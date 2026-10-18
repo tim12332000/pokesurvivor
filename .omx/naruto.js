@@ -17,10 +17,13 @@
     G.DEX.push(mon);G.DEX_BY[dex]=mon;
     const starter={dex,start,traits:['valiente','leal']};
     G.STARTERS.push(starter);G.STARTER_BY[dex]=starter;
-    const geometry={w:32,h:36,ax:16,ay:36,n:1,r:1,d:[24]};
-    G.SPRITE_META[dex]={s:1,sh:false,a:Object.fromEntries(G.Sprites.ANIMS.map(a=>[a,
-      a==='Walk'?{...geometry,n:4,d:[8,8,8,8]}:{...geometry}]))};
     const pixel=window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug],image=new Image();
+    const geometry={w:32,h:36,ax:16,ay:36,n:1,r:1,d:[24]};
+    G.SPRITE_META[dex]={s:1,sh:false,a:Object.fromEntries(G.Sprites.ANIMS.map(anim=>{
+      const action=pixel.animations?.[anim];
+      const count=anim==='Walk'?4:action?Math.max(...Object.values(action.frames).map(frames=>frames.length)):1;
+      return [anim,{...geometry,n:count,d:Array(count).fill(anim==='Walk'?8:action?(action.duration||7):24)}];
+    }))};
     const record={...mon,chinese,team,slug,pixel,image,ready:false,attack:''};
     record.loaded=new Promise(resolve=>{
       image.onload=()=>{
@@ -45,24 +48,31 @@
   G.Gacha.featured=gen=>gen===11?[30001,30002,30004]:featured(gen);
 
   const previews=new WeakSet(),Animator=G.Sprites.Animator;
+  const frameFor=(record,anim,dir,index=0)=>{
+    const pixel=record.pixel;
+    const direction=['down','right','right','right','up','left','left','left'][dir];
+    const action=pixel.animations?.[anim];
+    const frames=action?.frames||pixel.frames;
+    const group=frames[direction]||frames.default||frames.down;
+    const phase=anim==='Walk'&&!action?[0,1,0,2][index%4]:index;
+    return {rect:group[phase%group.length],direction,mirror:(action?.mirror||pixel.mirror||[]).includes(direction),action:!!action};
+  };
   G.Sprites.Animator=class extends Animator {
     draw(ctx,x,y,opts={}) {
       const record=records.get(this.dex);
       if(!record)return super.draw(ctx,x,y,opts);
       if(!record.ready)return;
       const pixel=record.pixel;
-      const direction=['down','down','right','up','up','up','left','down'][this.dir];
-      const group=pixel.frames[direction]||pixel.frames.down;
-      const frame=group[this.cur==='Walk'?[0,1,0,2][this.frame%4]%group.length:0];
-      const [sx,sy,sw,sh]=frame;
+      const pose=frameFor(record,this.cur,this.dir,this.frame);
+      const [sx,sy,sw,sh]=pose.rect;
       const ui=previews.has(ctx.canvas);
       const target=ui?Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75):64*this.scale;
-      const k=Math.min(target/sh,(ui?ctx.canvas.width*.88:68*this.scale)/sw);
+      const stand=pixel.frames.down[0];
+      const k=ui?Math.min(target/stand[3],ctx.canvas.width*.88/Math.max(sw,stand[2])):target/stand[3];
       ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.imageSmoothingEnabled=false;
       ctx.globalAlpha*=opts.alpha==null?1:opts.alpha;
-      if(pixel.mirror?.includes(direction))ctx.scale(-1,1);
-      if(this.cur==='Faint')ctx.scale(1,.45);
-      if(['Attack','Shoot','Charge'].includes(this.cur))ctx.translate(0,-Math.round(Math.sin(this.progress()*Math.PI)*3));
+      if(pose.mirror)ctx.scale(-1,1);
+      if(this.cur==='Faint'&&!pose.action)ctx.scale(1,.45);
       ctx.drawImage(opts.flash?G.Sprites.white(record.image):record.image,sx,sy,sw,sh,
         -Math.round(sw*k/2),-Math.round(sh*k),Math.round(sw*k),Math.round(sh*k));
       ctx.restore();
@@ -146,5 +156,5 @@
     .naruto-card canvas{display:block;width:128px;height:112px;max-width:100%;image-rendering:pixelated}.naruto-card span{font-size:14px}
     @media(max-width:650px){.naruto-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{gap:4px;max-width:calc(100vw - 12px);flex-wrap:wrap;justify-content:flex-end}.topbar .btn.small{padding:4px 6px;font-size:12px}#scr-naruto{padding:10px}}
   `;document.head.append(style);
-  G.Naruto={records,choose,openPicker};
+  G.Naruto={records,choose,openPicker,frameFor};
 })();

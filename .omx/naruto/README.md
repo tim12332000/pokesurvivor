@@ -29,8 +29,22 @@ Canvas removes the exact flat sheet background and draws with nearest-neighbor
 scaling; downloaded PNGs are unchanged. Rendering keeps characters around 64
 world pixels high, separate from menu-preview fitting.
 
+Horizontal field rows are audited against the original face direction. The six
+field sheets have right-facing frames above left-facing frames; the two battle
+sheets face right in the original, so only left views are mirrored.
+
+The renderer now plays available original attack/jutsu sequences for all eight
+characters, Naruto's casting sequence, and the battle sheets' hurt/faint rows.
+Attack and Shoot share the field combat sequences; missing action directions use
+the documented default view or an explicit mirror. Field sheets without verified
+hurt/faint art retain fallback flash/flatten presentation. Those fallbacks are not
+claimed to be newly sourced animations. Scaling uses standing height, so extended
+attacks and fallen poses retain their original proportions.
+
 Regenerate metadata and the shared entry with `python .omx/make_digimon.py`.
 Run `python .omx/check_naruto.py` for browser checks without a local HTTP server.
+Run `python .omx/check_naruto_animations.py` for source direction, frame timing,
+signature-animation checks and a labeled screenshot of all eight characters.
 Set `PAGES_LIVE=1` to check the deployed site instead. Tests require Python
 Playwright and the installed Windows Chrome, matching the other sandbox checks.
 

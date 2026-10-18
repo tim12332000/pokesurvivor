@@ -6,6 +6,8 @@
 !/naruto.js
 !/naruto-skills.js
 !/check_naruto.py
+!/check_naruto_animations.py
+/naruto/*-animation-patch.json
 /digimon/*
 !/digimon/pixel/
 !/digimon/README.md
