@@ -6,8 +6,8 @@ available: Naruto, Sasuke, Sakura, Kakashi, Hinata, Rock Lee, Gaara and Itachi.
 Choosing a ninja uses the existing sandbox save without resetting the collection.
 Naruto characters do not use the Digimon evolution system.
 
-Thirteen adapted skills include eight character signatures, two shared ninja tools
-and three additional area skills restricted to their respective characters.
+Fourteen adapted skills include eight character signatures, two shared ninja tools
+and four additional character skills restricted to their respective characters.
 The in-game skill guide links each character to official Naruto source articles.
 Attack names and character identities are source-based; damage, ranges, cooldowns,
 type mappings and crowd-control effects are survival-game design choices. In
@@ -22,6 +22,34 @@ area impacts, with real multi-target damage checks and character-specific pools.
 The [AoE audit](aoe-audit.md) records references and separates canon ability from
 the crossover's area, timeline and balance choices. Existing Sakura, Hinata and
 Rock Lee close-range attacks also have tested multi-target areas.
+
+## Naruto shadow clones
+
+Naruto now starts with Multi Shadow Clone Jutsu. Three lightweight actors move,
+choose nearby enemies and punch; they share the owner's damage credit and never
+become extra players, collect rewards or write saves. Normal pursuers can be
+distracted by a closer clone; bosses retain their target. Contact or hostile
+projectile hits disperse a clone with smoke. Initial lifetime is six seconds and
+cooldown ten seconds. Skill level three raises the cap to four and enables the
+Rasengan follow-up; level four extends lifetime to seven seconds; level five
+raises the cap to five. Recasting fills vacancies without refreshing existing
+lifetimes. Switching slots keeps existing clones until they expire.
+
+Character level three guarantees a Rasengan learning choice, and level six a
+Rasenshuriken choice. When four slots are full, the card explicitly offers to
+replace a shared kunai/shuriken slot rather than removing a character skill.
+Players may decline. The original Rasengan move ID is preserved. With the clone
+skill at level three or higher, casting Rasengan lets at most two eligible
+clones share a follow-up worth 40% of that cast's damage budget. Clones do not
+recursively summon or copy Rasenshuriken. Pause freezes their simulation time;
+death and scene changes clear actors and smoke. A gold chevron marks the owner.
+
+Run `python .omx/check_naruto_clones.py` for caps, lifetime, walls, distributed
+attacks, contact/projectile dispersal, aggro, shared combo damage, training choices,
+pause and scene cleanup. Original ability reference:
+https://naruto-official.com/en/news/01_1423 . Actor counts, automatic behavior,
+timing and damage budgets are this game's adaptation. Multiplayer replication of
+clone actors is not implemented in this guest-only edition.
 
 ## Original artwork
 

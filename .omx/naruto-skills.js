@@ -41,11 +41,12 @@
   };
 
   const profiles = [
-    [30001, 'naruto', '螺旋丸', 'Rasengan', '01_1296', {
-      mode: 'dash', type: 'fighting', cd: 1.25, dmg: 48, charge: .12,
-      range: 125, radius: 125, width: 56, knock: 100,
-      vis: { proj: 'wind', melee: 'impact', pal: 'naruto-blue' },
-      desc: '凝聚藍色旋轉查克拉後向前突進，擊退路徑上的敵人。'
+    [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
+      mode: 'shadow-clones', type: 'fighting', cd: 10, dmg: 8, range: 240,
+      cloneDuration: 6, punchCd: .65, vis: { pal: 'naruto-blue' },
+      desc: '召出 3 個會選敵、移動與出拳的影分身，存在 6 秒；受擊後化煙消散。技能 Lv.3 最多 4 個、Lv.5 最多 5 個。切換招式後現存分身仍會作戰；技能 Lv.3 起，使用螺旋丸可讓最多 2 個分身追加連擊。數量、時限與傷害皆為本作改編。',
+      ups: [{t:'分身傷害 +20%',m:{dmg:1.2}},{t:'同時存在上限提高為 4，解鎖分身螺旋丸連擊',m:{}},
+        {t:'分身存在時間增加至 7 秒',m:{cloneDuration:7}},{t:'同時存在上限提高為 5',m:{}}]
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
       mode: 'dash', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
@@ -103,6 +104,13 @@
     }]
   ];
   const extra = [
+    ['naruto-naruto', [30001], {
+      name: '螺旋丸', mode: 'dash', type: 'fighting', cd: 1.25, dmg: 48, charge: .12,
+      range: 125, radius: 125, width: 56, knock: 100,
+      vis: { proj: 'wind', melee: 'impact', pal: 'naruto-blue' },
+      desc: '凝聚旋轉查克拉後向前突進。鳴人 Lv.3 起保證出現學習選項；多重影分身達技能 Lv.3 時，最多 2 個現存分身可追加螺旋丸連擊，總追加傷害受限。',
+      source_url: 'https://naruto-official.com/en/news/01_1423'
+    }],
     ['naruto-rasenshuriken', [30001], {
       name: '風遁・螺旋手裏劍', mode: 'shot', type: 'flying', cd: 2.5, dmg: 58,
       speed: 350, life: 1.3, size: 15, range: 455, blastRadius: 110, knock: 65,
@@ -126,7 +134,7 @@
       source_url: 'https://naruto-official.com/en/news/01_2665'
     }]
   ];
-  const kinds = { dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone' };
+  const kinds = { dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff' };
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
 
@@ -136,7 +144,7 @@
       radius: 140, range: 480, width: 24, homing: 0, knock: 0, burn: 0, poison: 0, slow: 0,
       ...design, id, kind: kinds[design.mode], digimonSkill: true, narutoSkill: true,
       digiMode: design.mode, digiVis: design.vis || {}, maxLvl: 5,
-      ups: [
+      ups: design.ups || [
         { t: '傷害 +20%', m: { dmg: 1.2 } },
         { t: '冷卻 -10%', m: { cd: .9 } },
         { t: '攻擊範圍與持續時間 +12%', m: {
@@ -217,7 +225,7 @@
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = `冷卻 ${move.cd} 秒 · 基礎傷害 ${move.dmg} · 爆發半徑 ${move.blastRadius} · 可升至 Lv.5`;
+      extraStats.textContent = `冷卻 ${move.cd} 秒 · 基礎傷害 ${move.dmg}${move.blastRadius ? ' · 爆發半徑 '+move.blastRadius : ''} · 可升至 Lv.5`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';

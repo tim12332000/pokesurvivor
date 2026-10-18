@@ -12,7 +12,7 @@
   ];
   const records = new Map(), dictionary = {Naruto:'火影忍者'};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
-    const dex = 30001 + index, start = 'naruto-' + slug;
+    const dex = 30001 + index, start = slug==='naruto'?'naruto-shadow-clones':'naruto-' + slug;
     const mon = {dex,name,types,hp,spd,atk:1.32,rarity,bst:400+rarity*38,starter:true,gen:11,naruto:true,start};
     G.DEX.push(mon);G.DEX_BY[dex]=mon;
     const starter={dex,start,traits:['valiente','leal']};

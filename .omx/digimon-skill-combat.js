@@ -110,6 +110,7 @@
       for (const e of targets((sx + pl.x) / 2, (sy + pl.y) / 2, len / 2 + m.width)) { const dx = pl.x - sx, dy = pl.y - sy, t = Math.max(0, Math.min(1, ((e.x - sx) * dx + (e.y - sy) * dy) / (dx * dx + dy * dy || 1))); if (G.U.dist2(e.x, e.y, sx + dx * t, sy + dy * t) <= (m.width / 2 + e.r) ** 2) hit(pl, m, e, m.dmg * pl.atk, Math.cos(a), Math.sin(a)); }
       G.FX.slash(pl.x, pl.y - G.LIFT * .5, a, 34, 2.2, color(m), vis(m));
       if (m.narutoSkill) { const v=vis(m); G.FX.sp(v.proj||'wind',v.pal,pl.x,pl.y-G.LIFT,{life:.35,scale:1.7}); }
+      if (m.id==='naruto-naruto') G.NarutoClones?.combo(pl,m);
     } else if (mode === 'slam') { const x = pl.x + Math.cos(a) * m.range * .55, y = pl.y + Math.sin(a) * m.range * .55; G.FX.ring(x, y, 5, m.radius, color(m), .24, 3); area(pl, m, x, y, m.radius); }
     else if (mode === 'gate') { const target = pl.target && !pl.target.dead && G.U.dist(pl.x, pl.y, pl.target.x, pl.target.y) <= m.range ? pl.target : G.Projectiles.nearest(targets(pl.x, pl.y, m.range), pl.x, pl.y, m.range); if (target) field(pl, m, 'gate', { x: target.x, y: target.y, life: m.fieldDuration || 4, tick: m.fieldTick || .7, phase: 0 }); }
     else if (mode === 'sand-wave') {
@@ -126,7 +127,7 @@
     else if (mode === 'blizzard') { sweep(pl, m, pl.x, pl.y, a, m.range, arc); field(pl, m, 'frost', { x: pl.x + Math.cos(a) * m.range * .65, y: pl.y + Math.sin(a) * m.range * .65, life: m.fieldDuration || 3, tick: m.fieldTick || .65, radius: m.blastRadius || m.radius }); }
     else if (mode === 'dual') { const s = Object.assign({}, m, m.secondary || {}); line(pl, s, pl.x, pl.y, a, s.range || m.range, s.width || m.width, .55); sweep(pl, m, pl.x, pl.y, a, m.radius, m.arc || 2, .65); }
   }
-  function cast(pl, move) { const m = cloneMove(move); if (!m || !m.digimonSkill || !m.digiMode) return false; if (m.charge > 0) field(pl, m, 'charge', { life: m.charge, aim: pl.aim, x: pl.x, y: pl.y }); else emit(pl, m); return true; }
+  function cast(pl, move) { const m = cloneMove(move); if (!m || !m.digimonSkill || !m.digiMode) return false; if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.cast(pl,m); if (m.charge > 0) field(pl, m, 'charge', { life: m.charge, aim: pl.aim, x: pl.x, y: pl.y }); else emit(pl, m); return true; }
   function customUpdate(dt) {
     for (let i = fields.length - 1; i >= 0; i--) {
       const f = fields[i]; if (!valid(f)) { fields.splice(i, 1); continue; } f.t += dt;
@@ -149,7 +150,7 @@
     const original = pl.activeGroup; let custom = [];
     if (original) { const group = original.call(pl); custom = group.filter(m => m && m.digimonSkill); if (!custom.length) return vanilla.tick(dt, pl, now); pl.activeGroup = function() { return original.call(this).filter(m => !m.digimonSkill); }; }
     try { vanilla.tick(dt, pl, now); } finally { if (original) pl.activeGroup = original; }
-    for (const m of custom) { m.t -= dt; if (m.t > 0) continue; const target = pl.target; if (['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode) && (!target || target.dead || G.U.dist(pl.x, pl.y, target.x, target.y) > (m.range || m.radius || 520))) { m.t = .05; continue; } m.t = Math.max(.05, m.cd * pl.cdMul); const snapshot = cloneMove(m); pl.cast(m); if (G.Coop.active) G.Coop.cast(pl, m); m.castAt = performance.now(); cast(pl, snapshot); }
+    for (const m of custom) { m.t -= dt; if (m.t > 0) continue; const target = pl.target; if (['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode) && (!target || target.dead || G.U.dist(pl.x, pl.y, target.x, target.y) > (m.range || m.radius || 520))) { m.t = .05; continue; } m.t = Math.max(.05, m.cd * pl.cdMul); const snapshot = cloneMove(m); pl.cast(m); if (G.Coop.active) G.Coop.cast(pl, m); m.castAt = performance.now(); const started=cast(pl, snapshot); if(m.digiMode==='shadow-clones'&&!started&&!G.NarutoClones?.actors.some(a=>a.owner===pl&&!a.dead))m.t=.25; }
   };
   C.updateFields = update;
   C.drawGroundFields = ctx => { vanilla.ground(ctx); draw(ctx, ['gate','frost','charge']);
