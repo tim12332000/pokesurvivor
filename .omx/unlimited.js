@@ -1,7 +1,9 @@
-// Local sandbox: separate origin and save key; never initialize cloud services.
+// Personal sandbox: separate save key; never initialize cloud services.
 (() => {
-  if (!['127.0.0.1', 'localhost'].includes(location.hostname)) {
-    throw new Error('This sandbox is only available on localhost.');
+  const local = ['127.0.0.1', 'localhost'].includes(location.hostname);
+  const personalSite = location.hostname === 'tim12332000.github.io' && location.pathname.startsWith('/pokesurvivor/');
+  if (!local && !personalSite) {
+    throw new Error('This sandbox is available on localhost or the personal GitHub Pages site.');
   }
   const KEY = window.PS_SANDBOX_KEY || 'ps.sandbox.unlimited.v1';
   G.FIREBASE_CONFIG = null;

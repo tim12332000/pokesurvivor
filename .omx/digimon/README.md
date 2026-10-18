@@ -9,6 +9,15 @@ Use port 8001 for `check_unlimited.py`; the Digimon checks use port 8002.
 This variant is maintained on `feat/digimon-sandbox`, separately from the
 Traditional Chinese translation pull request.
 
+## Personal website
+
+The personal GitHub Pages site is https://tim12332000.github.io/pokesurvivor/ .
+The `digimon-pages.yml` workflow deploys only `feat/digimon-sandbox` on this fork.
+`python tools/build_digimon_site.py` builds `dist-digimon/` from tracked runtime
+files, omitting local state, development tools and the upstream custom domain.
+The sandbox host restriction allows localhost and this specific Pages site.
+Public saves remain browser-local and do not connect to original game accounts.
+
 Includes eight Adventure evolution lines (33 forms) after generation nine in collection
 and gacha tabs, a staged partner picker, local-only isolated saves, and unlimited
 coins and both gacha-ticket types. The normal game and translation PR are unchanged.

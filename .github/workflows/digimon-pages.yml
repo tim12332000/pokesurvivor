@@ -1,0 +1,36 @@
+name: Publish personal Digimon sandbox
+
+on:
+  push:
+    branches: [feat/digimon-sandbox]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: personal-digimon-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'tim12332000/pokesurvivor'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - run: python tools/build_digimon_site.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-digimon
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
