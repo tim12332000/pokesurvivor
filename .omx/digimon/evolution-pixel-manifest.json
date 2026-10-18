@@ -1,0 +1,1116 @@
+﻿{
+    "repository":  "https://github.com/EwertonMendes/DigiGame",
+    "commit":  "802e9cde626e759d15e33387bb3b4794d2b1def1",
+    "commit_url":  "https://github.com/EwertonMendes/DigiGame/commit/802e9cde626e759d15e33387bb3b4794d2b1def1",
+    "source_layout":  "assets/characters/{local_slug}/field.{png,json}",
+    "files":  [
+                  {
+                      "canonical_name":  "Angemon",
+                      "local_slug":  "angemon",
+                      "png":  "angemon.png",
+                      "metadata":  "angemon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/angemon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/angemon/field.json",
+                      "sha256":  "c0df3bf284a80336ddbd1c0762cfa1e02391bee644e0b64a2ad9dba47fc8f702",
+                      "metadata_sha256":  "c42f0568b0a792a49557f78e4913242568e94512e9352e25cf2b58bf42b95bb7",
+                      "width":  384,
+                      "height":  42,
+                      "cell_width":  32,
+                      "cell_height":  42,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  94,
+                                                     "source_archive_file":  "sprite thread/094_Angemon.png",
+                                                     "source_sha256":  "c19a52464a12fea7026443a077469c128d3587e711ca18792ef22b97220dbb81",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/094_Angemon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Angewomon",
+                      "local_slug":  "angewomon",
+                      "png":  "angewomon.png",
+                      "metadata":  "angewomon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/angewomon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/angewomon/field.json",
+                      "sha256":  "84402859dd474abd94fed33a396f95b9e9c416f5c0945ae7b96ca331c9cae28a",
+                      "metadata_sha256":  "fc437424d23b81377c466eb38688446470a8aa884370ccd1739554d3ab29e66e",
+                      "width":  420,
+                      "height":  44,
+                      "cell_width":  35,
+                      "cell_height":  44,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  208,
+                                                     "source_archive_file":  "sprite thread/208_Angewomon.png",
+                                                     "source_sha256":  "5e38fca7a727609a95ee8f4e7bed8e981dc389d7ce17b17eaa84be5dcdfa40ea",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/208_Angewomon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Birdramon",
+                      "local_slug":  "birdramon",
+                      "png":  "birdramon.png",
+                      "metadata":  "birdramon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/birdramon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/birdramon/field.json",
+                      "sha256":  "9ada42961a09dc99dab5610dc4d30bc5a172dff9b72b5156257e2e8b7310180d",
+                      "metadata_sha256":  "34620d1ad0c080aba3dc74e3feeb7bc0124122c1f53257aefb1a39a2e488565f",
+                      "width":  432,
+                      "height":  40,
+                      "cell_width":  36,
+                      "cell_height":  40,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  110,
+                                                     "source_archive_file":  "sprite thread/110_Birdramon.png",
+                                                     "source_sha256":  "e8c142798351e8798e04c992616453481824d6e18abddc3bc836eaef694556f5",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/110_Birdramon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                2,
+                                                                                1,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Garudamon",
+                      "local_slug":  "garudamon",
+                      "png":  "garudamon.png",
+                      "metadata":  "garudamon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/garudamon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/garudamon/field.json",
+                      "sha256":  "a6be3278525bc1edc19fcdb94aa2e6c066f9a2a3cd7ef7eab163c8c9346f2c44",
+                      "metadata_sha256":  "ae6c6f1e12bb624477ae544a8191edc611bed6722170a1c83b302310bc378b4b",
+                      "width":  420,
+                      "height":  43,
+                      "cell_width":  35,
+                      "cell_height":  43,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  217,
+                                                     "source_archive_file":  "sprite thread/217_Garudamon.png",
+                                                     "source_sha256":  "dd6de60a5c0e9e7e55ac26730461e46d299eb13f34770aa63bf6305a89b784d7",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/217_Garudamon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                2,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Garurumon",
+                      "local_slug":  "garurumon",
+                      "png":  "garurumon.png",
+                      "metadata":  "garurumon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/garurumon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/garurumon/field.json",
+                      "sha256":  "31e2e660cb1d45bfca3fc98ccd862bdb781d8e4938881319a990fc19a55550dc",
+                      "metadata_sha256":  "42a8a4b6643534f8d9d2a01376afedf614a161521b04ac7dad49ba94a5971db1",
+                      "width":  432,
+                      "height":  36,
+                      "cell_width":  36,
+                      "cell_height":  36,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  93,
+                                                     "source_archive_file":  "sprite thread/093_Garurumon.png",
+                                                     "source_sha256":  "c1ed6a013f9bf8f1b2a8c6fdf56c6a98e57a875700b1249639f11876160128a6",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/093_Garurumon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "HerculesKabuterimon",
+                      "local_slug":  "herculeskabuterimon",
+                      "png":  "herculeskabuterimon.png",
+                      "metadata":  "herculeskabuterimon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/herculeskabuterimon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/herculeskabuterimon/field.json",
+                      "sha256":  "4ce28e4ddb4236064b80be7ea5b4fa4898775383d6b65253560770fe68af5afa",
+                      "metadata_sha256":  "fc59c0ca3d99d44dacbea96e09e26c18d74002a4077edfbcaf78de00f24bfd25",
+                      "width":  432,
+                      "height":  45,
+                      "cell_width":  36,
+                      "cell_height":  45,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  299,
+                                                     "source_archive_file":  "sprite thread/299_HerculesKabuterimon.png",
+                                                     "source_sha256":  "a22ce7af194d576ffee3c652382a81805f29ed330ea0b845fa05b3cd40296e2e",
+                                                     "source_url":  "https://withthewill.net/threads/the-new-digimon-world-dawn-dusk-lost-evo-sxw-sprite-topic-no-sprite-requests.10654/",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                2,
+                                                                                1,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Magnadramon / Holydramon",
+                      "local_slug":  "holydramon",
+                      "png":  "holydramon.png",
+                      "metadata":  "holydramon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/holydramon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/holydramon/field.json",
+                      "sha256":  "8adbcbf226267864ca1cd3b5115a37761a2580e6a65ed22362a336334595cce6",
+                      "metadata_sha256":  "990fb9832b3fac85294d2eaab6b3006f5444f2787ce52c5218220859f2451acb",
+                      "width":  420,
+                      "height":  43,
+                      "cell_width":  35,
+                      "cell_height":  43,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  369,
+                                                     "source_archive_file":  "sprite thread/369_Holydramon.png",
+                                                     "source_sha256":  "6f6222762997a7b49dda047083a21c10208d6683972fdd8b0aecf8c482aa3f46",
+                                                     "source_url":  "https://withthewill.net/threads/the-new-digimon-world-dawn-dusk-lost-evo-sxw-sprite-topic-no-sprite-requests.10654/",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                2,
+                                                                                1,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Ikkakumon",
+                      "local_slug":  "ikkakumon",
+                      "png":  "ikkakumon.png",
+                      "metadata":  "ikkakumon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/ikkakumon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/ikkakumon/field.json",
+                      "sha256":  "0663efe056ddf6ff2342b0ed1949d39e880ffacd306ecfccd72a2cb4883c4566",
+                      "metadata_sha256":  "8214371ae93a6b0d5e554f293d0333dc6e807a574e15ea6ab4d35345ede36b64",
+                      "width":  420,
+                      "height":  40,
+                      "cell_width":  35,
+                      "cell_height":  40,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  134,
+                                                     "source_archive_file":  "sprite thread/134_Ikkakumon.png",
+                                                     "source_sha256":  "2f231a2ae3012c24474df159e267f73e9c63f7e0f05388dec6611317869cdae0",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/134_Ikkakumon.png",
+                                                     "source_group_order":  [
+                                                                                2,
+                                                                                3,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Kabuterimon",
+                      "local_slug":  "kabuterimon",
+                      "png":  "kabuterimon.png",
+                      "metadata":  "kabuterimon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/kabuterimon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/kabuterimon/field.json",
+                      "sha256":  "c0a2cffd4f801953e826505524e0258b2eba8f9db32b4104998f25bf6622ec73",
+                      "metadata_sha256":  "c397089fafa8f651dc622ec2aad73d88bec6bafa9d19b1a4cb01e035035724a0",
+                      "width":  456,
+                      "height":  42,
+                      "cell_width":  38,
+                      "cell_height":  42,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  92,
+                                                     "source_archive_file":  null,
+                                                     "source_sha256":  "068d0027163f647bc1d97c5c15edcadbe1cc743b47f9b531c8b10bb13f07551c",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/092_Kabuterimon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                2,
+                                                                                1,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Lillymon",
+                      "local_slug":  "lillymon",
+                      "png":  "lillymon.png",
+                      "metadata":  "lillymon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/lillymon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/lillymon/field.json",
+                      "sha256":  "12928cb38b2c38bf6f9860c5b0d03415f74f4f0d52b6b4a6d91074ad3af03da5",
+                      "metadata_sha256":  "3be9cf72514d8c374ac229d3428bd4a90aab7553e20da3c1a5a14e27438e3e96",
+                      "width":  384,
+                      "height":  35,
+                      "cell_width":  32,
+                      "cell_height":  35,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  219,
+                                                     "source_archive_file":  "sprite thread/219_Lillymon.png",
+                                                     "source_sha256":  "e5533af455bd8846b1229dfaa8fd0d04cc5dce883d8bd119c428fc43c5beaad2",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/219_Lillymon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "MagnaAngemon / HolyAngemon",
+                      "local_slug":  "magnaangemon",
+                      "png":  "magnaangemon.png",
+                      "metadata":  "magnaangemon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/magnaangemon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/magnaangemon/field.json",
+                      "sha256":  "bda346cda0c24797965764ed33c95256b1d7e87382cf3352dbb6c975b2f04e56",
+                      "metadata_sha256":  "8fb0ec442e31264e87b336b91e5184f66a6c06617310cc62f5f0755e7bd964ac",
+                      "width":  432,
+                      "height":  44,
+                      "cell_width":  36,
+                      "cell_height":  44,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  223,
+                                                     "source_archive_file":  "sprite thread/223_HolyAngemon.png",
+                                                     "source_sha256":  "524e1725b2fa446dbcab27e7137ce2f3cf80916fd352bccd35363f39e4387c67",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/223_HolyAngemon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "MegaKabuterimon (Red)",
+                      "local_slug":  "megakabuterimonred",
+                      "png":  "megakabuterimonred.png",
+                      "metadata":  "megakabuterimonred.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/megakabuterimonred/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/megakabuterimonred/field.json",
+                      "sha256":  "79211d2346eef2bd3ec17cb54989ed0b1f2900db74df2b02f4564f69a743f673",
+                      "metadata_sha256":  "56a8d5a59557fb71e8f4000b340cdaf71f6a53944864ed15b172dccd0cb8de51",
+                      "width":  432,
+                      "height":  42,
+                      "cell_width":  36,
+                      "cell_height":  42,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  220,
+                                                     "source_archive_file":  "sprite thread/220_AlterKabuterimonRed.png",
+                                                     "source_sha256":  "d4b102130bcdb58ea062a6855a9078e9d459b46a4e8307a9a8358c6d3c5ef926",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/220_AlterKabuterimonRed.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                2,
+                                                                                1,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "MetalGarurumon",
+                      "local_slug":  "metalgarurumon",
+                      "png":  "metalgarurumon.png",
+                      "metadata":  "metalgarurumon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/metalgarurumon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/metalgarurumon/field.json",
+                      "sha256":  "824a241d80280543ba1d5be27fbb622bac1cabe426ae368d30e1d7afadade578",
+                      "metadata_sha256":  "e8a6b151b032a793d0ce37d679e4da53d95f9e321a10f4960053010b8899cdb6",
+                      "width":  432,
+                      "height":  40,
+                      "cell_width":  36,
+                      "cell_height":  40,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  310,
+                                                     "source_archive_file":  "sprite thread/310_MetalGarurumon.png",
+                                                     "source_sha256":  "44d540a954c28b7e98dfab49d79fcf9c4b14a3106a2608859fd191238fb35a2f",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Ultimate/310_MetalGarurumon.png",
+                                                     "source_group_order":  [
+                                                                                2,
+                                                                                3,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "MetalGreymon (Vaccine/Orange)",
+                      "local_slug":  "metalgreymon",
+                      "png":  "metalgreymon.png",
+                      "metadata":  "metalgreymon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/metalgreymon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/metalgreymon/field.json",
+                      "sha256":  "0b02aea74a66b49d9d533bc37f744af2a3a7d91780164222ff6406e54372d230",
+                      "metadata_sha256":  "c69ca9e8b22e84a07407c338ee881636195eab7085575ecd4d6692811c9ef1e8",
+                      "width":  384,
+                      "height":  42,
+                      "cell_width":  32,
+                      "cell_height":  42,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "spriters_resource_reviewed_exact_boxes",
+                                                     "source_name":  "Agumon",
+                                                     "source_id":  null,
+                                                     "source_archive_file":  null,
+                                                     "source_sha256":  "2f370926a0585787dfbae2b575509f8698a80539c8a68c87d3586b1d99a05665",
+                                                     "source_url":  "https://www.spriters-resource.com/media/assets/45/48322.png",
+                                                     "source_group_order":  null,
+                                                     "canonical_runtime_phases":  null
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Omnimon / Omegamon",
+                      "local_slug":  "omnimon",
+                      "png":  "omnimon.png",
+                      "metadata":  "omnimon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/omnimon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/omnimon/field.json",
+                      "sha256":  "00281beac340e4e65b104408d52e4b9e487ce7f803c3d225918f7dc0b09bfce1",
+                      "metadata_sha256":  "4251911c2b686abbaaffc4e1a887d9cbf615b717be48c6447913af2b3c53855c",
+                      "width":  432,
+                      "height":  44,
+                      "cell_width":  36,
+                      "cell_height":  44,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  313,
+                                                     "source_archive_file":  "sprite thread/313_Omegamon.png",
+                                                     "source_sha256":  "c037c43c4651b38943fcda94fb41f8c65feba429aadd85608f2ec25f538d9dd4",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Ultimate/313_Omegamon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Ophanimon",
+                      "local_slug":  "ophanimon",
+                      "png":  "ophanimon.png",
+                      "metadata":  "ophanimon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/ophanimon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/ophanimon/field.json",
+                      "sha256":  "8b94567c7c924a5140735c58f57a94801447f200d8c6cd3475e8147223485280",
+                      "metadata_sha256":  "a9b64cb61a9a5f14e19e0d8064477c89c87dc7026731fb3242da5bd3299f5a0d",
+                      "width":  432,
+                      "height":  50,
+                      "cell_width":  36,
+                      "cell_height":  50,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  337,
+                                                     "source_archive_file":  "sprite thread/337_Orphanimon.png",
+                                                     "source_sha256":  "5ed3ac2770f34708223871035c9baae40025dfe835dd224c94242346f72bb496",
+                                                     "source_url":  "https://withthewill.net/threads/the-new-digimon-world-dawn-dusk-lost-evo-sxw-sprite-topic-no-sprite-requests.10654/",
+                                                     "source_group_order":  [
+                                                                                2,
+                                                                                3,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Phoenixmon / Hououmon",
+                      "local_slug":  "phoenixmon",
+                      "png":  "phoenixmon.png",
+                      "metadata":  "phoenixmon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/phoenixmon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/phoenixmon/field.json",
+                      "sha256":  "50d26f362cc0a303bfa9dd41351e5e9c0acd731dc3cff1f9e154f1955faae362",
+                      "metadata_sha256":  "7ea14b348444a2ebd608682ffdf60ad0346f2dbd2adf916f29b24f938308ccf8",
+                      "width":  432,
+                      "height":  42,
+                      "cell_width":  36,
+                      "cell_height":  42,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  306,
+                                                     "source_archive_file":  "sprite thread/306_Hououmon.png",
+                                                     "source_sha256":  "4bfaf07f2c04d522f85266f1bdd2c5b41dcca2e69a185c7e151c2e41011fb198",
+                                                     "source_url":  "https://withthewill.net/threads/the-new-digimon-world-dawn-dusk-lost-evo-sxw-sprite-topic-no-sprite-requests.10654/",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                2,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Rosemon",
+                      "local_slug":  "rosemon",
+                      "png":  "rosemon.png",
+                      "metadata":  "rosemon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/rosemon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/rosemon/field.json",
+                      "sha256":  "dacaf1d9d665a051714a5391814f5d57b745f63c7d24518045fe1c9258ba949f",
+                      "metadata_sha256":  "42aa55aa1d2282ee6f33fa38a37edaad8ee72b4567f9a62d5bb9a3576add83ae",
+                      "width":  408,
+                      "height":  40,
+                      "cell_width":  34,
+                      "cell_height":  40,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  308,
+                                                     "source_archive_file":  null,
+                                                     "source_sha256":  "c2992b05f5c3ade734eb666776fa231af75ed3afc58114c4ef029c3a749e4920",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Ultimate/308_Rosemon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Seraphimon",
+                      "local_slug":  "seraphimon",
+                      "png":  "seraphimon.png",
+                      "metadata":  "seraphimon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/seraphimon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/seraphimon/field.json",
+                      "sha256":  "7fc1550228f3bff47b2ac1e0b5d55eba38a3e410bf3188e452cd8b2cfca5f189",
+                      "metadata_sha256":  "52d0d279c00ee82a1f5348121a48e894e7e56cc89171f6fdc0edf70cb35b7ea6",
+                      "width":  408,
+                      "height":  40,
+                      "cell_width":  34,
+                      "cell_height":  40,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  318,
+                                                     "source_archive_file":  null,
+                                                     "source_sha256":  "9e4a1cbac20515276df950800aaa102c96421ed6508e18bae72bbfb54f517d72",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Ultimate/318_Seraphimon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Togemon",
+                      "local_slug":  "togemon",
+                      "png":  "togemon.png",
+                      "metadata":  "togemon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/togemon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/togemon/field.json",
+                      "sha256":  "f039b98107af529778a366bd1b43e68eda47fa8f610a4dec83978cedae28cad4",
+                      "metadata_sha256":  "2c272b01193b0a98d575521bb161cdc8b3b4cc60ad2989558305e0951156a290",
+                      "width":  432,
+                      "height":  42,
+                      "cell_width":  36,
+                      "cell_height":  42,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  106,
+                                                     "source_archive_file":  "sprite thread/106_Togemon.png",
+                                                     "source_sha256":  "6cde017078c3974093672588e8db339f95174549fced5a87db2a8283cb2fa3c7",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Adult/106_Togemon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                3,
+                                                                                2
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Vikemon",
+                      "local_slug":  "vikemon",
+                      "png":  "vikemon.png",
+                      "metadata":  "vikemon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/vikemon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/vikemon/field.json",
+                      "sha256":  "585503a41e3bd170e9ad9126ea233982ce3f741d21ea4371886df6c748d1a5e1",
+                      "metadata_sha256":  "c5a10d328b7fce45d23824727f9e6e5e0533a1adaea27506cb2cab160a1b2b58",
+                      "width":  432,
+                      "height":  43,
+                      "cell_width":  36,
+                      "cell_height":  43,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  362,
+                                                     "source_archive_file":  "sprite thread/362_VikemonGarmmon.png",
+                                                     "source_sha256":  "1bbb48c8d48a60f8d963bc4af2bd33cdb20c7117a6247ff10a9b4abae13ebcd8",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Ultimate/VikemonGarmmon.png",
+                                                     "source_group_order":  [
+                                                                                2,
+                                                                                3,
+                                                                                0,
+                                                                                1
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "WarGreymon",
+                      "local_slug":  "wargreymon",
+                      "png":  "wargreymon.png",
+                      "metadata":  "wargreymon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/wargreymon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/wargreymon/field.json",
+                      "sha256":  "3716e3a8fff3d463546578940c262870aab206fc45ebbd6de464947f5ced6f29",
+                      "metadata_sha256":  "9bfe069e28bf523ba97c0ac5d5cda9f4cab6288ec9c6fb77d02901090a70b124",
+                      "width":  408,
+                      "height":  43,
+                      "cell_width":  34,
+                      "cell_height":  43,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  309,
+                                                     "source_archive_file":  "sprite thread/309_WarGreymon.png",
+                                                     "source_sha256":  "b1539843fde32a68b9e4901facb7c01ae1ba3ec3f4a27ea27db0ad8f96646d65",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Ultimate/309_WarGreymon.png",
+                                                     "source_group_order":  [
+                                                                                2,
+                                                                                0,
+                                                                                3,
+                                                                                1
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "WereGarurumon",
+                      "local_slug":  "weregarurumon",
+                      "png":  "weregarurumon.png",
+                      "metadata":  "weregarurumon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/weregarurumon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/weregarurumon/field.json",
+                      "sha256":  "08a9a736a77b4045ea60db85d08ff5fb63470aad1cab6b51a9a621f1bbe7e5fb",
+                      "metadata_sha256":  "037085a70cee569eaad145cecc746c70297c4ae5eb0b90ba846dda09feacc8dd",
+                      "width":  384,
+                      "height":  36,
+                      "cell_width":  32,
+                      "cell_height":  36,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  214,
+                                                     "source_archive_file":  "sprite thread/214_WereGarurumon.png",
+                                                     "source_sha256":  "6b888f84e0453df312693816b5257d4202e15f914b631bae5ce122a297aaf170",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Perfect/214_WereGarurumon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                1,
+                                                                                2,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Zudomon",
+                      "local_slug":  "zudomon",
+                      "png":  "zudomon.png",
+                      "metadata":  "zudomon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/zudomon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/zudomon/field.json",
+                      "sha256":  "f8eb3212e8d2228ac369f8996f98466b69c404ff184295493ec99cb09f9aafb2",
+                      "metadata_sha256":  "f0556467aa7cb92d3d745eb1afc1d3a16613e7bd0a79f24813c911098b2f50dc",
+                      "width":  432,
+                      "height":  44,
+                      "cell_width":  36,
+                      "cell_height":  44,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "official_ds",
+                                                     "source_variant":  "withthewill_additional_audited",
+                                                     "source_name":  null,
+                                                     "source_id":  249,
+                                                     "source_archive_file":  "sprite thread/249_Zudomon.png",
+                                                     "source_sha256":  "0d78392a1fed402eb97a65c27cad18fb946fd6ca78ffc3c055bde51405c43a21",
+                                                     "source_url":  "https://i874.photobucket.com/albums/ab308/WtWSprites/Perfect/249_Zudomon.png",
+                                                     "source_group_order":  [
+                                                                                0,
+                                                                                2,
+                                                                                1,
+                                                                                3
+                                                                            ],
+                                                     "canonical_runtime_phases":  [
+                                                                                      "idle",
+                                                                                      "step_a",
+                                                                                      "step_b"
+                                                                                  ]
+                                                 }
+                  },
+                  {
+                      "canonical_name":  "Greymon",
+                      "local_slug":  "greymon",
+                      "png":  "greymon.png",
+                      "metadata":  "greymon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/greymon/field.png",
+                      "source_metadata":  null,
+                      "sha256":  "1c0f0a5c1ea2e68f8b80f3840a36fb88f31585030f0b7ad9d10db3ea3b092784",
+                      "metadata_sha256":  "8f336c1e5a30bc2121c99bcae9e22a85a77ba4e03b60428d218efc440393a8ab",
+                      "width":  339,
+                      "height":  63,
+                      "cell_width":  null,
+                      "cell_height":  null,
+                      "frame_count":  9,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "unresolved_group_0",
+                                              "unresolved_group_1",
+                                              "unresolved_group_2"
+                                          ],
+                      "source_metadata_fields":  {
+                                                     "source_kind":  "inferred_geometry",
+                                                     "source_variant":  "alpha_bounds_no_source_field_metadata",
+                                                     "source_sha256":  "1c0f0a5c1ea2e68f8b80f3840a36fb88f31585030f0b7ad9d10db3ea3b092784",
+                                                     "inference":  "Frame rectangles are alpha bounds. The three groups are retained in left-to-right source order; direction mapping is unresolved.",
+                                                     "frame_rects":  [
+                                                                         {
+                                                                             "y":  24,
+                                                                             "w":  30,
+                                                                             "h":  38,
+                                                                             "x":  2
+                                                                         },
+                                                                         {
+                                                                             "y":  25,
+                                                                             "w":  31,
+                                                                             "h":  37,
+                                                                             "x":  38
+                                                                         },
+                                                                         {
+                                                                             "y":  25,
+                                                                             "w":  30,
+                                                                             "h":  36,
+                                                                             "x":  76
+                                                                         },
+                                                                         {
+                                                                             "y":  25,
+                                                                             "w":  30,
+                                                                             "h":  37,
+                                                                             "x":  118
+                                                                         },
+                                                                         {
+                                                                             "y":  24,
+                                                                             "w":  30,
+                                                                             "h":  36,
+                                                                             "x":  155
+                                                                         },
+                                                                         {
+                                                                             "y":  24,
+                                                                             "w":  30,
+                                                                             "h":  39,
+                                                                             "x":  192
+                                                                         },
+                                                                         {
+                                                                             "y":  25,
+                                                                             "w":  30,
+                                                                             "h":  38,
+                                                                             "x":  234
+                                                                         },
+                                                                         {
+                                                                             "y":  26,
+                                                                             "w":  30,
+                                                                             "h":  37,
+                                                                             "x":  271
+                                                                         },
+                                                                         {
+                                                                             "y":  15,
+                                                                             "w":  28,
+                                                                             "h":  40,
+                                                                             "x":  309
+                                                                         }
+                                                                     ],
+                                                     "source_groups":  [
+                                                                           {
+                                                                               "frame_indices":  [
+                                                                                                     0,
+                                                                                                     1,
+                                                                                                     2
+                                                                                                 ],
+                                                                               "direction":  "unresolved"
+                                                                           },
+                                                                           {
+                                                                               "frame_indices":  [
+                                                                                                     3,
+                                                                                                     4,
+                                                                                                     5
+                                                                                                 ],
+                                                                               "direction":  "unresolved"
+                                                                           },
+                                                                           {
+                                                                               "frame_indices":  [
+                                                                                                     6,
+                                                                                                     7,
+                                                                                                     8
+                                                                                                 ],
+                                                                               "direction":  "unresolved"
+                                                                           }
+                                                                       ]
+                                                 }
+                  }
+              ]
+}

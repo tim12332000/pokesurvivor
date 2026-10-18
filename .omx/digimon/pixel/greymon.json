@@ -1,0 +1,103 @@
+﻿{
+    "source_kind":  "inferred_geometry",
+    "source_variant":  "alpha_bounds_no_source_field_metadata",
+    "source_url":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/greymon/field.png",
+    "source_sha256":  "1c0f0a5c1ea2e68f8b80f3840a36fb88f31585030f0b7ad9d10db3ea3b092784",
+    "inference":  "Only image geometry is inferred. Rectangles are connected nontransparent horizontal bounds found by alpha-column segmentation; no pixel data was changed.",
+    "inference_basis":  "Pinned-source PNG dimensions and alpha bounds; repository has no greymon/field.json, field.png.import, or runtime direction configuration.",
+    "width":  339,
+    "height":  63,
+    "frame_count":  9,
+    "frames_per_direction":  3,
+    "frame_rects":  [
+                        {
+                            "y":  24,
+                            "w":  30,
+                            "h":  38,
+                            "x":  2
+                        },
+                        {
+                            "y":  25,
+                            "w":  31,
+                            "h":  37,
+                            "x":  38
+                        },
+                        {
+                            "y":  25,
+                            "w":  30,
+                            "h":  36,
+                            "x":  76
+                        },
+                        {
+                            "y":  25,
+                            "w":  30,
+                            "h":  37,
+                            "x":  118
+                        },
+                        {
+                            "y":  24,
+                            "w":  30,
+                            "h":  36,
+                            "x":  155
+                        },
+                        {
+                            "y":  24,
+                            "w":  30,
+                            "h":  39,
+                            "x":  192
+                        },
+                        {
+                            "y":  25,
+                            "w":  30,
+                            "h":  38,
+                            "x":  234
+                        },
+                        {
+                            "y":  26,
+                            "w":  30,
+                            "h":  37,
+                            "x":  271
+                        },
+                        {
+                            "y":  15,
+                            "w":  28,
+                            "h":  40,
+                            "x":  309
+                        }
+                    ],
+    "source_order":  "left_to_right",
+    "source_groups":  [
+                          {
+                              "frame_indices":  [
+                                                    0,
+                                                    1,
+                                                    2
+                                                ],
+                              "direction":  "unresolved"
+                          },
+                          {
+                              "frame_indices":  [
+                                                    3,
+                                                    4,
+                                                    5
+                                                ],
+                              "direction":  "unresolved"
+                          },
+                          {
+                              "frame_indices":  [
+                                                    6,
+                                                    7,
+                                                    8
+                                                ],
+                              "direction":  "unresolved"
+                          }
+                      ],
+    "direction_mapping":  "unresolved",
+    "directions":  [
+                       "down_left",
+                       "down_right",
+                       "up_left",
+                       "up_right"
+                   ],
+    "runtime_scale":  null
+}

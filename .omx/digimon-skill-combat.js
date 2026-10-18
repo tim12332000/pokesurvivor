@@ -1,0 +1,148 @@
+/* Local Digimon skill layer. Loaded after systems/combat.js and entities/vfx.js. */
+(() => {
+  const C = G.Combat;
+  if (!C || !G.VFX || C._digimonSkillEngineInstalled) return;
+  C._digimonSkillEngineInstalled = true;
+  const vanilla = { tick: C.tick, resolve: C.resolve, updateFields: C.updateFields,
+    ground: C.drawGroundFields, air: C.drawAirFields, clear: C.clearFields };
+  const fields = [], bombs = new Set();
+  const CAP = 120, BOMB_CAP = 80, TAU = Math.PI * 2;
+  const cloneMove = m => Object.assign({}, m, { digiVis: m.digiVis && Object.assign({}, m.digiVis), secondary: m.secondary && Object.assign({}, m.secondary) });
+  const color = m => G.VFX.PAL[m.digiVis?.pal]?.[2] || G.U.TYPE_COLOR[m.type] || '#fff';
+  const vis = m => Object.assign({}, G.VFX.forMove(m), m.digiVis || {});
+  const valid = f => f.owner && f.owner === G.Game.player && !f.owner.dead && f.owner.hp > 0 && f.world === G.World;
+  const cap = () => { while (fields.length > CAP) fields.shift(); while (bombs.size > BOMB_CAP) bombs.delete(bombs.values().next().value); };
+  const targets = (x, y, r) => G.EnemyMgr.queryCircle(x, y, r).filter(e => !e.dead);
+  function hit(pl, m, e, base, dx, dy, knock = m.knock || 0) {
+    if (!e || e.dead) return 0;
+    const k = G.Types.mult(m.type, e.types) * G.Weather.mult(m.type), crit = pl.critChance > 0 && Math.random() < pl.critChance;
+    const dmg = base * k * (crit ? 1.5 : 1);
+    e.hurt(dmg, color(m), dx, dy, knock, crit ? 'crit' : G.Types.label(G.Types.mult(m.type, e.types)));
+    pl.onDealt(dmg); pl.dmgDealt += dmg;
+    if (m.burn) e.applyBurn(m.burn); if (m.poison) e.applyPoison(m.poison); if (m.slow) e.applySlow(m.slow);
+    return dmg;
+  }
+  function propHits(pl, m, x, y, r, base = m.dmg * pl.atk, test = null) {
+    for (const p of G.World.propsInCircle(x, y, r)) if (!test || test(p)) G.World.damageProp(p, base, color(m));
+  }
+  function area(pl, m, x, y, r, ratio = 1) {
+    let dealt = 0;
+    for (const e of targets(x, y, r)) dealt += hit(pl, m, e, m.dmg * pl.atk * ratio, e.x - x, e.y - y);
+    propHits(pl, m, x, y, r, m.dmg * pl.atk * ratio);
+    return dealt;
+  }
+  function projectile(pl, m, a, ratio = 1, explosive = false) {
+    const v = vis(m), p = G.Projectiles.spawn({ x: pl.x + Math.cos(a) * 3, y: pl.y + Math.sin(a) * 3,
+      vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed, dmg: m.dmg * pl.atk * ratio * (explosive ? .2 : 1),
+      r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
+      hits: new Set(), vis: v, owner: pl, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
+      slow: m.slow || 0, knock: m.knock || 0, digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
+    if (explosive) { bombs.add(p); cap(); }
+    return p;
+  }
+  function line(pl, m, x, y, a, len, width, ratio = 1) {
+    const ca = Math.cos(a), sa = Math.sin(a);
+    for (let d = 8; d <= len; d += 8) if (G.World.isWall(x + ca * d, y + sa * d)) { len = d; break; }
+    G.FX.beam(x, y - G.LIFT, a, len, width, color(m), vis(m));
+    const mx = x + ca * len / 2, my = y + sa * len / 2;
+    for (const e of targets(mx, my, len / 2 + width)) {
+      const px = e.x - x, py = e.y - y, along = px * ca + py * sa;
+      if (along >= -e.r && along <= len + e.r && Math.abs(-px * sa + py * ca) <= width / 2 + e.r)
+        hit(pl, m, e, m.dmg * pl.atk * ratio, ca, sa);
+    }
+    const onBeam = p => { const px = p.x - x, py = p.y - y, along = px * ca + py * sa; return along >= -p.r && along <= len + p.r && Math.abs(-px * sa + py * ca) <= width / 2 + p.r; };
+    propHits(pl, m, mx, my, len / 2 + width, m.dmg * pl.atk * ratio, onBeam);
+  }
+  function sweep(pl, m, x, y, aim, radius, arc, ratio = 1) {
+    G.FX.slash(x, y - G.LIFT * .5, aim, radius, arc, color(m), vis(m));
+    for (const e of targets(x, y, radius)) {
+      const a = Math.atan2(e.y - y, e.x - x);
+      if (Math.abs(((a - aim + Math.PI * 3) % TAU) - Math.PI) <= arc / 2)
+        hit(pl, m, e, m.dmg * pl.atk * ratio, e.x - x, e.y - y);
+    }
+    propHits(pl, m, x, y, radius, m.dmg * pl.atk * ratio, p => Math.abs(((Math.atan2(p.y - y, p.x - x) - aim + Math.PI * 3) % TAU) - Math.PI) <= arc / 2);
+  }
+  function field(pl, m, kind, o = {}) { fields.push(Object.assign({ kind, owner: pl, world: G.World, m: cloneMove(m), x: pl.x, y: pl.y, t: 0, col: color(m), v: vis(m) }, o)); cap(); }
+  function emit(pl, m, aim = pl.aim) {
+    const mode = m.digiMode, a = aim, n = Math.max(1, m.count | 0), arc = m.arc || .8;
+    if (mode === 'shot') for (let i = 0; i < n; i++) projectile(pl, m, a + (n === 1 ? 0 : (i / (n - 1) - .5) * arc), 1, !!m.blastRadius);
+    else if (mode === 'nova') for (let i = 0; i < n; i++) projectile(pl, m, i * TAU / n, 1, !!m.blastRadius);
+    else if (mode === 'melee') { for (let i = 0; i < n; i++) { const f = { kind: 'combo', owner: pl, world: G.World, m: cloneMove(m), t: 0, delay: i * (m.burstInterval || .12), x: pl.x, y: pl.y, aim: a, col: color(m), v: vis(m) }; fields.push(f); } cap(); }
+    else if (mode === 'beam') line(pl, m, pl.x, pl.y, a, m.radius, m.width);
+    else if (mode === 'dash') {
+      let len = 0; for (let d = 8; d <= m.range; d += 8) { if (!G.World.isFree(pl.x + Math.cos(a) * d, pl.y + Math.sin(a) * d, pl.r * .8, true)) break; len = d; }
+      const sx = pl.x, sy = pl.y; pl.x += Math.cos(a) * len; pl.y += Math.sin(a) * len; G.World.collide(pl); pl.invuln = Math.max(pl.invuln || 0, .3);
+      for (const e of targets((sx + pl.x) / 2, (sy + pl.y) / 2, len / 2 + m.width)) { const dx = pl.x - sx, dy = pl.y - sy, t = Math.max(0, Math.min(1, ((e.x - sx) * dx + (e.y - sy) * dy) / (dx * dx + dy * dy || 1))); if (G.U.dist2(e.x, e.y, sx + dx * t, sy + dy * t) <= (m.width / 2 + e.r) ** 2) hit(pl, m, e, m.dmg * pl.atk, Math.cos(a), Math.sin(a)); }
+      G.FX.slash(pl.x, pl.y - G.LIFT * .5, a, 34, 2.2, color(m), vis(m));
+    } else if (mode === 'slam') { const x = pl.x + Math.cos(a) * m.range * .55, y = pl.y + Math.sin(a) * m.range * .55; G.FX.ring(x, y, 5, m.radius, color(m), .24, 3); area(pl, m, x, y, m.radius); }
+    else if (mode === 'gate') { const target = pl.target && !pl.target.dead && G.U.dist(pl.x, pl.y, pl.target.x, pl.target.y) <= m.range ? pl.target : G.Projectiles.nearest(targets(pl.x, pl.y, m.range), pl.x, pl.y, m.range); if (target) field(pl, m, 'gate', { x: target.x, y: target.y, life: m.fieldDuration || 4, tick: m.fieldTick || .7, phase: 0 }); }
+    else if (mode === 'aura') {
+      G.FX.ring(pl.x, pl.y, 4, m.radius, color(m), .28, 3);
+      const v=vis(m);
+      for(let i=0;i<12;i++) { const a=i*TAU/12; G.FX.sp(v.aura||v.proj||'star',v.pal,pl.x+Math.cos(a)*28,pl.y-G.LIFT+Math.sin(a)*20,{vx:Math.cos(a)*90,vy:Math.sin(a)*65,life:.6,scale:1}); }
+      const dealt = area(pl, m, pl.x, pl.y, m.radius); if (m.healFraction && dealt > 0) pl.heal(Math.min(dealt, pl.maxHp * m.healFraction));
+    }
+    else if (mode === 'blizzard') { sweep(pl, m, pl.x, pl.y, a, m.range, arc); field(pl, m, 'frost', { x: pl.x + Math.cos(a) * m.range * .65, y: pl.y + Math.sin(a) * m.range * .65, life: m.fieldDuration || 3, tick: m.fieldTick || .65, radius: m.blastRadius || m.radius }); }
+    else if (mode === 'dual') { const s = Object.assign({}, m, m.secondary || {}); line(pl, s, pl.x, pl.y, a, s.range || m.range, s.width || m.width, .55); sweep(pl, m, pl.x, pl.y, a, m.radius, m.arc || 2, .65); }
+  }
+  function cast(pl, move) { const m = cloneMove(move); if (!m || !m.digimonSkill || !m.digiMode) return false; if (m.charge > 0) field(pl, m, 'charge', { life: m.charge, aim: pl.aim, x: pl.x, y: pl.y }); else emit(pl, m); return true; }
+  function customUpdate(dt) {
+    for (let i = fields.length - 1; i >= 0; i--) {
+      const f = fields[i]; if (!valid(f)) { fields.splice(i, 1); continue; } f.t += dt;
+      if (f.kind === 'charge' && f.t >= f.life) { emit(f.owner, f.m, f.aim); fields.splice(i, 1); continue; }
+      if (f.kind === 'combo' && f.t >= f.delay) { sweep(f.owner, f.m, f.x, f.y, f.aim, f.m.radius, f.m.arc || 2, 1 / Math.max(1, f.m.count | 0)); fields.splice(i, 1); continue; }
+      if (f.kind === 'gate' || f.kind === 'frost') {
+        f.phase += dt; if (f.phase >= f.tick) { f.phase -= f.tick; const m = f.m;
+          for (const e of targets(f.x, f.y, f.kind === 'gate' ? m.radius : f.radius)) { if (f.kind === 'gate') { const boss = !!e.boss, dx = f.x - e.x, dy = f.y - e.y, k = boss ? .12 : (m.pull || .4); if (G.U.dist2(e.x, e.y, f.x, f.y) > 36) { e.kx += dx * k; e.ky += dy * k; } e.applySlow(Math.max(m.slow || 0, .25)); } else if (m.slow) e.applySlow(m.slow); hit(f.owner, m, e, m.dmg * f.owner.atk * .2, e.x - f.x, e.y - f.y); }
+        }
+      }
+      if (f.life && f.t >= f.life) fields.splice(i, 1);
+    }
+  }
+  function update(dt) { vanilla.updateFields(dt); customUpdate(dt); }
+  function draw(ctx, kinds) { const now = performance.now() / 1000; for (const f of fields) { if (!kinds.includes(f.kind) || !G.Camera.sees(f.x, f.y, 220)) continue; ctx.save(); if (f.kind === 'gate' || f.kind === 'frost' || f.kind === 'charge') { const r = f.kind === 'frost' ? f.radius : f.kind === 'gate' ? f.m.radius : 22; ctx.globalAlpha = f.kind === 'charge' ? .3 + .2 * Math.sin(now * 12) : .35; ctx.strokeStyle = f.col; ctx.lineWidth = 2; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.ellipse(f.x, f.y, r, r * .65, 0, 0, TAU); ctx.stroke(); if (f.kind === 'gate') G.VFX.draw(ctx, 'digi-gaia', 'holy', f.x, f.y - 5, { scale: 2, frame: Math.floor(now * 5) }); } ctx.restore(); } }
+  function clear(owner) { vanilla.clear(owner); for (let i = fields.length - 1; i >= 0; i--) if (!owner || fields[i].owner === owner) fields.splice(i, 1); for (const p of [...bombs]) if (!owner || p.owner === owner) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } }
+  C.tick = function(dt, pl, now) {
+    if (!pl || pl.dead) return vanilla.tick(dt, pl, now);
+    const original = pl.activeGroup; let custom = [];
+    if (original) { const group = original.call(pl); custom = group.filter(m => m && m.digimonSkill); if (!custom.length) return vanilla.tick(dt, pl, now); pl.activeGroup = function() { return original.call(this).filter(m => !m.digimonSkill); }; }
+    try { vanilla.tick(dt, pl, now); } finally { if (original) pl.activeGroup = original; }
+    for (const m of custom) { m.t -= dt; if (m.t > 0) continue; const target = pl.target; if (['shot','beam','melee','dash','slam','gate','blizzard','dual'].includes(m.digiMode) && (!target || target.dead || G.U.dist(pl.x, pl.y, target.x, target.y) > (m.range || m.radius || 520))) { m.t = .05; continue; } m.t = Math.max(.05, m.cd * pl.cdMul); const snapshot = cloneMove(m); pl.cast(m); if (G.Coop.active) G.Coop.cast(pl, m); m.castAt = performance.now(); cast(pl, snapshot); }
+  };
+  C.updateFields = update;
+  C.drawGroundFields = ctx => { vanilla.ground(ctx); draw(ctx, ['gate','frost','charge']); };
+  C.drawAirFields = ctx => {
+    vanilla.air(ctx);
+    for(const f of fields) {
+      if(!valid(f))continue;
+      if(f.kind==='charge') {
+        const progress=Math.min(1,f.t/Math.max(.01,f.life));
+        G.VFX.draw(ctx,f.v.proj||'ball',f.v.pal,f.owner.x,f.owner.y-f.owner.bodyH*.62,
+          {scale:.6+progress*1.5,frame:Math.floor(f.t*12),alpha:.6+progress*.4});
+      } else if(f.kind==='gate') {
+        const cx=f.x,cy=f.y-G.LIFT-28,spin=f.t*1.5;
+        ctx.save();
+        for(let i=0;i<30;i++) {const a=i*TAU/30+spin;ctx.fillStyle=G.VFX.PAL.holy[i%3+2];ctx.fillRect(Math.round((cx+Math.cos(a)*24)/2)*2,Math.round((cy+Math.sin(a)*43)/2)*2,4,4);}
+        ctx.restore();
+      } else if(f.kind==='frost') {
+        for(let i=0;i<7;i++){const a=i*TAU/7;G.VFX.draw(ctx,'shard','ice',f.x+Math.cos(a)*f.radius*.6,f.y-G.LIFT*.4+Math.sin(a)*f.radius*.45,{scale:.65,alpha:.55});}
+      }
+    }
+  };
+  C.clearFields = clear;
+  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); for (const p of [...bombs]) { const b = p.digiBomb, alive = G.Projectiles.all().includes(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || b.owner !== G.Game.player || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
+  // Native pixel additions; VFX's public tables are the same used by the cache.
+  G.VFX.PAL.holy = ['#786022','#b38a32','#e2c56b','#fff0b0','#fffdf0'];
+  G.VFX.PAL.blueflame = ['#133e70','#267ed1','#58c5ff','#b3f1ff','#fff'];
+  G.VFX.SHAPES['digi-fish'] = { w: 15, h: 11, frames: 2, dir: true, gen(P,f) { P.fill((x,y) => { const d = Math.abs(x - 8) / 5 + Math.abs(y - 5) / 3; return d < 1 ? (y < 5 ? 'l' : 'm') : null; }); P.set(f ? 3 : 4,4,'l'); P.set(1,5,'m'); P.set(2,6,'d'); P.set(10,3,'w'); P.outline(); } };
+  G.VFX.SHAPES['digi-missile'] = { w: 15, h: 7, dir: true, gen(P) { for(let x=1;x<11;x++) for(let y=2;y<5;y++) P.set(x,y,y===2?'l':'m'); P.set(11,3,'w'); P.set(0,1,'d'); P.set(0,5,'d'); P.outline(); } };
+  G.VFX.SHAPES['digi-feather'] = { w:15,h:9,dir:true,gen(P) {
+    P.line(1,6,13,3,'w');
+    for(let x=4;x<12;x++){P.line(x,5-(x-4)*.2,x-2,1,'l');P.line(x,5-(x-4)*.2,x-3,7,'m');}
+    P.outline();
+  } };
+  G.VFX.SHAPES['digi-gaia'] = { w: 15, h: 15, frames: 3, gen(P,f) { P.fill((x,y) => { const d=Math.hypot(x-7,y-7); return d<2?'w':d<4?'l':d<6?(f%2?'m':'d'):null; }); for(let i=0;i<4;i++){const a=i*Math.PI/2+f*.16;P.line(7+Math.cos(a)*3,7+Math.sin(a)*3,7+Math.cos(a)*6,7+Math.sin(a)*6,'m');} P.outline(); } };
+  const priorForMove = G.VFX.forMove;
+  G.VFX.forMove = m => { const v = priorForMove(m); return m && m.digimonSkill ? Object.assign(v, m.digiVis || {}) : v; };
+  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, update: customUpdate, clear, get activeEffects() { return fields; } });
+})();

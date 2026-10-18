@@ -1,0 +1,28 @@
+// Adventure main evolution lines. Branch/fusion rules below are local game rules.
+window.PS_DIGIMON_EVOLUTIONS = [
+  [20101, 'Greymon', '暴龍獸', 20001, 1, 'greymon', 'flamethrower', '超級火焰'],
+  [20102, 'MetalGreymon', '機械暴龍獸', 20001, 2, 'metalgreymon', 'heat-wave', '究極破壞砲'],
+  [20103, 'WarGreymon', '戰鬥暴龍獸', 20001, 3, 'wargreymon', 'heat-wave', '蓋亞能量砲'],
+  [20111, 'Garurumon', '加魯魯獸', 20002, 1, 'garurumon', 'flamethrower', '妖狐火焰'],
+  [20112, 'WereGarurumon', '獸人加魯魯獸', 20002, 2, 'weregarurumon', 'karate-chop', '凱撒銳爪'],
+  [20113, 'MetalGarurumon', '鋼鐵加魯魯獸', 20002, 3, 'metalgarurumon', 'ice-beam', '絕對冷凍氣'],
+  [20121, 'Birdramon', '巴多拉獸', 20003, 1, 'birdramon', 'ember', '隕石巨翼'],
+  [20122, 'Garudamon', '伽樓達獸', 20003, 2, 'garudamon', 'wing-attack', '影翼斬'],
+  [20123, 'Phoenixmon', '鳳凰獸', 20003, 3, 'phoenixmon', 'heat-wave', '星光爆破'],
+  [20131, 'Kabuterimon', '比多獸', 20004, 1, 'kabuterimon', 'thunderbolt', '米加巨砲'],
+  [20132, 'MegaKabuterimon', '超比多獸', 20004, 2, 'megakabuterimonred', 'thunderbolt', '超大角砲'],
+  [20133, 'HerculesKabuterimon', '力神比多獸', 20004, 3, 'herculeskabuterimon', 'discharge', '千兆爆破'],
+  [20141, 'Togemon', '仙人掌獸', 20005, 1, 'togemon', 'poison-sting', '尖尖碰碰拳'],
+  [20142, 'Lillymon', '花仙獸', 20005, 2, 'lillymon', 'water-gun', '花仙砲'],
+  [20143, 'Rosemon', '薔薇獸', 20005, 3, 'rosemon', 'vine-whip', '荊棘鞭'],
+  [20151, 'Ikkakumon', '海獅獸', 20006, 1, 'ikkakumon', 'water-gun', '魚叉機關砲'],
+  [20152, 'Zudomon', '祖頓獸', 20006, 2, 'zudomon', 'body-slam', '重槌火花'],
+  [20153, 'Vikemon', '維京獸', 20006, 3, 'vikemon', 'powder-snow', '極寒暴風雪'],
+  [20161, 'Angemon', '天使獸', 20007, 1, 'angemon', 'aura-sphere', '天堂之拳'],
+  [20162, 'MagnaAngemon', '神聖天使獸', 20007, 2, 'magnaangemon', 'psychic', '天國之門'],
+  [20163, 'Seraphimon', '究極天使獸', 20007, 3, 'seraphimon', 'aura-sphere', '七重天堂'],
+  [20172, 'Angewomon', '天女獸', 20008, 2, 'angewomon', 'psybeam', '神聖弓箭'],
+  [20173, 'Magnadramon', '聖龍獸', 20008, 3, 'holydramon', 'flamethrower', '神聖火焰'],
+  [20174, 'Ophanimon', '神聖天女獸', 20008, 3, 'ophanimon', 'dazzling-gleam', '伊甸園標槍'],
+  [20201, 'Omnimon', '奧米加獸', 20001, 4, 'omnimon', 'flash-cannon', '加魯魯砲']
+];
