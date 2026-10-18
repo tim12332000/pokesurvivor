@@ -2,6 +2,10 @@
 /*
 !/.gitignore
 !/digimon/
+!/naruto/
+!/naruto.js
+!/naruto-skills.js
+!/check_naruto.py
 /digimon/*
 !/digimon/pixel/
 !/digimon/README.md

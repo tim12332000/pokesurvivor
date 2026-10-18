@@ -181,9 +181,9 @@
   };
   const starterGrid = document.getElementById('starter-grid');
   new MutationObserver(() => {
-    if (starterGrid.children.length === G.STARTERS.length && !starterGrid.querySelector('.digimon-group-label')) {
+    if (starterGrid.querySelectorAll('.cell').length === G.STARTERS.length && !starterGrid.querySelector('.digimon-group-label')) {
       const heading = document.createElement('h3'); heading.className = 'digimon-group-label'; heading.textContent = '數碼寶貝';
-      starterGrid.insertBefore(heading, starterGrid.children[G.STARTERS.length - 8]);
+      starterGrid.insertBefore(heading, starterGrid.querySelectorAll('.cell')[G.STARTERS.findIndex(s => s.dex === 20001)]);
     }
   }).observe(starterGrid, { childList: true });
   document.querySelector('#scr-menu .logo .t2').textContent = '數碼寶貝 × 寶可夢 · 本地版';

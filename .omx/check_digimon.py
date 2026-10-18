@@ -37,8 +37,8 @@ with sync_playwright() as p:
     page.screenshot(path='.omx/digimon-picker.png', animations='disabled')
     page.locator('[data-digimon="20001"]').click()
     assert page.locator('#menu-partner-name').inner_text() == '亞古獸'
-    assert page.evaluate('G.DEX.length') == 999
-    assert page.evaluate('G.Gacha.BANNERS.length') == 10
+    assert page.evaluate('G.DEX.length') == 1007
+    assert page.evaluate('G.Gacha.BANNERS.length') == 11
     assert page.evaluate('G.MenuUI.GEN_NAMES[9]') == 'Digimon'
     assert page.evaluate('G.DB.mode') == 'local'
     assert not page.evaluate('G.DB.online')
@@ -46,15 +46,15 @@ with sync_playwright() as p:
     assert page.evaluate('G.DB.save.tickets.t1') == 1000000000
     page.locator('#scr-menu [data-go="dex"]').click()
     tabs = page.locator('#dex-gens .gen-tab')
-    assert tabs.count() == 10
-    tabs.last.click()
+    assert tabs.count() == 11
+    tabs.nth(9).click()
     assert page.locator('#dex-grid .cell').count() == 33
     assert page.locator('#dex-grid .locked').count() == 0
     page.screenshot(path='.omx/digimon-collection.png', animations='disabled')
     page.evaluate('G.MenuUI.open()')
     page.locator('#scr-menu [data-go="gacha"]').click()
     page.locator('#gacha-gens [data-gen="10"]').click()
-    assert page.locator('#gacha-gens .gen-tab').count() == 10
+    assert page.locator('#gacha-gens .gen-tab').count() == 11
     assert '數碼' in page.locator('#banner-title').inner_text()
     draws = page.evaluate('G.Gacha.pull(G.DB.save, 10, 10, "t10")')
     assert len(draws) == 10 and page.evaluate('(draws) => draws.every(x => G.Digimon.records.has(x.dex))', draws)
@@ -93,7 +93,7 @@ with sync_playwright() as p:
     page.locator('[data-digimon="20008"]').scroll_into_view_if_needed()
     page.locator('[data-digimon="20008"]').click()
     assert page.locator('#menu-partner-name').inner_text() == '迪路獸'
-    print(json.dumps({'partners': 8, 'generation_tabs': 10, 'combat_startups': 8,
+    print(json.dumps({'partners': 8, 'generation_tabs': 11, 'combat_startups': 8,
                       'gacha': 'passed', 'saved_partner': 20008, 'mobile_selection': 'passed',
                       'page_errors': errors, 'missing_resources': missing, 'cloud_requests': cloud}))
     browser.close()

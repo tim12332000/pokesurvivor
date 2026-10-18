@@ -1,0 +1,89 @@
+{
+  "records": [
+    {
+      "file": "team7.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/NarutoPON2_Team7OW.png",
+      "page": "https://spritedatabase.net/file/6745",
+      "sha256": "73f3c44b030a25578b8b4f391e22b5d4599494942a2a80f892d7e5c748cd356f",
+      "dimensions": [
+        636,
+        466
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "Please give credit"
+    },
+    {
+      "file": "team8.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/NPON2_Team8OW.png",
+      "page": "https://spritedatabase.net/file/8848",
+      "sha256": "ffe94e0e124b6db6c3858661b96b9ce5cedea872a3afc3435607ed1366bf8da1",
+      "dimensions": [
+        390,
+        680
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "Please give credit"
+    },
+    {
+      "file": "team-guy.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/TeamGuy.png",
+      "page": "https://spritedatabase.net/file/9046",
+      "sha256": "c5e4c969a0edb08d20966d626b7d9b5843ead043147667729976584de1f3ea22",
+      "dimensions": [
+        422,
+        544
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "Please give credit"
+    },
+    {
+      "file": "sand-siblings.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/SandSiblingsOW.png",
+      "page": "https://spritedatabase.net/file/9076",
+      "sha256": "65032054354a8063d55d281b3612a46c1b536f379bc49dfc7debcb9fd1e99d70",
+      "dimensions": [
+        628,
+        310
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "Please give credit"
+    },
+    {
+      "file": "itachi.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/Itachi.png",
+      "page": "https://spritedatabase.net/game/59",
+      "sha256": "2fd9c7295510fd4b3664a813c29a3f410c7bb0b29689e1e1dbffd8de720a1979",
+      "dimensions": [
+        606,
+        430
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "No credit needed (printed on original sheet)"
+    },
+    {
+      "file": "sasuke.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/Sasuke.png",
+      "page": "https://spritedatabase.net/game/59",
+      "sha256": "af2af294f54421b6f1dc32c803e1a71108ecaae35d139ef373a89da533a5be36",
+      "dimensions": [
+        487,
+        445
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "No credit needed (printed on original sheet)"
+    }
+  ],
+  "direction_limitation": "Six characters use original 4-direction overworld frames. Sasuke and Itachi use original side-facing battle idle poses; mirrored right and reused for vertical movement."
+}

@@ -29,10 +29,14 @@ assert len(pixel) == 33
 references = json.loads((root / '.omx/digimon/skills-reference.json').read_text(encoding='utf-8-sig'))
 assert len(references['records']) == 33
 (root / '.omx/digimon/skills-sources.js').write_text('window.PS_DIGIMON_SKILL_REFERENCES = ' + json.dumps(references) + ';\n', encoding='utf-8')
+naruto = json.loads((root / '.omx/naruto/sprites.json').read_text(encoding='utf-8-sig'))
+assert len(naruto) == 8
+(root / '.omx/naruto/sprites-data.js').write_text('window.PS_NARUTO_SPRITES = ' + json.dumps(naruto) + ';\n', encoding='utf-8')
 html = (root / 'dev.html').read_text(encoding='utf-8')
 html = html.replace('<head>', '<head>\n<base href="../">\n<script>window.PS_SANDBOX_KEY="ps.sandbox.digimon.v1";</script>', 1)
 main = '<script defer src="js/main.js"></script>'
 assert main in html
 html = html.replace(main, '<script defer src=".omx/unlimited.js"></script>\n<script defer src=".omx/digimon/pixel-data.js"></script>\n<script defer src=".omx/digimon.js"></script>\n<script defer src=".omx/digimon/evolutions-data.js"></script>\n<script defer src=".omx/digimon-evolution.js"></script>\n<script defer src=".omx/digimon-size.js"></script>\n<script defer src=".omx/digimon/skills-sources.js"></script>\n<script defer src=".omx/digimon-skills.js"></script>\n<script defer src=".omx/digimon-skill-combat.js"></script>\n' + main, 1)
+html = html.replace(main, '<script defer src=".omx/naruto/sprites-data.js"></script>\n<script defer src=".omx/naruto.js"></script>\n<script defer src=".omx/naruto-skills.js"></script>\n' + main, 1)
 (root / '.omx/digimon.html').write_text(html, encoding='utf-8')
 print('Created local Digimon edition entry')

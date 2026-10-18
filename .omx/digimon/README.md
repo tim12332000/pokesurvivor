@@ -46,6 +46,9 @@ cloud service is initialized.
 
 ## Signature skills
 
+The same site also includes a separate [Naruto section](../naruto/README.md)
+after Digimon, with eight playable ninja and ten adapted ninja skills.
+
 All 33 forms have a distinct signature profile, with five additional learnable
 skills, for 38 skills total. The picker includes a skill guide with gameplay
 descriptions and clickable official references for every form. See

@@ -22,15 +22,15 @@ for name in filter(None, tracked):
 html_path = OUT / '.omx/digimon.html'
 html = html_path.read_text(encoding='utf-8')
 html = re.sub(r'<!-- seo:begin -->.*?<!-- seo:end -->', '', html, flags=re.S)
-html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 數碼寶貝同人沙盒版</title>', html, flags=re.S)
+html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼寶貝 × 火影忍者</title>', html, flags=re.S)
 html = html.replace('<html lang="es">', '<html lang="zh-TW">')
-html = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="非官方數碼寶貝同人沙盒版，免費遊玩，存檔保存在此瀏覽器。">', html)
+html = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="寶可夢、數碼寶貝與火影忍者的非官方跨界沙盒版，免費遊玩，存檔保存在此瀏覽器。">', html)
 html_path.write_text(html, encoding='utf-8')
 (OUT / 'index.html').write_text('''<!doctype html>
 <html lang="zh-TW"><meta charset="utf-8"><meta name="robots" content="noindex">
 <meta http-equiv="refresh" content="0;url=.omx/digimon.html?lang=zh-TW">
-<title>PokéSurvivor 數碼寶貝同人沙盒版</title>
-<a href=".omx/digimon.html?lang=zh-TW">開啟數碼寶貝同人沙盒版</a></html>
+<title>PokéSurvivor 跨界同人沙盒版</title>
+<a href=".omx/digimon.html?lang=zh-TW">開啟寶可夢 × 數碼寶貝 × 火影忍者</a></html>
 ''', encoding='utf-8')
 (OUT / '.nojekyll').touch()
 assert not (OUT / 'CNAME').exists(), 'Never publish the upstream custom domain'
