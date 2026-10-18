@@ -6,12 +6,22 @@ available: Naruto, Sasuke, Sakura, Kakashi, Hinata, Rock Lee, Gaara and Itachi.
 Choosing a ninja uses the existing sandbox save without resetting the collection.
 Naruto characters do not use the Digimon evolution system.
 
-Ten adapted skills include eight character signatures and two shared ninja tools.
+Thirteen adapted skills include eight character signatures, two shared ninja tools
+and three additional area skills restricted to their respective characters.
 The in-game skill guide links each character to official Naruto source articles.
 Attack names and character identities are source-based; damage, ranges, cooldowns,
 type mappings and crowd-control effects are survival-game design choices. In
-particular, Lightning Blade's ranged beam and Sand Coffin's slowing sand projectile
-are gameplay adaptations rather than literal reproductions of the manga.
+particular, Lightning Blade's ranged beam and automated combo timings are gameplay
+adaptations rather than literal reproductions of the manga.
+
+Gaara's primary now sweeps a widening sand wave across enemies, briefly binds
+ordinary enemies (bosses resist), and erupts across the swept area once. It no
+longer fires a sand orb. Naruto can learn Rasenshuriken, Sasuke and Itachi can
+learn Fireball Jutsu, and Kakashi can learn Water Dragon. The latter three use
+area impacts, with real multi-target damage checks and character-specific pools.
+The [AoE audit](aoe-audit.md) records references and separates canon ability from
+the crossover's area, timeline and balance choices. Existing Sakura, Hinata and
+Rock Lee close-range attacks also have tested multi-target areas.
 
 ## Original artwork
 
@@ -45,6 +55,11 @@ Regenerate metadata and the shared entry with `python .omx/make_digimon.py`.
 Run `python .omx/check_naruto.py` for browser checks without a local HTTP server.
 Run `python .omx/check_naruto_animations.py` for source direction, frame timing,
 signature-animation checks and a labeled screenshot of all eight characters.
+Run `python .omx/check_gaara.py` for sand-wave phases, three spread targets plus
+outside controls, boss resistance, walls, cleanup, extra AoE ownership and range
+upgrades. The reusable `$naruto-survivor-skills` policy is tracked under
+`.codex/skills/naruto-survivor-skills/SKILL.md` and installed in the local Codex
+skills directory for future character work.
 Set `PAGES_LIVE=1` to check the deployed site instead. Tests require Python
 Playwright and the installed Windows Chrome, matching the other sandbox checks.
 

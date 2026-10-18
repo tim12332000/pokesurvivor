@@ -63,6 +63,41 @@
     propHits(pl, m, x, y, radius, m.dmg * pl.atk * ratio, p => Math.abs(((Math.atan2(p.y - y, p.x - x) - aim + Math.PI * 3) % TAU) - Math.PI) <= arc / 2);
   }
   function field(pl, m, kind, o = {}) { fields.push(Object.assign({ kind, owner: pl, world: G.World, m: cloneMove(m), x: pl.x, y: pl.y, t: 0, col: color(m), v: vis(m) }, o)); cap(); }
+  function inSand(f, e, front = f.m.range) {
+    const dx=e.x-f.x,dy=e.y-f.y,ca=Math.cos(f.aim),sa=Math.sin(f.aim);
+    const along=dx*ca+dy*sa,across=-dx*sa+dy*ca;
+    const radius=Number.isFinite(e.r)?e.r:0;
+    if(along<0||along>front+radius||Math.abs(across)>f.m.width*.5*(.4+.6*Math.min(1,along/f.m.range))+radius)return false;
+    const distance=Math.hypot(dx,dy);
+    for(let d=8;d<=distance;d+=8)if(G.World.isWall(f.x+dx*d/distance,f.y+dy*d/distance))return false;
+    return true;
+  }
+  function sandTargets(f, front = f.m.range) {
+    const len=f.m.range;
+    return [...new Set(targets(f.x+Math.cos(f.aim)*len*.5,f.y+Math.sin(f.aim)*len*.5,len*.5+f.m.width))].filter(e=>inSand(f,e,front));
+  }
+  function updateSand(f) {
+    const burst=f.t>=f.burstTime;
+    f.phase=burst?'burst':f.t>=f.flowDuration?'bind':'flow';
+    if(!burst) {
+      const front=f.m.range*Math.min(1,f.t/f.flowDuration);
+      for(const e of sandTargets(f,front)) {
+        if(!f.hits.has(e)) {
+          f.hits.add(e);f.victims.push(e);
+          hit(f.owner,f.m,e,f.m.dmg*f.owner.atk*.25,e.x-f.x,e.y-f.y,0);
+        }
+      }
+      for(const e of f.victims)if(!e.dead)e.applySlow(e.boss ? .35 : .95,.2);
+    } else if(!f.crushed) {
+      f.crushed=true;
+      // The whole swept area erupts, including enemies entering after the wave.
+      for(const e of sandTargets(f))hit(f.owner,f.m,e,f.m.dmg*f.owner.atk*.75,e.x-f.x,e.y-f.y,f.m.knock);
+      const ca=Math.cos(f.aim),sa=Math.sin(f.aim);
+      propHits(f.owner,f.m,f.x+ca*f.m.range*.5,f.y+sa*f.m.range*.5,f.m.range*.5+f.m.width,
+        f.m.dmg*f.owner.atk,p=>inSand(f,p));
+      G.Audio.sfx('hit');
+    }
+  }
   function emit(pl, m, aim = pl.aim) {
     const mode = m.digiMode, a = aim, n = Math.max(1, m.count | 0), arc = m.arc || .8;
     if (mode === 'shot') for (let i = 0; i < n; i++) projectile(pl, m, a + (n === 1 ? 0 : (i / (n - 1) - .5) * arc), 1, !!m.blastRadius);
@@ -77,6 +112,11 @@
       if (m.narutoSkill) { const v=vis(m); G.FX.sp(v.proj||'wind',v.pal,pl.x,pl.y-G.LIFT,{life:.35,scale:1.7}); }
     } else if (mode === 'slam') { const x = pl.x + Math.cos(a) * m.range * .55, y = pl.y + Math.sin(a) * m.range * .55; G.FX.ring(x, y, 5, m.radius, color(m), .24, 3); area(pl, m, x, y, m.radius); }
     else if (mode === 'gate') { const target = pl.target && !pl.target.dead && G.U.dist(pl.x, pl.y, pl.target.x, pl.target.y) <= m.range ? pl.target : G.Projectiles.nearest(targets(pl.x, pl.y, m.range), pl.x, pl.y, m.range); if (target) field(pl, m, 'gate', { x: target.x, y: target.y, life: m.fieldDuration || 4, tick: m.fieldTick || .7, phase: 0 }); }
+    else if (mode === 'sand-wave') {
+      const flowDuration=m.waveDuration||.65,bindDuration=m.bindDuration||.5;
+      field(pl,m,'sand-wave',{aim:a,flowDuration,bindDuration,burstTime:flowDuration+bindDuration,
+        life:flowDuration+bindDuration+.35,phase:'flow',hits:new Set(),victims:[],crushed:false});
+    }
     else if (mode === 'aura') {
       G.FX.ring(pl.x, pl.y, 4, m.radius, color(m), .28, 3);
       const v=vis(m);
@@ -92,6 +132,7 @@
       const f = fields[i]; if (!valid(f)) { fields.splice(i, 1); continue; } f.t += dt;
       if (f.kind === 'charge' && f.t >= f.life) { emit(f.owner, f.m, f.aim); fields.splice(i, 1); continue; }
       if (f.kind === 'combo' && f.t >= f.delay) { sweep(f.owner, f.m, f.x, f.y, f.aim, f.m.radius, f.m.arc || 2, 1 / Math.max(1, f.m.count | 0)); fields.splice(i, 1); continue; }
+      if (f.kind === 'sand-wave') updateSand(f);
       if (f.kind === 'gate' || f.kind === 'frost') {
         f.phase += dt; if (f.phase >= f.tick) { f.phase -= f.tick; const m = f.m;
           for (const e of targets(f.x, f.y, f.kind === 'gate' ? m.radius : f.radius)) { if (f.kind === 'gate') { const boss = !!e.boss, dx = f.x - e.x, dy = f.y - e.y, k = boss ? .12 : (m.pull || .4); if (G.U.dist2(e.x, e.y, f.x, f.y) > 36) { e.kx += dx * k; e.ky += dy * k; } e.applySlow(Math.max(m.slow || 0, .25)); } else if (m.slow) e.applySlow(m.slow); hit(f.owner, m, e, m.dmg * f.owner.atk * .2, e.x - f.x, e.y - f.y); }
@@ -108,14 +149,17 @@
     const original = pl.activeGroup; let custom = [];
     if (original) { const group = original.call(pl); custom = group.filter(m => m && m.digimonSkill); if (!custom.length) return vanilla.tick(dt, pl, now); pl.activeGroup = function() { return original.call(this).filter(m => !m.digimonSkill); }; }
     try { vanilla.tick(dt, pl, now); } finally { if (original) pl.activeGroup = original; }
-    for (const m of custom) { m.t -= dt; if (m.t > 0) continue; const target = pl.target; if (['shot','beam','melee','dash','slam','gate','blizzard','dual'].includes(m.digiMode) && (!target || target.dead || G.U.dist(pl.x, pl.y, target.x, target.y) > (m.range || m.radius || 520))) { m.t = .05; continue; } m.t = Math.max(.05, m.cd * pl.cdMul); const snapshot = cloneMove(m); pl.cast(m); if (G.Coop.active) G.Coop.cast(pl, m); m.castAt = performance.now(); cast(pl, snapshot); }
+    for (const m of custom) { m.t -= dt; if (m.t > 0) continue; const target = pl.target; if (['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode) && (!target || target.dead || G.U.dist(pl.x, pl.y, target.x, target.y) > (m.range || m.radius || 520))) { m.t = .05; continue; } m.t = Math.max(.05, m.cd * pl.cdMul); const snapshot = cloneMove(m); pl.cast(m); if (G.Coop.active) G.Coop.cast(pl, m); m.castAt = performance.now(); cast(pl, snapshot); }
   };
   C.updateFields = update;
-  C.drawGroundFields = ctx => { vanilla.ground(ctx); draw(ctx, ['gate','frost','charge']); };
+  C.drawGroundFields = ctx => { vanilla.ground(ctx); draw(ctx, ['gate','frost','charge']);
+    for(const f of fields)if(f.kind==='sand-wave'&&valid(f))G.NarutoSandVFX?.drawGround(ctx,f);
+  };
   C.drawAirFields = ctx => {
     vanilla.air(ctx);
     for(const f of fields) {
       if(!valid(f))continue;
+      if(f.kind==='sand-wave'){G.NarutoSandVFX?.drawAir(ctx,f);continue;}
       if(f.kind==='charge') {
         const progress=Math.min(1,f.t/Math.max(.01,f.life));
         G.VFX.draw(ctx,f.v.proj||'ball',f.v.pal,f.owner.x,f.owner.y-f.owner.bodyH*.62,
