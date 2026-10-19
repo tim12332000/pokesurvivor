@@ -1,5 +1,9 @@
 # PokéSurvivor · Mundo Misterioso
 
+本跨界修改版免費遊玩、非營利、無廣告、無付費內容。
+原始 PokéSurvivor 由 [JPTER78](https://github.com/JPTER78/pokesurvivor) 開發，感謝原作者的創作與分享。
+本網站為非官方修改版，保留原始授權與版權聲明；[原始版網站](https://pokesurvivor.com)。
+
 Bullet-heaven con Pokémon al estilo de Survivor.io y Megabonk, con sprites de
 *Pokémon Mundo Misterioso*, capa roguelike, **966 Pokémon de las 9 generaciones**,
 shinies y gacha por región. Música y efectos compuestos para el juego.

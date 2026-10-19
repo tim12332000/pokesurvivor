@@ -255,6 +255,9 @@ label { display: block; font-size: 14px; color: var(--muted); margin: 8px 0 4px;
 }
 .menu-right > :first-child { margin-top: auto; }
 .menu-right > :last-child { margin-bottom: auto; }
+.project-notice { margin: 0; padding: 10px 12px; border: 1px solid rgba(255,210,63,.45); border-radius: 8px; background: rgba(8,21,43,.92); font-size: 12px; line-height: 1.6; color: var(--muted); }
+.project-notice strong { color: var(--ink); }
+.project-notice a, .credits a { color: #9fd4ff; }
 /* Portátiles con poca altura: menú más compacto y, si hace falta, en dos columnas. */
 @media (max-height: 780px) and (min-height: 521px) {
   .menu-right { padding-top: 62px; gap: 10px; }
@@ -362,12 +365,6 @@ label { display: block; font-size: 14px; color: var(--muted); margin: 8px 0 4px;
   60% { box-shadow: 0 0 80px 40px var(--glow); transform: scale(1.15); }
   100% { box-shadow: 0 0 200px 120px transparent; transform: scale(0); opacity: 0; }
 }
-/* Mensaje de apoyo al acabar una partida (run-ui.js). */
-.support-ask { position: relative; margin-top: 4px; padding: 10px 34px 12px 12px; border-radius: 10px; text-align: center;
-  background: rgba(255,210,63,.08); border: 2px solid rgba(255,210,63,.45); }
-.support-ask p { margin: 0 0 8px; font-size: 13px; color: var(--ink); line-height: 1.35; }
-.support-ask .btn { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; }
-.support-ask .x { position: absolute; top: 4px; right: 6px; background: none; border: 0; color: var(--muted); font-size: 18px; cursor: pointer; padding: 2px 6px; }
 .pull-results { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 900px; }
 .pcard {
   width: 150px; padding: 10px 6px; text-align: center; border-radius: 12px;
@@ -783,9 +780,6 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
 .login-links { margin-top: 10px; font-size: 13px; text-align: center; }
 .login-links a { color: #9fd4ff; }
 
-/* ---------- apoyar el proyecto ---------- */
-#scr-support { z-index: 60; }
-.box.support { width: min(560px, 100%); }
 /* Mejoras: botones y veto */
 .upg-btns { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 .ban-picker { grid-column: 1 / -1; }
@@ -814,12 +808,6 @@ a.btn { text-decoration: none; display: inline-block; color: var(--ink); }
 .news-day ul { margin: 0; padding-left: 20px; }
 .news-day li { margin: 4px 0; line-height: 1.35; font-size: 15px; }
 @media (max-width: 760px) { .news-btn span { display: none; } }
-.sup-tab { width: 100%; border-collapse: collapse; margin: 6px 0 10px; font-size: 15px; }
-.sup-tab td { padding: 5px 4px; border-bottom: 1px solid rgba(255,255,255,.1); }
-.sup-tab td.num { text-align: right; white-space: nowrap; }
-.sup-tab tr.tot td { font-weight: 700; color: var(--gold); border-bottom: 0; }
-#btn-support span { margin-left: 2px; }
-@media (max-height: 520px) { #btn-support span { display: none; } }
 /* ============ Pokémon en móvil horizontal ============
  * La lista a la izquierda y la ficha (con "Elegir de compañero") a la derecha,
  * siempre a la vista: antes la ficha quedaba debajo de la lista y había que

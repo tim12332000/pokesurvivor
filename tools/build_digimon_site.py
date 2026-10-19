@@ -7,12 +7,20 @@ import subprocess
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist-digimon'
 OUT.mkdir(exist_ok=True)
+excluded = {'js/app.min.js', 'js/data/funding.js', 'js/ui/support-ui.js'}
+# Remove obsolete files from an existing local artifact as well as fresh CI builds.
+for name in excluded:
+    stale=OUT/name
+    assert stale.resolve().is_relative_to(OUT.resolve())
+    stale.unlink(missing_ok=True)
 tracked = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
 # New public runtime files must also be included in builds before a commit.
 public_new = subprocess.check_output(
     ['git', 'ls-files', '--others', '--exclude-standard', '-z', '--', 'assets', 'css', 'js'],
     cwd=ROOT).decode().split('\0')
 for name in filter(None, tracked + public_new):
+    if name in excluded:
+        continue
     path = Path(name)
     public = path.parts[0] in {'assets', 'css', 'js'}
     sandbox = name.startswith('.omx/') and (path.suffix in {'.js', '.css', '.html', '.png', '.json', '.md'})
@@ -34,7 +42,7 @@ html = re.sub(r'(<link\b(?=[^>]*\brel="stylesheet")[^>]*\bhref=")(?!https?://)([
 html = re.sub(r'<!-- seo:begin -->.*?<!-- seo:end -->', '', html, flags=re.S)
 html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼寶貝 × 火影忍者</title>', html, flags=re.S)
 html = html.replace('<html lang="es">', '<html lang="zh-TW">')
-html = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="寶可夢、數碼寶貝與火影忍者的非官方跨界沙盒版，免費遊玩，存檔保存在此瀏覽器。">', html)
+html = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="免費遊玩、非營利、無廣告、無付費內容。原作由 JPTER78 開發，感謝原作者；本網站為非官方跨界修改版。">', html)
 for source in re.findall(r'<(?:script|link)\b[^>]*(?:src|href)="([^"]+)"', html):
     if source.startswith(('js/', 'css/', '.omx/')):
         assert (OUT / source.split('?', 1)[0]).is_file(), f'Missing runtime script: {source}'

@@ -104,10 +104,12 @@ G.SettingsUI = (() => {
     } else if (tab === 'acc') {
       renderAccount(box);
     } else {
-      box.innerHTML = `<div class="about-logo">PokéSurvivor</div><p class="sub center">Versión ${esc(VERSION)}</p>`
-        + `<p class="sub">Juego de fans <b>gratuito y sin ánimo de lucro</b>: sin anuncios ni compras. Pokémon y sus personajes son propiedad de Nintendo, Creatures y GAME FREAK; este proyecto no está afiliado a ellos.</p>`
+      box.innerHTML = `<div class="about-logo">PokéSurvivor</div><p class="sub center">Versión ${esc(G.Naruto?.version||VERSION)}</p>`
+        + `<p id="about-free-notice" class="sub" translate="no"><b>免費遊玩、非營利</b>：無廣告、無付費內容。本網站為非官方跨界修改版。</p>`
+        + `<p class="sub" translate="no">寶可夢及相關角色屬 Nintendo、Creatures、GAME FREAK 等原權利人所有，本網站與其並無隸屬關係。</p>`
         + section('Créditos')
         + `<ul class="credits">
+             <li translate="no"><b>原始遊戲開發：</b><a href="${REPO}" target="_blank" rel="noopener noreferrer">JPTER78</a>。感謝原作者開發 PokéSurvivor 並分享專案，讓這個修改版得以延伸。</li>
              <li><b>Sprites:</b> PMD SpriteCollab y sus artistas (CC BY-NC 4.0).</li>
              <li><b>Datos de los Pokémon:</b> PokéAPI.</li>
              <li><b>Música y sonidos:</b> originales, generados por el propio juego.</li>
