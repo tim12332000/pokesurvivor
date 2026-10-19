@@ -8,10 +8,13 @@
 !/naruto-sand-vfx.js
 !/naruto-clones.js
 !/naruto-training.js
+!/naruto-support.js
+!/naruto-offense.js
 !/check_naruto.py
 !/check_naruto_animations.py
 !/check_gaara.py
 !/check_naruto_clones.py
+!/check_naruto_roster.py
 /naruto/*-animation-patch.json
 /digimon/*
 !/digimon/pixel/

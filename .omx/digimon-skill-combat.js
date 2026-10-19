@@ -12,11 +12,12 @@
   const vis = m => Object.assign({}, G.VFX.forMove(m), m.digiVis || {});
   const valid = f => f.owner && f.owner === G.Game.player && !f.owner.dead && f.owner.hp > 0 && f.world === G.World;
   const cap = () => { while (fields.length > CAP) fields.shift(); while (bombs.size > BOMB_CAP) bombs.delete(bombs.values().next().value); };
-  const targets = (x, y, r) => G.EnemyMgr.queryCircle(x, y, r).filter(e => !e.dead);
+  const targets = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
+  const techniqueFor = mode => [G.NarutoSupport,G.NarutoOffense].find(api=>api?.supports(mode));
   function hit(pl, m, e, base, dx, dy, knock = m.knock || 0) {
     if (!e || e.dead) return 0;
     const k = G.Types.mult(m.type, e.types) * G.Weather.mult(m.type), crit = pl.critChance > 0 && Math.random() < pl.critChance;
-    const dmg = base * k * (crit ? 1.5 : 1);
+    const dmg = base * k * (crit ? 1.5 : 1) * (m.narutoSkill ? G.NarutoSupport?.precisionMultiplier(pl,e)||1 : 1);
     e.hurt(dmg, color(m), dx, dy, knock, crit ? 'crit' : G.Types.label(G.Types.mult(m.type, e.types)));
     pl.onDealt(dmg); pl.dmgDealt += dmg;
     if (m.burn) e.applyBurn(m.burn); if (m.poison) e.applyPoison(m.poison); if (m.slow) e.applySlow(m.slow);
@@ -53,8 +54,13 @@
     const onBeam = p => { const px = p.x - x, py = p.y - y, along = px * ca + py * sa; return along >= -p.r && along <= len + p.r && Math.abs(-px * sa + py * ca) <= width / 2 + p.r; };
     propHits(pl, m, mx, my, len / 2 + width, m.dmg * pl.atk * ratio, onBeam);
   }
-  function sweep(pl, m, x, y, aim, radius, arc, ratio = 1) {
+  function sweep(pl, m, x, y, aim, radius, arc, ratio = 1, hand = 0) {
     G.FX.slash(x, y - G.LIFT * .5, aim, radius, arc, color(m), vis(m));
+    if(m.narutoSkill&&vis(m).melee==='naruto-lion') {
+      const ca=Math.cos(aim),sa=Math.sin(aim),side=hand||1;
+      G.FX.sp('naruto-lion',vis(m).pal,x+ca*27-sa*side*12,y-G.LIFT+sa*27+ca*side*12,
+        {vx:ca*110,vy:sa*110,life:.24,scale:1.4,angle:aim,fade:false});
+    }
     for (const e of targets(x, y, radius)) {
       const a = Math.atan2(e.y - y, e.x - x);
       if (Math.abs(((a - aim + Math.PI * 3) % TAU) - Math.PI) <= arc / 2)
@@ -127,12 +133,21 @@
     else if (mode === 'blizzard') { sweep(pl, m, pl.x, pl.y, a, m.range, arc); field(pl, m, 'frost', { x: pl.x + Math.cos(a) * m.range * .65, y: pl.y + Math.sin(a) * m.range * .65, life: m.fieldDuration || 3, tick: m.fieldTick || .65, radius: m.blastRadius || m.radius }); }
     else if (mode === 'dual') { const s = Object.assign({}, m, m.secondary || {}); line(pl, s, pl.x, pl.y, a, s.range || m.range, s.width || m.width, .55); sweep(pl, m, pl.x, pl.y, a, m.radius, m.arc || 2, .65); }
   }
-  function cast(pl, move) { const m = cloneMove(move); if (!m || !m.digimonSkill || !m.digiMode) return false; if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.cast(pl,m); if (m.charge > 0) field(pl, m, 'charge', { life: m.charge, aim: pl.aim, x: pl.x, y: pl.y }); else emit(pl, m); return true; }
+  function cast(pl, move) {
+    const m=cloneMove(move);
+    if(!m||!m.digimonSkill||!m.digiMode)return false;
+    if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.cast(pl,m);
+    const handler=techniqueFor(m.digiMode);
+    if(m.narutoSkill&&m.dmg>0&&!G.NarutoSupport?.supports(m.digiMode))m.dmg*=G.NarutoSupport?.takeAttackBonus(pl)||1;
+    if(handler)return handler.cast(pl,m);
+    if(m.charge>0)field(pl,m,'charge',{life:m.charge,aim:pl.aim,x:pl.x,y:pl.y});else emit(pl,m);
+    return true;
+  }
   function customUpdate(dt) {
     for (let i = fields.length - 1; i >= 0; i--) {
       const f = fields[i]; if (!valid(f)) { fields.splice(i, 1); continue; } f.t += dt;
       if (f.kind === 'charge' && f.t >= f.life) { emit(f.owner, f.m, f.aim); fields.splice(i, 1); continue; }
-      if (f.kind === 'combo' && f.t >= f.delay) { sweep(f.owner, f.m, f.x, f.y, f.aim, f.m.radius, f.m.arc || 2, 1 / Math.max(1, f.m.count | 0)); fields.splice(i, 1); continue; }
+      if (f.kind === 'combo' && f.t >= f.delay) { sweep(f.owner, f.m, f.x, f.y, f.aim, f.m.radius, f.m.arc || 2, 1 / Math.max(1, f.m.count | 0),Math.round(f.delay/(f.m.burstInterval||.12))%2?1:-1); fields.splice(i, 1); continue; }
       if (f.kind === 'sand-wave') updateSand(f);
       if (f.kind === 'gate' || f.kind === 'frost') {
         f.phase += dt; if (f.phase >= f.tick) { f.phase -= f.tick; const m = f.m;
@@ -150,7 +165,16 @@
     const original = pl.activeGroup; let custom = [];
     if (original) { const group = original.call(pl); custom = group.filter(m => m && m.digimonSkill); if (!custom.length) return vanilla.tick(dt, pl, now); pl.activeGroup = function() { return original.call(this).filter(m => !m.digimonSkill); }; }
     try { vanilla.tick(dt, pl, now); } finally { if (original) pl.activeGroup = original; }
-    for (const m of custom) { m.t -= dt; if (m.t > 0) continue; const target = pl.target; if (['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode) && (!target || target.dead || G.U.dist(pl.x, pl.y, target.x, target.y) > (m.range || m.radius || 520))) { m.t = .05; continue; } m.t = Math.max(.05, m.cd * pl.cdMul); const snapshot = cloneMove(m); pl.cast(m); if (G.Coop.active) G.Coop.cast(pl, m); m.castAt = performance.now(); const started=cast(pl, snapshot); if(m.digiMode==='shadow-clones'&&!started&&!G.NarutoClones?.actors.some(a=>a.owner===pl&&!a.dead))m.t=.25; }
+    for(const m of custom) {
+      m.t-=dt;if(m.t>0)continue;
+      const target=pl.target,handler=techniqueFor(m.digiMode);
+      if(handler?.canCast&&!handler.canCast(pl,m)){m.t=.15;continue;}
+      if(m.digiMode==='shadow-clones'&&!G.NarutoClones?.canCast(pl,m)){m.t=.15;continue;}
+      if(['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode)&&(!target||target.dead||G.U.dist(pl.x,pl.y,target.x,target.y)>(m.range||m.radius||520))){m.t=.05;continue;}
+      m.t=Math.max(.05,m.cd*pl.cdMul);const snapshot=cloneMove(m);
+      pl.cast(m);if(G.Coop.active)G.Coop.cast(pl,m);m.castAt=performance.now();
+      if(!cast(pl,snapshot))m.t=.25;
+    }
   };
   C.updateFields = update;
   C.drawGroundFields = ctx => { vanilla.ground(ctx); draw(ctx, ['gate','frost','charge']);

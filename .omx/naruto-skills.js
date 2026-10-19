@@ -40,9 +40,17 @@
     }
   };
 
+  G.VFX.SHAPES['naruto-lion'] = {
+    w:19,h:19,frames:2,dir:true,gen(P,frame){
+      P.fill((x,y)=>{const r=Math.hypot(x-9,y-9);return r<5?'m':r<7+((x+y+frame)%3===0)?'l':null;});
+      P.line(8,5,14,3,'w',1,'l'); P.line(8,13,14,15,'l',1,'m');
+      P.line(12,7,17,8,'l',1,'m'); P.line(12,11,16,12,'m',1,'d');
+      P.set(12,6,'w');P.set(13,6,'o');P.set(15,10,'w');P.outline();
+    }
+  };
   const profiles = [
     [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
-      mode: 'shadow-clones', type: 'fighting', cd: 10, dmg: 8, range: 240,
+      mode: 'shadow-clones', type: 'fighting', cd: 4, dmg: 8, range: 240,
       cloneDuration: 6, punchCd: .65, vis: { pal: 'naruto-blue' },
       desc: '召出 3 個會選敵、移動與出拳的影分身，存在 6 秒；受擊後化煙消散。技能 Lv.3 最多 4 個、Lv.5 最多 5 個。切換招式後現存分身仍會作戰；技能 Lv.3 起，使用螺旋丸可讓最多 2 個分身追加連擊。數量、時限與傷害皆為本作改編。',
       ups: [{t:'分身傷害 +20%',m:{dmg:1.2}},{t:'同時存在上限提高為 4，解鎖分身螺旋丸連擊',m:{}},
@@ -61,16 +69,16 @@
       desc: '朝前方地面重擊，引發圓形衝擊波，將近處敵人推開。'
     }],
     [30004, 'kakashi', '雷切', 'Lightning Blade', '01_1327', {
-      mode: 'beam', type: 'electric', cd: 1.1, dmg: 41, charge: .1,
-      range: 280, radius: 260, width: 26,
+      mode: 'dash', type: 'electric', cd: 1.3, dmg: 46, charge: .1,
+      range: 95, radius: 95, width: 32,
       vis: { beam: 'bolt', proj: 'bolt', pal: 'naruto-blue' },
-      desc: '集中雷遁打出狹長直線穿刺，可貫穿多名敵人，遇牆停止。'
+      desc: '集中雷遁後短距離突進穿刺，傷害衝刺路徑上的敵人；遇牆停止，不是遠距雷射。'
     }],
-    [30005, 'hinata', '柔步雙獅拳', 'Gentle Step Twin Lion Fists', '01_2199', {
-      mode: 'melee', type: 'fighting', cd: .82, dmg: 40, count: 2, burstInterval: .12,
-      range: 118, radius: 94, arc: 1.85, knock: 45,
+    [30005, 'hinata', '柔拳', 'Gentle Fist', '01_1668', {
+      mode: 'melee', type: 'fighting', cd: .72, dmg: 30, count: 3, burstInterval: .08,
+      range: 100, radius: 78, arc: 1.5, knock: 15,
       vis: { melee: 'impact', proj: 'fire', pal: 'naruto-blue' },
-      desc: '以雙拳打出兩段近身查克拉攻擊；總傷害分攤於左右兩拳。'
+      desc: '向前連打三掌近身查克拉攻擊，總傷害分攤於三掌；維持狹窄、快速的近戰定位，不借用寧次的回天。'
     }],
     [30006, 'lee', '木葉旋風', 'Leaf Whirlwind', '01_1489', {
       mode: 'melee', type: 'fighting', cd: .86, dmg: 37,
@@ -85,10 +93,11 @@
       vis: { pal: 'naruto-sand' },
       desc: '前方寬扇形砂浪掃過多名敵人，造成 25% 傷害，再短暫束縛並以整片砂地壓葬造成 75% 傷害。束縛期間普通敵人減速 95%、首領減速 35%。官方遊戲的砂浪與追加區域攻擊為參考；自動銜接壓葬、比例與範圍為本作改編。'
     }],
-    [30008, 'itachi', '月讀', 'Tsukuyomi', '01_1287', {
-      mode: 'aura', type: 'psychic', cd: 1.9, dmg: 38, radius: 156, slow: .78,
+    [30008, 'itachi', '月讀', 'Tsukuyomi', '01_1316', {
+      mode: 'single-illusion', type: 'psychic', cd: 3.6, dmg: 30, range: 260,
+      fieldDuration: 1.5, slow: .9, bossSlow: .25,
       vis: { proj: 'ring', aura: 'ring', pal: 'naruto-red' },
-      desc: '展開紅色幻術波動，傷害並減速身邊敵人；群體範圍為本作控場改編，並非聲稱原作月讀可同時控制整群。'
+      desc: '鎖定一名可見敵人施加紅色幻術，造成一次精神傷害並短暫減速；首領抗性較高。這是單體控制，不會直接消滅整群。'
     }]
   ];
   const shared = [
@@ -134,9 +143,94 @@
       source_url: 'https://naruto-official.com/en/news/01_2665'
     }]
   ];
-  const kinds = { dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff' };
+  extra.push(
+    ['naruto-sharingan', [30002], {
+      name:'寫輪眼預判', mode:'sharingan', type:'psychic', cd:12, dmg:0,
+      range:180, fieldDuration:3, nextDamageMul:1.25, dodge:1,
+      vis:{pal:'naruto-red'},
+      desc:'附近有敵人時開眼預判，短暫準備一次閃避，並強化下一次攻擊；不會在安全空地反覆浪費冷卻。加成與時限為本作改編。',
+      source_url:'https://naruto-official.com/en/news/01_1296'
+    }],
+    ['naruto-medical-heal', [30003], {
+      name:'醫療忍術', mode:'medical-heal', type:'fairy', cd:7, dmg:0, healFraction:.22,
+      vis:{pal:'grass'}, desc:'受傷時為自己恢復最大生命的 22%；滿血不消耗冷卻。回復量為本作改編，不能使倒下角色復活。',
+      source_url:'https://naruto-official.com/en/news/01_1743'
+    }],
+    ['naruto-regeneration', [30003], {
+      name:'創造再生', mode:'regeneration', type:'fairy', cd:18, dmg:0,
+      fieldDuration:5, healFraction:.045,
+      vis:{pal:'grass'}, desc:'受傷時短暫持續自癒，每秒恢復最大生命的 4.5%，持續 5 秒；有長冷卻，不提供無限生命或復活。此招屬小櫻後期能力。',
+      source_url:'https://naruto-official.com/en/news/01_1743'
+    }],
+    ['naruto-earth-wall', [30004], {
+      name:'土遁・土流壁', mode:'earth-wall', type:'ground', cd:9, dmg:0,
+      fieldDuration:3, width:100, range:72,
+      vis:{pal:'naruto-sand'}, desc:'面對附近敵人升起短暫土牆，阻擋敵方接觸與飛行攻擊；不修改地圖格子，不阻擋玩家移動，也不永久封路。',
+      source_url:'https://naruto-official.com/en/news/01_2541'
+    }],
+    ['naruto-twin-lions', [30005], {
+      name:'柔步雙獅拳', mode:'melee', type:'fighting', cd:1.25, dmg:52,
+      count:2, burstInterval:.14, radius:100, range:125, arc:1.9, knock:35,
+      vis:{melee:'naruto-lion',pal:'naruto-blue'},
+      desc:'雙拳凝聚獅形查克拉，先後打出兩段較強的前方近戰；總傷害分攤於兩拳。屬雛田後期能力，不等同全周圍回天。',
+      source_url:'https://naruto-official.com/en/news/01_2199'
+    }],
+    ['naruto-byakugan', [30005], {
+      name:'白眼偵察', mode:'byakugan', type:'psychic', cd:10, dmg:0,
+      fieldDuration:5, radius:280, damageMul:1.2,
+      vis:{pal:'naruto-blue'}, desc:'附近有敵人時短暫標記周圍敵人，強化柔拳與柔步雙獅拳的近身精準傷害；不把拳擊改成全圖遠距離攻擊。',
+      source_url:'https://naruto-official.com/en/news/01_1668'
+    }],
+    ['naruto-lotus', [30006], {
+      name:'表蓮華', mode:'lotus', type:'fighting', cd:3, dmg:70,
+      range:145, radius:60, windup:.25, liftDuration:.35,
+      vis:{pal:'grass'}, desc:'選定近身敵人，踢起後短暫滯空，再以落地重擊收尾；首領不會被完整浮空。落地小範圍衝擊為本作改編。',
+      source_url:'https://naruto-official.com/en/news/01_1652'
+    }],
+    ['naruto-gates', [30006], {
+      name:'八門遁甲強化', mode:'gates', type:'fighting', cd:15, dmg:0,
+      fieldDuration:5, atkMul:1.3, speedMul:1.2, fatigueDuration:2, fatigueSpeedMul:.8,
+      vis:{pal:'grass'}, desc:'附近有敵人時短暫提升攻擊 30% 與移速 20%，結束後疲勞 2 秒、移速降低 20%；不可疊加或藉切換技能繞過疲勞。本版只採部分開門強化。',
+      source_url:'https://naruto-official.com/en/news/01_1652'
+    }],
+    ['naruto-sand-coffin', [30007], {
+      name:'砂縛柩・砂瀑送葬', mode:'sand-coffin', type:'ground', cd:3.5, dmg:80,
+      range:280, fieldDuration:1.1, slow:.95, bossSlow:.3,
+      vis:{pal:'naruto-sand'}, desc:'以砂包住一名敵人，短暫束縛後壓縮造成一次傷害；首領僅受較弱減速，不是無條件即死。與流砂瀑流的群攻分工不同。',
+      source_url:'https://naruto-official.com/en/news/01_1555'
+    }],
+    ['naruto-sand-shield', [30007], {
+      name:'砂之盾', mode:'sand-shield', type:'ground', cd:12, dmg:0,
+      fieldDuration:8, shieldAmount:45, range:180,
+      vis:{pal:'naruto-sand'}, desc:'危險接近時形成可吸收 45 傷害的砂盾，最長 8 秒；盾量耗盡會消失，不能疊加成永久無敵。',
+      source_url:'https://naruto-official.com/en/news/01_1555'
+    }],
+    ['naruto-black-flames', [30008], {
+      name:'天照', mode:'black-flames', type:'fire', cd:4.8, dmg:12,
+      range:280, radius:80, fieldDuration:3, fieldTick:.5, maxFields:2,
+      vis:{pal:'naruto-red'}, desc:'在鎖定敵人腳下留下有限時間的黑炎區域，傷害踏入範圍的敵人；最多同時兩片。持續時間、可閃避範圍與傷害為遊戲平衡改編。',
+      source_url:'https://naruto-official.com/en/news/01_1316'
+    }]
+  );
+  const kinds = { dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
+    sharingan:'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'sand-shield':'buff',
+    lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor' };
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
+
+  function supportUps(design) {
+    const power = design.healFraction != null ? {healFraction:design.healFraction*1.2}
+      : design.shieldAmount != null ? {shieldAmount:design.shieldAmount*1.2}
+      : design.nextDamageMul != null ? {nextDamageMul:1.35}
+      : design.damageMul != null ? {damageMul:1.3}
+      : design.atkMul != null ? {atkMul:1.4} : {width:1.2};
+    return [
+      {t:'冷卻 -10%',m:{cd:.9}},
+      {t:design.fieldDuration ? '持續時間增加' : '回復量增加',m:design.fieldDuration ? {fieldDuration:design.fieldDuration*1.2} : {healFraction:design.healFraction*1.15}},
+      {t:design.healFraction != null ? '回復量提高' : design.shieldAmount != null ? '護盾量提高' : design.mode==='earth-wall' ? '牆體寬度提高' : '強化效果提高',m:power},
+      {t:'冷卻再減少 10%',m:{cd:.9}}
+    ];
+  }
 
   function register(id, design) {
     const definition = {
@@ -144,17 +238,18 @@
       radius: 140, range: 480, width: 24, homing: 0, knock: 0, burn: 0, poison: 0, slow: 0,
       ...design, id, kind: kinds[design.mode], digimonSkill: true, narutoSkill: true,
       digiMode: design.mode, digiVis: design.vis || {}, maxLvl: 5,
-      ups: design.ups || [
+      ups: design.ups || (design.dmg === 0 ? supportUps(design) : [
         { t: '傷害 +20%', m: { dmg: 1.2 } },
         { t: '冷卻 -10%', m: { cd: .9 } },
         { t: '攻擊範圍與持續時間 +12%', m: {
           radius: 1.12, width: 1.12, life: 1.12,
           // The base upgrade system assigns unknown fields instead of multiplying them.
           ...(design.range != null ? { range: design.range * 1.12 } : {}),
-          ...(design.blastRadius != null ? { blastRadius: design.blastRadius * 1.12 } : {})
+          ...(design.blastRadius != null ? { blastRadius: design.blastRadius * 1.12 } : {}),
+          ...(design.fieldDuration != null ? {fieldDuration:design.fieldDuration*1.12} : {})
         } },
         { t: '傷害 +25%', m: { dmg: 1.25 } }
-      ]
+      ])
     };
     delete definition.mode;
     delete definition.vis;
@@ -201,7 +296,7 @@
   guide.id = 'scr-naruto-skills';
   guide.className = 'scr dim hidden';
   guide.translate = false;
-  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；範圍、突進、減速、傷害、冷卻及自動連段為本遊戲改編。此跨界版可混用角色後期忍術，不代表原作相同造型、時期已掌握。中文名稱採常見譯名。每位忍者皆可學習苦無與手裏劍，專屬範圍技限定對應角色。</p><div class="naruto-skill-entries"></div></div>';
+  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。每位忍者有三招特色技能，另可學共通忍具：苦無投擲、手裏劍散射。Lv.3、Lv.6 起保證出現兩招特色技能選項；角色招式池互不混用。控制與輔助招式不等同範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   for (const [dex, definition] of byDex) {
     const record = G.Naruto.records.get(dex), reference = references.get(dex);
     const item = document.createElement('article');
@@ -211,7 +306,7 @@
     const description = document.createElement('p');
     description.textContent = definition.desc;
     const stats = document.createElement('small');
-    stats.textContent = `冷卻 ${definition.cd} 秒 · 基礎傷害 ${definition.dmg} · 可升至 Lv.5`;
+    stats.textContent = `冷卻 ${definition.cd} 秒 · ${definition.dmg ? '基礎傷害 '+definition.dmg : '輔助技能'} · 可升至 Lv.5`;
     const source = document.createElement('a');
     source.href = reference.source_url;
     source.target = '_blank';
@@ -221,11 +316,11 @@
     for (const id of extraPools.get(dex) || []) {
       const move = definitions.get(id);
       const heading = document.createElement('h4');
-      heading.textContent = `可學範圍忍術 · ${move.name}`;
+      heading.textContent = `可學忍術 · ${move.name}`;
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = `冷卻 ${move.cd} 秒 · 基礎傷害 ${move.dmg}${move.blastRadius ? ' · 爆發半徑 '+move.blastRadius : ''} · 可升至 Lv.5`;
+      extraStats.textContent = `冷卻 ${move.cd} 秒 · ${move.dmg ? '基礎傷害 '+move.dmg : '輔助技能'}${move.blastRadius ? ' · 爆發半徑 '+move.blastRadius : ''} · 可升至 Lv.5`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';

@@ -19,6 +19,8 @@ description: 設計或修正 PokéSurvivor 跨界版本的火影忍者角色、�
 
 - 角色／動畫：`.omx/naruto.js`、`.omx/naruto/sprites.json`；原始素材來源與雜湊在 `.omx/naruto/sources.json`。
 - 技能／圖鑑：`.omx/naruto-skills.js`。共用戰鬥擴充在 `.omx/digimon-skill-combat.js`；新機制應沿用傷害、敵人狀態、碰撞與場景清除規則。
+- 輔助、防禦、暫時加成在 `.omx/naruto-support.js`；單體控制與持續地面技在 `.omx/naruto-offense.js`。清場時必須連同暫時屬性與碰撞一起還原。
+- 固定角色學習選項在 `.omx/naruto-training.js`；額外起始技能的抽選發生在開局流程切換為 playing 之前，也必須遵守角色等級限制。滿槽替換要保留技能群組參照與按鍵綁定。
 - `.omx/make_digimon.py` 產生入口與素材資料；`tools/build_digimon_site.py` 僅打包 Git 已追蹤的執行檔。
 - 動作要核對原圖的朝向與鏡射。原圖存在攻擊／結印影格時接上實際動畫，不能只讓站姿晃動。缺少原始方向或動作時註明，不宣稱完整動畫。
 

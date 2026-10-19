@@ -31,7 +31,7 @@ with sync_playwright() as p:
     page.screenshot(path=str(ROOT/'.omx/naruto-picker.png'),animations='disabled')
     page.locator('#naruto-skill-guide').click()
     assert page.locator('.naruto-skill-entry').count()==8
-    assert page.locator('.naruto-skill-entry a[href^="https://naruto-official.com/"]').count()==13
+    assert page.locator('.naruto-skill-entry a[href^="https://naruto-official.com/"]').count()==24
     page.screenshot(path=str(ROOT/'.omx/naruto-guide.png'),animations='disabled')
     page.locator('#naruto-skills-close').click()
     page.locator('[data-naruto="30001"]').click()
@@ -39,7 +39,7 @@ with sync_playwright() as p:
     report=page.evaluate('''() => {
       const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
       assert(G.MenuUI.GEN_NAMES.length===11&&G.Gacha.BANNERS.length===11,'Section registration');
-      assert(G.NarutoSkillCatalog.definitions.size===14,'Skill registry');
+      assert(G.NarutoSkillCatalog.definitions.size===25,'Skill registry');
       const pixels=[];
       for(const r of G.Naruto.records.values()) {
         assert(G.startMoveOf(r.dex)===r.start,'Starter signature '+r.dex);
@@ -85,6 +85,7 @@ with sync_playwright() as p:
       const results=[];
       try {
         for(const def of G.NarutoSkillCatalog.definitions.values()) {
+          if(def.dmg===0)continue; // Support behavior has dedicated roster checks.
           G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();pl.x=pl.y=0;pl.aim=0;pl.hp=pl.maxHp;pl.dead=false;pl.critChance=0;
           const targets=[[60,0],[110,10],[160,-15]].map(([x,y])=>{
             const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},x,y,{hp:1,spd:1,dmg:1});e.types=['normal'];G.EnemyMgr.add(e);return e;

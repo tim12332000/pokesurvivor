@@ -1,13 +1,15 @@
-// Naruto's signature choices remain available without changing other characters.
+// Each ninja learns their own two signature choices at fixed milestones.
 (() => {
-  const milestones=[{level:3,id:'naruto-naruto'},{level:6,id:'naruto-rasenshuriken'}];
+  const milestonesFor = dex => (G.NarutoSkillCatalog.extraPools.get(dex) || [])
+    .map((id,index)=>({level:index===0?3:6,id}));
   let startingRun=false;
   const startRun=G.Game.startRun;
   G.Game.startRun=function(...args){startingRun=true;try{return startRun.apply(this,args);}finally{startingRun=false;}};
   const poolFor=G.Moves.poolFor;
   G.Moves.poolFor=mon=>{
     const ids=poolFor(mon),player=G.Game.player;
-    if(mon.dex!==30001||mon!==player?.mon||(G.Game.state==='ui'&&!startingRun))return ids;
+    if(!mon.naruto||mon!==player?.mon||(G.Game.state==='ui'&&!startingRun))return ids;
+    const milestones=milestonesFor(mon.dex);
     return ids.filter(id=>!milestones.some(m=>m.id===id&&player.level<m.level));
   };
   function replacement(player) {
@@ -19,7 +21,7 @@
     if(player.slots.length>=player.maxMoves&&!swap)return null;
     const previousId=swap?.id;
     return {w:100,type:'new',key:'new:'+def.id,icon:'move:'+def.id,color:G.U.TYPE_COLOR[def.type],
-      tag:'鳴人特色招式',title:def.name,
+      tag:`${player.mon.chinese||player.mon.name}特色招式`,title:def.name,
       desc:(swap?`替換「${swap.name}」。`:'')+def.desc,
       apply:p=>{
         if(p.hasMove(def.id))return false;
@@ -34,7 +36,8 @@
   const offer=G.LevelUp.offer;
   G.LevelUp.offer=(player,n=3)=>{
     const cards=offer(player,n);
-    if(player.dex!==30001)return cards;
+    if(!player.mon?.naruto)return cards;
+    const milestones=milestonesFor(player.mon.dex);
     const guaranteed=milestones.filter(m=>player.level>=m.level&&!player.hasMove(m.id)&&!player.banned?.has(m.id))
       .map(m=>signatureCard(player,m)).filter(Boolean).slice(0,n);
     const keys=new Set(guaranteed.map(c=>c.key));

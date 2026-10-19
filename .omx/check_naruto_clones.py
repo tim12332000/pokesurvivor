@@ -41,10 +41,18 @@ with sync_playwright() as p:
       try {
         assert(pl.moves[0].id==='naruto-shadow-clones','Wrong Naruto starting move');
         setup();assert(cast(1)&&A.actors.length===3,'Initial three clones');
+        assert(G.Moves.BY_ID['naruto-shadow-clones'].cd===4,'Clone cooldown was not shortened');
         assert(A.actors.every(a=>!(a instanceof G.Player)&&!a.moves&&!a.slots),'Clones became full players');
         step(1);const old=A.actors.map(a=>({id:a.id,age:a.age}));cast(1);
         assert(A.actors.length===3&&old.every(x=>A.actors.find(a=>a.id===x.id).age===x.age),'Recast refreshed TTL');
         cast(3);assert(A.actors.length===4,'Level3 cap');cast(5);cast(5);assert(A.actors.length===5,'Level5 cap');
+        setup();let summons=0;const originalCast=pl.cast;
+        pl.cast=function(m){summons++;return originalCast.call(this,m);};
+        try {
+          for(let t=0;t<6.4;t+=1/60){G.Combat.tick(1/60,pl,t);G.Combat.updateFields(1/60);}
+          assert(summons===2&&A.actors.length===3&&A.actors.every(a=>a.age<.5),'Full-cap poll wasted cooldown or spammed casting');
+        }finally{delete pl.cast;}
+        cast(5);
         pl.addMove('naruto-naruto');assert(A.actors.length===5,'Slot switch dismissed clones');
         step(7.2);assert(A.actors.length===0,'Inactive clones survived their TTL');
         const enemies=setup([[120,0],[90,95],[-75,100]]);cast(1);const before=A.actors.map(a=>[a.x,a.y]);

@@ -6,8 +6,8 @@ available: Naruto, Sasuke, Sakura, Kakashi, Hinata, Rock Lee, Gaara and Itachi.
 Choosing a ninja uses the existing sandbox save without resetting the collection.
 Naruto characters do not use the Digimon evolution system.
 
-Fourteen adapted skills include eight character signatures, two shared ninja tools
-and four additional character skills restricted to their respective characters.
+Twenty-five adapted skills cover three character techniques per ninja, with
+Fireball shared only by Sasuke and Itachi, plus two common ninja tools.
 The in-game skill guide links each character to official Naruto source articles.
 Attack names and character identities are source-based; damage, ranges, cooldowns,
 type mappings and crowd-control effects are survival-game design choices. In
@@ -30,10 +30,12 @@ choose nearby enemies and punch; they share the owner's damage credit and never
 become extra players, collect rewards or write saves. Normal pursuers can be
 distracted by a closer clone; bosses retain their target. Contact or hostile
 projectile hits disperse a clone with smoke. Initial lifetime is six seconds and
-cooldown ten seconds. Skill level three raises the cap to four and enables the
+cooldown four seconds. Skill level three raises the cap to four and enables the
 Rasengan follow-up; level four extends lifetime to seven seconds; level five
 raises the cap to five. Recasting fills vacancies without refreshing existing
-lifetimes. Switching slots keeps existing clones until they expire.
+lifetimes. While at the cap, the active skill polls for a vacancy without wasting
+a new four-second cooldown or repeatedly replaying Charge. Switching slots keeps
+existing clones until they expire.
 
 Character level three guarantees a Rasengan learning choice, and level six a
 Rasenshuriken choice. When four slots are full, the card explicitly offers to
@@ -50,6 +52,46 @@ pause and scene cleanup. Original ability reference:
 https://naruto-official.com/en/news/01_1423 . Actor counts, automatic behavior,
 timing and damage budgets are this game's adaptation. Multiplayer replication of
 clone actors is not implemented in this guest-only edition.
+
+## Completed eight-character kits
+
+| Character | Starting technique | Character level 3 choice | Character level 6 choice |
+| --- | --- | --- | --- |
+| Naruto | Multi Shadow Clone | Rasengan | Rasenshuriken |
+| Sasuke | Chidori | Fireball | Sharingan prediction |
+| Sakura | Cherry Blossom Impact | Medical ninjutsu | Regeneration |
+| Kakashi | Short-range Lightning Blade | Water Dragon | Earth Wall |
+| Hinata | Gentle Fist | Twin Lion Fists | Byakugan |
+| Rock Lee | Leaf Whirlwind | Forward Lotus | Inner Gates |
+| Gaara | Sand Tsunami / burial | Sand Coffin / burial | Sand Shield |
+| Itachi | Single-target Tsukuyomi | Fireball | Amaterasu |
+
+Each role retains the four-slot choice system and can decline a learning card.
+When full, an explicit card can replace a shared ninja tool in place, retaining
+its key binding. Extra-starting-move perks cannot bypass character level gates.
+Cooldowns and effect details are available in the source-backed in-game guide.
+
+Healing is capped at maximum health and suppressed when full; regeneration has
+five timed ticks. Sharingan provides one dodge and one offensive-cast bonus.
+Byakugan marks visible nearby threats and improves close-range precision. Gates
+temporarily compose attack/speed multipliers, then fatigue, preserving concurrent
+level-up gains. Sand Shield absorbs a finite damage budget and locks on break.
+Earth Wall intercepts hostile swept projectiles and repels ordinary enemies;
+friendly shots and the player can pass, and no permanent map tile is changed.
+
+Lotus launches ordinary targets and gives other nearby enemies a smaller landing
+impact; bosses resist launch. Sand Coffin captures one target, then damages it
+once. Tsukuyomi prioritizes one visible elite, with reduced boss control. Amaterasu
+creates up to two finite black-flame circles, ticking once per half second for
+three seconds. All effects use simulation time and are cleared on run changes.
+`naruto-support.js` and `naruto-offense.js` extend the existing engine rather than
+replacing core player, room-provider or transport code.
+
+Run `python .omx/check_naruto_roster.py` for eight isolated kits, level gates,
+healing, defense, buffs, single-target control, real AoE budgets, wall geometry,
+expiry, cleanup and startup. Multiplayer adapter regression is checked with
+`node tools/test_multiplayer.js`; replication of these custom techniques remains
+a separate verification gap. Extended gameplay balance is still provisional.
 
 ## Original artwork
 

@@ -5,6 +5,8 @@
   let serial = 0;
   const valid = a => a.owner === G.Game.player && !a.owner.dead && a.owner.hp > 0 && a.world === G.World;
   const living = owner => actors.filter(a => !a.dead && a.owner === owner && valid(a));
+  const limitOf = move => Math.min(5,(move.lvl||1)>=5?5:(move.lvl||1)>=3?4:3);
+  const canCast = (owner,move) => owner===G.Game.player&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move);
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
   const nearby = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
   function clearPath(ax, ay, bx, by, radius = 0) {
@@ -30,7 +32,7 @@
   }
   function cast(owner, move) {
     if (owner !== G.Game.player || owner.dead || owner.hp <= 0 || owner.mon?.dex !== 30001) return false;
-    const lvl = move.lvl || 1, limit = Math.min(5, lvl >= 5 ? 5 : lvl >= 3 ? 4 : 3);
+    const lvl = move.lvl || 1, limit = limitOf(move);
     let count = living(owner).length, spawned = false;
     for (let ring = 0; ring < 3 && count < limit; ring++) for (let n = 0; n < 12 && count < limit; n++) {
       const angle = n % limit * TAU / limit + Math.floor(n / limit) * .18 + ring * .22, radius = 56 + ring * 18;
@@ -190,5 +192,5 @@
   C.drawGroundFields = function(ctx) { oldGround.call(this, ctx); ground(ctx); };
   C.clearFields = function(owner) { clearFields.call(this, owner); clear(owner); };
   if (G.DigimonSkills?.clear) { const previous = G.DigimonSkills.clear; G.DigimonSkills.clear = owner => { previous(owner); clear(owner); }; }
-  G.NarutoClones = { cast, update, draw, clear, combo, get actors() { return actors; } };
+  G.NarutoClones = { cast, canCast, update, draw, clear, combo, get actors() { return actors; } };
 })();
