@@ -85,7 +85,7 @@
       if(!record)return super.draw(ctx,x,y,opts);
       if(!record.ready)return;
       const pixel=record.pixel;
-      const pose=frameFor(record,this.cur,this.dir,this.frame);
+      const pose=G.NarutoChidori?.poseFor(this)||frameFor(record,this.cur,this.dir,this.frame);
       const [sx,sy,sw,sh]=pose.rect;
       const ui=previews.has(ctx.canvas);
       const target=ui?Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75):64*this.scale;
@@ -96,7 +96,7 @@
       if(pose.mirror)ctx.scale(-1,1);
       if(this.cur==='Faint'&&!pose.action)ctx.scale(1,.45);
       ctx.drawImage(opts.flash?G.Sprites.white(record.image):record.image,sx,sy,sw,sh,
-        -Math.round(sw*k/2),-Math.round(sh*k),Math.round(sw*k),Math.round(sh*k));
+        -Math.round((pose.anchor?.[0]??sw/2)*k),-Math.round((pose.anchor?.[1]??sh)*k),Math.round(sw*k),Math.round(sh*k));
       ctx.restore();
     }
   };

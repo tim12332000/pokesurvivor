@@ -1640,7 +1640,22 @@
         ]
       }
     },
-    "animationNote": "Attack and Perform Jutsu are separate original four-frame rows. Shoot uses the original Perform Jutsu sequence; Charge retains that sequence for charge/channel animation. Hurt and Faint use their genuine three-frame rows."
+    "animationNote": "Attack and Perform Jutsu are separate original four-frame rows. Shoot uses the original Perform Jutsu sequence; Charge retains that sequence for charge/channel animation. Hurt and Faint use their genuine three-frame rows.",
+    "chidori": {
+      "chargeFrames": [
+        { "rect": [93, 371, 30, 45], "anchor": [15, 45] },
+        { "rect": [132, 372, 78, 70], "anchor": [26, 44] },
+        { "rect": [218, 371, 80, 65], "anchor": [39, 45] }
+      ],
+      "dashFrame": {
+        "rect": [252, 108, 48, 39],
+        "anchor": [24, 39],
+        "hand": [45, 14]
+      },
+      "mirror": ["left"],
+      "sourceNote": "Naruto: Path of the Ninja 2, Nintendo DS; Sasuke sheet ripped by Hwdphg. Three bottom-row Charging Chidori poses: one preparation pose and two original lightning poses. Dash reuses the genuine final forward-thrust Attack frame because this sheet has no Chidori running or up/down frames.",
+      "boundsNote": "All three charge rects are exact connected foreground bounds, excluding the arrow and label. Anchors are crop-local character center/feet, aligned to source y=416 rather than the lower lightning edges. The dash hand is crop-local. Standard Charge/Shoot metadata is unchanged."
+    }
   },
   "itachi": {
     "file": "itachi.png",

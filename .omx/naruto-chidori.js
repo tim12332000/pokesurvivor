@@ -95,8 +95,20 @@
     const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m,pl),attack:pl.atk,hitCount:0,lastTarget:null,dashes:0,trail:0,
       origin:{x:pl.x,y:pl.y},camera:{x:G.Camera.x,y:G.Camera.y},
       speed:config.speed,retargetDelay:config.retargetDelay,phase:'charge',wait:Math.max(0,m.charge||0)};
-    if(!next(c))return false;
+    const first=next(c);if(!first)return false;
+    pl.aim=Math.atan2(first.y-pl.y,first.x-pl.x);
     chain=c;pl.svx=pl.svy=0;holdCamera(c);return true;
+  }
+  function poseFor(animator){
+    const c=chain;
+    if(!valid(c)||c.owner.anim!==animator)return null;
+    const source=G.Naruto.records.get(30002).pixel.chidori;
+    if(!source)return null;
+    const charging=c.phase==='charge',duration=Math.max(.001,c.move.charge||0);
+    const index=Math.min(source.chargeFrames.length-1,Math.floor(Math.max(0,1-c.wait/duration)*source.chargeFrames.length));
+    const frame=charging?source.chargeFrames[index]:source.dashFrame;
+    const dir=G.Sprites.dirFromAngle(c.owner.aim),direction=['down','right','right','right','up','left','left','left'][dir];
+    return {...frame,direction,mirror:source.mirror.includes(direction),action:true};
   }
   // Flight immunity never overwrites independent timers, including lava's reset.
   const hurt=G.Player.prototype.hurt, playerUpdate=G.Player.prototype.update;
@@ -123,7 +135,11 @@
   const clearSkills=G.DigimonSkills.clear;
   G.DigimonSkills.clear=function(owner){clearSkills(owner);clear(owner);};
   C.drawAirFields=function(ctx){oldAir.call(this,ctx);if(valid(chain)&&['dash','return'].includes(chain.phase)){
-    const p=chain.owner;G.VFX.draw(ctx,'bolt','naruto-blue',p.x+Math.cos(p.aim)*18,p.y-G.LIFT+Math.sin(p.aim)*18,{scale:1.25,angle:p.aim,frame:Math.floor(performance.now()/65)});
+    const p=chain.owner,pose=poseFor(p.anim),stand=G.Naruto.records.get(30002).pixel.frames.down[0];
+    const k=64*p.anim.scale/stand[3],mirror=pose?.mirror?-1:1;
+    const x=pose?.hand?p.x+(pose.hand[0]-pose.anchor[0])*k*mirror:p.x+Math.cos(p.aim)*18;
+    const y=pose?.hand?p.y+(pose.hand[1]-pose.anchor[1])*k:p.y-G.LIFT+Math.sin(p.aim)*18;
+    G.VFX.draw(ctx,'bolt','naruto-blue',x,y,{scale:1.25,angle:p.aim,frame:Math.floor(performance.now()/65)});
   }};
-  G.NarutoChidori={config,limitOf,supports:mode=>mode==='chidori-chain',canCast,cast,clear,update,get active(){return chain;}};
+  G.NarutoChidori={config,limitOf,poseFor,supports:mode=>mode==='chidori-chain',canCast,cast,clear,update,get active(){return chain;}};
 })();

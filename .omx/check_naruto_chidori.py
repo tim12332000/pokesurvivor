@@ -27,6 +27,27 @@ with sync_playwright() as p:
         return Array.from({length:n},(_,i)=>{const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},100+i*100,0,{hp:1,spd:1,dmg:1});e.types=['normal'];const hurt=e.hurt;e.hurt=function(damage,...args){hitEvents.push({enemy:e,damage});return hurt.call(this,damage,...args);};G.EnemyMgr.add(e);return e;});}
       function cast(){const m=G.Moves.instance('naruto-sasuke');assert(G.DigimonSkills.cast(pl,m),'cast rejected');return m;}
       function step(t){for(let i=0;i<Math.ceil(t*240);i++)G.Combat.updateFields(1/240);}
+      setup(2);cast();
+      const art=G.Naruto.records.get(30002).pixel.chidori,sourceCrops=[];
+      const review=document.createElement('canvas');review.id='chidori-source-review';review.width=960;review.height=240;
+      const rc=review.getContext('2d');rc.fillStyle='#28384d';rc.fillRect(0,0,960,240);rc.fillStyle='#fff';rc.font='14px sans-serif';
+      for(let i=0;i<3;i++){
+        if(i)G.Combat.updateFields(.031);
+        const pose=A.poseFor(pl.anim);assert(pose.rect.join()===art.chargeFrames[i].rect.join(),'wrong original charge frame '+i);
+        const cv=document.createElement('canvas');cv.width=cv.height=160;
+        const ctx=cv.getContext('2d'),originalDraw=ctx.drawImage;let crop,feet;
+        ctx.drawImage=function(image,sx,sy,sw,sh,dx,dy,dw,dh){crop=[sx,sy,sw,sh];feet=dy+pose.anchor[1]*(64*pl.anim.scale/44);return originalDraw.apply(this,arguments)};
+        pl.anim.draw(ctx,80,110);assert(crop.join()===pose.rect.join(),'renderer ignored source pose');assert(Math.abs(feet)<.51,'charge feet shift with lightning bounds');sourceCrops.push(crop);
+        rc.drawImage(cv,i*160,0);rc.fillText('Charge '+(i+1),i*160+40,150);
+      }
+      const preview=new G.Sprites.Animator(30002);assert(A.poseFor(preview)===null,'charge pose leaked into another Sasuke preview');
+      pl.aim=Math.PI;assert(A.poseFor(pl.anim).mirror,'left charge not mirrored');pl.anim.draw(rc,560,110);rc.fillText('Charge left',520,150);
+      G.Combat.updateFields(.029);assert(A.active.phase==='dash','charge timing changed');
+      pl.aim=0;assert(A.poseFor(pl.anim).rect.join()===art.dashFrame.rect.join(),'dash uses generic casting pose');pl.anim.draw(rc,720,110);rc.fillText('Dash right',680,150);
+      pl.aim=Math.PI;assert(A.poseFor(pl.anim).mirror,'left dash not mirrored');pl.anim.draw(rc,880,110);rc.fillText('Dash left',840,150);
+      review.style.cssText='position:fixed;left:0;top:0;z-index:30000';document.body.append(review);
+      A.clear();assert(A.poseFor(pl.anim)===null,'source pose remains after clear');
+      report.sourceAnimation={chargeFrames:sourceCrops,dash:art.dashFrame.rect,mirror:'left only',anchors:'fixed character feet',scope:'active owner only'};
       setup(20);assert(G.DigimonSkills.cast(pl,G.Moves.instance('naruto-sasuke',5)),'acceleration cast rejected');
       G.Combat.updateFields(.09);
       const measuredSpeeds=[],turnDelays=[];
@@ -147,6 +168,8 @@ with sync_playwright() as p:
       }finally{G.Combat.clearFields();pl.activeGroup=oldGroup;pl.moves=oldMoves;pl.cdMul=oldCd;}
       Object.assign(G.World,orig);Object.assign(G.Camera,camera);return report;
     }''')
+    page.locator('#chidori-source-review').screenshot(path=str(ROOT/'.omx/chidori-original-frames.png'))
+    page.evaluate("document.getElementById('chidori-source-review').remove()")
     capture=r'''() => {
       const pl=G.Game.player;G.Combat.clearFields();G.EnemyMgr.clear();G.FX.clear();
       pl.x=pl.y=0;pl.hp=pl.maxHp;pl.dead=false;pl.flash=0;pl.invuln=0;pl.aim=0;
