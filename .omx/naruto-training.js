@@ -1,7 +1,7 @@
-// Each ninja learns their own two signature choices at fixed milestones.
+// Each ninja learns signature choices at their explicit or default milestones.
 (() => {
   const milestonesFor = dex => (G.NarutoSkillCatalog.extraPools.get(dex) || [])
-    .map((id,index)=>({level:index===0?3:6,id}));
+    .map((id,index)=>({level:G.Moves.BY_ID[id].learnLevel||(index===0?3:6),id}));
   let startingRun=false;
   const startRun=G.Game.startRun;
   G.Game.startRun=function(...args){startingRun=true;try{return startRun.apply(this,args);}finally{startingRun=false;}};

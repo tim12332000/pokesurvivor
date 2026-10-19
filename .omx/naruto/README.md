@@ -6,7 +6,8 @@ available: Naruto, Sasuke, Sakura, Kakashi, Hinata, Rock Lee, Gaara and Itachi.
 Choosing a ninja uses the existing sandbox save without resetting the collection.
 Naruto characters do not use the Digimon evolution system.
 
-Twenty-five adapted skills cover three character techniques per ninja, with
+Twenty-six adapted skills cover three character techniques per ninja, with
+Naruto also learning a fourth technique, the Nine-Tails Chakra Cloak,
 Fireball shared only by Sasuke and Itachi, plus two common ninja tools.
 The in-game skill guide links each character to official Naruto source articles.
 Attack names and character identities are source-based; damage, ranges, cooldowns,
@@ -42,7 +43,7 @@ than performing the summoning seal themselves. Death and scene changes cancel
 pending summons. Quantity upgrades still fill immediately.
 
 Character level three guarantees a Rasengan learning choice, and level six a
-Rasenshuriken choice. When four slots are full, the card explicitly offers to
+Rasenshuriken choice; level nine adds the Chakra Cloak. When four slots are full, the card explicitly offers to
 replace a shared kunai/shuriken slot rather than removing a character skill.
 Players may decline. The original Rasengan move ID is preserved. Switching to
 learned Rasengan, Rasenshuriken, Kunai or Shuriken lets existing clones use that
@@ -150,10 +151,46 @@ const config = Object.freeze({ perPick: 1, maxPicks: 20 });
 | Gaara | Sand Tsunami / burial | Sand Coffin / burial | Sand Shield |
 | Itachi | Single-target Tsukuyomi | Fireball | Amaterasu |
 
+Naruto has an additional guaranteed level 9 choice: Nine-Tails Chakra Cloak.
+
 Each role retains the four-slot choice system and can decline a learning card.
 When full, an explicit card can replace a shared ninja tool in place, retaining
 its key binding. Extra-starting-move perks cannot bypass character level gates.
 Cooldowns and effect details are available in the source-backed in-game guide.
+
+## 九尾查克拉外衣（紅色一尾）
+
+新增鳴人限定的 `naruto-nine-tails-cloak`，角色 Lv.9 起出現在三選一。
+滿四槽時可替換苦無或手裏劍，沿用原槽位與按鍵；不自動刪除已學的特色忍術。
+學會後切到該技能，附近有威脅才會自動施放；再切回螺旋丸或其他技能，外衣仍會維持。
+
+| 基礎設定 | 效果 |
+| --- | --- |
+| `cd: 18` | 冷卻 18 秒，受玩家冷卻加成影響；外衣存在時不能重複施放 |
+| `fieldDuration: 8` | 持續 8 秒，切換技能不取消 |
+| `atkMul: 1.5` / `speedMul: 1.25` | 攻擊 +50%、移速 +25%；與已選的強化相乘 |
+| `damageTakenMul: .75` | 一般受擊傷害乘 0.75；保留屬性、減傷、無敵時間與真實傷害規則 |
+| `radius: 76` / `pulseInterval: .65` | 每 0.65 秒反擊有效範圍內全部敵人，遇牆阻擋 |
+| `pulseDamage: 12` / `knock: 18` | 每次反擊基礎傷害 12、普通敵人擊退 18；首領擊退降為 5 |
+
+所有平衡值與升級表集中在 `.omx/naruto-skills.js` 的同名技能定義。
+`learnLevel: 9` 控制學習門檻。技能升級依序改為：持續 9 秒、攻擊 +65%、移速 +35%、
+冷卻減少 15% 且持續 10 秒。支援模組的安全界限目前為持續最多 12 秒、
+攻擊倍率最多 1.8、移速倍率最多 1.5、一般傷害倍率最低 0.5；超出時須同步檢查測試。
+
+影分身沿用本體當前攻擊，因此外衣期間的拳擊與模仿招式也會受益；
+分身不會各自施放外衣或追加全周反擊。外觀固定一尾，屬於造型而非「數量增幅」的攻擊數量。
+到期、死亡、場景或技能效果重設會移除外衣與加成，不覆寫永久升級。
+暫停會凍結動畫與效果時間。視覺為程式繪製的像素查克拉、尾巴、狐耳及氣泡，
+保留原始角色 PNG、臉部與行走／攻擊影格。
+
+依據：[官方終末之谷回顧](https://naruto-official.com/en/news/01_1296)
+明確描述外衣提升速度、以查克拉反擊並抵擋攻擊，附有少年鳴人紅色查克拉外衣畫面。
+本版採紅色一尾外衣，不混同後期金色九尾查克拉模式；
+全周定時反擊、加成、冷卻與持續時間皆為生存遊戲改編。
+
+執行 `python .omx/check_naruto_cloak.py` 驗證學習、換槽、加成、三目標反擊、
+範圍／牆體、死亡與到期清除、暫停及實際遊戲畫面。
 
 Healing is capped at maximum health and suppressed when full; regeneration has
 five timed ticks. Sharingan provides one dodge and one offensive-cast bonus.

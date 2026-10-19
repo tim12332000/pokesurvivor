@@ -1,4 +1,15 @@
 {
+  "techniqueReferences": [
+    {
+      "id": "naruto-nine-tails-cloak",
+      "owner": "Naruto Uzumaki",
+      "url": "https://naruto-official.com/en/news/01_1296",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "referenceImage": "https://cmsapi-frontend.naruto-official.com/site/api/naruto/Image/get?path=%2Fnaruto%2Fjp%2Fnews%2F2022%2F10%2F17%2FBYOTc1iASab9eSiA%2F071.jpg",
+      "canonBasis": "Final Valley red chakra cloak increases speed, counterattacks with chakra and shields Naruto from Sasuke's fire jutsu.",
+      "adaptation": "Fixed one-tail procedural pixel cloak, temporary attack/speed/defense multipliers and periodic circular counterattack. Numeric balance, level 9 unlock, cooldown and duration are game-specific; not golden Nine-Tails Chakra Mode. Original sprite sheets unchanged."
+    }
+  ],
   "animationReferences": [
     {
       "character": "naruto",

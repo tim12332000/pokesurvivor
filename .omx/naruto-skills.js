@@ -127,6 +127,18 @@
       desc: '投出四刃旋轉查克拉手裏劍，命中後爆發風刃並傷害周圍敵人。此為鳴人後期習得的忍術，本跨界版可學；不代表少年造型在原作當時已會使用。爆發半徑、傷害與冷卻為遊戲改編。',
       source_url: 'https://naruto-official.com/en/news/01_1423'
     }],
+    ['naruto-nine-tails-cloak', [30001], {
+      name:'九尾查克拉外衣', mode:'nine-tails-cloak', type:'fighting', cd:18, dmg:0, learnLevel:9,
+      fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75,
+      radius:76, pulseDamage:12, pulseInterval:.65, knock:18,
+      vis:{pal:'naruto-red'},
+      desc:'鳴人 Lv.9 可學。紅色一尾外衣持續 8 秒：攻擊 +50%、移速 +25%、一般傷害 -25%，每 0.65 秒反擊近身敵人。切換招式後仍有效，不能疊加。數值與範圍為本作改編。',
+      ups:[{t:'外衣持續時間 → 9 秒',m:{fieldDuration:9}},
+        {t:'外衣攻擊加成 → +65%',m:{atkMul:1.65}},
+        {t:'外衣移速加成 → +35%',m:{speedMul:1.35}},
+        {t:'冷卻 -15%、持續時間 → 10 秒',m:{cd:.85,fieldDuration:10}}],
+      source_url:'https://naruto-official.com/en/news/01_1296'
+    }],
     ['naruto-fireball', [30002, 30008], {
       name: '火遁・豪火球之術', mode: 'shot', type: 'fire', cd: 2.3, dmg: 49,
       speed: 300, life: 1.4, size: 19, range: 420, blastRadius: 95, burn: .12,
@@ -213,7 +225,7 @@
     }]
   );
   const kinds = { dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
-    sharingan:'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'sand-shield':'buff',
+    sharingan:'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor' };
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();

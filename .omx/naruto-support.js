@@ -2,7 +2,7 @@
 (() => {
   if (G.NarutoSupport) return;
   const C = G.Combat, effects = [], locks = [], TAU = Math.PI * 2;
-  const modes = new Set(['medical-heal', 'regeneration', 'sharingan', 'byakugan', 'gates', 'sand-shield', 'earth-wall']);
+  const modes = new Set(['medical-heal', 'regeneration', 'sharingan', 'byakugan', 'gates', 'sand-shield', 'earth-wall', 'nine-tails-cloak']);
   const defaults = {
     'medical-heal': { healFraction: .22, fieldDuration: .5 },
     regeneration: { fieldDuration: 5, healFraction: .045 },
@@ -10,7 +10,8 @@
     byakugan: { fieldDuration: 5, radius: 280, damageMul: 1.2 },
     gates: { fieldDuration: 5, atkMul: 1.3, speedMul: 1.2, fatigueDuration: 2, fatigueSpeedMul: .8 },
     'sand-shield': { fieldDuration: 8, shieldAmount: 45, cd: 12 },
-    'earth-wall': { fieldDuration: 3, width: 100, range: 72 }
+    'earth-wall': { fieldDuration: 3, width: 100, range: 72 },
+    'nine-tails-cloak': { fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75, radius:76, pulseDamage:12, pulseInterval:.65, knock:18 }
   };
   const valid = f => f.owner === G.Game.player && f.world === G.World && !f.owner.dead && f.owner.hp > 0;
   const active = (owner, mode) => effects.find(f => f.owner === owner && f.mode === mode && valid(f));
@@ -39,6 +40,7 @@
   function canCast(owner, move) {
     const mode = move?.digiMode;
     if (!modes.has(mode) || owner !== G.Game.player || owner.dead || owner.hp <= 0 || !owner.mon?.naruto) return false;
+    if (mode === 'nine-tails-cloak' && owner.mon.dex !== 30001) return false;
     if (active(owner, mode) || locks.some(f => f.owner === owner && f.mode === mode && valid(f))) return false;
     if (mode === 'medical-heal') return owner.hp < owner.maxHp;
     if (mode === 'regeneration') return owner.hp < owner.maxHp * .8;
@@ -57,7 +59,7 @@
     if (mode === 'sand-shield') f.shield = f.capacity = Math.max(1, finite(m.shieldAmount, 45));
     if (mode === 'earth-wall') { const p = wallPosition(owner, m); if (!p) return false; Object.assign(f, p); }
     effects.push(f);
-    owner.anim?.play('Charge');
+    owner.anim?.play(mode === 'nine-tails-cloak' ? 'Idle' : 'Charge');
     return true;
   }
   function clear(owner) {
@@ -78,9 +80,11 @@
     const descriptor = Object.getOwnPropertyDescriptor(G.Player.prototype, key);
     if (!descriptor?.get) continue;
     Object.defineProperty(G.Player.prototype, key, { ...descriptor, get() {
-      const value = descriptor.get.call(this), buff = active(this, 'gates'), fatigue = active(this, 'gates-fatigue');
-      if (buff) return value * (key === 'atk' ? Math.min(1.6, finite(buff.m.atkMul, 1.3)) : Math.min(1.5, finite(buff.m.speedMul, 1.2)));
-      return key === 'spd' && fatigue ? value * Math.max(.5, Math.min(1, finite(fatigue.m.fatigueSpeedMul, .8))) : value;
+      let value = descriptor.get.call(this);
+      const buff = active(this, 'gates'), fatigue = active(this, 'gates-fatigue'), cloak = active(this, 'nine-tails-cloak');
+      if (buff) value *= key === 'atk' ? Math.min(1.6, finite(buff.m.atkMul, 1.3)) : Math.min(1.5, finite(buff.m.speedMul, 1.2));
+      else if (key === 'spd' && fatigue) value *= Math.max(.5, Math.min(1, finite(fatigue.m.fatigueSpeedMul, .8)));
+      return cloak ? value * (key === 'atk' ? Math.min(1.8,finite(cloak.m.atkMul,1.5)) : Math.min(1.5,finite(cloak.m.speedMul,1.25))) : value;
     } });
   }
   function breakShield(f) {
@@ -91,6 +95,8 @@
   const hurt = G.Player.prototype.hurt;
   G.Player.prototype.hurt = function(amount, type = null, pure = false) {
     if (this !== G.Game.player || this.invuln > 0 || this.dead || this.frozen || !(amount > 0) || pure) return hurt.call(this, amount, type, pure);
+    const cloak = active(this, 'nine-tails-cloak');
+    if (cloak) amount *= Math.max(.5,Math.min(1,finite(cloak.m.damageTakenMul,.75)));
     const eye = active(this, 'sharingan');
     if (eye?.dodges > 0) {
       eye.dodges--; this.invuln = Math.max(this.invuln || 0, .16);
@@ -152,6 +158,21 @@
       const delta = Math.min(dt, Math.max(0, f.ttl - f.age)); f.age += dt;
       if (f.mode === 'regeneration') { f.tick += delta; while (f.tick >= 1 - 1e-9) { f.tick -= 1; f.owner.heal(f.owner.maxHp * Math.min(.08, Math.max(0, finite(f.m.healFraction, .045)))); } }
       if (f.mode === 'earth-wall') repel(f, Math.min(dt, .1));
+      if (f.mode === 'nine-tails-cloak') {
+        f.tick+=delta; f.pulseFlash=Math.max(0,(f.pulseFlash||0)-dt);
+        const interval=Math.max(.2,finite(f.m.pulseInterval,.65)),radius=Math.max(1,finite(f.m.radius,76));
+        while(f.tick+1e-9>=interval) {
+          f.tick-=interval;f.pulseFlash=.18;
+          for(const enemy of nearby(f.owner.x,f.owner.y,radius)) {
+            const dx=enemy.x-f.owner.x,dy=enemy.y-f.owner.y;
+            if(Math.hypot(dx,dy)>radius+(enemy.r||0)||!clearPath(f.owner.x,f.owner.y,enemy.x,enemy.y))continue;
+            const k=G.Types.mult(f.m.type||'fighting',enemy.types),crit=f.owner.critChance>0&&Math.random()<f.owner.critChance;
+            const damage=finite(f.m.pulseDamage,12)*f.owner.atk*k*G.Weather.mult(f.m.type||'fighting')*(crit?1.5:1);
+            enemy.hurt(damage,'#ff654f',dx,dy,enemy.boss?5:finite(f.m.knock,18),crit?'crit':G.Types.label(k));
+            f.owner.onDealt(damage);f.owner.dmgDealt+=damage;
+          }
+        }
+      }
       if (f.age >= f.ttl) {
         effects.splice(i, 1);
         if (f.mode === 'gates') effects.push({ ...f, mode: 'gates-fatigue', age: 0, ttl: Math.max(.5, Math.min(5, finite(f.m.fatigueDuration, 2))) });
@@ -164,6 +185,7 @@
       if (!valid(f)) continue;
       const x = f.owner.x, y = f.owner.y, phase = f.age * 5;
       ctx.globalAlpha = Math.min(1, (f.ttl - f.age) * 3);
+      if (f.mode === 'nine-tails-cloak') { G.NarutoCloakVFX?.draw(ctx,f,ground); continue; }
       if (f.mode === 'earth-wall') {
         const corners = [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([u, n]) => [f.x + f.ux * u * f.width / 2 + f.nx * n * f.thickness / 2, f.y + f.uy * u * f.width / 2 + f.ny * n * f.thickness / 2]);
         const polygon = points => { ctx.beginPath(); points.forEach(([px, py], i) => i ? ctx.lineTo(Math.round(px), Math.round(py)) : ctx.moveTo(Math.round(px), Math.round(py))); ctx.closePath(); ctx.fill(); };

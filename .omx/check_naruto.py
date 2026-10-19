@@ -31,7 +31,7 @@ with sync_playwright() as p:
     page.screenshot(path=str(ROOT/'.omx/naruto-picker.png'),animations='disabled')
     page.locator('#naruto-skill-guide').click()
     assert page.locator('.naruto-skill-entry').count()==8
-    assert page.locator('.naruto-skill-entry a[href^="https://naruto-official.com/"]').count()==24
+    assert page.locator('.naruto-skill-entry a[href^="https://naruto-official.com/"]').count()==25
     page.screenshot(path=str(ROOT/'.omx/naruto-guide.png'),animations='disabled')
     page.locator('#naruto-skills-close').click()
     page.locator('[data-naruto="30001"]').click()
@@ -39,7 +39,7 @@ with sync_playwright() as p:
     report=page.evaluate('''() => {
       const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
       assert(G.MenuUI.GEN_NAMES.length===11&&G.Gacha.BANNERS.length===11,'Section registration');
-      assert(G.NarutoSkillCatalog.definitions.size===25,'Skill registry');
+      assert(G.NarutoSkillCatalog.definitions.size===26,'Skill registry');
       const pixels=[];
       for(const r of G.Naruto.records.values()) {
         assert(G.startMoveOf(r.dex)===r.start,'Starter signature '+r.dex);
