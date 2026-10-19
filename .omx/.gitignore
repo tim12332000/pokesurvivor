@@ -18,6 +18,9 @@
 !/check_naruto_cloak.py
 !/check_sasuke_shuriken.py
 !/check_naruto_start.py
+!/dev-network.json
+!/dev-controls.js
+!/check_dev_controls.py
 !/naruto-offense.js
 !/check_naruto.py
 !/check_naruto_animations.py
