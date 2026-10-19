@@ -15,6 +15,8 @@
 G.Combat = (() => {
   let ghost = false;
   let fields = [];
+  // Optional personal-edition passive; base game keeps its original quantities.
+  const quantity = (pl,base,minimum=1) => G.Quantity?.count(pl,base,minimum) ?? Math.max(minimum,base|0);
 
   // ---------------- ejecutar el movimiento activo ----------------
 
@@ -86,7 +88,7 @@ G.Combat = (() => {
   function fireProjectiles(pl, m) {
     const col = G.U.TYPE_COLOR[m.type];
     const vis = G.VFX.forMove(m);
-    const n = Math.max(1, m.count | 0);
+    const n = quantity(pl,m.count);
     const spread = m.spread || 0;
     for (let i = 0; i < n; i++) {
       const off = n === 1 ? 0 : (i / (n - 1) - 0.5) * spread * n;
@@ -95,7 +97,7 @@ G.Combat = (() => {
         x: pl.x + Math.cos(a) * 3, y: pl.y + Math.sin(a) * 3,
         vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed,
         dmg: m.dmg * pl.atk, r: m.size, life: m.life,
-        pierce: m.pierce | 0, color: col, homing: m.homing || 0,
+        pierce: quantity(pl,m.pierce,0), color: col, homing: m.homing || 0,
         hits: new Set(), vis, ghost, owner: pl
       }, payload(m)));
     }
@@ -106,14 +108,14 @@ G.Combat = (() => {
   function nova(pl, m) {
     const col = G.U.TYPE_COLOR[m.type];
     const vis = G.VFX.forMove(m);
-    const n = Math.max(3, m.count | 0);
+    const n = quantity(pl,m.count,3);
     for (let i = 0; i < n; i++) {
       const a = (i / n) * 6.2832 + G.U.rand(-0.06, 0.06);
       G.Projectiles.spawn(Object.assign({
         x: pl.x + Math.cos(a) * 3, y: pl.y + Math.sin(a) * 3,
         vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed,
         dmg: m.dmg * pl.atk, r: m.size, life: m.life,
-        pierce: m.pierce | 0, color: col, homing: m.homing || 0,
+        pierce: quantity(pl,m.pierce,0), color: col, homing: m.homing || 0,
         hits: new Set(), vis, ghost, owner: pl
       }, payload(m)));
     }
@@ -196,7 +198,7 @@ G.Combat = (() => {
   }
 
   function buff(pl, m) {
-    pl.addBuff(m.stat, m.amount, m.dur, m.stacks | 0);
+    pl.addBuff(m.stat, m.amount, m.dur, quantity(pl,m.stacks,0));
     const col = G.U.TYPE_COLOR[m.type];
     G.FX.ring(pl.x, pl.y, pl.r * 2.4, pl.r * 1.1, col, 0.35, 2.5);
     const vis = G.VFX.forMove(m);
@@ -211,7 +213,7 @@ G.Combat = (() => {
   /** Bumerán: sale hacia el enemigo, se para y vuelve a ti golpeando a la ida y a la vuelta. */
   function boomerang(pl, m) {
     const col = G.U.TYPE_COLOR[m.type], vis = G.VFX.forMove(m);
-    const n = Math.max(1, m.count | 0), spread = m.spread || 0.5;
+    const n = quantity(pl,m.count), spread = m.spread || 0.5;
     const out = m.radius / m.speed;                       // segundos de ida
     for (let i = 0; i < n; i++) {
       const a = pl.aim + (n === 1 ? 0 : (i / (n - 1) - 0.5) * spread * Math.min(n, 3));
@@ -230,7 +232,7 @@ G.Combat = (() => {
     if (!cur) return;
     let fx = pl.x, fy = pl.y - G.LIFT, k = 1;
     const done = new Set();
-    const n = Math.max(1, m.count | 0);
+    const n = quantity(pl,m.count);
     for (let i = 0; i < n && cur; i++) {
       done.add(cur.id);
       const tx = cur.x, ty = cur.y - cur.bodyH * 0.5;
@@ -256,7 +258,7 @@ G.Combat = (() => {
   /** Minas: se quedan en el suelo y estallan cuando un enemigo las pisa. */
   function mines(pl, m) {
     const col = G.U.TYPE_COLOR[m.type], vis = G.VFX.forMove(m);
-    const n = Math.max(1, m.count | 0);
+    const n = quantity(pl,m.count);
     for (let i = 0; i < n; i++) {
       const a = Math.random() * 6.2832, d = n === 1 ? 0 : G.U.rand(18, 46);
       fields.push({ kind: 'mine', owner: pl, ghost, m, col, vis, x: pl.x + Math.cos(a) * d, y: pl.y + Math.sin(a) * d * 0.8,
@@ -270,7 +272,7 @@ G.Combat = (() => {
   /** Meteoros: caen del cielo sobre enemigos cercanos (la sombra avisa dónde). */
   function meteors(pl, m) {
     const col = G.U.TYPE_COLOR[m.type], vis = G.VFX.forMove(m);
-    const n = Math.max(1, m.count | 0);
+    const n = quantity(pl,m.count);
     const near = G.EnemyMgr.queryCircle(pl.x, pl.y, reach(m)).filter(e => !e.dead);
     G.U.shuffle ? G.U.shuffle(near) : near.sort(() => Math.random() - 0.5);
     for (let i = 0; i < n; i++) {
@@ -288,7 +290,7 @@ G.Combat = (() => {
     fields.push({ kind: 'turret', owner: pl, ghost, m, col, vis, x: pl.x + Math.cos(a) * 26, y: pl.y + Math.sin(a) * 20,
                   t: 0, life: m.dur || 6, shotT: 0.3, dmg: m.dmg * pl.atk });
     const mine = fields.filter(f => f.kind === 'turret' && f.owner === pl && !f.gone);
-    for (const f of mine.slice(0, Math.max(0, mine.length - Math.max(1, m.count | 0)))) f.gone = true;
+    for (const f of mine.slice(0, Math.max(0, mine.length - quantity(pl,m.count)))) f.gone = true;
     G.FX.ring(pl.x, pl.y, 4, 30, col, 0.3, 2);
   }
 
@@ -331,19 +333,19 @@ G.Combat = (() => {
     fields.push(f);
     pl.lastPatch = f;
     const mine = fields.filter(o => o.kind === 'patch' && o.owner === pl && !o.gone);
-    for (const o of mine.slice(0, Math.max(0, mine.length - 18))) o.gone = true;
+    for (const o of mine.slice(0, Math.max(0, mine.length - quantity(pl,18)))) o.gone = true;
   }
 
   /** Abanico corto: muchos disparos rápidos que no llegan lejos (aliento, chorro...). */
   function cone(pl, m) {
     const col = G.U.TYPE_COLOR[m.type], vis = G.VFX.forMove(m);
-    const n = Math.max(2, m.count | 0), arc = m.arc || 0.9;
+    const n = quantity(pl,m.count,2), arc = m.arc || 0.9;
     for (let i = 0; i < n; i++) {
       const a = pl.aim + (i / (n - 1) - 0.5) * arc + G.U.rand(-0.05, 0.05);
       const sp = m.speed * G.U.rand(0.85, 1.1);
       G.Projectiles.spawn(Object.assign({
         x: pl.x + Math.cos(a) * 4, y: pl.y + Math.sin(a) * 4, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
-        dmg: m.dmg * pl.atk, r: m.size, life: m.life * G.U.rand(0.85, 1.05), pierce: m.pierce | 0, color: col,
+        dmg: m.dmg * pl.atk, r: m.size, life: m.life * G.U.rand(0.85, 1.05), pierce: quantity(pl,m.pierce,0), color: col,
         hits: new Set(), vis, ghost, owner: pl
       }, payload(m)));
     }
@@ -391,7 +393,7 @@ G.Combat = (() => {
             const a = Math.atan2(tg.y - f.y, tg.x - f.x);
             G.Projectiles.spawn(Object.assign({
               x: f.x, y: f.y, vx: Math.cos(a) * (m.speed || 300), vy: Math.sin(a) * (m.speed || 300),
-              dmg: f.dmg, r: m.size || 6, life: 1.4, pierce: m.pierce | 0, color: f.col,
+              dmg: f.dmg, r: m.size || 6, life: 1.4, pierce: quantity(f.owner,m.pierce,0), color: f.col,
               hits: new Set(), vis: f.vis, ghost: f.ghost, owner: f.owner
             }, payload(m)));
             f.kick = 0.12;
@@ -467,7 +469,7 @@ G.Combat = (() => {
 
   function orbit(pl, m, dt, now, isGhost = false) {
     const col = G.U.TYPE_COLOR[m.type];
-    const want = Math.max(1, m.count | 0);
+    const want = quantity(pl,m.count);
     // Cada movimiento de órbita tiene sus orbes (puede haber dos en un vínculo).
     const mine = p => p.orb && p.owner === pl && p.mid === m.id;
     const orbs = G.Projectiles.all().filter(mine);

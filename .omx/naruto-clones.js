@@ -9,7 +9,7 @@
   let serial = 0;
   const valid = a => a.owner === G.Game.player && !a.owner.dead && a.owner.hp > 0 && a.world === G.World;
   const living = owner => actors.filter(a => !a.dead && a.owner === owner && valid(a));
-  const limitOf = move => config.counts[Math.min(config.counts.length-1,Math.max(0,(move.lvl||1)-1))];
+  const limitOf = (move,owner=G.Game.player) => config.counts[Math.min(config.counts.length-1,Math.max(0,(move.lvl||1)-1))]+(move.quantityBonusAtCast??G.Quantity?.bonus(owner)??0);
   function formation(index) {
     let ring=0,slots=8;
     while(index>=slots){index-=slots;ring++;slots=8+ring*4;}
@@ -18,7 +18,7 @@
   }
   const mimicIds = new Set(['naruto-naruto', 'naruto-rasenshuriken', 'naruto-kunai', 'naruto-shuriken']);
   const selectedTechnique = owner => (owner.activeGroup?.() || []).find(m => mimicIds.has(m.id) && owner.moves?.some(learned => learned === m || learned.id === m.id)) || null;
-  const canCast = (owner,move) => owner===G.Game.player&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move)&&!summons.some(s=>s.owner===owner);
+  const canCast = (owner,move) => owner===G.Game.player&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move,owner)&&!summons.some(s=>s.owner===owner);
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
   const nearby = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
   function clearPath(ax, ay, bx, by, radius = 0) {
@@ -50,7 +50,7 @@
   }
   function cast(owner, move) {
     if (owner !== G.Game.player || owner.dead || owner.hp <= 0 || owner.mon?.dex !== 30001) return false;
-    const lvl = move.lvl || 1, limit = limitOf(move);
+    const lvl = move.lvl || 1, limit = limitOf(move,owner);
     let count = living(owner).length, spawned = false;
     const occupied=new Set(living(owner).map(a=>a.formationIndex));
     for(let n=0;n<Math.max(96,limit*12)&&count<limit;n++) {

@@ -65,7 +65,7 @@
       duration: mode === 'lotus' ? m.windup + m.liftDuration + .3 : m.fieldDuration };
     if (mode === 'black-flames') {
       const patches = effects.filter(e => e.kind === mode && e.owner === pl);
-      while (patches.length >= 2) {
+      while (patches.length >= (G.Quantity?.count(pl,2)||2)) {
         const previous = patches.shift(); effects.splice(effects.indexOf(previous), 1);
       }
     }

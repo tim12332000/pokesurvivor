@@ -117,7 +117,7 @@
       name: '螺旋丸', mode: 'dash', type: 'fighting', cd: 1.25, dmg: 48, charge: .12,
       range: 125, radius: 125, width: 56, knock: 100,
       vis: { proj: 'wind', melee: 'impact', pal: 'naruto-blue' },
-      desc: '凝聚旋轉查克拉後向前突進。鳴人 Lv.3 起保證出現學習選項；選用此招時，現存影分身會各自接近敵人並使用螺旋丸，總模仿傷害受限。',
+      desc: '凝聚旋轉查克拉後向前突進。鳴人 Lv.3 起保證出現學習選項；選用此招時，現存影分身會各自接近敵人並使用完整傷害的螺旋丸，沒有總模仿傷害上限。',
       source_url: 'https://naruto-official.com/en/news/01_1423'
     }],
     ['naruto-rasenshuriken', [30001], {

@@ -6,12 +6,12 @@
   const vanilla = { tick: C.tick, resolve: C.resolve, updateFields: C.updateFields,
     ground: C.drawGroundFields, air: C.drawAirFields, clear: C.clearFields };
   const fields = [], bombs = new Set();
-  const CAP = 120, BOMB_CAP = 80, TAU = Math.PI * 2;
+  const CAP = 120, TAU = Math.PI * 2;
   const cloneMove = m => Object.assign({}, m, { digiVis: m.digiVis && Object.assign({}, m.digiVis), secondary: m.secondary && Object.assign({}, m.secondary) });
   const color = m => G.VFX.PAL[m.digiVis?.pal]?.[2] || G.U.TYPE_COLOR[m.type] || '#fff';
   const vis = m => Object.assign({}, G.VFX.forMove(m), m.digiVis || {});
   const valid = f => f.owner && f.owner === G.Game.player && !f.owner.dead && f.owner.hp > 0 && f.world === G.World;
-  const cap = () => { while (fields.length > CAP) fields.shift(); while (bombs.size > BOMB_CAP) bombs.delete(bombs.values().next().value); };
+  const cap = () => { const limit=CAP*(1+(G.Quantity?.bonus(G.Game.player)||0)); while (fields.length > limit) fields.shift(); };
   const targets = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
   const techniqueFor = mode => [G.NarutoSupport,G.NarutoOffense].find(api=>api?.supports(mode));
   function hit(pl, m, e, base, dx, dy, knock = m.knock || 0) {
@@ -44,8 +44,8 @@
   function fireFrom(owner,move,x,y,aim,damageScale=1) {
     if(owner!==G.Game.player||owner.dead||owner.hp<=0||![x,y,aim,damageScale].every(Number.isFinite))return [];
     if(!['naruto-rasenshuriken','naruto-kunai','naruto-shuriken'].includes(move.id))return [];
-    const m=cloneMove(move);m.dmg*=Math.max(0,damageScale);
-    const count=Math.min(8,Math.max(1,m.count|0)),out=[];
+    const m=cloneMove(G.Quantity?.snapshot(owner,move)||move);m.dmg*=Math.max(0,damageScale);
+    const count=Math.max(1,m.count|0),out=[];
     for(let i=0;i<count;i++) {
       const angle=m.digiMode==='nova'?i*TAU/count:aim+(count===1?0:(i/(count-1)-.5)*(m.arc||0));
       const p=projectile(owner,m,angle,1,!!m.blastRadius,{x,y});p.narutoClone=true;out.push(p);
@@ -144,7 +144,7 @@
     else if (mode === 'dual') { const s = Object.assign({}, m, m.secondary || {}); line(pl, s, pl.x, pl.y, a, s.range || m.range, s.width || m.width, .55); sweep(pl, m, pl.x, pl.y, a, m.radius, m.arc || 2, .65); }
   }
   function cast(pl, move) {
-    const m=cloneMove(move);
+    const m=cloneMove(G.Quantity?.snapshot(pl,move)||move);
     if(!m||!m.digimonSkill||!m.digiMode)return false;
     if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.beginCast(pl,m);
     const handler=techniqueFor(m.digiMode);
@@ -157,7 +157,7 @@
     for (let i = fields.length - 1; i >= 0; i--) {
       const f = fields[i]; if (!valid(f)) { fields.splice(i, 1); continue; } f.t += dt;
       if (f.kind === 'charge' && f.t >= f.life) { emit(f.owner, f.m, f.aim); fields.splice(i, 1); continue; }
-      if (f.kind === 'combo' && f.t >= f.delay) { sweep(f.owner, f.m, f.x, f.y, f.aim, f.m.radius, f.m.arc || 2, 1 / Math.max(1, f.m.count | 0),Math.round(f.delay/(f.m.burstInterval||.12))%2?1:-1); fields.splice(i, 1); continue; }
+      if (f.kind === 'combo' && f.t >= f.delay) { sweep(f.owner, f.m, f.x, f.y, f.aim, f.m.radius, f.m.arc || 2, 1 / Math.max(1, (f.m.quantityBaseCount??f.m.count) | 0),Math.round(f.delay/(f.m.burstInterval||.12))%2?1:-1); fields.splice(i, 1); continue; }
       if (f.kind === 'sand-wave') updateSand(f);
       if (f.kind === 'gate' || f.kind === 'frost') {
         f.phase += dt; if (f.phase >= f.tick) { f.phase -= f.tick; const m = f.m;
@@ -210,7 +210,7 @@
     }
   };
   C.clearFields = clear;
-  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); for (const p of [...bombs]) { const b = p.digiBomb, alive = G.Projectiles.all().includes(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || b.owner !== G.Game.player || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
+  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); const live=new Set(G.Projectiles.all()); for (const p of [...bombs]) { const b = p.digiBomb, alive = live.has(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || b.owner !== G.Game.player || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
   // Native pixel additions; VFX's public tables are the same used by the cache.
   G.VFX.PAL.holy = ['#786022','#b38a32','#e2c56b','#fff0b0','#fffdf0'];
   G.VFX.PAL.blueflame = ['#133e70','#267ed1','#58c5ff','#b3f1ff','#fff'];
