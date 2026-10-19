@@ -15,7 +15,7 @@ public_new = subprocess.check_output(
 for name in filter(None, tracked + public_new):
     path = Path(name)
     public = path.parts[0] in {'assets', 'css', 'js'}
-    sandbox = name.startswith('.omx/') and (path.suffix in {'.js', '.html', '.png', '.json', '.md'})
+    sandbox = name.startswith('.omx/') and (path.suffix in {'.js', '.css', '.html', '.png', '.json', '.md'})
     root_file = name in {'sw.js', 'manifest.webmanifest', 'version.json', 'LICENSE', 'LICENSE-NONCOMMERCIAL.md'}
     if not (public or sandbox or root_file):
         continue
@@ -35,8 +35,8 @@ html = re.sub(r'<!-- seo:begin -->.*?<!-- seo:end -->', '', html, flags=re.S)
 html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼寶貝 × 火影忍者</title>', html, flags=re.S)
 html = html.replace('<html lang="es">', '<html lang="zh-TW">')
 html = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="寶可夢、數碼寶貝與火影忍者的非官方跨界沙盒版，免費遊玩，存檔保存在此瀏覽器。">', html)
-for source in re.findall(r'<script[^>]*src="([^"]+)"', html):
-    if source.startswith(('js/', '.omx/')):
+for source in re.findall(r'<(?:script|link)\b[^>]*(?:src|href)="([^"]+)"', html):
+    if source.startswith(('js/', 'css/', '.omx/')):
         assert (OUT / source.split('?', 1)[0]).is_file(), f'Missing runtime script: {source}'
 html_path.write_text(html, encoding='utf-8')
 (OUT / 'index.html').write_text('''<!doctype html>
