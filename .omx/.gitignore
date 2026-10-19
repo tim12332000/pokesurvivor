@@ -69,6 +69,8 @@
 !/unlimited.js
 !/make_digimon.py
 !/percent-health-damage.js
+!/run-attributes.js
+!/check_run_attributes.py
 !/check_percent_health_damage.py
 !/make_unlimited.py
 !/check_digimon.py
