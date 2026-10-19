@@ -354,6 +354,10 @@ personal `feat/digimon-sandbox` branch. No upstream PR is created or changed.
 
 `.omx/naruto-chidori.js` 的 `config` 集中控制 `counts`（凍結陣列 `[5,10,15,20,25]`）、`followupRangeMultiplier`（3）、`endInvulnerability`（0.3 秒）、`speed`（1000 世界像素／秒）、`retargetDelay`（0.045 秒）與移動細分距離 `step`（4 世界像素）。首擊搜尋與突進維持技能原射程 170；命中後，後續搜尋與實際突進上限同步增為三倍（510），升級射程時同比例增加，較分散的目標也能連續追擊。結印時間仍由技能定義 `charge`（0.09 秒）控制。飛行期間阻擋受傷；結印與轉向間隔正常受傷。已開始突進的千鳥自然結束、找不到下一個敵人或耗盡射程時，再給 0.3 秒收招無敵（保留更長的既有無敵）。結印取消、死亡、換世界或清場不補無敵。此分級追擊與飛行無敵為使用者指定的遊戲改編，並非宣稱漫畫原作設定；千鳥名稱的原官方來源仍見技能圖鑑。
 
+## 敵方支援怪上限
+
+敵方支援怪沿用原作者 main 的限制：回血、護盾、召喚寶可夢各自最多同時存活 3 隻。滿額時改刷目前名單內其他未滿額敵人；若整份名單都已滿額，略過該次生成。死亡後名額立即釋出，所有玩家共用同一組上限。設定為 `js/systems/spawner.js` 的 `SUPPORT_MAX`，驗證可執行 `node tools/test_support_cap.js`。
+
 ## 開局永久強化全滿基礎
 
 個人版本由 `.omx/starter-balance.js` 的 `G.StarterBalance.enabled` 控制，預設開啟。每次開局直接使用 `G.Upgrades.LIST` 所有強化的最高等級及原有 `perks` 公式；包含生命 +80、傷害 ×1.4、速度 ×1.24、冷卻 ×0.76、減傷 16%、每秒回復 1、拾取 ×1.72、經驗 ×1.4、金幣 ×1.64、暴擊 30%、起始最多 2 招、額外重抽 5 次及禁招 3 格。

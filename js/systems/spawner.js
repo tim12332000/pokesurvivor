@@ -76,8 +76,29 @@ G.Spawner = (() => {
     return Math.random() < SHINY_RATE;
   }
 
+  // Keep the upstream per-role cap: three living healers, shielders and summoners each.
+  const SUPPORT_MAX = 3, SUPPORT = new Set(['healer', 'shielder', 'summoner']);
+  function supportFull() {
+    const counts = {}, full = new Set();
+    for (const enemy of G.EnemyMgr.all()) {
+      if (!enemy.dead && SUPPORT.has(enemy.behavior) &&
+          (counts[enemy.behavior] = (counts[enemy.behavior] || 0) + 1) >= SUPPORT_MAX)
+        full.add(enemy.behavior);
+    }
+    return full;
+  }
+
   function spawnOne(pl, t, angle) {
-    const def = G.U.pick(G.Enemies.bagAt(t));
+    const bag = G.Enemies.bagAt(t);
+    let def = G.U.pick(bag);
+    if (SUPPORT.has(def.behavior)) {
+      const full = supportFull();
+      if (full.has(def.behavior)) {
+        const rest = bag.filter(candidate => !full.has(candidate.behavior));
+        if (!rest.length) return null;
+        def = G.U.pick(rest);
+      }
+    }
     const pt = freePoint(pl, angle == null ? Math.random() * 6.2832 : angle, isFlyer(def));
     if (!pt) return null;
     const shiny = rollShiny(def.dex);
