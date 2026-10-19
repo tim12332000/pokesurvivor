@@ -1,4 +1,15 @@
 {
+  "animationReferences": [
+    {
+      "character": "naruto",
+      "technique": "Multi Shadow Clone Jutsu",
+      "reference": "https://www.youtube.com/watch?v=OM-OzWJ2HTc",
+      "publisher": "VIZ official channel",
+      "sourceSheet": "team7.png",
+      "rects": [[95,237,14,32],[112,239,14,30],[129,240,14,29]],
+      "note": "Hands-together seal row, final-pose hold then smoke release. Frontal fallback; original pixel resolution cannot resolve individual crossed fingers. Previous y364 Charge row was arms-raised turning."
+    }
+  ],
   "records": [
     {
       "file": "team7.png",

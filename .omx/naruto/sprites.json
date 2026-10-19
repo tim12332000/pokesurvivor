@@ -266,33 +266,32 @@
         "frames": {
           "default": [
             [
-              90,
-              365,
-              22,
-              28
+              95,
+              237,
+              14,
+              32
             ],
             [
-              116,
-              364,
-              19,
+              112,
+              239,
+              14,
+              30
+            ],
+            [
+              129,
+              240,
+              14,
               29
-            ],
-            [
-              139,
-              364,
-              19,
-              29
-            ],
-            [
-              162,
-              365,
-              22,
-              28
             ]
           ]
         },
-        "fps": 9,
-        "source_note": "Original frontal multi-frame casting sequence; reused for all directions."
+        "fps": 10,
+        "source_note": "Original frontal hands-together seal row (y237-268), not the arms-raised turning/celebration row at y364. Prepare, form seal, hold before clone smoke release. Frontal fallback for every direction; pixel resolution does not resolve individual fingers.",
+        "durations": [
+          6,
+          6,
+          12
+        ]
       }
     }
   },

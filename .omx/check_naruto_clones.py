@@ -45,22 +45,33 @@ with sync_playwright() as p:
         assert(A.actors.every(a=>!(a instanceof G.Player)&&!a.moves&&!a.slots),'Clones became full players');
         step(1);const old=A.actors.map(a=>({id:a.id,age:a.age}));cast(1);
         assert(A.actors.length===8&&old.every(x=>A.actors.find(a=>a.id===x.id).age===x.age),'Recast refreshed TTL');
-        cast(3);assert(A.actors.length===32,'Level3 doubling');cast(5);cast(5);assert(A.actors.length===128,'Level5 doubling');
+        cast(3);assert(A.actors.length===24,'Level3 quantity');cast(5);cast(5);assert(A.actors.length===40,'Level5 quantity');
         setup();cast(1);const quantity=pl.moves[0];
         const quantityCard=G.LevelUp.offer(pl,20).find(c=>c.key==='up:naruto-shadow-clones');
         assert(quantityCard&&quantityCard.desc.includes('16'),'Quantity upgrade missing from level-up choices');
         const counts=[8];
         quantityCard.apply(pl);counts.push(A.actors.length);
         while(quantity.lvl<quantity.def.maxLvl){G.Moves.levelUp(quantity);counts.push(A.actors.length);}
-        assert(JSON.stringify(counts)==='[8,16,32,64,128]','Each upgrade did not immediately double quantity');
+        assert(JSON.stringify(counts)==='[8,16,24,32,40]','Upgrade quantities differ from requested progression');
+        assert(JSON.stringify(counts)===JSON.stringify(A.config.counts),'UI and actor config diverged');
+        assert(quantity.def.maxLvl===A.config.counts.length&&quantity.def.ups.length===A.config.counts.length-1,'Configured levels and choices diverged');
+        setup();
+        const spell=pl.moves[0],seal=G.Naruto.records.get(30001);
+        G.Combat.tick(.01,pl,0);
+        assert(!A.actors.length&&pl.anim.cur==='Charge'&&!A.canCast(pl,spell),'Missing seal windup or duplicate summon permitted');
+        assert(JSON.stringify(G.Naruto.frameFor(seal,'Charge',0,2).rect)==='[129,240,14,29]','Incorrect source row for seal');
+        step(A.config.sealDuration-.02);assert(!A.actors.length,'Clones appeared before seal completed');
+        step(.04);assert(A.actors.length===8&&A.actors.every(a=>a.anim.cur!=='Charge'),'Clones did not emerge after seal, or recursively performed summon pose');
+        setup();A.beginCast(pl,spell);pl.dead=true;step(.5);pl.dead=false;assert(!A.actors.length,'Dead owner released pending summon');
+        A.beginCast(pl,spell);G.Combat.clearFields();step(.5);assert(!A.actors.length,'Scene clear left pending summon');
         setup();let summons=0;const originalCast=pl.cast;
         pl.cast=function(m){summons++;return originalCast.call(this,m);};
         try {
-          for(let t=0;t<6.4;t+=1/60){G.Combat.tick(1/60,pl,t);G.Combat.updateFields(1/60);}
+          for(let t=0;t<7;t+=1/60){G.Combat.tick(1/60,pl,t);G.Combat.updateFields(1/60);}
           assert(summons===2&&A.actors.length===8&&A.actors.every(a=>a.age<.5),'Full-cap poll wasted cooldown or spammed casting');
         }finally{delete pl.cast;}
         cast(5);
-        pl.addMove('naruto-naruto');assert(A.actors.length===128,'Slot switch dismissed clones');
+        pl.addMove('naruto-naruto');assert(A.actors.length===40,'Slot switch dismissed clones');
         step(7.2);assert(A.actors.length===0,'Inactive clones survived their TTL');
         const enemies=setup([[120,0],[90,95],[-75,100]]);cast(1);const before=A.actors.map(a=>[a.x,a.y]);
         const resources=[pl.xp,pl.coins,pl.t1,pl.t10,localStorage.getItem('ps.sandbox.digimon.v1')];
@@ -69,7 +80,7 @@ with sync_playwright() as p:
         assert(JSON.stringify(resources)===JSON.stringify([pl.xp,pl.coins,pl.t1,pl.t10,localStorage.getItem('ps.sandbox.digimon.v1')]),'Clones wrote rewards/storage');
         setup();G.World.isFree=()=>false;assert(!cast(1)&&A.actors.length===0,'Spawned inside a wall');
         G.Combat.tick(.02,pl,0);assert(pl.moves[0].t<=.25,'Failed summon consumed full cooldown');
-        G.World.isFree=()=>true;G.Combat.tick(.3,pl,.3);assert(A.actors.length===8,'Failed summon did not recover');
+        G.World.isFree=()=>true;G.Combat.tick(.3,pl,.3);step(A.config.sealDuration+.02);assert(A.actors.length===8,'Failed summon did not recover');
         setup([[130,0]]);G.World.isFree=(x)=>x<65;G.World.projectileBlock=(x)=>x>=65;cast(1);
         const target=G.EnemyMgr.all()[0];step(1);
         assert(A.actors.every(a=>a.x<65)&&target.hp===100000,'Clone crossed or hit through a wall');
@@ -140,9 +151,35 @@ with sync_playwright() as p:
         card=G.LevelUp.offer(pl).find(c=>c.key==='new:naruto-rasenshuriken');assert(card&&card.desc.includes('替換'),'Full slots hide character skill');
         card.apply(pl);assert(pl.hasMove('naruto-rasenshuriken')&&pl.hasMove('naruto-naruto')&&pl.hasMove('naruto-shadow-clones')&&pl.slots.length===4,'Skill replacement broke slots');
         assert(pl.bind['naruto-rasenshuriken']===1&&pl.bind['naruto-kunai']==null,'Replacement lost binding');
-        return {quantity:counts,punches:'three spread enemies',walls:'passed',contact:'passed',projectiles:'passed',aggro:'ordinary only',mimic:['Rasengan','Rasenshuriken','Kunai','Shuriken'],mimicDamage:'full damage per clone; no total budget',switchCooldown:'preserved',lifecycle:'passed',training:'quantity upgrade plus Lv3/Lv6 choices',resources:'unchanged'};
+        return {quantity:counts,seal:'original hands-together frames, delayed release and cancellation passed',punches:'three spread enemies',walls:'passed',contact:'passed',projectiles:'passed',aggro:'ordinary only',mimic:['Rasengan','Rasenshuriken','Kunai','Shuriken'],mimicDamage:'full damage per clone; no total budget',switchCooldown:'preserved',lifecycle:'passed',training:'quantity upgrade plus Lv3/Lv6 choices',resources:'unchanged'};
       }finally{Object.assign(G.World,saved);G.Path.dirFor=oldPath;G.Combat.clearFields();pl.dead=false;}
     }''')
+    # Capture actual animator/actor states across the seal, not hand-picked idle art.
+    page.evaluate('''() => {
+      const pl=G.Game.player,A=G.NarutoClones,free=G.World.isFree,block=G.World.projectileBlock;
+      G.Combat.clearFields();G.EnemyMgr.clear();pl.hp=pl.maxHp;pl.dead=false;
+      try {
+        G.World.isFree=()=>true;G.World.projectileBlock=()=>false;
+        const panel=document.createElement('canvas');panel.id='clone-seal-timeline';panel.width=1200;panel.height=270;
+        panel.style.cssText='position:fixed;top:0;left:0;z-index:30000';
+        const ctx=panel.getContext('2d');ctx.fillStyle='#102442';ctx.fillRect(0,0,1200,270);
+        const move=G.Moves.instance('naruto-shadow-clones');
+        A.beginCast(pl,move);
+        let elapsed=0;
+        for(const [index,time] of [0,.11,.25,.43].entries()) {
+          const dt=time-elapsed;pl.anim.update(dt);A.update(dt);elapsed=time;
+          if(index===2&&pl.anim.frame!==2)throw Error('Final seal pose not held until release');
+          ctx.save();ctx.beginPath();ctx.rect(index*300,35,300,235);ctx.clip();
+          ctx.translate(index*300+150-pl.x,180-pl.y);
+          pl.anim.draw(ctx,pl.x,pl.y);A.draw(ctx);ctx.restore();
+          ctx.fillStyle='#ffffff';ctx.font='16px sans-serif';
+          ctx.fillText(time.toFixed(2)+'s / '+pl.anim.cur+' / clones: '+A.actors.length,index*300+12,25);
+        }
+        document.body.append(panel);
+      } finally {G.World.isFree=free;G.World.projectileBlock=block;G.Combat.clearFields();}
+    }''')
+    page.locator('#clone-seal-timeline').screenshot(path=str(ROOT/'.omx/naruto-seal-timeline.png'))
+    page.evaluate("document.getElementById('clone-seal-timeline').remove()")
     page.evaluate('''() => {
       G.Game.quit();G.Flow.goMenu();
       const perks=G.Upgrades.perks,pick=G.U.pick;

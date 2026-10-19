@@ -30,13 +30,16 @@ choose nearby enemies and punch; they share the owner's damage credit and never
 become extra players, collect rewards or write saves. Normal pursuers can be
 distracted by a closer clone; bosses retain their target. Contact or hostile
 projectile hits disperse a clone with smoke. Initial lifetime is six seconds and
-cooldown four seconds. Every skill upgrade doubles quantity: skill levels one
-through five support 8, 16, 32, 64 and 128 actors. The level-up choice explicitly
+cooldown four seconds. Skill levels one through five support 8, 16, 24, 32 and
+40 actors (+8 per upgrade). The level-up choice explicitly
 shows the next quantity, and choosing it immediately fills the new vacancies,
 even while another Naruto technique is selected. Recasting fills vacancies without refreshing existing
 lifetimes. While at the cap, the active skill polls for a vacancy without wasting
 a new four-second cooldown or repeatedly replaying Charge. Switching slots keeps
-existing clones until they expire.
+existing clones until they expire. A normal cast plays the original hands-together
+seal for 0.4 seconds before smoke and actors appear. New actors start idle rather
+than performing the summoning seal themselves. Death and scene changes cancel
+pending summons. Quantity upgrades still fill immediately.
 
 Character level three guarantees a Rasengan learning choice, and level six a
 Rasenshuriken choice. When four slots are full, the card explicitly offers to
@@ -58,6 +61,44 @@ pause and scene cleanup. Original ability reference:
 https://naruto-official.com/en/news/01_1423 . Actor counts, automatic behavior,
 timing and damage values are this game's adaptation. Multiplayer replication of
 clone actors is not implemented in this guest-only edition.
+
+## 影分身設定調整（單一設定入口）
+
+修改 [naruto-clones.js](../naruto-clones.js) 頂端的 `config`，重新整理網頁即可：
+
+```js
+const config = Object.freeze({ counts: Object.freeze([8,16,24,32,40]), cooldown: 4,
+  duration: 6, sealDuration: .4, punchDamage: 8, punchCooldown: .65 });
+```
+
+| 設定 | 意義 | 目前值 |
+| --- | --- | --- |
+| `counts` | 技能 Lv.1 起各級同時存在上限；須為正整數且遞增 | 8、16、24、32、40 |
+| `cooldown` | 施放冷卻（秒，受玩家冷卻倍率影響） | 4 |
+| `duration` | 每隻分身存活時間（秒） | 6 |
+| `sealDuration` | 本體結印至分身出現的時間（秒，須大於 0） | 0.4 |
+| `punchDamage` | 未選擇可模仿招式時的基本拳擊傷害 | 8 |
+| `punchCooldown` | 基本拳擊間隔（秒） | 0.65 |
+
+`counts` 同時決定技能最高等級、升級卡文字、技能說明和實際分身上限。
+例如只改成 `[4,8,12,16,20]`，這四處會一起更新，不需要分別改檔案。
+不要執行中修改凍結設定；直接修改原始碼後重新整理並開新局。
+數量是上限：空間不足時只生成可站立的分身；再次施放補空缺，不重設舊分身壽命。
+技能升級立即補到新上限，包括切換其他技能時。每隻模仿完整招式傷害，沒有總傷害封頂。
+傷害仍依原招式、玩家攻擊倍率、屬性與首領機制計算。
+
+改數量後同步更新 `.omx/check_naruto_clones.py` 的期望數量斷言（用來驗證需求）；
+測試也會確認設定、技能最高等級、升級卡與生成上限一致。
+本地執行 `python .omx/check_naruto_clones.py` 與
+`python .omx/check_naruto_animations.py` 驗證。
+只改平衡設定不需重產資料；若修改 `sprites.json`，先執行
+`python .omx/make_digimon.py` 重產 `sprites-data.js`。
+發布須把變更 commit / push 到個人分支 `feat/digimon-sandbox`，等待 Pages workflow 完成。
+
+結印參考：[VIZ 官方 Shadow Clone Jutsu 片段](https://www.youtube.com/watch?v=OM-OzWJ2HTc)。
+採用現有 DS 原圖 y237–268 的三格合手結印，而非原先 y364 的舉手轉身動作；
+以最後一格停留到施放完成。素材只有正面結印，其他朝向共用正面，像素解析度無法逐根表現十字手指。
+原始 PNG 不變；來源與裁切記錄在 `sources.json`、`sprites.json`。
 
 ## Completed eight-character kits
 

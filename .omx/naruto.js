@@ -22,7 +22,7 @@
     G.SPRITE_META[dex]={s:1,sh:false,a:Object.fromEntries(G.Sprites.ANIMS.map(anim=>{
       const action=pixel.animations?.[anim];
       const count=anim==='Walk'?4:action?Math.max(...Object.values(action.frames).map(frames=>frames.length)):1;
-      return [anim,{...geometry,n:count,d:Array(count).fill(anim==='Walk'?8:action?(action.duration||7):24)}];
+      return [anim,{...geometry,n:count,d:action?.durations||Array(count).fill(anim==='Walk'?8:action?(action.duration||7):24)}];
     }))};
     const record={...mon,chinese,team,slug,pixel,image,ready:false,attack:''};
     record.loaded=new Promise(resolve=>{

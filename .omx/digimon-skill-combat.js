@@ -146,7 +146,7 @@
   function cast(pl, move) {
     const m=cloneMove(move);
     if(!m||!m.digimonSkill||!m.digiMode)return false;
-    if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.cast(pl,m);
+    if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.beginCast(pl,m);
     const handler=techniqueFor(m.digiMode);
     if(m.narutoSkill&&m.dmg>0&&!G.NarutoSupport?.supports(m.digiMode))m.dmg*=G.NarutoSupport?.takeAttackBonus(pl)||1;
     if(handler)return handler.cast(pl,m);

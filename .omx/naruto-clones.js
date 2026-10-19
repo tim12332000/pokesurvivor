@@ -2,10 +2,14 @@
 (() => {
   if (G.NarutoClones) return;
   const actors = [], smoke = [], C = G.Combat, TAU = Math.PI * 2;
+  // Balance knobs: UI descriptions, upgrades and actor limits all read this object.
+  const config = Object.freeze({ counts: Object.freeze([8,16,24,32,40]), cooldown: 4,
+    duration: 6, sealDuration: .4, punchDamage: 8, punchCooldown: .65 });
+  const summons = [];
   let serial = 0;
   const valid = a => a.owner === G.Game.player && !a.owner.dead && a.owner.hp > 0 && a.world === G.World;
   const living = owner => actors.filter(a => !a.dead && a.owner === owner && valid(a));
-  const limitOf = move => 8 * 2 ** Math.max(0,(move.lvl||1)-1);
+  const limitOf = move => config.counts[Math.min(config.counts.length-1,Math.max(0,(move.lvl||1)-1))];
   function formation(index) {
     let ring=0,slots=8;
     while(index>=slots){index-=slots;ring++;slots=8+ring*4;}
@@ -14,7 +18,7 @@
   }
   const mimicIds = new Set(['naruto-naruto', 'naruto-rasenshuriken', 'naruto-kunai', 'naruto-shuriken']);
   const selectedTechnique = owner => (owner.activeGroup?.() || []).find(m => mimicIds.has(m.id) && owner.moves?.some(learned => learned === m || learned.id === m.id)) || null;
-  const canCast = (owner,move) => owner===G.Game.player&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move);
+  const canCast = (owner,move) => owner===G.Game.player&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move)&&!summons.some(s=>s.owner===owner);
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
   const nearby = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
   function clearPath(ax, ay, bx, by, radius = 0) {
@@ -35,6 +39,7 @@
   function dismiss(a) { if (!a.dead) { a.dead = true; puff(a); } }
   function clear(owner) {
     for (let i = actors.length - 1; i >= 0; i--) if (!owner || actors[i].owner === owner) actors.splice(i, 1);
+    for (let i = summons.length - 1; i >= 0; i--) if (!owner || summons[i].owner === owner) summons.splice(i, 1);
     clearProjectiles(owner);
     // Smoke belongs to this local effect layer and must not survive a run reset.
     smoke.length = 0;
@@ -53,16 +58,25 @@
       const x = owner.x + Math.cos(angle) * radius, y = owner.y + Math.sin(angle) * radius;
       if (!G.World.isFree(x, y, 10, true) || !clearPath(owner.x, owner.y, x, y, 10) || living(owner).some(a => Math.hypot(a.x - x, a.y - y) < 25)) continue;
       let formationIndex=0;while(occupied.has(formationIndex))formationIndex++;occupied.add(formationIndex);
-      const a = { id: ++serial, formationIndex, owner, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || 6,
-        lvl, dmg: Number.isFinite(move.dmg) ? move.dmg : 8, punchCd: move.punchCd || .65,
+      const a = { id: ++serial, formationIndex, owner, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || config.duration,
+        lvl, dmg: Number.isFinite(move.dmg) ? move.dmg : config.punchDamage, punchCd: move.punchCd || config.punchCooldown,
         cd: .16 + count % 8 * .08, anim: new G.Sprites.Animator(30001, 1), target: null, dead: false, comboT: 0,
         cloneTechniqueCdMul: move.cloneTechniqueCdMul ?? 1, cloneTechniqueDamageMul: move.cloneTechniqueDamageMul ?? 1,
         // Retain one cooldown per technique across slot switches; phase spreads eight casts out.
         cooldowns: new Map([...mimicIds].map(id => [id, .16 + count % 8 * .08])), mimickedId: null };
-      a.anim.dir = owner.anim.dir; a.anim.play('Charge'); actors.push(a); puff(a); count++; spawned = true;
+      a.anim.dir = owner.anim.dir; actors.push(a); puff(a); count++; spawned = true;
     }
-    if (spawned) owner.anim.play('Charge');
     return spawned;
+  }
+  function beginCast(owner, move) {
+    if (!canCast(owner,move)) return false;
+    // Reject blocked casts before consuming the full cooldown.
+    if (!G.World.isFree(owner.x,owner.y,10,true)) return false;
+    const duration=config.sealDuration;
+    const meta=G.Sprites.animMeta(30001,'Charge');
+    owner.anim.play('Charge',{speed:meta.d.reduce((sum,n)=>sum+n,0)/60/duration});
+    summons.push({owner,world:G.World,move:{...move},t:0,duration});
+    return true;
   }
   function hit(a, enemy, base, type, knock = 12) {
     if (enemy.dead || !valid(a)) return;
@@ -91,6 +105,18 @@
     // Run actor simulation in small steps even when a manual test advances a long frame.
     const steps = Math.max(1, Math.ceil(dt / .04)), sub = dt / steps;
     for (let step = 0; step < steps; step++) {
+      for (let i=summons.length-1;i>=0;i--) {
+        const s=summons[i];
+        if (!valid(s)) { summons.splice(i,1); continue; }
+        s.t+=sub;
+        if (s.t+1e-9>=s.duration) {
+          summons.splice(i,1);
+          if (!cast(s.owner,s.move)) {
+            const learned=s.owner.moves.find(m=>m.id===s.move.id);
+            if (learned) learned.t=.25;
+          }
+        }
+      }
       const claimed = new Set();
       const projectiles = G.Projectiles.all();
       for (let i = projectiles.length - 1; i >= 0; i--) {
@@ -226,5 +252,5 @@
     if(upgraded&&move.id==='naruto-shadow-clones'&&owner?.moves.includes(move)&&cast(owner,move))move.t=move.cd*owner.cdMul;
     return upgraded;
   };
-  G.NarutoClones = { cast, canCast, limitOf, update, draw, clear, combo, get actors() { return actors; } };
+  G.NarutoClones = { config, cast, beginCast, canCast, limitOf, update, draw, clear, combo, get actors() { return actors; } };
 })();

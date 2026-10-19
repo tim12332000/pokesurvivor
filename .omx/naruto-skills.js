@@ -48,12 +48,13 @@
       P.set(12,6,'w');P.set(13,6,'o');P.set(15,10,'w');P.outline();
     }
   };
+  const clones=G.NarutoClones.config;
   const profiles = [
     [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
-      mode: 'shadow-clones', type: 'fighting', cd: 4, dmg: 8, range: 240,
-      cloneDuration: 6, punchCd: .65, vis: { pal: 'naruto-blue' },
-      desc: 'Lv.1 召出 8 隻，每次技能升級數量翻倍：16、32、64、128 隻；存在 6 秒、冷卻 4 秒。切換到已學的螺旋丸、螺旋手裏劍或忍具時，每隻分身都使用完整招式傷害，不分攤、不設定總傷害上限。受擊後化煙消散，不會再召出分身。數量與數值為本作改編。',
-      ups: [16,32,64,128].map(count=>({t:`影分身數量翻倍 → ${count} 隻；每隻完整傷害`,m:{}}))
+      mode: 'shadow-clones', type: 'fighting', cd: clones.cooldown, dmg: clones.punchDamage, range: 240,
+      cloneDuration: clones.duration, punchCd: clones.punchCooldown, vis: { pal: 'naruto-blue' },
+      desc: `各級分身數量：${clones.counts.join('、')} 隻；結印 ${clones.sealDuration} 秒後化煙出現，存在 ${clones.duration} 秒、冷卻 ${clones.cooldown} 秒。切換到已學的螺旋丸、螺旋手裏劍或忍具時，每隻分身都使用完整招式傷害，不分攤、不設定總傷害上限。受擊後化煙消散，不會再召出分身。數量與數值為本作改編。`,
+      ups: clones.counts.slice(1).map(count=>({t:`影分身數量增加 → ${count} 隻；每隻完整傷害`,m:{}}))
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
       mode: 'dash', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
@@ -236,7 +237,7 @@
       speed: 340, life: 1.5, size: 7, count: 1, arc: 1.6, spread: 0, pierce: 0,
       radius: 140, range: 480, width: 24, homing: 0, knock: 0, burn: 0, poison: 0, slow: 0,
       ...design, id, kind: kinds[design.mode], digimonSkill: true, narutoSkill: true,
-      digiMode: design.mode, digiVis: design.vis || {}, maxLvl: 5,
+      digiMode: design.mode, digiVis: design.vis || {}, maxLvl: design.mode==='shadow-clones'?clones.counts.length:5,
       ups: design.ups || (design.dmg === 0 ? supportUps(design) : [
         { t: '傷害 +20%', m: { dmg: 1.2 } },
         { t: '冷卻 -10%', m: { cd: .9 } },
