@@ -88,6 +88,17 @@ with sync_playwright() as p:
       setup(1);cast();G.EnemyMgr.all()[0].dead=true;step(.2);assert(!A.active,'dead target remained');
       assert(G.Moves.BY_ID['naruto-kakashi'].digiMode==='dash','Raikiri changed');assert(G.Moves.instance('naruto-sasuke',5).dmg>44,'upgrades lost');
       report.lifecycle='death/world change/dead target/owner clear clean; independent invulnerability preserved; Raikiri unchanged';
+      const oldGroup=pl.activeGroup,oldMoves=pl.moves,oldCd=pl.cdMul;
+      try{
+        const learned=G.Moves.instance('naruto-sasuke',5);pl.moves=[learned];pl.activeGroup=()=>[learned];pl.cdMul=.01;
+        setup(1);learned.t=0;G.Combat.tick(.001,pl,0);
+        assert(A.active&&learned.t===.5,'cooldown reductions bypassed minimum');
+        learned.t=0;step(1);assert(!A.active&&learned.t===.5,'chain end missing minimum cooldown');
+        setup(1);G.Combat.tick(.499,pl,1);assert(!A.active,'recast before half-second recovery');
+        G.Combat.tick(.002,pl,1.501);assert(A.active&&learned.t===.5,'recast failed after minimum cooldown');
+        learned.t=1.2;step(1);assert(learned.t===1.2,'minimum shortened a longer cooldown');
+        report.cooldown='Lv5 with 99% reduction: 0.5-second minimum; end resets minimum; longer cooldown preserved';
+      }finally{G.Combat.clearFields();pl.activeGroup=oldGroup;pl.moves=oldMoves;pl.cdMul=oldCd;}
       Object.assign(G.World,orig);return report;
     }''')
     capture=r'''() => {

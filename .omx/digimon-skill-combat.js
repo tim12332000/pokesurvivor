@@ -197,7 +197,7 @@
       if(handler?.canCast&&!handler.canCast(pl,m)){m.t=.15;continue;}
       if(m.digiMode==='shadow-clones'&&!G.NarutoClones?.canCast(pl,m)){m.t=.15;continue;}
       if(['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode)&&(!target||target.dead||G.U.dist(pl.x,pl.y,target.x,target.y)>(m.range||m.radius||520))){m.t=.05;continue;}
-      m.t=Math.max(.05,m.cd*pl.cdMul);const snapshot=cloneMove(m);
+      m.t=Math.max(m.minCooldown||.05,m.cd*pl.cdMul);const snapshot=cloneMove(m);
       pl.cast(m);if(G.Coop.active)G.Coop.cast(pl,m);m.castAt=performance.now();
       if(!cast(pl,snapshot))m.t=.25;
     }

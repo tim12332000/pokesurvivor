@@ -1,7 +1,7 @@
 /* Level-based Chidori pursuit is this edition's gameplay adaptation. */
 (() => {
   if (G.NarutoChidori) return;
-  const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), followupRangeMultiplier: 3, endInvulnerability: .3, speed: 1000, retargetDelay: .045, step: 4 });
+  const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), minCooldown: .5, followupRangeMultiplier: 3, endInvulnerability: .3, speed: 1000, retargetDelay: .045, step: 4 });
   const limitOf = (move,owner=G.Game.player) =>
     config.counts[Math.max(0,Math.min(config.counts.length-1,(move?.lvl|0)-1))] +
     Math.max(0,Math.floor(move?.quantityBonusAtCast ?? G.Quantity?.bonus(owner) ?? 0));
@@ -10,7 +10,11 @@
   const clear = owner => { if (!owner || chain?.owner === owner) chain = null; };
   function end(c) {
     if(chain!==c)return;
-    if(valid(c)&&c.dashes>0)c.owner.invuln=Math.max(c.owner.invuln||0,config.endInvulnerability);
+    if(valid(c)&&c.dashes>0){
+      c.owner.invuln=Math.max(c.owner.invuln||0,config.endInvulnerability);
+      const learned=c.owner.moves.find(move=>move.id===c.move.id);
+      if(learned)learned.t=Math.max(learned.t||0,config.minCooldown);
+    }
     clear();
   }
   const targetAlive = e => e && !e.dead && e.hp > 0 && G.EnemyMgr.all().includes(e);
