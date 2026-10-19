@@ -6,7 +6,8 @@
     'naruto-blue': ['#102851', '#1767aa', '#35bfff', '#9feaff', '#ffffff'],
     'naruto-red': ['#250b12', '#751626', '#d93443', '#ff8b83', '#ffe9d5'],
     'naruto-sand': ['#4d3014', '#91622b', '#c79a53', '#edd395', '#fff0ca'],
-    'naruto-fireball': ['#601509', '#bf3010', '#f66b13', '#ffbd36', '#fff3b0']
+    'naruto-fireball': ['#601509', '#bf3010', '#f66b13', '#ffbd36', '#fff3b0'],
+    'naruto-fuma-steel': ['#090c10', '#171b22', '#46515d', '#bdc7ce', '#eef3f5']
   });
 
   // Chapter 223's broad exhaled fire mass, drawn separately from small Ember flames.
@@ -44,10 +45,10 @@
     }
   };
 
-  // Physical Fuma shuriken: four swept metal blades and an open central grip.
+  // Reference prop: black recurved blades, narrow silver cutting edges, small central rivet.
   G.VFX.SHAPES['naruto-fuma-shuriken'] = {
     w:35,h:35,frames:1,spin:true,gen(P) {
-      const blade=[[3,-5],[7,-4],[11,-4],[15,-7],[14,-1],[12,3],[9,6],[5,7],[2,6],[3,2]];
+      const blade=[[2,-1],[7,-3],[11,-6],[14,-11],[16,-7],[16,-2],[14,2],[10,4],[6,3],[3,1]];
       const inside=(x,y)=>{
         let yes=false;
         for(let i=0,j=blade.length-1;i<blade.length;j=i++){
@@ -57,22 +58,23 @@
         return yes;
       };
       P.fill((x,y)=>{
-        const dx=x-17,dy=y-17,r=Math.hypot(dx,dy);
-        if(r<2.8)return null;
-        if(r<5)return r<3.5?'l':'d';
+        const dx=x-17,dy=y-17;
+        if(Math.hypot(dx,dy)<2.8)return 'd';
         for(const [u,v] of [[dx,dy],[dy,-dx],[-dx,-dy],[-dy,dx]])
-          if(inside(u,v))return v>2?'d':'m';
+          if(inside(u,v))return 'd';
         return null;
       });
       for(let q=0;q<4;q++){
         const rotate=([x,y])=>q===0?[x,y]:q===1?[-y,x]:q===2?[-x,-y]:[y,-x];
-        for(let i=0;i<7;i++){
+        for(let i=4;i<8;i++){
           const [ax,ay]=rotate(blade[i]),[bx,by]=rotate(blade[i+1]);
-          P.line(17+ax,17+ay,17+bx,17+by,'l');
+          P.line(17+ax,17+ay,17+bx,17+by,'l',1,'m');
         }
+        const [tx,ty]=rotate(blade[3]);P.set(17+tx,17+ty,'l');
       }
       P.outline();
-      for(let y=15;y<=19;y++)for(let x=15;x<=19;x++)if(Math.hypot(x-17,y-17)<2.6)P.set(x,y,null);
+      for(let y=16;y<=18;y++)for(let x=16;x<=18;x++)P.set(x,y,'m');
+      P.set(17,16,'l');P.set(16,16,'w');P.set(17,17,'d');
     }
   };
   G.VFX.SHAPES['naruto-wind-shuriken'] = {
@@ -306,7 +308,7 @@
       name:'風魔手裏劍', mode:'shot', type:'steel', learnLevel:9,
       cd:1.6,dmg:34,speed:460,life:4,range:552,size:32,count:1,pierce:3,arc:.24,charge:.2,knock:24,
       fumaReturn:true,boom:.65,
-      vis:{proj:'naruto-fuma-shuriken',pal:'steel',projScale:.9},
+      vis:{proj:'naruto-fuma-shuriken',pal:'naruto-fuma-steel',projScale:.9},
       desc:'佐助 Lv.9 可學。大型旋轉鋼刃飛出後弧形繞回，追隨佐助回收；去、回各可命中最多 4 名敵人，每名每程一次。數量增幅增加枚數與穿透，各枚完整傷害；牆壁仍會擋下。往返為本作改編。',
       ups:[{t:'手裏劍 +1 枚、穿透 +1',m:{count:1,pierce:1}},
         {t:'手裏劍傷害 +20%',m:{dmg:1.2}},
@@ -391,7 +393,7 @@
   G.Moves.poolFor = mon => {
     if (!mon.naruto) return poolFor(mon);
     const signature = byDex.get(mon.dex);
-    return signature ? [signature.id, ...shared.map(([id]) => id), ...(extraPools.get(mon.dex) || [])] : [];
+    return signature ? [signature.id, ...(extraPools.get(mon.dex) || [])] : [];
   };
   G.NarutoSkillCatalog = { definitions, byDex, references, extraPools };
 
@@ -407,7 +409,7 @@
   guide.id = 'scr-naruto-skills';
   guide.className = 'scr dim hidden';
   guide.translate = false;
-  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。每位忍者有三招特色技能；鳴人 Lv.9 另可學九尾查克拉外衣，佐助 Lv.9 可學風魔手裏劍。共通忍具包含苦無投擲、手裏劍散射。Lv.3、Lv.6 起保證出現特色技能選項；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
+  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。每位忍者有三招特色技能；鳴人 Lv.9 另可學九尾查克拉外衣，佐助 Lv.9 可學風魔手裏劍。僅開放各角色的特色忍術。Lv.3、Lv.6 起保證出現特色技能選項；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   for (const [dex, definition] of byDex) {
     if(!G.Naruto.availableDexes.includes(dex))continue;
     const record = G.Naruto.records.get(dex), reference = references.get(dex);

@@ -35,8 +35,10 @@
   }
   const offer=G.LevelUp.offer;
   G.LevelUp.offer=(player,n=3)=>{
-    const cards=offer(player,n);
-    if(!player.mon?.naruto)return cards;
+    if(!player.mon?.naruto)return offer(player,n);
+    const retired=['naruto-kunai','naruto-shuriken'];
+    const legacyCount=player.moves.filter(m=>retired.includes(m.id)).length;
+    const cards=offer(player,n+legacyCount).filter(c=>!retired.some(id=>c.key.endsWith(':'+id)));
     const milestones=milestonesFor(player.mon.dex);
     const guaranteed=milestones.filter(m=>player.level>=m.level&&!player.hasMove(m.id)&&!player.banned?.has(m.id))
       .map(m=>signatureCard(player,m)).filter(Boolean).slice(0,n);

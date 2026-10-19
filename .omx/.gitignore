@@ -19,12 +19,16 @@
 !/naruto-training.js
 !/naruto-support.js
 !/naruto-sharingan.js
+!/naruto-sharingan-icons.js
+!/check_sharingan_icons.py
 !/naruto-sharingan-powers.js
 !/check_sharingan_evolution.py
 !/naruto-cloak-vfx.js
 !/check_naruto_cloak.py
 !/check_sasuke_shuriken.py
 !/check_fuma_return.py
+!/check_fuma_visual.py
+!/check_naruto_signature_pool.py
 !/check_naruto_fireball.py
 !/naruto-fireball-cast.js
 !/check_naruto_fireball_cast.py

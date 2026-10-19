@@ -282,7 +282,7 @@ G.HUD = (() => {
         const C = 22, P = (S - C * 2) / 3;
         g.forEach((gm, k) => {
           const cx = x + P + (k % 2) * (C + P), cy = y + P + Math.floor(k / 2) * (C + P);
-          G.Icons.draw(ctx, 'move:' + gm.id, cx, cy, C);
+          G.Icons.draw(ctx, G.SharinganIcons?.forMove(gm) || 'move:' + gm.id, cx, cy, C);
           const f = cdOf(gm);
           if (f > 0) { ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.fillRect(cx, cy, C, C * f); }
           if (gm.evolved) { ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 1; ctx.strokeRect(cx + 0.5, cy + 0.5, C - 1, C - 1); }
@@ -302,7 +302,7 @@ G.HUD = (() => {
         }
 
         // emblema del tipo + insignia de la familia
-        G.Icons.draw(ctx, 'move:' + m.id, x + (S - 32) / 2, y + (S - 32) / 2 - 2, 32);
+        G.Icons.draw(ctx, G.SharinganIcons?.forMove(m) || 'move:' + m.id, x + (S - 32) / 2, y + (S - 32) / 2 - 2, 32);
 
         // nivel del movimiento (puntitos)
         const dots = m.def.maxLvl;
