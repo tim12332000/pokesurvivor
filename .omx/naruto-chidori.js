@@ -51,7 +51,6 @@
       if(d<=reach+.001){hit(c,e,dx,dy);break;}
       const step=Math.min(config.step,budget,d-reach),ux=dx/d,uy=dy/d;
       const x=pl.x+ux*step,y=pl.y+uy*step;
-      if(!G.World.isFree(x,y,pl.r*.8,true)){end(c);break;}
       pl.x=x;pl.y=y;c.travel+=step;budget-=step;
       pl.aim=pl.moveAngle=Math.atan2(dy,dx);pl.attackFace=.15;pl.anim.dir=G.Sprites.dirFromAngle(pl.aim);
       c.trail+=step;
@@ -76,8 +75,9 @@
   G.Player.prototype.update=function(dt){
     if(!valid(chain)&&chain)clear();
     if(chain?.owner!==this||chain.phase!=='dash')return playerUpdate.call(this,dt);
-    const frozen=this.frozen;this.frozen=true;this.svx=this.svy=0;
-    try{return playerUpdate.call(this,dt);}finally{this.frozen=frozen;}
+    const frozen=this.frozen,x=this.x,y=this.y;this.frozen=true;this.svx=this.svy=0;
+    // Dash movement owns position, including passage through solid scenery.
+    try{return playerUpdate.call(this,dt);}finally{this.x=x;this.y=y;this.frozen=frozen;}
   };
   const C=G.Combat,oldUpdate=C.updateFields,oldClear=C.clearFields,oldAir=C.drawAirFields;
   C.updateFields=function(dt){oldUpdate.call(this,dt);update(dt);};

@@ -74,8 +74,13 @@ with sync_playwright() as p:
       setup(1);pl.invuln=3;cast();step(1);assert(pl.invuln===3,'end shortened existing protection');
       setup(1);cast();G.Combat.clearFields();assert(pl.invuln===0,'charge clear gave end protection');
       setup(1);cast();G.EnemyMgr.all()[0].dead=true;step(.2);assert(pl.invuln===0,'charge cancellation gave end protection');
-      setup(2);cast();G.World.isFree=(x)=>x<40;step(1);assert(pl.x<40&&!A.active&&pl.invuln===.3,'wall crossed or missing end protection');G.World.isFree=()=>true;report.walls='solid geometry stops chain without remote damage and grants end protection';
-      setup(2);cast();step(.095);G.World.isFree=()=>false;step(.01);assert(!A.active,'solid prop did not stop');G.World.isFree=()=>true;
+      const wallTargets=setup(2);cast();G.World.isFree=x=>x<40||x>70;
+      G.World.collide=p=>{if(p.x>=40&&p.x<=70)p.x=20;};
+      for(let i=0;i<240&&A.active;i++){pl.update(1/240);G.Combat.updateFields(1/240);}
+      assert(wallTargets.every(e=>e.hp<e.maxHp)&&pl.x>70&&!A.active&&pl.invuln===.3,'wall interrupted pursuit');
+      pl.x=50;pl.update(.01);assert(pl.x===20,'normal collision remained disabled');G.World.collide=()=>{};
+      const propTargets=setup(2);cast();G.World.isFree=()=>false;step(1);
+      assert(propTargets.every(e=>e.hp<e.maxHp)&&!A.active,'solid props interrupted pursuit');G.World.isFree=()=>true;report.walls='dash passes walls and solid props; normal collision resumes afterward';
       setup(2);cast();step(.095);pl.dead=true;step(.01);assert(!A.active&&pl.invuln===0,'death residue or added protection');
       setup(2);cast();step(.095);const world=G.World;G.World={...world};step(.01);assert(!A.active&&pl.invuln===0,'world residue or added protection');G.World=world;
       setup(2);cast();step(.095);G.Combat.clearFields(pl);assert(!A.active&&pl.invuln===0,'clear residue or added protection');
