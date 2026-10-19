@@ -130,7 +130,7 @@
       minCooldown: G.NarutoChidori.config.minCooldown,
       range: 170, radius: 170, width: 34, knock: 50,
       vis: { proj: 'bolt', melee: 'claw', pal: 'naruto-blue' },
-      desc: `千鳥 Lv.1～5 基礎追擊上限為 ${G.NarutoChidori.config.counts.join('、')} 名不同敵人，數量增幅每層再增加 1 次追擊。命中後自動追擊下一人，後續搜尋與突進距離擴大三倍。同一輪連招越往後突進越快、轉向間隔越短，速度最多達初始的 3 倍；下一輪重新由原速開始。突進可穿過牆壁與障礙物，飛行期間無敵，結束後再保護 0.3 秒；結印與轉向間隔仍可受傷。實際冷卻與連段結束後的再次施放間隔至少 ${G.NarutoChidori.config.minCooldown} 秒，冷卻加成不會突破下限。追擊次數以施放時的技能等級與數量增幅為準，此連擊為本作改編。`,
+      desc: `千鳥 Lv.1～5 基礎追擊上限為 ${G.NarutoChidori.config.counts.join('、')} 名不同敵人，數量增幅每層再增加 1 次追擊。每輪第一擊維持原傷，之後每次命中讓下一擊傷害再乘 1.05，不設增傷上限，重新施放時重置。命中後自動追擊下一人，後續搜尋與突進距離擴大三倍。同一輪連招越往後突進越快、轉向間隔越短，速度最多達初始的 3 倍；下一輪重新由原速開始。突進可穿過牆壁與障礙物，飛行期間無敵，結束後再保護 0.3 秒；結印與轉向間隔仍可受傷。實際冷卻與連段結束後的再次施放間隔至少 ${G.NarutoChidori.config.minCooldown} 秒，冷卻加成不會突破下限。追擊次數以施放時的技能等級與數量增幅為準，此連擊為本作改編。`,
       ups: G.NarutoChidori.config.counts.slice(1).map((count,index)=>({
         t: `追擊上限 → ${count} 名；${['傷害 +20%','冷卻 -10%','攻擊範圍 +12%','傷害 +25%'][index]}`,
         m: [{dmg:1.2},{cd:.9},{radius:1.12,width:1.12,life:1.12,range:170*1.12},{dmg:1.25}][index]

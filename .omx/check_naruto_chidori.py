@@ -47,9 +47,19 @@ with sync_playwright() as p:
       report.acceleration={measuredSpeeds,turnDelayStart:turnDelays[0],turnDelayFloor:turnDelays.at(-1),newCast:'speed 1000 and delay 0.045 reset; actual movement verified'};
       for(let n=1;n<=7;n++){const es=setup(n);const m=cast();const before=pl.dmgDealt;step(2);const hit=es.filter(e=>e.hp<e.maxHp).length;
         assert(hit===Math.min(n,5),'target count '+n+': '+hit);assert(!A.active,'chain remained');
-        const expected=Math.min(n,5)*m.dmg*pl.atk*G.Types.mult(m.type,['normal'])*G.Weather.mult(m.type);
+        const expected=Array.from({length:Math.min(n,5)},(_,i)=>Math.pow(1.05,i)).reduce((a,b)=>a+b,0)*m.dmg*pl.atk*G.Types.mult(m.type,['normal'])*G.Weather.mult(m.type);
         assert(Math.abs(pl.dmgDealt-before-expected)<.01,'owner damage credit mismatch');
       }report.chain='1..7 targets: distinct hits capped at 5; owner/type damage accounting';
+      const boosted=setup(47);pl.quantityBonus=20;const boostedMove=G.Moves.instance('naruto-sasuke',5);
+      const baseDamage=boostedMove.dmg*pl.atk*G.Types.mult(boostedMove.type,['normal'])*G.Weather.mult(boostedMove.type),creditBefore=pl.dmgDealt;
+      assert(G.DigimonSkills.cast(pl,boostedMove),'damage chain cast rejected');step(12);
+      for(let i=0;i<45;i++)assert(100000-boosted[i].hp===Math.round(baseDamage*Math.pow(1.05,i)),'damage progression mismatch at hit '+(i+1));
+      assert(boosted[45].hp===100000&&!A.active,'damage bonus changed pursuit count');
+      const total=baseDamage*Array.from({length:45},(_,i)=>Math.pow(1.05,i)).reduce((a,b)=>a+b,0);
+      assert(Math.abs(pl.dmgDealt-creditBefore-total)<.001,'increasing damage missing from owner credit');
+      const resetDamage=setup(2);assert(G.DigimonSkills.cast(pl,G.Moves.instance('naruto-sasuke',5)),'damage reset cast rejected');step(2);
+      assert(100000-resetDamage[0].hp===Math.round(baseDamage),'new chain retained damage growth');
+      report.damageGrowth={hits:45,firstMultiplier:1,lastMultiplier:Math.pow(1.05,44),cap:'none',newCast:'resets to base damage'};
       const limits=[];
       for(let lv=1;lv<=5;lv++){
         const es=setup(27),m=G.Moves.instance('naruto-sasuke',lv);

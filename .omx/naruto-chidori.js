@@ -2,7 +2,8 @@
 (() => {
   if (G.NarutoChidori) return;
   const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), minCooldown: .5, followupRangeMultiplier: 3, endInvulnerability: .3,
-    speed: 1000, speedStep: .15, maxSpeedMultiplier: 3, retargetDelay: .045, retargetDelayDecay: .85, minRetargetDelay: .012, step: 4 });
+    speed: 1000, speedStep: .15, maxSpeedMultiplier: 3, damageStep: .05,
+    retargetDelay: .045, retargetDelayDecay: .85, minRetargetDelay: .012, step: 4 });
   const limitOf = (move,owner=G.Game.player) =>
     config.counts[Math.max(0,Math.min(config.counts.length-1,(move?.lvl|0)-1))] +
     Math.max(0,Math.floor(move?.quantityBonusAtCast ?? G.Quantity?.bonus(owner) ?? 0));
@@ -38,9 +39,10 @@
     c.wait = c.retargetDelay;
   }
   function hit(c, e, dx, dy) {
+    const damageMultiplier=Math.pow(1+config.damageStep,c.hits.size);
     c.hits.add(e);
     const m=c.move, pl=c.owner, k=G.Types.mult(m.type,e.types), crit=pl.critChance>0&&Math.random()<pl.critChance;
-    const dmg=m.dmg*c.attack*k*G.Weather.mult(m.type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(pl,e)||1);
+    const dmg=m.dmg*c.attack*damageMultiplier*k*G.Weather.mult(m.type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(pl,e)||1);
     e.hurt(dmg,'#9feaff',dx,dy,m.knock||0,crit?'crit':G.Types.label(k));
     pl.onDealt(dmg); pl.dmgDealt+=dmg;
     if(m.slow)e.applySlow(m.slow);
