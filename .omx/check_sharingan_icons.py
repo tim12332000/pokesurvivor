@@ -30,12 +30,12 @@ with sync_playwright() as p:
       const urls=[],pixels=[];
       for(let lv=1;lv<=5;lv++){
         const key=S.key(lv),def=I.UI[key];assert(key==='sharingan-'+lv&&def,'Missing stage '+lv);
-        assert(def.rows.length===16&&def.rows.every(row=>row.length===16),'Eye must use 16 by 16 native pixel rows');
+        assert(def.rows.length===64&&def.rows.every(row=>row.length===64),'Eye must use 64 by 64 cached source rows');
         assert(def.rows.every(row=>/^[.krd]+$/.test(row)),'Circular iris contains sclera or a non-red eye rim');
-        for(let y=0;y<16;y++)for(let x=0;x<16;x++){
-          const radius=Math.hypot(x-7.5,y-7.5),pixel=def.rows[y][x];
-          if(radius>7.4)assert(pixel==='.' ,'Iris has an eyelid outside the circle');
-          if(radius<6.5)assert(pixel!=='.','Iris has a transparent gap inside the red disc');
+        for(let y=0;y<64;y++)for(let x=0;x<64;x++){
+          const radius=Math.hypot(x-31.5,y-31.5)/32,pixel=def.rows[y][x];
+          if(radius>.94)assert(pixel==='.' ,'Iris has an eyelid outside the circle');
+          if(radius<.88)assert(pixel!=='.','Iris has a transparent gap inside the red disc');
         }
         urls.push(I.url(key));pixels.push(I.canvas(key).toDataURL());
       }
@@ -54,12 +54,13 @@ with sync_playwright() as p:
         I.draw(a.getContext('2d'),generic,0,0,64);I.draw(b.getContext('2d'),S.key(lv),0,0,64);
         assert(a.toDataURL()===b.toDataURL(),'Canvas HUD draw did not resolve current stage '+lv);
         assert(I.html(generic,32).includes(urls[lv-1]),'DOM icon did not resolve current stage '+lv);
+        assert(I.html(generic,24).includes('width="24" height="24"'),'Higher-resolution eye enlarged the requested UI size');
         if(lv<5){const up=G.LevelUp.offer(pl,100).find(c=>c.key==='up:'+id);assert(up?.icon===S.key(lv+1),'Upgrade card must preview next stage '+(lv+1));G.Moves.levelUp(learned);}
       }
       pl.dead=true;pl.hp=0;assert(I.url(generic)===urls[4],'Death summary lost evolved eye icon');pl.dead=false;pl.hp=pl.maxHp;
       assert(I.url('heart')===before[0]&&I.url('move:naruto-kunai')===before[1],'Unrelated icon cache changed');
       const oldMoves=pl.moves;pl.moves=[];assert(I.url(generic)===urls[0],'New-run empty loadout retained stage 5');pl.moves=oldMoves;
-      return {art:'five unique 16x16 eye maps and canvas/SVG images',dynamic:'generic URL, canvas, HTML and HUD draw evolve through all five levels; death retains stage',cards:'new stage 1; upgrade cards preview next stage',regression:'unrelated move and heart unchanged; empty loadout defaults stage 1'};
+      return {art:'five unique 64x64 source eye maps, rendered at requested UI size',dynamic:'generic URL, canvas, HTML and HUD draw evolve through all five levels; death retains stage',cards:'new stage 1; upgrade cards preview next stage',regression:'unrelated move and heart unchanged; empty loadout defaults stage 1'};
     }''')
     # Show and click a real upgrade card while the learned skill is still stage 4.
     page.evaluate(r'''() => {
