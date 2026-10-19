@@ -1,5 +1,8 @@
 # Naruto crossover section
 
+目前火影版號：**火影 beta 0.01**。顯示於火影選角區塊、瀏覽器標題與畫面右下角。
+日後修改 `.omx/naruto.js` 頂端的 `version`，三處會同步更新；不影響存檔鍵值。
+
 Generation 11 follows Digimon in collection and gacha. The Naruto button appears
 in the top navigation and in the first-time Digimon picker. Eight characters are
 available: Naruto, Sasuke, Sakura, Kakashi, Hinata, Rock Lee, Gaara and Itachi.

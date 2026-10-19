@@ -1,5 +1,6 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
+  const version='火影 beta 0.01';
   const roster = [
     ['naruto','Naruto Uzumaki','漩渦鳴人','第七班',['fighting','flying'],3,120,116],
     ['sasuke','Sasuke Uchiha','宇智波佐助','第七班',['electric','fire'],4,108,123],
@@ -88,7 +89,7 @@
   G.UI.spriteCanvas=(dex,w,h,opts)=>{const canvas=spriteCanvas(dex,w,h,opts);if(records.has(dex))previews.add(canvas);return canvas;};
 
   const picker=document.createElement('section');picker.id='scr-naruto';picker.className='scr dim hidden';picker.translate=false;
-  picker.innerHTML=`<div class="box"><div class="naruto-heading"><div><h2>火影忍者</h2><p class="sub">選擇忍者，踏上你的忍道。</p></div><button id="naruto-close" class="btn small ghost">返回</button></div>
+  picker.innerHTML=`<div class="box"><div class="naruto-heading"><div><h2>火影忍者</h2><p class="naruto-version">${version}</p><p class="sub">選擇忍者，踏上你的忍道。</p></div><button id="naruto-close" class="btn small ghost">返回</button></div>
     <div class="naruto-actions"><button id="naruto-to-digimon" class="btn small">數碼寶貝</button></div>
     <div class="naruto-grid"></div><p class="note">8 位忍者・招式為生存玩法改編・存檔保存在此瀏覽器</p>
     <p class="note">像素素材：Path of the Ninja 2・Hwdphg 擷取・<a href="https://spritedatabase.net/game/59" target="_blank" rel="noopener noreferrer">Sprite Database</a>。角色與美術權利屬原權利人。</p></div>`;
@@ -144,17 +145,18 @@
   }).observe(document.getElementById('scr-gacha'),{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['class']});
   document.querySelector('#scr-menu .logo .t2').textContent='寶可夢 × 數碼寶貝 × 火影忍者';
   document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代＋數碼寶貝＋火影忍者';
-  document.title='PokéSurvivor · 跨界同人沙盒版';
+  document.title=version+' · PokéSurvivor';
   const badge=document.querySelector('body>div[style*="pointer-events: none"]');
-  if(badge)badge.textContent='非官方跨界沙盒版・金幣與抽卡券無限・瀏覽器存檔';
+  if(badge){badge.textContent=version+'・非官方跨界沙盒版・金幣與抽卡券無限・瀏覽器存檔';badge.style.maxWidth='calc(100vw - 16px)';}
   const style=document.createElement('style');style.textContent=`
     #scr-naruto{z-index:150;padding:20px;background:#08152bef}#scr-naruto>.box{width:min(960px,100%);max-height:92vh;overflow:auto;border-color:#e4a653}
     .naruto-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}.naruto-heading h2{margin-bottom:4px;color:#ffd23f}.naruto-heading>button{flex-shrink:0;white-space:nowrap}
+    .naruto-version{margin:0 0 4px;color:#ffcf7c;font-size:13px}
     .naruto-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.naruto-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
     .naruto-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;color:white;background:#173564;border:2px solid #597fae;border-radius:12px;font:inherit;cursor:pointer}
     .naruto-card:hover,.naruto-card:focus-visible,.naruto-card.on{border-color:#ffc468;background:#244b80}.naruto-card b{font-size:19px;color:#ffd23f}.naruto-card small{color:#c9d8ef}
     .naruto-card canvas{display:block;width:128px;height:112px;max-width:100%;image-rendering:pixelated}.naruto-card span{font-size:14px}
     @media(max-width:650px){.naruto-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{gap:4px;max-width:calc(100vw - 12px);flex-wrap:wrap;justify-content:flex-end}.topbar .btn.small{padding:4px 6px;font-size:12px}#scr-naruto{padding:10px}}
   `;document.head.append(style);
-  G.Naruto={records,choose,openPicker,frameFor};
+  G.Naruto={version,records,choose,openPicker,frameFor};
 })();
