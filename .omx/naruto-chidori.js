@@ -3,14 +3,14 @@
   if (G.NarutoChidori) return;
   const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), minCooldown: .5, followupRangeMultiplier: 3, endInvulnerability: .3,
     speed: 1000, speedStep: .15, maxSpeedMultiplier: 3, damageStep: .05,
-    retargetDelay: .045, retargetDelayDecay: .85, minRetargetDelay: .012, step: 4 });
+    retargetDelay: .045, retargetDelayDecay: .85, minRetargetDelay: .012, screenPadding: 48, returnDuration: .12, step: 4 });
   const limitOf = (move,owner=G.Game.player) =>
     config.counts[Math.max(0,Math.min(config.counts.length-1,(move?.lvl|0)-1))] +
     Math.max(0,Math.floor(move?.quantityBonusAtCast ?? G.Quantity?.bonus(owner) ?? 0));
   let chain = null;
   const valid = c => c && c.owner === G.Game.player && c.world === G.World && !c.owner.dead && c.owner.hp > 0;
-  const clear = owner => { if (!owner || chain?.owner === owner) chain = null; };
-  function end(c) {
+  const clear = owner => { if (!owner || chain?.owner === owner) { if(chain)chain.owner.svx=chain.owner.svy=0;chain=null; } };
+  function complete(c) {
     if(chain!==c)return;
     if(valid(c)&&c.dashes>0){
       c.owner.invuln=Math.max(c.owner.invuln||0,config.endInvulnerability);
@@ -19,11 +19,19 @@
     }
     clear();
   }
+  function end(c) {
+    if(chain!==c)return;
+    if(!valid(c)||!c.dashes){clear();return;}
+    if(c.phase==='return')return;
+    c.phase='return';c.returnFrom={x:c.owner.x,y:c.owner.y};c.returnAge=0;
+    c.owner.svx=c.owner.svy=0;
+  }
   const targetAlive = e => e && !e.dead && e.hp > 0 && G.EnemyMgr.all().includes(e);
+  const inViewport = (e,camera) => Math.abs(e.x-camera.x)<=G.Camera.w/2+config.screenPadding && Math.abs(e.y-camera.y)<=G.Camera.h/2+config.screenPadding;
   const rangeFor = c => c.move.range * (c.hits.size ? config.followupRangeMultiplier : 1);
   function next(c) {
     const pl = c.owner;
-    return G.EnemyMgr.all().filter(e => targetAlive(e) && !c.hits.has(e) && Math.hypot(e.x-pl.x,e.y-pl.y) <= rangeFor(c))
+    return G.EnemyMgr.all().filter(e => targetAlive(e) && inViewport(e,c.camera) && !c.hits.has(e) && Math.hypot(e.x-pl.x,e.y-pl.y) <= rangeFor(c))
       .sort((a,b) => Math.hypot(a.x-pl.x,a.y-pl.y)-Math.hypot(b.x-pl.x,b.y-pl.y))[0];
   }
   function begin(c) {
@@ -52,8 +60,17 @@
   function update(dt) {
     const c=chain;
     if(!valid(c)){clear();return;}
+    if(c.phase==='return') {
+      c.returnAge=Math.min(config.returnDuration,c.returnAge+dt);
+      const t=c.returnAge/config.returnDuration;
+      c.owner.x=c.returnFrom.x+(c.origin.x-c.returnFrom.x)*t;
+      c.owner.y=c.returnFrom.y+(c.origin.y-c.returnFrom.y)*t;
+      c.owner.svx=c.owner.svy=0;
+      if(t>=1){c.owner.x=c.origin.x;c.owner.y=c.origin.y;complete(c);}
+      return;
+    }
     if(c.phase!=='dash') {c.wait-=dt;if(c.wait<=0)begin(c);return;}
-    if(!targetAlive(c.target)){finish(c);return;}
+    if(!targetAlive(c.target)||!inViewport(c.target,c.camera)){finish(c);return;}
     const pl=c.owner,m=c.move,e=c.target;
     let budget=Math.min(c.speed*dt,c.legRange-c.travel);
     while(budget>0&&chain===c&&c.phase==='dash') {
@@ -72,30 +89,40 @@
     }
   }
   const canCast = (pl,m) => pl === G.Game.player && pl.dex === 30002 && !pl.dead && pl.hp > 0 && !chain && !G.NarutoFireball?.active &&
-    G.EnemyMgr.all().some(e=>targetAlive(e)&&Math.hypot(e.x-pl.x,e.y-pl.y)<=(m?.range||170));
+    G.EnemyMgr.all().some(e=>targetAlive(e)&&inViewport(e,G.Camera)&&Math.hypot(e.x-pl.x,e.y-pl.y)<=(m?.range||170));
   function cast(pl,m) {
     if(!canCast(pl,m))return false;
     const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m,pl),attack:pl.atk,hits:new Set(),dashes:0,trail:0,
+      origin:{x:pl.x,y:pl.y},camera:{x:G.Camera.x,y:G.Camera.y},
       speed:config.speed,retargetDelay:config.retargetDelay,phase:'charge',wait:Math.max(0,m.charge||0)};
     if(!next(c))return false;
-    chain=c;return true;
+    chain=c;pl.svx=pl.svy=0;holdCamera(c);return true;
   }
-  // Keep independent damage immunity intact: no writes to pl.invuln, including lava's reset.
+  // Flight immunity never overwrites independent timers, including lava's reset.
   const hurt=G.Player.prototype.hurt, playerUpdate=G.Player.prototype.update;
-  G.Player.prototype.hurt=function(...args){if(valid(chain)&&chain.owner===this&&chain.phase==='dash')return;return hurt.apply(this,args);};
+  G.Player.prototype.hurt=function(...args){if(valid(chain)&&chain.owner===this&&['dash','return'].includes(chain.phase))return;return hurt.apply(this,args);};
   G.Player.prototype.update=function(dt){
     if(!valid(chain)&&chain)clear();
-    if(chain?.owner!==this||chain.phase!=='dash')return playerUpdate.call(this,dt);
+    if(chain?.owner!==this)return playerUpdate.call(this,dt);
     const frozen=this.frozen,x=this.x,y=this.y;this.frozen=true;this.svx=this.svy=0;
     // Dash movement owns position, including passage through solid scenery.
     try{return playerUpdate.call(this,dt);}finally{this.x=x;this.y=y;this.frozen=frozen;}
   };
+  function holdCamera(c) {Object.assign(G.Camera,{x:c.camera.x,y:c.camera.y,shake:0,_sx:0,_sy:0});}
+  const follow=G.Camera.follow,kick=G.Camera.kick;
+  G.Camera.follow=function(...args){
+    if(chain&&!valid(chain))clear();
+    const result=follow.apply(this,args);
+    if(valid(chain))holdCamera(chain);
+    return result;
+  };
+  G.Camera.kick=function(...args){if(valid(chain)){holdCamera(chain);return;}return kick.apply(this,args);};
   const C=G.Combat,oldUpdate=C.updateFields,oldClear=C.clearFields,oldAir=C.drawAirFields;
   C.updateFields=function(dt){oldUpdate.call(this,dt);update(dt);};
   C.clearFields=function(owner){oldClear.call(this,owner);clear(owner);};
   const clearSkills=G.DigimonSkills.clear;
   G.DigimonSkills.clear=function(owner){clearSkills(owner);clear(owner);};
-  C.drawAirFields=function(ctx){oldAir.call(this,ctx);if(valid(chain)&&chain.phase==='dash'){
+  C.drawAirFields=function(ctx){oldAir.call(this,ctx);if(valid(chain)&&['dash','return'].includes(chain.phase)){
     const p=chain.owner;G.VFX.draw(ctx,'bolt','naruto-blue',p.x+Math.cos(p.aim)*18,p.y-G.LIFT+Math.sin(p.aim)*18,{scale:1.25,angle:p.aim,frame:Math.floor(performance.now()/65)});
   }};
   G.NarutoChidori={config,limitOf,supports:mode=>mode==='chidori-chain',canCast,cast,clear,update,get active(){return chain;}};

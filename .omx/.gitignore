@@ -37,6 +37,7 @@
 !/check_roster_availability.py
 !/naruto-chidori.js
 !/check_naruto_chidori.py
+!/check_chidori_camera_return.py
 !/check_naruto_start.py
 !/dev-network.json
 !/dev-controls.js

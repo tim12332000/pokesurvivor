@@ -86,8 +86,8 @@ with sync_playwright() as p:
       try {
         for(const def of G.NarutoSkillCatalog.definitions.values()) {
           if(def.dmg===0)continue; // Support behavior has dedicated roster checks.
-          G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();pl.x=pl.y=0;pl.aim=0;pl.hp=pl.maxHp;pl.dead=false;pl.critChance=0;
-          const owner=[...G.Naruto.records.values()].find(mon=>{const level=pl.level;pl.level=9;try{return G.Moves.poolFor(mon).includes(def.id);}finally{pl.level=level;}});
+          G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();pl.x=pl.y=0;G.Camera.x=G.Camera.y=0;pl.aim=0;pl.hp=pl.maxHp;pl.dead=false;pl.critChance=0;
+          const owner=[...G.Naruto.records.values()].find(mon=>{const level=pl.level;pl.level=9;try{return G.Moves.poolFor(mon).includes(def.id);}finally{pl.level=level;}})||G.Naruto.records.get(30001);
           pl.mon=owner;pl.dex=owner.dex;
           const targets=[[60,0],[110,10],[160,-15]].map(([x,y])=>{
             const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},x,y,{hp:1,spd:1,dmg:1});e.types=['normal'];G.EnemyMgr.add(e);return e;

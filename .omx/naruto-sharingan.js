@@ -63,7 +63,7 @@
   G.Player.prototype.hurt = function(amount, type = null, pure = false) {
     if (this !== G.Game.player) return hurt.call(this, amount, type, pure);
     const level = sync(this), dash = G.NarutoChidori?.active;
-    const immuneDash = dash?.owner === this && dash.phase === 'dash' && dash.world === G.World;
+    const immuneDash = dash?.owner === this && ['dash','return'].includes(dash.phase) && dash.world === G.World;
     if (!level || this.invuln > 0 || this.dead || this.frozen || pure || !(amount > 0) || immuneDash)
       return hurt.call(this, amount, type, pure);
     if (Math.random() < config.dodgeChance) {

@@ -75,7 +75,7 @@ with sync_playwright() as p:
           Object.assign(G.World,{isFree:()=>true,isLiquid:()=>false,collide:()=>{}});
           let healed,dealt;
           try{
-            pl.x=pl.y=pl.aim=0;
+            pl.x=pl.y=pl.aim=0;G.Camera.x=G.Camera.y=0;
             const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},100,0,{hp:1,spd:1,dmg:1});
             e.types=['normal'];G.EnemyMgr.add(e);G.EnemyMgr.rebuildGrid();pl.target=e;
             const beforeHP=pl.hp,beforeDamage=pl.dmgDealt;

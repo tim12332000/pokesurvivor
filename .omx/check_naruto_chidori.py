@@ -19,6 +19,8 @@ with sync_playwright() as p:
     result=page.evaluate(r'''() => {
       const pl=G.Game.player,A=G.NarutoChidori,assert=(v,m)=>{if(!v)throw Error(m)},report={};
       const orig={isFree:G.World.isFree,isLiquid:G.World.isLiquid,collide:G.World.collide};
+      const camera={x:G.Camera.x,y:G.Camera.y,w:G.Camera.w,h:G.Camera.h};
+      Object.assign(G.Camera,{x:0,y:0,w:20000,h:20000}); // Isolate progression math from separately tested screen clipping.
       G.World.isFree=()=>true;G.World.isLiquid=()=>false;G.World.collide=()=>{};
       function setup(n){G.Combat.clearFields();G.EnemyMgr.clear();G.FX.clear();pl.x=pl.y=0;pl.hp=pl.maxHp;pl.dead=false;pl.invuln=0;pl.critChance=0;pl.quantityBonus=0;pl.item=null;
         return Array.from({length:n},(_,i)=>{const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},100+i*100,0,{hp:1,spd:1,dmg:1});e.types=['normal'];G.EnemyMgr.add(e);return e;});}
@@ -107,8 +109,9 @@ with sync_playwright() as p:
       setup(1);cast();G.EnemyMgr.all()[0].dead=true;step(.2);assert(pl.invuln===0,'charge cancellation gave end protection');
       const wallTargets=setup(2);cast();G.World.isFree=x=>x<40||x>70;
       G.World.collide=p=>{if(p.x>=40&&p.x<=70)p.x=20;};
-      for(let i=0;i<240&&A.active;i++){pl.update(1/240);G.Combat.updateFields(1/240);}
-      assert(wallTargets.every(e=>e.hp<e.maxHp)&&pl.x>70&&!A.active&&pl.invuln===.3,'wall interrupted pursuit');
+      let beyondWall=false;
+      for(let i=0;i<240&&A.active;i++){pl.update(1/240);G.Combat.updateFields(1/240);if(pl.x>70)beyondWall=true;}
+      assert(wallTargets.every(e=>e.hp<e.maxHp)&&beyondWall&&pl.x===0&&!A.active&&pl.invuln===.3,'wall interrupted pursuit or return');
       pl.x=50;pl.update(.01);assert(pl.x===20,'normal collision remained disabled');G.World.collide=()=>{};
       const propTargets=setup(2);cast();G.World.isFree=()=>false;step(1);
       assert(propTargets.every(e=>e.hp<e.maxHp)&&!A.active,'solid props interrupted pursuit');G.World.isFree=()=>true;report.walls='dash passes walls and solid props; normal collision resumes afterward';
@@ -133,7 +136,7 @@ with sync_playwright() as p:
         learned.t=1.2;step(1);assert(learned.t===1.2,'minimum shortened a longer cooldown');
         report.cooldown='Lv5 with 99% reduction: 0.5-second minimum; end resets minimum; longer cooldown preserved';
       }finally{G.Combat.clearFields();pl.activeGroup=oldGroup;pl.moves=oldMoves;pl.cdMul=oldCd;}
-      Object.assign(G.World,orig);return report;
+      Object.assign(G.World,orig);Object.assign(G.Camera,camera);return report;
     }''')
     capture=r'''() => {
       const pl=G.Game.player;G.Combat.clearFields();G.EnemyMgr.clear();G.FX.clear();
