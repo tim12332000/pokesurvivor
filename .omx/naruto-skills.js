@@ -10,7 +10,7 @@
   });
 
   // Chapter 223's broad exhaled fire mass, drawn separately from small Ember flames.
-  // 36-pixel body × PX 2 × scale 1.6 ≈ 115 world pixels; collision radius is 52.
+  // 36-pixel body × PX 2 × base scale 1.6; flight growth scales art and collision together.
   G.VFX.SHAPES['naruto-great-fireball'] = {
     w:51,h:43,frames:3,dir:true,gen(P,frame) {
       P.fill((x,y)=>{
@@ -213,8 +213,9 @@
     ['naruto-fireball', [30002, 30008], {
       name: '火遁・豪火球之術', mode: 'shot', type: 'fire', cd: 2.3, dmg: 49,
       speed: 300, life: 1.4, size: 52, range: 420, blastRadius: 95, burn: .12,
+      fireballGrowth: {startRatio:.2,endRatio:1.4,distance:300},
       vis: { proj: 'naruto-great-fireball', projScale: 1.6, trail: 'ember', pal: 'naruto-fireball' },
-      desc: '吐出比身體更寬的圓形火團，翻動的橙紅外焰包住亮黃核心並拖出火舌；命中後爆發火焰，傷害爆心周圍多名敵人並施加短暫燃燒。佐助與鼬使用此招有官方資料；火球碰撞半徑 52、爆炸半徑 95 與燃燒數值為本作改編。',
+      desc: '從嘴前吐出小火團，越往外飛越大，飛行 300 距離後達最大尺寸；火焰外觀與實際碰撞範圍同步成長。命中後爆發火焰，傷害爆心周圍多名敵人並施加短暫燃燒。佐助與鼬使用此招有官方資料；成長尺寸、爆炸半徑 95 與燃燒數值為本作改編。',
       source_url: 'https://naruto-official.com/en/anime/naruto1/list/01_354',
       owner_sources: { 30008: 'https://naruto-official.com/en/news/01_2332' }
     }],
@@ -392,6 +393,7 @@
   guide.translate = false;
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。每位忍者有三招特色技能；鳴人 Lv.9 另可學九尾查克拉外衣，佐助 Lv.9 可學風魔手裏劍。共通忍具包含苦無投擲、手裏劍散射。Lv.3、Lv.6 起保證出現特色技能選項；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   for (const [dex, definition] of byDex) {
+    if(!G.Naruto.availableDexes.includes(dex))continue;
     const record = G.Naruto.records.get(dex), reference = references.get(dex);
     const item = document.createElement('article');
     item.className = 'naruto-skill-entry';

@@ -26,19 +26,19 @@ with sync_playwright() as p:
     if page.locator('#tap-start').is_visible():page.locator('#tap-start').click()
     page.locator('#btn-naruto').click()
     page.wait_for_function('[...G.Naruto.records.values()].every(r=>r.ready)')
-    assert page.locator('#scr-naruto [data-naruto]').count()==8
+    assert page.locator('#scr-naruto [data-naruto]').count()==2
     assert page.locator('#scr-digimon').is_hidden()
     page.screenshot(path=str(ROOT/'.omx/naruto-picker.png'),animations='disabled')
     page.locator('#naruto-skill-guide').click()
-    assert page.locator('.naruto-skill-entry').count()==8
-    assert page.locator('.naruto-skill-entry a[href^="https://naruto-official.com/"]').count()==25
+    assert page.locator('.naruto-skill-entry').count()==2
+    assert page.locator('.naruto-skill-entry a[href^="https://naruto-official.com/"]').count()==7
     page.screenshot(path=str(ROOT/'.omx/naruto-guide.png'),animations='disabled')
     page.locator('#naruto-skills-close').click()
     page.locator('[data-naruto="30001"]').click()
     assert page.locator('#menu-partner-name').inner_text()=='漩渦鳴人'
     report=page.evaluate('''() => {
       const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
-      assert(G.MenuUI.GEN_NAMES.length===11&&G.Gacha.BANNERS.length===11,'Section registration');
+      assert(G.MenuUI.GEN_NAMES.filter(Boolean).length===10&&G.Gacha.BANNERS.filter(Boolean).length===10,'Section registration');
       assert(G.NarutoSkillCatalog.definitions.size===27,'Skill registry');
       const pixels=[];
       for(const r of G.Naruto.records.values()) {
@@ -56,20 +56,20 @@ with sync_playwright() as p:
       }
       assert(!G.Moves.poolFor(G.DEX_BY[1]).some(id=>id.startsWith('naruto-')),'Pokemon pool changed');
       assert(!G.Moves.poolFor(G.DEX_BY[20001]).some(id=>id.startsWith('naruto-')),'Digimon pool changed');
-      for(let i=0;i<10;i++)assert(G.Gacha.pull(G.DB.save,10,11,'t10').every(r=>G.Naruto.records.has(r.dex)&&!r.shiny),'Naruto gacha leaked');
+      for(let i=0;i<10;i++)assert(G.Gacha.pull(G.DB.save,10,11,'t10').every(r=>G.Naruto.availableDexes.includes(r.dex)&&!r.shiny),'Naruto gacha leaked');
       return {characters:G.Naruto.records.size,skills:G.NarutoSkillCatalog.definitions.size,direction_renders:pixels.length};
     }''')
     page.locator('#scr-menu [data-go="dex"]').click()
-    assert page.locator('#dex-gens .gen-tab').count()==11
+    assert page.locator('#dex-gens .gen-tab').count()==10
     page.locator('#dex-gens .gen-tab').last.click()
-    assert page.locator('#dex-grid .cell').count()==8
+    assert page.locator('#dex-grid .cell').count()==2
     page.screenshot(path=str(ROOT/'.omx/naruto-collection.png'),animations='disabled')
     page.evaluate('G.Flow.goMenu();G.GachaUI.open()')
     page.locator('#gacha-gens [data-gen="11"]').click()
-    assert page.locator('#gacha-gens .gen-tab').count()==11
+    assert page.locator('#gacha-gens .gen-tab').count()==10
     page.screenshot(path=str(ROOT/'.omx/naruto-gacha.png'),animations='disabled')
     page.evaluate('G.Flow.goMenu()')
-    for dex in range(30001,30009):
+    for dex in (30001,30002):
         page.evaluate('(dex)=>G.Naruto.choose(dex)',dex)
         page.locator('#scr-menu [data-go="play"]').click()
         page.wait_for_function('G.Game.state==="playing"')
@@ -101,18 +101,18 @@ with sync_playwright() as p:
       }finally{Object.assign(G.World,saved);G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();}
       return results;
     }''')
-    page.evaluate('G.Game.quit();G.Digimon.choose(20001);G.Naruto.choose(30008);G.DB.commit()')
+    page.evaluate('G.Game.quit();G.Naruto.choose(30002);G.DB.commit()')
     page.reload();page.wait_for_function("document.getElementById('boot').classList.contains('hidden')")
     page.wait_for_function("!document.getElementById('tap-start').classList.contains('hidden')||!document.getElementById('topbar').classList.contains('hidden')")
     if page.locator('#tap-start').is_visible():page.locator('#tap-start').click()
-    assert page.evaluate('G.DB.save.partner')==30008
+    assert page.evaluate('G.DB.save.partner')==30002
     page.locator('#btn-naruto').click()
     page.set_viewport_size({'width':390,'height':844})
     page.screenshot(path=str(ROOT/'.omx/naruto-mobile.png'),animations='disabled')
-    page.locator('[data-naruto="30005"]').scroll_into_view_if_needed();page.locator('[data-naruto="30005"]').click()
-    assert page.evaluate('G.DB.save.partner')==30005
+    page.locator('[data-naruto="30001"]').scroll_into_view_if_needed();page.locator('[data-naruto="30001"]').click()
+    assert page.evaluate('G.DB.save.partner')==30001
     assert not errors,errors
     assert not missing,missing
     assert not cloud,cloud
-    report.update(damage=damage,combat_starts=8,save_reload='passed',mobile='passed',errors=errors)
+    report.update(damage=damage,combat_starts=2,save_reload='passed',mobile='passed',errors=errors)
     print(json.dumps(report,ensure_ascii=True));browser.close()

@@ -59,7 +59,8 @@ with sync_playwright() as p:
     return out;
    }finally{Object.assign(G.World,saved);G.Camera.sees=sees;reset()}
   }''')
-  page.evaluate("G.Game.quit();G.Flow.goMenu();G.Naruto.choose(30008);G.Flow.play();G.Game.togglePause();G.Game.player.addMove('naruto-fireball');G.DigimonSkills.cast(G.Game.player,G.Moves.instance('naruto-fireball'))")
+  # Hidden characters remain in the runtime catalog; exercise Itachi without exposing his picker.
+  page.evaluate("G.Game.quit();G.Flow.goMenu();G.Naruto.choose(30002);G.Flow.play();G.Game.togglePause();const pl=G.Game.player;pl.mon=G.Naruto.records.get(30008);pl.dex=30008;pl.anim=new G.Sprites.Animator(30008);pl.addMove('naruto-fireball');G.DigimonSkills.cast(pl,G.Moves.instance('naruto-fireball'))")
   assert page.evaluate('G.Projectiles.count===1&&!G.NarutoFireball.active'),'Itachi acquired Sasuke delay or pose'
   result['itachi']='unchanged immediate fireball; no Sasuke casting pose'
   page.evaluate("G.Game.quit();G.Flow.goMenu();G.Naruto.choose(30002);G.Flow.play();G.Game.togglePause();G.Game.player.addMove('naruto-fireball')")

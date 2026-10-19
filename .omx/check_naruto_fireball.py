@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 from urllib.parse import unquote,urlsplit
 from playwright.sync_api import sync_playwright
 import json,mimetypes,os
@@ -21,13 +21,13 @@ with sync_playwright() as p:
  errors=[]
  try:
   context,page=boot()
-  capture=r'''() => {
+  capture=r'''({distance=0,vertical=false}={}) => {
    const pl=G.Game.player;G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();
-   pl.aim=0;pl.anim.update(10);pl.anim.loop('Idle');const m=pl.moves.find(m=>m.id==='naruto-fireball');pl.cast(m);pl.anim.update(.12);
-   G.DigimonSkills.cast(pl,m);G.Combat.updateFields(.5);const shot=G.Projectiles.all()[0];shot.x=pl.x+110;shot.y=pl.y;shot.t=.12;
-   G.Camera.x=pl.x;G.Camera.y=pl.y;document.getElementById('scr-pause').style.visibility='hidden';
+   pl.aim=vertical?-Math.PI/2:0;pl.anim.update(10);pl.anim.loop('Idle');const m=pl.moves.find(m=>m.id==='naruto-fireball');pl.cast(m);pl.anim.update(.12);
+   G.DigimonSkills.cast(pl,m);G.Combat.updateFields(.241);if(distance)G.Projectiles.update(distance/m.speed,pl,[]);
+   G.Camera.x=pl.x+Math.cos(pl.aim)*distance*.5;G.Camera.y=pl.y+Math.sin(pl.aim)*distance*.5;document.getElementById('scr-pause').style.visibility='hidden';
   }'''
-  page.evaluate(capture);page.wait_for_timeout(60)
+  page.evaluate(capture,{});page.wait_for_timeout(60)
   suffix='before' if os.environ.get('FIREBALL_BEFORE') else 'desktop'
   page.screenshot(path=str(ROOT/f'.omx/naruto-fireball-{suffix}.png'),animations='disabled')
   if os.environ.get('FIREBALL_BEFORE'):print('baseline captured')
@@ -48,8 +48,24 @@ with sync_playwright() as p:
      assert(def.size===52&&def.digiVis.proj==='naruto-great-fireball','Large collision/shape absent');
      for(const mon of G.Naruto.records.values()){pl.level=9;assert(G.Moves.poolFor(mon).includes(id)===[30002,30008].includes(mon.dex),'Pool escaped '+mon.dex)}
      setup();pl.quantityBonus=2;const learned=G.Moves.instance(id),before=JSON.stringify(learned);G.DigimonSkills.cast(pl,learned);step(.25);
-     assert(G.Projectiles.count===3&&G.Projectiles.all().every(s=>s.r===52&&s.owner===pl&&Math.abs(s.dmg-49*pl.atk*.2)<.001),'Quantity, full damage, or owner failed');
+     assert(G.Projectiles.count===3&&G.Projectiles.all().every(s=>s.r>10.4&&s.r<12&&s.owner===pl&&Math.abs(s.dmg-49*pl.atk*.2)<.001),'Quantity, full damage, or owner failed');
      assert(JSON.stringify(learned)===before,'Definition mutated');out.quantity='1 + 2 passive stacks = 3 full damage fireballs';
+     const growth=[];
+     for(const distance of [0,75,150,300,400]){
+      setup();G.DigimonSkills.cast(pl,G.Moves.instance(id));G.Combat.updateFields(.241);
+      const shot=G.Projectiles.all()[0];if(distance)G.Projectiles.update(distance/300,pl,[]);
+      const ratio=.2+1.2*Math.min(distance/300,1);
+      assert(Math.abs(shot.r-52*ratio)<.0001&&Math.abs(shot.vis.projScale-1.6*ratio)<.0001,'Growth mismatch at '+distance+': '+shot.r);
+      growth.push({distance,radius:shot.r,scale:shot.vis.projScale});
+     }
+     setup();G.DigimonSkills.cast(pl,G.Moves.instance(id));G.Combat.updateFields(.241);let shot=G.Projectiles.all()[0];shot.vx=shot.vy=0;G.Projectiles.update(.4,pl,[]);
+     assert(Math.abs(shot.r-10.4)<.0001,'Growth depends on age rather than travel');shot.vx=600;G.Projectiles.update(.125,pl,[]);assert(Math.abs(shot.r-26)<.0001,'Speed change did not affect travel growth');
+     setup();pl.quantityBonus=2;G.DigimonSkills.cast(pl,G.Moves.instance(id));G.Combat.updateFields(.241);const siblings=G.Projectiles.all();
+     assert(siblings.length===3&&siblings[0].vis!==siblings[1].vis&&siblings[0].fireballGrowth!==siblings[1].fireballGrowth,'Quantity shares growth state');
+     siblings[0].vx*=.5;siblings[0].vy*=.5;G.Projectiles.update(.5,pl,[]);
+     assert(Math.abs(siblings[0].r-26)<.0001&&siblings.slice(1).every(s=>Math.abs(s.r-41.6)<.0001),'Quantity growth not independent');
+     setup();G.DigimonSkills.cast(pl,G.Moves.instance('naruto-rasenshuriken'));G.Combat.updateFields(.241);shot=G.Projectiles.all()[0];const unaffected=shot.r;G.Projectiles.update(.25,pl,[]);assert(shot.r===unaffected&&!shot.fireballGrowth,'Unrelated projectile grew');
+     out.growth=growth;out.travel='stationary age does not grow; speed changes and sibling state are independent';
      setup();const origin=G.NarutoFireball?.origin(pl,0)||{x:3,y:0};
      const es=setup([[origin.x+147,origin.y],[origin.x+87,origin.y+82],[origin.x+87,origin.y-82],[origin.x+87,origin.y+170]]),m=G.Moves.instance(id),expected=m.dmg*pl.atk*G.Types.mult(m.type,['normal'])*G.Weather.mult(m.type),credit=pl.dmgDealt;
      G.DigimonSkills.cast(pl,m);step(.65);const damage=es.map(e=>100000-e.hp);
@@ -66,7 +82,9 @@ with sync_playwright() as p:
      assert(G.Moves.instance('naruto-rasenshuriken').digiVis.proj==='naruto-wind-shuriken'&&G.VFX.SHAPES.fire.w===15,'Unrelated VFX changed');out.lifecycle='dead owner and scene cleanup pass';return out;
     }finally{Object.assign(G.World,saved);G.Camera.sees=sees;G.FX.sp=originalSp;G.Combat.clearFields();G.Projectiles.clear()}
    }''')
-   mobile,phone=boot(True);phone.evaluate(capture);phone.wait_for_timeout(60);phone.screenshot(path=str(ROOT/'.omx/naruto-fireball-portrait.png'),animations='disabled');mobile.close()
+   for name,distance in [('near',0),('mid',150),('far',300)]:
+    page.evaluate(capture,{'distance':distance});page.wait_for_timeout(60);page.screenshot(path=str(ROOT/f'.omx/fireball-growth-{name}.png'),animations='disabled')
+   mobile,phone=boot(True);phone.evaluate(capture,{'distance':300,'vertical':True});phone.wait_for_timeout(60);phone.screenshot(path=str(ROOT/'.omx/naruto-fireball-portrait.png'),animations='disabled');phone.screenshot(path=str(ROOT/'.omx/fireball-growth-portrait.png'),animations='disabled');mobile.close()
    assert not errors,errors
    print(json.dumps({'ok':True,'checks':report},ensure_ascii=False))
  finally:browser.close()

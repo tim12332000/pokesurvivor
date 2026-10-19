@@ -34,8 +34,11 @@ with sync_playwright() as p:
     page.evaluate('G.Game.quit();G.Flow.goMenu();G.Naruto.choose(30002);G.DB.save.stats.runs=12;G.DB.save.stats.bestTime=321;G.DB.commit()')
     enter(True)
     assert page.evaluate('G.DB.save.partner===30002&&G.DB.save.stats.runs===12&&G.DB.save.stats.bestTime===321')
-    page.evaluate('G.Digimon.choose(20001)');enter(True)
-    assert page.evaluate('G.DB.save.partner===20001&&G.DB.save.stats.runs===12')
+    page.evaluate('G.Digimon.choose(20001)')
+    assert page.evaluate('G.DB.save.partner===30002&&G.DB.save.stats.runs===12')
+    # Actual legacy Digimon saves migrate safely while retaining play history.
+    page.evaluate('G.DB.save.partner=G.DB.save.starter=20001;G.DB.commit()');enter(True)
+    assert page.evaluate('G.DB.save.partner===30001&&G.DB.save.starter===30001&&G.DB.save.stats.runs===12&&G.DB.save.stats.bestTime===321')
     page.evaluate("G.DB.save.partner=G.DB.save.starter=1;G.DB.grant(1,'starter');G.DB.commit()");enter(True)
     assert page.evaluate('G.DB.save.partner===1&&G.DB.save.stats.runs===12')
     # A visitor who previously opened the page but never chose or played also gets Naruto.
@@ -45,5 +48,5 @@ with sync_playwright() as p:
     page.evaluate('G.DB.save.partner=G.DB.save.starter=null;G.DB.save.stats.runs=12;G.DB.commit()');enter(True)
     assert page.evaluate('!G.DB.save.partner&&G.DB.save.stats.runs===12')
     assert not errors,errors
-    print(json.dumps({'freshVisitor':'Naruto, main menu, shadow-clone starter','returningChoices':['Sasuke','Digimon','Pokemon'],'history':'preserved','unplayedExistingVisit':'Naruto','pageErrors':errors}))
+    print(json.dumps({'freshVisitor':'Naruto, main menu, shadow-clone starter','returningChoices':['Sasuke','Pokemon'],'disabledDigimon':'selection rejected; legacy save migrated to Naruto','history':'preserved','unplayedExistingVisit':'Naruto','pageErrors':errors}))
     browser.close()

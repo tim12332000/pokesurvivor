@@ -48,6 +48,11 @@
       r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
       hits: new Set(), vis: v, owner: pl, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
       slow: m.slow || 0, knock: m.knock || 0, digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
+    if(m.fireballGrowth) {
+      p.fireballGrowth={...m.fireballGrowth,travelled:0,baseRadius:p.r,baseScale:v.projScale||1};
+      p.r*=m.fireballGrowth.startRatio;
+      p.vis.projScale=p.fireballGrowth.baseScale*m.fireballGrowth.startRatio;
+    }
     if (explosive) { bombs.add(p); cap(); }
     return p;
   }

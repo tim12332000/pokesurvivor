@@ -86,6 +86,13 @@ G.Projectiles = (() => {
       }
       p.x += p.vx * dt;
       p.y += p.vy * dt;
+      if(p.fireballGrowth) {
+        const g=p.fireballGrowth;
+        g.travelled+=Math.hypot(p.x-p.px,p.y-p.py);
+        const ratio=g.startRatio+(g.endRatio-g.startRatio)*Math.min(1,g.travelled/g.distance);
+        p.r=g.baseRadius*ratio;
+        p.vis.projScale=g.baseScale*ratio;
+      }
 
       // Fuera de la vista con margen generoso -> se descarta.
       if (!G.Camera.sees(p.x, p.y, 260)) { list.splice(i, 1); continue; }

@@ -1,5 +1,8 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
+  // Public beta roster. Keep all definitions so hidden characters can return later.
+  const availableDexes=Object.freeze([30001,30002]);
+  const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
   const version='火影 beta 0.01';
   const roster = [
     ['naruto','Naruto Uzumaki','漩渦鳴人','第七班',['fighting','flying'],3,120,116],
@@ -46,7 +49,25 @@
   G.MenuUI.GEN_NAMES.push('Naruto');
   G.Gacha.BANNERS.push({gen:11,name:'Naruto',color:['#57321b','#94431e','#252f56']});
   const featured=G.Gacha.featured;
-  G.Gacha.featured=gen=>gen===11?[30001,30002,30004]:featured(gen);
+  G.Gacha.featured=gen=>gen===11?[...availableDexes]:gen===10&&!G.Digimon.enabled?[]:featured(gen);
+
+  const selectable=dex=>available(dex)&&(G.Digimon.enabled||!G.Digimon.records.has(+dex));
+  // Filter discovery lists, retaining DEX_BY and records for save data and battle assets.
+  G.DEX.splice(0,G.DEX.length,...G.DEX.filter(mon=>selectable(mon.dex)));
+  G.STARTERS.splice(0,G.STARTERS.length,...G.STARTERS.filter(mon=>selectable(mon.dex)));
+  if(!G.Digimon.enabled){delete G.MenuUI.GEN_NAMES[9];delete G.Gacha.BANNERS[9];}
+  const pull=G.Gacha.pull;
+  G.Gacha.pull=(save,n,gen=1,use='t1')=>gen===10&&!G.Digimon.enabled?null:pull(save,n,gen,use);
+  const upgradePicker=document.getElementById('upg-mon');
+  new MutationObserver(()=>{
+    for(const option of [...upgradePicker.options])if(!selectable(option.value))option.remove();
+  }).observe(upgradePicker,{childList:true});
+  const restoreAvailablePartner=()=>{
+    const save=G.DB.save;
+    if(save.partner&&!selectable(save.partner)){
+      save.partner=save.starter=30001;save.partnerShiny=false;
+    }else if(save.starter&&!selectable(save.starter))save.starter=save.partner||30001;
+  };
 
   const previews=new WeakSet(),Animator=G.Sprites.Animator;
   const frameFor=(record,anim,dir,index=0)=>{
@@ -91,13 +112,14 @@
   const picker=document.createElement('section');picker.id='scr-naruto';picker.className='scr dim hidden';picker.translate=false;
   picker.innerHTML=`<div class="box"><div class="naruto-heading"><div><h2>火影忍者</h2><p class="naruto-version">${version}</p><p class="sub">選擇忍者，踏上你的忍道。</p></div><button id="naruto-close" class="btn small ghost">返回</button></div>
     <div class="naruto-actions"><button id="naruto-to-digimon" class="btn small">數碼寶貝</button></div>
-    <div class="naruto-grid"></div><p class="note">8 位忍者・招式為生存玩法改編・存檔保存在此瀏覽器</p>
+    <div class="naruto-grid"></div><p class="note">2 位忍者・招式為生存玩法改編・存檔保存在此瀏覽器</p>
     <p class="note">像素素材：Path of the Ninja 2・Hwdphg 擷取・<a href="https://spritedatabase.net/game/59" target="_blank" rel="noopener noreferrer">Sprite Database</a>。角色與美術權利屬原權利人。</p></div>`;
   document.body.append(picker);
   const grid=picker.querySelector('.naruto-grid');
   const hideOverlays=()=>['scr-naruto','scr-naruto-skills','scr-digimon','scr-digimon-skills'].forEach(id=>document.getElementById(id)?.classList.add('hidden'));
   const choose=dex=>{
     if(!records.has(dex))throw Error('Unknown Naruto character');
+    if(!available(dex))return false;
     const save=G.DB.save;save.partner=save.starter=dex;save.partnerShiny=false;
     G.DB.grant(dex,'starter');G.DB.commit(true);hideOverlays();G.Flow.goMenu();
   };
@@ -108,6 +130,7 @@
     for(const b of grid.querySelectorAll('[data-naruto]'))b.classList.toggle('on',+b.dataset.naruto===G.DB.save.partner);
   };
   for(const record of records.values()) {
+    if(!available(record.dex))continue;
     const button=document.createElement('button');button.className='naruto-card';button.dataset.naruto=record.dex;
     button.append(G.UI.spriteCanvas(record.dex,128,112,{dir:0,shadow:true}));
     button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${record.team}</small><span data-naruto-attack="${record.dex}"></span>`);
@@ -117,6 +140,8 @@
   G.Digimon.openPicker=()=>{hideOverlays();digimonOpen();};
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').onclick=G.Digimon.openPicker;
+  document.getElementById('naruto-to-digimon').hidden=!G.Digimon.enabled;
+  picker.querySelector('.naruto-grid + .note').textContent='目前開放鳴人與佐助；其他角色暫停開放。';
   document.getElementById('naruto-close').onclick=()=>{hideOverlays();G.Flow.goMenu();};
   const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='火影忍者';nav.translate=false;nav.onclick=openPicker;
   document.getElementById('btn-settings').before(nav);
@@ -126,6 +151,7 @@
   const ready=G.DB.ready;
   G.DB.ready=async()=>{
     const restored=await ready(),save=G.DB.save;
+    restoreAvailablePartner();
     for(const dex of records.keys())G.DB.grant(dex,'starter');
     if(!save.partner&&!(save.stats?.runs>0)){
       save.partner=save.starter=30001;save.partnerShiny=false;
@@ -156,14 +182,20 @@
   const badge=document.querySelector('body>div[style*="pointer-events: none"]');
   if(badge){badge.textContent=version+'・免費／非營利・原作 JPTER78';badge.style.maxWidth='calc(100vw - 16px)';}
   const style=document.createElement('style');style.textContent=`
-    #scr-naruto{z-index:150;padding:20px;background:#08152bef}#scr-naruto>.box{width:min(960px,100%);max-height:92vh;overflow:auto;border-color:#e4a653}
+    #scr-naruto{z-index:150;padding:20px;background:#08152bef}#scr-naruto>.box{width:min(680px,100%);max-height:92vh;overflow:auto;border-color:#e4a653}
     .naruto-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}.naruto-heading h2{margin-bottom:4px;color:#ffd23f}.naruto-heading>button{flex-shrink:0;white-space:nowrap}
     .naruto-version{margin:0 0 4px;color:#ffcf7c;font-size:13px}
-    .naruto-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.naruto-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .naruto-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}.naruto-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
     .naruto-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;color:white;background:#173564;border:2px solid #597fae;border-radius:12px;font:inherit;cursor:pointer}
     .naruto-card:hover,.naruto-card:focus-visible,.naruto-card.on{border-color:#ffc468;background:#244b80}.naruto-card b{font-size:19px;color:#ffd23f}.naruto-card small{color:#c9d8ef}
     .naruto-card canvas{display:block;width:128px;height:112px;max-width:100%;image-rendering:pixelated}.naruto-card span{font-size:14px}
     @media(max-width:650px){.naruto-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{gap:4px;max-width:calc(100vw - 12px);flex-wrap:wrap;justify-content:flex-end}.topbar .btn.small{padding:4px 6px;font-size:12px}#scr-naruto{padding:10px}}
   `;document.head.append(style);
-  G.Naruto={version,records,choose,openPicker,frameFor};
+  if(!G.Digimon.enabled){
+    document.querySelector('#scr-menu .logo .t2').textContent='寶可夢 × 火影忍者';
+    document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代與鳴人、佐助';
+  }
+  const startRun=G.Game.startRun;
+  G.Game.startRun=function(...args){restoreAvailablePartner();return startRun.apply(this,args);};
+  G.Naruto={version,records,availableDexes,choose,openPicker,frameFor};
 })();

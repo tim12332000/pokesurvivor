@@ -1,5 +1,7 @@
 // Local crossover prototype. Pixel sprites: DS-era sheets; see pixel-manifest.json.
 (() => {
+  // Keep registration/assets for later work, but disable every public selector.
+  const enabled = false;
   const definitions = [
     ['Agumon', '亞古獸', '太一', ['fire'], 'ember', '小型火焰', 'Baby Flame', ['valiente', 'impulsivo'], 3, 263, 284],
     ['Gabumon', '加布獸', '阿和', ['fire', 'ice'], 'ember', '爆炎火焰彈', 'Petit Fire', ['leal', 'prudente'], 3, 194, 276],
@@ -129,6 +131,7 @@
       G.UI.spriteCanvas(record.dex, 128, 112, { scale: 3, dir: 1, shadow: true }));
   }
   const openPicker = () => {
+    if (!enabled) return false;
     G.UI.show('scr-menu');
     if (!G.DB.save.partner) document.getElementById('scr-menu').classList.add('hidden');
     G.UI.chrome(!!G.DB.save.partner);
@@ -138,6 +141,7 @@
     picker.dispatchEvent(new Event('digimon-open'));
   };
   const choose = dex => {
+    if (!enabled) return false;
     if (!records.has(dex)) throw new Error('Unknown Digimon partner');
     const save = G.DB.save;
     save.partner = dex; save.starter = records.get(dex).baseDex || dex; save.partnerShiny = false;
@@ -149,6 +153,7 @@
   const switcher = document.createElement('button');
   switcher.id = 'btn-digimon'; switcher.className = 'btn small gold'; switcher.textContent = '數碼寶貝';
   switcher.translate = false; switcher.onclick = openPicker;
+  switcher.hidden = !enabled;
   document.getElementById('btn-settings').before(switcher);
   const gacha = document.getElementById('scr-gacha');
   const customizeGacha = () => {
@@ -171,7 +176,7 @@
     childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['class']
   });
   const afterLogin = G.Flow.afterLogin;
-  G.Flow.afterLogin = function () { if (!G.DB.save.partner) openPicker(); else afterLogin.call(this); };
+  G.Flow.afterLogin = function () { if (enabled && !G.DB.save.partner) openPicker(); else afterLogin.call(this); };
   const ready = G.DB.ready;
   G.DB.ready = async () => {
     const restored = await ready();
@@ -181,7 +186,7 @@
   };
   const starterGrid = document.getElementById('starter-grid');
   new MutationObserver(() => {
-    if (starterGrid.querySelectorAll('.cell').length === G.STARTERS.length && !starterGrid.querySelector('.digimon-group-label')) {
+    if (enabled && starterGrid.querySelectorAll('.cell').length === G.STARTERS.length && !starterGrid.querySelector('.digimon-group-label')) {
       const heading = document.createElement('h3'); heading.className = 'digimon-group-label'; heading.textContent = '數碼寶貝';
       starterGrid.insertBefore(heading, starterGrid.querySelectorAll('.cell')[G.STARTERS.findIndex(s => s.dex === 20001)]);
     }
@@ -189,5 +194,5 @@
   document.querySelector('#scr-menu .logo .t2').textContent = '數碼寶貝 × 寶可夢 · 本地版';
   document.querySelector('#scr-menu [data-go="gacha"] small').textContent = '9 大世代 + 數碼寶貝';
   document.title = 'PokéSurvivor × 數碼寶貝 · 本地版';
-  G.Digimon = { records, choose, openPicker };
+  G.Digimon = { enabled, records, choose, openPicker };
 })();

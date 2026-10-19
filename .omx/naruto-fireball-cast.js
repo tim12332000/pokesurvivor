@@ -6,7 +6,7 @@
   const valid = f => f && f.owner === G.Game.player && f.world === G.World && !f.owner.dead && f.owner.hp > 0;
   const clear = owner => { if (!owner || active?.owner === owner) active = null; };
   // The rendered projectile is lifted by LIFT; its rear clears the breathing face.
-  const origin = (pl, angle) => ({x:pl.x + Math.cos(angle)*76, y:pl.y - 22 + Math.sin(angle)*76});
+  const origin = (pl, angle) => ({x:pl.x + Math.cos(angle)*24, y:pl.y - 22 + Math.sin(angle)*24});
   function cast(pl, move, release) {
     if (pl !== G.Game.player || pl.dex !== 30002 || pl.dead || pl.hp <= 0 || active || G.NarutoChidori?.active) return false;
     active = {owner:pl, world:G.World, move:{...move,digiVis:{...move.digiVis}}, release, aim:pl.aim, t:0, phase:'seal', released:false};
@@ -67,7 +67,7 @@
     oldAir.call(this,ctx);
     const f=active;if(!valid(f)||f.phase!=='breath')return;
     const pl=f.owner, side=Math.cos(f.aim)>=0?1:-1, mouth={x:pl.x+side*16,y:pl.y-44};
-    const end=origin(pl,f.aim), ex=end.x-Math.cos(f.aim)*42, ey=end.y-G.LIFT-Math.sin(f.aim)*42;
+    const end=origin(pl,f.aim), ex=end.x, ey=end.y-G.LIFT;
     ctx.save();
     for(let layer=0;layer<3;layer++) {
       ctx.fillStyle=['#ab3721','#ff8028','#ffe8a2'][layer];

@@ -331,6 +331,10 @@ Playwright and the installed Windows Chrome, matching the other sandbox checks.
 Deployment remains https://tim12332000.github.io/pokesurvivor/ and uses only the
 personal `feat/digimon-sandbox` branch. No upstream PR is created or changed.
 
+## 目前開放角色
+
+火影 beta 暫時只開放鳴人（30001）與佐助（30002）。`.omx/naruto.js` 的 `availableDexes` 集中控制開放名單；其他角色的資料、素材與已擁有／升級紀錄均保留。數碼寶貝由 `.omx/digimon.js` 的 `enabled = false` 暫停開放，隱藏選角、圖鑑世代與抽卡入口，直接呼叫選角也無法選取。舊存檔若使用停用角色，進入時會切回鳴人，保留其他進度；已選佐助與寶可夢不受影響。恢復開放時修改這兩處設定並重新載入即可。
+
 ## 千鳥分級追擊
 
 佐助千鳥命中後自動選取範圍內尚未命中的敵人；Lv1～5 基礎追擊上限依序為 5／10／15／20／25 次，數量增幅每層再加 1 次，同一敵人不重複命中。例如 Lv1 加一層為 6 次，Lv5 加三層為 28 次。突進直接穿過牆壁與障礙物；找不到下一個敵人、玩家死亡或清場即停止。單次傷害維持 44、冷卻 1.05 秒，升級沿用原本傷害與範圍加成。施放瞬間保存技能等級與數量增幅，途中升級或增加被動在下次施放才生效，不重複計算數量加成。
