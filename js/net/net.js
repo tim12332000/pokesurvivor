@@ -18,7 +18,8 @@
  *       broadcast(msg) · on(fn(from, msg)) · onPeer(fn(uid, state))
  *       peers() · mode(uid) -> 'connecting' | 'direct' | 'relay' | 'closed'
  */
-G.Net = (() => {
+// Explicit opt-in factory. The application supplies its own signaling session.
+G.createFirebaseTransport = ({ getSession }) => {
   const ICE = [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] }];
   const DIRECT_TIMEOUT = 9000;     // ms para conseguir canal directo antes de usar el relé
   // Relé por la Realtime Database APAGADO (12-10-2026): a 1 $ el GB era lo que más
@@ -44,7 +45,8 @@ G.Net = (() => {
   function open(id, host, hostId) {
     if (roomId === id) return;
     close();
-    const fb = G.DB.fb;
+    const fb = getSession();
+    if (!fb || !fb.uid || !fb.rtdb) throw new Error('No signaling session configured');
     rtdb = fb.rtdb; uid = fb.uid;
     roomId = id; isHost = host; hostUid = hostId;
     qref = rtdb.ref('rooms/' + id + '/q/' + uid);
@@ -213,6 +215,7 @@ G.Net = (() => {
     open, close, syncMembers, send, toHost, broadcast,
     on(fn) { handlers.add(fn); }, off(fn) { handlers.delete(fn); },
     onPeer(fn) { peerHandlers.add(fn); },
+    offPeer(fn) { peerHandlers.delete(fn); },
     mode(u) { const p = peers.get(u); return p ? p.mode : 'closed'; },
     /** ¿Va por el relé (o no hay conexión)? Entonces se manda menos a menudo. */
     slow(u) { const p = peers.get(u); return !p || p.mode !== 'direct'; },
@@ -223,4 +226,4 @@ G.Net = (() => {
     get hostUid() { return hostUid; },
     stats
   };
-})();
+};

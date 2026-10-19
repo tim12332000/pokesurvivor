@@ -8,7 +8,11 @@ ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist-digimon'
 OUT.mkdir(exist_ok=True)
 tracked = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
-for name in filter(None, tracked):
+# New public runtime files must also be included in builds before a commit.
+public_new = subprocess.check_output(
+    ['git', 'ls-files', '--others', '--exclude-standard', '-z', '--', 'assets', 'css', 'js'],
+    cwd=ROOT).decode().split('\0')
+for name in filter(None, tracked + public_new):
     path = Path(name)
     public = path.parts[0] in {'assets', 'css', 'js'}
     sandbox = name.startswith('.omx/') and (path.suffix in {'.js', '.html', '.png', '.json', '.md'})
@@ -25,6 +29,9 @@ html = re.sub(r'<!-- seo:begin -->.*?<!-- seo:end -->', '', html, flags=re.S)
 html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼寶貝 × 火影忍者</title>', html, flags=re.S)
 html = html.replace('<html lang="es">', '<html lang="zh-TW">')
 html = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="寶可夢、數碼寶貝與火影忍者的非官方跨界沙盒版，免費遊玩，存檔保存在此瀏覽器。">', html)
+for source in re.findall(r'<script[^>]*src="([^"]+)"', html):
+    if source.startswith(('js/', '.omx/')):
+        assert (OUT / source.split('?', 1)[0]).is_file(), f'Missing runtime script: {source}'
 html_path.write_text(html, encoding='utf-8')
 (OUT / 'index.html').write_text('''<!doctype html>
 <html lang="zh-TW"><meta charset="utf-8"><meta name="robots" content="noindex">

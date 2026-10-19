@@ -74,8 +74,8 @@ G.MenuUI = (() => {
     const pend = G.Progress.pending();
     $('menu-goals-sub').textContent = pend ? pend + (pend === 1 ? ' premio por recoger' : ' premios por recoger') : 'Misiones, logros y perfil';
     $('menu-goals-sub').classList.toggle('gold', pend > 0);
-    // Con cuenta en la nube: amigos en línea, invitaciones y (una vez) el apodo.
-    if (G.DB.online && !G.Social.started) {
+    // Multiplayer availability is independent of cloud saves.
+    if (G.Social.available && !G.Social.started) {
       G.Social.start().then(r => {
         if (r === 'need-nick' && !G.NickUI.skipped && G.UI.isOpen('scr-menu')) G.NickUI.open();
         socialLine();

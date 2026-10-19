@@ -21,7 +21,8 @@
  *
  * El resto del juego escucha los cambios con G.Social.on(fn).
  */
-G.Social = (() => {
+// Explicit opt-in factory; loading this file does not start a cloud service.
+G.createFirebaseSocial = () => {
   const VALID = /^[A-Za-z0-9_ñÑáéíóúÁÉÍÓÚ]{3,16}$/;
   const MAX_PLAYERS = 4;
   const INVITE_TTL = 3 * 60 * 1000;
@@ -459,19 +460,7 @@ G.Social = (() => {
   // ---------------- perfil público ----------------
 
   /** Lo que se enseña de ti (también para tu vista previa, sin subirlo). */
-  function profileData() {
-    const s = G.DB.save, st = s.stats, prof = s.profile || {};
-    const unlocked = G.AchDefs.LIST.filter(a => s.ach && s.ach[a.id]);
-    const medals = unlocked.slice().sort((a, b) => (b.tier - a.tier) || (s.ach[b.id] - s.ach[a.id])).slice(0, 8).map(a => a.id);
-    return {
-      name: me ? me.name : G.DB.user,
-      favs: (prof.favs || []).slice(0, 3).map(f => ({ dex: f.dex | 0, shiny: !!f.shiny })),
-      title: prof.title || '',
-      best: { solo: st.bestTime | 0, group: st.bestGroupTime | 0, level: st.bestLevel | 0, bosses: st.bossesTotal | 0,
-              legends: Object.keys(s.legends || {}).length, kills: st.totalKills | 0, medals: unlocked.length },
-      medals
-    };
-  }
+  function profileData() { return G.Social.profileData(); }
 
   let pubT = 0, pubAt = 0, pubLast = '';
   /**
@@ -516,9 +505,6 @@ G.Social = (() => {
     return v;
   }
 
-  // Al cerrar sesión o borrar la cuenta.
-  G.DB.onLeave(why => stop(why));
-
   return {
     start, stop, claimNick, request, accept, remove, publishProfile, getProfile, profileData,
     createRoom, joinRoom, leaveRoom, setOpen, refreshMember, setPlaying, refreshPresence,
@@ -530,8 +516,9 @@ G.Social = (() => {
     get invites() { return [...invites.values()]; },
     get room() { return room; },
     get uid() { return uid; },
+    get available() { return G.DB.online; },
     /** La hora real (corrige el reloj del aparato si va desfasado). */
     now,
     VALID, MAX_PLAYERS
   };
-})();
+};

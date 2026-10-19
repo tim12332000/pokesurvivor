@@ -43,6 +43,10 @@ no una revisión oficial de todas las traducciones.
 Tras editar, `node tools/build.js` regenera la entrada principal `index.html` y
 su paquete. La comprobación de traducciones se ejecuta con `node tools/test_i18n.js`.
 
+La conexión multijugador es reemplazable y está desactivada por defecto en este fork.
+Contrato y configuración: [docs/MULTIPLAYER.md](docs/MULTIPLAYER.md).
+Pruebas sin servicios externos: `node tools/test_multiplayer.js`.
+
 Doble clic en `index.html`. Crea una cuenta o entra como invitado, haz el test
 de personalidad y a la mazmorra.
 

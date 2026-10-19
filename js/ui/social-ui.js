@@ -5,9 +5,8 @@
 
   /** ¿Se puede usar lo online? Si no, explica por qué. */
   function needOnline() {
-    if (G.DB.online) return true;
-    G.UI.toast(G.DB.guest ? 'Crea una cuenta para jugar con amigos y salir en el ranking.'
-      : 'Esto necesita la versión online del juego (con la nube).', 3200);
+    if (G.Social.available) return true;
+    G.UI.toast('多人連線服務尚未設定。', 3200);
     return false;
   }
 
@@ -48,7 +47,10 @@
   function withNick(fn) {
     if (!needOnline()) return;
     if (G.Social.me) { fn(); return; }
-    G.Social.start().then(r => { if (r === 'ok') fn(); else G.NickUI.open(fn); });
+    G.Social.start().then(r => {
+      if (r === 'ok') fn();
+      else if (r === 'need-nick') G.NickUI.open(fn);
+    });
   }
 
   // ======================= AMIGOS =======================
@@ -184,7 +186,7 @@
       if (m.uid === room.host) return 'Anfitrión';
       if (!room.isHost) return m.uid === G.Social.uid ? 'Tú' : 'En la sala';
       const mode = G.Net.mode(m.uid);
-      return mode === 'direct' ? 'Conectado' : mode === 'relay' ? 'Conectado (por servidor)' : mode === 'failed' ? 'No se pudo conectar (reintentando…)' : 'Conectando…';
+      return mode === 'connected' ? 'Conectado' : mode === 'failed' ? 'No se pudo conectar (reintentando…)' : 'Conectando…';
     }
 
     function render() {
@@ -244,7 +246,7 @@
 
       const btn = $('lobby-start');
       btn.classList.toggle('hidden', !room.isHost);
-      const connecting = ms.some(m => m.uid !== room.host && G.Net.mode(m.uid) === 'connecting');
+      const connecting = ms.some(m => m.uid !== room.host && !['connected', 'failed'].includes(G.Net.mode(m.uid)));
       const failed = ms.some(m => m.uid !== room.host && G.Net.mode(m.uid) === 'failed');
       btn.disabled = !room.isHost || ms.length < 2 || connecting || failed;
       btn.textContent = 'Empezar partida (' + ms.length + '/' + G.Social.MAX_PLAYERS + ')';
@@ -257,6 +259,7 @@
     function start() {
       const room = G.Social.room;
       if (!room || !room.isHost || room.members.length < 2) return;
+      if (room.members.some(m => m.uid !== room.host && G.Net.mode(m.uid) !== 'connected')) return;
       const cfg = {
         k: 'start', seed: Math.floor(Math.random() * 1e6), host: room.host,
         members: room.members.map(m => ({ uid: m.uid, name: m.name, dex: m.dex, shiny: !!m.shiny }))

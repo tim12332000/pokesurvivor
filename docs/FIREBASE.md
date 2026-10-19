@@ -1,5 +1,10 @@
 # Configurar Firebase (base de datos y cuentas)
 
+> 此分支預設停用 Firebase，僅使用瀏覽器本機存檔；雲端帳號、排行榜與多人組隊目前不啟用。
+> 不使用上游專案的 Firebase。若要啟用，必須設定自行擁有的專案、部署資料庫規則、
+> 設定登入授權網域與 API 限制，並更新 `js/core/db.js` 的 `HOSTS`。
+> `.firebaserc` 不再指定預設專案；部署時請明確指定自己的 `--project`。
+
 Con esto las partidas se guardan en la nube y se pueden seguir en cualquier
 ordenador. Todo es **gratis** (plan Spark de Firebase). Se tarda unos 10 minutos.
 
