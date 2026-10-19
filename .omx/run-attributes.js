@@ -23,20 +23,22 @@
     const items = rows(pl);
     if(!items.length)return;
     const touch=G.Touch.active;
-    const portrait=!!(touch&&G.Touch.controlLayout(w,h,Math.max(1,pl.slots.length)).portrait);
+    const controls=touch?G.Touch.controlLayout(w,h,Math.max(1,pl.slots.length)):null;
+    const portrait=!!controls?.portrait;
     const safeTop=portrait?Math.min(44,G.Touch.safeArea().top):0;
     const width=portrait?146:170, x=w-width-12, y=portrait?180+safeTop:102;
-    const height=28+items.length*16;
+    const rowHeight=portrait?Math.min(16,Math.max(11,(controls.bar.y-y-36)/items.length)):16;
+    const height=28+items.length*rowHeight;
     ctx.save();
     G.HUD.roundRect(ctx,x,y,width,height,8);
     ctx.fillStyle='rgba(5,14,32,.78)';ctx.fill();
     ctx.textAlign='left';ctx.textBaseline='top';
     ctx.font='700 11px "Segoe UI",system-ui,sans-serif';
     ctx.fillStyle='#ffcf7c';ctx.fillText('已獲得屬性',x+9,y+8,width-18);
-    ctx.font='11px "Segoe UI",system-ui,sans-serif';
+    ctx.font=`${rowHeight<15?10:11}px "Segoe UI",system-ui,sans-serif`;
     for(let i=0;i<items.length;i++){
       ctx.fillStyle=['quantity','lifesteal','percentHealthDamage'].includes(items[i].id)?'#9fe7ff':'#eaf2ff';
-      ctx.fillText(items[i].text,x+9,y+26+i*16,width-18);
+      ctx.fillText(items[i].text,x+9,y+26+i*rowHeight,width-18);
     }
     ctx.restore();
   };

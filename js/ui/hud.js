@@ -246,7 +246,7 @@ G.HUD = (() => {
 
     // ---------- ranura de movimientos ----------
     const S = controls ? controls.S : 54, GAP = controls ? controls.GAP : 9;
-    const n = portrait ? 4 : Math.max(1, pl.slots.length);
+    const n = portrait ? Math.max(4, pl.slots.length) : Math.max(1, pl.slots.length);
     const totalW = n * S + (n - 1) * GAP;
     const sx = controls ? controls.slots[0].x : (w - totalW) / 2;
     const sy = controls ? controls.slots[0].y : h - S - 18;
@@ -376,7 +376,7 @@ G.HUD = (() => {
       ctx.textAlign = 'center';
       ctx.fillStyle = 'rgba(180,200,230,.55)';
       ctx.fillText(touch ? 'Arrastra el dedo para moverte  ·  toca un ataque para cambiarlo'
-                         : 'WASD moverse  ·  1-4 / Q / E o clic en un ataque para cambiarlo  ·  Esc pausa', w / 2, portrait ? h - Math.min(44, G.Touch.safeArea().bottom) - 5 : h - 4, w - 24);
+                         : `WASD moverse  ·  1-${Math.max(4, pl.slots.length)} / Q / E o clic en un ataque para cambiarlo  ·  Esc pausa`, w / 2, portrait ? h - Math.min(44, G.Touch.safeArea().bottom) - 5 : h - 4, w - 24);
     }
 
     ctx.restore();

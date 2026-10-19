@@ -53,10 +53,17 @@ with sync_playwright() as p:
         page.screenshot(path=str(ROOT/f'.omx/run-attributes-{width}.png'))
     # All card types render; one-off healing never becomes a permanent attribute.
     assert page.evaluate('''()=>{
-      const pl=G.Game.player,save={...pl.statsTaken};
+      const pl=G.Game.player,save={...pl.statsTaken},slots=pl.slots;
       for(const s of G.LevelUp.STATS)pl.statsTaken[s.id]=1;
-      const rows=G.RunAttributes.rows(pl);pl.statsTaken=save;
-      return rows.length===11&&!rows.some(r=>r.id==='heal');
+      const rows=G.RunAttributes.rows(pl);
+      // Five skills plus all acquired attributes must fit a short portrait screen.
+      pl.slots=Array.from({length:5},(_,i)=>slots[i%slots.length]);
+      const canvas=document.createElement('canvas');canvas.width=360;canvas.height=640;
+      const original=G.HUD.roundRect;let panel;
+      G.HUD.roundRect=function(ctx,x,y,w,h,r){panel={x,y,w,h};return original(ctx,x,y,w,h,r)};
+      try{G.HUD.draw(canvas.getContext('2d'),360,640,pl,{time:0});}
+      finally{G.HUD.roundRect=original;pl.statsTaken=save;pl.slots=slots;}
+      return rows.length===11&&!rows.some(r=>r.id==='heal')&&panel.y+panel.h<=G.Touch.controlLayout(360,640,5).bar.y;
     }''')
     page.evaluate('G.Game.quit();G.Flow.goMenu();G.Flow.play();G.Game.togglePause()')
     assert page.evaluate('G.RunAttributes.rows(G.Game.player).length===0')

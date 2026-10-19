@@ -29,6 +29,12 @@
       "referenceImage": "https://cmsapi-frontend.naruto-official.com/site/api/naruto/Image/get?path=%2Fnaruto%2Fjp%2Fnews%2F2022%2F10%2F17%2FBYOTc1iASab9eSiA%2F071.jpg",
       "canonBasis": "Final Valley red chakra cloak increases speed, counterattacks with chakra and shields Naruto from Sasuke's fire jutsu.",
       "adaptation": "Fixed one-tail procedural pixel cloak, temporary attack/speed/defense multipliers and periodic circular counterattack. Numeric balance, level 9 unlock, cooldown and duration are game-specific; not golden Nine-Tails Chakra Mode. Original sprite sheets unchanged."
+    },
+    {
+      "id": "naruto-kusanagi",
+      "owner": "Sasuke Uchiha",
+      "url": "https://naruto-official.com/en/news/01_1710",
+      "adaptation": "Official source documents Sasuke sword techniques and lightning-coated blade. Autonomous permanent orbit, multiple flying swords and numerical progression are survival-game adaptations; no claim of canonical autonomous orbit."
     }
   ],
   "animationReferences": [

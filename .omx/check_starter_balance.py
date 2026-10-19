@@ -54,7 +54,7 @@ with sync_playwright() as p:
             assert(near(pl.xpMul,expected.xpMul)&&near(pl.coinMul,expected.coinMul)&&near(pl.critChance,expected.crit),'Reward/crit baseline incorrect');
             const expectedMoves=Math.min(expected.startMoves,G.Moves.poolFor(pl.mon).filter(id=>!pl.banned?.has(id)).length);
             assert(pl.rerollBonus===5&&pl.moves.length===expectedMoves,'Starting moves or rerolls missing');
-            if(pl.mon.naruto)assert(pl.moves.every(m=>!G.NarutoSkillCatalog.extraPools.get(dex).includes(m.id)),'Starting extra move bypassed signature unlock gate');
+            if(pl.mon.naruto)assert(pl.moves.every(m=>!G.NarutoSkillCatalog.extraPools.get(dex).includes(m.id)||(G.Moves.BY_ID[m.id].learnLevel||3)<=pl.level),'Starting extra move bypassed signature unlock gate');
             assert(before===JSON.stringify({pupg:save.pupg,coins:save.coins,pban:save.pban,pbind:save.pbind}),'Run start changed purchase history or currency');
             const atk=pl.atkMul,magnet=pl.magnet;
             G.LevelUp.STATS.find(s=>s.id==='atk').apply(pl);

@@ -133,8 +133,8 @@ G.Touch = (() => {
   /** Shared screen geometry for the actual HUD and the draggable control editor. */
   function controlLayout(w,h,n=4,{defaults=false}={}) {
     const vertical=portrait(w,h),sa=safeArea(),S=vertical?56:54,GAP=vertical?8:9,itemGap=vertical?8:18;
-    const slotsCount=vertical?4:n,all=Math.max(n,4),bw=vertical?2*S+GAP:S+itemGap+all*S+(all-1)*GAP;
-    const bh=vertical?3*S+2*GAP:S;
+    const slotsCount=vertical?Math.max(4,n):n,all=Math.max(n,4),bw=vertical?2*S+GAP:S+itemGap+all*S+(all-1)*GAP;
+    const rows=1+Math.ceil(slotsCount/2),bh=vertical?rows*S+(rows-1)*GAP:S;
     const custom=defaults?null:spot('bar');
     const left=sa.left+6,right=w-sa.right-6,bottom=h-sa.bottom-18;
     let x=vertical?right-bw-6:(w-(slotsCount*S+(slotsCount-1)*GAP))/2-S-itemGap;

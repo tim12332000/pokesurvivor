@@ -35,7 +35,7 @@
   }
   function projectileBonus(owner, move) {
     if (stage(owner) < 3 || !move) return 0;
-    if (move.digiMode) return ['shot', 'nova'].includes(move.digiMode) ? config.projectileCount : 0;
+    if (move.digiMode) return ['shot', 'nova', 'kusanagi-orbit'].includes(move.digiMode) ? config.projectileCount : 0;
     return ['projectile', 'nova', 'boomerang', 'cone'].includes(move.kind) ? config.projectileCount : 0;
   }
   function image(owner, life = config.afterimageLifetime) {

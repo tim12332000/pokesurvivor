@@ -31,7 +31,7 @@ with sync_playwright() as p:
     page.screenshot(path=str(ROOT/'.omx/naruto-picker.png'),animations='disabled')
     page.locator('#naruto-skill-guide').click()
     assert page.locator('.naruto-skill-entry').count()==2
-    assert page.locator('.naruto-skill-entry a[href^="https://naruto-official.com/"]').count()==7
+    assert page.locator('.naruto-skill-entry a[href^="https://naruto-official.com/"]').count()==8
     page.screenshot(path=str(ROOT/'.omx/naruto-guide.png'),animations='disabled')
     page.locator('#naruto-skills-close').click()
     page.locator('[data-naruto="30001"]').click()
@@ -39,7 +39,7 @@ with sync_playwright() as p:
     report=page.evaluate('''() => {
       const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
       assert(G.MenuUI.GEN_NAMES.filter(Boolean).length===10&&G.Gacha.BANNERS.filter(Boolean).length===10,'Section registration');
-      assert(G.NarutoSkillCatalog.definitions.size===27,'Skill registry');
+      assert(G.NarutoSkillCatalog.definitions.size===28,'Skill registry');
       const pixels=[];
       for(const r of G.Naruto.records.values()) {
         assert(G.startMoveOf(r.dex)===r.start,'Starter signature '+r.dex);
@@ -92,11 +92,15 @@ with sync_playwright() as p:
           const targets=[[60,0],[110,10],[160,-15]].map(([x,y])=>{
             const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},x,y,{hp:1,spd:1,dmg:1});e.types=['normal'];G.EnemyMgr.add(e);return e;
           });G.EnemyMgr.rebuildGrid();pl.target=targets[0];
+          // Maintained weapons require an actually learned move before activation.
+          const maintained=def.id==='naruto-kusanagi'&&!pl.hasMove(def.id)?G.Moves.instance(def.id):null;
+          if(maintained)pl.moves.push(maintained);
           G.DigimonSkills.cast(pl,G.Moves.instance(def.id));
           for(let t=0;t<2;t+=1/60){G.Projectiles.update(1/60,pl,G.EnemyMgr.all());G.Combat.resolve(1/60,pl,t);G.Combat.updateFields(1/60);G.FX.update(1/60);}
           const damage=300000-targets.reduce((s,e)=>s+e.hp,0);
           if(!Number.isFinite(damage)||damage<=0)throw Error('No damage '+def.id);
           results.push({skill:def.id,damage});
+          if(maintained)pl.moves.splice(pl.moves.indexOf(maintained),1);
         }
       }finally{Object.assign(G.World,saved);G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();}
       return results;

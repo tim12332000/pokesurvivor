@@ -28,9 +28,9 @@ with sync_playwright() as p:
           for(const dex of [30001,30002]){
             G.Game.toUI();G.Naruto.choose(dex);G.Flow.play();G.Game.togglePause();
             const pl=G.Game.player,main=G.NarutoSkillCatalog.byDex.get(dex).id;
-            assert(pl.moves.length===1&&pl.moves[0].id===main,'Wrong initial signature '+dex);
+            assert(pl.moves.length===(dex===30002?2:1)&&pl.hasMove(main),'Wrong initial signature '+dex);
             const milestones=G.NarutoSkillCatalog.extraPools.get(dex);
-            for(const level of [1,3,6,9]){
+            for(const level of [1,3,6,9,12]){
               pl.level=level;
               const pool=G.Moves.poolFor(pl.mon);
               assert(retired.every(id=>!pool.includes(id)),'Retired tool in pool');
