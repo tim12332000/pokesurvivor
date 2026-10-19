@@ -30,7 +30,7 @@
         const next=G.Moves.instance(def.id);
         for(const key of Object.keys(swap))delete swap[key];Object.assign(swap,next);
         if(p.bind[previousId]!=null){p.bind[def.id]=p.bind[previousId];delete p.bind[previousId];}
-        p.arrange();p.setActive(p.slots.findIndex(s=>s.includes(swap)));return true;
+        p.arrange();p.setActive(def.passive?p.slots.findIndex(s=>s.some(move=>!move.passive)):p.slots.findIndex(s=>s.includes(swap)));return true;
       }};
   }
   const offer=G.LevelUp.offer;

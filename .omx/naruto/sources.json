@@ -1,6 +1,17 @@
 {
   "techniqueReferences": [
     {
+      "id": "naruto-sharingan",
+      "owner": "Sasuke Uchiha",
+      "url": "https://naruto-official.com/en/anime/naruto1/list/01_246",
+      "amaterasuSource": "https://naruto-official.com/en/news/01_1316",
+      "persistentFlameSource": "https://naruto-official.com/en/anime/naruto2/list/01_586",
+      "lateGamePullAdaptation": "https://naruto-official.com/en/news/01_1674",
+      "susanooSource": "https://naruto-official.com/en/news/01_1340",
+      "publisher": "NARUTO OFFICIAL SITE / official game announcements",
+      "adaptation": "User-requested cumulative five-level passive: one/two/three tomoe, Amaterasu and Susanoo. Dodge chance, pickup radius, counter shuriken, extra projectiles, pull vortex, run-permanent ground fire and max-HP damage are survival-game mechanics. This is not a claim that young three-tomoe Sasuke has Mangekyo powers or Kamui."
+    },
+    {
       "id": "naruto-fuma-shuriken",
       "owner": "Sasuke Uchiha",
       "url": "https://tamashiiweb.com/item/14256/?wovn=en",

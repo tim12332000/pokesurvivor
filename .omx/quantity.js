@@ -6,8 +6,9 @@
   const count = (owner,base,minimum=1) => Math.max(minimum,base|0)+bonus(owner);
   function snapshot(owner,move) {
     if (move.quantityBonusAtCast != null) return {...move};
-    return {...move,quantityBaseCount:Math.max(1,move.count|0),quantityBonusAtCast:bonus(owner),
-      count:count(owner,move.count),
+    const sharinganProjectilesAtCast=G.NarutoSharingan?.projectileBonus(owner,move)||0;
+    return {...move,quantityBaseCount:Math.max(1,move.count|0),quantityBonusAtCast:bonus(owner),sharinganProjectilesAtCast,
+      count:count(owner,move.count)+sharinganProjectilesAtCast,
       ...(Number.isFinite(move.pierce)?{pierce:count(owner,move.pierce,0)}:{})};
   }
   G.Quantity={config,bonus,count,snapshot};

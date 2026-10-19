@@ -17,6 +17,7 @@ G.Combat = (() => {
   let fields = [];
   // Optional personal-edition passive; base game keeps its original quantities.
   const quantity = (pl,base,minimum=1) => G.Quantity?.count(pl,base,minimum) ?? Math.max(minimum,base|0);
+  const projectileCount = (pl,move,minimum=1) => quantity(pl,move.count,minimum)+(G.NarutoSharingan?.projectileBonus(pl,move)||0);
 
   // ---------------- ejecutar el movimiento activo ----------------
 
@@ -88,7 +89,7 @@ G.Combat = (() => {
   function fireProjectiles(pl, m) {
     const col = G.U.TYPE_COLOR[m.type];
     const vis = G.VFX.forMove(m);
-    const n = quantity(pl,m.count);
+    const n = projectileCount(pl,m);
     const spread = m.spread || 0;
     for (let i = 0; i < n; i++) {
       const off = n === 1 ? 0 : (i / (n - 1) - 0.5) * spread * n;
@@ -108,7 +109,7 @@ G.Combat = (() => {
   function nova(pl, m) {
     const col = G.U.TYPE_COLOR[m.type];
     const vis = G.VFX.forMove(m);
-    const n = quantity(pl,m.count,3);
+    const n = projectileCount(pl,m,3);
     for (let i = 0; i < n; i++) {
       const a = (i / n) * 6.2832 + G.U.rand(-0.06, 0.06);
       G.Projectiles.spawn(Object.assign({
@@ -213,7 +214,7 @@ G.Combat = (() => {
   /** Bumerán: sale hacia el enemigo, se para y vuelve a ti golpeando a la ida y a la vuelta. */
   function boomerang(pl, m) {
     const col = G.U.TYPE_COLOR[m.type], vis = G.VFX.forMove(m);
-    const n = quantity(pl,m.count), spread = m.spread || 0.5;
+    const n = projectileCount(pl,m), spread = m.spread || 0.5;
     const out = m.radius / m.speed;                       // segundos de ida
     for (let i = 0; i < n; i++) {
       const a = pl.aim + (n === 1 ? 0 : (i / (n - 1) - 0.5) * spread * Math.min(n, 3));
@@ -339,7 +340,7 @@ G.Combat = (() => {
   /** Abanico corto: muchos disparos rápidos que no llegan lejos (aliento, chorro...). */
   function cone(pl, m) {
     const col = G.U.TYPE_COLOR[m.type], vis = G.VFX.forMove(m);
-    const n = quantity(pl,m.count,2), arc = m.arc || 0.9;
+    const n = projectileCount(pl,m,2), arc = m.arc || 0.9;
     for (let i = 0; i < n; i++) {
       const a = pl.aim + (i / (n - 1) - 0.5) * arc + G.U.rand(-0.05, 0.05);
       const sp = m.speed * G.U.rand(0.85, 1.1);

@@ -145,7 +145,7 @@ G.Player = class Player {
     this.active = i;
     G.Projectiles.clearOrbs(this);
     G.Audio.sfx('select');
-    for (const m of this.slots[i]) m.t = Math.min(m.t, m.cd * 0.35);
+    for (const m of this.slots[i]) m.t = Math.min(m.t, Math.max(m.minCooldown || 0, m.cd * 0.35));
     const m = this.slots[i][0];
     G.FX.ring(this.x, this.y - G.LIFT * 0.5, 6, this.r * 3.4, G.U.TYPE_COLOR[m.type], 0.3, 3);
   }

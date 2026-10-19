@@ -230,10 +230,16 @@
   ];
   extra.push(
     ['naruto-sharingan', [30002], {
-      name:'寫輪眼預判', mode:'sharingan', type:'psychic', cd:12, dmg:0,
-      range:180, fieldDuration:3, nextDamageMul:1.25, dodge:1,
+      name:'寫輪眼・進化', mode:'sharingan-evolution', passive:true, type:'psychic', cd:0, dmg:0,
+      range:320,
       vis:{pal:'naruto-red'},
-      desc:'附近有敵人時開眼預判，短暫準備一次閃避，並強化下一次攻擊；不會在安全空地反覆浪費冷卻。加成與時限為本作改編。',
+      desc:'學會後被動生效，不必切到此技能。Lv.1 一勾玉：閃避 +5%、寶石拾取範圍 +20%；Lv.2 二勾玉：閃避成功向四周投出 3 枚看破手裏劍，反擊傷害 +35%；Lv.3 三勾玉：紅色殘影、遠程彈道 +1；Lv.4 天照：牽引渦流收束後留下本局不熄的黑炎，每秒造成最大生命 2% 傷害（首領 0.5%）；Lv.5 須佐能乎：紫色護體減傷 30%，並自動範圍斬擊。各階段效果累加；數量增幅增加反擊彈數。牽引黑洞與進化階段為本作改編，並非佐助的神威。',
+      ups:[
+        {t:'進化二勾玉：閃避成功發射 3 枚看破手裏劍',m:{}},
+        {t:'進化三勾玉：殘影、所有遠程彈道 +1',m:{}},
+        {t:'開啟天照：牽引渦流留下本局永久百分比黑炎',m:{}},
+        {t:'開啟須佐能乎：護體減傷 30%、自動範圍斬擊',m:{}}
+      ],
       source_url:'https://naruto-official.com/en/news/01_1296'
     }],
     ['naruto-medical-heal', [30003], {
@@ -310,7 +316,7 @@
     }]
   );
   const kinds = { 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
-    sharingan:'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
+    sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor' };
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
@@ -389,6 +395,14 @@
   };
   G.NarutoSkillCatalog = { definitions, byDex, references, extraPools };
 
+  const nameSharingan = move => {
+    if(move.id==='naruto-sharingan')move.name='寫輪眼・'+G.NarutoSharingan.config.stageNames[Math.max(0,Math.min(4,move.lvl-1))];
+    return move;
+  };
+  const instance=G.Moves.instance,levelUp=G.Moves.levelUp;
+  G.Moves.instance=(...args)=>nameSharingan(instance(...args));
+  G.Moves.levelUp=move=>{const changed=levelUp(move);if(changed)nameSharingan(move);return changed;};
+
   const guide = document.createElement('section');
   guide.id = 'scr-naruto-skills';
   guide.className = 'scr dim hidden';
@@ -404,7 +418,7 @@
     const description = document.createElement('p');
     description.textContent = definition.desc;
     const stats = document.createElement('small');
-    stats.textContent = `冷卻 ${definition.cd} 秒 · ${definition.dmg ? '基礎傷害 '+definition.dmg : '輔助技能'} · 可升至 Lv.5`;
+    stats.textContent = definition.passive ? '學會即生效 · 五階段進化' : `冷卻 ${definition.cd} 秒 · ${definition.dmg ? '基礎傷害 '+definition.dmg : '輔助技能'} · 可升至 Lv.5`;
     const source = document.createElement('a');
     source.href = reference.source_url;
     source.target = '_blank';
@@ -418,7 +432,7 @@
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = `冷卻 ${move.cd} 秒 · ${move.dmg ? '基礎傷害 '+move.dmg : '輔助技能'}${move.blastRadius ? ' · 爆發半徑 '+move.blastRadius : ''} · 可升至 Lv.5`;
+      extraStats.textContent = move.passive ? '學會即生效 · 五階段進化' : `冷卻 ${move.cd} 秒 · ${move.dmg ? '基礎傷害 '+move.dmg : '輔助技能'}${move.blastRadius ? ' · 爆發半徑 '+move.blastRadius : ''} · 可升至 Lv.5`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';

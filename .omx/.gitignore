@@ -9,6 +9,8 @@
 !/naruto-clones.js
 !/quantity.js
 !/lifesteal.js
+!/starter-balance.js
+!/check_starter_balance.py
 !/check_lifesteal.py
 !/mobile-portrait.css
 !/check_mobile_portrait.py
@@ -16,6 +18,9 @@
 !/check_quantity.py
 !/naruto-training.js
 !/naruto-support.js
+!/naruto-sharingan.js
+!/naruto-sharingan-powers.js
+!/check_sharingan_evolution.py
 !/naruto-cloak-vfx.js
 !/check_naruto_cloak.py
 !/check_sasuke_shuriken.py

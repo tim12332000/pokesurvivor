@@ -162,6 +162,7 @@
   function cast(pl, move) {
     const m=cloneMove(G.Quantity?.snapshot(pl,move)||move);
     if(!m||!m.digimonSkill||!m.digiMode)return false;
+    if(m.digiMode==='sharingan-evolution')return !!G.NarutoSharingan?.sync(pl);
     if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.beginCast(pl,m);
     const handler=techniqueFor(m.digiMode);
     if(m.narutoSkill&&m.dmg>0&&!G.NarutoSupport?.supports(m.digiMode))m.dmg*=G.NarutoSupport?.takeAttackBonus(pl)||1;
@@ -193,6 +194,7 @@
     if (original) { const group = original.call(pl); custom = group.filter(m => m && m.digimonSkill); if (!custom.length) return vanilla.tick(dt, pl, now); pl.activeGroup = function() { return original.call(this).filter(m => !m.digimonSkill); }; }
     try { vanilla.tick(dt, pl, now); } finally { if (original) pl.activeGroup = original; }
     for(const m of custom) {
+      if(m.passive)continue;
       m.t-=dt;if(m.t>0)continue;
       const target=pl.target,handler=techniqueFor(m.digiMode);
       if(handler?.canCast&&!handler.canCast(pl,m)){m.t=.15;continue;}

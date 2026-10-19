@@ -115,6 +115,9 @@ with sync_playwright() as p:
         setup(1);learned.t=0;G.Combat.tick(.001,pl,0);
         assert(A.active&&learned.t===.5,'cooldown reductions bypassed minimum');
         learned.t=0;step(1);assert(!A.active&&learned.t===.5,'chain end missing minimum cooldown');
+        const oldSlots=pl.slots,oldActive=pl.active;
+        pl.slots=[[],[learned]];pl.active=0;pl.setActive(1);
+        assert(learned.t===.5,'switching skills bypassed minimum cooldown');pl.slots=oldSlots;pl.active=oldActive;
         setup(1);G.Combat.tick(.499,pl,1);assert(!A.active,'recast before half-second recovery');
         G.Combat.tick(.002,pl,1.501);assert(A.active&&learned.t===.5,'recast failed after minimum cooldown');
         learned.t=1.2;step(1);assert(learned.t===1.2,'minimum shortened a longer cooldown');
