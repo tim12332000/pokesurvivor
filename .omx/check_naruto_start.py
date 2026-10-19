@@ -27,7 +27,27 @@ with sync_playwright() as p:
     page.locator('#scr-menu').wait_for(state='visible')
     assert page.evaluate('G.DB.save.partner===30001&&G.DB.save.starter===30001&&!G.DB.save.partnerShiny')
     assert page.locator('#scr-digimon').is_hidden() and page.locator('#scr-test').is_hidden()
-    page.screenshot(path=str(ROOT/'.omx/naruto-default-start.png'),animations='disabled')
+    cards=page.locator('#naruto-quick-pick [data-quick-naruto]')
+    assert cards.count()==2
+    assert page.locator('[data-quick-naruto="30001"]').get_attribute('aria-pressed')=='true'
+    for width,height in [(1280,800),(390,844),(360,640)]:
+        page.set_viewport_size({'width':width,'height':height})
+        for card in cards.all():
+            assert card.is_visible()
+            bounds=card.bounding_box()
+            assert bounds['x']>=0 and bounds['x']+bounds['width']<=width
+            assert bounds['y']>=0 and bounds['y']+bounds['height']<=height
+        assert page.locator('#scr-menu [data-go=play]').is_visible()
+        page.screenshot(path=str(ROOT/f'.omx/naruto-quick-pick-{width}.png'),animations='disabled')
+    page.locator('[data-quick-naruto="30002"]').tap()
+    assert page.evaluate('G.DB.save.partner===30002&&G.DB.save.starter===30002')
+    assert page.locator('[data-quick-naruto="30002"]').get_attribute('aria-pressed')=='true'
+    page.locator('#scr-menu [data-go=play]').tap()
+    page.wait_for_function("G.Game.player?.mon.dex===30002")
+    page.evaluate('G.Game.quit();G.Flow.goMenu()')
+    enter(True)
+    assert page.locator('[data-quick-naruto="30002"]').get_attribute('aria-pressed')=='true'
+    page.locator('[data-quick-naruto="30001"]').tap()
     page.locator('#scr-menu [data-go=play]').tap()
     page.wait_for_function("G.Game.player?.mon.dex===30001&&G.NarutoClones.actors.length===8")
     assert page.evaluate("G.Game.player.moves[0].id==='naruto-shadow-clones'")
@@ -41,6 +61,8 @@ with sync_playwright() as p:
     assert page.evaluate('G.DB.save.partner===30001&&G.DB.save.starter===30001&&G.DB.save.stats.runs===12&&G.DB.save.stats.bestTime===321')
     page.evaluate("G.DB.save.partner=G.DB.save.starter=1;G.DB.grant(1,'starter');G.DB.commit()");enter(True)
     assert page.evaluate('G.DB.save.partner===1&&G.DB.save.stats.runs===12')
+    assert page.locator('#scr-menu .partner-card').is_visible()
+    assert page.locator('#naruto-quick-pick [aria-pressed=true]').count()==0
     # A visitor who previously opened the page but never chose or played also gets Naruto.
     page.evaluate('G.DB.save.partner=G.DB.save.starter=null;G.DB.save.stats.runs=0;G.DB.commit()');enter(True)
     assert page.evaluate('G.DB.save.partner===30001')

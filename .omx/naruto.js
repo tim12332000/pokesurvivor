@@ -136,6 +136,29 @@
     button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${record.team}</small><span data-naruto-attack="${record.dex}"></span>`);
     button.onclick=()=>choose(record.dex);grid.append(button);
   }
+  // Keep both beta characters visible beside the play button, without opening a picker.
+  const quickPick=document.createElement('section');quickPick.id='naruto-quick-pick';quickPick.translate=false;
+  quickPick.setAttribute('aria-label','選擇出戰角色');
+  quickPick.innerHTML='<h2>選擇出戰角色</h2><p>點選鳴人或佐助，再按開始遊戲。</p><div class="naruto-grid"></div>';
+  for(const dex of availableDexes){
+    const record=records.get(dex),button=document.createElement('button');
+    button.type='button';button.className='naruto-card';button.dataset.quickNaruto=dex;
+    button.append(G.UI.spriteCanvas(dex,128,112,{dir:0,shadow:true}));
+    button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${dex===30001?'影分身・螺旋丸':'千鳥・豪火球'}</small><span class="naruto-selection"></span>`);
+    button.onclick=()=>choose(dex);quickPick.querySelector('.naruto-grid').append(button);
+  }
+  const partnerCard=document.querySelector('#scr-menu .partner-card');partnerCard.after(quickPick);
+  const syncQuickPick=()=>{
+    const selected=G.DB.save.partner;
+    partnerCard.classList.toggle('hidden',availableDexes.includes(+selected));
+    for(const button of quickPick.querySelectorAll('[data-quick-naruto]')){
+      const on=+button.dataset.quickNaruto===selected;
+      button.classList.toggle('on',on);button.setAttribute('aria-pressed',String(on));
+      button.querySelector('.naruto-selection').textContent=on?'✓ 已選擇':'點選使用';
+    }
+  };
+  const menuOpen=G.MenuUI.open;
+  G.MenuUI.open=function(...args){const result=menuOpen.apply(this,args);syncQuickPick();return result;};
   const digimonOpen=G.Digimon.openPicker;
   G.Digimon.openPicker=()=>{hideOverlays();digimonOpen();};
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
@@ -189,6 +212,9 @@
     .naruto-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;color:white;background:#173564;border:2px solid #597fae;border-radius:12px;font:inherit;cursor:pointer}
     .naruto-card:hover,.naruto-card:focus-visible,.naruto-card.on{border-color:#ffc468;background:#244b80}.naruto-card b{font-size:19px;color:#ffd23f}.naruto-card small{color:#c9d8ef}
     .naruto-card canvas{display:block;width:128px;height:112px;max-width:100%;image-rendering:pixelated}.naruto-card span{font-size:14px}
+    #naruto-quick-pick{width:min(420px,100%);margin:12px auto;text-align:center}#naruto-quick-pick h2{margin:0;color:#ffd23f;font-size:22px}#naruto-quick-pick>p{margin:6px 0 12px;color:#c9d8ef;font-size:14px}
+    #naruto-quick-pick .naruto-card.on{box-shadow:0 0 0 2px #ffc468}#naruto-quick-pick .naruto-selection{color:#ffcf7c}
+    @media(max-width:650px){#naruto-quick-pick{margin:6px auto}#naruto-quick-pick .naruto-card{gap:3px;padding:8px 6px}#naruto-quick-pick .naruto-card canvas{width:96px;height:84px}#naruto-quick-pick h2{font-size:19px}#naruto-quick-pick>p{margin:4px 0 8px}}
     @media(max-width:650px){.naruto-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{gap:4px;max-width:calc(100vw - 12px);flex-wrap:wrap;justify-content:flex-end}.topbar .btn.small{padding:4px 6px;font-size:12px}#scr-naruto{padding:10px}}
   `;document.head.append(style);
   if(!G.Digimon.enabled){
