@@ -11,6 +11,7 @@ with sync_playwright() as p:
     page.on('response',lambda r:missing.append(r.url) if r.status>=400 else None)
     page.goto(URL);page.wait_for_function("document.getElementById('boot').classList.contains('hidden')")
     if page.locator('#tap-start').is_visible():page.locator('#tap-start').click()
+    page.locator('#btn-digimon').click()
     page.locator('#digimon-skill-guide').click()
     assert page.locator('#scr-digimon-skills .digimon-skill-entry').count()==33
     assert page.locator('#scr-digimon-skills a[href^="https://"]').count()>=33

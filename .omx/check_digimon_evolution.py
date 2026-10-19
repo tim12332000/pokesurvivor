@@ -13,6 +13,7 @@ with sync_playwright() as p:
     page.goto(URL)
     page.wait_for_function("document.getElementById('boot').classList.contains('hidden')")
     if page.locator('#tap-start').is_visible(): page.locator('#tap-start').click()
+    page.locator('#btn-digimon').click()
     page.locator('#scr-digimon').wait_for(state='visible')
     page.wait_for_function('[...G.Digimon.records.values()].every(r => r.ready)')
     assert page.locator('[data-evo-tab]').count() == 5

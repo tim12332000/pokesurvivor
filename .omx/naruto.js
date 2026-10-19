@@ -124,7 +124,14 @@
   document.querySelector('#scr-digimon .digimon-heading').after(shortcut);
 
   const ready=G.DB.ready;
-  G.DB.ready=async()=>{const restored=await ready();for(const dex of records.keys())G.DB.grant(dex,'starter');G.DB.commit();return restored;};
+  G.DB.ready=async()=>{
+    const restored=await ready(),save=G.DB.save;
+    for(const dex of records.keys())G.DB.grant(dex,'starter');
+    if(!save.partner&&!(save.stats?.runs>0)){
+      save.partner=save.starter=30001;save.partnerShiny=false;
+    }
+    G.DB.commit();return restored;
+  };
   const starterGrid=document.getElementById('starter-grid');
   new MutationObserver(()=>{
     const cells=starterGrid.querySelectorAll('.cell');

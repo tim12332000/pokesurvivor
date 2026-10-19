@@ -24,7 +24,7 @@ with sync_playwright() as p:
     page.on('request',lambda r:cloud.append(r.url) if any(s in r.url for s in ['firebaseio.com','firestore.googleapis.com','identitytoolkit.googleapis.com']) else None)
     page.goto(URL);page.wait_for_function("document.getElementById('boot').classList.contains('hidden')")
     if page.locator('#tap-start').is_visible():page.locator('#tap-start').click()
-    page.locator('#digimon-to-naruto').click()
+    page.locator('#btn-naruto').click()
     page.wait_for_function('[...G.Naruto.records.values()].every(r=>r.ready)')
     assert page.locator('#scr-naruto [data-naruto]').count()==8
     assert page.locator('#scr-digimon').is_hidden()
