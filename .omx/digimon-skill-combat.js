@@ -13,7 +13,7 @@
   const valid = f => f.owner && f.owner === G.Game.player && !f.owner.dead && f.owner.hp > 0 && f.world === G.World;
   const cap = () => { const limit=CAP*(1+(G.Quantity?.bonus(G.Game.player)||0)); while (fields.length > limit) fields.shift(); };
   const targets = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
-  const techniqueFor = mode => [G.NarutoSupport,G.NarutoOffense].find(api=>api?.supports(mode));
+  const techniqueFor = mode => [G.NarutoSupport,G.NarutoOffense,G.NarutoChidori].find(api=>api?.supports(mode));
   function hit(pl, m, e, base, dx, dy, knock = m.knock || 0) {
     if (!e || e.dead) return 0;
     const k = G.Types.mult(m.type, e.types) * G.Weather.mult(m.type), crit = pl.critChance > 0 && Math.random() < pl.critChance;
@@ -210,7 +210,7 @@
     }
   };
   C.clearFields = clear;
-  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); const live=new Set(G.Projectiles.all()); for (const p of [...bombs]) { const b = p.digiBomb, alive = live.has(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || b.owner !== G.Game.player || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
+  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); const live=new Set(G.Projectiles.all()); for (const p of [...bombs]) { const b = p.digiBomb, alive = live.has(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || b.owner !== G.Game.player || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; if(m.id==='naruto-fireball')G.FX.sp('naruto-great-fireball-burst','naruto-fireball',p.x,p.y-G.LIFT,{life:.24,scale:b.r/51,frameRate:12}); G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
   // Native pixel additions; VFX's public tables are the same used by the cache.
   G.VFX.PAL.holy = ['#786022','#b38a32','#e2c56b','#fff0b0','#fffdf0'];
   G.VFX.PAL.blueflame = ['#133e70','#267ed1','#58c5ff','#b3f1ff','#fff'];

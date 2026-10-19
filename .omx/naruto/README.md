@@ -330,3 +330,9 @@ Playwright and the installed Windows Chrome, matching the other sandbox checks.
 
 Deployment remains https://tim12332000.github.io/pokesurvivor/ and uses only the
 personal `feat/digimon-sandbox` branch. No upstream PR is created or changed.
+
+## 千鳥五段追擊
+
+佐助千鳥命中後自動選取範圍內尚未命中的敵人；每次施放最多五次飛行突進，同一敵人不重複命中。找不到下一個敵人、撞牆或障礙、玩家死亡或清場即停止。單次傷害維持 44、冷卻 1.05 秒，升級沿用原本傷害與範圍加成。數量增幅不突破五次上限。
+
+`.omx/naruto-chidori.js` 的 `config` 集中控制 `maxDashes`（5）、`speed`（1000 世界像素／秒）、`retargetDelay`（0.045 秒）與碰撞細分距離 `step`（4 世界像素）。結印時間仍由技能定義 `charge`（0.09 秒）控制。只有實際飛行期間阻擋受傷；結印、轉向間隔與結束後正常受傷，不改寫其他來源的無敵時間。此五段追擊與飛行無敵為使用者指定的遊戲改編，並非宣稱漫畫原作設定；千鳥名稱的原官方來源仍見技能圖鑑。

@@ -5,8 +5,44 @@
   Object.assign(G.VFX.PAL, {
     'naruto-blue': ['#102851', '#1767aa', '#35bfff', '#9feaff', '#ffffff'],
     'naruto-red': ['#250b12', '#751626', '#d93443', '#ff8b83', '#ffe9d5'],
-    'naruto-sand': ['#4d3014', '#91622b', '#c79a53', '#edd395', '#fff0ca']
+    'naruto-sand': ['#4d3014', '#91622b', '#c79a53', '#edd395', '#fff0ca'],
+    'naruto-fireball': ['#601509', '#bf3010', '#f66b13', '#ffbd36', '#fff3b0']
   });
+
+  // Chapter 223's broad exhaled fire mass, drawn separately from small Ember flames.
+  // 36-pixel body × PX 2 × scale 1.6 ≈ 115 world pixels; collision radius is 52.
+  G.VFX.SHAPES['naruto-great-fireball'] = {
+    w:51,h:43,frames:3,dir:true,gen(P,frame) {
+      P.fill((x,y)=>{
+        const dx=x-29,dy=y-21,r=Math.hypot(dx,dy),a=Math.atan2(dy,dx);
+        const edge=17.5+1.1*Math.sin(a*7+frame*2)+.7*Math.cos(a*11-frame);
+        // An irregular round front with flame tongues pointing back toward the caster.
+        if(r>edge){
+          const neck=6+3*Math.sin((x+frame*3)*.55);
+          if(x>2&&x<24&&Math.abs(dy)<neck*(x/24))return Math.abs(dy)<2?'l':'d';
+          return null;
+        }
+        const curl=Math.sin(a*3+r*.4-frame*1.6);
+        if(r>edge-2.3)return 'd';
+        if(r>13+curl*1.5)return 'm';
+        if(Math.hypot(dx-3,dy+1)<7+curl)return 'w';
+        return r<12+curl*2?'l':'m';
+      });
+      P.line(2,19+frame,16,17,'m',1,'d');
+      P.line(6,28-frame,17,25,'l',1,'m');
+      P.line(12,8+frame,20,12,'m',1,'d');
+      P.outline();
+    }
+  };
+  G.VFX.SHAPES['naruto-great-fireball-burst'] = {
+    w:51,h:51,frames:3,gen(P,frame) {
+      P.fill((x,y)=>{
+        const dx=x-25,dy=y-25,r=Math.hypot(dx,dy),a=Math.atan2(dy,dx);
+        const edge=20+2*Math.sin(a*9+frame*2)+Math.cos(a*13);
+        return r>edge?null:r>edge-3?'d':r>14?'m':r>7?'l':'w';
+      });P.outline();
+    }
+  };
 
   // Physical Fuma shuriken: four swept metal blades and an open central grip.
   G.VFX.SHAPES['naruto-fuma-shuriken'] = {
@@ -88,10 +124,10 @@
       ups: clones.counts.slice(1).map(count=>({t:`影分身數量增加 → ${count} 隻；每隻完整傷害`,m:{}}))
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
-      mode: 'dash', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
+      mode: 'chidori-chain', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
       range: 170, radius: 170, width: 34, knock: 50,
       vis: { proj: 'bolt', melee: 'claw', pal: 'naruto-blue' },
-      desc: '以雷遁集中穿刺前方，突進距離較長、命中路徑較窄。'
+      desc: '千鳥命中後自動追擊下一名敵人，每次施放最多突進五次、同一敵人只命中一次。只有飛行突進時無敵，結印、轉向與結束後均可受傷；遇牆或障礙停止。數量增幅不突破五次上限，此連擊為本作改編。'
     }],
     [30003, 'sakura', '櫻花衝', 'Cherry Blossom Impact', '01_1743', {
       mode: 'slam', type: 'fighting', cd: 1.3, dmg: 55,
@@ -172,9 +208,9 @@
     }],
     ['naruto-fireball', [30002, 30008], {
       name: '火遁・豪火球之術', mode: 'shot', type: 'fire', cd: 2.3, dmg: 49,
-      speed: 300, life: 1.4, size: 19, range: 420, blastRadius: 95, burn: .12,
-      vis: { proj: 'fire', trail: 'fire', pal: 'fire' },
-      desc: '吐出大型火球，命中後爆發火焰，傷害爆心周圍多名敵人並施加短暫燃燒。佐助與鼬使用此招有官方資料；命中爆炸半徑與燃燒數值為本作改編。',
+      speed: 300, life: 1.4, size: 52, range: 420, blastRadius: 95, burn: .12,
+      vis: { proj: 'naruto-great-fireball', projScale: 1.6, trail: 'ember', pal: 'naruto-fireball' },
+      desc: '吐出比身體更寬的圓形火團，翻動的橙紅外焰包住亮黃核心並拖出火舌；命中後爆發火焰，傷害爆心周圍多名敵人並施加短暫燃燒。佐助與鼬使用此招有官方資料；火球碰撞半徑 52、爆炸半徑 95 與燃燒數值為本作改編。',
       source_url: 'https://naruto-official.com/en/anime/naruto1/list/01_354',
       owner_sources: { 30008: 'https://naruto-official.com/en/news/01_2332' }
     }],
@@ -266,7 +302,7 @@
       source_url:'https://tamashiiweb.com/item/14256/?wovn=en'
     }]
   );
-  const kinds = { dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
+  const kinds = { 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
     sharingan:'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor' };
   const definitions = new Map(), byDex = new Map(), references = new Map();
