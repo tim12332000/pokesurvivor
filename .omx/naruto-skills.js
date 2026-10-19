@@ -52,9 +52,9 @@
     [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
       mode: 'shadow-clones', type: 'fighting', cd: 4, dmg: 8, range: 240,
       cloneDuration: 6, punchCd: .65, vis: { pal: 'naruto-blue' },
-      desc: '召出 3 個會選敵、移動與出拳的影分身，存在 6 秒；受擊後化煙消散。技能 Lv.3 最多 4 個、Lv.5 最多 5 個。切換招式後現存分身仍會作戰；技能 Lv.3 起，使用螺旋丸可讓最多 2 個分身追加連擊。數量、時限與傷害皆為本作改編。',
-      ups: [{t:'分身傷害 +20%',m:{dmg:1.2}},{t:'同時存在上限提高為 4，解鎖分身螺旋丸連擊',m:{}},
-        {t:'分身存在時間增加至 7 秒',m:{cloneDuration:7}},{t:'同時存在上限提高為 5',m:{}}]
+      desc: '最多召出 8 個影分身，存在 6 秒、冷卻 4 秒；受擊後化煙消散。切換到已學的螺旋丸、螺旋手裏劍或忍具時，現存分身也會使用同一招。分身共用受限的招式傷害預算，不會再召出分身。數量、時限與傷害皆為本作改編。',
+      ups: [{t:'分身拳擊傷害 +20%',m:{dmg:1.2}},{t:'分身模仿招式冷卻 -10%',m:{cloneTechniqueCdMul:.9}},
+        {t:'分身存在時間增加至 7 秒',m:{cloneDuration:7}},{t:'分身拳擊與模仿招式傷害 +25%',m:{dmg:1.25,cloneTechniqueDamageMul:1.25}}]
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
       mode: 'dash', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
@@ -117,7 +117,7 @@
       name: '螺旋丸', mode: 'dash', type: 'fighting', cd: 1.25, dmg: 48, charge: .12,
       range: 125, radius: 125, width: 56, knock: 100,
       vis: { proj: 'wind', melee: 'impact', pal: 'naruto-blue' },
-      desc: '凝聚旋轉查克拉後向前突進。鳴人 Lv.3 起保證出現學習選項；多重影分身達技能 Lv.3 時，最多 2 個現存分身可追加螺旋丸連擊，總追加傷害受限。',
+      desc: '凝聚旋轉查克拉後向前突進。鳴人 Lv.3 起保證出現學習選項；選用此招時，現存影分身會各自接近敵人並使用螺旋丸，總模仿傷害受限。',
       source_url: 'https://naruto-official.com/en/news/01_1423'
     }],
     ['naruto-rasenshuriken', [30001], {

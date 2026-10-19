@@ -25,14 +25,15 @@ Rock Lee close-range attacks also have tested multi-target areas.
 
 ## Naruto shadow clones
 
-Naruto now starts with Multi Shadow Clone Jutsu. Three lightweight actors move,
+Naruto now starts with Multi Shadow Clone Jutsu. Eight lightweight actors move,
 choose nearby enemies and punch; they share the owner's damage credit and never
 become extra players, collect rewards or write saves. Normal pursuers can be
 distracted by a closer clone; bosses retain their target. Contact or hostile
 projectile hits disperse a clone with smoke. Initial lifetime is six seconds and
-cooldown four seconds. Skill level three raises the cap to four and enables the
-Rasengan follow-up; level four extends lifetime to seven seconds; level five
-raises the cap to five. Recasting fills vacancies without refreshing existing
+cooldown four seconds. Every skill level retains the eight-clone cap. Skill
+level three shortens their copied-technique cooldown by 10%; level four extends
+lifetime to seven seconds; level five improves their copied-technique damage.
+Recasting fills vacancies without refreshing existing
 lifetimes. While at the cap, the active skill polls for a vacancy without wasting
 a new four-second cooldown or repeatedly replaying Charge. Switching slots keeps
 existing clones until they expire.
@@ -40,10 +41,15 @@ existing clones until they expire.
 Character level three guarantees a Rasengan learning choice, and level six a
 Rasenshuriken choice. When four slots are full, the card explicitly offers to
 replace a shared kunai/shuriken slot rather than removing a character skill.
-Players may decline. The original Rasengan move ID is preserved. With the clone
-skill at level three or higher, casting Rasengan lets at most two eligible
-clones share a follow-up worth 40% of that cast's damage budget. Clones do not
-recursively summon or copy Rasenshuriken. Pause freezes their simulation time;
+Players may decline. The original Rasengan move ID is preserved. Switching to
+learned Rasengan, Rasenshuriken, Kunai or Shuriken lets existing clones use that
+technique autonomously, without waiting for the player's cast. Each maintains a
+separate cooldown per technique across slot switches. Each copied cast uses
+one eighth of the owner's base damage, so eight clones share one extra cast's
+budget (before their explicit skill upgrades and integer rounding). Both the
+direct hit and explosion are scaled. Clones cannot recursively summon or borrow
+other characters' techniques. While Shadow Clone is selected, they use basic
+punches. Pause freezes their simulation time;
 death and scene changes clear actors and smoke. A gold chevron marks the owner.
 
 Run `python .omx/check_naruto_clones.py` for caps, lifetime, walls, distributed

@@ -5,7 +5,9 @@
   let serial = 0;
   const valid = a => a.owner === G.Game.player && !a.owner.dead && a.owner.hp > 0 && a.world === G.World;
   const living = owner => actors.filter(a => !a.dead && a.owner === owner && valid(a));
-  const limitOf = move => Math.min(5,(move.lvl||1)>=5?5:(move.lvl||1)>=3?4:3);
+  const limitOf = () => 8;
+  const mimicIds = new Set(['naruto-naruto', 'naruto-rasenshuriken', 'naruto-kunai', 'naruto-shuriken']);
+  const selectedTechnique = owner => (owner.activeGroup?.() || []).find(m => mimicIds.has(m.id) && owner.moves?.some(learned => learned === m || learned.id === m.id)) || null;
   const canCast = (owner,move) => owner===G.Game.player&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move);
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
   const nearby = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
@@ -27,8 +29,13 @@
   function dismiss(a) { if (!a.dead) { a.dead = true; puff(a); } }
   function clear(owner) {
     for (let i = actors.length - 1; i >= 0; i--) if (!owner || actors[i].owner === owner) actors.splice(i, 1);
+    clearProjectiles(owner);
     // Smoke belongs to this local effect layer and must not survive a run reset.
     smoke.length = 0;
+  }
+  function clearProjectiles(owner) {
+    const list = G.Projectiles.all();
+    for (let i = list.length - 1; i >= 0; i--) if (list[i].narutoClone && (!owner || list[i].owner === owner)) list.splice(i, 1);
   }
   function cast(owner, move) {
     if (owner !== G.Game.player || owner.dead || owner.hp <= 0 || owner.mon?.dex !== 30001) return false;
@@ -40,7 +47,10 @@
       if (!G.World.isFree(x, y, 10, true) || !clearPath(owner.x, owner.y, x, y, 10) || living(owner).some(a => Math.hypot(a.x - x, a.y - y) < 25)) continue;
       const a = { id: ++serial, owner, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || 6,
         lvl, dmg: Number.isFinite(move.dmg) ? move.dmg : 8, punchCd: move.punchCd || .65,
-        cd: .16 + count * .08, anim: new G.Sprites.Animator(30001, 1), target: null, dead: false, comboT: 0 };
+        cd: .16 + count * .08, anim: new G.Sprites.Animator(30001, 1), target: null, dead: false, comboT: 0,
+        cloneTechniqueCdMul: move.cloneTechniqueCdMul ?? 1, cloneTechniqueDamageMul: move.cloneTechniqueDamageMul ?? 1,
+        // Retain one cooldown per technique across slot switches; phase spreads eight casts out.
+        cooldowns: new Map([...mimicIds].map(id => [id, .16 + count * .08])), mimickedId: null };
       a.anim.dir = owner.anim.dir; a.anim.play('Charge'); actors.push(a); puff(a); count++; spawned = true;
     }
     if (spawned) owner.anim.play('Charge');
@@ -74,29 +84,51 @@
     const steps = Math.max(1, Math.ceil(dt / .04)), sub = dt / steps;
     for (let step = 0; step < steps; step++) {
       const claimed = new Set();
+      const projectiles = G.Projectiles.all();
+      for (let i = projectiles.length - 1; i >= 0; i--) {
+        const p = projectiles[i];
+        if (p.narutoClone && (p.owner !== G.Game.player || p.owner.dead || p.owner.hp <= 0)) projectiles.splice(i, 1);
+      }
       for (const a of actors) {
         if (a.dead) continue;
         if (!valid(a)) { a.dead = true; continue; }
         a.age += sub; a.cd -= sub; a.comboT = Math.max(0, a.comboT - sub);
+        for (const [id, remaining] of a.cooldowns) a.cooldowns.set(id, Math.max(0, remaining - sub));
         if (a.age >= a.ttl) { dismiss(a); continue; }
-        const enemies = nearby(a.owner.x, a.owner.y, 240).filter(e => distance(a, e) <= 280);
+        const technique = selectedTechnique(a.owner);
+        a.mimickedId = technique?.id || null;
+        const range = technique?.id==='naruto-naruto'?280:technique?Math.min(600,technique.range||technique.speed*technique.life||280):280;
+        const tethered = distance(a, a.owner) <= 420;
+        const enemies = tethered ? nearby(a.owner.x, a.owner.y, technique ? 420 : 240).filter(e => distance(a, e) <= range) : [];
         enemies.sort((b, c) => (claimed.has(b) - claimed.has(c)) || distance(a, b) - distance(a, c));
         a.target = enemies.find(e => clearPath(a.x, a.y, e.x, e.y)) || null;
         let moving = false;
         if (a.target) {
           const e = a.target; claimed.add(e);
-          const reach = 35 + (e.r || 0);
-          if (distance(a, e) > reach) moving = moveToward(a, e.x, e.y, Math.max(125, a.owner.spd || 0), sub);
+          const reach = 35 + (e.r || 0), rasengan = technique?.id === 'naruto-naruto';
+          if ((!technique || rasengan) && distance(a, e) > reach) moving = moveToward(a, e.x, e.y, rasengan && a.cooldowns.get(technique.id) <= 0 ? 400 : Math.max(125, a.owner.spd || 0), sub);
           else {
             a.anim.dir = G.Sprites.dirFromAngle(Math.atan2(e.y - a.y, e.x - a.x));
-            if (a.cd <= 0 && clearPath(a.x, a.y, e.x, e.y)) {
+            if (technique && a.cooldowns.get(technique.id) <= 0 && clearPath(a.x, a.y, e.x, e.y)) {
+              const aim = Math.atan2(e.y - a.y, e.x - a.x);
+              if (rasengan) {
+                a.anim.play('Attack'); a.comboT = .4; a.comboAim = aim;
+                hit(a, e, technique.dmg * a.owner.atk / 8 * a.cloneTechniqueDamageMul, technique.type || 'fighting', technique.knock || 28);
+                G.FX.beam(a.x, a.y - G.LIFT, aim, distance(a, e), 8, '#83dcff', { pal: 'water' });
+              } else if (G.DigimonSkills?.fireFrom) {
+                const shots = G.DigimonSkills.fireFrom(a.owner, technique, a.x, a.y, aim, a.cloneTechniqueDamageMul / 8) || [];
+                for (const p of shots) p.narutoClone = true;
+                a.anim.play('Shoot');
+              }
+              a.cooldowns.set(technique.id, Math.max(.1, (technique.cd || 1) * a.cloneTechniqueCdMul));
+            } else if (!technique && a.cd <= 0 && clearPath(a.x, a.y, e.x, e.y)) {
               a.cd = a.punchCd; a.anim.play('Attack', { speed: 1.3 });
               hit(a, e, a.dmg * a.owner.atk, 'fighting');
               G.FX.spark(e.x, e.y - (e.bodyH || 30) * .5, '#a9dcff', e.x - a.x, e.y - a.y, 3);
             }
           }
         } else {
-          const angle = (a.id - 1) % 5 * TAU / 5, x = a.owner.x + Math.cos(angle) * 74, y = a.owner.y + Math.sin(angle) * 66;
+          const angle = (a.id - 1) % 8 * TAU / 8, x = a.owner.x + Math.cos(angle) * 90, y = a.owner.y + Math.sin(angle) * 78;
           if (Math.hypot(a.x - x, a.y - y) > 20) moving = moveToward(a, x, y, 165, sub);
         }
         if (a.age >= .25) for (const e of nearby(a.x, a.y, a.r + 45)) {
@@ -114,23 +146,8 @@
       }
     }
   }
-  function combo(owner, move) {
-    if (!owner.hasMove?.('naruto-naruto')) return 0;
-    const participants = living(owner).filter(a => a.lvl >= 3), hits = [];
-    for (const a of participants) {
-      const e = nearby(a.x, a.y, 90).sort((b, c) => distance(a, b) - distance(a, c)).find(e => clearPath(a.x, a.y, e.x, e.y, 2));
-      if (e) hits.push([a, e]);
-      if(hits.length===2)break;
-    }
-    // One shared damage budget, rather than a full Rasengan per clone.
-    for (const [a, e] of hits) {
-      a.anim.dir = G.Sprites.dirFromAngle(Math.atan2(e.y - a.y, e.x - a.x));
-      a.anim.play('Attack'); a.comboT = .4;
-      hit(a, e, move.dmg * owner.atk * .4 / hits.length, move.type || 'fighting', 28);
-      G.FX.beam(a.x, a.y - G.LIFT, Math.atan2(e.y - a.y, e.x - a.x), distance(a, e), 8, '#83dcff', { pal: 'water' });
-    }
-    return hits.length;
-  }
+  // Legacy player-cast hook: autonomous clone techniques own their entire budget.
+  function combo() { return 0; }
   function draw(ctx) {
     const owner=G.Game.player;
     if(owner&&living(owner).length){
@@ -142,8 +159,11 @@
       const alpha = Math.min(.82, Math.max(0, a.ttl - a.age) * 2);
       a.anim.draw(ctx, a.x, a.y, { alpha });
       if (a.comboT > 0) {
-        ctx.save(); ctx.globalAlpha = a.comboT * 2; ctx.fillStyle = '#b8f3ff';
-        ctx.fillRect(Math.round(a.x + 10), Math.round(a.y - 29), 9, 9); ctx.restore();
+        const aim = a.comboAim || 0, x = a.x + Math.cos(aim) * 18, y = a.y - G.LIFT + Math.sin(aim) * 12;
+        ctx.save(); ctx.globalAlpha = Math.min(.85, a.comboT * 3); ctx.translate(x, y);
+        ctx.fillStyle = '#b8f3ff'; ctx.beginPath(); ctx.arc(0, 0, 7, 0, TAU); ctx.fill();
+        ctx.strokeStyle = '#3fafff'; ctx.lineWidth = 2; ctx.rotate(a.comboT * 22);
+        ctx.beginPath(); ctx.ellipse(0, 0, 10, 4, 0, 0, TAU); ctx.ellipse(0, 0, 4, 10, 0, 0, TAU); ctx.stroke(); ctx.restore();
       }
     }
     ctx.save(); ctx.fillStyle = '#dfedff';

@@ -32,14 +32,25 @@
     propHits(pl, m, x, y, r, m.dmg * pl.atk * ratio);
     return dealt;
   }
-  function projectile(pl, m, a, ratio = 1, explosive = false) {
-    const v = vis(m), p = G.Projectiles.spawn({ x: pl.x + Math.cos(a) * 3, y: pl.y + Math.sin(a) * 3,
+  function projectile(pl, m, a, ratio = 1, explosive = false, origin = pl) {
+    const v = vis(m), p = G.Projectiles.spawn({ x: origin.x + Math.cos(a) * 3, y: origin.y + Math.sin(a) * 3,
       vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed, dmg: m.dmg * pl.atk * ratio * (explosive ? .2 : 1),
       r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
       hits: new Set(), vis: v, owner: pl, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
       slow: m.slow || 0, knock: m.knock || 0, digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
     if (explosive) { bombs.add(p); cap(); }
     return p;
+  }
+  function fireFrom(owner,move,x,y,aim,damageScale=1) {
+    if(owner!==G.Game.player||owner.dead||owner.hp<=0||![x,y,aim,damageScale].every(Number.isFinite))return [];
+    if(!['naruto-rasenshuriken','naruto-kunai','naruto-shuriken'].includes(move.id))return [];
+    const m=cloneMove(move);m.dmg*=G.U.clamp(damageScale,0,1);
+    const count=Math.min(8,Math.max(1,m.count|0)),out=[];
+    for(let i=0;i<count;i++) {
+      const angle=m.digiMode==='nova'?i*TAU/count:aim+(count===1?0:(i/(count-1)-.5)*(m.arc||0));
+      const p=projectile(owner,m,angle,1,!!m.blastRadius,{x,y});p.narutoClone=true;out.push(p);
+    }
+    return out;
   }
   function line(pl, m, x, y, a, len, width, ratio = 1) {
     const ca = Math.cos(a), sa = Math.sin(a);
@@ -116,7 +127,6 @@
       for (const e of targets((sx + pl.x) / 2, (sy + pl.y) / 2, len / 2 + m.width)) { const dx = pl.x - sx, dy = pl.y - sy, t = Math.max(0, Math.min(1, ((e.x - sx) * dx + (e.y - sy) * dy) / (dx * dx + dy * dy || 1))); if (G.U.dist2(e.x, e.y, sx + dx * t, sy + dy * t) <= (m.width / 2 + e.r) ** 2) hit(pl, m, e, m.dmg * pl.atk, Math.cos(a), Math.sin(a)); }
       G.FX.slash(pl.x, pl.y - G.LIFT * .5, a, 34, 2.2, color(m), vis(m));
       if (m.narutoSkill) { const v=vis(m); G.FX.sp(v.proj||'wind',v.pal,pl.x,pl.y-G.LIFT,{life:.35,scale:1.7}); }
-      if (m.id==='naruto-naruto') G.NarutoClones?.combo(pl,m);
     } else if (mode === 'slam') { const x = pl.x + Math.cos(a) * m.range * .55, y = pl.y + Math.sin(a) * m.range * .55; G.FX.ring(x, y, 5, m.radius, color(m), .24, 3); area(pl, m, x, y, m.radius); }
     else if (mode === 'gate') { const target = pl.target && !pl.target.dead && G.U.dist(pl.x, pl.y, pl.target.x, pl.target.y) <= m.range ? pl.target : G.Projectiles.nearest(targets(pl.x, pl.y, m.range), pl.x, pl.y, m.range); if (target) field(pl, m, 'gate', { x: target.x, y: target.y, life: m.fieldDuration || 4, tick: m.fieldTick || .7, phase: 0 }); }
     else if (mode === 'sand-wave') {
@@ -214,5 +224,5 @@
   G.VFX.SHAPES['digi-gaia'] = { w: 15, h: 15, frames: 3, gen(P,f) { P.fill((x,y) => { const d=Math.hypot(x-7,y-7); return d<2?'w':d<4?'l':d<6?(f%2?'m':'d'):null; }); for(let i=0;i<4;i++){const a=i*Math.PI/2+f*.16;P.line(7+Math.cos(a)*3,7+Math.sin(a)*3,7+Math.cos(a)*6,7+Math.sin(a)*6,'m');} P.outline(); } };
   const priorForMove = G.VFX.forMove;
   G.VFX.forMove = m => { const v = priorForMove(m); return m && m.digimonSkill ? Object.assign(v, m.digiVis || {}) : v; };
-  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, update: customUpdate, clear, get activeEffects() { return fields; } });
+  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, fireFrom, update: customUpdate, clear, get activeEffects() { return fields; } });
 })();
