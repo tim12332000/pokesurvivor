@@ -28,27 +28,27 @@
   }
   const targetAlive = e => e && !e.dead && e.hp > 0 && G.EnemyMgr.all().includes(e);
   const inViewport = (e,camera) => Math.abs(e.x-camera.x)<=G.Camera.w/2+config.screenPadding && Math.abs(e.y-camera.y)<=G.Camera.h/2+config.screenPadding;
-  const rangeFor = c => c.move.range * (c.hits.size ? config.followupRangeMultiplier : 1);
+  const rangeFor = c => c.move.range * (c.hitCount ? config.followupRangeMultiplier : 1);
   function next(c) {
     const pl = c.owner;
-    return G.EnemyMgr.all().filter(e => targetAlive(e) && inViewport(e,c.camera) && !c.hits.has(e) && Math.hypot(e.x-pl.x,e.y-pl.y) <= rangeFor(c))
+    return G.EnemyMgr.all().filter(e => targetAlive(e) && inViewport(e,c.camera) && e!==c.lastTarget && Math.hypot(e.x-pl.x,e.y-pl.y) <= rangeFor(c))
       .sort((a,b) => Math.hypot(a.x-pl.x,a.y-pl.y)-Math.hypot(b.x-pl.x,b.y-pl.y))[0];
   }
   function begin(c) {
     if (c.dashes >= c.limit || !(c.target = next(c))) { end(c); return; }
-    c.legRange = rangeFor(c); c.speed = config.speed*Math.min(config.maxSpeedMultiplier,1+c.hits.size*config.speedStep);
+    c.legRange = rangeFor(c); c.speed = config.speed*Math.min(config.maxSpeedMultiplier,1+c.hitCount*config.speedStep);
     c.dashes++; c.travel = 0; c.phase = 'dash';
     c.owner.cast(c.move);
   }
   function finish(c) {
     if (c.dashes >= c.limit || !next(c)) { end(c); return; }
     c.phase = 'retarget';
-    c.retargetDelay = Math.max(config.minRetargetDelay,config.retargetDelay*Math.pow(config.retargetDelayDecay,c.hits.size));
+    c.retargetDelay = Math.max(config.minRetargetDelay,config.retargetDelay*Math.pow(config.retargetDelayDecay,c.hitCount));
     c.wait = c.retargetDelay;
   }
   function hit(c, e, dx, dy) {
-    const damageMultiplier=Math.pow(1+config.damageStep,c.hits.size);
-    c.hits.add(e);
+    const damageMultiplier=Math.pow(1+config.damageStep,c.hitCount);
+    c.hitCount++;c.lastTarget=e;
     const m=c.move, pl=c.owner, k=G.Types.mult(m.type,e.types), crit=pl.critChance>0&&Math.random()<pl.critChance;
     const dmg=m.dmg*c.attack*damageMultiplier*k*G.Weather.mult(m.type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(pl,e)||1);
     e.hurt(dmg,'#9feaff',dx,dy,m.knock||0,crit?'crit':G.Types.label(k));
@@ -92,7 +92,7 @@
     G.EnemyMgr.all().some(e=>targetAlive(e)&&inViewport(e,G.Camera)&&Math.hypot(e.x-pl.x,e.y-pl.y)<=(m?.range||170));
   function cast(pl,m) {
     if(!canCast(pl,m))return false;
-    const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m,pl),attack:pl.atk,hits:new Set(),dashes:0,trail:0,
+    const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m,pl),attack:pl.atk,hitCount:0,lastTarget:null,dashes:0,trail:0,
       origin:{x:pl.x,y:pl.y},camera:{x:G.Camera.x,y:G.Camera.y},
       speed:config.speed,retargetDelay:config.retargetDelay,phase:'charge',wait:Math.max(0,m.charge||0)};
     if(!next(c))return false;

@@ -23,12 +23,14 @@ with sync_playwright() as p:
           const A=G.NarutoChidori,C=G.Camera,pl=G.Game.player,assert=(v,m)=>{if(!v)throw Error(m)};
           const original={isFree:G.World.isFree,isLiquid:G.World.isLiquid,collide:G.World.collide},axis=G.Input.axis;
           Object.assign(G.World,{isFree:()=>true,isLiquid:()=>false,collide:()=>{}});G.Input.axis=()=>[1,1];
+          let hitEvents=[];
           function setup(points=[100]){
+            hitEvents=[];
             G.Combat.clearFields();G.EnemyMgr.clear();G.Projectiles.clear();G.FX.clear();
             pl.x=pl.y=0;pl.hp=pl.maxHp;pl.dead=false;pl.invuln=0;pl.quantityBonus=0;pl.critChance=0;pl.item=null;
             C.x=C.y=C.shake=C._sx=C._sy=0;
             pl.moves=[G.Moves.instance('naruto-sasuke')];pl.slots=[[pl.moves[0]]];pl.active=0;
-            const es=points.map(x=>{const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},x,0,{hp:1,spd:1,dmg:1});e.types=['normal'];G.EnemyMgr.add(e);return e;});
+            const es=points.map(x=>{const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},x,0,{hp:1,spd:1,dmg:1});e.types=['normal'];const hurt=e.hurt;e.hurt=function(...args){hitEvents.push(e);return hurt.apply(this,args);};G.EnemyMgr.add(e);return e;});
             G.EnemyMgr.rebuildGrid();pl.target=es[0];return es;
           }
           function cast(){assert(G.DigimonSkills.cast(pl,pl.moves[0]),'cast rejected');}
@@ -65,7 +67,7 @@ with sync_playwright() as p:
           const moving=setup([100]);cast();fields(.09);fields(.01);moving[0].x=edge+1;fields(.001);
           assert(A.active.phase==='return'&&moving[0].hp===moving[0].maxHp,'offscreen moving target chased/hit');G.Combat.clearFields();
           const maxTargets=setup([70,100,130,160,190,220]);cast();for(let i=0;i<400&&A.active;i++)fields(1/240);
-          assert(!A.active&&pl.x===0&&maxTargets.filter(e=>e.hp<e.maxHp).length===5,'maximum-hit completion did not return');
+          assert(!A.active&&pl.x===0&&hitEvents.length===5&&hitEvents.every((e,i)=>!i||e!==hitEvents[i-1]),'maximum-hit completion did not return');
           const dead=setup([100]);cast();fields(.09);fields(.01);dead[0].dead=true;fields(.001);
           assert(A.active.phase==='return','dead last target failed return');G.Combat.clearFields();
           for(const reason of ['clear','death','world']){
