@@ -127,7 +127,11 @@
       mode: 'chidori-chain', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
       range: 170, radius: 170, width: 34, knock: 50,
       vis: { proj: 'bolt', melee: 'claw', pal: 'naruto-blue' },
-      desc: '千鳥命中後自動追擊下一名敵人，每次施放最多突進五次、同一敵人只命中一次。只有飛行突進時無敵，結印、轉向與結束後均可受傷；遇牆或障礙停止。數量增幅不突破五次上限，此連擊為本作改編。'
+      desc: `千鳥 Lv.1～5 最多追擊 ${G.NarutoChidori.config.counts.join('、')} 名不同敵人，命中後自動追擊下一人，後續搜尋與突進距離擴大三倍。飛行突進期間無敵，結束後再保護 0.3 秒；結印與轉向間隔仍可受傷，遇牆或障礙停止。數量增幅不額外增加追擊上限，此連擊為本作改編。`,
+      ups: G.NarutoChidori.config.counts.slice(1).map((count,index)=>({
+        t: `追擊上限 → ${count} 名；${['傷害 +20%','冷卻 -10%','攻擊範圍 +12%','傷害 +25%'][index]}`,
+        m: [{dmg:1.2},{cd:.9},{radius:1.12,width:1.12,life:1.12,range:170*1.12},{dmg:1.25}][index]
+      }))
     }],
     [30003, 'sakura', '櫻花衝', 'Cherry Blossom Impact', '01_1743', {
       mode: 'slam', type: 'fighting', cd: 1.3, dmg: 55,

@@ -18,6 +18,8 @@
 !/check_naruto_cloak.py
 !/check_sasuke_shuriken.py
 !/check_naruto_fireball.py
+!/naruto-fireball-cast.js
+!/check_naruto_fireball_cast.py
 !/naruto-chidori.js
 !/check_naruto_chidori.py
 !/check_naruto_start.py

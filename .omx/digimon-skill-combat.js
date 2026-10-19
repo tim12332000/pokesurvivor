@@ -33,6 +33,16 @@
     return dealt;
   }
   function projectile(pl, m, a, ratio = 1, explosive = false, origin = pl) {
+    if(m.id==='naruto-fireball'&&pl.dex===30002&&origin===pl&&G.NarutoFireball) {
+      const mouth=G.NarutoFireball.origin(pl,a),dx=mouth.x-pl.x,dy=mouth.y-pl.y,len=Math.hypot(dx,dy);
+      origin={x:pl.x,y:pl.y};
+      // Check the mouth offset as swept travel too: a nearby wall/prop cannot be skipped.
+      for(let d=4;d<len+4;d+=4) {
+        const t=Math.min(1,d/len),x=pl.x+dx*t,y=pl.y+dy*t;
+        if(G.World.projectileBlock(x,y,1)){origin.x-=Math.cos(a)*3;origin.y-=Math.sin(a)*3;break;}
+        origin={x,y};
+      }
+    }
     const v = vis(m), p = G.Projectiles.spawn({ x: origin.x + Math.cos(a) * 3, y: origin.y + Math.sin(a) * 3,
       vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed, dmg: m.dmg * pl.atk * ratio * (explosive ? .2 : 1),
       r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
@@ -150,6 +160,7 @@
     const handler=techniqueFor(m.digiMode);
     if(m.narutoSkill&&m.dmg>0&&!G.NarutoSupport?.supports(m.digiMode))m.dmg*=G.NarutoSupport?.takeAttackBonus(pl)||1;
     if(handler)return handler.cast(pl,m);
+    if(m.id==='naruto-fireball'&&pl.dex===30002&&G.NarutoFireball)return G.NarutoFireball.cast(pl,m,(owner,move,aim)=>emit(owner,move,aim));
     if(m.charge>0)field(pl,m,'charge',{life:m.charge,aim:pl.aim,x:pl.x,y:pl.y});else emit(pl,m);
     return true;
   }

@@ -1,24 +1,30 @@
-/* Five distinct Chidori targets is this edition's gameplay adaptation. */
+/* Level-based Chidori pursuit is this edition's gameplay adaptation. */
 (() => {
   if (G.NarutoChidori) return;
-  const config = Object.freeze({ maxDashes: 5, speed: 1000, retargetDelay: .045, step: 4 });
+  const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), followupRangeMultiplier: 3, endInvulnerability: .3, speed: 1000, retargetDelay: .045, step: 4 });
+  const limitOf = move => config.counts[Math.max(0,Math.min(config.counts.length-1,(move?.lvl|0)-1))];
   let chain = null;
   const valid = c => c && c.owner === G.Game.player && c.world === G.World && !c.owner.dead && c.owner.hp > 0;
   const clear = owner => { if (!owner || chain?.owner === owner) chain = null; };
+  function end(c) {
+    if(chain!==c)return;
+    if(valid(c)&&c.dashes>0)c.owner.invuln=Math.max(c.owner.invuln||0,config.endInvulnerability);
+    clear();
+  }
   const targetAlive = e => e && !e.dead && e.hp > 0 && G.EnemyMgr.all().includes(e);
+  const rangeFor = c => c.move.range * (c.hits.size ? config.followupRangeMultiplier : 1);
   function next(c) {
     const pl = c.owner;
-    return G.EnemyMgr.all().filter(e => targetAlive(e) && !c.hits.has(e) && Math.hypot(e.x-pl.x,e.y-pl.y) <= c.move.range)
+    return G.EnemyMgr.all().filter(e => targetAlive(e) && !c.hits.has(e) && Math.hypot(e.x-pl.x,e.y-pl.y) <= rangeFor(c))
       .sort((a,b) => Math.hypot(a.x-pl.x,a.y-pl.y)-Math.hypot(b.x-pl.x,b.y-pl.y))[0];
   }
   function begin(c) {
-    if (c.dashes >= config.maxDashes || !(c.target = next(c))) { clear(); return; }
-    c.dashes++; c.travel = 0; c.phase = 'dash';
+    if (c.dashes >= c.limit || !(c.target = next(c))) { end(c); return; }
+    c.legRange = rangeFor(c); c.dashes++; c.travel = 0; c.phase = 'dash';
     c.owner.cast(c.move);
   }
   function finish(c) {
-    // Do not leave invulnerability behind, even when there is no next target.
-    if (c.dashes >= config.maxDashes || !next(c)) { clear(); return; }
+    if (c.dashes >= c.limit || !next(c)) { end(c); return; }
     c.phase = 'retarget'; c.wait = config.retargetDelay;
   }
   function hit(c, e, dx, dy) {
@@ -37,13 +43,13 @@
     if(c.phase!=='dash') {c.wait-=dt;if(c.wait<=0)begin(c);return;}
     if(!targetAlive(c.target)){finish(c);return;}
     const pl=c.owner,m=c.move,e=c.target;
-    let budget=Math.min(config.speed*dt,m.range-c.travel);
+    let budget=Math.min(config.speed*dt,c.legRange-c.travel);
     while(budget>0&&chain===c&&c.phase==='dash') {
       const dx=e.x-pl.x,dy=e.y-pl.y,d=Math.hypot(dx,dy),reach=m.width*.5+(e.r||0);
       if(d<=reach+.001){hit(c,e,dx,dy);break;}
       const step=Math.min(config.step,budget,d-reach),ux=dx/d,uy=dy/d;
       const x=pl.x+ux*step,y=pl.y+uy*step;
-      if(!G.World.isFree(x,y,pl.r*.8,true)){clear();break;}
+      if(!G.World.isFree(x,y,pl.r*.8,true)){end(c);break;}
       pl.x=x;pl.y=y;c.travel+=step;budget-=step;
       pl.aim=pl.moveAngle=Math.atan2(dy,dx);pl.attackFace=.15;pl.anim.dir=G.Sprites.dirFromAngle(pl.aim);
       c.trail+=step;
@@ -51,14 +57,14 @@
     }
     if(chain===c&&c.phase==='dash'){
       if(Math.hypot(e.x-pl.x,e.y-pl.y)<=m.width*.5+(e.r||0)+.001)hit(c,e,e.x-pl.x,e.y-pl.y);
-      else if(c.travel>=m.range-.001)clear();
+      else if(c.travel>=c.legRange-.001)end(c);
     }
   }
-  const canCast = (pl,m) => pl === G.Game.player && pl.dex === 30002 && !pl.dead && pl.hp > 0 && !chain &&
+  const canCast = (pl,m) => pl === G.Game.player && pl.dex === 30002 && !pl.dead && pl.hp > 0 && !chain && !G.NarutoFireball?.active &&
     G.EnemyMgr.all().some(e=>targetAlive(e)&&Math.hypot(e.x-pl.x,e.y-pl.y)<=(m?.range||170));
   function cast(pl,m) {
     if(!canCast(pl,m))return false;
-    const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},attack:pl.atk,hits:new Set(),dashes:0,trail:0,phase:'charge',wait:Math.max(0,m.charge||0)};
+    const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m),attack:pl.atk,hits:new Set(),dashes:0,trail:0,phase:'charge',wait:Math.max(0,m.charge||0)};
     if(!next(c))return false;
     chain=c;return true;
   }
@@ -79,5 +85,5 @@
   C.drawAirFields=function(ctx){oldAir.call(this,ctx);if(valid(chain)&&chain.phase==='dash'){
     const p=chain.owner;G.VFX.draw(ctx,'bolt','naruto-blue',p.x+Math.cos(p.aim)*18,p.y-G.LIFT+Math.sin(p.aim)*18,{scale:1.25,angle:p.aim,frame:Math.floor(performance.now()/65)});
   }};
-  G.NarutoChidori={config,supports:mode=>mode==='chidori-chain',canCast,cast,clear,update,get active(){return chain;}};
+  G.NarutoChidori={config,limitOf,supports:mode=>mode==='chidori-chain',canCast,cast,clear,update,get active(){return chain;}};
 })();
