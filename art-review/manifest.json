@@ -1,0 +1,168 @@
+{
+  "branch": "feat/animation-presentation-lab",
+  "baseCommit": "b0d2796",
+  "baseBranch": "feat/digimon-sandbox",
+  "approvalRequired": true,
+  "items": [
+    {
+      "id": "sasuke-chidori-v02",
+      "title": "佐助・千鳥蓄力與突進 v02",
+      "character": "佐助",
+      "status": "candidate",
+      "kind": "AI概念稿",
+      "image": "candidates/sasuke-chidori-v02.png",
+      "beforeImage": "previews/chidori-current.png",
+      "summary": "改成低位蓄力、帶電手向後蓄勢，再前傾伸手命中，雷光集中在手掌附近。",
+      "improvements": [
+        "重做出手銜接，蓄力、前傾、刺擊與收勢的剪影比第一版清楚。",
+        "以原作左手蓄力為目標修正提示；整組方向一致，沒有拿一般結印當突進。",
+        "藍白電弧範圍較第一版克制，角色身體仍可辨識。"
+      ],
+      "limitations": [
+        "僅動作概念候選；採用前仍須以相同高度縮圖，逐幀確認解剖左右手與鏡射。",
+        "殘影只作設計方向，實裝應分離特效，不把殘影烘焙在每張角色圖。"
+      ],
+      "references": [
+        {
+          "title": "官方：中忍考試千鳥回顧",
+          "url": "https://naruto-official.com/en/news/01_1282"
+        },
+        {
+          "title": "官方少年佐助模型：低位千鳥姿勢",
+          "url": "https://tamashiiweb.com/item/14256/?wovn=en"
+        }
+      ],
+      "qa": {
+        "score": 91,
+        "verdict": "保留 v02 作分鏡候選；v01 出手與雷光過度問題退回。左右手仍列為拆幀前必要核對。"
+      },
+      "sourceImage": {
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "sasuke-fireball-v01",
+      "title": "佐助・豪火球施放分鏡 v01",
+      "character": "佐助",
+      "status": "candidate",
+      "kind": "AI概念稿",
+      "image": "candidates/sasuke-fireball-v01.png",
+      "beforeImage": "references/sasuke-original.png",
+      "summary": "從結印、吸氣、嘴前起火，到大火球分離與收勢，補足原版缺少的軀幹動作。",
+      "improvements": [
+        "火焰確實從嘴部發出，施放起點比一般施術姿勢清楚。",
+        "有吸氣、噴吐、後仰與收勢的分段，不靠放大特效取代動作。",
+        "維持藍衣白褲與黑色像素輪廓，方向一致。"
+      ],
+      "limitations": [
+        "概念審稿，尚未拆幀或接入遊戲；需重新校正腳底與嘴部錨點。",
+        "第六格為火球分離的演出方向，實裝仍需依現有射程與碰撞驗證。"
+      ],
+      "references": [
+        {
+          "title": "官方：Father and Son, the Broken Crest",
+          "url": "https://naruto-official.com/en/anime/naruto1/list/01_354"
+        },
+        {
+          "title": "官方少年佐助模型：結印、火遁姿勢",
+          "url": "https://tamashiiweb.com/item/14256/?wovn=en"
+        }
+      ],
+      "qa": {
+        "score": 91,
+        "verdict": "保留作動作方向候選：嘴部起火、吸氣與收勢比目前普通施術列更清楚；尚待使用者核准。"
+      },
+      "sourceImage": {
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "naruto-clones-v02",
+      "title": "鳴人・影分身結印與煙霧 v02",
+      "character": "鳴人",
+      "status": "candidate",
+      "kind": "AI概念稿",
+      "image": "candidates/naruto-clones-v02.png",
+      "beforeImage": "references/team7-original.png",
+      "summary": "以單一鳴人的交叉指印、持印、白煙成形、落地和出拳呈現分身演出。",
+      "improvements": [
+        "交叉指印比第一版合掌更清楚，且前後幀衣著一致。",
+        "每格只畫一個角色，讓實際分身數交由遊戲產生，避免原稿六人誤當八人的問題。",
+        "有煙霧出現、角色走出煙與出拳的接續動作，身體比例較第一版修長。"
+      ],
+      "limitations": [
+        "概念審稿；煙霧邊緣的半透明雜點、地面錨點仍需製作階段整理。",
+        "不把整張當成八隻分身貼圖；分身數量、控制與碰撞維持遊戲機制。"
+      ],
+      "references": [
+        {
+          "title": "官方：火影第一集",
+          "url": "https://naruto-official.com/en/anime/naruto1/list/01_225"
+        }
+      ],
+      "qa": {
+        "score": 90,
+        "verdict": "保留交叉指印與煙霧分鏡方向；淘汰第一版錯誤人數，未標示為可直接上線資產。"
+      },
+      "sourceImage": {
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "naruto-rasengan-v01",
+      "title": "鳴人・螺旋丸施放分鏡 v01",
+      "character": "鳴人",
+      "status": "candidate",
+      "kind": "AI概念稿",
+      "image": "candidates/naruto-rasengan-v01.png",
+      "beforeImage": "references/team7-original.png",
+      "summary": "掌心成球、雙手協助旋轉、重心前移再推掌命中，讓蓄力和打中有清楚區別。",
+      "improvements": [
+        "前四格藍白球體貼住掌心，施放輪廓容易辨識。",
+        "加入前傾推掌與命中後的手臂跟進，補足原版共用攻擊姿勢。",
+        "保留少年期橙藍服裝，沒有改成疾風傳黑橙版本。"
+      ],
+      "limitations": [
+        "概念審稿；撞擊大漩渦只作命中效果方向，不代表技能改成光波。",
+        "實裝前仍需縮到原角色高度、修正手腕與球心錨點並驗證八方向表現。"
+      ],
+      "references": [
+        {
+          "title": "官方：螺旋丸的旋轉與壓縮",
+          "url": "https://naruto-official.com/en/news/01_1521"
+        }
+      ],
+      "qa": {
+        "score": 90,
+        "verdict": "保留作蓄力、推掌與命中分鏡候選；角色比例及球心錨點仍需製作階段驗證，尚待使用者核准。"
+      },
+      "sourceImage": {
+        "width": 1774,
+        "height": 887,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    }
+  ]
+}

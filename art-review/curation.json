@@ -1,0 +1,57 @@
+{
+  "reviewer": "Codex",
+  "reviewDate": "2026-10-20",
+  "gate": "Only visually improved concepts enter candidates; final adoption requires user approval.",
+  "rejected": [
+    {
+      "id": "sasuke-chidori-v01",
+      "score": 76,
+      "reasons": [
+        "出手前後帶電手的銜接不夠清楚，且提示誤指定右手；需以官方左手蓄力重新審視。",
+        "衝刺殘影與大爆光跨格，無法作可靠拆幀素材。"
+      ],
+      "retainedInGallery": false
+    },
+    {
+      "id": "naruto-clones-v01",
+      "score": 62,
+      "reasons": [
+        "宣稱八人的格子實際只有六人。",
+        "手印偏向合掌，人物比例較原圖圓頭。",
+        "煙霧帶大片半透明背景，PNG alpha 最大值只有254，無完全不透明主體。"
+      ],
+      "retainedInGallery": false
+    }
+  ],
+  "retained": [
+    {
+      "id": "sasuke-chidori-v02",
+      "score": 91,
+      "status": "concept-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "sasuke-fireball-v01",
+      "score": 91,
+      "status": "concept-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "naruto-clones-v02",
+      "score": 90,
+      "status": "concept-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "naruto-rasengan-v01",
+      "score": 90,
+      "status": "concept-only",
+      "userApproval": "pending"
+    }
+  ],
+  "imageCount": {
+    "generated": 6,
+    "rejected": 2,
+    "retained": 4
+  }
+}
