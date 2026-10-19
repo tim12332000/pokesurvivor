@@ -18,9 +18,14 @@ G.Camera = {
 
   resize(cssW, cssH, dpr = 1) {
     this.dpr = dpr;
-    this.scale = Math.min(cssW / this.VIEW_W, cssH / this.MIN_VIEW_H);
+    this.scale = this.viewportScale(cssW,cssH);
     this.w = cssW / this.scale;
     this.h = cssH / this.scale;
+  },
+
+  viewportScale(cssW,cssH) {
+    const portrait=(G.Settings.touch||G.Touch?.active)&&cssW<=600&&cssH>cssW;
+    return Math.min(cssW / (portrait?540:this.VIEW_W), cssH / (portrait?720:this.MIN_VIEW_H));
   },
 
   follow(tx, ty, dt) {

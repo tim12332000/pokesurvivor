@@ -32,7 +32,7 @@ G.Game = (() => {
     resize();
     addEventListener('resize', resize);
     G.Touch.init(cv);
-    // En móvil: al cambiar de app o girarlo en vertical, la partida se pausa.
+    // Backgrounding still pauses; rotating only resizes and releases the joystick.
     document.addEventListener('visibilitychange', () => { if (document.hidden) autoPause(); });
     G.RunUI.wirePause(() => { state = 'playing'; G.UI.hideAll(); }, quitRun);
     Backdrop.init();
@@ -48,17 +48,7 @@ G.Game = (() => {
     cv.width = Math.round(w * dpr);
     cv.height = Math.round(h * dpr);
     G.Camera.resize(w, h, dpr);
-    checkOrientation();
-  }
-
-  /** Móvil en vertical: aviso de girarlo (y pausa). */
-  function checkOrientation() {
-    const portrait = G.Touch.active && innerHeight > innerWidth;
-    const el = document.getElementById('rotate');
-    if (!el) return;
-    if (portrait && !document.getElementById('rotate-ico').innerHTML) document.getElementById('rotate-ico').innerHTML = G.Icons.html('phone', 48);
-    el.classList.toggle('hidden', !portrait);
-    if (portrait) autoPause();
+    G.Touch.reset();
   }
 
   /** Pausa sola (sólo en solitario: en grupo los demás siguen). */
@@ -571,6 +561,7 @@ G.Game = (() => {
   // récords y ranking. Mejor eso que una pantalla negra y perderlo todo.
   let loopErrs = 0, errRun = 0;
   function loop(ts) {
+    if(document.body.dataset.gameState!==state)document.body.dataset.gameState=state;
     requestAnimationFrame(loop);
     try { frame(ts); errRun = 0; }
     catch (e) {

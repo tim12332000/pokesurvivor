@@ -47,8 +47,8 @@ G.SettingsUI = (() => {
     else {
       const el = document.documentElement;
       const p = (el.requestFullscreen || el.webkitRequestFullscreen).call(el);
-      // En móvil, además se intenta fijar la pantalla en horizontal.
-      if (p && p.then) p.then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) { /* nada */ } }).catch(() => {});
+      // Fullscreen follows the orientation chosen by the player.
+      if (p && p.then) p.then(() => { try { screen.orientation?.unlock(); } catch (e) { /* optional API */ } }).catch(() => {});
     }
     setTimeout(() => { if (isOpen()) render(); }, 300);
   }
@@ -88,7 +88,7 @@ G.SettingsUI = (() => {
            : iosTip() ? `<div class="set-row"><div class="grow"><b>Pantalla completa</b><small>${esc(IOS_TIP)}</small></div></div>` : '');
     } else if (tab === 'ctl') {
       box.innerHTML = section('En móvil o tablet')
-        + `<p class="sub">Pon el dedo en cualquier parte y arrastra para moverte: el joystick aparece donde tocas. Toca un ataque de abajo para cambiarlo y el botón de arriba a la derecha para pausar. Se juega en horizontal.</p>`
+        + `<p class="sub">Arrastra para moverte, toca una habilidad para cambiarla y usa el botón de pausa. Puedes jugar en vertical o en horizontal.</p>`
         + `<div class="set-row"><div class="grow"><b>Tamaño del joystick</b><small>Cuánto hay que arrastrar el dedo.</small></div></div>`
         + choice('stick', [[0.8, 'Pequeño'], [1, 'Normal'], [1.25, 'Grande']])
         + `<div class="set-row"><div class="grow"><b>Colocar los botones</b><small>Pon los ataques, la pausa y el joystick (fijo, si quieres) donde quieras de la pantalla.</small></div>

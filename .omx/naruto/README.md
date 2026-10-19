@@ -3,6 +3,22 @@
 目前火影版號：**火影 beta 0.01**。顯示於火影選角區塊、瀏覽器標題與畫面右下角。
 日後修改 `.omx/naruto.js` 頂端的 `version`，三處會同步更新；不影響存檔鍵值。
 
+## 手機直向遊玩
+
+手機直向、橫向皆可遊玩；旋轉時持續遊戲並釋放舊搖桿觸控，切到其他 App 仍會自動暫停。
+全螢幕及加入主畫面不再鎖定橫向。手機直向寬度不超過 600px 時：
+
+- 技能固定在右下角 2×2 四格，道具放在技能上方；浮動搖桿可在空白處拖曳。
+- 血量、計時與暫停分列，鏡頭維持可辨識的角色大小，選單／三選一／設定可直向捲動。
+- 「設定 → 控制 → 配置按鈕」可個別儲存直向與橫向布局，重設只影響目前方向。
+- 底部版號縮為單行，避開拇指操作區，並保留瀏海及底部手勢安全距離。
+
+`G.Touch.controlLayout()` 統一實際 HUD 與編輯器的矩形；直向設定使用 `padPortrait`，
+原橫向 `pad` 保留。直向樣式位於 `.omx/mobile-portrait.css`，由入口產生器載入。
+`G.Camera.viewportScale()` 同時供一般鏡頭與數碼寶貝尺寸調整使用，避免直向縮放被覆蓋。
+執行 `python .omx/check_mobile_portrait.py` 驗證五種尺寸、觸控移動、雙指切招、暫停、
+旋轉、三選一與布局儲存；此為瀏覽器手機模擬，實體裝置的瀏海、主畫面模式與效能仍須實機觀察。
+
 Generation 11 follows Digimon in collection and gacha. The Naruto button appears
 in the top navigation and in the first-time Digimon picker. Eight characters are
 available: Naruto, Sasuke, Sakura, Kakashi, Hinata, Rock Lee, Gaara and Itachi.

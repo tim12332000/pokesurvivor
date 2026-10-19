@@ -336,6 +336,8 @@ G.I18n.add({
   "Pon los ataques, la pausa y el joystick (fijo, si quieres) donde quieras de la pantalla.": "將攻擊、暫停按鈕與搖桿（可選擇固定）放在畫面上任何位置。",
   "Arrastra los botones a donde quieras": "將按鈕拖曳至想要的位置",
   "Gira el móvil: se juega en horizontal.": "請轉動手機：本遊戲採橫向遊玩。",
+  "Puedes jugar en vertical o en horizontal.": "手機直向、橫向皆可遊玩。",
+  "Arrastra para moverte, toca una habilidad para cambiarla y usa el botón de pausa. Puedes jugar en vertical o en horizontal.": "拖曳即可移動，點選技能切換，右上角可暫停。手機直向、橫向皆可遊玩。",
   "Joystick": "搖桿",
   "Flotante": "浮動",
   "Fijo": "固定",

@@ -29,6 +29,8 @@ build_id = subprocess.check_output(['git','rev-parse','--short','HEAD'],cwd=ROOT
 # Every deployment must fetch its matching scripts, including changed skill data.
 html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(")',
               lambda match: match[1]+match[2]+'?v='+build_id+match[3], html)
+html = re.sub(r'(<link\b(?=[^>]*\brel="stylesheet")[^>]*\bhref=")(?!https?://)([^"?]+)(")',
+              lambda match: match[1]+match[2]+'?v='+build_id+match[3], html)
 html = re.sub(r'<!-- seo:begin -->.*?<!-- seo:end -->', '', html, flags=re.S)
 html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼寶貝 × 火影忍者</title>', html, flags=re.S)
 html = html.replace('<html lang="es">', '<html lang="zh-TW">')

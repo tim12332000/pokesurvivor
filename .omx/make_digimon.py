@@ -33,6 +33,7 @@ naruto = json.loads((root / '.omx/naruto/sprites.json').read_text(encoding='utf-
 assert len(naruto) == 8
 (root / '.omx/naruto/sprites-data.js').write_text('window.PS_NARUTO_SPRITES = ' + json.dumps(naruto) + ';\n', encoding='utf-8')
 html = (root / 'dev.html').read_text(encoding='utf-8')
+html = html.replace('</head>', '<link rel="stylesheet" href=".omx/mobile-portrait.css">\n</head>', 1)
 html = html.replace('<head>', '<head>\n<base href="../">\n<script>window.PS_SANDBOX_KEY="ps.sandbox.digimon.v1";</script>', 1)
 main = '<script defer src="js/main.js"></script>'
 assert main in html

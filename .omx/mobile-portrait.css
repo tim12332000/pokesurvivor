@@ -1,0 +1,210 @@
+/* Sandbox phone portrait layout. Keep desktop and landscape rules unchanged. */
+/* Achievement notices are informational and must not swallow a second finger. */
+body.touch .ach-pop { pointer-events: none; }
+@media (max-width: 600px) and (orientation: portrait) {
+  body {
+    --portrait-top: calc(env(safe-area-inset-top, 0px) + 164px);
+    --portrait-bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+  }
+
+  body .scr {
+    padding: calc(env(safe-area-inset-top, 0px) + 12px) 10px var(--portrait-bottom);
+    min-width: 0;
+    overflow-x: hidden;
+  }
+  body .scr > .box {
+    min-width: 0;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 16px 12px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    overflow-wrap: anywhere;
+  }
+  body .box h2 { font-size: 23px; }
+  body[data-game-state="playing"] .ach-pop {
+    top: calc(env(safe-area-inset-top, 0px) + 170px);
+    width: max-content;
+    max-width: calc(100vw - 24px);
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+  body .sub { font-size: 13px; margin-bottom: 10px; }
+  body .btn, body .btn.small, body .chip, body .gen-tab, body .seg button {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+  body .split { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  body .upg, body .ach-grid { grid-template-columns: minmax(0, 1fr); }
+  body .card .txt, body .set-row > div { min-width: 0; }
+
+  body #topbar {
+    top: calc(env(safe-area-inset-top, 0px) + 6px);
+    left: 8px;
+    right: 8px;
+    max-width: none;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
+    max-height: 154px;
+    overflow-y: auto;
+    padding: 2px;
+  }
+  body #topbar.hidden { display: none; }
+  body #topbar .pill, body #topbar .btn.small {
+    min-width: 0;
+    min-height: 44px;
+    justify-content: center;
+    gap: 3px;
+    padding: 5px 3px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  body #user-pill { overflow: hidden; text-overflow: ellipsis; }
+  body .sound-panel {
+    top: var(--portrait-top);
+    right: 10px;
+    width: min(320px, calc(100vw - 20px));
+    max-height: calc(100dvh - var(--portrait-top) - var(--portrait-bottom));
+  }
+  body #scr-goals, body #scr-dex, body #scr-upgrades, body #scr-gacha,
+  body #scr-friends, body #scr-rank, body #scr-lobby, body #scr-profile {
+    padding-top: var(--portrait-top);
+  }
+
+  body #scr-menu {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: var(--portrait-top) 10px var(--portrait-bottom);
+    overflow-y: auto;
+  }
+  body #scr-menu .menu-left {
+    flex: 0 0 auto;
+    padding: 6px 0 10px;
+  }
+  body #scr-menu .logo .t1 { font-size: clamp(28px, 8vw, 38px); }
+  body #scr-menu .logo .t2 { font-size: 11px; letter-spacing: 1px; }
+  body #scr-menu .partner-card { margin-top: 2px; }
+  body #menu-partner { width: 143px; height: 110px; }
+  body #scr-menu .partner-card .nm { font-size: 20px; }
+  body #scr-menu .partner-card .lv { font-size: 12px; }
+  body #scr-menu .menu-right {
+    width: 100%;
+    flex: 0 0 auto;
+    padding: 0;
+    gap: 10px;
+    overflow: visible;
+    background: transparent;
+  }
+  body #scr-menu .menu-right > :first-child,
+  body #scr-menu .menu-right > :last-child { margin: 0; }
+  body #scr-menu .menu-right .box { padding: 10px 8px; overflow: visible; }
+  body #scr-menu .menu-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; }
+  body #scr-menu .menu-item {
+    min-width: 0;
+    min-height: 56px;
+    padding: 8px 4px;
+    grid-template-columns: 24px minmax(0, 1fr);
+    column-gap: 5px;
+    font-size: 16px;
+  }
+  body #scr-menu .menu-item.play { grid-column: 1 / -1; font-size: 24px; }
+  body #scr-menu .menu-item small {
+    white-space: normal;
+    font-size: 11px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+  body #scr-menu .menu-item::before { display: none; }
+  body #scr-menu .mi-ico img { width: 23px; height: 23px; }
+
+  body #scr-naruto, body #scr-digimon,
+  body #scr-naruto-skills, body #scr-digimon-skills {
+    padding: calc(env(safe-area-inset-top, 0px) + 10px) 10px var(--portrait-bottom);
+  }
+  body #scr-naruto > .box, body #scr-digimon > .box,
+  body #scr-naruto-skills > .box, body #scr-digimon-skills > .box {
+    width: 100%;
+    max-height: 100%;
+  }
+  body #scr-naruto .naruto-grid, body #scr-digimon .digimon-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+  body #scr-naruto .naruto-card, body #scr-digimon .digimon-card {
+    min-width: 0;
+    padding: 10px 4px;
+    gap: 5px;
+    overflow-wrap: anywhere;
+  }
+  body #scr-naruto .naruto-card canvas, body #scr-digimon .digimon-card canvas {
+    width: 112px;
+    height: 98px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  body #scr-naruto .naruto-card b, body #scr-digimon .digimon-card b { font-size: 16px; }
+  body #scr-naruto .naruto-card span, body #scr-digimon .digimon-card small { font-size: 12px; }
+  body .naruto-skill-heading, body .digimon-skill-heading { align-items: flex-start; gap: 8px; }
+  body .naruto-skill-heading h2, body .digimon-skill-heading h2 { font-size: 20px; }
+  body .naruto-skill-heading > button, body .digimon-skill-heading > button { flex-shrink: 0; }
+  body .naruto-skill-entry p { font-size: 14px; line-height: 1.65; }
+  body .naruto-skill-entry a { padding: 10px 0; line-height: 1.5; overflow-wrap: anywhere; }
+
+  body #scr-levelup > .box, body #scr-bond > .box, body #scr-item > .box { width: 100%; }
+  body #cards, body #bond-cards, body #item-cards {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+  body .card { min-height: 76px; gap: 9px; padding: 10px 8px; }
+  body .card:hover { transform: none; }
+  body .card .ico { flex-basis: 38px; height: 38px; }
+  body .card .nm { font-size: 16px; gap: 5px; }
+  body .card .ds { font-size: 13px; line-height: 1.45; }
+  body #scr-pause .row { gap: 10px; }
+  body #scr-pause .row > .btn { flex: 1 1 100%; }
+  body #scr-settings .box.settings { max-height: 100%; padding: 14px 10px; }
+  body #set-tabs { gap: 5px; }
+  body #set-tabs .gen-tab { padding: 7px 8px; }
+  body .set-body { padding-right: 2px; }
+  body .set-row { gap: 8px; }
+  body .set-row b { font-size: 14px; }
+  body .set-row input[type="range"] { min-width: 0; max-width: 45%; }
+  body #scr-layout .lay-panel { top: 27%; max-height: 38%; overflow-y: auto; }
+  body .toast { max-width: calc(100vw - 24px); font-size: 13px; text-align: center; }
+  body #credits-line { position: static; display: none; }
+
+  /* Keep the beta label away from movement and attack controls. */
+  body #sandbox-badge {
+    top: auto !important;
+    bottom: var(--portrait-bottom) !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 20px);
+    width: max-content;
+    padding: 4px 7px !important;
+    font-size: 10px !important;
+    line-height: 1.3 !important;
+    text-align: center;
+    pointer-events: none;
+  }
+  body[data-game-state="playing"] #sandbox-badge {
+    left: 8px !important;
+    right: 8px !important;
+    bottom: max(3px, env(safe-area-inset-bottom, 0px)) !important;
+    width: auto;
+    max-width: none;
+    transform: none;
+    padding: 0 !important;
+    font-size: 10px !important;
+    line-height: 12px !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

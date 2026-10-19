@@ -73,7 +73,7 @@
   G.Camera.follow = function(x, y, dt) {
     const canvas = document.getElementById('game');
     const width = canvas.clientWidth, height = canvas.clientHeight;
-    const baseScale = Math.min(width / this.VIEW_W, height / this.MIN_VIEW_H);
+    const baseScale = this.viewportScale(width,height);
     const player = G.Game.player;
     const inRun = G.Game.state !== 'ui' && records.has(player?.dex);
     this.scale = inRun ? Math.min(baseScale, Math.max(32, height - 152) / player.bodyH) : baseScale;

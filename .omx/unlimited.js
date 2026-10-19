@@ -59,6 +59,7 @@
   }
   showInfinity();
   const badge = document.createElement('div');
+  badge.id = 'sandbox-badge';
   badge.textContent = window.PS_SANDBOX_KEY === 'ps.sandbox.digimon.v1'
     ? '數碼寶貝本地版 · 金幣與抽卡券無限 · 獨立存檔'
     : '本地測試版 · 金幣與抽卡券無限 · 獨立存檔';

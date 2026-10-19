@@ -171,6 +171,8 @@ G.I18n.add({
   'Colocar los botones': 'Place the buttons', 'Colocar': 'Place',
   'Pon los ataques, la pausa y el joystick (fijo, si quieres) donde quieras de la pantalla.': 'Put the attacks, the pause button and the joystick (fixed, if you like) anywhere on the screen.',
   'Arrastra los botones a donde quieras': 'Drag the buttons wherever you want', 'Gira el móvil: se juega en horizontal.': 'Turn your phone: the game is played in landscape.',
+  'Puedes jugar en vertical o en horizontal.': 'Play in portrait or landscape.',
+  'Arrastra para moverte, toca una habilidad para cambiarla y usa el botón de pausa. Puedes jugar en vertical o en horizontal.': 'Drag to move, tap a skill to switch, and use the pause button. Play in portrait or landscape.',
   'Joystick': 'Joystick', 'Flotante': 'Floating', 'Fijo': 'Fixed', 'Ataques': 'Attacks',
   'Flotante: aparece donde pones el dedo. Fijo: siempre en el mismo sitio.': 'Floating: it appears where you put your finger. Fixed: always in the same place.',
   'Restablecer': 'Reset', 'Guardar': 'Save', 'Botones colocados': 'Buttons placed',
