@@ -21,9 +21,99 @@
         "煙霧帶大片半透明背景，PNG alpha 最大值只有254，無完全不透明主體。"
       ],
       "retainedInGallery": false
+    },
+    {
+      "id": "sasuke-death-v01",
+      "score": 65,
+      "reasons": [
+        "Left-direction row faces right; background halo and duplicate directions."
+      ],
+      "retainedInGallery": false
+    },
+    {
+      "id": "sasuke-fuma-v01",
+      "score": 65,
+      "reasons": [
+        "Weapon and trails cross cell boundaries, so playback would show cropped or duplicate weapons."
+      ],
+      "retainedInGallery": false
+    },
+    {
+      "id": "sasuke-kusanagi-v01",
+      "score": 65,
+      "reasons": [
+        "Prominent sword crossguard conflicts with accepted straight blade and plain hilt."
+      ],
+      "retainedInGallery": false
+    },
+    {
+      "id": "sasuke-sharingan-v01",
+      "score": 65,
+      "reasons": [
+        "Nine poses packed into an eight-cell layout; cannot preview accurately."
+      ],
+      "retainedInGallery": false
+    },
+    {
+      "id": "naruto-rasenshuriken-v01",
+      "score": 65,
+      "reasons": [
+        "Three curved blades instead of the required four; background glow obscures alpha."
+      ],
+      "retainedInGallery": false
+    },
+    {
+      "id": "naruto-cloak-v01",
+      "score": 65,
+      "reasons": [
+        "Multiple tail-like forms instead of one; large glow hides body silhouette."
+      ],
+      "retainedInGallery": false
     }
   ],
   "retained": [
+    {
+      "id": "sasuke-movement-v01",
+      "score": 91,
+      "status": "playtest-movement-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "naruto-movement-v01",
+      "score": 91,
+      "status": "playtest-movement-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "sasuke-idle-v01",
+      "score": 90,
+      "status": "concept-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "naruto-idle-v01",
+      "score": 90,
+      "status": "concept-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "sasuke-hurt-v01",
+      "score": 90,
+      "status": "concept-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "naruto-hurt-v01",
+      "score": 90,
+      "status": "concept-only",
+      "userApproval": "pending"
+    },
+    {
+      "id": "naruto-death-v01",
+      "score": 90,
+      "status": "concept-only",
+      "userApproval": "pending"
+    },
     {
       "id": "sasuke-chidori-v02",
       "score": 91,
@@ -50,8 +140,9 @@
     }
   ],
   "imageCount": {
-    "generated": 6,
-    "rejected": 2,
-    "retained": 4
-  }
+    "generated": 19,
+    "rejected": 8,
+    "retained": 11
+  },
+  "gameplay_gate": "Review movement in the actual survivor game; do not count sheets as integrated animations."
 }

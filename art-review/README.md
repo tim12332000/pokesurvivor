@@ -4,6 +4,10 @@
 
 本地審閱網址：<http://127.0.0.1:8317/art-review/index.html>。使用獨立埠與獨立輸出目錄；直接用 `file://` 開啟無法讀取候選清單。
 
+實際遊戲預覽：<http://127.0.0.1:8318/art-review/playtest.html>。從本 worktree 執行 `python -m http.server 8318 --bind 127.0.0.1`；這個網址讀取完整遊戲與審稿試驗，8317 則只供看圖。可分別勾選「實驗移動素材」與「實驗：投擲出手銜接」，比較走位、自動出招及風魔手裏劍由手上轉為飛行武器的時機。實際玩法與限制見 [gameplay-contract.md](gameplay-contract.md)。
+
+完整範圍為 17 組；目前自審保留 11 組、退回 6 組，並未宣稱全部完成或全部實裝。完整格線圖與分鏡不能取代遊戲裡的起手、出手、道具起點、飛行、命中與收勢驗證。
+
 執行 `python tools/build_animation_review.py` 只會輸出審稿頁至本 worktree 的 `dist-animation-review/`，不執行遊戲打包或發布。從該目錄執行 `python -m http.server 8317 --bind 127.0.0.1` 即可開啟。現有遊戲的 8002 埠、原分支與 GitHub Pages 保持獨立；此分支推送不符合原發布工作流程的分支觸發條件。
 
 ## 資料夾
@@ -42,6 +46,8 @@ art-review/
     "image": "candidates/sasuke-chidori-01.png",
     "beforeImage": "references/sasuke-current.png",
     "kind": "AI概念稿",
+    "category": "skill",
+    "animation": {"columns": 4, "rows": 2, "fps": 7, "sequences": [{"name": "施術", "frames": [0, 1, 2, 3, 4, 5, 6, 7]}]},
     "summary": "這版要解決的視覺問題。",
     "improvements": ["具體改善"],
     "limitations": ["尚未完成的部分"],
@@ -52,3 +58,7 @@ art-review/
 ```
 
 `beforeImage` 可省略；`kind` 使用「AI概念稿」或「原圖動作預覽」。來源請記錄能直接支持該動作或造型的頁面，勿把遊戲改編效果誤稱為原作設定。新增素材後也須檢查版權、透明背景、角色比例、動作方向與現有素材的風格一致性。
+
+`category` 使用 `movement`（方向移動）、`common`（共通動作）或 `skill`（技能演出），可與角色交叉篩選。`animation` 可省略，省略時顯示靜態圖。格線由左至右、由上至下編號，第一格為 `0`；例如 4 欄 × 4 列的四方向圖，每一列可分別設定 `[0,1,2,3]`、`[4,5,6,7]`、`[8,9,10,11]`、`[12,13,14,15]`。
+
+播放器可切換方向／動作、暫停、逐格查看及調整 FPS。完整圖集收在播放器下方的「查看完整圖集」。只有畫面內可見的播放器會推進影格，切換篩選後會停止舊播放器。這是「格線播放預覽，尚未對齊遊戲錨點」，僅裁取原始格線，不會修改圖片、去背或補畫不存在的影格，也不代表已完成遊戲動畫接線。

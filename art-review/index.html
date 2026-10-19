@@ -12,13 +12,14 @@
     <header class="hero">
       <p class="eyebrow">NARUTO · ANIMATION LAB</p>
       <h1>動作演出審閱室</h1>
-      <p class="intro">先看動作，再決定保留。這裡是獨立分支的美術提案，尚未套用至遊戲。</p>
+      <p class="intro">先在實際生存玩法檢查走位、自動出招與道具銜接，再審閱圖片。正式遊戲尚未套用。</p>
+      <p><a href="http://127.0.0.1:8318/art-review/playtest.html" target="_blank" rel="noopener">開啟獨立實玩預覽：走位、切招與施放連貫性 ↗</a></p>
       <div class="meta"><span id="branch">讀取分支資訊…</span><span id="base"></span></div>
-      <nav aria-label="參考資料"><a href="research.md" target="_blank" rel="noopener">研究與來源 ↗</a><a href="README.md" target="_blank" rel="noopener">資料夾與審閱說明 ↗</a></nav>
+      <nav aria-label="參考資料"><a href="coverage.md" target="_blank" rel="noopener">完整動作清單 ↗</a><a href="research.md" target="_blank" rel="noopener">研究與來源 ↗</a><a href="README.md" target="_blank" rel="noopener">資料夾與審閱說明 ↗</a></nav>
     </header>
     <section class="review-note" aria-label="審閱說明"><strong>等待你的最終審核</strong><p>候選圖已先由製作端篩選。按「認可」只會記錄在這個瀏覽器；合併仍需你明確同意，不會自動發生。</p></section>
     <section class="toolbar" aria-label="篩選與匯出">
-      <div><label for="character">角色</label><select id="character"><option value="all">所有角色</option></select><span id="count" role="status"></span></div>
+      <div><label for="character">角色</label><select id="character"><option value="all">所有角色</option></select><label for="category">類別</label><select id="category"><option value="all">所有動作</option><option value="movement">方向移動</option><option value="common">共通動作</option><option value="skill">技能演出</option></select><span id="count" role="status"></span></div>
       <button id="export" class="primary" type="button">匯出審閱紀錄 JSON</button>
     </section>
     <p id="message" role="status">正在讀取候選作品…</p>

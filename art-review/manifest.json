@@ -5,6 +5,583 @@
   "approvalRequired": true,
   "items": [
     {
+      "id": "sasuke-movement-v01",
+      "title": "佐助・四方向移動",
+      "character": "佐助",
+      "category": "movement",
+      "kind": "AI動作候選",
+      "image": "candidates/sasuke-movement-v01.png",
+      "beforeImage": "previews/sasuke-original-movement.png",
+      "animation": {
+        "columns": 4,
+        "rows": 4,
+        "fps": 7,
+        "sequences": [
+          {
+            "name": "向下／正面",
+            "frames": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "向上／背面",
+            "frames": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "name": "向左",
+            "frames": [
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          {
+            "name": "向右",
+            "frames": [
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        ]
+      },
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "四方向移動循環，另接到獨立遊戲預覽，以實際走位與自動出招檢查。",
+      "improvements": [
+        "向下是正面、向上是背面，左右各有獨立姿勢。",
+        "四格有手腳交替，可用播放器直接檢查步態。",
+        "預覽只替換行走繪製，出招時保留既有施法與追擊姿勢。"
+      ],
+      "limitations": [
+        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
+        "目前只在獨立試玩頁套用，原遊戲與其他角色不受影響。"
+      ],
+      "references": [
+        {
+          "title": "目前遊戲素材來源",
+          "url": "https://spritedatabase.net/game/59"
+        }
+      ],
+      "qa": {
+        "score": 91,
+        "verdict": "保留方向與交替步態，需在俯視實際玩法試走再由使用者決定。"
+      },
+      "sourceImage": {
+        "width": 1312,
+        "height": 1199,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "naruto-movement-v01",
+      "title": "鳴人・四方向移動",
+      "character": "鳴人",
+      "category": "movement",
+      "kind": "AI動作候選",
+      "image": "candidates/naruto-movement-v01.png",
+      "beforeImage": "previews/naruto-original-movement.png",
+      "animation": {
+        "columns": 4,
+        "rows": 4,
+        "fps": 7,
+        "sequences": [
+          {
+            "name": "向下／正面",
+            "frames": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "向上／背面",
+            "frames": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "name": "向左",
+            "frames": [
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          {
+            "name": "向右",
+            "frames": [
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        ]
+      },
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "四方向移動循環，另接到獨立遊戲預覽，以實際走位與自動出招檢查。",
+      "improvements": [
+        "向下是正面、向上是背面，左右各有獨立姿勢。",
+        "四格有手腳交替，可用播放器直接檢查步態。",
+        "預覽只替換行走繪製，出招時保留既有施法與追擊姿勢。"
+      ],
+      "limitations": [
+        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
+        "目前只在獨立試玩頁套用，原遊戲與其他角色不受影響。"
+      ],
+      "references": [
+        {
+          "title": "目前遊戲素材來源",
+          "url": "https://spritedatabase.net/game/59"
+        }
+      ],
+      "qa": {
+        "score": 91,
+        "verdict": "保留方向與交替步態，需在俯視實際玩法試走再由使用者決定。"
+      },
+      "sourceImage": {
+        "width": 1265,
+        "height": 1243,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "sasuke-idle-v01",
+      "title": "佐助・四方向待機",
+      "character": "佐助",
+      "category": "common",
+      "kind": "AI動作候選",
+      "image": "candidates/sasuke-idle-v01.png",
+      "beforeImage": "references/sasuke-original.png",
+      "animation": {
+        "columns": 4,
+        "rows": 4,
+        "fps": 4,
+        "sequences": [
+          {
+            "name": "向下／正面",
+            "frames": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "向上／背面",
+            "frames": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "name": "向左",
+            "frames": [
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          {
+            "name": "向右",
+            "frames": [
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        ]
+      },
+      "status": "candidate",
+      "runtimePreview": false,
+      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
+      "improvements": [
+        "補齊正面、背面與左右姿勢。",
+        "狀態前後姿勢有明確變化，可逐格比較。"
+      ],
+      "limitations": [
+        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
+        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
+      ],
+      "references": [
+        {
+          "title": "目前遊戲素材來源",
+          "url": "https://spritedatabase.net/game/59"
+        }
+      ],
+      "qa": {
+        "score": 90,
+        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
+      },
+      "sourceImage": {
+        "width": 1312,
+        "height": 1199,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "naruto-idle-v01",
+      "title": "鳴人・四方向待機",
+      "character": "鳴人",
+      "category": "common",
+      "kind": "AI動作候選",
+      "image": "candidates/naruto-idle-v01.png",
+      "beforeImage": "references/team7-original.png",
+      "animation": {
+        "columns": 4,
+        "rows": 4,
+        "fps": 4,
+        "sequences": [
+          {
+            "name": "向下／正面",
+            "frames": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "向上／背面",
+            "frames": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "name": "向左",
+            "frames": [
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          {
+            "name": "向右",
+            "frames": [
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        ]
+      },
+      "status": "candidate",
+      "runtimePreview": false,
+      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
+      "improvements": [
+        "補齊正面、背面與左右姿勢。",
+        "狀態前後姿勢有明確變化，可逐格比較。"
+      ],
+      "limitations": [
+        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
+        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
+      ],
+      "references": [
+        {
+          "title": "目前遊戲素材來源",
+          "url": "https://spritedatabase.net/game/59"
+        }
+      ],
+      "qa": {
+        "score": 90,
+        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
+      },
+      "sourceImage": {
+        "width": 1299,
+        "height": 1211,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "sasuke-hurt-v01",
+      "title": "佐助・四方向受傷",
+      "character": "佐助",
+      "category": "common",
+      "kind": "AI動作候選",
+      "image": "candidates/sasuke-hurt-v01.png",
+      "beforeImage": "references/sasuke-original.png",
+      "animation": {
+        "columns": 4,
+        "rows": 4,
+        "fps": 7,
+        "sequences": [
+          {
+            "name": "向下／正面",
+            "frames": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "向上／背面",
+            "frames": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "name": "向左",
+            "frames": [
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          {
+            "name": "向右",
+            "frames": [
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        ]
+      },
+      "status": "candidate",
+      "runtimePreview": false,
+      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
+      "improvements": [
+        "補齊正面、背面與左右姿勢。",
+        "狀態前後姿勢有明確變化，可逐格比較。"
+      ],
+      "limitations": [
+        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
+        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
+      ],
+      "references": [
+        {
+          "title": "目前遊戲素材來源",
+          "url": "https://spritedatabase.net/game/59"
+        }
+      ],
+      "qa": {
+        "score": 90,
+        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
+      },
+      "sourceImage": {
+        "width": 1312,
+        "height": 1199,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "naruto-hurt-v01",
+      "title": "鳴人・四方向受傷",
+      "character": "鳴人",
+      "category": "common",
+      "kind": "AI動作候選",
+      "image": "candidates/naruto-hurt-v01.png",
+      "beforeImage": "references/team7-original.png",
+      "animation": {
+        "columns": 4,
+        "rows": 4,
+        "fps": 7,
+        "sequences": [
+          {
+            "name": "向下／正面",
+            "frames": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "向上／背面",
+            "frames": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "name": "向左",
+            "frames": [
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          {
+            "name": "向右",
+            "frames": [
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        ]
+      },
+      "status": "candidate",
+      "runtimePreview": false,
+      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
+      "improvements": [
+        "補齊正面、背面與左右姿勢。",
+        "狀態前後姿勢有明確變化，可逐格比較。"
+      ],
+      "limitations": [
+        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
+        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
+      ],
+      "references": [
+        {
+          "title": "目前遊戲素材來源",
+          "url": "https://spritedatabase.net/game/59"
+        }
+      ],
+      "qa": {
+        "score": 90,
+        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
+      },
+      "sourceImage": {
+        "width": 1312,
+        "height": 1199,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
+      "id": "naruto-death-v01",
+      "title": "鳴人・四方向倒下",
+      "character": "鳴人",
+      "category": "common",
+      "kind": "AI動作候選",
+      "image": "candidates/naruto-death-v01.png",
+      "beforeImage": "references/team7-original.png",
+      "animation": {
+        "columns": 4,
+        "rows": 4,
+        "fps": 5,
+        "sequences": [
+          {
+            "name": "向下／正面",
+            "frames": [
+              0,
+              1,
+              2,
+              3
+            ]
+          },
+          {
+            "name": "向上／背面",
+            "frames": [
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "name": "向左",
+            "frames": [
+              8,
+              9,
+              10,
+              11
+            ]
+          },
+          {
+            "name": "向右",
+            "frames": [
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        ],
+        "loop": false
+      },
+      "status": "candidate",
+      "runtimePreview": false,
+      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
+      "improvements": [
+        "補齊正面、背面與左右姿勢。",
+        "狀態前後姿勢有明確變化，可逐格比較。"
+      ],
+      "limitations": [
+        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
+        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
+      ],
+      "references": [
+        {
+          "title": "目前遊戲素材來源",
+          "url": "https://spritedatabase.net/game/59"
+        }
+      ],
+      "qa": {
+        "score": 90,
+        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
+      },
+      "sourceImage": {
+        "width": 1414,
+        "height": 1113,
+        "mode": "RGBA",
+        "alphaExtrema": [
+          0,
+          255
+        ]
+      }
+    },
+    {
       "id": "sasuke-chidori-v02",
       "title": "佐助・千鳥蓄力與突進 v02",
       "character": "佐助",
@@ -43,6 +620,27 @@
         "alphaExtrema": [
           0,
           255
+        ]
+      },
+      "category": "skill",
+      "animation": {
+        "columns": 4,
+        "rows": 2,
+        "fps": 7,
+        "sequences": [
+          {
+            "name": "Skill",
+            "frames": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          }
         ]
       }
     },
@@ -86,6 +684,27 @@
           0,
           255
         ]
+      },
+      "category": "skill",
+      "animation": {
+        "columns": 4,
+        "rows": 2,
+        "fps": 7,
+        "sequences": [
+          {
+            "name": "Skill",
+            "frames": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          }
+        ]
       }
     },
     {
@@ -123,6 +742,27 @@
         "alphaExtrema": [
           0,
           255
+        ]
+      },
+      "category": "skill",
+      "animation": {
+        "columns": 4,
+        "rows": 2,
+        "fps": 7,
+        "sequences": [
+          {
+            "name": "Skill",
+            "frames": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          }
         ]
       }
     },
@@ -162,7 +802,29 @@
           0,
           255
         ]
+      },
+      "category": "skill",
+      "animation": {
+        "columns": 4,
+        "rows": 2,
+        "fps": 7,
+        "sequences": [
+          {
+            "name": "Skill",
+            "frames": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          }
+        ]
       }
     }
-  ]
+  ],
+  "playtestURL": "http://127.0.0.1:8318/art-review/playtest.html"
 }

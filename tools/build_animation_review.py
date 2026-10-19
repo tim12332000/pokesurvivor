@@ -9,6 +9,7 @@ OUTPUT = ROOT / 'dist-animation-review'
 manifest = json.loads((SOURCE / 'manifest.json').read_text(encoding='utf-8'))
 files = {'index.html', 'gallery.js', 'style.css', 'manifest.json', 'README.md',
          'research.md', 'prompts.json', 'curation.json', 'references/sources.json'}
+files.update(name for name in ['coverage.json','coverage.md','prompts-expansion.json','gameplay-contract.md'] if (SOURCE/name).is_file())
 for item in manifest['items']:
     if item['status'] != 'candidate':
         continue

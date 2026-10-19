@@ -5,6 +5,9 @@
   const gallery = document.getElementById('gallery');
   const message = document.getElementById('message');
   const filter = document.getElementById('character');
+  const categoryFilter = document.getElementById('category');
+  const categories = { movement: '方向移動', common: '共通動作', skill: '技能演出' };
+  let disposePlayers = [];
   let manifest = null;
   let items = [];
   let reviews = {};
@@ -52,6 +55,108 @@
     section.append(list);
     return section;
   }
+  function animationPlayer(item, sourceImage) {
+    const spec = item.animation;
+    if (!spec || !Number.isInteger(spec.columns) || !Number.isInteger(spec.rows) || spec.columns < 1 || spec.rows < 1) return null;
+    const total = spec.columns * spec.rows;
+    const sequences = (Array.isArray(spec.sequences) ? spec.sequences : []).map(sequence => ({
+      name: String(sequence.name || '動作'),
+      loop: sequence.loop ?? spec.loop ?? true,
+      frames: Array.isArray(sequence.frames) ? sequence.frames.filter(frame => Number.isInteger(frame) && frame >= 0 && frame < total) : []
+    })).filter(sequence => sequence.frames.length);
+    if (!sequences.length) sequences.push({ name: '全部影格', loop:spec.loop??true, frames: Array.from({ length: total }, (_, i) => i) });
+    const wrapper = element('section', 'animation-player');
+    const canvas = element('canvas', 'animation-canvas');
+    canvas.width = 384;
+    canvas.height = 320;
+    canvas.setAttribute('aria-label', `${item.title} 格線動畫播放預覽`);
+    const context = canvas.getContext('2d');
+    const controls = element('div', 'animation-controls');
+    const sequenceSelect = element('select');
+    sequenceSelect.setAttribute('aria-label', '播放動作');
+    sequences.forEach((sequence, index) => {
+      const option = element('option', '', sequence.name);
+      option.value = String(index);
+      sequenceSelect.append(option);
+    });
+    const previous = element('button', '', '上一格');
+    const toggle = element('button', '', '暫停');
+    const next = element('button', '', '下一格');
+    [previous, toggle, next].forEach(button => { button.type = 'button'; });
+    const speed = element('input');
+    speed.type = 'number';
+    speed.min = '1';
+    speed.max = '24';
+    speed.value = String(Math.max(1, Math.min(24, Number(spec.fps) || 7)));
+    speed.setAttribute('aria-label', '播放 FPS');
+    const speedLabel = element('label', 'speed-label', 'FPS ');
+    speedLabel.append(speed);
+    const counter = element('span', 'frame-counter');
+    controls.append(sequenceSelect, previous, toggle, next, speedLabel, counter);
+    wrapper.append(canvas, controls, element('p', 'animation-caption', '格線播放預覽，尚未對齊遊戲錨點'));
+    let frameIndex = 0;
+    let playing = true;
+    let visible = false;
+    let request = 0;
+    let lastTime = null;
+    let disposed = false;
+    function frames() { return sequences[Number(sequenceSelect.value) || 0].frames; }
+    function draw() {
+      if (!context) return;
+      const frame = frames()[frameIndex];
+      canvas.dataset.frame = String(frame);
+      counter.textContent = `${frameIndex + 1} / ${frames().length}`;
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      if (!sourceImage.complete || !sourceImage.naturalWidth) return;
+      const width = sourceImage.naturalWidth / spec.columns;
+      const height = sourceImage.naturalHeight / spec.rows;
+      const scale = Math.min((canvas.width - 24) / width, (canvas.height - 24) / height);
+      const dw = width * scale;
+      const dh = height * scale;
+      context.imageSmoothingEnabled = false;
+      context.drawImage(sourceImage, (frame % spec.columns) * width, Math.floor(frame / spec.columns) * height, width, height, (canvas.width - dw) / 2, (canvas.height - dh) / 2, dw, dh);
+    }
+    function shouldPlay() { return playing && visible && !document.hidden && !disposed; }
+    function tick(time) {
+      request = 0;
+      if (!shouldPlay()) return;
+      if (lastTime === null) lastTime = time;
+      const interval = 1000 / Math.max(1, Math.min(24, Number(speed.value) || 7));
+      if (time - lastTime >= interval) {
+        const steps = Math.floor((time - lastTime) / interval);
+        if(!sequences[Number(sequenceSelect.value)||0].loop&&frameIndex+steps>=frames().length-1){frameIndex=frames().length-1;draw();pause();return;}
+        frameIndex = (frameIndex + steps) % frames().length;
+        lastTime += steps * interval;
+        draw();
+      }
+      request = requestAnimationFrame(tick);
+    }
+    function sync() {
+      if (request) cancelAnimationFrame(request);
+      request = 0;
+      lastTime = null;
+      if (shouldPlay()) request = requestAnimationFrame(tick);
+    }
+    function pause() { playing = false; toggle.textContent = '播放'; sync(); }
+    previous.addEventListener('click', () => { pause(); frameIndex = (frameIndex + frames().length - 1) % frames().length; draw(); });
+    next.addEventListener('click', () => { pause(); frameIndex = (frameIndex + 1) % frames().length; draw(); });
+    toggle.addEventListener('click', () => {if(!playing&&!sequences[Number(sequenceSelect.value)||0].loop&&frameIndex===frames().length-1){frameIndex=0;draw();} playing = !playing; toggle.textContent = playing ? '暫停' : '播放'; sync(); });
+    sequenceSelect.addEventListener('change', () => { frameIndex = 0; draw(); sync(); });
+    speed.addEventListener('change', () => { speed.value = String(Math.max(1, Math.min(24, Number(speed.value) || 7))); sync(); });
+    sourceImage.addEventListener('load', draw);
+    document.addEventListener('visibilitychange', sync);
+    const observer = new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); });
+    observer.observe(canvas);
+    disposePlayers.push(() => {
+      disposed = true;
+      observer.disconnect();
+      if (request) cancelAnimationFrame(request);
+      sourceImage.removeEventListener('load', draw);
+      document.removeEventListener('visibilitychange', sync);
+    });
+    draw();
+    return wrapper;
+  }
   function card(item) {
     const article = element('article', 'card');
     article.dataset.itemId = item.id;
@@ -61,15 +166,16 @@
     const image = element('img');
     image.src = imageLink.href;
     image.alt = item.title;
-    image.loading = 'lazy';
+    image.loading = item.animation ? 'eager' : 'lazy';
     image.addEventListener('error', () => {
       imageLink.replaceChildren(element('p', 'image-error', '圖片讀取失敗，請確認候選檔案路徑。'));
     });
     imageLink.append(image);
     const body = element('div', 'card-body');
     const tags = element('div', 'tags');
-    [item.character, item.kind || '美術提案'].forEach(text => tags.append(element('span', 'tag', text)));
+    [item.character, categories[item.category], item.kind || '美術提案'].filter(Boolean).forEach(text => tags.append(element('span', 'tag', text)));
     tags.append(element('span', 'tag pending', '尚待使用者核准'));
+    tags.append(element('span','tag',item.runtimePreview?'已接獨立移動試玩':'僅分鏡審閱'));
     body.append(tags, element('h2', '', item.title), element('p', 'summary', item.summary || ''));
     const beforeURL = safeURL(item.beforeImage, true);
     if (beforeURL) {
@@ -118,16 +224,24 @@
     notes.addEventListener('input', () => save(item.id, { note: notes.value }, saved));
     review.append(choices, label, notes, saved);
     body.append(review, element('p', 'file-path', `art-review/${item.image}`));
-    article.append(imageLink, body);
+    const player = animationPlayer(item, image);
+    if (player) {
+      const sheet = element('details', 'full-sheet');
+      sheet.append(element('summary', '', '查看完整圖集／點圖開啟原尺寸'), imageLink);
+      article.append(player, sheet, body);
+    } else article.append(imageLink, body);
     return article;
   }
   function render() {
-    const visible = items.filter(item => filter.value === 'all' || item.character === filter.value);
+    disposePlayers.forEach(dispose => dispose());
+    disposePlayers = [];
+    const visible = items.filter(item => (filter.value === 'all' || item.character === filter.value) && (categoryFilter.value === 'all' || item.category === categoryFilter.value));
     gallery.replaceChildren(...visible.map(card));
     document.getElementById('count').textContent = `${visible.length} 件候選作品`;
     message.textContent = visible.length ? '點選圖片可開啟原尺寸檔案。AI 概念稿需另行製作遊戲可用動畫。' : '目前沒有符合篩選條件的候選作品。';
   }
   filter.addEventListener('change', render);
+  categoryFilter.addEventListener('change', render);
   document.getElementById('export').addEventListener('click', () => {
     const data = {
       branch: manifest?.branch || '', baseCommit: manifest?.baseCommit || '',
