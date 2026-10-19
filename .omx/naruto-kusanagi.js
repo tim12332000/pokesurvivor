@@ -2,6 +2,21 @@
 (() => {
   if (G.NarutoKusanagi) return;
   const id = 'naruto-kusanagi', states = new Map();
+  // Redrawn from the official Shippuden figure: straight steel, plain black hilt,
+  // flush collar. Keep a cached pixel sprite crisp while it rotates.
+  const sword=document.createElement('canvas');sword.width=56;sword.height=12;
+  const art=sword.getContext('2d');
+  art.fillStyle='#111620';art.fillRect(3,3,14,7);
+  art.fillStyle='#252b37';art.fillRect(4,4,11,4);
+  art.fillStyle='#465064';art.fillRect(5,4,10,1);
+  art.fillStyle='#090e17';art.fillRect(4,8,12,1);
+  art.fillStyle='#697789';art.fillRect(16,3,2,7);
+  art.fillStyle='#c3ccd4';art.fillRect(16,4,1,4);
+  art.fillStyle='#252e3b';art.fillRect(18,3,32,7);art.fillRect(50,4,2,5);art.fillRect(52,5,2,3);
+  art.fillStyle='#8794a4';art.fillRect(18,4,31,5);art.fillRect(49,5,3,3);
+  art.fillStyle='#c9d4de';art.fillRect(18,4,30,3);art.fillRect(48,5,3,2);
+  art.fillStyle='#f2f6f9';art.fillRect(18,7,31,1);art.fillRect(49,6,3,1);art.fillRect(52,5,1,1);
+  art.fillStyle='#687788';art.fillRect(18,8,30,1);
   const config = Object.freeze({ tick: .35, bladeHalfLength: 18, bladeRadius: 7, angularSpeed: 2.4 });
   const alive = owner => owner && !owner.dead && owner.hp > 0;
   const learned = owner => owner?.mon?.dex === 30002 && alive(owner) && owner.moves?.find(m => m.id === id);
@@ -64,12 +79,7 @@
       for (const blade of state.blades) {
         if (!G.Camera.sees(blade.x, blade.y, 50)) continue;
         ctx.save(); ctx.translate(Math.round(blade.x), Math.round(blade.y - G.LIFT)); ctx.rotate(blade.angle);
-        ctx.fillStyle = '#172239'; ctx.fillRect(-21, -3, 43, 6);
-        ctx.fillStyle = '#bcecff'; ctx.fillRect(-10, -2, 29, 4); ctx.fillRect(19, -1, 3, 2);
-        ctx.fillStyle = '#f0fbff'; ctx.fillRect(-9, -2, 28, 1);
-        ctx.fillStyle = '#406080'; ctx.fillRect(-10, 1, 28, 1);
-        ctx.fillStyle = '#69718b'; ctx.fillRect(-13, -5, 3, 10);
-        ctx.fillStyle = '#9c96bd'; for (let x = -20; x < -13; x += 3) ctx.fillRect(x, -2, 1, 4);
+        ctx.imageSmoothingEnabled=false;ctx.drawImage(sword,-28,-6);
         ctx.restore();
       }
     }
