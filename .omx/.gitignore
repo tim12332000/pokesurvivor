@@ -68,6 +68,8 @@
 !/unlimited.html
 !/unlimited.js
 !/make_digimon.py
+!/percent-health-damage.js
+!/check_percent_health_damage.py
 !/make_unlimited.py
 !/check_digimon.py
 !/check_digimon_evolution.py

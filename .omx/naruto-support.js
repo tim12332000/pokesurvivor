@@ -168,7 +168,7 @@
             if(Math.hypot(dx,dy)>radius+(enemy.r||0)||!clearPath(f.owner.x,f.owner.y,enemy.x,enemy.y))continue;
             const k=G.Types.mult(f.m.type||'fighting',enemy.types),crit=f.owner.critChance>0&&Math.random()<f.owner.critChance;
             const damage=finite(f.m.pulseDamage,12)*f.owner.atk*k*G.Weather.mult(f.m.type||'fighting')*(crit?1.5:1);
-            enemy.hurt(damage,'#ff654f',dx,dy,enemy.boss?5:finite(f.m.knock,18),crit?'crit':G.Types.label(k));
+            enemy.hurt(damage,'#ff654f',dx,dy,enemy.boss?5:finite(f.m.knock,18),crit?'crit':G.Types.label(k),f.owner);
             f.owner.onDealt(damage);f.owner.dmgDealt+=damage;
           }
         }

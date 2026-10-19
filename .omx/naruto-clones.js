@@ -82,7 +82,7 @@
     if (enemy.dead || !valid(a)) return;
     const typeK = G.Types.mult(type, enemy.types), crit = a.owner.critChance > 0 && Math.random() < a.owner.critChance;
     const dmg = base * typeK * G.Weather.mult(type) * (crit ? 1.5 : 1);
-    enemy.hurt(dmg, '#a9dcff', enemy.x - a.x, enemy.y - a.y, knock, crit ? 'crit' : G.Types.label(typeK));
+    enemy.hurt(dmg, '#a9dcff', enemy.x - a.x, enemy.y - a.y, knock, crit ? 'crit' : G.Types.label(typeK), a.owner);
     a.owner.onDealt(dmg); a.owner.dmgDealt += dmg;
   }
   function moveToward(a, x, y, speed, dt) {

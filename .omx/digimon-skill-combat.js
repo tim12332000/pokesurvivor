@@ -18,7 +18,7 @@
     if (!e || e.dead) return 0;
     const k = G.Types.mult(m.type, e.types) * G.Weather.mult(m.type), crit = pl.critChance > 0 && Math.random() < pl.critChance;
     const dmg = base * k * (crit ? 1.5 : 1) * (m.narutoSkill ? G.NarutoSupport?.precisionMultiplier(pl,e)||1 : 1);
-    e.hurt(dmg, color(m), dx, dy, knock, crit ? 'crit' : G.Types.label(G.Types.mult(m.type, e.types)));
+    e.hurt(dmg, color(m), dx, dy, knock, crit ? 'crit' : G.Types.label(G.Types.mult(m.type, e.types)), pl);
     pl.onDealt(dmg); pl.dmgDealt += dmg;
     if (m.burn) e.applyBurn(m.burn); if (m.poison) e.applyPoison(m.poison); if (m.slow) e.applySlow(m.slow);
     return dmg;

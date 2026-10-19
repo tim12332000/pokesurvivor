@@ -51,7 +51,7 @@
     c.hitCount++;c.lastTarget=e;
     const m=c.move, pl=c.owner, k=G.Types.mult(m.type,e.types), crit=pl.critChance>0&&Math.random()<pl.critChance;
     const dmg=m.dmg*c.attack*damageMultiplier*k*G.Weather.mult(m.type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(pl,e)||1);
-    e.hurt(dmg,'#9feaff',dx,dy,m.knock||0,crit?'crit':G.Types.label(k));
+    e.hurt(dmg,'#9feaff',dx,dy,m.knock||0,crit?'crit':G.Types.label(k),pl);
     pl.onDealt(dmg); pl.dmgDealt+=dmg;
     if(m.slow)e.applySlow(m.slow);
     G.FX.slash(pl.x,pl.y-G.LIFT*.5,pl.aim,34,2.2,'#9feaff',m.digiVis);
