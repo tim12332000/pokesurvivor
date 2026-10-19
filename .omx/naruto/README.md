@@ -25,15 +25,15 @@ Rock Lee close-range attacks also have tested multi-target areas.
 
 ## Naruto shadow clones
 
-Naruto now starts with Multi Shadow Clone Jutsu. Eight lightweight actors move,
+Naruto now starts with Multi Shadow Clone Jutsu. Lightweight actors move,
 choose nearby enemies and punch; they share the owner's damage credit and never
 become extra players, collect rewards or write saves. Normal pursuers can be
 distracted by a closer clone; bosses retain their target. Contact or hostile
 projectile hits disperse a clone with smoke. Initial lifetime is six seconds and
-cooldown four seconds. Every skill level retains the eight-clone cap. Skill
-level three shortens their copied-technique cooldown by 10%; level four extends
-lifetime to seven seconds; level five improves their copied-technique damage.
-Recasting fills vacancies without refreshing existing
+cooldown four seconds. Every skill upgrade doubles quantity: skill levels one
+through five support 8, 16, 32, 64 and 128 actors. The level-up choice explicitly
+shows the next quantity, and choosing it immediately fills the new vacancies,
+even while another Naruto technique is selected. Recasting fills vacancies without refreshing existing
 lifetimes. While at the cap, the active skill polls for a vacancy without wasting
 a new four-second cooldown or repeatedly replaying Charge. Switching slots keeps
 existing clones until they expire.
@@ -44,19 +44,19 @@ replace a shared kunai/shuriken slot rather than removing a character skill.
 Players may decline. The original Rasengan move ID is preserved. Switching to
 learned Rasengan, Rasenshuriken, Kunai or Shuriken lets existing clones use that
 technique autonomously, without waiting for the player's cast. Each maintains a
-separate cooldown per technique across slot switches. Each copied cast uses
-one eighth of the owner's base damage, so eight clones share one extra cast's
-budget (before their explicit skill upgrades and integer rounding). Both the
-direct hit and explosion are scaled. Clones cannot recursively summon or borrow
+separate cooldown per technique across slot switches.
+Each clone uses the full copied-technique damage: no division by clone count and
+no aggregate damage ceiling. Both the direct hit and explosion retain that full
+damage. Clones cannot recursively summon or borrow
 other characters' techniques. While Shadow Clone is selected, they use basic
 punches. Pause freezes their simulation time;
 death and scene changes clear actors and smoke. A gold chevron marks the owner.
 
 Run `python .omx/check_naruto_clones.py` for caps, lifetime, walls, distributed
-attacks, contact/projectile dispersal, aggro, shared combo damage, training choices,
+attacks, contact/projectile dispersal, aggro, full per-clone damage, quantity cards,
 pause and scene cleanup. Original ability reference:
 https://naruto-official.com/en/news/01_1423 . Actor counts, automatic behavior,
-timing and damage budgets are this game's adaptation. Multiplayer replication of
+timing and damage values are this game's adaptation. Multiplayer replication of
 clone actors is not implemented in this guest-only edition.
 
 ## Completed eight-character kits

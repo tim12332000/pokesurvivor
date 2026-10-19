@@ -52,9 +52,8 @@
     [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
       mode: 'shadow-clones', type: 'fighting', cd: 4, dmg: 8, range: 240,
       cloneDuration: 6, punchCd: .65, vis: { pal: 'naruto-blue' },
-      desc: '最多召出 8 個影分身，存在 6 秒、冷卻 4 秒；受擊後化煙消散。切換到已學的螺旋丸、螺旋手裏劍或忍具時，現存分身也會使用同一招。分身共用受限的招式傷害預算，不會再召出分身。數量、時限與傷害皆為本作改編。',
-      ups: [{t:'分身拳擊傷害 +20%',m:{dmg:1.2}},{t:'分身模仿招式冷卻 -10%',m:{cloneTechniqueCdMul:.9}},
-        {t:'分身存在時間增加至 7 秒',m:{cloneDuration:7}},{t:'分身拳擊與模仿招式傷害 +25%',m:{dmg:1.25,cloneTechniqueDamageMul:1.25}}]
+      desc: 'Lv.1 召出 8 隻，每次技能升級數量翻倍：16、32、64、128 隻；存在 6 秒、冷卻 4 秒。切換到已學的螺旋丸、螺旋手裏劍或忍具時，每隻分身都使用完整招式傷害，不分攤、不設定總傷害上限。受擊後化煙消散，不會再召出分身。數量與數值為本作改編。',
+      ups: [16,32,64,128].map(count=>({t:`影分身數量翻倍 → ${count} 隻；每隻完整傷害`,m:{}}))
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
       mode: 'dash', type: 'electric', cd: 1.05, dmg: 44, charge: .09,

@@ -44,7 +44,7 @@
   function fireFrom(owner,move,x,y,aim,damageScale=1) {
     if(owner!==G.Game.player||owner.dead||owner.hp<=0||![x,y,aim,damageScale].every(Number.isFinite))return [];
     if(!['naruto-rasenshuriken','naruto-kunai','naruto-shuriken'].includes(move.id))return [];
-    const m=cloneMove(move);m.dmg*=G.U.clamp(damageScale,0,1);
+    const m=cloneMove(move);m.dmg*=Math.max(0,damageScale);
     const count=Math.min(8,Math.max(1,m.count|0)),out=[];
     for(let i=0;i<count;i++) {
       const angle=m.digiMode==='nova'?i*TAU/count:aim+(count===1?0:(i/(count-1)-.5)*(m.arc||0));

@@ -5,7 +5,13 @@
   let serial = 0;
   const valid = a => a.owner === G.Game.player && !a.owner.dead && a.owner.hp > 0 && a.world === G.World;
   const living = owner => actors.filter(a => !a.dead && a.owner === owner && valid(a));
-  const limitOf = () => 8;
+  const limitOf = move => 8 * 2 ** Math.max(0,(move.lvl||1)-1);
+  function formation(index) {
+    let ring=0,slots=8;
+    while(index>=slots){index-=slots;ring++;slots=8+ring*4;}
+    const angle=index*TAU/slots+ring*.25,radius=90+ring*32;
+    return {x:Math.cos(angle)*radius,y:Math.sin(angle)*radius*.87};
+  }
   const mimicIds = new Set(['naruto-naruto', 'naruto-rasenshuriken', 'naruto-kunai', 'naruto-shuriken']);
   const selectedTechnique = owner => (owner.activeGroup?.() || []).find(m => mimicIds.has(m.id) && owner.moves?.some(learned => learned === m || learned.id === m.id)) || null;
   const canCast = (owner,move) => owner===G.Game.player&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move);
@@ -41,16 +47,18 @@
     if (owner !== G.Game.player || owner.dead || owner.hp <= 0 || owner.mon?.dex !== 30001) return false;
     const lvl = move.lvl || 1, limit = limitOf(move);
     let count = living(owner).length, spawned = false;
-    for (let ring = 0; ring < 3 && count < limit; ring++) for (let n = 0; n < 12 && count < limit; n++) {
-      const angle = n % limit * TAU / limit + Math.floor(n / limit) * .18 + ring * .22, radius = 56 + ring * 18;
+    const occupied=new Set(living(owner).map(a=>a.formationIndex));
+    for(let n=0;n<Math.max(96,limit*12)&&count<limit;n++) {
+      const angle=n*2.399963229728653,radius=56+18*Math.sqrt(n);
       const x = owner.x + Math.cos(angle) * radius, y = owner.y + Math.sin(angle) * radius;
       if (!G.World.isFree(x, y, 10, true) || !clearPath(owner.x, owner.y, x, y, 10) || living(owner).some(a => Math.hypot(a.x - x, a.y - y) < 25)) continue;
-      const a = { id: ++serial, owner, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || 6,
+      let formationIndex=0;while(occupied.has(formationIndex))formationIndex++;occupied.add(formationIndex);
+      const a = { id: ++serial, formationIndex, owner, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || 6,
         lvl, dmg: Number.isFinite(move.dmg) ? move.dmg : 8, punchCd: move.punchCd || .65,
-        cd: .16 + count * .08, anim: new G.Sprites.Animator(30001, 1), target: null, dead: false, comboT: 0,
+        cd: .16 + count % 8 * .08, anim: new G.Sprites.Animator(30001, 1), target: null, dead: false, comboT: 0,
         cloneTechniqueCdMul: move.cloneTechniqueCdMul ?? 1, cloneTechniqueDamageMul: move.cloneTechniqueDamageMul ?? 1,
         // Retain one cooldown per technique across slot switches; phase spreads eight casts out.
-        cooldowns: new Map([...mimicIds].map(id => [id, .16 + count * .08])), mimickedId: null };
+        cooldowns: new Map([...mimicIds].map(id => [id, .16 + count % 8 * .08])), mimickedId: null };
       a.anim.dir = owner.anim.dir; a.anim.play('Charge'); actors.push(a); puff(a); count++; spawned = true;
     }
     if (spawned) owner.anim.play('Charge');
@@ -113,10 +121,10 @@
               const aim = Math.atan2(e.y - a.y, e.x - a.x);
               if (rasengan) {
                 a.anim.play('Attack'); a.comboT = .4; a.comboAim = aim;
-                hit(a, e, technique.dmg * a.owner.atk / 8 * a.cloneTechniqueDamageMul, technique.type || 'fighting', technique.knock || 28);
+                hit(a, e, technique.dmg * a.owner.atk * a.cloneTechniqueDamageMul, technique.type || 'fighting', technique.knock || 28);
                 G.FX.beam(a.x, a.y - G.LIFT, aim, distance(a, e), 8, '#83dcff', { pal: 'water' });
               } else if (G.DigimonSkills?.fireFrom) {
-                const shots = G.DigimonSkills.fireFrom(a.owner, technique, a.x, a.y, aim, a.cloneTechniqueDamageMul / 8) || [];
+                const shots = G.DigimonSkills.fireFrom(a.owner, technique, a.x, a.y, aim, a.cloneTechniqueDamageMul) || [];
                 for (const p of shots) p.narutoClone = true;
                 a.anim.play('Shoot');
               }
@@ -128,7 +136,7 @@
             }
           }
         } else {
-          const angle = (a.id - 1) % 8 * TAU / 8, x = a.owner.x + Math.cos(angle) * 90, y = a.owner.y + Math.sin(angle) * 78;
+          const spot=formation(a.formationIndex),x=a.owner.x+spot.x,y=a.owner.y+spot.y;
           if (Math.hypot(a.x - x, a.y - y) > 20) moving = moveToward(a, x, y, 165, sub);
         }
         if (a.age >= .25) for (const e of nearby(a.x, a.y, a.r + 45)) {
@@ -146,7 +154,7 @@
       }
     }
   }
-  // Legacy player-cast hook: autonomous clone techniques own their entire budget.
+  // Legacy player-cast hook stays inert; clones cast their selected technique autonomously.
   function combo() { return 0; }
   function draw(ctx) {
     const owner=G.Game.player;
@@ -212,5 +220,11 @@
   C.drawGroundFields = function(ctx) { oldGround.call(this, ctx); ground(ctx); };
   C.clearFields = function(owner) { clearFields.call(this, owner); clear(owner); };
   if (G.DigimonSkills?.clear) { const previous = G.DigimonSkills.clear; G.DigimonSkills.clear = owner => { previous(owner); clear(owner); }; }
-  G.NarutoClones = { cast, canCast, update, draw, clear, combo, get actors() { return actors; } };
+  const levelUp=G.Moves.levelUp;
+  G.Moves.levelUp=function(move){
+    const upgraded=levelUp(move),owner=G.Game.player;
+    if(upgraded&&move.id==='naruto-shadow-clones'&&owner?.moves.includes(move)&&cast(owner,move))move.t=move.cd*owner.cdMul;
+    return upgraded;
+  };
+  G.NarutoClones = { cast, canCast, limitOf, update, draw, clear, combo, get actors() { return actors; } };
 })();
