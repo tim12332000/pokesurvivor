@@ -1,7 +1,8 @@
 /* Level-based Chidori pursuit is this edition's gameplay adaptation. */
 (() => {
   if (G.NarutoChidori) return;
-  const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), minCooldown: .5, followupRangeMultiplier: 3, endInvulnerability: .3, speed: 1000, retargetDelay: .045, step: 4 });
+  const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), minCooldown: .5, followupRangeMultiplier: 3, endInvulnerability: .3,
+    speed: 1000, speedStep: .15, maxSpeedMultiplier: 3, retargetDelay: .045, retargetDelayDecay: .85, minRetargetDelay: .012, step: 4 });
   const limitOf = (move,owner=G.Game.player) =>
     config.counts[Math.max(0,Math.min(config.counts.length-1,(move?.lvl|0)-1))] +
     Math.max(0,Math.floor(move?.quantityBonusAtCast ?? G.Quantity?.bonus(owner) ?? 0));
@@ -26,12 +27,15 @@
   }
   function begin(c) {
     if (c.dashes >= c.limit || !(c.target = next(c))) { end(c); return; }
-    c.legRange = rangeFor(c); c.dashes++; c.travel = 0; c.phase = 'dash';
+    c.legRange = rangeFor(c); c.speed = config.speed*Math.min(config.maxSpeedMultiplier,1+c.hits.size*config.speedStep);
+    c.dashes++; c.travel = 0; c.phase = 'dash';
     c.owner.cast(c.move);
   }
   function finish(c) {
     if (c.dashes >= c.limit || !next(c)) { end(c); return; }
-    c.phase = 'retarget'; c.wait = config.retargetDelay;
+    c.phase = 'retarget';
+    c.retargetDelay = Math.max(config.minRetargetDelay,config.retargetDelay*Math.pow(config.retargetDelayDecay,c.hits.size));
+    c.wait = c.retargetDelay;
   }
   function hit(c, e, dx, dy) {
     c.hits.add(e);
@@ -49,7 +53,7 @@
     if(c.phase!=='dash') {c.wait-=dt;if(c.wait<=0)begin(c);return;}
     if(!targetAlive(c.target)){finish(c);return;}
     const pl=c.owner,m=c.move,e=c.target;
-    let budget=Math.min(config.speed*dt,c.legRange-c.travel);
+    let budget=Math.min(c.speed*dt,c.legRange-c.travel);
     while(budget>0&&chain===c&&c.phase==='dash') {
       const dx=e.x-pl.x,dy=e.y-pl.y,d=Math.hypot(dx,dy),reach=m.width*.5+(e.r||0);
       if(d<=reach+.001){hit(c,e,dx,dy);break;}
@@ -69,7 +73,8 @@
     G.EnemyMgr.all().some(e=>targetAlive(e)&&Math.hypot(e.x-pl.x,e.y-pl.y)<=(m?.range||170));
   function cast(pl,m) {
     if(!canCast(pl,m))return false;
-    const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m,pl),attack:pl.atk,hits:new Set(),dashes:0,trail:0,phase:'charge',wait:Math.max(0,m.charge||0)};
+    const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m,pl),attack:pl.atk,hits:new Set(),dashes:0,trail:0,
+      speed:config.speed,retargetDelay:config.retargetDelay,phase:'charge',wait:Math.max(0,m.charge||0)};
     if(!next(c))return false;
     chain=c;return true;
   }

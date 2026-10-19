@@ -24,6 +24,27 @@ with sync_playwright() as p:
         return Array.from({length:n},(_,i)=>{const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},100+i*100,0,{hp:1,spd:1,dmg:1});e.types=['normal'];G.EnemyMgr.add(e);return e;});}
       function cast(){const m=G.Moves.instance('naruto-sasuke');assert(G.DigimonSkills.cast(pl,m),'cast rejected');return m;}
       function step(t){for(let i=0;i<Math.ceil(t*240);i++)G.Combat.updateFields(1/240);}
+      setup(20);assert(G.DigimonSkills.cast(pl,G.Moves.instance('naruto-sasuke',5)),'acceleration cast rejected');
+      G.Combat.updateFields(.09);
+      const measuredSpeeds=[],turnDelays=[];
+      for(let leg=0;leg<16;leg++){
+        assert(A.active?.phase==='dash','missing acceleration leg '+leg);
+        const x=pl.x,y=pl.y;G.Combat.updateFields(.004);
+        const speed=Math.hypot(pl.x-x,pl.y-y)/.004;
+        assert(Math.abs(speed-Math.min(3000,1000+leg*150))<.001,'actual dash speed mismatch '+leg+': '+speed);
+        measuredSpeeds.push(Math.round(speed));
+        while(A.active?.phase==='dash')G.Combat.updateFields(1/240);
+        assert(A.active?.phase==='retarget','acceleration chain ended early');
+        const delay=A.active.wait;turnDelays.push(delay);
+        assert(Math.abs(delay-Math.max(.012,.045*Math.pow(.85,leg+1)))<.000001,'turn delay mismatch');
+        G.Combat.updateFields(delay);
+      }
+      assert(measuredSpeeds[0]<measuredSpeeds[1]&&measuredSpeeds[1]<measuredSpeeds[2]&&measuredSpeeds[15]===3000,'acceleration/cap missing');
+      assert(turnDelays[0]>turnDelays[1]&&turnDelays.at(-1)===.012,'turn delay floor missing');
+      setup(2);cast();assert(A.active.speed===1000&&A.active.retargetDelay===.045,'new cast retained acceleration');
+      G.Combat.updateFields(.09);const resetX=pl.x;G.Combat.updateFields(.004);
+      assert(Math.abs(pl.x-resetX-4)<.001,'new cast first leg failed speed reset');
+      report.acceleration={measuredSpeeds,turnDelayStart:turnDelays[0],turnDelayFloor:turnDelays.at(-1),newCast:'speed 1000 and delay 0.045 reset; actual movement verified'};
       for(let n=1;n<=7;n++){const es=setup(n);const m=cast();const before=pl.dmgDealt;step(2);const hit=es.filter(e=>e.hp<e.maxHp).length;
         assert(hit===Math.min(n,5),'target count '+n+': '+hit);assert(!A.active,'chain remained');
         const expected=Math.min(n,5)*m.dmg*pl.atk*G.Types.mult(m.type,['normal'])*G.Weather.mult(m.type);
