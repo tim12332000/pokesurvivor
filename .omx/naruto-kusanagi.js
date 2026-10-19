@@ -20,9 +20,10 @@
   const config = Object.freeze({ tick: .35, bladeHalfLength: 18, bladeRadius: 7, angularSpeed: 2.4 });
   const alive = owner => owner && !owner.dead && owner.hp > 0;
   const learned = owner => owner?.mon?.dex === 30002 && alive(owner) && owner.moves?.find(m => m.id === id);
+  const selected = owner => !!owner?.activeGroup().some(m => m.id === id);
   function clear(owner) { if (owner) states.delete(owner); else states.clear(); }
   function activate(owner) {
-    if (!learned(owner) || !G.Game.everyone().includes(owner)) return false;
+    if (!learned(owner) || !selected(owner) || !G.Game.everyone().includes(owner)) return false;
     if (states.get(owner)?.world !== G.World)
       states.set(owner, { owner, world: G.World, age: 0, hits: new Map(), blades: [] });
     return true;
@@ -35,6 +36,12 @@
       const index = this.slots.indexOf(previous); if (index >= 0) this.active = index;
     }
     return added;
+  };
+  const setActive=G.Player.prototype.setActive;
+  G.Player.prototype.setActive=function(...args){
+    const result=setActive.apply(this,args);
+    if(!selected(this))clear(this);
+    return result;
   };
   function blades(state, move) {
     const count = Math.max(1, (move.count || 1) + (G.Quantity?.bonus(state.owner) || 0) + (G.NarutoSharingan?.projectileBonus(state.owner, move) || 0));
@@ -52,7 +59,7 @@
   }
   function update(dt) {
     const owners = G.Game.everyone();
-    for (const [owner, state] of states) if (!owners.includes(owner) || !learned(owner) || state.world !== G.World) clear(owner);
+    for (const [owner, state] of states) if (!owners.includes(owner) || !learned(owner) || !selected(owner) || state.world !== G.World) clear(owner);
     if (!(dt > 0) || !Number.isFinite(dt)) return;
     for (const owner of owners) {
       const move = learned(owner); if (!move) continue;
@@ -75,7 +82,7 @@
   }
   function draw(ctx) {
     for (const state of states.values()) {
-      if (!learned(state.owner) || state.world !== G.World) continue;
+      if (!learned(state.owner) || !selected(state.owner) || state.world !== G.World) continue;
       for (const blade of state.blades) {
         if (!G.Camera.sees(blade.x, blade.y, 50)) continue;
         ctx.save(); ctx.translate(Math.round(blade.x), Math.round(blade.y - G.LIFT)); ctx.rotate(blade.angle);
@@ -88,5 +95,5 @@
   C.updateFields = function(dt) { const result = previousUpdate.call(this, dt); update(dt); return result; };
   C.drawAirFields = function(ctx) { previousDraw.call(this, ctx); draw(ctx); };
   C.clearFields = function(owner) { const result = previousClear.call(this, owner); clear(owner); return result; };
-  G.NarutoKusanagi = { config, states, clear, activate, active: owner => states.get(owner)?.world === G.World };
+  G.NarutoKusanagi = { config, states, clear, activate, active: owner => selected(owner) && states.get(owner)?.world === G.World };
 })();

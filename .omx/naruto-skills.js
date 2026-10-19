@@ -308,7 +308,7 @@
     ['naruto-kusanagi', [30002], {
       name:'草薙劍・環繞', mode:'kusanagi-orbit', type:'steel', learnLevel:1,
       cd:1,dmg:28,radius:58,count:1,knock:8,
-      desc:'佐助 Lv.1 即可學。切換至此技能開啟，之後切換其他招式仍常駐；學會本身不會啟動，死亡或換局後需重新開啟。環繞飛行劍可同時斬中多名敵人，同一目標每 0.35 秒最多命中一次。數量增幅每層、三勾玉寫輪眼彈道加成都各多一把劍。自動環繞為本版改編。',
+      desc:'佐助 Lv.1 即可學。選用此技能並施放後，飛行劍持續環繞；切換其他招式立即消失並停止傷害，切回後需再次施放。學會本身不會啟動。可同時斬中多名敵人，同一目標每 0.35 秒最多命中一次。數量增幅每層、三勾玉寫輪眼彈道加成都各多一把劍。自動環繞為本版改編。',
       ups:[{t:'環繞劍 +1 把',m:{count:1}},
         {t:'劍刃傷害 +30%、環繞範圍 +10%',m:{dmg:1.3,radius:1.1}},
         {t:'環繞劍再 +1 把',m:{count:1}},
@@ -420,7 +420,7 @@
   guide.id = 'scr-naruto-skills';
   guide.className = 'scr dim hidden';
   guide.translate = false;
-  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍需先切換開啟，之後換別招仍常駐。僅開放各角色的特色忍術。Lv.3、Lv.6 起保證出現特色技能選項；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
+  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。Lv.3、Lv.6 起保證出現特色技能選項；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   for (const [dex, definition] of byDex) {
     if(!G.Naruto.availableDexes.includes(dex))continue;
     const record = G.Naruto.records.get(dex), reference = references.get(dex);

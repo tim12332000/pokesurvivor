@@ -94,13 +94,14 @@ with sync_playwright() as p:
           });G.EnemyMgr.rebuildGrid();pl.target=targets[0];
           // Maintained weapons require an actually learned move before activation.
           const maintained=def.id==='naruto-kusanagi'&&!pl.hasMove(def.id)?G.Moves.instance(def.id):null;
-          if(maintained)pl.moves.push(maintained);
+          const previousSlots=pl.slots,previousActive=pl.active;
+          if(maintained){pl.moves.push(maintained);pl.slots=[...pl.slots,[maintained]];pl.active=pl.slots.length-1;}
           G.DigimonSkills.cast(pl,G.Moves.instance(def.id));
           for(let t=0;t<2;t+=1/60){G.Projectiles.update(1/60,pl,G.EnemyMgr.all());G.Combat.resolve(1/60,pl,t);G.Combat.updateFields(1/60);G.FX.update(1/60);}
           const damage=300000-targets.reduce((s,e)=>s+e.hp,0);
           if(!Number.isFinite(damage)||damage<=0)throw Error('No damage '+def.id);
           results.push({skill:def.id,damage});
-          if(maintained)pl.moves.splice(pl.moves.indexOf(maintained),1);
+          if(maintained){pl.moves.splice(pl.moves.indexOf(maintained),1);pl.slots=previousSlots;pl.active=previousActive;}
         }
       }finally{Object.assign(G.World,saved);G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();}
       return results;

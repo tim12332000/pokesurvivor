@@ -35,7 +35,7 @@ with sync_playwright() as p:
     p.percentHealthDamage=.01;p.lifestealRate=.01;p.hp=p.maxHp/2;
     const damage=m.dmg*p.atk*G.Types.mult('steel',['normal'])*G.Weather.mult('steel'),before=p.dmgDealt,hp=p.hp;
     G.Combat.updateFields(.001);assert(!G.NarutoKusanagi.states.size,'learning auto-activated sword');
-    const active=p.active;p.setActive(p.slots.findIndex(s=>s.some(m=>m.id===id)));m.t=0;G.Combat.tick(.001,p,0);p.setActive(active);G.Combat.updateFields(.001);
+    const swordSlot=p.slots.findIndex(s=>s.some(m=>m.id===id));p.setActive(swordSlot);m.t=0;G.Combat.tick(.001,p,0);G.Combat.updateFields(.001);
     assert(es.slice(0,3).every(e=>100000-e.hp===Math.round(damage+1000))&&es[3].hp===100000,'three real AOE contacts/outside failed');
     assert(Math.abs(p.dmgDealt-before-(damage+1000)*3)<.001,'owner percent/base credited twice');
     assert(Math.abs(p.hp-hp-(damage+1000)*.03)<.001,'lifesteal ownership mismatch');
@@ -48,7 +48,11 @@ with sync_playwright() as p:
     }
     assert(out.levels.map(v=>v.count).join(',')==='1,2,2,3,3','five-stage count ladder wrong');
     p.quantityBonus=0;const qty=G.LevelUp.STATS.find(s=>s.id==='quantity');qty.apply(p);qty.apply(p);G.Combat.updateFields(.001);assert(G.NarutoKusanagi.states.get(p).blades.length===5,'quantity card bonus missing');const eye=G.Moves.instance('naruto-sharingan',3);p.moves.push(eye);G.Combat.updateFields(.001);assert(G.NarutoKusanagi.states.get(p).blades.length===6,'Sharingan projectile +1 missing');p.moves=p.moves.filter(v=>v!==eye);G.NarutoSharingan.sync(p);
-    p.setActive(0);G.Combat.updateFields(.1);assert(G.NarutoKusanagi.states.has(p),'switching removes passive');
+    p.setActive(0);assert(!G.NarutoKusanagi.states.has(p),'switch did not immediately remove orbit');
+    const switchedHp=es.map(e=>e.hp);G.Combat.updateFields(.4);assert(es.every((e,i)=>e.hp===switchedHp[i]),'sword still damages after switch');
+    assert(!G.NarutoKusanagi.activate(p),'inactive sword could be cast');
+    p.setActive(swordSlot);assert(!G.NarutoKusanagi.states.has(p),'switching back bypassed cast');m.t=0;G.Combat.tick(.001,p,1);G.Combat.updateFields(.001);assert(G.NarutoKusanagi.states.has(p),'reselected sword failed to cast');
+    out.switching='immediate removal, no residual damage, recast on return';
     G.Combat.clearFields(p);assert(!G.NarutoKusanagi.states.size,'owner cleanup failed');G.NarutoKusanagi.activate(p);G.Combat.updateFields(.001);
     p.dead=true;G.Combat.updateFields(.001);assert(!G.NarutoKusanagi.states.size,'death cleanup failed');p.dead=false;G.Combat.updateFields(.001);assert(!G.NarutoKusanagi.states.size,'revive auto-activated');G.NarutoKusanagi.activate(p);
     G.Combat.updateFields(.001);const moveIndex=p.moves.indexOf(m);p.moves.splice(moveIndex,1);G.Combat.updateFields(.001);assert(!G.NarutoKusanagi.states.size,'unlearn cleanup failed');p.moves.push(m);G.NarutoKusanagi.activate(p);
