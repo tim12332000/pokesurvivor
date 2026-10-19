@@ -2,7 +2,9 @@
 (() => {
   if (G.NarutoChidori) return;
   const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), followupRangeMultiplier: 3, endInvulnerability: .3, speed: 1000, retargetDelay: .045, step: 4 });
-  const limitOf = move => config.counts[Math.max(0,Math.min(config.counts.length-1,(move?.lvl|0)-1))];
+  const limitOf = (move,owner=G.Game.player) =>
+    config.counts[Math.max(0,Math.min(config.counts.length-1,(move?.lvl|0)-1))] +
+    Math.max(0,Math.floor(move?.quantityBonusAtCast ?? G.Quantity?.bonus(owner) ?? 0));
   let chain = null;
   const valid = c => c && c.owner === G.Game.player && c.world === G.World && !c.owner.dead && c.owner.hp > 0;
   const clear = owner => { if (!owner || chain?.owner === owner) chain = null; };
@@ -64,7 +66,7 @@
     G.EnemyMgr.all().some(e=>targetAlive(e)&&Math.hypot(e.x-pl.x,e.y-pl.y)<=(m?.range||170));
   function cast(pl,m) {
     if(!canCast(pl,m))return false;
-    const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m),attack:pl.atk,hits:new Set(),dashes:0,trail:0,phase:'charge',wait:Math.max(0,m.charge||0)};
+    const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m,pl),attack:pl.atk,hits:new Set(),dashes:0,trail:0,phase:'charge',wait:Math.max(0,m.charge||0)};
     if(!next(c))return false;
     chain=c;return true;
   }

@@ -31,7 +31,7 @@ with sync_playwright() as p:
       }report.chain='1..7 targets: distinct hits capped at 5; owner/type damage accounting';
       const limits=[];
       for(let lv=1;lv<=5;lv++){
-        const es=setup(27),m=G.Moves.instance('naruto-sasuke',lv);pl.quantityBonus=20;
+        const es=setup(27),m=G.Moves.instance('naruto-sasuke',lv);
         assert(m.lvl===lv&&A.limitOf(m)===lv*5,'wrong level field or limit');
         assert(G.DigimonSkills.cast(pl,m),'level cast rejected');step(6);
         const hits=es.filter(e=>e.hp<e.maxHp).length;
@@ -43,7 +43,17 @@ with sync_playwright() as p:
       step(6);assert(snapshotEnemies.filter(e=>e.hp<e.maxHp).length===5,'mid-cast upgrade changed chain limit');
       assert(G.DigimonSkills.cast(pl,snapshotMove),'upgraded next cast rejected');
       assert(A.active.limit===25,'next cast did not use upgraded limit');G.Combat.clearFields();
-      report.levels={limits,quantity:'20 bonus cannot exceed per-level limit',snapshot:'upgrade during cast applies next cast only'};
+      const quantityLimits=[];
+      for(let lv=1;lv<=5;lv++)for(const bonus of [1,20]){
+        const es=setup(47),m=G.Moves.instance('naruto-sasuke',lv);
+        for(let pick=0;pick<bonus;pick++)G.LevelUp.STATS.find(s=>s.id==='quantity').apply(pl);
+        assert(A.limitOf(m)===lv*5+bonus,'quantity limit mismatch');
+        assert(G.DigimonSkills.cast(pl,m),'quantity cast rejected');step(12);
+        const hits=es.filter(e=>e.hp<e.maxHp).length;
+        assert(hits===lv*5+bonus&&!A.active,'quantity counted twice or missing: '+lv+'/'+bonus+'/'+hits);
+        quantityLimits.push({lv,bonus,hits});
+      }
+      report.levels={limits,quantityLimits,snapshot:'upgrade during cast applies next cast only'};
       setup(0);assert(!G.DigimonSkills.cast(pl,G.Moves.instance('naruto-sasuke')),'zero targets cast');
       const distant=setup(5);distant.forEach((e,i)=>e.x=100+i*350);cast();step(3);
       assert(distant.every(e=>e.hp<e.maxHp)&&!A.active,'350-spaced targets broke follow-up chain');
@@ -55,7 +65,8 @@ with sync_playwright() as p:
       assert(G.DigimonSkills.cast(pl,G.Moves.instance('naruto-sasuke',4)),'upgraded cast rejected');step(2);
       assert(upgraded.every(e=>e.hp<e.maxHp),'upgraded follow-up range did not scale');
       report.followup='five targets spaced 350 reached; beyond 510 stops; first cast remains 170; upgrades scale follow-up range';
-      const es=setup(7);pl.quantityBonus=20;const m=cast();m.dmg=999;step(2);assert(es.filter(e=>e.hp<e.maxHp).length===5,'quantity exceeded cap');assert(es[0].maxHp-es[0].hp<900,'snapshot mutated');report.snapshot='quantity +20 stays 5; learned damage snapshot immutable';
+      const es=setup(47);pl.quantityBonus=1;const m=cast();m.dmg=999;pl.quantityBonus=20;step(12);assert(es.filter(e=>e.hp<e.maxHp).length===6,'mid-cast quantity changed limit');assert(es[0].maxHp-es[0].hp<900,'snapshot mutated');
+      assert(G.DigimonSkills.cast(pl,G.Moves.instance('naruto-sasuke'))&&A.active.limit===25,'next cast missed new quantity');G.Combat.clearFields();report.snapshot='quantity captured once; mid-cast passive applies next cast; learned damage immutable';
       setup(2);cast();let hp=pl.hp;pl.hurt(1,null,true);assert(pl.hp<hp,'charge invulnerable');pl.invuln=0;step(.095);assert(A.active?.phase==='dash','dash not begun');hp=pl.hp;pl.hurt(10000,null,true);assert(pl.hp===hp,'dash pure damage got through');pl.invuln=0;pl.hurt(10,'fire');assert(pl.hp===hp,'dash typed damage got through');
       let oldx=pl.x,oldy=pl.y;const axis=G.Input.axis;G.Input.axis=()=>[1,1];pl.update(.01);G.Input.axis=axis;assert(pl.x===oldx&&pl.y===oldy,'normal movement fought dash');
       while(A.active?.phase==='dash')step(1/240);assert(A.active?.phase==='retarget','missing retarget window');pl.invuln=0;hp=pl.hp;pl.hurt(1,null,true);assert(pl.hp<hp,'retarget invulnerable');pl.invuln=0;step(1);assert(!A.active,'end pending');assert(pl.invuln===.3,'missing end protection');hp=pl.hp;pl.hurt(1,null,true);assert(pl.hp===hp,'end protection did not block');pl.update(.31);pl.hurt(1,null,true);assert(pl.hp<hp,'end protection did not expire');report.immunity='actual dash invulnerable; charge/retarget vulnerable; end protected 0.3 seconds then expires; joystick suppressed';
