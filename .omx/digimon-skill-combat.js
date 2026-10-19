@@ -198,7 +198,7 @@
       if(f.kind==='charge') {
         const progress=Math.min(1,f.t/Math.max(.01,f.life));
         G.VFX.draw(ctx,f.v.proj||'ball',f.v.pal,f.owner.x,f.owner.y-f.owner.bodyH*.62,
-          {scale:.6+progress*1.5,frame:Math.floor(f.t*12),alpha:.6+progress*.4});
+          {scale:f.v.projScale||.6+progress*1.5,frame:Math.floor(f.t*12),alpha:.6+progress*.4});
       } else if(f.kind==='gate') {
         const cx=f.x,cy=f.y-G.LIFT-28,spin=f.t*1.5;
         ctx.save();

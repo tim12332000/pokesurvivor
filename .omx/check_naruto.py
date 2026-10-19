@@ -39,7 +39,7 @@ with sync_playwright() as p:
     report=page.evaluate('''() => {
       const assert=(ok,msg)=>{if(!ok)throw Error(msg);};
       assert(G.MenuUI.GEN_NAMES.length===11&&G.Gacha.BANNERS.length===11,'Section registration');
-      assert(G.NarutoSkillCatalog.definitions.size===26,'Skill registry');
+      assert(G.NarutoSkillCatalog.definitions.size===27,'Skill registry');
       const pixels=[];
       for(const r of G.Naruto.records.values()) {
         assert(G.startMoveOf(r.dex)===r.start,'Starter signature '+r.dex);

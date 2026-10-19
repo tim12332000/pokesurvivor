@@ -30,8 +30,8 @@ available: Naruto, Sasuke, Sakura, Kakashi, Hinata, Rock Lee, Gaara and Itachi.
 Choosing a ninja uses the existing sandbox save without resetting the collection.
 Naruto characters do not use the Digimon evolution system.
 
-Twenty-six adapted skills cover three character techniques per ninja, with
-Naruto also learning a fourth technique, the Nine-Tails Chakra Cloak,
+Twenty-seven adapted skills cover three character techniques per ninja, with
+Naruto also learning the Nine-Tails Chakra Cloak and Sasuke learning Fuma Shuriken,
 Fireball shared only by Sasuke and Itachi, plus two common ninja tools.
 The in-game skill guide links each character to official Naruto source articles.
 Attack names and character identities are source-based; damage, ranges, cooldowns,
@@ -176,6 +176,7 @@ const config = Object.freeze({ perPick: 1, maxPicks: 20 });
 | Itachi | Single-target Tsukuyomi | Fireball | Amaterasu |
 
 Naruto has an additional guaranteed level 9 choice: Nine-Tails Chakra Cloak.
+Sasuke has an additional guaranteed level 9 choice: Fuma Shuriken.
 
 Each role retains the four-slot choice system and can decline a learning card.
 When full, an explicit card can replace a shared ninja tool in place, retaining
@@ -237,6 +238,37 @@ healing, defense, buffs, single-target control, real AoE budgets, wall geometry,
 expiry, cleanup and startup. Multiplayer adapter regression is checked with
 `node tools/test_multiplayer.js`; replication of these custom techniques remains
 a separate verification gap. Extended gameplay balance is still provisional.
+
+## 佐助：風魔手裏劍（大型手裏劍）
+
+`naruto-fuma-shuriken` 為佐助限定，Lv.9 起保證出現在三選一；
+豪火球 Lv.3、寫輪眼 Lv.6 的學習順序維持。滿槽時可替換苦無或一般手裏劍，保留槽位與按鍵。
+
+參考 [TAMASHII NATIONS 官方少年佐助資料](https://tamashiiweb.com/item/14256/?wovn=en)：
+明確記載佐助在再不斬戰使用風魔手裏劍，並展示大型四片彎刃、中央握環的忍具。
+另有 [BANPRESTO 官方場景商品](https://bsp-prize.jp/item/2643350/) 對應波之國篇的持武器姿勢。
+此招是實體忍具，不等同鳴人的螺旋手裏劍；本版不附加爆炸、燃燒或自動返回。
+
+| 設定 | 基礎值／意義 |
+| --- | --- |
+| `cd: 1.6` / `charge: .2` | 冷卻 1.6 秒、投出前準備 0.2 秒 |
+| `dmg: 34` / `count: 1` | 每枚基礎傷害 34，一次 1 枚 |
+| `speed: 460` / `life: 1.2` / `range: 552` | 飛速、存活秒數與選敵距離 |
+| `size: 32` / `pierce: 3` | 寬幅碰撞、最多貫穿 4 名敵人，牆仍會阻擋 |
+| `arc: .24` / `knock: 24` | 多枚時保持狹窄方向差，並施加擊退 |
+| `vis.projScale: .9` | 35×35 像素造型以固定比例顯示，準備與飛行時保持大小一致 |
+
+升級依序：多 1 枚且穿透 +1、傷害 +20%、冷卻 -15%、再多 1 枚且傷害 +25%。
+滿級一次 3 枚；通用「數量增幅」再加發射枚數與穿透，各枚保留完整傷害。
+延遲施放沿用數量快照，不會在等待期間重複加成。數值、命中上限與 Lv.9 門檻均為本作改編。
+
+這是沿路貫穿多目標的忍具，不取代佐助豪火球的爆炸範圍技。
+投擲沿用原始素材的四格 `Shoot`（Perform Jutsu）動作與既有朝向鏡射；
+原圖沒有獨立的風魔手裏劍投擲影格，因此不宣稱新增完整的原作武器動作。
+彎刃、中央孔與旋轉特效為程式繪製，角色 PNG 保留不變。
+
+所有平衡設定集中在 `.omx/naruto-skills.js` 同名定義；
+執行 `python .omx/check_sasuke_shuriken.py` 驗證學習門檻、替換、數量、貫穿、牆體與畫面。
 
 ## Original artwork
 

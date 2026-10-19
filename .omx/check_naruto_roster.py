@@ -65,7 +65,7 @@ with sync_playwright() as p:
           const close=(a,b,epsilon=.001)=>Math.abs(a-b)<epsilon;
           const result={};
           try {
-            assert(catalog.definitions.size===26,'Expected 26 distinct ninja skills including shared tools');
+            assert(catalog.definitions.size===27,'Expected 27 distinct ninja skills including shared tools');
             const rosters=[];
             for(const mon of G.Naruto.records.values()) {
               setup(mon.dex);pl.level=6;

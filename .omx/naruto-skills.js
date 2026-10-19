@@ -8,6 +8,37 @@
     'naruto-sand': ['#4d3014', '#91622b', '#c79a53', '#edd395', '#fff0ca']
   });
 
+  // Physical Fuma shuriken: four swept metal blades and an open central grip.
+  G.VFX.SHAPES['naruto-fuma-shuriken'] = {
+    w:35,h:35,frames:1,spin:true,gen(P) {
+      const blade=[[3,-5],[7,-4],[11,-4],[15,-7],[14,-1],[12,3],[9,6],[5,7],[2,6],[3,2]];
+      const inside=(x,y)=>{
+        let yes=false;
+        for(let i=0,j=blade.length-1;i<blade.length;j=i++){
+          const [ax,ay]=blade[i],[bx,by]=blade[j];
+          if((ay>y)!==(by>y)&&x<(bx-ax)*(y-ay)/(by-ay)+ax)yes=!yes;
+        }
+        return yes;
+      };
+      P.fill((x,y)=>{
+        const dx=x-17,dy=y-17,r=Math.hypot(dx,dy);
+        if(r<2.8)return null;
+        if(r<5)return r<3.5?'l':'d';
+        for(const [u,v] of [[dx,dy],[dy,-dx],[-dx,-dy],[-dy,dx]])
+          if(inside(u,v))return v>2?'d':'m';
+        return null;
+      });
+      for(let q=0;q<4;q++){
+        const rotate=([x,y])=>q===0?[x,y]:q===1?[-y,x]:q===2?[-x,-y]:[y,-x];
+        for(let i=0;i<7;i++){
+          const [ax,ay]=rotate(blade[i]),[bx,by]=rotate(blade[i+1]);
+          P.line(17+ax,17+ay,17+bx,17+by,'l');
+        }
+      }
+      P.outline();
+      for(let y=15;y<=19;y++)for(let x=15;x<=19;x++)if(Math.hypot(x-17,y-17)<2.6)P.set(x,y,null);
+    }
+  };
   G.VFX.SHAPES['naruto-wind-shuriken'] = {
     w: 19, h: 19, frames: 3, spin: true, gen(P, frame) {
       for (let blade = 0; blade < 4; blade++) {
@@ -222,6 +253,17 @@
       range:280, radius:80, fieldDuration:3, fieldTick:.5, maxFields:2,
       vis:{pal:'naruto-red'}, desc:'在鎖定敵人腳下留下有限時間的黑炎區域，傷害踏入範圍的敵人；最多同時兩片。持續時間、可閃避範圍與傷害為遊戲平衡改編。',
       source_url:'https://naruto-official.com/en/news/01_1316'
+    }],
+    ['naruto-fuma-shuriken', [30002], {
+      name:'風魔手裏劍', mode:'shot', type:'steel', learnLevel:9,
+      cd:1.6,dmg:34,speed:460,life:1.2,range:552,size:32,count:1,pierce:3,arc:.24,charge:.2,knock:24,
+      vis:{proj:'naruto-fuma-shuriken',pal:'steel',projScale:.9},
+      desc:'佐助 Lv.9 可學。投出大型旋轉四刃手裏劍，沿直線貫穿最多 4 名敵人；不會爆炸。可與數量增幅疊加，每枚保留完整傷害。數量、傷害與貫穿上限為本作改編。',
+      ups:[{t:'手裏劍 +1 枚、穿透 +1',m:{count:1,pierce:1}},
+        {t:'手裏劍傷害 +20%',m:{dmg:1.2}},
+        {t:'冷卻 -15%',m:{cd:.85}},
+        {t:'手裏劍 +1 枚、傷害 +25%',m:{count:1,dmg:1.25}}],
+      source_url:'https://tamashiiweb.com/item/14256/?wovn=en'
     }]
   );
   const kinds = { dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
@@ -308,7 +350,7 @@
   guide.id = 'scr-naruto-skills';
   guide.className = 'scr dim hidden';
   guide.translate = false;
-  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。每位忍者有三招特色技能，另可學共通忍具：苦無投擲、手裏劍散射。Lv.3、Lv.6 起保證出現兩招特色技能選項；角色招式池互不混用。控制與輔助招式不等同範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
+  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。每位忍者有三招特色技能；鳴人 Lv.9 另可學九尾查克拉外衣，佐助 Lv.9 可學風魔手裏劍。共通忍具包含苦無投擲、手裏劍散射。Lv.3、Lv.6 起保證出現特色技能選項；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   for (const [dex, definition] of byDex) {
     const record = G.Naruto.records.get(dex), reference = references.get(dex);
     const item = document.createElement('article');

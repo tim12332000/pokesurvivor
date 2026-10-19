@@ -49,7 +49,7 @@ with sync_playwright() as p:
           const step=t=>{for(let elapsed=0;elapsed<t-1e-9;elapsed+=.01)G.Combat.updateFields(Math.min(.01,t-elapsed));};
           const out={};
           try {
-            assert(G.NarutoSkillCatalog.definitions.size===26,'Expected 26 definitions');
+            assert(G.NarutoSkillCatalog.definitions.size===27,'Expected 27 definitions');
             for(const mon of G.Naruto.records.values()) {
               reset();pl.mon=mon;pl.dex=mon.dex;pl.level=9;
               assert(G.Moves.poolFor(mon).includes(id)===(mon.dex===30001),'Cloak leaked into another ninja pool');
