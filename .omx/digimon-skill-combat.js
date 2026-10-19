@@ -48,6 +48,7 @@
       r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
       hits: new Set(), vis: v, owner: pl, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
       slow: m.slow || 0, knock: m.knock || 0, digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
+    if(m.fumaReturn)Object.assign(p,{fumaReturn:true,boom:m.boom,bsp:m.speed*1.1,fumaPierce:p.pierce});
     if(m.fireballGrowth) {
       p.fireballGrowth={...m.fireballGrowth,travelled:0,baseRadius:p.r,baseScale:v.projScale||1};
       p.r*=m.fireballGrowth.startRatio;

@@ -77,7 +77,7 @@ with sync_playwright() as p:
             pl.quantityBonus=7;learned.count=9;learned.dmg=999;
             step(.02);let shots=G.Projectiles.all();
             assert(shots.length===3&&shots.every(s=>s.pierce===5&&Math.abs(s.dmg-34*pl.atk)<.001),'Pending cast mutated after quantity/damage changes');
-            assert(shots.every(s=>s.owner===pl&&!s.digiBomb&&!s.boom&&!s.homing&&s.vis.proj===id),'Projectile has wrong owner or invented behavior');
+            assert(shots.every(s=>s.owner===pl&&!s.digiBomb&&s.fumaReturn&&s.boom===.65&&!s.homing&&s.vis.proj===id),'Projectile has wrong owner or return behavior');
             assert(G.VFX.spins(id),'Large blade does not spin');
             // Casting itself must not mutate a learned instance or its definition.
             setup();const immutable=G.Moves.instance(id),baseline=JSON.stringify(immutable);pl.quantityBonus=2;
@@ -92,11 +92,11 @@ with sync_playwright() as p:
 
             const victims=setup([[100,0],[210,0],[320,0],[210,120]]);
             const damageBefore=pl.dmgDealt,m=G.Moves.instance(id),expected=m.dmg*pl.atk*G.Types.mult(m.type,['normal'])*G.Weather.mult(m.type);
-            G.DigimonSkills.cast(pl,m);step(1.5);
+            G.DigimonSkills.cast(pl,m);step(.82);
             assert(victims.slice(0,3).every(e=>100000-e.hp===Math.round(expected)),'Piercing damage expected '+Math.round(expected)+'; observed '+JSON.stringify(victims.map(e=>100000-e.hp)));
             assert(victims[3].hp===100000,'Straight blade gained an AOE explosion');
             assert(Math.abs((pl.dmgDealt-damageBefore)-3*expected)<.001,'Real player damage credit missing');
-            assert(!G.Projectiles.count,'Expired blade survived');
+            step(3);assert(!G.Projectiles.count,'Returned blade survived');
             result.damage='three aligned enemies hit once; off-axis untouched; damage credited to player';
 
             const blocked=setup([[200,0]]);G.World.projectileBlock=x=>x>=65;G.World.isWall=G.World.projectileBlock;

@@ -298,9 +298,10 @@
     }],
     ['naruto-fuma-shuriken', [30002], {
       name:'風魔手裏劍', mode:'shot', type:'steel', learnLevel:9,
-      cd:1.6,dmg:34,speed:460,life:1.2,range:552,size:32,count:1,pierce:3,arc:.24,charge:.2,knock:24,
+      cd:1.6,dmg:34,speed:460,life:4,range:552,size:32,count:1,pierce:3,arc:.24,charge:.2,knock:24,
+      fumaReturn:true,boom:.65,
       vis:{proj:'naruto-fuma-shuriken',pal:'steel',projScale:.9},
-      desc:'佐助 Lv.9 可學。投出大型旋轉四刃手裏劍，沿直線貫穿最多 4 名敵人；不會爆炸。可與數量增幅疊加，每枚保留完整傷害。數量、傷害與貫穿上限為本作改編。',
+      desc:'佐助 Lv.9 可學。大型旋轉鋼刃飛出後弧形繞回，追隨佐助回收；去、回各可命中最多 4 名敵人，每名每程一次。數量增幅增加枚數與穿透，各枚完整傷害；牆壁仍會擋下。往返為本作改編。',
       ups:[{t:'手裏劍 +1 枚、穿透 +1',m:{count:1,pierce:1}},
         {t:'手裏劍傷害 +20%',m:{dmg:1.2}},
         {t:'冷卻 -15%',m:{cd:.85}},

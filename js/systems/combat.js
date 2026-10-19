@@ -585,6 +585,8 @@ G.Combat = (() => {
       }
 
       // Objetos del escenario (rocas, cofres, hierba).
+      // A spent Fuma blade still flies home, without dealing extra hits on this leg.
+      if(p.fumaReturn&&p.fumaSpent)continue;
       let consumed = false;
       for (const prop of G.World.propsInCircle(p.x, p.y, p.r)) {
         if (p.orb) {
@@ -600,6 +602,7 @@ G.Combat = (() => {
         // La hierba no frena; lo sólido sí gasta perforación.
         if (prop.solid) {
           if (p.pierce > 0) p.pierce--;
+          else if(p.fumaReturn) { p.fumaSpent=true;if(!p.back)p.boom=p.t;break; }
           else { consumed = true; break; }
         }
       }
@@ -608,6 +611,7 @@ G.Combat = (() => {
         projectiles.splice(i, 1);
         continue;
       }
+      if(p.fumaReturn&&p.fumaSpent)continue;
 
       // Enemigos. Colisión BARRIDA: se comprueba todo el tramo recorrido en este
       // fotograma, no sólo el punto final. Un Impactrueno avanza 8 unidades por
@@ -650,6 +654,7 @@ G.Combat = (() => {
 
         if (!p.orb) {
           if (p.pierce > 0) { p.pierce--; }
+          else if(p.fumaReturn) { p.fumaSpent=true;if(!p.back)p.boom=p.t;break; }
           else {
             G.FX.burst(p.x, p.y - G.LIFT, p.color, 5, 80);
             projectiles.splice(i, 1);

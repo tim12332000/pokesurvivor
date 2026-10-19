@@ -43,6 +43,7 @@ G.Projectiles = (() => {
     for (let i = list.length - 1; i >= 0; i--) {
       const p = list[i];
       p.t += dt;
+      if(p.fumaReturn&&(!p.owner||p.owner!==player||p.owner.dead||p.owner.hp<=0)) { list.splice(i,1);continue; }
 
       if (p.orb) {
         // Gira alrededor de su jugador.
@@ -59,9 +60,16 @@ G.Projectiles = (() => {
       // golpear a los mismos) y vuelve a su dueño; al llegar, desaparece.
       if (p.boom) {
         const o = p.owner || player;
-        if (!p.back && p.t >= p.boom) { p.back = true; p.hits = new Set(); }
+        if (!p.back && p.t >= p.boom) {
+          p.back = true; p.hits = new Set();
+          if(p.fumaReturn) { p.returnAt=p.t;p.pierce=p.fumaPierce;p.fumaSpent=false;p.phits=new Set(); }
+        }
         if (p.back) {
-          const [dx, dy] = G.U.norm(o.x - p.x, o.y - p.y);
+          let [dx, dy] = G.U.norm(o.x - p.x, o.y - p.y);
+          if(p.fumaReturn) {
+            const bend=.85*Math.max(0,1-(p.t-p.returnAt)/.4),angle=Math.atan2(dy,dx)+bend;
+            dx=Math.cos(angle);dy=Math.sin(angle);
+          }
           p.vx = G.U.damp(p.vx, dx * p.bsp, 7, dt);
           p.vy = G.U.damp(p.vy, dy * p.bsp, 7, dt);
           if (G.U.dist2(p.x, p.y, o.x, o.y) < (o.r + 8) ** 2) { list.splice(i, 1); continue; }

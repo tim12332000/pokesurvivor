@@ -267,20 +267,21 @@ a separate verification gap. Extended gameplay balance is still provisional.
 參考 [TAMASHII NATIONS 官方少年佐助資料](https://tamashiiweb.com/item/14256/?wovn=en)：
 明確記載佐助在再不斬戰使用風魔手裏劍，並展示大型四片彎刃、中央握環的忍具。
 另有 [BANPRESTO 官方場景商品](https://bsp-prize.jp/item/2643350/) 對應波之國篇的持武器姿勢。
-此招是實體忍具，不等同鳴人的螺旋手裏劍；本版不附加爆炸、燃燒或自動返回。
+此招是實體忍具，不等同鳴人的螺旋手裏劍；不附加爆炸或燃燒。自動弧形返回是本版的遊戲改編，不宣稱為原作效果。
 
 | 設定 | 基礎值／意義 |
 | --- | --- |
 | `cd: 1.6` / `charge: .2` | 冷卻 1.6 秒、投出前準備 0.2 秒 |
 | `dmg: 34` / `count: 1` | 每枚基礎傷害 34，一次 1 枚 |
-| `speed: 460` / `life: 1.2` / `range: 552` | 飛速、存活秒數與選敵距離 |
-| `size: 32` / `pierce: 3` | 寬幅碰撞、最多貫穿 4 名敵人，牆仍會阻擋 |
+| `speed: 460` / `life: 4` / `range: 552` | 飛速、最多存活秒數與選敵距離；回到佐助身邊立即回收 |
+| `fumaReturn: true` / `boom: .65` | 飛出 0.65 秒後沿弧線折返，持續追隨移動中的佐助；穿透耗盡時提早折返 |
+| `size: 32` / `pierce: 3` | 寬幅碰撞、去回各最多命中 4 名敵人，同敵每程一次；牆仍會阻擋 |
 | `arc: .24` / `knock: 24` | 多枚時保持狹窄方向差，並施加擊退 |
 | `vis.projScale: .9` | 35×35 像素造型以固定比例顯示，準備與飛行時保持大小一致 |
 
 升級依序：多 1 枚且穿透 +1、傷害 +20%、冷卻 -15%、再多 1 枚且傷害 +25%。
 滿級一次 3 枚；通用「數量增幅」再加發射枚數與穿透，各枚保留完整傷害。
-延遲施放沿用數量快照，不會在等待期間重複加成。數值、命中上限與 Lv.9 門檻均為本作改編。
+延遲施放沿用數量快照，不會在等待期間重複加成。回程刷新各枚獨立的命中與穿透額度；回程額度耗盡仍會飛回，但不再造成傷害。數值、往返、命中上限與 Lv.9 門檻均為本作改編。
 
 這是沿路貫穿多目標的忍具，不取代佐助豪火球的爆炸範圍技。
 投擲沿用原始素材的四格 `Shoot`（Perform Jutsu）動作與既有朝向鏡射；
@@ -288,7 +289,7 @@ a separate verification gap. Extended gameplay balance is still provisional.
 彎刃、中央孔與旋轉特效為程式繪製，角色 PNG 保留不變。
 
 所有平衡設定集中在 `.omx/naruto-skills.js` 同名定義；
-執行 `python .omx/check_sasuke_shuriken.py` 驗證學習門檻、替換、數量、貫穿、牆體與畫面。
+執行 `python .omx/check_sasuke_shuriken.py` 驗證學習門檻、替換、數量、貫穿、牆體與畫面；`python .omx/check_fuma_return.py` 驗證弧形往返、移動追隨、每程傷害與清除。
 
 ## Original artwork
 
