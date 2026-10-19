@@ -31,6 +31,12 @@ with sync_playwright() as p:
       for(let lv=1;lv<=5;lv++){
         const key=S.key(lv),def=I.UI[key];assert(key==='sharingan-'+lv&&def,'Missing stage '+lv);
         assert(def.rows.length===16&&def.rows.every(row=>row.length===16),'Eye must use 16 by 16 native pixel rows');
+        assert(def.rows.every(row=>/^[.krd]+$/.test(row)),'Circular iris contains sclera or a non-red eye rim');
+        for(let y=0;y<16;y++)for(let x=0;x<16;x++){
+          const radius=Math.hypot(x-7.5,y-7.5),pixel=def.rows[y][x];
+          if(radius>7.4)assert(pixel==='.' ,'Iris has an eyelid outside the circle');
+          if(radius<6.5)assert(pixel!=='.','Iris has a transparent gap inside the red disc');
+        }
         urls.push(I.url(key));pixels.push(I.canvas(key).toDataURL());
       }
       assert(new Set(urls).size===5&&new Set(pixels).size===5,'Stages reused identical URL or canvas pixels');

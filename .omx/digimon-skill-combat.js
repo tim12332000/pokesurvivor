@@ -32,7 +32,8 @@
     propHits(pl, m, x, y, r, m.dmg * pl.atk * ratio);
     return dealt;
   }
-  function projectile(pl, m, a, ratio = 1, explosive = false, origin = pl) {
+  function projectile(pl, m, a, ratio = 1, explosive = false, origin = pl, shotIndex = 0) {
+    if(m.fireballAOE)explosive=false;
     if(m.id==='naruto-fireball'&&pl.dex===30002&&origin===pl&&G.NarutoFireball) {
       const mouth=G.NarutoFireball.origin(pl,a),dx=mouth.x-pl.x,dy=mouth.y-pl.y,len=Math.hypot(dx,dy);
       origin={x:pl.x,y:pl.y};
@@ -48,12 +49,19 @@
       r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
       hits: new Set(), vis: v, owner: pl, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
       slow: m.slow || 0, knock: m.knock || 0, digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
-    if(m.fumaReturn)Object.assign(p,{fumaReturn:true,boom:m.boom,bsp:m.speed*1.1,fumaPierce:p.pierce});
+    if(m.fumaReturn) {
+      Object.assign(p,{fumaReturn:true,boom:m.boom,bsp:m.speed*1.1,fumaPierce:p.pierce,fumaLearned:pl.hasMove(m.id)});
+      const target=pl.target,locked=target&&!target.dead&&G.EnemyMgr.all().includes(target)&&G.U.dist(pl.x,pl.y,target.x,target.y)<=m.range;
+      const tx=locked?target.x:p.x+Math.cos(a)*m.speed*m.boom,ty=locked?target.y:p.y+Math.sin(a)*m.speed*m.boom;
+      const [dx,dy]=G.U.norm(tx-p.x,ty-p.y),bend=(m.fumaCurve||130)*(shotIndex%2?-1:1)*(1+Math.min(2,shotIndex>>1)*.12);
+      p.fumaCurve={sx:p.x,sy:p.y,tx,ty,cx:(p.x+tx)/2-dy*bend*2,cy:(p.y+ty)/2+dx*bend*2,duration:m.boom};
+    }
     if(m.fireballGrowth) {
       p.fireballGrowth={...m.fireballGrowth,travelled:0,baseRadius:p.r,baseScale:v.projScale||1};
       p.r*=m.fireballGrowth.startRatio;
       p.vis.projScale=p.fireballGrowth.baseScale*m.fireballGrowth.startRatio;
     }
+    if(m.fireballAOE)G.NarutoFireballAOE?.track(p,m,pl);
     if (explosive) { bombs.add(p); cap(); }
     return p;
   }
@@ -133,7 +141,7 @@
   }
   function emit(pl, m, aim = pl.aim) {
     const mode = m.digiMode, a = aim, n = Math.max(1, m.count | 0), arc = m.arc || .8;
-    if (mode === 'shot') for (let i = 0; i < n; i++) projectile(pl, m, a + (n === 1 ? 0 : (i / (n - 1) - .5) * arc), 1, !!m.blastRadius);
+    if (mode === 'shot') for (let i = 0; i < n; i++) projectile(pl, m, a + (n === 1 ? 0 : (i / (n - 1) - .5) * arc), 1, !!m.blastRadius,pl,i);
     else if (mode === 'nova') for (let i = 0; i < n; i++) projectile(pl, m, i * TAU / n, 1, !!m.blastRadius);
     else if (mode === 'melee') { for (let i = 0; i < n; i++) { const f = { kind: 'combo', owner: pl, world: G.World, m: cloneMove(m), t: 0, delay: i * (m.burstInterval || .12), x: pl.x, y: pl.y, aim: a, col: color(m), v: vis(m) }; fields.push(f); } cap(); }
     else if (mode === 'beam') line(pl, m, pl.x, pl.y, a, m.radius, m.width);

@@ -31,6 +31,8 @@
 !/check_naruto_signature_pool.py
 !/check_naruto_fireball.py
 !/naruto-fireball-cast.js
+!/naruto-fireball-aoe.js
+!/check_fireball_persistent_aoe.py
 !/check_naruto_fireball_cast.py
 !/check_roster_availability.py
 !/naruto-chidori.js

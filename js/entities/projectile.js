@@ -43,7 +43,8 @@ G.Projectiles = (() => {
     for (let i = list.length - 1; i >= 0; i--) {
       const p = list[i];
       p.t += dt;
-      if(p.fumaReturn&&(!p.owner||p.owner!==player||p.owner.dead||p.owner.hp<=0)) { list.splice(i,1);continue; }
+      if(p.fireballAOE&&(!p.owner||p.owner!==player||p.owner.dead||p.owner.hp<=0)){list.splice(i,1);continue;}
+      if(p.fumaReturn&&(!p.owner||p.owner!==player||p.owner.dead||p.owner.hp<=0||(p.fumaLearned&&!p.owner.hasMove('naruto-fuma-shuriken')))) { list.splice(i,1);continue; }
 
       if (p.orb) {
         // Gira alrededor de su jugador.
@@ -55,6 +56,24 @@ G.Projectiles = (() => {
       }
 
       if (p.t >= p.life) { list.splice(i, 1); continue; }
+
+      // Fuma's outward arc ends at a launch-time target snapshot, never an infinite chase.
+      let moveDt=dt;
+      if(p.fumaCurve) {
+        p.px=p.x;p.py=p.y;p.fumaSweep=[[p.x,p.y]];
+        if(!p.back) {
+          const c=p.fumaCurve,start=Math.min(c.duration,p.t-dt),end=Math.min(c.duration,p.boom,p.t);
+          const steps=Math.max(1,Math.ceil(Math.max(0,end-start)*120));
+          for(let n=1;n<=steps;n++) {
+            const t=Math.max(0,Math.min(1,(start+(end-start)*n/steps)/c.duration)),u=1-t;
+            p.x=u*u*c.sx+2*u*t*c.cx+t*t*c.tx;p.y=u*u*c.sy+2*u*t*c.cy+t*t*c.ty;
+            p.fumaSweep.push([p.x,p.y]);
+            p.vx=2*(u*(c.cx-c.sx)+t*(c.tx-c.cx))/c.duration;
+            p.vy=2*(u*(c.cy-c.sy)+t*(c.ty-c.cy))/c.duration;
+          }
+          moveDt=Math.max(0,p.t-Math.max(p.t-dt,p.boom));
+        }
+      }
 
       // Bumerán: a los `boom` segundos se da la vuelta (y puede volver a
       // golpear a los mismos) y vuelve a su dueño; al llegar, desaparece.
@@ -87,13 +106,28 @@ G.Projectiles = (() => {
         }
       }
 
-      p.px = p.x; p.py = p.y;          // para la colisión barrida (ver combat.js)
+      if(!p.fumaCurve) { p.px = p.x; p.py = p.y; } // para la colisión barrida (ver combat.js)
       if (p.vis && p.vis.trail && G.Camera.sees(p.x, p.y, 20)) {
         p.trailT = (p.trailT || 0) - dt;
         if (p.trailT <= 0) { p.trailT = 0.04; G.FX.trail(p.vis.trail, p.vis.pal, p.x, p.y - G.LIFT, p.vx, p.vy); }
       }
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
+      if(p.fireballAOE) {
+        const f=p.fireballAOE;
+        if(!f.blocked) {
+          const dx=p.vx*moveDt,dy=p.vy*moveDt,length=Math.hypot(dx,dy),steps=Math.max(1,Math.ceil(length/4)),sx=p.x,sy=p.y;
+          for(let n=1;n<=steps;n++) {
+            const fraction=n/steps,x=sx+dx*fraction,y=sy+dy*fraction,g=p.fireballGrowth;
+            const ratio=g?g.startRatio+(g.endRatio-g.startRatio)*Math.min(1,(g.travelled+length*fraction)/g.distance):1;
+            const radius=g?g.baseRadius*ratio:p.r,block=G.World.projectileBlock(x,y,radius);
+            if(block){f.blocked=true;f.blockedProp=typeof block==='object'?block:null;p.vx=p.vy=0;break;}
+            p.x=x;p.y=y;
+          }
+        }
+      } else {
+        p.x += p.vx * moveDt;
+        p.y += p.vy * moveDt;
+      }
+      if(p.fumaSweep)p.fumaSweep.push([p.x,p.y]);
       if(p.fireballGrowth) {
         const g=p.fireballGrowth;
         g.travelled+=Math.hypot(p.x-p.px,p.y-p.py);
@@ -103,7 +137,7 @@ G.Projectiles = (() => {
       }
 
       // Fuera de la vista con margen generoso -> se descarta.
-      if (!G.Camera.sees(p.x, p.y, 260)) { list.splice(i, 1); continue; }
+      if (!p.fireballAOE && !G.Camera.sees(p.x, p.y, 260)) { list.splice(i, 1); continue; }
     }
   }
 

@@ -90,21 +90,21 @@ with sync_playwright() as p:
             }
             result.quantity={baseAndLevel5:quantities.slice(0,2),withTwoPassiveStacks:quantities.slice(2),snapshot:'immutable through charge'};
 
-            const victims=setup([[100,0],[210,0],[320,0],[210,120]]);
+            const victims=setup([[80,98],[160,130],[320,0],[210,-120]]);pl.target=victims[2];
             const damageBefore=pl.dmgDealt,m=G.Moves.instance(id),expected=m.dmg*pl.atk*G.Types.mult(m.type,['normal'])*G.Weather.mult(m.type);
             G.DigimonSkills.cast(pl,m);step(.82);
             assert(victims.slice(0,3).every(e=>100000-e.hp===Math.round(expected)),'Piercing damage expected '+Math.round(expected)+'; observed '+JSON.stringify(victims.map(e=>100000-e.hp)));
             assert(victims[3].hp===100000,'Straight blade gained an AOE explosion');
             assert(Math.abs((pl.dmgDealt-damageBefore)-3*expected)<.001,'Real player damage credit missing');
             step(3);assert(!G.Projectiles.count,'Returned blade survived');
-            result.damage='three aligned enemies hit once; off-axis untouched; damage credited to player';
+            result.damage='three enemies along outbound arc hit once; outside untouched; damage credited to player';
 
             const blocked=setup([[200,0]]);G.World.projectileBlock=x=>x>=65;G.World.isWall=G.World.projectileBlock;
             G.DigimonSkills.cast(pl,G.Moves.instance(id));step(.8);
             assert(blocked[0].hp===100000&&!G.Projectiles.count,'Blade crossed a wall');
             G.World.projectileBlock=()=>false;G.World.isWall=()=>false;
             setup();let propDamage=0;
-            const prop={id:98765,x:80,y:0,r:12,solid:true};
+            const prop={id:98765,x:80,y:98,r:12,solid:true};
             G.World.propsInCircle=(x,y,r)=>Math.hypot(x-prop.x,y-prop.y)<=r+prop.r?[prop]:[];
             G.World.damageProp=(p,d)=>{assert(p===prop,'Unexpected prop');propDamage+=d;};
             G.DigimonSkills.cast(pl,G.Moves.instance(id));step(.6);

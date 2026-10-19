@@ -36,12 +36,12 @@ with sync_playwright() as p:
     assert(!G.DigimonSkills.cast(pl,G.Moves.instance('naruto-sasuke'))&&!G.NarutoChidori.active,'Chidori interrupted the fireball pose');G.EnemyMgr.clear();
     tick(.239);assert(!G.Projectiles.count,'Shot before .24 second seal');tick(.002);assert(G.Projectiles.count===1,'Missing single release');
     const shot=G.Projectiles.all()[0],origin=api.origin(pl,0);assert(Math.hypot(shot.x-origin.x,shot.y-origin.y)<4,'Shot did not leave mouth');
-    assert(shot.owner===pl&&Math.abs(shot.dmg-move.dmg*pl.atk*.2)<.001&&shot.digiBomb.r===95,'Damage or ownership changed');
+    assert(shot.owner===pl&&Math.abs(shot.dmg-move.dmg*pl.atk)<.001&&shot.fireballAOE&&!shot.digiBomb,'DPS or ownership changed');
     tick(2);assert(G.Projectiles.count===1&&!api.active,'Large dt repeats emission or pose lingers');
     assert(JSON.stringify(move)===original,'Learned skill mutated');out.timing='seal .239: 0; .241: 1; after large dt: still 1';
     reset();G.DigimonSkills.cast(pl,G.Moves.instance(id));tick(1);assert(G.Projectiles.count===1&&!api.active,'Single large frame skipped or duplicated release');out.largeFrame='one release even when all phases elapse in one frame';
     reset();pl.quantityBonus=2;const snap=G.Moves.instance(id);G.DigimonSkills.cast(pl,snap);pl.quantityBonus=7;snap.dmg=999;pl.aim=Math.PI;tick(.25);
-    assert(G.Projectiles.count===3&&G.Projectiles.all().every(s=>s.vx>0&&Math.abs(s.dmg-49*pl.atk*.2)<.001),'Pending cast did not snapshot quantity, damage, and aim');out.snapshot='3 full-damage shots; quantity, damage, and facing locked during seal';
+    assert(G.Projectiles.count===3&&G.Projectiles.all().every(s=>s.vx>0&&Math.abs(s.dmg-49*pl.atk)<.001),'Pending cast did not snapshot quantity, damage, and aim');out.snapshot='3 full-DPS bodies; quantity, damage, and facing locked during seal';
     reset();const right=api.origin(pl,0),left=api.origin(pl,Math.PI);
     assert(right.x>pl.x&&left.x<pl.x&&Math.abs(right.x+left.x-2*pl.x)<.01&&Math.abs(right.y-left.y)<.01,'Mouth origin not mirrored');
     pl.aim=Math.PI;G.DigimonSkills.cast(pl,G.Moves.instance(id));tick(.25);assert(G.Projectiles.all().every(s=>s.x<pl.x&&s.vx<0),'Left release faces right');out.direction={right,left};

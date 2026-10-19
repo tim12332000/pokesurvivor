@@ -215,10 +215,11 @@
     }],
     ['naruto-fireball', [30002, 30008], {
       name: '火遁・豪火球之術', mode: 'shot', type: 'fire', cd: 2.3, dmg: 49,
-      speed: 300, life: 1.4, size: 52, range: 420, blastRadius: 95, burn: .12,
+      speed: 300, life: 1.4, size: 52, range: 420, burn: .12,
+      fireballAOE:true, fireballTick:.2,
       fireballGrowth: {startRatio:.2,endRatio:1.4,distance:300},
       vis: { proj: 'naruto-great-fireball', projScale: 1.6, trail: 'ember', pal: 'naruto-fireball' },
-      desc: '從嘴前吐出小火團，越往外飛越大，飛行 300 距離後達最大尺寸；火焰外觀與實際碰撞範圍同步成長。命中後爆發火焰，傷害爆心周圍多名敵人並施加短暫燃燒。佐助與鼬使用此招有官方資料；成長尺寸、爆炸半徑 95 與燃燒數值為本作改編。',
+      desc: '從嘴前吐出小火團，越往外飛越大，飛行 300 距離後達最大尺寸；外觀與碰撞範圍同步成長。初次接觸立即造成一次範圍傷害，同一敵人之後每 0.2 秒最多一次，碰到敵人繼續飛；碰到牆或實體障礙物則停在前方燃燒，仍於火球發射後 1.4 秒消散。每顆獨立計算每秒 49 基礎傷害，不會永久殘留。持續傷害、成長與時限為本作改編。',
       source_url: 'https://naruto-official.com/en/anime/naruto1/list/01_354',
       owner_sources: { 30008: 'https://naruto-official.com/en/news/01_2332' }
     }],
@@ -307,9 +308,9 @@
     ['naruto-fuma-shuriken', [30002], {
       name:'風魔手裏劍', mode:'shot', type:'steel', learnLevel:9,
       cd:1.6,dmg:34,speed:460,life:4,range:552,size:32,count:1,pierce:3,arc:.24,charge:.2,knock:24,
-      fumaReturn:true,boom:.65,
+      fumaReturn:true,boom:.65,fumaCurve:130,
       vis:{proj:'naruto-fuma-shuriken',pal:'naruto-fuma-steel',projScale:.9},
-      desc:'佐助 Lv.9 可學。大型旋轉鋼刃飛出後弧形繞回，追隨佐助回收；去、回各可命中最多 4 名敵人，每名每程一次。數量增幅增加枚數與穿透，各枚完整傷害；牆壁仍會擋下。往返為本作改編。',
+      desc:'佐助 Lv.9 可學。大型旋轉鋼刃先繞大弧線擊中投出時鎖定的位置，再弧形返回佐助；去、回各最多命中 4 名敵人，每名每程一次。數量增幅增加枚數與穿透，多枚交錯繞向同目標，各枚完整傷害；牆壁仍會擋下。軌跡為本作改編。',
       ups:[{t:'手裏劍 +1 枚、穿透 +1',m:{count:1,pierce:1}},
         {t:'手裏劍傷害 +20%',m:{dmg:1.2}},
         {t:'冷卻 -15%',m:{cd:.85}},

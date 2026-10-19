@@ -44,11 +44,11 @@ with sync_playwright() as p:
     };
     let time=0;const step=seconds=>{for(let t=0;t<seconds;t+=1/240){const dt=Math.min(1/240,seconds-t);time+=dt;G.Projectiles.update(dt,pl,G.EnemyMgr.all());G.Combat.resolve(dt,pl,time);G.Combat.updateFields(dt)}};
     const out={};try{
-     assert(def.dmg===49&&def.cd===2.3&&def.burn===.12&&def.blastRadius===95,'Balance changed');
+     assert(def.dmg===49&&def.cd===2.3&&def.burn===.12&&def.fireballAOE&&!def.blastRadius,'Persistent DPS configuration changed');
      assert(def.size===52&&def.digiVis.proj==='naruto-great-fireball','Large collision/shape absent');
      for(const mon of G.Naruto.records.values()){pl.level=9;assert(G.Moves.poolFor(mon).includes(id)===[30002,30008].includes(mon.dex),'Pool escaped '+mon.dex)}
      setup();pl.quantityBonus=2;const learned=G.Moves.instance(id),before=JSON.stringify(learned);G.DigimonSkills.cast(pl,learned);step(.25);
-     assert(G.Projectiles.count===3&&G.Projectiles.all().every(s=>s.r>10.4&&s.r<12&&s.owner===pl&&Math.abs(s.dmg-49*pl.atk*.2)<.001),'Quantity, full damage, or owner failed');
+     assert(G.Projectiles.count===3&&G.Projectiles.all().every(s=>s.r>10.4&&s.r<12&&s.owner===pl&&Math.abs(s.dmg-49*pl.atk)<.001&&s.fireballAOE&&!s.digiBomb),'Quantity, full DPS, or owner failed');
      assert(JSON.stringify(learned)===before,'Definition mutated');out.quantity='1 + 2 passive stacks = 3 full damage fireballs';
      const growth=[];
      for(const distance of [0,75,150,300,400]){
@@ -66,17 +66,17 @@ with sync_playwright() as p:
      assert(Math.abs(siblings[0].r-26)<.0001&&siblings.slice(1).every(s=>Math.abs(s.r-41.6)<.0001),'Quantity growth not independent');
      setup();G.DigimonSkills.cast(pl,G.Moves.instance('naruto-rasenshuriken'));G.Combat.updateFields(.241);shot=G.Projectiles.all()[0];const unaffected=shot.r;G.Projectiles.update(.25,pl,[]);assert(shot.r===unaffected&&!shot.fireballGrowth,'Unrelated projectile grew');
      out.growth=growth;out.travel='stationary age does not grow; speed changes and sibling state are independent';
-     setup();const origin=G.NarutoFireball?.origin(pl,0)||{x:3,y:0};
-     const es=setup([[origin.x+147,origin.y],[origin.x+87,origin.y+82],[origin.x+87,origin.y-82],[origin.x+87,origin.y+170]]),m=G.Moves.instance(id),expected=m.dmg*pl.atk*G.Types.mult(m.type,['normal'])*G.Weather.mult(m.type),credit=pl.dmgDealt;
-     G.DigimonSkills.cast(pl,m);step(.65);const damage=es.map(e=>100000-e.hp);
-     assert(damage[0]===Math.round(expected*.2)+Math.round(expected*.8),'Direct hit doubled: '+damage);
-     assert(damage[1]===Math.round(expected*.8)&&damage[2]===Math.round(expected*.8)&&damage[3]===0,'AOE mismatch '+damage);
-     assert(Math.abs(pl.dmgDealt-credit-expected*2.6)<.001,'Damage credit mismatch');assert(es.slice(0,3).every(e=>e.burn>0||e.burnT>0||e.burnPct>0),'Burn absent');out.damage=damage;
-     assert(bursts.length===1&&G.VFX.SHAPES['naruto-great-fireball-burst'].frames===3,'Dedicated impact flame missing or repeated');out.impact='one dedicated three-frame flame burst';
-     const blocked=setup([[300,0]]);G.World.projectileBlock=x=>x>=65;G.World.isWall=G.World.projectileBlock;G.DigimonSkills.cast(pl,G.Moves.instance(id));step(.8);assert(blocked[0].hp===100000&&!G.Projectiles.count,'Crossed wall');
+     setup();G.DigimonSkills.cast(pl,G.Moves.instance(id));G.Combat.updateFields(.241);const body=G.Projectiles.all()[0];G.Projectiles.update(.6,pl,[]);G.Combat.resolve(.6,pl,time+=.6);body.vx=body.vy=0;
+     const es=[[-25,20],[0,-20],[25,20],[0,150]].map(([dx,dy])=>{const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},body.x+dx,body.y+dy,{hp:1,spd:1,dmg:1});e.types=['normal'];G.EnemyMgr.add(e);return e});G.EnemyMgr.rebuildGrid();
+     const expected=49*pl.atk*.2*G.Types.mult('fire',['normal'])*G.Weather.mult('fire'),credit=pl.dmgDealt;step(.2);const damage=es.map(e=>100000-e.hp);
+     assert(damage.slice(0,3).every(d=>d===Math.round(expected))&&damage[3]===0,'Body AOE mismatch '+damage);
+     assert(Math.abs(pl.dmgDealt-credit-expected*3)<.001,'DPS owner credit mismatch');assert(es.slice(0,3).every(e=>e.burn>0),'Burn absent');out.damage=damage;
+     assert(bursts.length===0&&G.Projectiles.all().includes(body),'AOE still explodes or disappears on hit');out.impact='persistent body; no impact bomb or burst';
+     const blocked=setup([[300,0]]);G.World.projectileBlock=x=>x>=65;G.World.isWall=G.World.projectileBlock;G.DigimonSkills.cast(pl,G.Moves.instance(id));step(.8);assert(blocked[0].hp===100000&&G.Projectiles.count===1&&G.Projectiles.all()[0].fireballAOE.blocked,'Crossed wall or vanished');
      G.World.projectileBlock=()=>false;G.World.isWall=()=>false;setup();let propDamage=0;const prop={id:98765,x:130,y:0,r:12,solid:true};
      G.World.propsInCircle=(x,y,r)=>Math.hypot(x-prop.x,y-prop.y)<=r+prop.r?[prop]:[];G.World.damageProp=(p,d)=>{propDamage+=d};
-     G.DigimonSkills.cast(pl,G.Moves.instance(id));step(.8);assert(Math.abs(propDamage-49*pl.atk)<.001,'Prop damage duplicate or missing '+propDamage);out.collision='walls block; props receive one 20% + 80% budget';G.World.propsInCircle=()=>[];
+     G.World.projectileBlock=(x,y,r)=>Math.hypot(x-prop.x,y-prop.y)<=r+prop.r?prop:false;
+     G.DigimonSkills.cast(pl,G.Moves.instance(id));step(.8);assert(propDamage>0&&propDamage<=49*pl.atk*.6+.001&&G.Projectiles.count===1,'Prop DPS missing or excessive '+propDamage);out.collision='walls and solid props retain fireball; bounded periodic prop damage';G.World.propsInCircle=()=>[];
      setup();G.DigimonSkills.cast(pl,G.Moves.instance(id));pl.dead=true;pl.hp=0;step(.01);assert(!G.Projectiles.count,'Dead owner retained shot');pl.dead=false;pl.hp=pl.maxHp;
      setup();G.DigimonSkills.cast(pl,G.Moves.instance(id));G.Combat.clearFields();G.Projectiles.clear();assert(!G.Projectiles.count&&G.DigimonSkills.activeEffects.length===0,'Clear retained effects');
      assert(G.Moves.instance('naruto-rasenshuriken').digiVis.proj==='naruto-wind-shuriken'&&G.VFX.SHAPES.fire.w===15,'Unrelated VFX changed');out.lifecycle='dead owner and scene cleanup pass';return out;

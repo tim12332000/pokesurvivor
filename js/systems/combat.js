@@ -573,11 +573,20 @@ G.Combat = (() => {
         continue;
       }
 
+      // Growing fireballs retain their bodies; their scoped AOE layer owns damage.
+      if(p.fireballAOE)continue;
       // --- disparos de jugadores ---
+      const path=p.fumaSweep;
+      let pathX=p.x,pathY=p.y,pathRadius=p.r;
+      const onPath=e=>path.some(([x,y],j)=>j&&segDist2(path[j-1][0],path[j-1][1],x,y,e.x,e.y)<=(p.r+e.r)**2);
+      if(path) {
+        const xs=path.map(q=>q[0]),ys=path.map(q=>q[1]),minX=Math.min(...xs),maxX=Math.max(...xs),minY=Math.min(...ys),maxY=Math.max(...ys);
+        pathX=(minX+maxX)/2;pathY=(minY+maxY)/2;pathRadius=Math.hypot(maxX-minX,maxY-minY)/2+p.r;
+      }
       // Orbes de un compañero: sólo se ven.
       if (p.orb && p.ghost) continue;
       if (!p.orb) {
-        const block = G.World.projectileBlock(p.x, p.y, p.r);
+        const block = path?path.map(([x,y])=>G.World.projectileBlock(x,y,p.r)).find(b=>b==='wall'||(b&&!b.destructible)):G.World.projectileBlock(p.x, p.y, p.r);
         if (block === 'wall' || (block && !block.destructible)) {
           G.FX.burst(p.x, p.y - G.LIFT, p.color, 5, 80);
           projectiles.splice(i, 1);
@@ -589,7 +598,8 @@ G.Combat = (() => {
       // A spent Fuma blade still flies home, without dealing extra hits on this leg.
       if(p.fumaReturn&&p.fumaSpent)continue;
       let consumed = false;
-      for (const prop of G.World.propsInCircle(p.x, p.y, p.r)) {
+      for (const prop of G.World.propsInCircle(pathX,pathY,pathRadius)) {
+        if(path&&!onPath(prop))continue;
         if (p.orb) {
           const k = 'p' + prop.id, last = p.hitLog.get(k) || -99;
           if (now - last < p.rehit) continue;
@@ -620,8 +630,8 @@ G.Combat = (() => {
       // eran inmunes a todos los movimientos de proyectil.
       const sx = p.orb || p.px == null ? p.x : p.px, sy = p.orb || p.py == null ? p.y : p.py;
       const half = Math.hypot(p.x - sx, p.y - sy) / 2;
-      for (const e of G.EnemyMgr.queryCircle((sx + p.x) / 2, (sy + p.y) / 2, half + p.r)) {
-        if (segDist2(sx, sy, p.x, p.y, e.x, e.y) > (p.r + e.r) * (p.r + e.r)) continue;
+      for (const e of G.EnemyMgr.queryCircle(path?pathX:(sx+p.x)/2,path?pathY:(sy+p.y)/2,path?pathRadius:half+p.r)) {
+        if(path?!onPath(e):segDist2(sx, sy, p.x, p.y, e.x, e.y) > (p.r + e.r) * (p.r + e.r)) continue;
         if (p.orb) {
           const last = p.hitLog.get(e.id) || -99;
           if (now - last < p.rehit) continue;
