@@ -56,7 +56,8 @@ PASSIVE = r"""() => {
    out.stages.push({level,playerLevel:p.level,name:move.name,attack:p.atk,speed:p.spd,healingFactor:factor,slots:p.slots.length});
  }
  A.assert(!G.LevelUp.offer(p,100).some(c=>c.key==='up:naruto-gates'),'sixth gates stage offered');
- p.level=30;A.assert(g.bonusPercent(p)===80&&near(g.healingMultiplier(p),1.8)&&near(p.spd,baseSpd*1.8),'N5 LV30 did not update immediately');
+ p.level=29;p.xp=0;p.xpNext=G.Player.xpFor(p.level);p.gainXp((p.xpNext+.001)/p.xpMul);
+ A.assert(p.level===30&&g.bonusPercent(p)===80&&near(g.healingMultiplier(p),1.8)&&near(p.spd,baseSpd*1.8),'N5 LV30 did not update immediately');
  p.hp=10;p.heal(10);A.assert(near(p.hp,28),'N5 LV30 healing should be +80%');
  out.dynamicLevel={skillLevel:5,playerLevel:30,bonusPercent:g.bonusPercent(p),speed:p.spd,healingFactor:g.healingMultiplier(p)};
  for(const id of ['naruto-lee','naruto-lotus','naruto-reverse-lotus']){A.select(id);A.advance(.01);A.assert(g.stage(p)===5&&near(p.atk,baseAtk*1.5),'weapon switch lost passive')}
