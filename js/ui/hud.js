@@ -252,7 +252,7 @@ G.HUD = (() => {
     const sx = controls ? controls.slots[0].x : (w - totalW) / 2;
     const sy = controls ? controls.slots[0].y : h - S - 18;
     const BOND = '#ff8ad8';
-    const cdOf = m => m.passive || m.kind === 'orbit' ? 0 : G.U.clamp(m.t / (m.cd * pl.cdMul), 0, 1);
+    const cdOf = m => m.passive || m.kind === 'orbit' ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul), 0, 1);
 
     for (let i = 0; i < n; i++) {
       const g = groups[i] || [];

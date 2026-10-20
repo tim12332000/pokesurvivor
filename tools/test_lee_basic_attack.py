@@ -104,6 +104,36 @@ COMBAT=r"""() => {
  p.percentHealthDamage=p.critChance=p.lifestealRate=0;return out;
 }"""
 
+COOLDOWN=r"""() => {
+ const A=Acceptance,p=A.p(),m=p.moves.find(m=>m.id==='naruto-reverse-lotus'),original=p.cdMul,out=[];
+ try {
+   for(let level=1;level<=5;level++) {
+     if(m.lvl<level){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+m.id);A.assert(card&&card.apply(p)!==false,'cooldown upgrade fixture '+level)}
+     A.assert(m.cd===5&&m.minCooldown===5,'upgraded reverse cooldown is not fixed at five seconds');
+     for(const reduction of [1,.76,.1]) {
+       A.basicFixture(m.id);p.cdMul=reduction;p.target=A.spawn(35,0);p.aim=0;m.t=0;A.basicCasts=[];
+       A.basicTick(.001);A.assert(m.t===5,'cooldown reduction bypassed five-second floor');
+       for(let n=0;n<499;n++)A.basicStep(.01);
+       A.assert(A.basicCasts.filter(c=>c.id===m.id).length===1,'reverse recast before five seconds');
+       A.assert(A.basicCasts.some(c=>c.id==='tackle'),'five-second cooldown lost basic attack window');
+       A.basicStep(.02);A.assert(A.basicCasts.filter(c=>c.id===m.id).length===2&&m.t===5,'reverse did not recast at five seconds');
+       out.push({level,reduction,cooldown:m.t});
+     }
+   }
+ } finally {p.cdMul=original;G.Combat.clearFields(p)}
+ const timers=p.moves.map(move=>[move,move.t]),canvas=document.createElement('canvas');
+ canvas.width=innerWidth;canvas.height=innerHeight;
+ const ctx=canvas.getContext('2d'),fill=ctx.fillRect.bind(ctx),rects=[];
+ ctx.fillRect=function(x,y,w,h){rects.push({style:String(this.fillStyle).replaceAll(' ',''),w,h});return fill(x,y,w,h)};
+ try{
+   for(const move of p.moves)move.t=0;
+   m.t=2.5;G.HUD.draw(ctx,canvas.width,canvas.height,p,{time:30});
+ } finally {for(const [move,time] of timers)move.t=time}
+ A.assert(rects.some(r=>r.style==='rgba(0,0,0,0.6)'&&r.w>=40&&Math.abs(r.h/r.w-.5)<1e-7),
+   'HUD did not show half of the fixed five-second cooldown');
+ return {cases:out,hudHalfProgress:true};
+}"""
+
 ART=r"""() => {
  const A=Acceptance,p=A.p(),out={};
  for(const id of ['naruto-lotus','naruto-reverse-lotus']){
@@ -131,6 +161,7 @@ def main():
                 page.wait_for_function('G.Game.player?.dex===30006&&G.Game.state==="playing"')
                 page.evaluate(HARNESS);page.evaluate(SETUP);page.evaluate(HELPERS)
                 result={'combat':page.evaluate(COMBAT)};report['viewports'][label]=result
+                result['fixedReverseCooldown']=page.evaluate(COOLDOWN)
                 page.evaluate(AUDIT);result['art']=page.evaluate(ART)
                 for name,pose in result['art'].items():
                     (OUT/f'{label}-{name}.png').write_bytes(base64.b64decode(pose.pop('png').split(',',1)[1]))

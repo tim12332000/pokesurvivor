@@ -294,15 +294,15 @@
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-reverse-lotus', [30006], {
-      name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, dmg:210,
+      name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, minCooldown:5, dmg:210,
       range:180, radius:100,
       ups:[
         {t:'空中連擊 +2（7 次）・傷害 +20%・落地範圍擴大至 120',m:{dmg:1.2,radius:1.2}},
-        {t:'空中連擊 +2（9 次）・冷卻 -10%・落地範圍擴大至 140',m:{cd:.9,radius:7/6}},
+        {t:'空中連擊 +2（9 次）・落地範圍擴大至 140',m:{radius:7/6}},
         {t:'空中連擊 +2（11 次）・突進距離 +12%・落地範圍擴大至 160',m:{range:201.6,radius:8/7}},
         {t:'空中連擊 +2（13 次）・傷害 +25%・落地範圍擴大至 180',m:{dmg:1.25,radius:9/8}}
       ],
-      vis:{pal:'grass'}, desc:'全程最多 3.3 秒。空中連擊＝5＋2×（技能等級－1）＋數量；第 n 擊傷害 ×1.10^n。每踢升高並加速，空中無敵，持續顯示累積傷害。致命傷延至落地才擊倒，落地造成範圍傷害；冷卻自動普攻。首領不浮空。',
+      vis:{pal:'grass'}, desc:'冷卻固定 5 秒，全程最多 3.3 秒。空中連擊＝5＋2×（技能等級－1）＋數量；第 n 擊傷害 ×1.10^n。每踢升高並加速，空中無敵，持續顯示累積傷害。致命傷延至落地才擊倒，落地造成範圍傷害；冷卻自動普攻。首領不浮空。',
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {
