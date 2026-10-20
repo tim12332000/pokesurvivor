@@ -11,6 +11,30 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / '.omx/state/lee-gates'
 URL = 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&test=lee-gates'
 
+HUD = r"""() => {
+ const A=Acceptance;
+ A.inspectHud=(id='naruto-gates')=>{
+   const p=A.p(),m=p.moves.find(m=>m.id===id),canvas=document.createElement('canvas');
+   canvas.width=innerWidth;canvas.height=innerHeight;const ctx=canvas.getContext('2d'),icons=[],rects=[],texts=[],buttons=[];
+   const icon=G.Icons.draw,add=G.Touch.addButton,fill=ctx.fillRect.bind(ctx),text=ctx.fillText.bind(ctx);
+   G.Icons.draw=function(c,key,x,y,size,...args){icons.push({key,x,y,size});return icon.call(this,c,key,x,y,size,...args)};
+   G.Touch.addButton=function(x,y,w,h,...args){buttons.push({x,y,w,h});return add.call(this,x,y,w,h,...args)};
+   ctx.fillRect=function(x,y,w,h){rects.push({x,y,w,h,color:ctx.fillStyle});return fill(x,y,w,h)};
+   ctx.fillText=function(value,x,y,...args){texts.push({value:String(value),x,y});return text(value,x,y,...args)};
+   try{G.HUD.draw(ctx,canvas.width,canvas.height,p,{time:30})}finally{G.Icons.draw=icon;G.Touch.addButton=add}
+   const key=G.SharinganIcons?.forMove(m)||'move:'+id,matches=icons.filter(i=>i.key===key);
+   A.assert(matches.length===1,'learned passive icon missing or duplicated '+id+' '+matches.length);
+   const i=matches[0],button=buttons.find(b=>i.x+i.size/2>b.x&&i.x+i.size/2<b.x+b.w&&i.y+i.size/2>b.y&&i.y+i.size/2<b.y+b.h);
+   A.assert(button,'HUD icon did not register actual input target '+id);
+   const inside=r=>r.x>=button.x&&r.x<=button.x+button.w&&r.y>=button.y&&r.y<=button.y+button.h;
+   const dots=rects.filter(r=>r.w===4&&r.h===3&&inside(r));ctx.fillStyle=G.U.TYPE_COLOR[m.type];const col=ctx.fillStyle;
+   A.assert(dots.length===m.def.maxLvl&&dots.filter(d=>d.color===col).length===m.lvl,'HUD stage dots not current '+id+' Lv'+m.lvl);
+   if(id==='naruto-gates')A.assert(texts.some(t=>t.value==='\u221e'&&inside(t)),'slotless passive badge missing');
+   return {icon:key,count:matches.length,level:m.lvl,dots:dots.length,filled:dots.filter(d=>d.color===col).length,
+     target:{x:button.x+button.w/2,y:button.y+button.h/2},active:p.active,selected:p.activeGroup().map(m=>m.id)};
+ };
+}"""
+
 PASSIVE = r"""() => {
  const A=Acceptance,p=A.p(),g=G.NarutoGates,out={stages:[]},near=(a,b)=>Math.abs(a-b)<1e-7;
  A.assert(g&&g.stage(p)===0,'new Lee already owns gates');
@@ -53,7 +77,7 @@ PASSIVE = r"""() => {
      A.assert(near(p.hp-10,p.maxHp*.014*factor),'spring did not scale once');
    }finally{G.World.specialsNear=specials}
    p.hp=p.maxHp;
-   out.stages.push({level,playerLevel:p.level,name:move.name,attack:p.atk,speed:p.spd,healingFactor:factor,slots:p.slots.length});
+   out.stages.push({hud:A.inspectHud(),level,playerLevel:p.level,name:move.name,attack:p.atk,speed:p.spd,healingFactor:factor,slots:p.slots.length});
  }
  A.assert(!G.LevelUp.offer(p,100).some(c=>c.key==='up:naruto-gates'),'sixth gates stage offered');
  p.level=29;p.xp=0;p.xpNext=G.Player.xpFor(p.level);p.gainXp((p.xpNext+.001)/p.xpMul);
@@ -113,6 +137,7 @@ def main():
                 page.wait_for_function('G.Game.player?.dex===30006&&G.Game.state==="playing"')
                 page.evaluate(HARNESS)
                 page.evaluate(SETUP)
+                page.evaluate(HUD)
                 result = {'passive':page.evaluate(PASSIVE)}
                 page.evaluate(r"""() => {const A=Acceptance,p=A.p();A.leeArena();p.regenFlat=0;p.hp=1;G.Pickups.clear();
                   A.expectedBerry=1+p.maxHp*.3*G.NarutoGates.healingMultiplier(p);G.Pickups.drop('heal',p.x,p.y);A.resume();
@@ -120,6 +145,22 @@ def main():
                 page.wait_for_function('G.Pickups.count===0&&G.Game.player.hp>1')
                 result['pickup']=page.evaluate(r"""() => {const A=Acceptance,p=A.p();A.pause();A.assert(Math.abs(p.hp-A.expectedBerry)<1e-7,'real berry healing scaled incorrectly');return {hp:p.hp,expected:A.expectedBerry}}""")
                 report['viewports'][label] = result
+                target=page.evaluate('Acceptance.inspectHud().target')
+                before=page.evaluate('({active:G.Game.player.active,ids:G.Game.player.activeGroup().map(m=>m.id)})')
+                page.evaluate('Acceptance.resume()')
+                if mobile:page.touchscreen.tap(target['x'],target['y'])
+                else:page.mouse.click(target['x'],target['y'])
+                result['hudClick']=page.evaluate(r"""before => {
+                  const A=Acceptance,p=A.p();A.pause();A.assert(p.active===before.active&&JSON.stringify(p.activeGroup().map(m=>m.id))===JSON.stringify(before.ids),'passive click changed weapon');
+                  const toast=document.querySelector('.toast');A.assert(toast&&toast.textContent.includes(p.moves.find(m=>m.id==='naruto-gates').name)&&toast.textContent.includes('Lv.5'),'passive click did not explain learned level');
+                  return {active:p.active,toast:toast.textContent,hud:A.inspectHud()};
+                }""",before)
+                page.evaluate('Acceptance.resume()')
+                page.wait_for_function("!document.querySelector('.toast')||document.querySelector('.toast').style.display==='none'")
+                page.evaluate('() => new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))')
+                result['hudScreenshotState']=page.evaluate('({game:G.Game.state,body:document.body.dataset.gameState})')
+                page.screenshot(path=str(OUT/f'hud-{label}.png'))
+                page.evaluate('Acceptance.pause()')
                 page.evaluate(AUDIT)
                 result['art'] = page.evaluate(ART)
                 for name, pose in result['art'].items():
@@ -131,6 +172,13 @@ def main():
                   return true;
                 }""")
                 page.screenshot(path=str(OUT/f'{label}.png'))
+                page.evaluate('G.Flow.goMenu()')
+                page.locator('[data-quick-naruto="30002"]').click()
+                page.locator('#scr-menu [data-go="play"]').click()
+                page.wait_for_function('G.Game.player?.dex===30002&&G.Game.state==="playing"')
+                page.evaluate(HARNESS)
+                page.evaluate(HUD)
+                result['sharinganNoDuplicate']=page.evaluate(r"""() => {const A=Acceptance,p=A.p();A.pause();A.assert(p.addMove('naruto-sharingan'),'learn sharingan fixture');return A.inspectHud('naruto-sharingan')}""")
                 ctx.close()
             browser.close()
         assert not report['errors'], report['errors']

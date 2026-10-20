@@ -30,7 +30,8 @@ G.HUD = (() => {
     ctx.textBaseline = 'alphabetic';
     G.Touch.clearButtons();
     const touch = G.Touch.active;
-    const controls = touch ? G.Touch.controlLayout(w, h, Math.max(1, pl.slots.length)) : null;
+    const groups = [...pl.slots, ...pl.moves.filter(move => move.passive && !pl.slots.some(group => group.includes(move))).map(move => [move])];
+    const controls = touch ? G.Touch.controlLayout(w, h, Math.max(1, groups.length)) : null;
     const portrait = !!(controls && controls.portrait);
     const safeTop = portrait ? Math.min(44, G.Touch.safeArea().top) : 0;
 
@@ -246,16 +247,17 @@ G.HUD = (() => {
 
     // ---------- ranura de movimientos ----------
     const S = controls ? controls.S : 54, GAP = controls ? controls.GAP : 9;
-    const n = touch ? controls.slots.length : Math.max(1, pl.slots.length);
+    const n = touch ? controls.slots.length : Math.max(1, groups.length);
     const totalW = n * S + (n - 1) * GAP;
     const sx = controls ? controls.slots[0].x : (w - totalW) / 2;
     const sy = controls ? controls.slots[0].y : h - S - 18;
     const BOND = '#ff8ad8';
-    const cdOf = m => m.kind === 'orbit' ? 0 : G.U.clamp(m.t / (m.cd * pl.cdMul), 0, 1);
+    const cdOf = m => m.passive || m.kind === 'orbit' ? 0 : G.U.clamp(m.t / (m.cd * pl.cdMul), 0, 1);
 
     for (let i = 0; i < n; i++) {
-      const g = pl.slots[i] || [];
+      const g = groups[i] || [];
       const m = g[0];
+      const displayPassive = i >= pl.slots.length && !!m?.passive;
       const fused = g.length > 1;
       const on = i === pl.active;
       const slot = controls && controls.slots[i];
@@ -264,7 +266,11 @@ G.HUD = (() => {
       const y = on ? y0 - (touch ? 4 : 6) : y0;
       // Tocar (o hacer clic en) un icono activa ese movimiento.
       const grow = touch && on ? S * 0.06 : 0;
-      if (m) G.Touch.addButton(x - grow, y - grow, S + grow * 2, S + grow * 2, () => { if (G.Game.state === 'playing' && pl.active !== i) { pl.setActive(i); G.Audio.sfx('click'); } }, touch ? 1 : GAP / 2 + 3);
+      if (m) G.Touch.addButton(x - grow, y - grow, S + grow * 2, S + grow * 2, () => {
+        if (G.Game.state !== 'playing') return;
+        if (displayPassive) { G.UI.toast(m.name + ' · Lv.' + m.lvl, 1600); return; }
+        if (pl.active !== i) { pl.setActive(i); G.Audio.sfx('click'); }
+      }, touch ? 1 : GAP / 2 + 3);
       const col = m ? G.U.TYPE_COLOR[m.type] : '#4a5468';
       ctx.save();
       if (touch && on) {
@@ -325,7 +331,7 @@ G.HUD = (() => {
       ctx.font = F(800, 9);
       ctx.fillStyle = fused ? BOND : on ? col : 'rgba(180,200,230,.6)';
       ctx.textAlign = 'left';
-      ctx.fillText(String(i + 1), x + 3, y + 10);
+      ctx.fillText(displayPassive ? '∞' : String(i + 1), x + 3, y + 10);
       ctx.restore();
 
       // nombre encima del activo (con un vínculo: "Ascuas +2")
