@@ -32,9 +32,28 @@
   function removeLift(f) {
     if (f) { f.targetLift = 0; f.visualLift = 0; }
   }
-  const liftFor = enemy => valid(chain) && alive(enemy) && chain.target === enemy ? chain.targetLift : 0;
+  const hitLiftFor = enemy => valid(chain) && chain.target === enemy ? chain.targetLift : 0;
+  const liftFor = enemy => alive(enemy) ? hitLiftFor(enemy) : 0;
+  function resetCamera(f) {
+    if (f.cameraRaised && f.owner === G.Game.player && f.world === G.World && G.Camera) G.Camera.y = f.owner.y;
+    f.cameraRaised = false;
+  }
+  function syncLift(f) {
+    if (!['lift', 'suspend', 'combo', 'descent'].includes(f.phase) || elite(f.target)) { removeLift(f); return; }
+    const reverse = f.kind === 'lee-reverse-lotus', base = reverse ? 60 : 40;
+    f.visualLift = f.phase === 'lift' ? Math.sin(Math.min(1, f.phaseAge / f.durations.lift) * Math.PI / 2) * base :
+      f.phase === 'descent' ? f.peakLift * Math.max(0, 1 - f.phaseAge / f.durations.descent) :
+      f.phase === 'combo' ? base + f.ticks * 8 : base;
+    f.targetLift = f.visualLift;
+    // Follow only the excess height, keeping high-quantity kicks below the HUD.
+    const camera = G.Camera;
+    if (reverse && camera?.h > 0 && Number.isFinite(camera.y)) {
+      const ceiling = f.owner.y - f.visualLift - 140 + camera.h / 2;
+      if (camera.y > ceiling) { camera.y = ceiling; f.cameraRaised = true; }
+    }
+  }
   function clear(owner) {
-    if (chain && (!owner || chain.owner === owner)) { removeLift(chain); chain = null; }
+    if (chain && (!owner || chain.owner === owner)) { resetCamera(chain); removeLift(chain); chain = null; }
   }
   function canCast(owner, move) {
     return supports(move?.digiMode) && !chain && owner?.dex === 30006 && valid({ owner, world: G.World }) && !!targetFor(owner, move);
@@ -44,9 +63,15 @@
     const target = targetFor(owner, move);
     const snapshot = G.Quantity?.snapshot(owner, move) || { ...move };
     const quantity = Number.isFinite(snapshot.quantityBonusAtCast) ? Math.max(0, Math.floor(snapshot.quantityBonusAtCast)) : 0;
+    const reverse = move.digiMode === 'lee-reverse-lotus';
+    const comboHits = 5 + 2 * (Math.max(1, Math.min(5, snapshot.lvl | 0)) - 1) + quantity;
+    const comboDuration = reverseDurations.combo / (1 + .025 * Math.max(0, comboHits - 5));
+    const firstInterval = comboDuration * .1 / (1 - .9 ** comboHits);
+    let elapsed = 0;
+    const comboDeadlines = reverse ? Array.from({ length: comboHits }, (_, i) => (elapsed += firstInterval * .9 ** i)) : [];
     chain = { owner, world: G.World, target, kind: move.digiMode, move: snapshot,
-      durations: move.digiMode === 'lee-reverse-lotus' ? reverseDurations : durations,
-      comboHits: 5 + 2 * (Math.max(1, Math.min(5, snapshot.lvl | 0)) - 1) + quantity,
+      durations: reverse ? { ...reverseDurations, combo: comboDuration } : durations,
+      comboHits, comboDeadlines, peakLift: reverse ? 60 + comboHits * 8 : 40,
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
       visualLift: 0, targetLift: 0, ticks: 0 };
     owner.svx = owner.svy = 0;
@@ -60,12 +85,14 @@
       (crit ? 1.5 : 1) * (G.NarutoSupport?.precisionMultiplier(owner, enemy) || 1);
     enemy.hurt(damage, '#f2ddab', enemy.x - owner.x, enemy.y - owner.y, 0, crit ? 'crit' : G.Types.label(mult), owner);
     owner.onDealt(damage); owner.dmgDealt += damage;
-    G.FX.burst(enemy.x, enemy.y - (enemy.jumpLift || 0) - liftFor(enemy), '#f2ddab', 5, 40);
+    G.FX.burst(enemy.x, enemy.y - (enemy.jumpLift || 0) - hitLiftFor(enemy), '#f2ddab', 5, 40);
   }
   function enter(f, phase) {
     f.phase = phase; f.phaseAge = 0;
+    syncLift(f);
     if (phase === 'lift') hit(f, f.target, f.kind === 'lee-lotus' ? .2 : .1);
     if (phase === 'slam') {
+      resetCamera(f);
       removeLift(f);
       hit(f, f.target, f.kind === 'lee-lotus' ? .8 : .3);
       const radius = f.move.radius || 60;
@@ -122,10 +149,11 @@
       }
       if ((!alive(f.target) && !launchedLotus(f)) || Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24) { clear(); return; }
       if (f.phase === 'combo') {
-        const due = Math.min(f.comboHits, Math.floor(f.phaseAge / (f.durations.combo / f.comboHits) + 1e-8));
         // Keep the planned aerial motion after a midair KO; hit() skips dead
         // targets, so later swings cannot award damage or healing again.
-        while (f.ticks < due) { f.ticks++; hit(f, f.target, .12 * 1.1 ** f.ticks); }
+        while (f.ticks < f.comboHits && f.phaseAge + 1e-9 >= f.comboDeadlines[f.ticks]) {
+          f.ticks++; syncLift(f); hit(f, f.target, .12 * 1.1 ** f.ticks);
+        }
       }
       if (f.phaseAge + 1e-9 >= f.durations[f.phase]) {
         const next = f.phase === 'windup' ? 'lift' : f.phase === 'lift' ?
@@ -135,13 +163,8 @@
       }
     }
     if (chain !== f) return;
-    if (['lift', 'suspend', 'combo', 'descent'].includes(f.phase) && !elite(f.target)) {
-      const height = f.kind === 'lee-reverse-lotus' ? 60 : 40;
-      f.visualLift = f.phase === 'lift' ? Math.sin(Math.min(1, f.phaseAge / f.durations.lift) * Math.PI / 2) * height :
-        f.phase === 'descent' ? height * Math.max(0, 1 - f.phaseAge / f.durations.descent) : height;
-      f.targetLift = f.visualLift;
-      f.target.applySlow(.95, .08);
-    }
+    syncLift(f);
+    if (f.visualLift > 0) f.target.applySlow(.95, .08);
   }
   // Contact movement belongs to the technique even when experimental art is disabled.
   // Keep the normal update for animation/status timers; restore only its ground motion.
@@ -185,5 +208,5 @@
   C.updateFields = function(dt) { const result = previousUpdate.call(this, dt); update(dt); return result; };
   C.clearFields = function(owner) { previousClear.call(this, owner); clear(owner); };
   if (G.DigimonSkills?.clear) { const previous = G.DigimonSkills.clear; G.DigimonSkills.clear = owner => { previous(owner); clear(owner); }; }
-  G.NarutoLee = { supports, canCast, cast, clear, update, liftFor, isInvulnerable, get active() { return chain; } };
+  G.NarutoLee = { supports, canCast, cast, clear, update, liftFor, hitLiftFor, isInvulnerable, get active() { return chain; } };
 })();

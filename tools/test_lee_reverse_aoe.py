@@ -6,6 +6,7 @@ from playwright.sync_api import sync_playwright
 from test_animation_complete import CHROME, HARNESS
 from test_rock_lee import SETUP
 from test_redrawn_heroes import AUDIT
+from test_lee_rising_combo import TALL_HARNESS
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'.omx/state/lee-reverse-aoe'
@@ -55,7 +56,8 @@ LEVEL=r"""level => {
      A.assert(next.visualLift===0&&G.NarutoLee.liftFor(r.primary)===0,'impact occurred while floating');landing=A.reverseScene();
    }
  }
- A.assert(!G.NarutoLee.active&&elapsed>=3.2&&airborne>2.0,'airborne combo did not stay up longer '+elapsed+' air '+airborne);
+ const expectedDuration=1.6+1.65/(1+.025*((5+2*(level-1))-5));
+ A.assert(!G.NarutoLee.active&&elapsed>=expectedDuration&&elapsed<expectedDuration+.1&&airborne>2.0,'airborne combo duration did not follow hit acceleration '+elapsed+' air '+airborne);
  A.assert(air&&air.visualLift>=59&&air.targetLift>=59,'airborne height did not reach 60px');
  A.assert(descending.length>10&&descending.every((h,i)=>i===0||h<=descending[i-1]+.001)&&descending[0]>40&&descending.at(-1)<5,'descent did not visibly lower toward ground');
  A.assert(landing&&r.counts.get(r.primary)===5+2*(level-1)+2,'primary combo hit count did not scale with skill level');
@@ -126,7 +128,7 @@ def main():
                 page.locator('[data-quick-naruto="30006"]').click();page.locator('#scr-menu [data-go="play"]').click();page.wait_for_function('G.Game.player?.dex===30006&&G.Game.state==="playing"')
                 page.evaluate('() => G.Sprites.preload([19])')
                 page.evaluate("() => {if(!G.Sprites.sheet(19,'Idle').ready)throw Error('real enemy artwork did not load')}")
-                page.evaluate(HARNESS);page.evaluate(SETUP);page.evaluate(AUDIT);page.evaluate(HELPERS)
+                page.evaluate(TALL_HARNESS);page.evaluate(SETUP);page.evaluate(AUDIT);page.evaluate(HELPERS)
                 result={'levels':[]};report['viewports'][label]=result
                 for level in range(1,6):
                     evidence=page.evaluate(LEVEL,level)

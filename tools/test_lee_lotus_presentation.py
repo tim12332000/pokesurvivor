@@ -7,6 +7,7 @@ from playwright.sync_api import sync_playwright
 from test_animation_complete import CHROME, HARNESS
 from test_rock_lee import SETUP
 from test_redrawn_heroes import AUDIT
+from test_lee_rising_combo import TALL_HARNESS
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'.omx/state/lee-lotus-presentation'
@@ -49,7 +50,7 @@ PRESENTATION=r"""id => {
    if(ready&&!frames[label])frames[label]=A.presentationScene();
  }}finally{p.cast=cast}
  A.assert(!G.NarutoLee.active&&elapsed>=(reverse?3.25:1.66),'main action still too short '+elapsed);
- A.assert(maxLift===(reverse?60:40)&&airTime>(reverse?2:.8),'main action did not visibly stay airborne');
+ A.assert(maxLift===(reverse?100:40)&&airTime>(reverse?2:.8),'main action did not visibly stay airborne');
  A.assert(['windup','lift',reverse?'combo':'suspend','descent','slam','recovery'].every(phase=>phases.includes(phase)),'missing presentation phase');
  A.assert(descent.length>20&&descent.every((h,i)=>!i||h<=descent[i-1]+.001)&&descent.at(-1)<2,'descent did not smoothly reach ground');
  A.assert(!casts.includes('tackle'),'cooldown basic interrupted Lotus presentation');
@@ -99,7 +100,7 @@ def main():
                 page.goto(URL);page.wait_for_function("window.PS_REDRAWN_READY&&G.AnimationLab&&document.getElementById('boot').classList.contains('hidden')")
                 if page.locator('#tap-start').is_visible():page.locator('#tap-start').click()
                 page.locator('[data-quick-naruto="30006"]').click();page.locator('#scr-menu [data-go="play"]').click();page.wait_for_function('G.Game.player?.dex===30006&&G.Game.state==="playing"')
-                page.evaluate('()=>G.Sprites.preload([19])');page.evaluate(HARNESS);page.evaluate(SETUP);page.evaluate(AUDIT);page.evaluate(HELPERS)
+                page.evaluate('()=>G.Sprites.preload([19])');page.evaluate(TALL_HARNESS);page.evaluate(SETUP);page.evaluate(AUDIT);page.evaluate(HELPERS)
                 result={'techniques':[]};report['viewports'][label]=result
                 for id in ('naruto-lotus','naruto-reverse-lotus'):
                     evidence=page.evaluate(PRESENTATION,id);paths=[]

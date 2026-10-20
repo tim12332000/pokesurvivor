@@ -3,6 +3,7 @@
   const percent = value => Math.round(value * 1000) / 10;
   const labels = {
     hp: n => `生命 +${20*n}`,
+    maxHealthPercent: n => `生命成長 +1% ×${n}`,
     atk: n => `攻擊 +${percent(1.1**n-1)}%`,
     spd: n => `移速 +${percent(1.07**n-1)}%`,
     cd: n => `冷卻 −${percent(1-.92**n)}%`,

@@ -10,6 +10,12 @@ from playwright.sync_api import sync_playwright
 from test_animation_complete import CHROME, HARNESS
 from test_redrawn_heroes import AUDIT
 
+# Preserve real rising heights while keeping isolated source evidence in frame.
+TALL_HARNESS=(HARNESS.replace('canvas.width=240;canvas.height=200','canvas.width=240;canvas.height=620')
+    .replace('anim.draw(ctx,120,150,opts)','anim.draw(ctx,120,550,opts)')
+    .replace('0,0,240,200','0,0,240,620').replace('y0=200','y0=620')
+    .replace('y<200','y<620').replace('y1<199','y1<619'))
+
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / '.omx/state/rock-lee'
 URL = 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&test=rock-lee'
@@ -189,7 +195,7 @@ def main():
                 assert page.evaluate('G.DB.save.partner===30006'), 'normal menu did not select Lee'
                 page.locator('#scr-menu [data-go="play"]').click()
                 page.wait_for_function('G.Game.player?.dex===30006 && G.Game.state==="playing"')
-                page.evaluate(HARNESS)
+                page.evaluate(TALL_HARNESS)
                 page.evaluate(SETUP)
                 result = {'progression': page.evaluate(PROGRESSION)}
                 report['viewports'][label]=result
