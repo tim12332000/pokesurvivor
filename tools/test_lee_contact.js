@@ -7,7 +7,8 @@ const vm = require('node:vm');
 const owner = { x: 0, y: 0, r: 12, hp: 100, dex: 30006, atk: 1 };
 const target = { x: 0, y: 0, r: 10, hp: 1000 };
 const G = {
-  Combat: { updateFields() {}, clearFields() {} }, Player: function() {},
+  Combat: { updateFields() {}, clearFields() {} }, Player: function() {}, Enemy: function() {},
+  HUD: { draw() {} },
   Game: { player: owner, state: 'playing' },
   World: { isWall: () => false, projectileBlock: () => false, isFree: () => true },
   EnemyMgr: { queryCircle: () => [target] }, Sprites: { dirFromAngle: () => 0 }

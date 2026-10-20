@@ -265,6 +265,8 @@
       }
       if (this.dead) return;
 
+      if (G.NarutoLee?.pendingDefeat(this)) { this.kx = this.ky = 0; this.touchCd = Math.max(.1, this.touchCd || 0); return; }
+
       // --- terreno ---
       let terrainMul = 1;
       // (El legendario está en su casa: su arena no le afecta. Los de Arceus, tampoco.)
@@ -805,6 +807,15 @@
       if (died) corpses.push(e);
     }
 
+    // Silent removal by actor identity also covers enemies stashed for a rift.
+    function discard(actor) {
+      if (byId.get(actor.id) === actor) byId.delete(actor.id);
+      list = list.filter(e => e !== actor);
+      corpses = corpses.filter(e => e !== actor);
+      if (stashed) stashed = stashed.filter(e => e !== actor);
+      rebuildGrid();
+    }
+
     function key(cx, cy) { return cx * 73856093 ^ cy * 19349663; }
 
     function rebuildGrid() {
@@ -959,7 +970,7 @@
     function bossAlive() { return list.some(e => e.boss && !e.dead); }
     function shinies() { return list.filter(e => e.shiny && !e.dead); }
 
-    return { clear, all, add, get, addRemote, removeRemote, stash, restore, clearRemote, update, drawables, queryCircle, rebuildGrid, bossAlive, shinies, nearestPlayer,
+    return { clear, all, add, get, addRemote, removeRemote, discard, stash, restore, clearRemote, update, drawables, queryCircle, rebuildGrid, bossAlive, shinies, nearestPlayer,
              get count() { return list.length; } };
   })();
 })();

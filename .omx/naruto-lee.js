@@ -5,7 +5,7 @@
   const durations = { windup: .24, lift: .36, suspend: .42, descent: .22, slam: .20, recovery: .22 };
   const reverseDurations = { windup: .28, lift: .48, combo: 1.65, descent: .32, slam: .24, recovery: .28 };
   const basics = new WeakMap();
-  let chain = null;
+  let chain = null, finalSummary = null;
   const alive = actor => actor && !actor.dead && actor.hp > 0;
   const valid = f => f && f.owner === G.Game.player && f.world === G.World && alive(f.owner);
   const elite = e => !!(e.boss || e.elite || e.legend || e.judge);
@@ -53,8 +53,41 @@
     }
   }
   function clear(owner) {
-    if (chain && (!owner || chain.owner === owner)) { resetCamera(chain); removeLift(chain); chain = null; }
+    if (chain && (!owner || chain.owner === owner)) { releasePending(chain); resetCamera(chain); removeLift(chain); chain = null; }
+    if (finalSummary && (!owner || finalSummary.owner === owner)) finalSummary = null;
   }
+  const pendingDefeat = enemy => !!chain?.pendingDeath && valid(chain) && chain.target === enemy && !enemy.dead;
+  function releasePending(f) {
+    if (!f.pendingDeath || f.releasing) return;
+    f.releasing = true;
+    const target = f.target;
+    if (!target.dead) {
+      target.hp = 0;
+      if (f.owner === G.Game.player && f.world === G.World) target.die();
+      else { G.EnemyMgr.discard(target); target.dead = true; target.fade = 0; }
+    }
+    f.pendingDeath = false;
+  }
+  const enemyDie = G.Enemy.prototype.die;
+  G.Enemy.prototype.die = function(...args) {
+    const f = chain;
+    if (valid(f) && f.kind === 'lee-reverse-lotus' && f.target === this && !this.remote &&
+        !f.releasing && !this.dead && this.hp <= 0 && ['lift', 'combo', 'descent', 'slam'].includes(f.phase)) {
+      if (!f.pendingDeath) { f.pendingDeath = true; f.anchorX = this.x; f.anchorY = this.y; }
+      this.hp = 1; this.kx = this.ky = 0; this.touchCd = Math.max(.1, this.touchCd || 0);
+      return;
+    }
+    return enemyDie.apply(this, args);
+  };
+  const enemyHurt = G.Enemy.prototype.hurt;
+  G.Enemy.prototype.hurt = function(amount, ...args) {
+    const f = chain, primary = valid(f) && f.kind === 'lee-reverse-lotus' && f.primaryHit && f.target === this && !this.dead;
+    const result = enemyHurt.call(this, amount, ...args);
+    // Later percent-health wrappers pass the complete incoming hit through here.
+    // Match the native displayed integer, retaining shield and critical semantics.
+    if (primary && Number.isFinite(amount)) { f.totalDamage += Math.max(1, Math.round(amount)); f.totalHits++; }
+    return result;
+  };
   function canCast(owner, move) {
     return supports(move?.digiMode) && !chain && owner?.dex === 30006 && valid({ owner, world: G.World }) && !!targetFor(owner, move);
   }
@@ -73,7 +106,8 @@
       durations: reverse ? { ...reverseDurations, combo: comboDuration } : durations,
       comboHits, comboDeadlines, peakLift: reverse ? 60 + comboHits * 8 : 40,
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
-      visualLift: 0, targetLift: 0, ticks: 0 };
+      visualLift: 0, targetLift: 0, ticks: 0, totalDamage: 0, totalHits: 0, pendingDeath: false };
+    finalSummary = null;
     owner.svx = owner.svy = 0;
     return true;
   }
@@ -83,7 +117,9 @@
     const crit = owner.critChance > 0 && Math.random() < owner.critChance;
     const damage = move.dmg * ratio * f.attack * mult * G.Weather.mult(move.type) *
       (crit ? 1.5 : 1) * (G.NarutoSupport?.precisionMultiplier(owner, enemy) || 1);
-    enemy.hurt(damage, '#f2ddab', enemy.x - owner.x, enemy.y - owner.y, 0, crit ? 'crit' : G.Types.label(mult), owner);
+    f.primaryHit = enemy === f.target;
+    try { enemy.hurt(damage, '#f2ddab', enemy.x - owner.x, enemy.y - owner.y, 0, crit ? 'crit' : G.Types.label(mult), owner); }
+    finally { f.primaryHit = false; }
     owner.onDealt(damage); owner.dmgDealt += damage;
     G.FX.burst(enemy.x, enemy.y - (enemy.jumpLift || 0) - hitLiftFor(enemy), '#f2ddab', 5, 40);
   }
@@ -113,6 +149,7 @@
         G.FX.ring(f.target.x, f.target.y, 5, radius, '#f6a65e', .36, 6);
         G.FX.burst(f.target.x, f.target.y, '#ddc99a', 16, radius * .65);
         G.Camera.kick(.18);
+        releasePending(f);
       } else {
         G.FX.ring(f.target.x, f.target.y, radius, radius, '#f2d5a0', .32, 3);
         G.FX.ring(f.target.x, f.target.y, 5, radius, '#ddc99a', .28, 4);
@@ -141,8 +178,13 @@
     return f.phase !== 'approach' || f.travel < (f.move.range || 145) - .001;
   }
   function update(dt) {
+    if (finalSummary) {
+      if (!valid(finalSummary)) finalSummary = null;
+      else if (G.Game.state === 'playing' && dt > 0 && Number.isFinite(dt) && (finalSummary.ttl -= dt) <= 0) finalSummary = null;
+    }
     if (!(dt > 0) || !Number.isFinite(dt) || !chain) return;
     const f = chain;
+    if (f.pendingDeath && valid(f)) { f.target.x = f.anchorX; f.target.y = f.anchorY; f.target.kx = f.target.ky = 0; }
     if (!valid(f) || (!alive(f.target) && !launchedLotus(f)) || !clearPath(f.owner.x, f.owner.y, f.target.x, f.target.y)) { clear(); return; }
     if (G.Game.state !== 'playing') return;
     removeLift(f);
@@ -159,8 +201,7 @@
       }
       if ((!alive(f.target) && !launchedLotus(f)) || Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24) { clear(); return; }
       if (f.phase === 'combo') {
-        // Keep the planned aerial motion after a midair KO; hit() skips dead
-        // targets, so later swings cannot award damage or healing again.
+        // A defeated bound target stays hittable until the landing resolves it.
         while (f.ticks < f.comboHits && f.phaseAge + 1e-9 >= f.comboDeadlines[f.ticks]) {
           f.ticks++; syncLift(f); hit(f, f.target, .12 * 1.1 ** f.ticks);
         }
@@ -168,7 +209,11 @@
       if (f.phaseAge + 1e-9 >= f.durations[f.phase]) {
         const next = f.phase === 'windup' ? 'lift' : f.phase === 'lift' ?
           (f.kind === 'lee-reverse-lotus' ? 'combo' : 'suspend') : ['combo', 'suspend'].includes(f.phase) ? 'descent' : f.phase === 'descent' ? 'slam' : f.phase === 'slam' ? 'recovery' : null;
-        if (!next) { clear(); return; }
+        if (!next) {
+          const summary = f.kind === 'lee-reverse-lotus' && f.totalHits ?
+            { owner: f.owner, world: f.world, totalDamage: f.totalDamage, totalHits: f.totalHits, ttl: 1 } : null;
+          clear(); finalSummary = summary; return;
+        }
         enter(f, next);
       }
     }
@@ -218,5 +263,24 @@
   C.updateFields = function(dt) { const result = previousUpdate.call(this, dt); update(dt); return result; };
   C.clearFields = function(owner) { previousClear.call(this, owner); clear(owner); };
   if (G.DigimonSkills?.clear) { const previous = G.DigimonSkills.clear; G.DigimonSkills.clear = owner => { previous(owner); clear(owner); }; }
-  G.NarutoLee = { supports, canCast, cast, clear, update, liftFor, hitLiftFor, isInvulnerable, get active() { return chain; } };
+  const comboSummary = () => {
+    const f = valid(chain) && chain.kind === 'lee-reverse-lotus' && chain.totalHits ? chain : finalSummary;
+    return valid(f) ? Object.freeze({ totalDamage: f.totalDamage, totalHits: f.totalHits,
+      pendingDeath: !!f.pendingDeath, finished: f === finalSummary }) : null;
+  };
+  const drawHud = G.HUD.draw;
+  G.HUD.draw = function(ctx, w, h, owner, stats) {
+    drawHud.call(this, ctx, w, h, owner, stats);
+    const summary = owner === G.Game.player && comboSummary();
+    if (!summary) return;
+    const groupCount = owner.slots.length + owner.moves.filter(move => move.passive && !owner.slots.some(group => group.includes(move))).length;
+    const controls = G.Touch.active ? G.Touch.controlLayout(w, h, Math.max(1, groupCount)) : null;
+    const y = controls ? controls.bar.y - 16 : h - 110;
+    ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `bold ${controls ? 16 : 18}px "Segoe UI",system-ui,sans-serif`; ctx.lineWidth = 4; ctx.strokeStyle = '#101627'; ctx.fillStyle = '#ffe0a3';
+    const text = `${summary.totalHits} 連擊｜總傷害 ${summary.totalDamage.toLocaleString('zh-TW')}`;
+    ctx.strokeText(text, w / 2, y, w - 24); ctx.fillText(text, w / 2, y, w - 24); ctx.restore();
+  };
+  G.NarutoLee = { supports, canCast, cast, clear, update, liftFor, hitLiftFor, isInvulnerable, pendingDefeat,
+    get comboSummary() { return comboSummary(); }, get active() { return chain; } };
 })();
