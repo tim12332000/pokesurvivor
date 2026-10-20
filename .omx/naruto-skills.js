@@ -282,9 +282,15 @@
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
-      name:'八門遁甲・開門', mode:'gates', type:'fighting', learnLevel:6, cd:15, dmg:0,
-      fieldDuration:5, atkMul:1.3, speedMul:1.2, fatigueDuration:2, fatigueSpeedMul:.8,
-      vis:{pal:'grass'}, desc:'小李 Lv.6 解鎖。部分開門：5 秒攻擊 +30%、速度 +20%，結束後 2 秒疲勞減速 20%。加成與疲勞數值為本作平衡；不含成年後高階八門招式。',
+      name:'八門遁甲・開門', mode:'gates-passive', passive:true, type:'fighting', learnLevel:6, cd:0, dmg:0,
+      vis:{pal:'grass'},
+      desc:'小李 Lv.6 解鎖。學會即持續生效，不佔主動技能欄。N 為技能等級，LV 為角色等級：回血量與跑速皆增加 (10×N＋LV)%。例如 N=1、LV=6 時 +16%；N=5、LV=30 時 +80%。只增幅既有回血來源，不額外產生回血。五階攻擊加成依序 +30%、+35%、+40%、+45%、+50%。開門起切換紅膚、白眼、豎髮形態；生門起氣焰增強。前兩門形態與五階常駐效果為本作改編，沒有倒數或結束疲勞。',
+      ups:[
+        {t:'第二門・休門：攻擊 +35%；回血量、跑速增加 (20＋角色等級)%',m:{}},
+        {t:'第三門・生門：攻擊 +40%；回血量、跑速增加 (30＋角色等級)%，氣焰增強',m:{}},
+        {t:'第四門・傷門：攻擊 +45%；回血量、跑速增加 (40＋角色等級)%',m:{}},
+        {t:'第五門・杜門：攻擊 +50%；回血量、跑速增加 (50＋角色等級)%',m:{}}
+      ],
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-reverse-lotus', [30006], {
@@ -335,7 +341,7 @@
     }]
   );
   const kinds = { 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
-    sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
+    sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'gates-passive':'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
@@ -416,6 +422,7 @@
 
   const nameSharingan = move => {
     if(move.id==='naruto-sharingan')move.name='寫輪眼・'+G.NarutoSharingan.config.stageNames[Math.max(0,Math.min(4,move.lvl-1))];
+    if(move.id==='naruto-gates')move.name='八門遁甲・'+G.NarutoGates.config.stageNames[Math.max(0,Math.min(4,move.lvl-1))];
     return move;
   };
   const instance=G.Moves.instance,levelUp=G.Moves.levelUp;

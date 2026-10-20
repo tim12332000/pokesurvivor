@@ -44,7 +44,7 @@
 | 技能專屬狀態 | 手／嘴發射點、持有武器到飛行武器的銜接、場景／死亡清理；原圖已有能量時避免重複效果。保留既有傷害與冷卻，除非任務要求調整。 |
 | `.omx/redrawn-init.js`、`js/main.js` | 正常入口等素材完成後才開遊戲；`animationLab=1` 的審稿父頁仍只安裝一次，不把審稿工具列搬到一般遊戲。 |
 | `.omx/make_digimon.py` | 重建 HTML 後仍保留正確腳本順序與角色資料。 |
-| `tools/build_digimon_site.py` | 明確列入新增圖集及必要資料；目前為七張圖集的明確名單，需依實際新名單更新，不可刪除檢查來略過漏包。 |
+| `tools/build_digimon_site.py` | 明確列入新增圖集及必要資料；目前為九張圖集（含小李開門共通／技能專用圖）的明確名單，需依實際新名單更新，不可刪除檢查來略過漏包。 |
 
 審稿頁 `manifest.json` 也要更新，使用實際裁切座標播放。退回／舊版提案可存檔，但不要繼續當作現用素材展示。
 
@@ -61,6 +61,8 @@ python tools/test_redrawn_heroes.py
 python tools/test_animation_complete.py
 python tools/test_sandbox_redrawn.py
 python tools/test_rock_lee.py                 # 小李體術、學習進程、原生跳躍與手機操作
+node tools/test_lee_contact.js               # 浮點接觸邊界不會卡死
+python tools/test_lee_gates.py               # 八門被動、動態回血／跑速與開門形態
 python tools/build_digimon_site.py
 ```
 

@@ -2729,6 +2729,916 @@
       }
     ]
   },
+  "lee-opened-movement": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          44,
+          469,
+          145,
+          192
+        ],
+        "anchor": [
+          64.5,
+          188
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          260,
+          469,
+          139,
+          192
+        ],
+        "anchor": [
+          78.0,
+          188
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          470,
+          468,
+          138,
+          193
+        ],
+        "anchor": [
+          68.0,
+          189
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          680,
+          469,
+          152,
+          192
+        ],
+        "anchor": [
+          81.0,
+          188
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          45,
+          889,
+          131,
+          217
+        ],
+        "anchor": [
+          67.5,
+          213
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          265,
+          888,
+          125,
+          218
+        ],
+        "anchor": [
+          71.0,
+          214
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          482,
+          888,
+          122,
+          218
+        ],
+        "anchor": [
+          49.0,
+          214
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          690,
+          887,
+          127,
+          219
+        ],
+        "anchor": [
+          73.0,
+          215
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          30,
+          671,
+          159,
+          203
+        ],
+        "anchor": [
+          75.5,
+          200
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          240,
+          674,
+          173,
+          201
+        ],
+        "anchor": [
+          117.5,
+          197
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          450,
+          674,
+          169,
+          201
+        ],
+        "anchor": [
+          116.0,
+          197
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          668,
+          675,
+          167,
+          199
+        ],
+        "anchor": [
+          119.5,
+          196
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          30,
+          671,
+          159,
+          203
+        ],
+        "anchor": [
+          75.5,
+          200
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          240,
+          674,
+          173,
+          201
+        ],
+        "anchor": [
+          117.5,
+          197
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          450,
+          674,
+          169,
+          201
+        ],
+        "anchor": [
+          116.0,
+          197
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          668,
+          675,
+          167,
+          199
+        ],
+        "anchor": [
+          119.5,
+          196
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-opened-idle": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          59,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          62.0,
+          199
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          269,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          60.0,
+          199
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          59,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          62.0,
+          199
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          269,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          60.0,
+          199
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          490,
+          26,
+          114,
+          204
+        ],
+        "anchor": [
+          57.5,
+          200
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          696,
+          25,
+          115,
+          205
+        ],
+        "anchor": [
+          58.0,
+          201
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          490,
+          26,
+          114,
+          204
+        ],
+        "anchor": [
+          57.5,
+          200
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          696,
+          25,
+          115,
+          205
+        ],
+        "anchor": [
+          58.0,
+          201
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-opened-hurt": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          57,
+          1119,
+          121,
+          194
+        ],
+        "anchor": [
+          60.5,
+          190
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          264,
+          1119,
+          132,
+          194
+        ],
+        "anchor": [
+          65.5,
+          190
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          59,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          62.0,
+          199
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          269,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          60.0,
+          199
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          485,
+          1120,
+          121,
+          193
+        ],
+        "anchor": [
+          60.5,
+          189
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          690,
+          1118,
+          126,
+          195
+        ],
+        "anchor": [
+          61.5,
+          191
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          490,
+          26,
+          114,
+          204
+        ],
+        "anchor": [
+          57.5,
+          200
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          696,
+          25,
+          115,
+          205
+        ],
+        "anchor": [
+          58.0,
+          201
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          484,
+          251,
+          137,
+          194
+        ],
+        "anchor": [
+          74.5,
+          190
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          706,
+          248,
+          127,
+          197
+        ],
+        "anchor": [
+          51.5,
+          193
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          484,
+          251,
+          137,
+          194
+        ],
+        "anchor": [
+          74.5,
+          190
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          706,
+          248,
+          127,
+          197
+        ],
+        "anchor": [
+          51.5,
+          193
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-opened-death": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          39,
+          1334,
+          143,
+          184
+        ],
+        "anchor": [
+          69.0,
+          180
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          222,
+          1361,
+          193,
+          157
+        ],
+        "anchor": [
+          86.0,
+          153
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          415,
+          1385,
+          220,
+          132
+        ],
+        "anchor": [
+          103.0,
+          128
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          647,
+          1409,
+          217,
+          98
+        ],
+        "anchor": [
+          103.5,
+          94
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 186.21
+      }
+    ]
+  },
+  "lee-opened-attack": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          31,
+          1539,
+          147,
+          202
+        ],
+        "anchor": [
+          72.5,
+          198
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          234,
+          1538,
+          189,
+          203
+        ],
+        "anchor": [
+          73.5,
+          199
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          449,
+          1539,
+          195,
+          202
+        ],
+        "anchor": [
+          76.0,
+          198
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          690,
+          1536,
+          131,
+          205
+        ],
+        "anchor": [
+          65.5,
+          201
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 186.21
+      }
+    ]
+  },
   "naruto-clones": {
     "source": "redrawn/naruto-skills-v2.png",
     "bodyHeight": 250.0,
@@ -3542,6 +4452,278 @@
         ],
         "atlasIndex": 15,
         "bodyHeight": 248.0
+      }
+    ]
+  },
+  "lee-opened-whirlwind": {
+    "source": "redrawn/lee-gates-skills-v1.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          50,
+          53,
+          226,
+          268
+        ],
+        "anchor": [
+          111.5,
+          264
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          377,
+          28,
+          196,
+          295
+        ],
+        "anchor": [
+          67.0,
+          291
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          628,
+          50,
+          327,
+          273
+        ],
+        "anchor": [
+          103.0,
+          269
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          982,
+          58,
+          238,
+          265
+        ],
+        "anchor": [
+          115.5,
+          261
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-opened-lotus": {
+    "source": "redrawn/lee-gates-skills-v1.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          61,
+          400,
+          195,
+          239
+        ],
+        "anchor": [
+          95.5,
+          235
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          353,
+          336,
+          258,
+          302
+        ],
+        "anchor": [
+          87.0,
+          298
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          700,
+          365,
+          189,
+          274
+        ],
+        "anchor": [
+          77.0,
+          273
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          984,
+          431,
+          248,
+          208
+        ],
+        "anchor": [
+          127.5,
+          205
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-opened-gates": {
+    "source": "redrawn/lee-gates-skills-v1.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          59,
+          664,
+          219,
+          264
+        ],
+        "anchor": [
+          109.5,
+          260
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          343,
+          677,
+          251,
+          251
+        ],
+        "anchor": [
+          126.0,
+          247
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          673,
+          639,
+          223,
+          290
+        ],
+        "anchor": [
+          111.0,
+          286
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          984,
+          667,
+          241,
+          262
+        ],
+        "anchor": [
+          115.0,
+          258
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-opened-reverse": {
+    "source": "redrawn/lee-gates-skills-v1.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          37,
+          997,
+          274,
+          203
+        ],
+        "anchor": [
+          119.5,
+          199
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          355,
+          947,
+          287,
+          244
+        ],
+        "anchor": [
+          39.5,
+          240
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          678,
+          935,
+          249,
+          219
+        ],
+        "anchor": [
+          77.5,
+          215
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          991,
+          1001,
+          244,
+          201
+        ],
+        "anchor": [
+          190.5,
+          197
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 251.33
       }
     ]
   }

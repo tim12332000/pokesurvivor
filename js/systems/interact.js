@@ -56,7 +56,7 @@ G.Interact = (() => {
     if (p.charge < 1) p.charge = Math.min(1, p.charge + dt / 45);
     if (pl.dead || d2 > 26 * 26 || p.charge <= 0.02 || pl.hp >= pl.maxHp) return;
     const before = pl.hp;
-    pl.hp = Math.min(pl.maxHp, pl.hp + pl.maxHp * 0.14 * dt);
+    pl.hp = Math.min(pl.maxHp, pl.hp + pl.maxHp * 0.14 * dt * (G.NarutoGates?.healingMultiplier(pl) ?? 1));
     healAcc += pl.hp - before;
     p.charge = Math.max(0, p.charge - dt * 0.09);
     if (Math.random() < dt * 14) G.FX.px(pl.x + G.U.rand(-pl.r, pl.r), pl.y - G.U.rand(0, pl.bodyH), '#7dffb0', { vy: -50, life: 0.5 });

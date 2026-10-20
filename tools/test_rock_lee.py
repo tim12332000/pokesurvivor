@@ -52,7 +52,7 @@ PROGRESSION = r"""() => {
    const card=G.LevelUp.offer(p,100).find(c=>c.key==='new:'+id);
    // Two retired tool slots can be reclaimed; a truly full signature loadout
    // must not silently overwrite another skill to fit a third new technique.
-   if(p.slots.length>=p.maxMoves&&!p.moves.some(m=>['naruto-kunai','naruto-shuriken'].includes(m.id))){
+   if(id!=='naruto-gates'&&p.slots.length>=p.maxMoves&&!p.moves.some(m=>['naruto-kunai','naruto-shuriken'].includes(m.id))){
      A.assert(!card,'offered impossible full-slot card '+id);break;
    }
    A.assert(card&&card.apply(p)!==false,'full-slot signature unavailable '+id);
@@ -75,7 +75,7 @@ COMBAT = r"""() => {
  A.assert(es.slice(0,3).every(e=>e.hp<100000)&&es[3].hp===100000,'whirlwind AOE coverage');
  out.whirlwind=es.map(e=>100000-e.hp);
  for(const [id,hits,quantity] of [['naruto-lotus',2,0],['naruto-reverse-lotus',7,0],['naruto-lotus',2,3],['naruto-reverse-lotus',7,3]]){
-   A.leeArena();const e=A.spawn(110,0),outside=A.spawn(400,0);p.target=e;p.aim=0;p.percentHealthDamage=.01;p.lifestealRate=.01;p.hp=p.maxHp/2;
+   A.leeArena();const e=A.spawn(110,0),outside=A.spawn(400,0);p.target=e;p.aim=0;p.percentHealthDamage=.01;p.lifestealRate=.001;p.hp=p.maxHp/2;
    let n=0,owned=true,crit=true,total=0;const hurt=e.hurt;e.hurt=function(...args){n++;owned&&=args[6]===p;crit&&=args[5]==='crit';total+=args[0]+1000;return hurt.apply(this,args)};
    p.critChance=1;p.quantityBonus=quantity;const before=p.dmgDealt,hp=p.hp;A.actualCast(id);
    const phases=[],positions=[];for(let i=0;i<180&&G.NarutoLee.active;i++){
@@ -84,7 +84,7 @@ COMBAT = r"""() => {
    A.assert(!G.NarutoLee.active,'combo did not finish '+id);
    A.assert(n===hits&&owned&&crit,'wrong owned critical hit count '+id+' '+n);
    A.assert(near(p.dmgDealt-before,total),'damage credit recursion '+id);
-   A.assert(near(p.hp-hp,total*.01),'lifesteal credit '+id);
+   A.assert(near(p.hp-hp,total*.001*(G.NarutoGates?.healingMultiplier(p)||1)),'lifesteal credit '+id);
    A.assert(outside.hp===100000,'outside target damaged');
    A.assert(phases.includes('approach')&&phases.includes('windup')&&phases.includes('lift')&&phases.includes('slam')&&phases.includes('recovery'),'missing motion phases '+id);
    A.assert(positions.some(x=>x>0)&&positions.every((x,i)=>!i||x-positions[i-1]<=4.81),'approach teleported');
@@ -129,14 +129,15 @@ COMBAT = r"""() => {
  A.advance(.2);G.World.isFree=free;
  A.assert(!G.NarutoLee.active&&p.x<=20&&e.hp===100000,'approach passed blocked ground');
  out.cleanup=['clear','target-death','owner-death','world','pause','wall','blocked-approach','boss-no-lift'];
- A.leeArena();e=A.spawn(65,0);p.target=e;const atk=p.atk,spd=p.spd;A.actualCast('naruto-gates');
- A.assert(near(p.atk,atk*1.3)&&near(p.spd,spd*1.2),'gates stats');
- A.assert(!G.NarutoSupport.canCast(p,A.select('naruto-gates')),'gates stacked');
- A.select('naruto-lee');A.advance(5.01);
- A.assert(near(p.atk,atk)&&near(p.spd,spd*.8),'fatigue stats or switch bypass');
- A.assert(!G.NarutoSupport.canCast(p,A.select('naruto-gates')),'fatigue recast bypass');
- A.advance(2.01);A.assert(near(p.atk,atk)&&near(p.spd,spd),'gates permanent stat drift');
- out.gates='temporary attack/speed, no stacking, switch retains fatigue, restored';return out;
+ A.leeArena();const gates=p.moves.find(m=>m.id==='naruto-gates');
+ A.assert(gates?.passive&&G.NarutoGates.stage(p)===1,'gates learned passive missing');
+ A.assert(!p.slots.some(group=>group.includes(gates)),'gates consumed active slot');
+ const atk=p.atk,spd=p.spd;A.select('naruto-lee');
+ for(let n=0;n<100;n++)A.advance(.1);
+ A.assert(near(p.atk,atk)&&near(p.spd,spd),'passive gates timed out or stacked');
+ G.Combat.clearFields(p);A.advance(.01);
+ A.assert(near(p.atk,atk)&&near(p.spd,spd),'field clear disabled learned gates');
+ out.gates='permanent learned passive, slotless, switch/clear safe, no fatigue';return out;
 }"""
 
 ART = r"""() => {
@@ -149,12 +150,12 @@ ART = r"""() => {
  A.leeArena();p.hurt(10,null,true);out.hurt=A.render();out.flash=A.render(p.anim,{flash:true,alpha:.5});
  A.leeArena();p.dead=true;p.hp=0;p.anim.play('Faint',{hold:true});out.death=A.render();
  p.dead=false;p.hp=p.maxHp;p.anim.play('Idle');
- for(const id of ['naruto-lee','naruto-lotus','naruto-gates','naruto-reverse-lotus']){
+ for(const id of ['naruto-lee','naruto-lotus','naruto-reverse-lotus']){
    A.leeArena();const e=A.spawn(65,0);p.target=e;p.aim=0;A.actualCast(id);
    for(const [i,dt] of [0,.12,.16,.18,.18,.18,.18,.24,.24].entries()){
      if(dt)A.advance(dt);out[id+'-'+i]=A.render();
    }
-   const expected={'naruto-lee':'lee-whirlwind','naruto-lotus':'lee-lotus','naruto-gates':'lee-gates','naruto-reverse-lotus':'lee-reverse'}[id];
+   const expected={'naruto-lee':'lee-whirlwind','naruto-lotus':'lee-lotus','naruto-reverse-lotus':'lee-reverse'}[id].replace(/^lee-/,G.NarutoGates.redSkin(p)?'lee-opened-':'lee-');
    A.assert(Object.entries(out).some(([name,sample])=>name.startsWith(id+'-')&&sample.state.key===expected),'dedicated skill art never used '+id);
  }
  for(const [name,sample] of Object.entries(out)){
@@ -221,7 +222,7 @@ def main():
                 result['combat']=page.evaluate(COMBAT)
                 result['upgrades']=page.evaluate(r"""() => {
                   const A=Acceptance,p=A.p(),out={};
-                  for(const id of ['naruto-lee','naruto-lotus','naruto-gates','naruto-reverse-lotus']){
+                  for(const id of ['naruto-lee','naruto-lotus','naruto-reverse-lotus']){
                     const m=p.moves.find(m=>m.id===id);out[id]=[];
                     for(let lvl=1;lvl<=5;lvl++){
                       if(lvl>1){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+id);

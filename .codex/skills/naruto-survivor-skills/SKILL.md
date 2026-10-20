@@ -30,6 +30,7 @@ description: 新增或調整 PokéSurvivor 的火影角色、忍術、AOE／AEO�
 - 技能／圖鑑：`.omx/naruto-skills.js`。共用戰鬥擴充在 `.omx/digimon-skill-combat.js`；新機制應沿用傷害、敵人狀態、碰撞與場景清除規則。
 - 輔助、防禦、暫時加成在 `.omx/naruto-support.js`；單體控制與持續地面技在 `.omx/naruto-offense.js`。清場時必須連同暫時屬性與碰撞一起還原。
 - 小李分段體術在 `.omx/naruto-lee.js`；接近移動須檢查碰撞。技能浮空使用獨立視覺高度，不得覆寫／扣除敵人原生 `jumpLift`；暫停、取消與死亡保留原生跳躍狀態。
+- 小李八門被動在 `.omx/naruto-gates.js`；學會即生效且不占主動槽，使用專用紅膚圖集。回血量／跑速增幅為 `(10 × 技能等級 + 角色等級)%`，角色升級須立即重算，回血不得重複套倍率；加成不應憑空產生回血。接觸移動的迴圈須有步數上限與距離容差，避免浮點誤差卡死遊戲。
 - 固定角色學習選項在 `.omx/naruto-training.js`；額外起始技能的抽選發生在開局流程切換為 playing 之前，也必須遵守角色等級限制。滿槽替換要保留技能群組參照與按鍵綁定。
 - 重繪資料：`art-review/animation-assets.json`、`art-review/redrawn/atlas-map.json`；載入與繪製為 `animation-assets.js`，角色／施術動作分派為 `animation-runtime.js`。一尾專用接點是 `kyuubi-form.js`、`kyuubi-frames.json`，不要直接套到其他角色的變身。
 - 正常遊戲入口由 `.omx/redrawn-init.js` 載入；`js/main.js` 等待 `PS_REDRAWN_READY`。審稿 iframe 的 `animationLab=1` 由父頁安裝，避免重複掛接。只在審稿頁看得到不算正式入口完成。

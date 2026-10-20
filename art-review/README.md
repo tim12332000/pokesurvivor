@@ -1,6 +1,6 @@
 # 火影動作演出審閱室
 
-目前版本：鳴人、佐助、小李及一尾形態使用七張重新繪製的圖集，共 168 個實體影格。Ninja Council 3 僅作比例、描邊和動作語意參考，現用角色圖沒有直接複製該遊戲素材。生成方式、完整提示詞及檔案雜湊見 [redrawn/provenance.json](redrawn/provenance.json)。
+目前版本：鳴人、佐助、小李及一尾、八門形態使用九張重新繪製的圖集，共 216 個實體影格。Ninja Council 3 僅作比例、描邊和動作語意參考，現用角色圖沒有直接複製該遊戲素材。生成方式、完整提示詞及檔案雜湊見 [redrawn/provenance.json](redrawn/provenance.json)。
 
 這是鳴人、佐助與小李的美術研究與審稿資料夾。重繪已合併至 `feat/digimon-sandbox`，小李依新增角色指示接入正常選角與遊戲。
 
@@ -8,7 +8,7 @@
 
 完整動作內測：<http://127.0.0.1:8004/art-review/playtest.html>。從本 worktree 執行 `python tools/serve_animation_lab.py --port 8004`；這個網址讀取完整遊戲與審稿試驗，獨立匯出的 8317 服務則只供看圖。專用本機服務使用較大的連線佇列，避免大量精靈圖同時載入時被拒絕。「新版完整動作」預設開啟，涵蓋三位角色與分身；取消勾選可對照原版。遊戲內與上方都有升級按鈕，可解鎖所有招式並用選單逐招測試。實際素材與姿勢組合的範圍見 [gameplay-contract.md](gameplay-contract.md)。
 
-原有鳴人／佐助 17 組演出及小李九組動作皆接入目前自繪圖集。小李招式與驗證見 [lee-skill-design.md](lee-skill-design.md)。審稿頁顯示七張現用圖集；前版十一項提案清單保留於 `redrawn/legacy-manifest.json` 作歷史對照。
+原有鳴人／佐助 17 組演出及小李普通、八門形態共十八組動作皆接入目前自繪圖集。八門於 Lv.6 起學會後永久被動生效，不佔主動槽；五階使用專用紅臉、白眼與豎髮動作，第三階起加強氣場。小李招式與驗證見 [lee-skill-design.md](lee-skill-design.md)。審稿頁顯示九張現用圖集；前版十一項提案清單保留於 `redrawn/legacy-manifest.json` 作歷史對照。
 
 執行 `python tools/build_animation_review.py` 只會輸出審稿頁至本 worktree 的 `dist-animation-review/`，不執行遊戲打包或發布。從該目錄執行 `python -m http.server 8317 --bind 127.0.0.1` 即可開啟。現有遊戲的 8002 埠、原分支與 GitHub Pages 保持獨立；此分支推送不符合原發布工作流程的分支觸發條件。
 

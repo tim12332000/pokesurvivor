@@ -16,7 +16,7 @@
     'naruto-shuriken': 'redrawn throw sequence',
     'naruto-lee': 'redrawn sweeping roundhouse; close-range AOE',
     'naruto-lotus': 'redrawn step-in, rising kick, airborne drive and landing',
-    'naruto-gates': 'redrawn partial-gates activation; temporary strength and fatigue',
+    'naruto-gates': 'learned five-stage passive; dedicated red-skin action set and green aura',
     'naruto-reverse-lotus': 'redrawn committed aerial taijutsu combo and finisher'
   });
   function install(G, { enabled = () => true } = {}) {
@@ -36,7 +36,7 @@
       return G.NarutoClones?.actors.find(a => a.anim === anim) || null;
     }
     function entry(anim) {
-      if (!states.has(anim)) states.set(anim, { age: 0, hurtAge: Infinity, deathAge: null, cast: null, sharingan: 0, kusanagi: false });
+      if (!states.has(anim)) states.set(anim, { age: 0, hurtAge: Infinity, deathAge: null, cast: null, sharingan: 0, gates: 0, kusanagi: false });
       return states.get(anim);
     }
     function clear() { states.clear(); }
@@ -104,12 +104,14 @@
       const pl = G.Game.player;
       if (supported(pl?.anim) && !pl.dead && pl.hp > 0) {
         const state = entry(pl.anim), level = G.NarutoSharingan?.stage(pl) || 0;
+        const gates = G.NarutoGates?.stage(pl) || 0;
         const sword = !!G.NarutoKusanagi?.active(pl);
         // Passive synchronization may run immediately after a scene clear or
         // accepted attack. It must never replace that attack's presentation.
         if (!state.cast && level !== state.sharingan && level) record(pl, { id: 'naruto-sharingan' }, .62);
+        if (!state.cast && gates !== state.gates && gates) record(pl, { id: 'naruto-gates' }, .5);
         if (!state.cast && sword && !state.kusanagi) record(pl, { id: 'naruto-kusanagi' }, .48);
-        state.sharingan = level; state.kusanagi = sword;
+        state.sharingan = level; state.gates = gates; state.kusanagi = sword;
       }
       for (const [anim] of states) if (anim !== pl?.anim && !G.NarutoClones?.actors.some(a => a.anim === anim)) states.delete(anim);
       return result;
@@ -128,7 +130,7 @@
       if (cast && !this.activeGroup().some(m => m.id === cast.id)) entry(this.anim).cast = null;
       return result;
     };
-    function stateFor(anim) {
+    function baseStateFor(anim) {
       sync();
       const state = entry(anim), pl = actor(anim), name = hero(anim), dir = direction(anim);
       const base = { state: 'idle', phase: 'loop', direction: dir, key: name + '-idle', frame: row(dir) * 4 + Math.floor(state.age * 5) % 4, age: state.age, treatment: 'candidate', mirror: false, rotation: 0 };
@@ -175,6 +177,13 @@
       }
       const walking = pl ? (pl.walking || anim.base === 'Walk') : anim.cur === 'Walk';
       return walking ? { ...base, state: 'movement', key: name + '-movement', frame: row(dir) * 4 + Math.floor(state.age * 10) % 4 } : base;
+    }
+    function stateFor(anim) {
+      const pose = baseStateFor(anim);
+      if (anim.dex === 30006 && G.NarutoGates?.redSkin(actor(anim))) {
+        return { ...pose, key: pose.key.replace(/^lee-/, 'lee-opened-'), form: 'gates' };
+      }
+      return pose;
     }
     function handFor(pl, frame = 2) {
       if (!enabled() || pl?.dex !== 30002 || pl !== G.Game.player) return null;

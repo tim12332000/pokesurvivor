@@ -85,6 +85,19 @@ def sequence(source, indices, mirrors=()):
             'safeFrames': list(range(len(frames))), 'frames': frames}
 
 
+def lee_neck_to_feet(image, frame):
+    """Raised hair adds height after opening the gates, not a smaller body."""
+    x, y, w, h = frame['rect']
+    crop = image.crop((x, y, x + w, y + h))
+    green_rows = [py for py in range(h) for px in range(w)
+                  if (lambda c: c[3] > 180 and c[1] > 45
+                      and c[1] > c[0] * 1.3 and c[1] > c[2] * 1.15)(
+                          crop.getpixel((px, py)))]
+    if not green_rows:
+        raise ValueError('Cannot establish Lee green jumpsuit reference')
+    return frame['anchor'][1] - min(green_rows)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sources = {}
@@ -98,8 +111,10 @@ def main():
     for kind, rows in (('common', 8), ('skills', 4)):
         key = 'lee-' + kind
         sources[key], images[key] = atlas(key + '-v1.png', rows)
+        opened_key = 'lee-opened-' + kind
+        sources[opened_key], images[opened_key] = atlas('lee-gates-' + kind + '-v1.png', rows)
     # Standing reference is measured once, never independently per pose.
-    for hero in ('naruto', 'sasuke', 'lee'):
+    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened'):
         common = sources[hero + '-common']
         common['bodyHeight'] = median(f['rect'][3] - 4 for f in common['frames'][:6])
     base = sources['naruto-common']
@@ -114,14 +129,25 @@ def main():
                                          for i in (3, 7, 11, 15))
     # Whirlwind and gates finish upright. Both lotus rows finish in a low
     # landing, so those poses cannot define the fixed standing body scale.
-    lee_skills = sources['lee-skills']
-    lee_skills['bodyHeight'] = median(lee_skills['frames'][i]['rect'][3] - 4
-                                    for i in (3, 11))
+    for hero in ('lee', 'lee-opened'):
+        lee_skills = sources[hero + '-skills']
+        lee_skills['bodyHeight'] = median(lee_skills['frames'][i]['rect'][3] - 4
+                                        for i in (3, 11))
+    # Preserve the original body's scale beneath the added hair spikes. Use
+    # just the same upright references in each atlas, never individual poses.
+    for kind, indices in (('common', (0, 1)), ('skills', (3, 11))):
+        base_lee = sources['lee-' + kind]
+        opened_lee = sources['lee-opened-' + kind]
+        base_body = median(lee_neck_to_feet(images['lee-' + kind], base_lee['frames'][i])
+                           for i in indices)
+        opened_body = median(lee_neck_to_feet(images['lee-opened-' + kind], opened_lee['frames'][i])
+                             for i in indices)
+        opened_lee['bodyHeight'] = round(base_lee['bodyHeight'] * opened_body / base_body, 2)
     form_head = median(hair_width(images['one-tail'], f)
                        for f in sources['one-tail']['frames'][:4])
     sources['one-tail']['bodyHeight'] = round(base['bodyHeight'] * form_head / base_head, 2)
     assets = {}
-    for hero in ('naruto', 'sasuke', 'lee'):
+    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened'):
         common = sources[hero + '-common']
         sets = {
             'movement': (list(range(8, 12)) + list(range(16, 20))
@@ -138,7 +164,8 @@ def main():
             assets[hero + '-' + kind] = entry
     for hero, kinds in (('naruto', ('clones', 'rasengan', 'throw', 'cloak')),
                         ('sasuke', ('chidori', 'fireball', 'throw', 'sword')),
-                        ('lee', ('whirlwind', 'lotus', 'gates', 'reverse'))):
+                        ('lee', ('whirlwind', 'lotus', 'gates', 'reverse')),
+                        ('lee-opened', ('whirlwind', 'lotus', 'gates', 'reverse'))):
         for row, kind in enumerate(kinds):
             assets[hero + '-' + kind] = sequence(sources[hero + '-skills'], range(row * 4, row * 4 + 4))
     (ART / 'animation-assets.json').write_text(json.dumps(assets, indent=2) + '\n', encoding='utf-8')

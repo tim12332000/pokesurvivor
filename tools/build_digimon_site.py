@@ -36,6 +36,7 @@ assert sources == {
     'redrawn/sasuke-common-v1.png', 'redrawn/sasuke-skills-v2.png',
     'redrawn/one-tail-v2.png',
     'redrawn/lee-common-v1.png', 'redrawn/lee-skills-v1.png',
+    'redrawn/lee-gates-common-v1.png', 'redrawn/lee-gates-skills-v1.png',
 }, 'Unexpected reviewed hero atlas inventory'
 for name in review_runtime + ['.omx/redrawn-init.js']:
     target = OUT / name

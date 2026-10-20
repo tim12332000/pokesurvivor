@@ -17,8 +17,9 @@
   }
   function signatureCard(player,milestone) {
     const def=G.Moves.BY_ID[milestone.id];
-    const swap=player.slots.length>=player.maxMoves?replacement(player):null;
-    if(player.slots.length>=player.maxMoves&&!swap)return null;
+    const slotless=def.id==='naruto-gates'&&def.passive;
+    const swap=!slotless&&player.slots.length>=player.maxMoves?replacement(player):null;
+    if(!slotless&&player.slots.length>=player.maxMoves&&!swap)return null;
     const previousId=swap?.id;
     return {w:100,type:'new',key:'new:'+def.id,icon:'move:'+def.id,color:G.U.TYPE_COLOR[def.type],
       tag:`${player.mon.chinese||player.mon.name}特色招式`,title:def.name,

@@ -2,13 +2,12 @@
 (() => {
   if (G.NarutoSupport) return;
   const C = G.Combat, effects = [], locks = [], TAU = Math.PI * 2;
-  const modes = new Set(['medical-heal', 'regeneration', 'sharingan', 'byakugan', 'gates', 'sand-shield', 'earth-wall', 'nine-tails-cloak']);
+  const modes = new Set(['medical-heal', 'regeneration', 'sharingan', 'byakugan', 'sand-shield', 'earth-wall', 'nine-tails-cloak']);
   const defaults = {
     'medical-heal': { healFraction: .22, fieldDuration: .5 },
     regeneration: { fieldDuration: 5, healFraction: .045 },
     sharingan: { fieldDuration: 3, nextDamageMul: 1.25 },
     byakugan: { fieldDuration: 5, radius: 280, damageMul: 1.2 },
-    gates: { fieldDuration: 5, atkMul: 1.3, speedMul: 1.2, fatigueDuration: 2, fatigueSpeedMul: .8 },
     'sand-shield': { fieldDuration: 8, shieldAmount: 45, cd: 12 },
     'earth-wall': { fieldDuration: 3, width: 100, range: 72 },
     'nine-tails-cloak': { fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75, radius:76, pulseDamage:12, pulseInterval:.65, knock:18 }
@@ -44,7 +43,6 @@
     if (active(owner, mode) || locks.some(f => f.owner === owner && f.mode === mode && valid(f))) return false;
     if (mode === 'medical-heal') return owner.hp < owner.maxHp;
     if (mode === 'regeneration') return owner.hp < owner.maxHp * .8;
-    if (mode === 'gates' && active(owner, 'gates-fatigue')) return false;
     if (!danger(owner)) return false;
     return mode !== 'earth-wall' || !!wallPosition(owner, { ...defaults[mode], ...move });
   }
@@ -81,9 +79,7 @@
     if (!descriptor?.get) continue;
     Object.defineProperty(G.Player.prototype, key, { ...descriptor, get() {
       let value = descriptor.get.call(this);
-      const buff = active(this, 'gates'), fatigue = active(this, 'gates-fatigue'), cloak = active(this, 'nine-tails-cloak');
-      if (buff) value *= key === 'atk' ? Math.min(1.6, finite(buff.m.atkMul, 1.3)) : Math.min(1.5, finite(buff.m.speedMul, 1.2));
-      else if (key === 'spd' && fatigue) value *= Math.max(.5, Math.min(1, finite(fatigue.m.fatigueSpeedMul, .8)));
+      const cloak = active(this, 'nine-tails-cloak');
       return cloak ? value * (key === 'atk' ? Math.min(1.8,finite(cloak.m.atkMul,1.5)) : Math.min(1.5,finite(cloak.m.speedMul,1.25))) : value;
     } });
   }
@@ -175,7 +171,6 @@
       }
       if (f.age >= f.ttl) {
         effects.splice(i, 1);
-        if (f.mode === 'gates') effects.push({ ...f, mode: 'gates-fatigue', age: 0, ttl: Math.max(.5, Math.min(5, finite(f.m.fatigueDuration, 2))) });
       }
     }
   }
@@ -222,7 +217,7 @@
         ctx.fillStyle = '#6b4c2b'; ctx.fillRect(Math.round(x - 21), Math.round(y + 6), 42, 4);
         ctx.fillStyle = '#e8c684'; ctx.fillRect(Math.round(x - 21), Math.round(y + 6), 42 * f.shield / f.capacity, 3);
       } else {
-        ctx.fillStyle = f.mode === 'gates-fatigue' ? '#a9a793' : '#83ffb7';
+        ctx.fillStyle = '#83ffb7';
         for (let i = 0; i < 8; i++) { const a = i * TAU / 8 + phase * .3, py = y - 10 - (f.age * 25 + i * 7) % 38; ctx.fillRect(Math.round(x + Math.cos(a) * 19), Math.round(py), 3, 6); }
         if (f.mode === 'medical-heal' || f.mode === 'regeneration') { ctx.fillRect(Math.round(x - 2), Math.round(y - 47), 4, 12); ctx.fillRect(Math.round(x - 6), Math.round(y - 43), 12, 4); }
       }

@@ -58,7 +58,7 @@
       "owner": "Rock Lee",
       "url": "https://naruto-official.com/en/news/01_1652",
       "publisher": "NARUTO OFFICIAL SITE",
-      "adaptation": "Level-six partial gate buff: five seconds of 30% attack and 20% speed, then two seconds of 20% speed fatigue; no adult sixth/eighth-gate techniques."
+      "adaptation": "Level-six learned passive, first five gates across skill levels1-5. Attack +30/35/40/45/50%; healing received and movement speed each +(10*skillLevel+characterLevel)%. Persistent stats and redface from the first gate are game adaptations; no active slot, timer or fatigue. Existing healing triggers remain required."
     },
     {
       "id": "naruto-reverse-lotus",
@@ -114,7 +114,16 @@
       "provenance": "art-review/redrawn/provenance.json",
       "runtimeActiveInLab": true,
       "method": "Built-in image_gen original generation; own generated atlases only used as image references",
-      "scope": "Five own atlases for Naruto, Sasuke, skills, clones and one-tail. Ninja Council3 only broad visual/action reference, not copied sprite pixels."
+      "scope": "Nine original atlases for Naruto, Sasuke, Lee, skills, clones, one-tail and dedicated opened-gates common/skill forms. NC3 is visual/action reference only; no ripped pixels in current renderer."
+    },
+    {
+      "id": "lee-gates-nc3-reference",
+      "url": "https://spritedatabase.net/files/ds/55/Sprite/RockLee.png",
+      "page": "https://spritedatabase.net/file/1295",
+      "credit": "Original sprites credited to Neimad; used for research only, not in current renderer",
+      "scope": "URA RENGE includes dedicated redface, white eyes, raised hair and persistent transformed combo poses. Clothes and bandages preserve their palette. Current form is an original edit of our own generated Lee atlases.",
+      "runtimeActiveInLab": false,
+      "replacementProvenance": "art-review/redrawn/provenance.json"
     }
   ],
   "records": [
