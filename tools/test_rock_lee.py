@@ -189,6 +189,20 @@ def main():
                 page.evaluate(SETUP)
                 result = {'progression': page.evaluate(PROGRESSION)}
                 report['viewports'][label]=result
+                result['fractionalContact'] = page.evaluate("""() => {
+                  const A=Acceptance,p=A.p(),radius=p.r,out=[];
+                  try {
+                    for(const id of ['naruto-lotus','naruto-reverse-lotus']) {
+                      A.leeArena();p.r=12;p.x=245.2212490607053;p.y=607.796689029783;
+                      p.target=A.spawn(264.44099647663217,639.8360687385729);p.target.r=10;
+                      A.actualCast(id);A.advance(1/60);
+                      A.assert(G.NarutoLee.active?.phase==='windup','fractional contact did not finish approach');
+                      for(let n=0;n<90;n++)A.advance(1/60);
+                      A.assert(!G.NarutoLee.active,'fractional contact did not finish recovery');out.push(id);
+                    }
+                  } finally {p.r=radius;A.leeArena()}
+                  return out;
+                }""")
                 page.evaluate('Acceptance.leeArena()')
                 page.keyboard.down('KeyD')
                 result['keyboard'] = page.evaluate("""() => {const A=Acceptance,p=A.p(),x=p.x;

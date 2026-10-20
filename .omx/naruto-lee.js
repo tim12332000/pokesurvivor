@@ -69,9 +69,12 @@
   function approach(f, dt) {
     const owner = f.owner, target = f.target;
     let budget = Math.min(480 * dt, (f.move.range || 145) - f.travel);
-    while (budget > 0) {
+    // Rounding at contact can leave a subpixel gap whose step changes neither
+    // the position nor budget. Tolerate that gap and bound collision sampling.
+    const maxSteps = Math.ceil(budget / 4) + 1;
+    for (let steps = 0; budget > .001 && steps < maxSteps; steps++) {
       const dx = target.x - owner.x, dy = target.y - owner.y, distance = Math.hypot(dx, dy);
-      if (distance <= reach(f)) { enter(f, 'windup'); return true; }
+      if (distance <= reach(f) + .001) { enter(f, 'windup'); return true; }
       const step = Math.min(4, budget, distance - reach(f));
       const x = owner.x + dx / distance * step, y = owner.y + dy / distance * step;
       if (!G.World.isFree(x, y, owner.r || 12, true) || !clearPath(owner.x, owner.y, x, y)) return false;
