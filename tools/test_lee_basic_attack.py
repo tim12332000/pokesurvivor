@@ -49,7 +49,7 @@ COMBAT=r"""() => {
    A.assertLoadout(slots,moves,active,fn);
    let hits=0;const hurt=e.hurt;e.hurt=function(...args){hits++;return hurt.apply(this,args)};
    // The final recovery boundary is advanced without another attack tick.
-   for(let n=0;n<200&&G.NarutoLee.active;n++){
+   for(let n=0;n<350&&G.NarutoLee.active;n++){
      const before=A.basicCasts.length;A.basicTick(.01);
      A.assert(A.basicCasts.length===before,'basic overlapped active Lotus '+id);A.advance(.01);
    }

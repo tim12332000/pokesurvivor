@@ -67,7 +67,7 @@
       "additionalSource": "https://naruto-official.com/en/news/01_1652",
       "publisher": "NARUTO OFFICIAL SITE",
       "canonBasis": "Official episode summary distinguishes Primary Lotus and Hidden Lotus while showing the danger of the Eight Inner Gates.",
-      "adaptation": "Level-nine single-target high-speed five-hit combo and landing finisher; standalone casting, 145 total damage and small secondary splash are game adaptations. Uses current attack including Gates buff."
+      "adaptation": "Level-nine standalone contact combo: 0.18s windup, 0.36s lift to height52, five hits over1.05s, 0.22s smooth descent, 0.16s slam and0.18s recovery (2.15s after contact). Main-target base145 is split10%+5*12%+30%, unchanged seven hits; cooldown5s. Skill levels1-5 landing base radii100/120/140/160/180 (+20 per upgrade), each secondary receives35% base once; main target is excluded from extra splash. Full boundary ring matches actual radius before inner expansion/burst. Once launched, Reverse Lotus continues to land its AOE after target death; Front Lotus still cancels on target death. Owner death, world change, walls and contact distance still cancel. Longer airborne sequence, growing landing AOE, post-target-death landing and cooldown melee fallback are user-requested survival-game adaptations, not canonical claims. Uses current attack including learned Gates buff."
     }
   ],
   "animationReferences": [

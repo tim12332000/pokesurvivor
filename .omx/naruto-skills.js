@@ -295,8 +295,14 @@
     }],
     ['naruto-reverse-lotus', [30006], {
       name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, dmg:145,
-      range:180, radius:64,
-      vis:{pal:'grass'}, desc:'小李 Lv.9 解鎖。近身上踢後五段高速體術連擊，最後重摔；首領不浮空。冷卻期間自動使用近身體術普攻，連段中不穿插；就緒時優先施放蓮華。可獨立施放，開門期間享攻擊加成；獨立施放、數值與落地範圍為本作改編。',
+      range:180, radius:100,
+      ups:[
+        {t:'傷害 +20%・落地範圍擴大至 120',m:{dmg:1.2,radius:1.2}},
+        {t:'冷卻 -10%・落地範圍擴大至 140',m:{cd:.9,radius:7/6}},
+        {t:'突進距離 +12%・落地範圍擴大至 160',m:{range:201.6,radius:8/7}},
+        {t:'傷害 +25%・落地範圍擴大至 180',m:{dmg:1.25,radius:9/8}}
+      ],
+      vis:{pal:'grass'}, desc:'小李 Lv.9 解鎖。近身上踢後滯空連擊，約 1.4 秒後開始下墜，落地產生圓形範圍震擊；技能 Lv.1–5 的落地半徑依序為 100／120／140／160／180。首領不浮空。冷卻期間自動使用近身體術普攻，連段中不穿插；就緒時優先施放蓮華。可獨立施放，開門期間享攻擊加成；獨立施放、數值與落地範圍為本作改編。',
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {

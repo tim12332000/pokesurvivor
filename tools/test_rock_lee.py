@@ -78,7 +78,7 @@ COMBAT = r"""() => {
    A.leeArena();const e=A.spawn(110,0),outside=A.spawn(400,0);p.target=e;p.aim=0;p.percentHealthDamage=.01;p.lifestealRate=.001;p.hp=p.maxHp/2;
    let n=0,owned=true,crit=true,total=0;const hurt=e.hurt;e.hurt=function(...args){n++;owned&&=args[6]===p;crit&&=args[5]==='crit';total+=args[0]+1000;return hurt.apply(this,args)};
    p.critChance=1;p.quantityBonus=quantity;const before=p.dmgDealt,hp=p.hp;A.actualCast(id);
-   const phases=[],positions=[];for(let i=0;i<180&&G.NarutoLee.active;i++){
+   const phases=[],positions=[];for(let i=0;i<350&&G.NarutoLee.active;i++){
      phases.push(G.NarutoLee.active.phase);positions.push(p.x);A.advance(.01);
    }
    A.assert(!G.NarutoLee.active,'combo did not finish '+id);
@@ -198,7 +198,7 @@ def main():
                       p.target=A.spawn(264.44099647663217,639.8360687385729);p.target.r=10;
                       A.actualCast(id);A.advance(1/60);
                       A.assert(G.NarutoLee.active?.phase==='windup','fractional contact did not finish approach');
-                      for(let n=0;n<90;n++)A.advance(1/60);
+                      for(let n=0;n<210;n++)A.advance(1/60);
                       A.assert(!G.NarutoLee.active,'fractional contact did not finish recovery');out.push(id);
                     }
                   } finally {p.r=radius;A.leeArena()}

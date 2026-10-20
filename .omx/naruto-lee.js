@@ -3,12 +3,14 @@
   if (G.NarutoLee) return;
   const C = G.Combat, modes = new Set(['lee-lotus', 'lee-reverse-lotus']);
   const durations = { windup: .18, lift: .24, combo: .42, slam: .16, recovery: .18 };
+  const reverseDurations = { ...durations, lift: .36, combo: 1.05, descent: .22 };
   const basics = new WeakMap();
   let chain = null;
   const alive = actor => actor && !actor.dead && actor.hp > 0;
   const valid = f => f && f.owner === G.Game.player && f.world === G.World && alive(f.owner);
   const elite = e => !!(e.boss || e.elite || e.legend || e.judge);
   const supports = mode => modes.has(mode);
+  const launchedReverse = f => f.kind === 'lee-reverse-lotus' && ['lift', 'combo', 'descent', 'slam', 'recovery'].includes(f.phase);
   const reach = f => (f.owner.r || 12) + (f.target.r || 10) + 12;
   function clearPath(ax, ay, bx, by) {
     const steps = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / 4));
@@ -39,6 +41,7 @@
     if (!canCast(owner, move)) return false;
     const target = targetFor(owner, move);
     chain = { owner, world: G.World, target, kind: move.digiMode, move: { ...move },
+      durations: move.digiMode === 'lee-reverse-lotus' ? reverseDurations : durations,
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
       visualLift: 0, targetLift: 0, ticks: 0 };
     owner.svx = owner.svy = 0;
@@ -64,7 +67,13 @@
       for (const enemy of new Set(G.EnemyMgr.queryCircle(f.target.x, f.target.y, radius))) {
         if (enemy !== f.target && Math.hypot(enemy.x - f.target.x, enemy.y - f.target.y) <= radius + (enemy.r || 0)) hit(f, enemy, .35);
       }
-      G.FX.ring(f.target.x, f.target.y, 5, radius, '#ddc99a', .28, 3);
+      if (f.kind === 'lee-reverse-lotus') {
+        // The outside rim marks the actual damage radius from the landing frame.
+        G.FX.ring(f.target.x, f.target.y, radius, radius, '#ffe0a3', .42, 4);
+        G.FX.ring(f.target.x, f.target.y, 5, radius, '#f6a65e', .36, 6);
+        G.FX.burst(f.target.x, f.target.y, '#ddc99a', 16, radius * .65);
+        G.Camera.kick(.18);
+      } else G.FX.ring(f.target.x, f.target.y, 5, radius, '#ddc99a', .28, 3);
     }
   }
   function approach(f, dt) {
@@ -89,7 +98,7 @@
   function update(dt) {
     if (!(dt > 0) || !Number.isFinite(dt) || !chain) return;
     const f = chain;
-    if (!valid(f) || !alive(f.target) || !clearPath(f.owner.x, f.owner.y, f.target.x, f.target.y)) { clear(); return; }
+    if (!valid(f) || (!alive(f.target) && !launchedReverse(f)) || !clearPath(f.owner.x, f.owner.y, f.target.x, f.target.y)) { clear(); return; }
     if (G.Game.state !== 'playing') return;
     removeLift(f);
     // Fixed simulation steps retain all combo hits under a delayed frame.
@@ -101,21 +110,23 @@
         if (!approach(f, step) || f.age > .6) { clear(); return; }
         continue;
       }
-      if (!alive(f.target) || Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24) { clear(); return; }
+      if ((!alive(f.target) && !launchedReverse(f)) || Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24) { clear(); return; }
       if (f.phase === 'combo') {
-        const due = Math.min(5, Math.floor(f.phaseAge / (durations.combo / 5) + 1e-8));
+        const due = Math.min(5, Math.floor(f.phaseAge / (f.durations.combo / 5) + 1e-8));
         while (f.ticks < due && alive(f.target)) { f.ticks++; hit(f, f.target, .12); }
       }
-      if (f.phaseAge + 1e-9 >= durations[f.phase]) {
+      if (f.phaseAge + 1e-9 >= f.durations[f.phase]) {
         const next = f.phase === 'windup' ? 'lift' : f.phase === 'lift' ?
-          (f.kind === 'lee-reverse-lotus' ? 'combo' : 'slam') : f.phase === 'combo' ? 'slam' : f.phase === 'slam' ? 'recovery' : null;
+          (f.kind === 'lee-reverse-lotus' ? 'combo' : 'slam') : f.phase === 'combo' ? 'descent' : f.phase === 'descent' ? 'slam' : f.phase === 'slam' ? 'recovery' : null;
         if (!next) { clear(); return; }
         enter(f, next);
       }
     }
     if (chain !== f) return;
-    if (['lift', 'combo'].includes(f.phase) && !elite(f.target)) {
-      f.visualLift = f.phase === 'lift' ? Math.sin(Math.min(1, f.phaseAge / durations.lift) * Math.PI / 2) * 30 : 30;
+    if (['lift', 'combo', 'descent'].includes(f.phase) && !elite(f.target)) {
+      const height = f.kind === 'lee-reverse-lotus' ? 52 : 30;
+      f.visualLift = f.phase === 'lift' ? Math.sin(Math.min(1, f.phaseAge / f.durations.lift) * Math.PI / 2) * height :
+        f.phase === 'descent' ? height * Math.max(0, 1 - f.phaseAge / f.durations.descent) : height;
       f.targetLift = f.visualLift;
       f.target.applySlow(.95, .08);
     }
