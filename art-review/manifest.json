@@ -3,828 +3,2137 @@
   "baseCommit": "b0d2796",
   "baseBranch": "feat/digimon-sandbox",
   "approvalRequired": true,
+  "provenance": "redrawn/provenance.json",
   "items": [
     {
-      "id": "sasuke-movement-v01",
-      "title": "佐助・四方向移動",
-      "character": "佐助",
-      "category": "movement",
-      "kind": "AI動作候選",
-      "image": "candidates/sasuke-movement-v01.png",
-      "beforeImage": "previews/sasuke-original-movement.png",
-      "animation": {
-        "columns": 4,
-        "rows": 4,
-        "fps": 7,
-        "sequences": [
-          {
-            "name": "向下／正面",
-            "frames": [
-              0,
-              1,
-              2,
-              3
-            ]
-          },
-          {
-            "name": "向上／背面",
-            "frames": [
-              4,
-              5,
-              6,
-              7
-            ]
-          },
-          {
-            "name": "向左",
-            "frames": [
-              8,
-              9,
-              10,
-              11
-            ]
-          },
-          {
-            "name": "向右",
-            "frames": [
-              12,
-              13,
-              14,
-              15
-            ]
-          }
-        ]
-      },
+      "id": "naruto-common-v1",
+      "title": "鳴人・共通與方向動作",
+      "character": "鳴人",
+      "category": "common",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/naruto-common-v1.png",
       "status": "candidate",
       "runtimePreview": true,
-      "summary": "四方向移動循環，另接到獨立遊戲預覽，以實際走位與自動出招檢查。",
+      "summary": "目前內測已套用的統一像素角色圖。Ninja Council 3 僅作比例、輪廓與動作語彙研究；本圖重新繪製，未複製或擷取遊戲圖。",
       "improvements": [
-        "向下是正面、向上是背面，左右各有獨立姿勢。",
-        "四格有手腳交替，可用播放器直接檢查步態。",
-        "預覽只替換行走繪製，出招時保留既有施法與追擊姿勢。"
+        "角色與技能使用同一美術家族。",
+        "與實玩共用逐格裁切、固定比例和腳底錨點。"
       ],
       "limitations": [
-        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
-        "目前只在獨立試玩頁套用，原遊戲與其他角色不受影響。"
+        "正背面待機各兩張；左向動作由右向鏡射。"
       ],
       "references": [
         {
-          "title": "目前遊戲素材來源",
-          "url": "https://spritedatabase.net/game/59"
-        }
-      ],
-      "qa": {
-        "score": 91,
-        "verdict": "保留方向與交替步態，需在俯視實際玩法試走再由使用者決定。"
-      },
-      "sourceImage": {
-        "width": 1312,
-        "height": 1199,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      }
-    },
-    {
-      "id": "naruto-movement-v01",
-      "title": "鳴人・四方向移動",
-      "character": "鳴人",
-      "category": "movement",
-      "kind": "AI動作候選",
-      "image": "candidates/naruto-movement-v01.png",
-      "beforeImage": "previews/naruto-original-movement.png",
-      "animation": {
-        "columns": 4,
-        "rows": 4,
-        "fps": 7,
-        "sequences": [
-          {
-            "name": "向下／正面",
-            "frames": [
-              0,
-              1,
-              2,
-              3
-            ]
-          },
-          {
-            "name": "向上／背面",
-            "frames": [
-              4,
-              5,
-              6,
-              7
-            ]
-          },
-          {
-            "name": "向左",
-            "frames": [
-              8,
-              9,
-              10,
-              11
-            ]
-          },
-          {
-            "name": "向右",
-            "frames": [
-              12,
-              13,
-              14,
-              15
-            ]
-          }
-        ]
-      },
-      "status": "candidate",
-      "runtimePreview": true,
-      "summary": "四方向移動循環，另接到獨立遊戲預覽，以實際走位與自動出招檢查。",
-      "improvements": [
-        "向下是正面、向上是背面，左右各有獨立姿勢。",
-        "四格有手腳交替，可用播放器直接檢查步態。",
-        "預覽只替換行走繪製，出招時保留既有施法與追擊姿勢。"
-      ],
-      "limitations": [
-        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
-        "目前只在獨立試玩頁套用，原遊戲與其他角色不受影響。"
-      ],
-      "references": [
+          "title": "Ninja Council 3：僅作風格研究",
+          "url": "https://spritedatabase.net/game/55"
+        },
         {
-          "title": "目前遊戲素材來源",
-          "url": "https://spritedatabase.net/game/59"
+          "title": "原創製作來源與提示紀錄",
+          "url": "redrawn/provenance.json"
         }
       ],
       "qa": {
-        "score": 91,
-        "verdict": "保留方向與交替步態，需在俯視實際玩法試走再由使用者決定。"
+        "score": 93,
+        "verdict": "圖集裁切、比例與風格檢查通過；實際技能銜接請進入內測。"
       },
-      "sourceImage": {
-        "width": 1265,
-        "height": 1243,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      }
-    },
-    {
-      "id": "sasuke-idle-v01",
-      "title": "佐助・四方向待機",
-      "character": "佐助",
-      "category": "common",
-      "kind": "AI動作候選",
-      "image": "candidates/sasuke-idle-v01.png",
-      "beforeImage": "references/sasuke-original.png",
       "animation": {
-        "columns": 4,
-        "rows": 4,
-        "fps": 4,
-        "sequences": [
+        "fps": 8,
+        "bodyHeight": 168.5,
+        "frames": [
           {
-            "name": "向下／正面",
-            "frames": [
-              0,
-              1,
-              2,
-              3
-            ]
+            "rect": [
+              77,
+              48,
+              96,
+              172
+            ],
+            "anchor": [
+              48.5,
+              167
+            ],
+            "atlasIndex": 0
           },
           {
-            "name": "向上／背面",
-            "frames": [
-              4,
-              5,
-              6,
-              7
-            ]
+            "rect": [
+              283,
+              48,
+              95,
+              171
+            ],
+            "anchor": [
+              47.5,
+              167
+            ],
+            "atlasIndex": 1
           },
           {
-            "name": "向左",
-            "frames": [
-              8,
-              9,
-              10,
-              11
-            ]
+            "rect": [
+              509,
+              46,
+              96,
+              173
+            ],
+            "anchor": [
+              47.5,
+              169
+            ],
+            "atlasIndex": 2
           },
           {
-            "name": "向右",
-            "frames": [
-              12,
-              13,
-              14,
-              15
-            ]
-          }
-        ]
-      },
-      "status": "candidate",
-      "runtimePreview": false,
-      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
-      "improvements": [
-        "補齊正面、背面與左右姿勢。",
-        "狀態前後姿勢有明確變化，可逐格比較。"
-      ],
-      "limitations": [
-        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
-        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
-      ],
-      "references": [
-        {
-          "title": "目前遊戲素材來源",
-          "url": "https://spritedatabase.net/game/59"
-        }
-      ],
-      "qa": {
-        "score": 90,
-        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
-      },
-      "sourceImage": {
-        "width": 1312,
-        "height": 1199,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      }
-    },
-    {
-      "id": "naruto-idle-v01",
-      "title": "鳴人・四方向待機",
-      "character": "鳴人",
-      "category": "common",
-      "kind": "AI動作候選",
-      "image": "candidates/naruto-idle-v01.png",
-      "beforeImage": "references/team7-original.png",
-      "animation": {
-        "columns": 4,
-        "rows": 4,
-        "fps": 4,
-        "sequences": [
-          {
-            "name": "向下／正面",
-            "frames": [
-              0,
-              1,
-              2,
-              3
-            ]
+            "rect": [
+              714,
+              48,
+              97,
+              171
+            ],
+            "anchor": [
+              48.5,
+              167
+            ],
+            "atlasIndex": 3
           },
           {
-            "name": "向上／背面",
-            "frames": [
-              4,
-              5,
-              6,
-              7
-            ]
+            "rect": [
+              85,
+              250,
+              81,
+              181
+            ],
+            "anchor": [
+              42.5,
+              176
+            ],
+            "atlasIndex": 4
           },
           {
-            "name": "向左",
-            "frames": [
-              8,
-              9,
-              10,
-              11
-            ]
+            "rect": [
+              297,
+              249,
+              77,
+              181
+            ],
+            "anchor": [
+              38.5,
+              177
+            ],
+            "atlasIndex": 5
           },
           {
-            "name": "向右",
-            "frames": [
-              12,
-              13,
-              14,
-              15
-            ]
-          }
-        ]
-      },
-      "status": "candidate",
-      "runtimePreview": false,
-      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
-      "improvements": [
-        "補齊正面、背面與左右姿勢。",
-        "狀態前後姿勢有明確變化，可逐格比較。"
-      ],
-      "limitations": [
-        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
-        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
-      ],
-      "references": [
-        {
-          "title": "目前遊戲素材來源",
-          "url": "https://spritedatabase.net/game/59"
-        }
-      ],
-      "qa": {
-        "score": 90,
-        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
-      },
-      "sourceImage": {
-        "width": 1299,
-        "height": 1211,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      }
-    },
-    {
-      "id": "sasuke-hurt-v01",
-      "title": "佐助・四方向受傷",
-      "character": "佐助",
-      "category": "common",
-      "kind": "AI動作候選",
-      "image": "candidates/sasuke-hurt-v01.png",
-      "beforeImage": "references/sasuke-original.png",
-      "animation": {
-        "columns": 4,
-        "rows": 4,
-        "fps": 7,
-        "sequences": [
-          {
-            "name": "向下／正面",
-            "frames": [
-              0,
-              1,
-              2,
-              3
-            ]
+            "rect": [
+              485,
+              259,
+              132,
+              171
+            ],
+            "anchor": [
+              81.0,
+              166
+            ],
+            "atlasIndex": 6
           },
           {
-            "name": "向上／背面",
-            "frames": [
-              4,
-              5,
-              6,
-              7
-            ]
+            "rect": [
+              729,
+              251,
+              82,
+              179
+            ],
+            "anchor": [
+              40.5,
+              175
+            ],
+            "atlasIndex": 7
           },
           {
-            "name": "向左",
-            "frames": [
-              8,
-              9,
-              10,
-              11
-            ]
+            "rect": [
+              61,
+              476,
+              111,
+              169
+            ],
+            "anchor": [
+              56.0,
+              164
+            ],
+            "atlasIndex": 8
           },
           {
-            "name": "向右",
-            "frames": [
-              12,
-              13,
-              14,
-              15
-            ]
-          }
-        ]
-      },
-      "status": "candidate",
-      "runtimePreview": false,
-      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
-      "improvements": [
-        "補齊正面、背面與左右姿勢。",
-        "狀態前後姿勢有明確變化，可逐格比較。"
-      ],
-      "limitations": [
-        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
-        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
-      ],
-      "references": [
-        {
-          "title": "目前遊戲素材來源",
-          "url": "https://spritedatabase.net/game/59"
-        }
-      ],
-      "qa": {
-        "score": 90,
-        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
-      },
-      "sourceImage": {
-        "width": 1312,
-        "height": 1199,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      }
-    },
-    {
-      "id": "naruto-hurt-v01",
-      "title": "鳴人・四方向受傷",
-      "character": "鳴人",
-      "category": "common",
-      "kind": "AI動作候選",
-      "image": "candidates/naruto-hurt-v01.png",
-      "beforeImage": "references/team7-original.png",
-      "animation": {
-        "columns": 4,
-        "rows": 4,
-        "fps": 7,
-        "sequences": [
-          {
-            "name": "向下／正面",
-            "frames": [
-              0,
-              1,
-              2,
-              3
-            ]
+            "rect": [
+              283,
+              472,
+              112,
+              172
+            ],
+            "anchor": [
+              55.5,
+              168
+            ],
+            "atlasIndex": 9
           },
           {
-            "name": "向上／背面",
-            "frames": [
-              4,
-              5,
-              6,
-              7
-            ]
+            "rect": [
+              492,
+              468,
+              108,
+              176
+            ],
+            "anchor": [
+              56.0,
+              171
+            ],
+            "atlasIndex": 10
           },
           {
-            "name": "向左",
-            "frames": [
-              8,
-              9,
-              10,
-              11
-            ]
+            "rect": [
+              702,
+              476,
+              127,
+              168
+            ],
+            "anchor": [
+              68.5,
+              164
+            ],
+            "atlasIndex": 11
           },
           {
-            "name": "向右",
-            "frames": [
-              12,
-              13,
-              14,
-              15
-            ]
-          }
-        ]
-      },
-      "status": "candidate",
-      "runtimePreview": false,
-      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
-      "improvements": [
-        "補齊正面、背面與左右姿勢。",
-        "狀態前後姿勢有明確變化，可逐格比較。"
-      ],
-      "limitations": [
-        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
-        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
-      ],
-      "references": [
-        {
-          "title": "目前遊戲素材來源",
-          "url": "https://spritedatabase.net/game/59"
-        }
-      ],
-      "qa": {
-        "score": 90,
-        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
-      },
-      "sourceImage": {
-        "width": 1312,
-        "height": 1199,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      }
-    },
-    {
-      "id": "naruto-death-v01",
-      "title": "鳴人・四方向倒下",
-      "character": "鳴人",
-      "category": "common",
-      "kind": "AI動作候選",
-      "image": "candidates/naruto-death-v01.png",
-      "beforeImage": "references/team7-original.png",
-      "animation": {
-        "columns": 4,
-        "rows": 4,
-        "fps": 5,
-        "sequences": [
-          {
-            "name": "向下／正面",
-            "frames": [
-              0,
-              1,
-              2,
-              3
-            ]
+            "rect": [
+              47,
+              679,
+              134,
+              179
+            ],
+            "anchor": [
+              65.5,
+              175
+            ],
+            "atlasIndex": 12
           },
           {
-            "name": "向上／背面",
-            "frames": [
-              4,
-              5,
-              6,
-              7
-            ]
+            "rect": [
+              247,
+              678,
+              143,
+              180
+            ],
+            "anchor": [
+              105.0,
+              176
+            ],
+            "atlasIndex": 13
           },
           {
-            "name": "向左",
-            "frames": [
-              8,
-              9,
-              10,
-              11
-            ]
+            "rect": [
+              470,
+              684,
+              146,
+              174
+            ],
+            "anchor": [
+              97.0,
+              170
+            ],
+            "atlasIndex": 14
           },
           {
-            "name": "向右",
-            "frames": [
-              12,
-              13,
-              14,
-              15
-            ]
+            "rect": [
+              683,
+              679,
+              144,
+              179
+            ],
+            "anchor": [
+              102.0,
+              175
+            ],
+            "atlasIndex": 15
+          },
+          {
+            "rect": [
+              55,
+              902,
+              118,
+              181
+            ],
+            "anchor": [
+              60.0,
+              176
+            ],
+            "atlasIndex": 16
+          },
+          {
+            "rect": [
+              275,
+              900,
+              111,
+              183
+            ],
+            "anchor": [
+              62.5,
+              179
+            ],
+            "atlasIndex": 17
+          },
+          {
+            "rect": [
+              498,
+              895,
+              108,
+              188
+            ],
+            "anchor": [
+              50.5,
+              183
+            ],
+            "atlasIndex": 18
+          },
+          {
+            "rect": [
+              707,
+              898,
+              121,
+              185
+            ],
+            "anchor": [
+              64.5,
+              180
+            ],
+            "atlasIndex": 19
+          },
+          {
+            "rect": [
+              74,
+              1121,
+              97,
+              174
+            ],
+            "anchor": [
+              48.5,
+              169
+            ],
+            "atlasIndex": 20
+          },
+          {
+            "rect": [
+              277,
+              1123,
+              117,
+              172
+            ],
+            "anchor": [
+              60.0,
+              168
+            ],
+            "atlasIndex": 21
+          },
+          {
+            "rect": [
+              497,
+              1142,
+              107,
+              153
+            ],
+            "anchor": [
+              54.5,
+              149
+            ],
+            "atlasIndex": 22
+          },
+          {
+            "rect": [
+              710,
+              1124,
+              107,
+              171
+            ],
+            "anchor": [
+              53.5,
+              167
+            ],
+            "atlasIndex": 23
+          },
+          {
+            "rect": [
+              57,
+              1347,
+              122,
+              155
+            ],
+            "anchor": [
+              55.0,
+              151
+            ],
+            "atlasIndex": 24
+          },
+          {
+            "rect": [
+              249,
+              1382,
+              161,
+              118
+            ],
+            "anchor": [
+              67.5,
+              114
+            ],
+            "atlasIndex": 25
+          },
+          {
+            "rect": [
+              433,
+              1400,
+              202,
+              100
+            ],
+            "anchor": [
+              86.5,
+              96
+            ],
+            "atlasIndex": 26
+          },
+          {
+            "rect": [
+              661,
+              1417,
+              196,
+              73
+            ],
+            "anchor": [
+              98.5,
+              69
+            ],
+            "atlasIndex": 27
+          },
+          {
+            "rect": [
+              46,
+              1543,
+              118,
+              181
+            ],
+            "anchor": [
+              59.0,
+              176
+            ],
+            "atlasIndex": 28
+          },
+          {
+            "rect": [
+              252,
+              1547,
+              153,
+              177
+            ],
+            "anchor": [
+              63.5,
+              172
+            ],
+            "atlasIndex": 29
+          },
+          {
+            "rect": [
+              475,
+              1546,
+              160,
+              178
+            ],
+            "anchor": [
+              63.0,
+              173
+            ],
+            "atlasIndex": 30
+          },
+          {
+            "rect": [
+              709,
+              1543,
+              112,
+              181
+            ],
+            "anchor": [
+              56.5,
+              176
+            ],
+            "atlasIndex": 31
           }
         ],
-        "loop": false
-      },
-      "status": "candidate",
-      "runtimePreview": false,
-      "summary": "四方向共通動作候選，先供逐格審閱，尚未接入遊戲狀態。",
-      "improvements": [
-        "補齊正面、背面與左右姿勢。",
-        "狀態前後姿勢有明確變化，可逐格比較。"
-      ],
-      "limitations": [
-        "保持原角色64像素高度試看；AI來源需另校正關節與每幀地面錨點。",
-        "尚未驗證受傷／倒下觸發與自動攻擊狀態的銜接，不能視為完整可上線動畫。"
-      ],
-      "references": [
-        {
-          "title": "目前遊戲素材來源",
-          "url": "https://spritedatabase.net/game/59"
-        }
-      ],
-      "qa": {
-        "score": 90,
-        "verdict": "保留作共通動作候選，尚待遊戲狀態驗證與使用者審閱。"
-      },
-      "sourceImage": {
-        "width": 1414,
-        "height": 1113,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
+        "sequences": [
+          {
+            "name": "正面待機",
+            "indices": [
+              0,
+              1
+            ],
+            "loop": true
+          },
+          {
+            "name": "背面待機",
+            "indices": [
+              2,
+              3
+            ],
+            "loop": true
+          },
+          {
+            "name": "右向待機",
+            "indices": [
+              4,
+              5
+            ],
+            "loop": true
+          },
+          {
+            "name": "正面跑動",
+            "indices": [
+              8,
+              9,
+              10,
+              11
+            ],
+            "loop": true
+          },
+          {
+            "name": "右向跑動",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": true
+          },
+          {
+            "name": "左向跑動（鏡射）",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": true,
+            "mirror": true
+          },
+          {
+            "name": "背面跑動",
+            "indices": [
+              16,
+              17,
+              18,
+              19
+            ],
+            "loop": true
+          },
+          {
+            "name": "正面受傷",
+            "indices": [
+              20,
+              21,
+              0,
+              1
+            ],
+            "loop": false
+          },
+          {
+            "name": "背面受傷",
+            "indices": [
+              22,
+              23,
+              2,
+              3
+            ],
+            "loop": false
+          },
+          {
+            "name": "右向受傷",
+            "indices": [
+              6,
+              7,
+              4,
+              5
+            ],
+            "loop": false
+          },
+          {
+            "name": "倒下",
+            "indices": [
+              24,
+              25,
+              26,
+              27
+            ],
+            "loop": false
+          },
+          {
+            "name": "基本攻擊",
+            "indices": [
+              28,
+              29,
+              30,
+              31
+            ],
+            "loop": false
+          }
         ]
       }
     },
     {
-      "id": "sasuke-chidori-v02",
-      "title": "佐助・千鳥蓄力與突進 v02",
-      "character": "佐助",
+      "id": "naruto-skills-v2",
+      "title": "鳴人・技能動作",
+      "character": "鳴人",
+      "category": "skill",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/naruto-skills-v2.png",
       "status": "candidate",
-      "kind": "AI概念稿",
-      "image": "candidates/sasuke-chidori-v02.png",
-      "beforeImage": "previews/chidori-current.png",
-      "summary": "改成低位蓄力、帶電手向後蓄勢，再前傾伸手命中，雷光集中在手掌附近。",
+      "runtimePreview": true,
+      "summary": "目前內測已套用的統一像素角色圖。Ninja Council 3 僅作比例、輪廓與動作語彙研究；本圖重新繪製，未複製或擷取遊戲圖。",
       "improvements": [
-        "重做出手銜接，蓄力、前傾、刺擊與收勢的剪影比第一版清楚。",
-        "以原作左手蓄力為目標修正提示；整組方向一致，沒有拿一般結印當突進。",
-        "藍白電弧範圍較第一版克制，角色身體仍可辨識。"
+        "角色與技能使用同一美術家族。",
+        "與實玩共用逐格裁切、固定比例和腳底錨點。"
       ],
       "limitations": [
-        "僅動作概念候選；採用前仍須以相同高度縮圖，逐幀確認解剖左右手與鏡射。",
-        "殘影只作設計方向，實裝應分離特效，不把殘影烘焙在每張角色圖。"
+        "技能及一尾動作只有側向原畫，左向鏡射；上下出招沿用側向。"
       ],
       "references": [
         {
-          "title": "官方：中忍考試千鳥回顧",
-          "url": "https://naruto-official.com/en/news/01_1282"
+          "title": "Ninja Council 3：僅作風格研究",
+          "url": "https://spritedatabase.net/game/55"
         },
         {
-          "title": "官方少年佐助模型：低位千鳥姿勢",
-          "url": "https://tamashiiweb.com/item/14256/?wovn=en"
+          "title": "原創製作來源與提示紀錄",
+          "url": "redrawn/provenance.json"
         }
       ],
       "qa": {
-        "score": 91,
-        "verdict": "保留 v02 作分鏡候選；v01 出手與雷光過度問題退回。左右手仍列為拆幀前必要核對。"
+        "score": 93,
+        "verdict": "圖集裁切、比例與風格檢查通過；實際技能銜接請進入內測。"
       },
-      "sourceImage": {
-        "width": 1774,
-        "height": 887,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      },
-      "category": "skill",
       "animation": {
-        "columns": 4,
-        "rows": 2,
-        "fps": 7,
+        "fps": 8,
+        "bodyHeight": 250.0,
+        "frames": [
+          {
+            "rect": [
+              66,
+              49,
+              191,
+              256
+            ],
+            "anchor": [
+              95.5,
+              252
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              377,
+              51,
+              190,
+              254
+            ],
+            "anchor": [
+              95.0,
+              250
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              693,
+              51,
+              189,
+              254
+            ],
+            "anchor": [
+              94.5,
+              250
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              1017,
+              53,
+              185,
+              251
+            ],
+            "anchor": [
+              92.5,
+              247
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              49,
+              353,
+              210,
+              255
+            ],
+            "anchor": [
+              105.0,
+              251
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              381,
+              356,
+              204,
+              252
+            ],
+            "anchor": [
+              102.0,
+              248
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              642,
+              365,
+              321,
+              243
+            ],
+            "anchor": [
+              121.0,
+              239
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              1018,
+              356,
+              194,
+              252
+            ],
+            "anchor": [
+              97.0,
+              248
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              55,
+              649,
+              228,
+              256
+            ],
+            "anchor": [
+              105.0,
+              252
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              353,
+              655,
+              232,
+              250
+            ],
+            "anchor": [
+              114.5,
+              246
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              649,
+              658,
+              303,
+              247
+            ],
+            "anchor": [
+              116.5,
+              243
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              1009,
+              658,
+              198,
+              247
+            ],
+            "anchor": [
+              99.0,
+              243
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              62,
+              937,
+              187,
+              268
+            ],
+            "anchor": [
+              93.5,
+              263
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              357,
+              948,
+              224,
+              255
+            ],
+            "anchor": [
+              112.0,
+              251
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              662,
+              992,
+              245,
+              212
+            ],
+            "anchor": [
+              121.0,
+              208
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              973,
+              1006,
+              252,
+              197
+            ],
+            "anchor": [
+              126.0,
+              193
+            ],
+            "atlasIndex": 15
+          }
+        ],
         "sequences": [
           {
-            "name": "Skill",
-            "frames": [
+            "name": "結印／分身",
+            "indices": [
               0,
               1,
               2,
-              3,
+              3
+            ],
+            "loop": false
+          },
+          {
+            "name": "螺旋丸",
+            "indices": [
               4,
               5,
               6,
               7
-            ]
+            ],
+            "loop": false
+          },
+          {
+            "name": "忍具投擲",
+            "indices": [
+              8,
+              9,
+              10,
+              11
+            ],
+            "loop": false
+          },
+          {
+            "name": "外衣啟動",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": false
           }
         ]
       }
     },
     {
-      "id": "sasuke-fireball-v01",
-      "title": "佐助・豪火球施放分鏡 v01",
+      "id": "sasuke-common-v1",
+      "title": "佐助・共通與方向動作",
       "character": "佐助",
+      "category": "common",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/sasuke-common-v1.png",
       "status": "candidate",
-      "kind": "AI概念稿",
-      "image": "candidates/sasuke-fireball-v01.png",
-      "beforeImage": "references/sasuke-original.png",
-      "summary": "從結印、吸氣、嘴前起火，到大火球分離與收勢，補足原版缺少的軀幹動作。",
+      "runtimePreview": true,
+      "summary": "目前內測已套用的統一像素角色圖。Ninja Council 3 僅作比例、輪廓與動作語彙研究；本圖重新繪製，未複製或擷取遊戲圖。",
       "improvements": [
-        "火焰確實從嘴部發出，施放起點比一般施術姿勢清楚。",
-        "有吸氣、噴吐、後仰與收勢的分段，不靠放大特效取代動作。",
-        "維持藍衣白褲與黑色像素輪廓，方向一致。"
+        "角色與技能使用同一美術家族。",
+        "與實玩共用逐格裁切、固定比例和腳底錨點。"
       ],
       "limitations": [
-        "概念審稿，尚未拆幀或接入遊戲；需重新校正腳底與嘴部錨點。",
-        "第六格為火球分離的演出方向，實裝仍需依現有射程與碰撞驗證。"
+        "正背面待機各兩張；左向動作由右向鏡射。"
       ],
       "references": [
         {
-          "title": "官方：Father and Son, the Broken Crest",
-          "url": "https://naruto-official.com/en/anime/naruto1/list/01_354"
+          "title": "Ninja Council 3：僅作風格研究",
+          "url": "https://spritedatabase.net/game/55"
         },
         {
-          "title": "官方少年佐助模型：結印、火遁姿勢",
-          "url": "https://tamashiiweb.com/item/14256/?wovn=en"
+          "title": "原創製作來源與提示紀錄",
+          "url": "redrawn/provenance.json"
         }
       ],
       "qa": {
-        "score": 91,
-        "verdict": "保留作動作方向候選：嘴部起火、吸氣與收勢比目前普通施術列更清楚；尚待使用者核准。"
+        "score": 93,
+        "verdict": "圖集裁切、比例與風格檢查通過；實際技能銜接請進入內測。"
       },
-      "sourceImage": {
-        "width": 1774,
-        "height": 887,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      },
-      "category": "skill",
       "animation": {
-        "columns": 4,
-        "rows": 2,
-        "fps": 7,
+        "fps": 8,
+        "bodyHeight": 182.0,
+        "frames": [
+          {
+            "rect": [
+              72,
+              39,
+              105,
+              187
+            ],
+            "anchor": [
+              52.0,
+              183
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              279,
+              39,
+              104,
+              187
+            ],
+            "anchor": [
+              52.0,
+              183
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              503,
+              39,
+              105,
+              186
+            ],
+            "anchor": [
+              52.5,
+              182
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              709,
+              39,
+              107,
+              186
+            ],
+            "anchor": [
+              53.0,
+              182
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              74,
+              252,
+              95,
+              186
+            ],
+            "anchor": [
+              54.0,
+              182
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              286,
+              252,
+              94,
+              186
+            ],
+            "anchor": [
+              53.5,
+              182
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              474,
+              261,
+              142,
+              177
+            ],
+            "anchor": [
+              89.0,
+              173
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              722,
+              252,
+              95,
+              186
+            ],
+            "anchor": [
+              46.0,
+              182
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              52,
+              472,
+              123,
+              182
+            ],
+            "anchor": [
+              65.5,
+              178
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              272,
+              471,
+              124,
+              183
+            ],
+            "anchor": [
+              67.5,
+              179
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              487,
+              471,
+              120,
+              183
+            ],
+            "anchor": [
+              59.0,
+              179
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              703,
+              471,
+              140,
+              183
+            ],
+            "anchor": [
+              70.5,
+              179
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              42,
+              680,
+              145,
+              183
+            ],
+            "anchor": [
+              70.0,
+              180
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              248,
+              679,
+              151,
+              184
+            ],
+            "anchor": [
+              107.5,
+              181
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              463,
+              680,
+              158,
+              181
+            ],
+            "anchor": [
+              107.0,
+              178
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              680,
+              680,
+              153,
+              183
+            ],
+            "anchor": [
+              108.5,
+              180
+            ],
+            "atlasIndex": 15
+          },
+          {
+            "rect": [
+              53,
+              895,
+              122,
+              196
+            ],
+            "anchor": [
+              63.5,
+              192
+            ],
+            "atlasIndex": 16
+          },
+          {
+            "rect": [
+              273,
+              895,
+              115,
+              196
+            ],
+            "anchor": [
+              67.0,
+              192
+            ],
+            "atlasIndex": 17
+          },
+          {
+            "rect": [
+              497,
+              894,
+              112,
+              197
+            ],
+            "anchor": [
+              48.0,
+              193
+            ],
+            "atlasIndex": 18
+          },
+          {
+            "rect": [
+              708,
+              894,
+              115,
+              197
+            ],
+            "anchor": [
+              65.0,
+              193
+            ],
+            "atlasIndex": 19
+          },
+          {
+            "rect": [
+              71,
+              1119,
+              106,
+              182
+            ],
+            "anchor": [
+              53.0,
+              178
+            ],
+            "atlasIndex": 20
+          },
+          {
+            "rect": [
+              273,
+              1114,
+              121,
+              185
+            ],
+            "anchor": [
+              61.5,
+              181
+            ],
+            "atlasIndex": 21
+          },
+          {
+            "rect": [
+              497,
+              1132,
+              110,
+              166
+            ],
+            "anchor": [
+              56.0,
+              162
+            ],
+            "atlasIndex": 22
+          },
+          {
+            "rect": [
+              709,
+              1114,
+              110,
+              184
+            ],
+            "anchor": [
+              55.5,
+              180
+            ],
+            "atlasIndex": 23
+          },
+          {
+            "rect": [
+              53,
+              1340,
+              131,
+              166
+            ],
+            "anchor": [
+              60.0,
+              162
+            ],
+            "atlasIndex": 24
+          },
+          {
+            "rect": [
+              246,
+              1370,
+              166,
+              136
+            ],
+            "anchor": [
+              67.5,
+              132
+            ],
+            "atlasIndex": 25
+          },
+          {
+            "rect": [
+              433,
+              1389,
+              204,
+              115
+            ],
+            "anchor": [
+              97.5,
+              111
+            ],
+            "atlasIndex": 26
+          },
+          {
+            "rect": [
+              664,
+              1408,
+              199,
+              83
+            ],
+            "anchor": [
+              97.5,
+              79
+            ],
+            "atlasIndex": 27
+          },
+          {
+            "rect": [
+              44,
+              1541,
+              126,
+              189
+            ],
+            "anchor": [
+              62.0,
+              185
+            ],
+            "atlasIndex": 28
+          },
+          {
+            "rect": [
+              250,
+              1542,
+              170,
+              188
+            ],
+            "anchor": [
+              66.0,
+              184
+            ],
+            "atlasIndex": 29
+          },
+          {
+            "rect": [
+              471,
+              1543,
+              174,
+              187
+            ],
+            "anchor": [
+              66.5,
+              183
+            ],
+            "atlasIndex": 30
+          },
+          {
+            "rect": [
+              707,
+              1541,
+              118,
+              189
+            ],
+            "anchor": [
+              59.0,
+              185
+            ],
+            "atlasIndex": 31
+          }
+        ],
         "sequences": [
           {
-            "name": "Skill",
-            "frames": [
+            "name": "正面待機",
+            "indices": [
               0,
-              1,
+              1
+            ],
+            "loop": true
+          },
+          {
+            "name": "背面待機",
+            "indices": [
               2,
-              3,
+              3
+            ],
+            "loop": true
+          },
+          {
+            "name": "右向待機",
+            "indices": [
               4,
-              5,
+              5
+            ],
+            "loop": true
+          },
+          {
+            "name": "正面跑動",
+            "indices": [
+              8,
+              9,
+              10,
+              11
+            ],
+            "loop": true
+          },
+          {
+            "name": "右向跑動",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": true
+          },
+          {
+            "name": "左向跑動（鏡射）",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": true,
+            "mirror": true
+          },
+          {
+            "name": "背面跑動",
+            "indices": [
+              16,
+              17,
+              18,
+              19
+            ],
+            "loop": true
+          },
+          {
+            "name": "正面受傷",
+            "indices": [
+              20,
+              21,
+              0,
+              1
+            ],
+            "loop": false
+          },
+          {
+            "name": "背面受傷",
+            "indices": [
+              22,
+              23,
+              2,
+              3
+            ],
+            "loop": false
+          },
+          {
+            "name": "右向受傷",
+            "indices": [
               6,
-              7
-            ]
+              7,
+              4,
+              5
+            ],
+            "loop": false
+          },
+          {
+            "name": "倒下",
+            "indices": [
+              24,
+              25,
+              26,
+              27
+            ],
+            "loop": false
+          },
+          {
+            "name": "基本攻擊",
+            "indices": [
+              28,
+              29,
+              30,
+              31
+            ],
+            "loop": false
           }
         ]
       }
     },
     {
-      "id": "naruto-clones-v02",
-      "title": "鳴人・影分身結印與煙霧 v02",
-      "character": "鳴人",
+      "id": "sasuke-skills-v2",
+      "title": "佐助・技能動作",
+      "character": "佐助",
+      "category": "skill",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/sasuke-skills-v2.png",
       "status": "candidate",
-      "kind": "AI概念稿",
-      "image": "candidates/naruto-clones-v02.png",
-      "beforeImage": "references/team7-original.png",
-      "summary": "以單一鳴人的交叉指印、持印、白煙成形、落地和出拳呈現分身演出。",
+      "runtimePreview": true,
+      "summary": "目前內測已套用的統一像素角色圖。Ninja Council 3 僅作比例、輪廓與動作語彙研究；本圖重新繪製，未複製或擷取遊戲圖。",
       "improvements": [
-        "交叉指印比第一版合掌更清楚，且前後幀衣著一致。",
-        "每格只畫一個角色，讓實際分身數交由遊戲產生，避免原稿六人誤當八人的問題。",
-        "有煙霧出現、角色走出煙與出拳的接續動作，身體比例較第一版修長。"
+        "角色與技能使用同一美術家族。",
+        "與實玩共用逐格裁切、固定比例和腳底錨點。"
       ],
       "limitations": [
-        "概念審稿；煙霧邊緣的半透明雜點、地面錨點仍需製作階段整理。",
-        "不把整張當成八隻分身貼圖；分身數量、控制與碰撞維持遊戲機制。"
+        "技能及一尾動作只有側向原畫，左向鏡射；上下出招沿用側向。"
       ],
       "references": [
         {
-          "title": "官方：火影第一集",
-          "url": "https://naruto-official.com/en/anime/naruto1/list/01_225"
+          "title": "Ninja Council 3：僅作風格研究",
+          "url": "https://spritedatabase.net/game/55"
+        },
+        {
+          "title": "原創製作來源與提示紀錄",
+          "url": "redrawn/provenance.json"
         }
       ],
       "qa": {
-        "score": 90,
-        "verdict": "保留交叉指印與煙霧分鏡方向；淘汰第一版錯誤人數，未標示為可直接上線資產。"
+        "score": 93,
+        "verdict": "圖集裁切、比例與風格檢查通過；實際技能銜接請進入內測。"
       },
-      "sourceImage": {
-        "width": 1774,
-        "height": 887,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      },
-      "category": "skill",
       "animation": {
-        "columns": 4,
-        "rows": 2,
-        "fps": 7,
+        "fps": 8,
+        "bodyHeight": 254.5,
+        "frames": [
+          {
+            "rect": [
+              50,
+              118,
+              228,
+              221
+            ],
+            "anchor": [
+              104.5,
+              217
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              346,
+              89,
+              220,
+              250
+            ],
+            "anchor": [
+              90.0,
+              246
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              637,
+              90,
+              300,
+              249
+            ],
+            "anchor": [
+              108.5,
+              245
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              990,
+              86,
+              177,
+              253
+            ],
+            "anchor": [
+              77.0,
+              249
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              78,
+              388,
+              164,
+              263
+            ],
+            "anchor": [
+              81.5,
+              259
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              385,
+              391,
+              165,
+              260
+            ],
+            "anchor": [
+              83.0,
+              256
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              653,
+              417,
+              207,
+              234
+            ],
+            "anchor": [
+              103.5,
+              230
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              990,
+              389,
+              152,
+              262
+            ],
+            "anchor": [
+              76.0,
+              258
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              63,
+              690,
+              216,
+              260
+            ],
+            "anchor": [
+              104.0,
+              256
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              337,
+              693,
+              217,
+              257
+            ],
+            "anchor": [
+              105.5,
+              253
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              619,
+              698,
+              293,
+              252
+            ],
+            "anchor": [
+              112.5,
+              248
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              964,
+              695,
+              195,
+              255
+            ],
+            "anchor": [
+              92.0,
+              251
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              62,
+              990,
+              195,
+              260
+            ],
+            "anchor": [
+              93.0,
+              256
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              325,
+              990,
+              263,
+              260
+            ],
+            "anchor": [
+              105.0,
+              256
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              588,
+              1016,
+              370,
+              234
+            ],
+            "anchor": [
+              122.5,
+              230
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              968,
+              986,
+              197,
+              264
+            ],
+            "anchor": [
+              89.5,
+              260
+            ],
+            "atlasIndex": 15
+          }
+        ],
         "sequences": [
           {
-            "name": "Skill",
-            "frames": [
+            "name": "千鳥",
+            "indices": [
               0,
               1,
               2,
-              3,
+              3
+            ],
+            "loop": false
+          },
+          {
+            "name": "豪火球",
+            "indices": [
               4,
               5,
               6,
               7
-            ]
+            ],
+            "loop": false
+          },
+          {
+            "name": "風魔手裏劍投擲",
+            "indices": [
+              8,
+              9,
+              10,
+              11
+            ],
+            "loop": false
+          },
+          {
+            "name": "草薙劍",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": false
           }
         ]
       }
     },
     {
-      "id": "naruto-rasengan-v01",
-      "title": "鳴人・螺旋丸施放分鏡 v01",
+      "id": "one-tail-v2",
+      "title": "鳴人・一尾查克拉形態",
       "character": "鳴人",
+      "category": "skill",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/one-tail-v2.png",
       "status": "candidate",
-      "kind": "AI概念稿",
-      "image": "candidates/naruto-rasengan-v01.png",
-      "beforeImage": "references/team7-original.png",
-      "summary": "掌心成球、雙手協助旋轉、重心前移再推掌命中，讓蓄力和打中有清楚區別。",
+      "runtimePreview": true,
+      "summary": "目前內測已套用的統一像素角色圖。Ninja Council 3 僅作比例、輪廓與動作語彙研究；本圖重新繪製，未複製或擷取遊戲圖。",
       "improvements": [
-        "前四格藍白球體貼住掌心，施放輪廓容易辨識。",
-        "加入前傾推掌與命中後的手臂跟進，補足原版共用攻擊姿勢。",
-        "保留少年期橙藍服裝，沒有改成疾風傳黑橙版本。"
+        "角色與技能使用同一美術家族。",
+        "與實玩共用逐格裁切、固定比例和腳底錨點。"
       ],
       "limitations": [
-        "概念審稿；撞擊大漩渦只作命中效果方向，不代表技能改成光波。",
-        "實裝前仍需縮到原角色高度、修正手腕與球心錨點並驗證八方向表現。"
+        "技能及一尾動作只有側向原畫，左向鏡射；上下出招沿用側向。"
       ],
       "references": [
         {
-          "title": "官方：螺旋丸的旋轉與壓縮",
-          "url": "https://naruto-official.com/en/news/01_1521"
+          "title": "Ninja Council 3：僅作風格研究",
+          "url": "https://spritedatabase.net/game/55"
+        },
+        {
+          "title": "原創製作來源與提示紀錄",
+          "url": "redrawn/provenance.json"
         }
       ],
       "qa": {
-        "score": 90,
-        "verdict": "保留作蓄力、推掌與命中分鏡候選；角色比例及球心錨點仍需製作階段驗證，尚待使用者核准。"
+        "score": 93,
+        "verdict": "圖集裁切、比例與風格檢查通過；實際技能銜接請進入內測。"
       },
-      "sourceImage": {
-        "width": 1774,
-        "height": 887,
-        "mode": "RGBA",
-        "alphaExtrema": [
-          0,
-          255
-        ]
-      },
-      "category": "skill",
       "animation": {
-        "columns": 4,
-        "rows": 2,
-        "fps": 7,
+        "fps": 8,
+        "bodyHeight": 175.76,
+        "frames": [
+          {
+            "rect": [
+              24,
+              77,
+              216,
+              177
+            ],
+            "anchor": [
+              116.0,
+              173
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              280,
+              79,
+              218,
+              175
+            ],
+            "anchor": [
+              120.0,
+              171
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              525,
+              82,
+              225,
+              172
+            ],
+            "anchor": [
+              122.5,
+              168
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              796,
+              80,
+              212,
+              174
+            ],
+            "anchor": [
+              107.0,
+              170
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              17,
+              311,
+              246,
+              169
+            ],
+            "anchor": [
+              178.0,
+              165
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              280,
+              307,
+              241,
+              177
+            ],
+            "anchor": [
+              163.5,
+              173
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              524,
+              320,
+              246,
+              165
+            ],
+            "anchor": [
+              184.5,
+              161
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              775,
+              312,
+              237,
+              173
+            ],
+            "anchor": [
+              156.0,
+              169
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              19,
+              538,
+              222,
+              193
+            ],
+            "anchor": [
+              125.5,
+              189
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              273,
+              562,
+              231,
+              169
+            ],
+            "anchor": [
+              115.5,
+              165
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              530,
+              569,
+              231,
+              162
+            ],
+            "anchor": [
+              111.0,
+              158
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              792,
+              553,
+              217,
+              178
+            ],
+            "anchor": [
+              124.0,
+              174
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              25,
+              803,
+              207,
+              193
+            ],
+            "anchor": [
+              105.5,
+              189
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              265,
+              796,
+              250,
+              200
+            ],
+            "anchor": [
+              95.0,
+              197
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              522,
+              804,
+              271,
+              192
+            ],
+            "anchor": [
+              101.5,
+              189
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              805,
+              802,
+              187,
+              194
+            ],
+            "anchor": [
+              97.0,
+              191
+            ],
+            "atlasIndex": 15
+          },
+          {
+            "rect": [
+              18,
+              1060,
+              196,
+              188
+            ],
+            "anchor": [
+              105.0,
+              184
+            ],
+            "atlasIndex": 16
+          },
+          {
+            "rect": [
+              265,
+              1064,
+              207,
+              184
+            ],
+            "anchor": [
+              103.0,
+              180
+            ],
+            "atlasIndex": 17
+          },
+          {
+            "rect": [
+              516,
+              1061,
+              274,
+              187
+            ],
+            "anchor": [
+              83.5,
+              183
+            ],
+            "atlasIndex": 18
+          },
+          {
+            "rect": [
+              801,
+              1060,
+              199,
+              188
+            ],
+            "anchor": [
+              98.5,
+              184
+            ],
+            "atlasIndex": 19
+          },
+          {
+            "rect": [
+              19,
+              1310,
+              216,
+              180
+            ],
+            "anchor": [
+              107.0,
+              176
+            ],
+            "atlasIndex": 20
+          },
+          {
+            "rect": [
+              279,
+              1314,
+              224,
+              176
+            ],
+            "anchor": [
+              84.5,
+              172
+            ],
+            "atlasIndex": 21
+          },
+          {
+            "rect": [
+              516,
+              1326,
+              258,
+              164
+            ],
+            "anchor": [
+              102.0,
+              160
+            ],
+            "atlasIndex": 22
+          },
+          {
+            "rect": [
+              801,
+              1325,
+              208,
+              165
+            ],
+            "anchor": [
+              102.5,
+              161
+            ],
+            "atlasIndex": 23
+          }
+        ],
         "sequences": [
           {
-            "name": "Skill",
-            "frames": [
+            "name": "一尾待機",
+            "indices": [
               0,
               1,
               2,
-              3,
+              3
+            ],
+            "loop": true
+          },
+          {
+            "name": "一尾奔跑",
+            "indices": [
               4,
               5,
               6,
               7
-            ]
+            ],
+            "loop": true
+          },
+          {
+            "name": "一尾受傷",
+            "indices": [
+              8,
+              9,
+              10,
+              11
+            ],
+            "loop": false
+          },
+          {
+            "name": "一尾爪擊",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": false
+          },
+          {
+            "name": "一尾螺旋丸",
+            "indices": [
+              16,
+              17,
+              18,
+              19
+            ],
+            "loop": false
+          },
+          {
+            "name": "一尾投擲",
+            "indices": [
+              20,
+              21,
+              22,
+              23
+            ],
+            "loop": false
           }
         ]
       }
     }
-  ],
-  "playtestURL": "http://127.0.0.1:8318/art-review/playtest.html"
+  ]
 }

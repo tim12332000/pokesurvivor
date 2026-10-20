@@ -45,8 +45,44 @@
       "reference": "https://www.youtube.com/watch?v=OM-OzWJ2HTc",
       "publisher": "VIZ official channel",
       "sourceSheet": "team7.png",
-      "rects": [[95,237,14,32],[112,239,14,30],[129,240,14,29]],
+      "rects": [
+        [
+          95,
+          237,
+          14,
+          32
+        ],
+        [
+          112,
+          239,
+          14,
+          30
+        ],
+        [
+          129,
+          240,
+          14,
+          29
+        ]
+      ],
       "note": "Hands-together seal row, final-pose hold then smoke release. Frontal fallback; original pixel resolution cannot resolve individual crossed fingers. Previous y364 Charge row was arms-raised turning."
+    },
+    {
+      "id": "naruto-one-tail-lab",
+      "file": "art-review/candidates/naruto-one-tail-source.png",
+      "url": "https://spritecollection.weebly.com/uploads/7/8/7/7/7877225/kyubi_naruto_sheet.png",
+      "credit": "Ripped by Neimad; original credit retained in full source sheet",
+      "sha256": "2b9a12ce74eabaf0fcca2f12d55f62f1eb7cc3d597b00296dfefa106b41f8e2a",
+      "scope": "Dedicated one-tail animation set in isolated playtest; user supplied matching sheet. Side-facing source, left mirrored, vertical movement uses side views. No new balance or skill mechanics.",
+      "runtimeActiveInLab": false,
+      "supersededBy": "art-review/redrawn/provenance.json"
+    },
+    {
+      "id": "original-redrawn-heroes-lab",
+      "provenance": "art-review/redrawn/provenance.json",
+      "runtimeActiveInLab": true,
+      "method": "Built-in image_gen original generation; own generated atlases only used as image references",
+      "scope": "Five own atlases for Naruto, Sasuke, skills, clones and one-tail. Ninja Council3 only broad visual/action reference, not copied sprite pixels."
     }
   ],
   "records": [

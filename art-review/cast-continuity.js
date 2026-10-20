@@ -1,11 +1,11 @@
-/* Isolated audit plus opt-in source-frame/hand-origin throw prototype. */
+/* Isolated audit plus switchable source-frame/hand-origin throw prototype. */
 (() => {
   const installed=new WeakSet();
-  function install(G){
+  function install(G,{controls=true}={}){
     if(installed.has(G))return;installed.add(G);
     let clock=0;const casts=new Map(),events=[];
-    const toggle=document.createElement('label'),checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.id='continuity';
-    toggle.append(checkbox,document.createTextNode('實驗：投擲出手銜接'));document.querySelector('header').append(toggle);
+    const toggle=document.createElement('label'),checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.id='continuity';checkbox.checked=true;
+    toggle.append(checkbox,document.createTextNode('實驗：投擲出手銜接'));if(controls)document.querySelector('header')?.append(toggle);
     checkbox.onchange=()=>{const frame=document.querySelector('#game');frame.focus();frame.contentWindow.focus();};
     const valid=c=>c&&c.world===G.World&&c.owner===G.Game.player&&!c.owner.dead&&c.owner.hp>0;
     const selected=p=>p.activeGroup().some(m=>m.id==='naruto-fuma-shuriken');
@@ -13,7 +13,7 @@
     const frames=[{rect:[100,97,29,50],anchor:[14.5,50],hand:[24,28]},{rect:[140,104,50,43],anchor:[25,43],hand:[47,13]},
       {rect:[196,107,50,40],anchor:[25,40],hand:[47,11]},{rect:[252,108,48,39],anchor:[24,39],hand:[45,14]}];
     const pose=c=>frames[c.released?3:Math.min(2,Math.floor(Math.max(0,(clock-c.time)/c.duration)*3))];
-    const hand=(p,c,frame=frames[3])=>{const k=64*p.anim.scale/44,side=Math.cos(c.aim)>=0?1:-1;return {x:p.x+(frame.hand[0]-frame.anchor[0])*k*side,y:p.y+(frame.hand[1]-frame.anchor[1])*k+G.LIFT};};
+    const hand=(p,c,frame=frames[3])=>{const redrawn=G.AnimationLab?.handFor?.(p);if(redrawn)return redrawn;const k=64*p.anim.scale/44,side=Math.cos(c.aim)>=0?1:-1;return {x:p.x+(frame.hand[0]-frame.anchor[0])*k*side,y:p.y+(frame.hand[1]-frame.anchor[1])*k+G.LIFT};};
     // Replace only the generic center-of-body charge ornament, not flying shots.
     const air=G.Combat.drawAirFields,fx=G.VFX.draw;let drawingAir=false;
     G.Combat.drawAirFields=function(...args){const previous=drawingAir;drawingAir=true;try{return air.apply(this,args);}finally{drawingAir=previous;}};
@@ -73,17 +73,16 @@
       }
       const projectile=spawn.call(this,options);
       const actorPose=prototype?frames[3]:G.Naruto.frameFor(G.Naruto.records.get(owner.dex),owner.anim.cur,owner.anim.dir,owner.anim.frame);
-      const event={skill:c.id,time:clock,castAge:clock-c.time,actorAnimation:owner.anim.cur,sourceFrame:actorPose.rect,
+      const event={skill:c.id,time:clock,castAge:clock-c.time,actorAnimation:prototype?'Attack':owner.anim.cur,sourceFrame:actorPose.rect,
         spawn:{x:options.x,y:options.y},expected,originError:Math.hypot(options.x-expected.x,options.y-expected.y),
         phase:fire?(G.NarutoFireball.active?.t>=G.NarutoFireball.config.sealDuration?'breath':'seal'):prototype?'release':'generic-cast',mode:prototype?'prototype':'audit-only'};
-      event.sourceFrame=actorPose.rect;event.actorAnimation=prototype?'Attack':owner.anim.cur;
       events.push(event);if(events.length>100)events.shift();
       const host=document.getElementById('cast-audit');
       if(host)host.textContent=`${fire?'豪火球':'風魔手裏劍'} · 出手 ${(event.castAge*1000).toFixed(0)}ms · ${event.actorAnimation} · 發射點距參考 ${event.originError.toFixed(1)}px · ${event.mode}`;
       return projectile;
     };
     G.CastContinuityLab={events,active,clear:()=>{casts.clear();events.length=0;},get enabled(){return checkbox.checked;}};
-    if(!document.getElementById('cast-audit')){
+    if(controls&&!document.getElementById('cast-audit')){
       const panel=document.createElement('aside');panel.id='cast-audit';panel.textContent='施放連貫性紀錄：選用豪火球或風魔手裏劍，等待實際出手。';
       panel.style.cssText='flex:0 0 auto;padding:6px 12px;background:#102034;color:#ffcf7c;border-top:1px solid #607c99;font:11px system-ui;pointer-events:none';
       document.querySelector('#game').before(panel);

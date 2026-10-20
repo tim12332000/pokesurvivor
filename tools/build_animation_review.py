@@ -8,7 +8,7 @@ SOURCE = ROOT / 'art-review'
 OUTPUT = ROOT / 'dist-animation-review'
 manifest = json.loads((SOURCE / 'manifest.json').read_text(encoding='utf-8'))
 files = {'index.html', 'gallery.js', 'style.css', 'manifest.json', 'README.md',
-         'research.md', 'prompts.json', 'curation.json', 'references/sources.json'}
+         'research.md', 'redrawn/provenance.json', 'redrawn/atlas-map.json'}
 files.update(name for name in ['coverage.json','coverage.md','prompts-expansion.json','gameplay-contract.md'] if (SOURCE/name).is_file())
 for item in manifest['items']:
     if item['status'] != 'candidate':
@@ -16,6 +16,10 @@ for item in manifest['items']:
     files.add(item['image'])
     if item.get('beforeImage'):
         files.add(item['beforeImage'])
+if OUTPUT.exists():
+    if OUTPUT.resolve() != ROOT.resolve() / 'dist-animation-review':
+        raise ValueError('Unexpected export directory')
+    shutil.rmtree(OUTPUT)
 for name in sorted(files):
     source = (SOURCE / name).resolve()
     if not source.is_relative_to(SOURCE.resolve()) or not source.is_file():

@@ -57,19 +57,20 @@
   }
   function animationPlayer(item, sourceImage) {
     const spec = item.animation;
-    if (!spec || !Number.isInteger(spec.columns) || !Number.isInteger(spec.rows) || spec.columns < 1 || spec.rows < 1) return null;
-    const total = spec.columns * spec.rows;
+    if (!spec || !Array.isArray(spec.frames) || !spec.frames.length || !(spec.bodyHeight > 0)) return null;
+    const total = spec.frames.length;
     const sequences = (Array.isArray(spec.sequences) ? spec.sequences : []).map(sequence => ({
       name: String(sequence.name || '動作'),
       loop: sequence.loop ?? spec.loop ?? true,
-      frames: Array.isArray(sequence.frames) ? sequence.frames.filter(frame => Number.isInteger(frame) && frame >= 0 && frame < total) : []
+      mirror: sequence.mirror === true,
+      frames: Array.isArray(sequence.indices) ? sequence.indices.filter(frame => Number.isInteger(frame) && frame >= 0 && frame < total) : []
     })).filter(sequence => sequence.frames.length);
     if (!sequences.length) sequences.push({ name: '全部影格', loop:spec.loop??true, frames: Array.from({ length: total }, (_, i) => i) });
     const wrapper = element('section', 'animation-player');
     const canvas = element('canvas', 'animation-canvas');
     canvas.width = 384;
     canvas.height = 320;
-    canvas.setAttribute('aria-label', `${item.title} 格線動畫播放預覽`);
+    canvas.setAttribute('aria-label', `${item.title} 動畫播放預覽`);
     const context = canvas.getContext('2d');
     const controls = element('div', 'animation-controls');
     const sequenceSelect = element('select');
@@ -93,7 +94,7 @@
     speedLabel.append(speed);
     const counter = element('span', 'frame-counter');
     controls.append(sequenceSelect, previous, toggle, next, speedLabel, counter);
-    wrapper.append(canvas, controls, element('p', 'animation-caption', '格線播放預覽，尚未對齊遊戲錨點'));
+    wrapper.append(canvas, controls, element('p', 'animation-caption', '共用實玩裁切與腳底錨點；固定身高比例，側向可鏡射。'));
     let frameIndex = 0;
     let playing = true;
     let visible = false;
@@ -108,13 +109,18 @@
       counter.textContent = `${frameIndex + 1} / ${frames().length}`;
       context.clearRect(0, 0, canvas.width, canvas.height);
       if (!sourceImage.complete || !sourceImage.naturalWidth) return;
-      const width = sourceImage.naturalWidth / spec.columns;
-      const height = sourceImage.naturalHeight / spec.rows;
-      const scale = Math.min((canvas.width - 24) / width, (canvas.height - 24) / height);
+      const crop = spec.frames[frame];
+      const [sx, sy, width, height] = crop.rect;
+      const [anchorX, anchorY] = crop.anchor;
+      const scale = 160 / spec.bodyHeight;
       const dw = width * scale;
       const dh = height * scale;
       context.imageSmoothingEnabled = false;
-      context.drawImage(sourceImage, (frame % spec.columns) * width, Math.floor(frame / spec.columns) * height, width, height, (canvas.width - dw) / 2, (canvas.height - dh) / 2, dw, dh);
+      context.save();
+      context.translate(canvas.width / 2, canvas.height - 44);
+      if (sequences[Number(sequenceSelect.value) || 0].mirror) context.scale(-1, 1);
+      context.drawImage(sourceImage, sx, sy, width, height, -anchorX * scale, -anchorY * scale, dw, dh);
+      context.restore();
     }
     function shouldPlay() { return playing && visible && !document.hidden && !disposed; }
     function tick(time) {
@@ -175,7 +181,7 @@
     const tags = element('div', 'tags');
     [item.character, categories[item.category], item.kind || '美術提案'].filter(Boolean).forEach(text => tags.append(element('span', 'tag', text)));
     tags.append(element('span', 'tag pending', '尚待使用者核准'));
-    tags.append(element('span','tag',item.runtimePreview?'已接獨立移動試玩':'僅分鏡審閱'));
+    tags.append(element('span','tag',item.runtimePreview?'已接完整內測':'僅供圖像審閱'));
     body.append(tags, element('h2', '', item.title), element('p', 'summary', item.summary || ''));
     const beforeURL = safeURL(item.beforeImage, true);
     if (beforeURL) {
@@ -238,7 +244,7 @@
     const visible = items.filter(item => (filter.value === 'all' || item.character === filter.value) && (categoryFilter.value === 'all' || item.category === categoryFilter.value));
     gallery.replaceChildren(...visible.map(card));
     document.getElementById('count').textContent = `${visible.length} 件候選作品`;
-    message.textContent = visible.length ? '點選圖片可開啟原尺寸檔案。AI 概念稿需另行製作遊戲可用動畫。' : '目前沒有符合篩選條件的候選作品。';
+    message.textContent = visible.length ? '目前五張原創圖集已接入內測。可切換動作、逐格檢查，或展開原尺寸圖集。' : '目前沒有符合篩選條件的候選作品。';
   }
   filter.addEventListener('change', render);
   categoryFilter.addEventListener('change', render);

@@ -1,0 +1,2366 @@
+{
+  "naruto-movement": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          61,
+          476,
+          111,
+          169
+        ],
+        "anchor": [
+          56.0,
+          164
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          283,
+          472,
+          112,
+          172
+        ],
+        "anchor": [
+          55.5,
+          168
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          492,
+          468,
+          108,
+          176
+        ],
+        "anchor": [
+          56.0,
+          171
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          702,
+          476,
+          127,
+          168
+        ],
+        "anchor": [
+          68.5,
+          164
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          55,
+          902,
+          118,
+          181
+        ],
+        "anchor": [
+          60.0,
+          176
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          275,
+          900,
+          111,
+          183
+        ],
+        "anchor": [
+          62.5,
+          179
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          498,
+          895,
+          108,
+          188
+        ],
+        "anchor": [
+          50.5,
+          183
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          707,
+          898,
+          121,
+          185
+        ],
+        "anchor": [
+          64.5,
+          180
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          47,
+          679,
+          134,
+          179
+        ],
+        "anchor": [
+          65.5,
+          175
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          247,
+          678,
+          143,
+          180
+        ],
+        "anchor": [
+          105.0,
+          176
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          470,
+          684,
+          146,
+          174
+        ],
+        "anchor": [
+          97.0,
+          170
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          683,
+          679,
+          144,
+          179
+        ],
+        "anchor": [
+          102.0,
+          175
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          47,
+          679,
+          134,
+          179
+        ],
+        "anchor": [
+          65.5,
+          175
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          247,
+          678,
+          143,
+          180
+        ],
+        "anchor": [
+          105.0,
+          176
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          470,
+          684,
+          146,
+          174
+        ],
+        "anchor": [
+          97.0,
+          170
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          683,
+          679,
+          144,
+          179
+        ],
+        "anchor": [
+          102.0,
+          175
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 168.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "naruto-idle": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          77,
+          48,
+          96,
+          172
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          283,
+          48,
+          95,
+          171
+        ],
+        "anchor": [
+          47.5,
+          167
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          77,
+          48,
+          96,
+          172
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          283,
+          48,
+          95,
+          171
+        ],
+        "anchor": [
+          47.5,
+          167
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          509,
+          46,
+          96,
+          173
+        ],
+        "anchor": [
+          47.5,
+          169
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          714,
+          48,
+          97,
+          171
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          509,
+          46,
+          96,
+          173
+        ],
+        "anchor": [
+          47.5,
+          169
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          714,
+          48,
+          97,
+          171
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "naruto-hurt": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          74,
+          1121,
+          97,
+          174
+        ],
+        "anchor": [
+          48.5,
+          169
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          277,
+          1123,
+          117,
+          172
+        ],
+        "anchor": [
+          60.0,
+          168
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          77,
+          48,
+          96,
+          172
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          283,
+          48,
+          95,
+          171
+        ],
+        "anchor": [
+          47.5,
+          167
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          497,
+          1142,
+          107,
+          153
+        ],
+        "anchor": [
+          54.5,
+          149
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          710,
+          1124,
+          107,
+          171
+        ],
+        "anchor": [
+          53.5,
+          167
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          509,
+          46,
+          96,
+          173
+        ],
+        "anchor": [
+          47.5,
+          169
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          714,
+          48,
+          97,
+          171
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          485,
+          259,
+          132,
+          171
+        ],
+        "anchor": [
+          81.0,
+          166
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          729,
+          251,
+          82,
+          179
+        ],
+        "anchor": [
+          40.5,
+          175
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          485,
+          259,
+          132,
+          171
+        ],
+        "anchor": [
+          81.0,
+          166
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          729,
+          251,
+          82,
+          179
+        ],
+        "anchor": [
+          40.5,
+          175
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "naruto-death": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          57,
+          1347,
+          122,
+          155
+        ],
+        "anchor": [
+          55.0,
+          151
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          249,
+          1382,
+          161,
+          118
+        ],
+        "anchor": [
+          67.5,
+          114
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          433,
+          1400,
+          202,
+          100
+        ],
+        "anchor": [
+          86.5,
+          96
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          661,
+          1417,
+          196,
+          73
+        ],
+        "anchor": [
+          98.5,
+          69
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 168.5
+      }
+    ]
+  },
+  "naruto-attack": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          46,
+          1543,
+          118,
+          181
+        ],
+        "anchor": [
+          59.0,
+          176
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          252,
+          1547,
+          153,
+          177
+        ],
+        "anchor": [
+          63.5,
+          172
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          475,
+          1546,
+          160,
+          178
+        ],
+        "anchor": [
+          63.0,
+          173
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          709,
+          1543,
+          112,
+          181
+        ],
+        "anchor": [
+          56.5,
+          176
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 168.5
+      }
+    ]
+  },
+  "sasuke-movement": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          52,
+          472,
+          123,
+          182
+        ],
+        "anchor": [
+          65.5,
+          178
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          272,
+          471,
+          124,
+          183
+        ],
+        "anchor": [
+          67.5,
+          179
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          487,
+          471,
+          120,
+          183
+        ],
+        "anchor": [
+          59.0,
+          179
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          703,
+          471,
+          140,
+          183
+        ],
+        "anchor": [
+          70.5,
+          179
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          53,
+          895,
+          122,
+          196
+        ],
+        "anchor": [
+          63.5,
+          192
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          273,
+          895,
+          115,
+          196
+        ],
+        "anchor": [
+          67.0,
+          192
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          497,
+          894,
+          112,
+          197
+        ],
+        "anchor": [
+          48.0,
+          193
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          708,
+          894,
+          115,
+          197
+        ],
+        "anchor": [
+          65.0,
+          193
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          42,
+          680,
+          145,
+          183
+        ],
+        "anchor": [
+          70.0,
+          180
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          248,
+          679,
+          151,
+          184
+        ],
+        "anchor": [
+          107.5,
+          181
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          463,
+          680,
+          158,
+          181
+        ],
+        "anchor": [
+          107.0,
+          178
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          680,
+          680,
+          153,
+          183
+        ],
+        "anchor": [
+          108.5,
+          180
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          42,
+          680,
+          145,
+          183
+        ],
+        "anchor": [
+          70.0,
+          180
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          248,
+          679,
+          151,
+          184
+        ],
+        "anchor": [
+          107.5,
+          181
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          463,
+          680,
+          158,
+          181
+        ],
+        "anchor": [
+          107.0,
+          178
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          680,
+          680,
+          153,
+          183
+        ],
+        "anchor": [
+          108.5,
+          180
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "sasuke-idle": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          72,
+          39,
+          105,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          279,
+          39,
+          104,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          72,
+          39,
+          105,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          279,
+          39,
+          104,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          503,
+          39,
+          105,
+          186
+        ],
+        "anchor": [
+          52.5,
+          182
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          709,
+          39,
+          107,
+          186
+        ],
+        "anchor": [
+          53.0,
+          182
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          503,
+          39,
+          105,
+          186
+        ],
+        "anchor": [
+          52.5,
+          182
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          709,
+          39,
+          107,
+          186
+        ],
+        "anchor": [
+          53.0,
+          182
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "sasuke-hurt": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          71,
+          1119,
+          106,
+          182
+        ],
+        "anchor": [
+          53.0,
+          178
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          273,
+          1114,
+          121,
+          185
+        ],
+        "anchor": [
+          61.5,
+          181
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          72,
+          39,
+          105,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          279,
+          39,
+          104,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          497,
+          1132,
+          110,
+          166
+        ],
+        "anchor": [
+          56.0,
+          162
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          709,
+          1114,
+          110,
+          184
+        ],
+        "anchor": [
+          55.5,
+          180
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          503,
+          39,
+          105,
+          186
+        ],
+        "anchor": [
+          52.5,
+          182
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          709,
+          39,
+          107,
+          186
+        ],
+        "anchor": [
+          53.0,
+          182
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          474,
+          261,
+          142,
+          177
+        ],
+        "anchor": [
+          89.0,
+          173
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          722,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          46.0,
+          182
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          474,
+          261,
+          142,
+          177
+        ],
+        "anchor": [
+          89.0,
+          173
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          722,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          46.0,
+          182
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "sasuke-death": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          53,
+          1340,
+          131,
+          166
+        ],
+        "anchor": [
+          60.0,
+          162
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          246,
+          1370,
+          166,
+          136
+        ],
+        "anchor": [
+          67.5,
+          132
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          433,
+          1389,
+          204,
+          115
+        ],
+        "anchor": [
+          97.5,
+          111
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          664,
+          1408,
+          199,
+          83
+        ],
+        "anchor": [
+          97.5,
+          79
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 182.0
+      }
+    ]
+  },
+  "sasuke-attack": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          44,
+          1541,
+          126,
+          189
+        ],
+        "anchor": [
+          62.0,
+          185
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          250,
+          1542,
+          170,
+          188
+        ],
+        "anchor": [
+          66.0,
+          184
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          471,
+          1543,
+          174,
+          187
+        ],
+        "anchor": [
+          66.5,
+          183
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          707,
+          1541,
+          118,
+          189
+        ],
+        "anchor": [
+          59.0,
+          185
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 182.0
+      }
+    ]
+  },
+  "naruto-clones": {
+    "source": "redrawn/naruto-skills-v2.png",
+    "bodyHeight": 250.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          66,
+          49,
+          191,
+          256
+        ],
+        "anchor": [
+          95.5,
+          252
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          377,
+          51,
+          190,
+          254
+        ],
+        "anchor": [
+          95.0,
+          250
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          693,
+          51,
+          189,
+          254
+        ],
+        "anchor": [
+          94.5,
+          250
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          1017,
+          53,
+          185,
+          251
+        ],
+        "anchor": [
+          92.5,
+          247
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 250.0
+      }
+    ]
+  },
+  "naruto-rasengan": {
+    "source": "redrawn/naruto-skills-v2.png",
+    "bodyHeight": 250.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          49,
+          353,
+          210,
+          255
+        ],
+        "anchor": [
+          105.0,
+          251
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          381,
+          356,
+          204,
+          252
+        ],
+        "anchor": [
+          102.0,
+          248
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          642,
+          365,
+          321,
+          243
+        ],
+        "anchor": [
+          121.0,
+          239
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          1018,
+          356,
+          194,
+          252
+        ],
+        "anchor": [
+          97.0,
+          248
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 250.0
+      }
+    ]
+  },
+  "naruto-throw": {
+    "source": "redrawn/naruto-skills-v2.png",
+    "bodyHeight": 250.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          55,
+          649,
+          228,
+          256
+        ],
+        "anchor": [
+          105.0,
+          252
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          353,
+          655,
+          232,
+          250
+        ],
+        "anchor": [
+          114.5,
+          246
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          649,
+          658,
+          303,
+          247
+        ],
+        "anchor": [
+          116.5,
+          243
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          1009,
+          658,
+          198,
+          247
+        ],
+        "anchor": [
+          99.0,
+          243
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 250.0
+      }
+    ]
+  },
+  "naruto-cloak": {
+    "source": "redrawn/naruto-skills-v2.png",
+    "bodyHeight": 250.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          62,
+          937,
+          187,
+          268
+        ],
+        "anchor": [
+          93.5,
+          263
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          357,
+          948,
+          224,
+          255
+        ],
+        "anchor": [
+          112.0,
+          251
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          662,
+          992,
+          245,
+          212
+        ],
+        "anchor": [
+          121.0,
+          208
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          973,
+          1006,
+          252,
+          197
+        ],
+        "anchor": [
+          126.0,
+          193
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 250.0
+      }
+    ]
+  },
+  "sasuke-chidori": {
+    "source": "redrawn/sasuke-skills-v2.png",
+    "bodyHeight": 254.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          50,
+          118,
+          228,
+          221
+        ],
+        "anchor": [
+          104.5,
+          217
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          346,
+          89,
+          220,
+          250
+        ],
+        "anchor": [
+          90.0,
+          246
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          637,
+          90,
+          300,
+          249
+        ],
+        "anchor": [
+          108.5,
+          245
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          990,
+          86,
+          177,
+          253
+        ],
+        "anchor": [
+          77.0,
+          249
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 254.5
+      }
+    ]
+  },
+  "sasuke-fireball": {
+    "source": "redrawn/sasuke-skills-v2.png",
+    "bodyHeight": 254.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          78,
+          388,
+          164,
+          263
+        ],
+        "anchor": [
+          81.5,
+          259
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          385,
+          391,
+          165,
+          260
+        ],
+        "anchor": [
+          83.0,
+          256
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          653,
+          417,
+          207,
+          234
+        ],
+        "anchor": [
+          103.5,
+          230
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          990,
+          389,
+          152,
+          262
+        ],
+        "anchor": [
+          76.0,
+          258
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 254.5
+      }
+    ]
+  },
+  "sasuke-throw": {
+    "source": "redrawn/sasuke-skills-v2.png",
+    "bodyHeight": 254.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          63,
+          690,
+          216,
+          260
+        ],
+        "anchor": [
+          104.0,
+          256
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          337,
+          693,
+          217,
+          257
+        ],
+        "anchor": [
+          105.5,
+          253
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          619,
+          698,
+          293,
+          252
+        ],
+        "anchor": [
+          112.5,
+          248
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          964,
+          695,
+          195,
+          255
+        ],
+        "anchor": [
+          92.0,
+          251
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 254.5
+      }
+    ]
+  },
+  "sasuke-sword": {
+    "source": "redrawn/sasuke-skills-v2.png",
+    "bodyHeight": 254.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          62,
+          990,
+          195,
+          260
+        ],
+        "anchor": [
+          93.0,
+          256
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          325,
+          990,
+          263,
+          260
+        ],
+        "anchor": [
+          105.0,
+          256
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          588,
+          1016,
+          370,
+          234
+        ],
+        "anchor": [
+          122.5,
+          230
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          968,
+          986,
+          197,
+          264
+        ],
+        "anchor": [
+          89.5,
+          260
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 254.5
+      }
+    ]
+  }
+}

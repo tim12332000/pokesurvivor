@@ -26,7 +26,10 @@
       "target_frames": 16,
       "runtime_integrated": false,
       "original_reference": "side-only battle sheet; new front/back art requires review",
-      "preview_integrated": true
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/sasuke-common-v1.png"
     },
     {
       "id": "sasuke-idle-v01",
@@ -45,7 +48,10 @@
       "target_frames": 16,
       "runtime_integrated": false,
       "original_reference": "side-only battle sheet; new front/back art requires review",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/sasuke-common-v1.png"
     },
     {
       "id": "sasuke-hurt-v01",
@@ -64,7 +70,10 @@
       "target_frames": 16,
       "runtime_integrated": false,
       "original_reference": "side-only battle sheet; new front/back art requires review",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/sasuke-common-v1.png"
     },
     {
       "id": "sasuke-death-v01",
@@ -83,7 +92,10 @@
       "target_frames": 16,
       "runtime_integrated": false,
       "original_reference": "side-only battle sheet; new front/back art requires review",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/sasuke-common-v1.png"
     },
     {
       "id": "naruto-movement-v01",
@@ -102,7 +114,10 @@
       "target_frames": 16,
       "runtime_integrated": false,
       "original_reference": "original four-direction overworld sheet",
-      "preview_integrated": true
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/naruto-common-v1.png"
     },
     {
       "id": "naruto-idle-v01",
@@ -121,7 +136,10 @@
       "target_frames": 16,
       "runtime_integrated": false,
       "original_reference": "original four-direction overworld sheet",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/naruto-common-v1.png"
     },
     {
       "id": "naruto-hurt-v01",
@@ -140,7 +158,10 @@
       "target_frames": 16,
       "runtime_integrated": false,
       "original_reference": "original four-direction overworld sheet",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/naruto-common-v1.png"
     },
     {
       "id": "naruto-death-v01",
@@ -159,7 +180,10 @@
       "target_frames": 16,
       "runtime_integrated": false,
       "original_reference": "original four-direction overworld sheet",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/naruto-common-v1.png"
     },
     {
       "id": "sasuke-chidori-v02",
@@ -170,7 +194,10 @@
       "image": "candidates/sasuke-chidori-v02.png",
       "runtime_integrated": false,
       "status_evidence": "Existing gallery manifest lists candidate and image file exists; user approval remains pending.",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/sasuke-skills-v2.png"
     },
     {
       "id": "sasuke-fireball-v01",
@@ -181,8 +208,10 @@
       "image": "candidates/sasuke-fireball-v01.png",
       "runtime_integrated": false,
       "status_evidence": "Existing gallery manifest lists candidate and image file exists; user approval remains pending.",
-      "preview_integrated": false,
-      "preview_status": "existing mouth-origin release verified in actual game"
+      "preview_integrated": true,
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_source": "redrawn/sasuke-skills-v2.png"
     },
     {
       "id": "naruto-clones-v02",
@@ -193,7 +222,10 @@
       "image": "candidates/naruto-clones-v02.png",
       "runtime_integrated": false,
       "status_evidence": "Existing gallery manifest lists candidate and image file exists; user approval remains pending.",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/naruto-skills-v2.png"
     },
     {
       "id": "naruto-rasengan-v01",
@@ -204,7 +236,10 @@
       "image": "candidates/naruto-rasengan-v01.png",
       "runtime_integrated": false,
       "status_evidence": "Existing gallery manifest lists candidate and image file exists; user approval remains pending.",
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/naruto-skills-v2.png"
     },
     {
       "id": "sasuke-fuma-v01",
@@ -215,7 +250,9 @@
       "image": "candidates/sasuke-fuma-v01.png",
       "runtime_integrated": false,
       "preview_integrated": true,
-      "preview_status": "source-frame handoff prototype; rejected AI sheet not used"
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_source": "redrawn/sasuke-skills-v2.png"
     },
     {
       "id": "sasuke-kusanagi-v01",
@@ -225,7 +262,10 @@
       "status": "needs-revision",
       "image": "candidates/sasuke-kusanagi-v01.png",
       "runtime_integrated": false,
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/sasuke-skills-v2.png"
     },
     {
       "id": "sasuke-sharingan-v01",
@@ -242,7 +282,10 @@
         "mangekyo-amaterasu",
         "eternal-mangekyo-susanoo"
       ],
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/sasuke-skills-v2.png"
     },
     {
       "id": "naruto-rasenshuriken-v01",
@@ -252,7 +295,10 @@
       "status": "needs-revision",
       "image": "candidates/naruto-rasenshuriken-v01.png",
       "runtime_integrated": false,
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/naruto-skills-v2.png"
     },
     {
       "id": "naruto-cloak-v01",
@@ -262,9 +308,13 @@
       "status": "needs-revision",
       "image": "candidates/naruto-cloak-v01.png",
       "runtime_integrated": false,
-      "preview_integrated": false
+      "preview_integrated": true,
+      "preview_treatment": "newly drawn original atlas; shared proportions and outline; original game material is reference only",
+      "preview_status": "verified: .omx/state/redrawn-heroes/acceptance.json",
+      "preview_source": "redrawn/one-tail-v2.png"
     }
   ],
   "candidate_boards": 11,
-  "not_approved_boards": 17
+  "not_approved_boards": 17,
+  "runtime_scope": "Default enabled playtest uses only five newly drawn atlases; original/candidate history retained as reference. Original comparison mode is explicitly opt-in."
 }

@@ -1,5 +1,6 @@
 /* Personal test controls: the public IP is checked in memory and never saved. */
 (() => {
+  const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
   const button=document.createElement('button');
   button.id='dev-level-up';button.className='btn small gold hidden';button.translate=false;
   button.textContent='升一等';button.title='測試用：升一等並選擇升級';
@@ -7,7 +8,7 @@
   document.body.append(button);
   const notice=document.createElement('p');notice.translate=false;notice.id='dev-network-notice';
   notice.textContent='測試按鈕會透過 ipify 查詢目前的公網 IPv4，用於判斷是否顯示個人測試控制。本網站不將完整 IP 寫入遊戲存檔；查詢失敗不影響一般遊玩。';
-  document.querySelector('#scr-legal .box')?.append(notice);
+  if (!local) document.querySelector('#scr-legal .box')?.append(notice);
   let allowed=false,pending=false,controller=null,generation=0;
   function render() {
     const state=G.Game.state,player=G.Game.player;
@@ -24,6 +25,7 @@
     const current=++generation;
     controller?.abort();const request=new AbortController();controller=request;
     const signal=request.signal;
+    if (local) { allowed=true;render();return true; }
     allowed=false;render();
     let timer=setTimeout(()=>request.abort(),5000);
     try {

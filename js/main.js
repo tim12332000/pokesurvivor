@@ -40,7 +40,12 @@
     G.I18n.startDom();
     // Espera a la fuente pixel para que la UI no salte al cargarla.
     const ready = document.fonts && document.fonts.load ? document.fonts.load('16px Pixelify') : Promise.resolve();
-    ready.catch(() => {}).then(() => G.Flow.boot());
+    Promise.all([ready.catch(() => {}), window.PS_REDRAWN_READY]).then(() => G.Flow.boot()).catch(error => {
+      console.error('[Character art]', error);
+      const el = document.getElementById('boot');
+      el.classList.remove('hidden');
+      el.innerHTML = '<p>角色圖像載入失敗，請重新載入。</p><button class="btn gold" onclick="location.reload()">重新載入</button>';
+    });
   }
   if (document.readyState === 'loading') addEventListener('DOMContentLoaded', boot);
   else boot();

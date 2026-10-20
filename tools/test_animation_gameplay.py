@@ -1,4 +1,4 @@
-"""Exercise the actual iframe game; synthetic opaque test cells are not art candidates."""
+"""Exercise real retained animation assets and original survivor combat contracts."""
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
 import json, mimetypes
@@ -6,32 +6,32 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = 'http://127.0.0.1:8318/'
+OUT = ROOT/'.omx/state/animation-complete/legacy'
+OUT.mkdir(parents=True, exist_ok=True)
 
 with sync_playwright() as pw:
     browser = pw.chromium.launch(executable_path=r'C:\Program Files\Google\Chrome\Application\chrome.exe', headless=True)
     context = browser.new_context(viewport={'width':1200,'height':900}, service_workers='block')
-    errors=[];synthetic=True
+    errors=[]
     def route(request):
         path=unquote(urlsplit(request.request.url).path).lstrip('/')
-        if synthetic and path=='art-review/playtest-config.json':
-            return request.fulfill(json={'sprites':{'30002':{'image':'test-cells.svg','columns':4,'rows':4,'directions':{'down':0,'up':1,'left':2,'right':3}}}})
-        if path=='art-review/test-cells.svg':
-            cells=''.join(f'<rect x="{col*40+13}" y="{row*40+4}" width="14" height="34" fill="{color}"/>' for row,color in enumerate(['red','blue','green','yellow']) for col in range(4))
-            return request.fulfill(content_type='image/svg+xml',body=f'<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160">{cells}</svg>')
         file=ROOT/path
         request.fulfill(status=200 if file.is_file() else 404,body=file.read_bytes() if file.is_file() else b'',content_type=mimetypes.guess_type(file)[0] or 'application/octet-stream')
     context.route(BASE+'**',route)
     page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto(BASE+'art-review/playtest.html')
     try:
-        page.wait_for_function('GameplayLab.ready && GameplayLab.assets.has(30002)')
+        page.wait_for_function('GameplayLab.ready && AnimationAssets.ready')
     except Exception:
-        print('BOOT DIAGNOSTICS',page.evaluate('({ready:GameplayLab.ready,assets:[...GameplayLab.assets.keys()],frames:[...document.querySelectorAll("iframe")].map(f=>({url:f.src,boot:f.contentDocument.querySelector("#boot")?.className,G:!!f.contentWindow.G,db:!!f.contentWindow.G?.DB?.save,text:f.contentDocument.body.innerText.slice(0,200)}))})'),errors)
+        print('BOOT DIAGNOSTICS',page.evaluate('({ready:GameplayLab.ready,assets:AnimationAssets.keys,frames:[...document.querySelectorAll("iframe")].map(f=>({url:f.src,boot:f.contentDocument.querySelector("#boot")?.className,G:!!f.contentWindow.G,db:!!f.contentWindow.G?.DB?.save,text:f.contentDocument.body.innerText.slice(0,200)}))})'),errors)
         raise
     frame=page.frame_locator('#game')
     if frame.locator('#tap-start').is_visible():frame.locator('#tap-start').click()
     page.locator('[data-hero="30002"]').click()
-    page.wait_for_function('GameplayLab.attached?.player.dex===30002')
+    page.wait_for_function("document.querySelector('#game').contentWindow.G.Game.player?.dex===30002")
+    assert page.locator('#candidate').is_checked()
+    assert page.locator('#continuity').is_checked()
+    page.locator('#continuity').uncheck()
     iframe=next(f for f in page.frames if '/.omx/digimon.html' in f.url)
     iframe.evaluate('G.Game.togglePause()')
     page.locator('#training').click()
@@ -60,19 +60,35 @@ with sync_playwright() as pw:
       let cast=0;const original=p.cast;p.cast=function(...a){cast++;return original.apply(this,a)};
       G.Combat.tick(.1,p,0);p.cast=original;
       assert(cast===1,'selected skill no longer autocasts');assert(m.dmg===damage,'render toggle changed damage');
-      G.Combat.clearFields();p.anim.once=false;p.anim.done=false;p.walking=true;p.moveAngle=-Math.PI/2;p.attackFace=0;
-      const ctx=document.createElement('canvas').getContext('2d');let imageCall;
-      const draw=ctx.drawImage.bind(ctx);ctx.drawImage=(...a)=>{imageCall=a;return draw(...a)};
-      const before=L.counters.candidate;p.anim.draw(ctx,80,80);
-      assert(L.counters.candidate===before+1,'walking candidate not shown');assert(imageCall[2]>=40&&imageCall[2]<80,'up direction row incorrect');
-      p.moveAngle=Math.PI/2;p.anim.draw(ctx,80,80);assert(imageCall[2]<40,'down direction row incorrect');
-      p.anim.play('Shoot');const fallback=L.counters.source;p.anim.draw(ctx,80,80);assert(L.counters.source===fallback+1,'cast pose overwritten');
+      G.Combat.clearFields();G.AnimationLab.clear();p.anim.once=false;p.anim.done=false;
+      p.walking=true;p.moveAngle=-Math.PI/2;p.anim.dir=4;p.attackFace=0;p.anim.base='Walk';
+      const ctx=document.createElement('canvas').getContext('2d');let imageCall,transform;
+      const draw=ctx.drawImage.bind(ctx);ctx.drawImage=(...a)=>{imageCall=a;transform=ctx.getTransform();return draw(...a)};
+      const before=L.counters.candidate,sourceBefore=L.counters.source;
+      p.anim.draw(ctx,80,80);
+      let pose=G.AnimationLab.stateFor(p.anim);
+      assert(L.counters.candidate===before+1,'walking candidate not shown');
+      assert(pose.state==='movement'&&pose.direction==='up','up pose incorrect '+JSON.stringify(pose));
+      const upAsset=parent.AnimationAssets.get(pose.key),upFrame=upAsset.frames[pose.frame];
+      assert(imageCall[0]===upAsset.image,'actual retained asset not rendered');
+      assert(imageCall.slice(1,5).join()===upFrame.rect.join(),'authored crop not used');
+      assert(Math.abs(transform.a-64/upAsset.bodyHeight*p.anim.scale)<1e-8,'scale depends on frame crop');
+      assert(imageCall[5]===-upFrame.anchor[0]&&imageCall[6]===-upFrame.anchor[1],'foot anchor ignored');
+      p.moveAngle=Math.PI/2;p.anim.dir=0;p.anim.draw(ctx,80,80);
+      assert(G.AnimationLab.stateFor(p.anim).direction==='down','down pose incorrect');
+      p.walking=false;p.anim.base='Idle';G.AnimationLab.clear();p.anim.play('Shoot');
+      p.anim.draw(ctx,80,80);assert(L.counters.source===sourceBefore,'generic cast fell back to old body');
+      assert(imageCall[0]!==G.Naruto.records.get(p.dex).image,'old body appeared');
       const old=p.anim.draw;p.setActive(p.slots.findIndex(g=>g.some(m=>m.id==='naruto-kusanagi')));
       p.anim.once=false;p.frozen=false;p.update(.01);assert(!p.frozen,'switch froze player');
       assert(p.anim.draw===old,'switch replaced renderer');
-      const clone=new G.Sprites.Animator(p.dex,1);assert(!Object.hasOwn(clone,'draw'),'other animator patched');
-      return {autocasts:cast,damage,upDownRowsCorrect:true,castPosePreserved:true,isolatedRenderer:true};
+      const clone=new G.Sprites.Animator(30001,1),cloneBefore=L.counters.candidate;
+      clone.draw(ctx,80,80);assert(L.counters.candidate===cloneBefore+1,'clone body not integrated');
+      assert(!Object.hasOwn(clone,'draw'),'animator instance unnecessarily patched');
+      return {autocasts:cast,damage,upDownRowsCorrect:true,authoredAnchors:true,fixedBodyScale:true,fullCandidateRenderer:true,cloneRenderer:true};
     }'''))
+    # This block audits the original source-frame continuity adapter deliberately.
+    page.locator('#candidate').uncheck()
     report['continuityAudit']=iframe.evaluate('''() => {
       const p=G.Game.player,A=G.CastContinuityLab,assert=(v,m)=>{if(!v)throw Error(m)};
       const block=G.World.projectileBlock;G.World.projectileBlock=()=>false;
@@ -116,21 +132,19 @@ with sync_playwright() as pw:
         return {fireball:{age:fire.castAge,originError:fire.originError},baselineFuma:{originError:fuma.originError,actorAnimation:fuma.actorAnimation},prototypeFuma:{originError:release.originError,releaseFrame:release.sourceFrame,movementAnchor:true,cancellation:'before release only',curveOrigin:'matches hand',powerAndSpeed:'unchanged',walls:'blocked',mirror:'left passed',quantity:'three shots from same hand'}};
       }finally{p.quantityBonus=0;parent.document.getElementById('continuity').checked=false;G.World.projectileBlock=block;G.Combat.clearFields();G.Projectiles.clear();}
     }''')
-    old_wrapper=iframe.evaluate('window.oldPlayer=G.Game.player;window.oldOriginal=parent.GameplayLab.attached.original;true')
+    old_wrapper=iframe.evaluate('window.oldPlayer=G.Game.player;window.oldDraw=oldPlayer.anim.draw;true')
     page.locator('[data-hero="30001"]').click()
-    page.wait_for_function('GameplayLab.attached?.player.dex===30001')
-    assert iframe.evaluate('oldPlayer.anim.draw===oldOriginal'),'old player renderer not restored'
-    synthetic=False
-    page.evaluate('GameplayLab.reloadConfig()')
-    assert page.evaluate('GameplayLab.assets.size')==2,'actual curated movement sheets missing'
+    page.wait_for_function("document.querySelector('#game').contentWindow.G.Game.player?.dex===30001")
+    assert iframe.evaluate('oldPlayer.anim.draw===oldDraw'),'restart stacked or replaced renderer'
+    assert page.evaluate('AnimationAssets.keys.length')==18,'authored sequences missing'
     for dex,name in [(30001,'naruto'),(30002,'sasuke')]:
         page.locator(f'[data-hero="{dex}"]').click()
-        page.wait_for_function(f'GameplayLab.attached?.player.dex==={dex}')
+        page.wait_for_function(f"document.querySelector('#game').contentWindow.G.Game.player?.dex==={dex}")
         iframe.evaluate('G.Game.togglePause();G.Combat.clearFields();G.EnemyMgr.clear();G.Game.player.walking=true;G.Game.player.moveAngle=Math.PI/2;G.Game.player.anim.once=false')
         page.locator('#candidate').set_checked(True)
-        page.screenshot(path=str(ROOT/'art-review'/'previews'/f'{name}-actual-game-walk.png'))
+        page.screenshot(path=str(OUT/f'{name}-actual-game-walk.png'))
         iframe.evaluate("G.Game.player.anim.play('Shoot')")
-        page.screenshot(path=str(ROOT/'art-review'/'previews'/f'{name}-actual-game-cast.png'))
+        page.screenshot(path=str(OUT/f'{name}-actual-game-cast.png'))
     page.locator('#continuity').set_checked(True)
     iframe.evaluate('''()=>{
       const p=G.Game.player;if(G.Game.state==='playing')G.Game.togglePause();G.UI.hide('scr-pause');
@@ -140,22 +154,22 @@ with sync_playwright() as pw:
       const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},180,0,{hp:1,spd:1,dmg:1});G.EnemyMgr.add(e);p.target=e;
       p.activeMove().t=0;G.Combat.tick(.001,p,0);G.Combat.updateFields(.199);G.Camera.x=G.Camera.y=0;
     }''')
-    page.screenshot(path=str(ROOT/'art-review/previews/fuma-continuity-windup.png'))
+    page.screenshot(path=str(OUT/'fuma-continuity-windup.png'))
     iframe.evaluate('G.Combat.updateFields(.002)')
-    page.screenshot(path=str(ROOT/'art-review/previews/fuma-continuity-release.png'))
+    page.screenshot(path=str(OUT/'fuma-continuity-release.png'))
     mobile=browser.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True,service_workers='block')
     mobile.route(BASE+'**',route)
     phone=mobile.new_page();phone.on('pageerror',lambda e:errors.append(str(e)));phone.goto(BASE+'art-review/playtest.html')
-    phone.wait_for_function('GameplayLab.ready && GameplayLab.assets.has(30002)')
+    phone.wait_for_function('GameplayLab.ready && AnimationAssets.ready')
     if phone.frame_locator('#game').locator('#tap-start').is_visible():phone.frame_locator('#game').locator('#tap-start').tap()
-    phone.locator('[data-hero="30002"]').tap();phone.wait_for_function('GameplayLab.attached?.player.dex===30002')
+    phone.locator('[data-hero="30002"]').tap();phone.wait_for_function("document.querySelector('#game').contentWindow.G.Game.player?.dex===30002")
     phone.locator('#candidate').set_checked(True)
     gameframe=next(f for f in phone.frames if '/.omx/digimon.html' in f.url)
     gameframe.evaluate("if(G.Game.state==='playing')G.Game.togglePause();G.UI.hide('scr-pause');G.Game.player.walking=true;G.Game.player.anim.once=false;G.Game.player.moveAngle=-Math.PI/2")
     bounds=phone.locator('#game').bounding_box();assert bounds['y']+bounds['height']<=844.5
     assert gameframe.evaluate('G.Touch.active&&G.Touch.controlLayout(innerWidth,innerHeight,2).slots.every(s=>s.y+s.h<=innerHeight)')
-    phone.screenshot(path=str(ROOT/'art-review/previews/playtest-mobile.png'))
+    phone.screenshot(path=str(OUT/'playtest-mobile.png'))
     assert not errors,errors
-    report['movementDistances']=distances;report['oldPlayerRestored']=True
+    report['movementDistances']=distances;report['restartRendererStable']=True
     print(json.dumps(report,ensure_ascii=False))
     browser.close()

@@ -9,33 +9,34 @@ with sync_playwright() as p:
     context=browser.new_context(viewport={'width':1440,'height':1000},accept_downloads=True)
     page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
     page.goto('http://127.0.0.1:8317/art-review/index.html')
-    page.wait_for_function("document.querySelectorAll('.card').length===11")
+    page.wait_for_function("document.querySelectorAll('.card').length===5")
     page.locator('.card').last.scroll_into_view_if_needed()
     page.wait_for_function("[...document.images].every(i=>i.complete&&i.naturalWidth>0)")
     assert 'feat/animation-presentation-lab' in page.locator('#branch').inner_text()
-    page.locator('#character').select_option('佐助');assert page.locator('.card').count()==5
-    page.locator('#character').select_option('鳴人');assert page.locator('.card').count()==6
+    page.locator('#character').select_option('佐助');assert page.locator('.card').count()==2
+    page.locator('#character').select_option('鳴人');assert page.locator('.card').count()==3
     page.locator('#character').select_option('all')
-    page.locator('#category').select_option('movement');assert page.locator('.card').count()==2
+    page.locator('#category').select_option('common');assert page.locator('.card').count()==2
     assert page.locator('.animation-player').count()==2
-    page.locator('#category').select_option('skill');assert page.locator('.card').count()==4
+    page.locator('#category').select_option('skill');assert page.locator('.card').count()==3
     page.locator('#category').select_option('common')
-    death=page.locator('[data-item-id="naruto-death-v01"]');death.locator('canvas').scroll_into_view_if_needed()
+    death=page.locator('[data-item-id="naruto-common-v1"]');death.locator('canvas').scroll_into_view_if_needed()
+    death.locator('.animation-controls select').select_option(label='倒下')
     death.locator('input[type=number]').fill('24');death.locator('input[type=number]').dispatch_event('change')
-    page.wait_for_function("document.querySelector('[data-item-id=naruto-death-v01] canvas').dataset.frame==='3'")
-    page.wait_for_timeout(200);assert death.locator('canvas').get_attribute('data-frame')=='3'
+    page.wait_for_function("document.querySelector('[data-item-id=naruto-common-v1] canvas').dataset.frame==='27'")
+    page.wait_for_timeout(200);assert death.locator('canvas').get_attribute('data-frame')=='27'
     page.locator('#category').select_option('all')
     first=page.locator('.card').first
     first.locator('[data-decision=revise]').click()
     first.locator('textarea').fill('QA: preserve poses, reduce lightning')
-    page.reload();page.wait_for_function("document.querySelectorAll('.card').length===11")
+    page.reload();page.wait_for_function("document.querySelectorAll('.card').length===5")
     assert page.locator('.card').first.locator('[data-decision=revise]').get_attribute('aria-pressed')=='true'
     assert page.locator('.card').first.locator('textarea').input_value()=='QA: preserve poses, reduce lightning'
     with page.expect_download() as download:page.locator('#export').click()
     data=json.loads(Path(download.value.path()).read_text(encoding='utf-8'))
-    assert len(data['reviews'])==11 and data['reviews'][0]['decision']=='revise'
+    assert len(data['reviews'])==5 and data['reviews'][0]['decision']=='revise'
     assert data['branch']=='feat/animation-presentation-lab'
-    page.evaluate('localStorage.clear()');page.reload();page.wait_for_function("document.querySelectorAll('.card').length===11")
+    page.evaluate('localStorage.clear()');page.reload();page.wait_for_function("document.querySelectorAll('.card').length===5")
     for w,h in [(1440,1000),(390,844)]:
         page.set_viewport_size({'width':w,'height':h})
         assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
@@ -45,5 +46,8 @@ with sync_playwright() as p:
     # The review export has its own entry and no game runtime entry.
     output=ROOT/'dist-animation-review'
     assert (output/'art-review/index.html').is_file() and not (output/'.omx/digimon.html').exists()
-    print(json.dumps({'ok':True,'candidates':11,'images':'all loaded','filters':'both characters and action categories','reviews':'persist and export','viewports':[1440,390],'gameRuntimeExported':False,'errors':errors}))
+    assert len(list((output/'art-review').rglob('*.png')))==5
+    assert not (output/'art-review/candidates').exists()
+    assert not (output/'art-review/references').exists()
+    print(json.dumps({'ok':True,'candidates':5,'images':'all loaded, original atlases only','filters':'both characters and action categories','reviews':'persist and export','viewports':[1440,390],'gameRuntimeExported':False,'errors':errors}))
     browser.close()
