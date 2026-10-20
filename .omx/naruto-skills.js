@@ -276,9 +276,15 @@
       source_url:'https://naruto-official.com/en/news/01_1668'
     }],
     ['naruto-lotus', [30006], {
-      name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:3, dmg:110,
+      name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:5, minCooldown:5, dmg:110,
       range:145, radius:60,
-      vis:{pal:'grass'}, desc:'挑空、抱身下墜重摔，造成落地範圍傷害；目標空中倒下仍完成落地。冷卻時自動近身普攻，連段中不插普攻；首領不浮空。',
+      ups:[
+        {t:'傷害 +20%',m:{dmg:1.2}},
+        {t:'冷卻固定 5 秒',m:{}},
+        {t:'攻擊範圍與持續時間 +12%',m:{radius:1.12,width:1.12,life:1.12,range:162.4}},
+        {t:'傷害 +25%',m:{dmg:1.25}}
+      ],
+      vis:{pal:'grass'}, desc:'冷卻固定 5 秒。挑空、抱身下墜重摔，造成落地範圍傷害；目標空中倒下仍完成落地。冷卻時自動近身普攻，連段中不插普攻；首領不浮空。',
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {

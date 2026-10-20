@@ -104,8 +104,8 @@ COMBAT=r"""() => {
  p.percentHealthDamage=p.critChance=p.lifestealRate=0;return out;
 }"""
 
-COOLDOWN=r"""() => {
- const A=Acceptance,p=A.p(),m=p.moves.find(m=>m.id==='naruto-reverse-lotus'),original=p.cdMul,out=[];
+COOLDOWN=r"""id => {
+ const A=Acceptance,p=A.p(),m=p.moves.find(m=>m.id===id),original=p.cdMul,out=[];
  try {
    for(let level=1;level<=5;level++) {
      if(m.lvl<level){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+m.id);A.assert(card&&card.apply(p)!==false,'cooldown upgrade fixture '+level)}
@@ -161,7 +161,8 @@ def main():
                 page.wait_for_function('G.Game.player?.dex===30006&&G.Game.state==="playing"')
                 page.evaluate(HARNESS);page.evaluate(SETUP);page.evaluate(HELPERS)
                 result={'combat':page.evaluate(COMBAT)};report['viewports'][label]=result
-                result['fixedReverseCooldown']=page.evaluate(COOLDOWN)
+                result['fixedForwardCooldown']=page.evaluate(COOLDOWN,'naruto-lotus')
+                result['fixedReverseCooldown']=page.evaluate(COOLDOWN,'naruto-reverse-lotus')
                 page.evaluate(AUDIT);result['art']=page.evaluate(ART)
                 for name,pose in result['art'].items():
                     (OUT/f'{label}-{name}.png').write_bytes(base64.b64decode(pose.pop('png').split(',',1)[1]))
