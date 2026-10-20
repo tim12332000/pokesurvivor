@@ -156,7 +156,7 @@
     }],
     [30006, 'lee', '木葉旋風', 'Leaf Whirlwind', '01_1489', {
       mode: 'melee', type: 'fighting', cd: .86, dmg: 37,
-      range: 145, radius: 124, arc: 3.9, knock: 95,
+      range: 72.5, radius: 62, arc: 3.9, knock: 95,
       vis: { melee: 'claw', proj: 'wind', pal: 'grass' },
       desc: '旋身踢出大角度橫掃，適合清開貼身與側面的敵人。'
     }],

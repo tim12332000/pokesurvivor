@@ -68,10 +68,13 @@ PROGRESSION = r"""() => {
 
 COMBAT = r"""() => {
  const A=Acceptance,p=A.p(),out={},near=(a,b)=>Math.abs(a-b)<.001;
- // Wide fan must damage three separated real enemies and spare the outside one.
+ // Halved fan still hits three close enemies, sparing the former outer reach.
  A.leeArena();const m=A.select('naruto-lee'),r=m.radius;
- const es=[A.spawn(65,-45),A.spawn(80,0),A.spawn(65,45),A.spawn(r+80,0)];p.target=es[1];p.aim=0;
- A.actualCast(m.id);A.advance(.02);
+ A.assert(r===62&&m.range===72.5,'whirlwind reach was not halved');
+ const es=[A.spawn(32.5,-22.5),A.spawn(40,0),A.spawn(32.5,22.5),A.spawn(100,0)];p.target=es[1];p.aim=0;
+ const slash=G.FX.slash;let drawnRadius=null;G.FX.slash=function(...args){drawnRadius=args[3];return slash.apply(this,args)};
+ try{A.actualCast(m.id);A.advance(.02)}finally{G.FX.slash=slash}
+ A.assert(drawnRadius===r,'whirlwind visual does not match the smaller hit radius');
  A.assert(es.slice(0,3).every(e=>e.hp<100000)&&es[3].hp===100000,'whirlwind AOE coverage');
  out.whirlwind=es.map(e=>100000-e.hp);
  for(const [id,hits,quantity] of [['naruto-lotus',2,0],['naruto-reverse-lotus',7,0],['naruto-lotus',2,3],['naruto-reverse-lotus',10,3]]){
