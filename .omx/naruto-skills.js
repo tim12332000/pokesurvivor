@@ -276,9 +276,9 @@
       source_url:'https://naruto-official.com/en/news/01_1668'
     }],
     ['naruto-lotus', [30006], {
-      name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:3, dmg:70,
+      name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:3, dmg:110,
       range:145, radius:60,
-      vis:{pal:'grass'}, desc:'小李 Lv.3 解鎖。踏入近身、上踢挑空，再旋身摔落。冷卻期間自動使用近身體術普攻，連段中不穿插；就緒時優先施放蓮華。首領保持接地；落地小範圍震擊為本作改編。',
+      vis:{pal:'grass'}, desc:'小李 Lv.3 解鎖。踏入近身、上踢挑空、空中抱身停留，再下墜重摔；接觸後約 1.7 秒完成，基礎總傷害 110，落地帶出範圍震擊。目標空中倒下仍完成落地。冷卻期間自動使用近身體術普攻，連段中不穿插；就緒時優先施放蓮華。首領保持接地；滯空與地面震擊為本作改編。',
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
@@ -294,7 +294,7 @@
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-reverse-lotus', [30006], {
-      name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, dmg:145,
+      name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, dmg:210,
       range:180, radius:100,
       ups:[
         {t:'空中連擊 +2（7 次）・傷害 +20%・落地範圍擴大至 120',m:{dmg:1.2,radius:1.2}},
@@ -302,7 +302,7 @@
         {t:'空中連擊 +2（11 次）・突進距離 +12%・落地範圍擴大至 160',m:{range:201.6,radius:8/7}},
         {t:'空中連擊 +2（13 次）・傷害 +25%・落地範圍擴大至 180',m:{dmg:1.25,radius:9/8}}
       ],
-      vis:{pal:'grass'}, desc:'小李 Lv.9 解鎖。空中連擊數＝5＋2×（技能等級－1）＋數量加成，上踢與重摔另計。空中第 n 擊傷害乘 1.10^n（首擊 ×1.10、第二擊 ×1.21），每次施放重新計數；數量與等級在起手時固定。升空至下墜期間無敵。約 1.4 秒後開始下墜，落地範圍震擊半徑依技能 Lv.1–5 為 100／120／140／160／180，重摔與範圍傷害不套連擊倍率。首領不浮空。冷卻期間自動近身普攻，連段中不穿插；就緒時優先施放蓮華。可獨立施放並享開門加成；連段、無敵與數值皆為本作改編。',
+      vis:{pal:'grass'}, desc:'小李 Lv.9 解鎖。基礎傷害係數 210，升空與高速連打約 2.1 秒，再下墜重摔，接觸後約 3.3 秒完成。空中連擊數＝5＋2×（技能等級－1）＋數量加成，上踢與重摔另計；第 n 擊乘 1.10^n（首擊 ×1.10），每次施放重算，數量與等級在起手時固定。升空至下墜期間無敵。落地震擊半徑依技能 Lv.1–5 為 100／120／140／160／180，重摔與範圍傷害不套連擊倍率。首領不浮空。冷卻期間自動近身普攻，連段中不穿插；就緒時優先施放蓮華。可獨立施放並享開門加成；連段、無敵與數值皆為本作改編。',
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {

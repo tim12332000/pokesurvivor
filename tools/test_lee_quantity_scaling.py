@@ -31,7 +31,7 @@ HELPERS=r"""() => {
    const f=G.NarutoLee.active,snapshot={damage:f.move.dmg,attack:f.attack,hits:f.comboHits,level:f.move.lvl,quantity:f.move.quantityBonusAtCast};
    const air=5+2*(level-1)+quantity,total=air+2;
    A.assert(f.comboHits===air,'quantity counted twice or omitted '+JSON.stringify(snapshot));
-   for(let n=0;n<650&&G.NarutoLee.active;n++)A.advance(step);
+   for(let n=0;n<1000&&G.NarutoLee.active;n++)A.advance(step);
    A.assert(!G.NarutoLee.active,'quantity combo did not finish');
    const primary=r.ledger.filter(h=>h.primary),side=r.ledger.filter(h=>!h.primary);
    A.assert(primary.length===total&&side.length===(r.side?1:0),'wrong actual hit count '+primary.length+' expected '+total);
@@ -56,7 +56,7 @@ MATRIX=r"""() => {
    while(move.lvl<level){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+move.id);A.assert(card&&card.apply(p)!==false,'real skill upgrade')}
    for(const quantity of [0,1,3,20]){const r=A.quantityFixture(quantity);out.push(A.checkQuantityRun(r,level,quantity));}
  }
- const r=A.quantityFixture(20);A.advance(3);
+ const r=A.quantityFixture(20);A.advance(4);
  A.assert(!G.NarutoLee.active&&r.ledger.filter(h=>h.primary).length===35&&r.ledger.filter(h=>!h.primary).length===1,'max quantity large dt lost/duplicated hits');
  const again=A.quantityFixture(0);const reset=A.checkQuantityRun(again,5,0);
  return {matrix:out,maxQuantityLargeDelta:35,newChainResetsExponent:reset.rawPrimary[1]};
@@ -78,9 +78,9 @@ SNAPSHOT=r"""() => {
 }"""
 
 DEAD_TARGET=r"""() => {
- const A=Acceptance,p=A.p(),r=A.quantityFixture(20,false);A.advance(.2);A.assert(G.NarutoLee.active?.phase==='lift','dead-target launch fixture');
+ const A=Acceptance,p=A.p(),r=A.quantityFixture(20,false);A.advance(.3);A.assert(G.NarutoLee.active?.phase==='lift','dead-target launch fixture');
  r.e.hp=0;r.e.dead=true;const hits=r.ledger.length,hp=p.hp,credit=p.dmgDealt;
- A.advance(1);A.assert(G.NarutoLee.active?.ticks>0,'planned swings did not continue after early KO');A.advance(3);
+ A.advance(1);A.assert(G.NarutoLee.active?.ticks>0,'planned swings did not continue after early KO');A.advance(4);
  A.assert(!G.NarutoLee.active&&r.ledger.length===hits&&p.hp===hp&&p.dmgDealt===credit,'dead target generated exponential hit/heal/credit');
  return {priorHits:hits,noAdditionalProcs:true};
 }"""

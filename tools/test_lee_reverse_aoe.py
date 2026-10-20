@@ -44,7 +44,7 @@ LEVEL=r"""level => {
    A.assert(card.apply(p)!==false&&m.radius>before,'actual card did not enlarge landing AOE');}
  A.assert(m.lvl===level&&m.radius===100+(level-1)*20,'wrong radius Lv'+level+' '+m.radius);
  A.reverseFixture();const r=A.reverse;let airborne=0,elapsed=0,descending=[],air=null,landing=null;
- for(let n=0;n<350&&G.NarutoLee.active;n++){
+ for(let n=0;n<500&&G.NarutoLee.active;n++){
    const f=G.NarutoLee.active,phase=f.phase;
    if(phase!=='slam'&&phase!=='recovery')A.assert(r.side.every(e=>r.counts.get(e)===0)&&r.counts.get(r.outside)===0&&r.counts.get(r.farther)===0,'AOE occurred before landing');
    A.reverseStep(.01);elapsed+=.01;
@@ -55,8 +55,8 @@ LEVEL=r"""level => {
      A.assert(next.visualLift===0&&G.NarutoLee.liftFor(r.primary)===0,'impact occurred while floating');landing=A.reverseScene();
    }
  }
- A.assert(!G.NarutoLee.active&&elapsed>=2.1&&airborne>1.2,'airborne combo did not stay up longer '+elapsed+' air '+airborne);
- A.assert(air&&air.visualLift>=51&&air.targetLift>=51,'airborne height did not reach 52px');
+ A.assert(!G.NarutoLee.active&&elapsed>=3.2&&airborne>2.0,'airborne combo did not stay up longer '+elapsed+' air '+airborne);
+ A.assert(air&&air.visualLift>=59&&air.targetLift>=59,'airborne height did not reach 60px');
  A.assert(descending.length>10&&descending.every((h,i)=>i===0||h<=descending[i-1]+.001)&&descending[0]>40&&descending.at(-1)<5,'descent did not visibly lower toward ground');
  A.assert(landing&&r.counts.get(r.primary)===5+2*(level-1)+2,'primary combo hit count did not scale with skill level');
  A.assert(r.side.every(e=>r.counts.get(e)===1),'landing did not hit 3 separated inside enemies exactly once');
@@ -71,16 +71,16 @@ LEVEL=r"""level => {
 REGRESSIONS=r"""() => {
  const A=Acceptance,p=A.p(),out={};
  // A large simulation delta preserves the current-level primary hit count and one landing splash.
- A.reverseFixture();let r=A.reverse;const expectedHits=7+2*(r.m.lvl-1);A.reverseStep(3);
+ A.reverseFixture();let r=A.reverse;const expectedHits=7+2*(r.m.lvl-1);A.reverseStep(4);
  A.assert(!G.NarutoLee.active&&r.counts.get(r.primary)===expectedHits&&r.side.every(e=>r.counts.get(e)===1),'large dt lost or duplicated combo/AOE hits');out.largeDt=true;
  // Long airborne ownership suppresses cooldown punches until recovery completes.
  A.reverseFixture();r=A.reverse;const casts=[],cast=p.cast;
  p.cast=function(m,...args){casts.push(m.id);return cast.call(this,m,...args)};
- try{for(let n=0;n<350&&G.NarutoLee.active;n++){A.resume();G.Combat.tick(.01,p,0);A.pause();A.reverseStep(.01)}}finally{p.cast=cast}
+ try{for(let n=0;n<500&&G.NarutoLee.active;n++){A.resume();G.Combat.tick(.01,p,0);A.pause();A.reverseStep(.01)}}finally{p.cast=cast}
  A.assert(!casts.includes('tackle')&&r.counts.get(r.primary)===expectedHits,'basic punched into long airborne chain');out.noBasicOverlap=true;
  // Bosses retain their native ground position throughout the longer sequence.
  A.leeArena();const boss=A.spawn(35,0,true);p.target=boss;A.actualCast('naruto-reverse-lotus');
- for(let n=0;n<300&&G.NarutoLee.active;n++){A.reverseStep(.01);A.assert(!G.NarutoLee.active?.visualLift&&!G.NarutoLee.liftFor(boss)&&!boss.jumpLift,'boss lifted')};out.bossGrounded=true;
+ for(let n=0;n<500&&G.NarutoLee.active;n++){A.reverseStep(.01);A.assert(!G.NarutoLee.active?.visualLift&&!G.NarutoLee.liftFor(boss)&&!boss.jumpLift,'boss lifted')};out.bossGrounded=true;
  A.reverseFixture();r=A.reverse;for(let n=0;n<200&&G.NarutoLee.active?.phase!=='combo';n++)A.reverseStep(.01);
  A.assert(G.NarutoLee.active?.phase==='combo','combo phase fixture never reached');
  const before={age:G.NarutoLee.active.age,lift:G.NarutoLee.liftFor(r.primary),phase:G.NarutoLee.active.phase};G.Combat.updateFields(.5);
@@ -91,7 +91,7 @@ REGRESSIONS=r"""() => {
    for(let n=0;n<200&&G.NarutoLee.active?.phase!==phase;n++)A.reverseStep(.01);
    A.assert(G.NarutoLee.active?.phase===phase,'dead-target fixture missing '+phase);
    const priorHits=r.counts.get(r.primary),credit=p.dmgDealt;r.primary.hp=0;r.primary.dead=true;
-   for(let n=0;n<350&&G.NarutoLee.active;n++)A.reverseStep(.01);
+   for(let n=0;n<500&&G.NarutoLee.active;n++)A.reverseStep(.01);
    A.assert(!G.NarutoLee.active&&r.side.every(e=>r.counts.get(e)===1),'dead primary cancelled promised landing AOE '+phase);
    A.assert(r.counts.get(r.primary)===priorHits&&r.primary.hp===0&&r.primary.dead,'dead primary received extra hit or revived');
    const live=[...r.side,r.farther].filter(e=>r.counts.get(e)===1),expected=live.reduce((sum,e)=>sum+r.m.dmg*.35*p.atk*G.Types.mult(r.m.type,e.types)*G.Weather.mult(r.m.type),0);
