@@ -42,9 +42,11 @@
   function cast(owner, move) {
     if (!canCast(owner, move)) return false;
     const target = targetFor(owner, move);
-    chain = { owner, world: G.World, target, kind: move.digiMode, move: { ...move },
+    const snapshot = G.Quantity?.snapshot(owner, move) || { ...move };
+    const quantity = Number.isFinite(snapshot.quantityBonusAtCast) ? Math.max(0, Math.floor(snapshot.quantityBonusAtCast)) : 0;
+    chain = { owner, world: G.World, target, kind: move.digiMode, move: snapshot,
       durations: move.digiMode === 'lee-reverse-lotus' ? reverseDurations : durations,
-      comboHits: 5 + 2 * (Math.max(1, Math.min(5, move.lvl | 0)) - 1),
+      comboHits: 5 + 2 * (Math.max(1, Math.min(5, snapshot.lvl | 0)) - 1) + quantity,
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
       visualLift: 0, targetLift: 0, ticks: 0 };
     owner.svx = owner.svy = 0;
@@ -118,7 +120,7 @@
         const due = Math.min(f.comboHits, Math.floor(f.phaseAge / (f.durations.combo / f.comboHits) + 1e-8));
         // Keep the planned aerial motion after a midair KO; hit() skips dead
         // targets, so later swings cannot award damage or healing again.
-        while (f.ticks < due) { f.ticks++; hit(f, f.target, .12); }
+        while (f.ticks < due) { f.ticks++; hit(f, f.target, .12 * 1.1 ** f.ticks); }
       }
       if (f.phaseAge + 1e-9 >= f.durations[f.phase]) {
         const next = f.phase === 'windup' ? 'lift' : f.phase === 'lift' ?

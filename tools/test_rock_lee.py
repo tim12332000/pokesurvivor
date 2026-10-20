@@ -74,7 +74,7 @@ COMBAT = r"""() => {
  A.actualCast(m.id);A.advance(.02);
  A.assert(es.slice(0,3).every(e=>e.hp<100000)&&es[3].hp===100000,'whirlwind AOE coverage');
  out.whirlwind=es.map(e=>100000-e.hp);
- for(const [id,hits,quantity] of [['naruto-lotus',2,0],['naruto-reverse-lotus',7,0],['naruto-lotus',2,3],['naruto-reverse-lotus',7,3]]){
+ for(const [id,hits,quantity] of [['naruto-lotus',2,0],['naruto-reverse-lotus',7,0],['naruto-lotus',2,3],['naruto-reverse-lotus',10,3]]){
    A.leeArena();const e=A.spawn(110,0),outside=A.spawn(400,0);p.target=e;p.aim=0;p.percentHealthDamage=.01;p.lifestealRate=.001;p.hp=p.maxHp/2;
    let n=0,owned=true,crit=true,total=0;const hurt=e.hurt;e.hurt=function(...args){n++;owned&&=args[6]===p;crit&&=args[5]==='crit';total+=args[0]+1000;return hurt.apply(this,args)};
    p.critChance=1;p.quantityBonus=quantity;const before=p.dmgDealt,hp=p.hp;A.actualCast(id);

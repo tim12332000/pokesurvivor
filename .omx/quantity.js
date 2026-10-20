@@ -13,7 +13,7 @@
   }
   G.Quantity={config,bonus,count,snapshot};
   G.LevelUp.STATS.push({id:'quantity',icon:'star',title:'數量增幅',
-    desc:`投射物、分身、環繞物、連鎖目標、連擊、穿透、疊層及場上數量上限 +${config.perPick}。最多選 ${config.maxPicks} 次。`,
+    desc:`投射物、分身、環繞物、連鎖目標、連擊（含裏蓮華空中連擊）、穿透、疊層及場上數量上限 +${config.perPick}。最多選 ${config.maxPicks} 次。`,
     max:config.maxPicks,
     apply:owner=>{
       owner.quantityBonus=bonus(owner)+config.perPick;
