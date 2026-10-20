@@ -160,12 +160,15 @@
       vis: { melee: 'claw', proj: 'wind', pal: 'grass' },
       desc:'旋身大角度橫掃，踢開近身與側面敵人。'
     }],
-    [30007, 'gaara', '流砂瀑流・砂瀑大葬', 'Sand Tsunami — automatic burial follow-up (game adaptation)', '01_1695', {
-      mode: 'sand-wave', type: 'ground', cd: 2.8, dmg: 72,
-      range: 310, radius: 310, width: 240, knock: 55,
-      waveDuration: .65, bindDuration: .5, slow: 0,
+    [30007, 'gaara', '砂時雨', 'Sand Shower (game adaptation)', '01_1695', {
+      mode: 'gaara-sand-burst', type: 'ground', cd: 1.2, dmg: 28,
+      range: 155, radius: 155, width: 130, knock: 12,
+      ups:[{t:'傷害提高至 34',m:{dmg:34/28}},
+        {t:'距離 175・寬 150',m:{range:175,width:150/130,radius:175/155}},
+        {t:'傷害提高至 42',m:{dmg:42/34}},
+        {t:'傷害 52・距離 195・寬 170',m:{dmg:52/42,range:195,width:170/150,radius:195/175}}],
       vis: { pal: 'naruto-sand' },
-      desc:'扇形砂浪造成 25% 傷害，束縛後壓葬造成 75%。束縛時普通敵人減速 95%、首領減速 35%。'
+      desc:'操砂橫掃前方扇形範圍。基礎冷卻 1.2 秒；升級增加傷害及範圍，冷卻縮減卡有效。'
     }],
     [30008, 'itachi', '月讀', 'Tsukuyomi', '01_1316', {
       mode: 'single-illusion', type: 'psychic', cd: 3.6, dmg: 30, range: 260,
@@ -312,16 +315,28 @@
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {
-      name:'砂縛柩・砂瀑送葬', mode:'sand-coffin', type:'ground', cd:3.5, dmg:80,
+      name:'砂縛柩・砂瀑送葬', mode:'gaara-coffin', type:'ground', learnLevel:3, cd:5, dmg:110,
       range:280, fieldDuration:1.1, slow:.95, bossSlow:.3,
-      vis:{pal:'naruto-sand'}, desc:'束縛一名敵人後壓縮造成傷害；首領僅受較弱減速。',
+      ups:[{t:'傷害 +20%',m:{dmg:1.2}},{t:'索敵距離提高至 310',m:{range:310}},
+        {t:'傷害 +25%',m:{dmg:1.25}},{t:'傷害 +25%・索敵距離 340',m:{dmg:1.25,range:340}}],
+      vis:{pal:'naruto-sand'}, desc:'束縛 1.1 秒後壓縮單一敵人，首領僅減速 30%。基礎冷卻 5 秒，升級不變；冷卻期間自動砂術普攻。',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-shield', [30007], {
-      name:'砂之盾', mode:'sand-shield', type:'ground', cd:12, dmg:0,
-      fieldDuration:8, shieldAmount:45, range:180,
-      vis:{pal:'naruto-sand'}, desc:'獲得吸收 45 傷害的砂盾，最長 8 秒；耗盡消失，不能疊加。',
+      name:'砂之盾', mode:'gaara-shield-passive', passive:true, type:'ground', learnLevel:6, cd:12, dmg:0,
+      shieldAmount:45, range:180,
+      ups:[{t:'砂盾容量提高至 60',m:{shieldAmount:60}},{t:'砂盾容量提高至 75',m:{shieldAmount:75}},
+        {t:'砂盾容量提高至 90',m:{shieldAmount:90}},{t:'砂盾容量提高至 110',m:{shieldAmount:110}}],
+      vis:{pal:'naruto-sand'}, desc:'學會即獲得 45 砂盾，不占主動欄。每 12 秒補滿、冷卻卡可加速；可升至 110，不能疊加或回血。',
       source_url:'https://naruto-official.com/en/news/01_1555'
+    }],
+    ['naruto-sand-tsunami', [30007], {
+      name:'流砂瀑流・砂瀑大葬', mode:'gaara-tsunami', type:'ground', learnLevel:9, cd:5, dmg:150,
+      range:310, radius:310, width:240, knock:0, waveDuration:.65, bindDuration:.5,
+      ups:[{t:'傷害 +20%',m:{dmg:1.2}},{t:'距離 345・寬 270',m:{range:345,radius:345/310,width:270/240}},
+        {t:'傷害 +25%',m:{dmg:1.25}},{t:'傷害 +25%・距離 380・寬 300',m:{dmg:1.25,range:380,radius:380/345,width:300/270}}],
+      vis:{pal:'naruto-sand'}, desc:'砂浪造成 25% 傷害，束縛 0.5 秒後大葬造成 75%。普通敵人減速 95%、首領 35%。基礎冷卻 5 秒，冷卻期間自動砂術普攻。',
+      source_url:'https://naruto-official.com/en/news/01_1695'
     }],
     ['naruto-black-flames', [30008], {
       name:'天照', mode:'black-flames', type:'fire', cd:4.8, dmg:12,
@@ -352,7 +367,7 @@
       source_url:'https://tamashiiweb.com/item/14256/?wovn=en'
     }]
   );
-  const kinds = { 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
+  const kinds = { 'gaara-sand-burst':'cone', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield-passive':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
     sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'gates-passive':'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
   const definitions = new Map(), byDex = new Map(), references = new Map();

@@ -17,7 +17,7 @@
   }
   function signatureCard(player,milestone) {
     const def=G.Moves.BY_ID[milestone.id];
-    const slotless=def.id==='naruto-gates'&&def.passive;
+    const slotless=def.passive&&['naruto-gates','naruto-sand-shield'].includes(def.id);
     const swap=!slotless&&player.slots.length>=player.maxMoves?replacement(player):null;
     if(!slotless&&player.slots.length>=player.maxMoves&&!swap)return null;
     const previousId=swap?.id;

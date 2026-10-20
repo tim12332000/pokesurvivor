@@ -4,6 +4,10 @@
 原始 PokéSurvivor 由 [JPTER78](https://github.com/JPTER78/pokesurvivor) 開發，感謝原作者的創作與分享。
 本網站為非官方修改版，保留原始授權與版權聲明；[原始版網站](https://pokesurvivor.com)。
 
+火影內測入口：<http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW>，以 `python tools/serve_animation_lab.py --port 8004` 啟動目前工作目錄。角色範圍為鳴人、佐助、小李與少年我愛羅；我愛羅採砂時雨、砂縛柩、自動砂盾與砂浪大葬的四招設計，學習等級為 Lv.1／3／6／9。設計與官方來源見 [我愛羅技能設計](art-review/gaara-skill-design.md)，圖集與實玩說明見 [動作覆蓋清單](art-review/coverage.md) 和 [遊戲演出契約](art-review/gameplay-contract.md)。
+
+新增火影角色的完整流程保存在 [角色與素材 SKILL](.codex/skills/naruto-survivor-skills/SKILL.md) 與 [工作流程](.codex/skills/naruto-survivor-skills/references/character-workflow.md)：先考據與設計，再產圖、裁切登記、戰鬥接線、正常入口和手機驗收。不能只增加選角或 PNG。現行素材登記為 11 張圖集、264 個實體影格、46 組動畫序列；我愛羅專屬驗收指令為 `python tools/test_gaara.py`，結果寫入 `.omx/state/gaara/report.json`，是否通過以當次輸出為準。
+
 Bullet-heaven con Pokémon al estilo de Survivor.io y Megabonk, con sprites de
 *Pokémon Mundo Misterioso*, capa roguelike, **966 Pokémon de las 9 generaciones**,
 shinies y gacha por región. Música y efectos compuestos para el juego.

@@ -13,7 +13,7 @@
   const valid = f => f.owner && f.owner === G.Game.player && !f.owner.dead && f.owner.hp > 0 && f.world === G.World;
   const cap = () => { const limit=CAP*(1+(G.Quantity?.bonus(G.Game.player)||0)); while (fields.length > limit) fields.shift(); };
   const targets = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
-  const techniqueFor = mode => [G.NarutoSupport,G.NarutoLee,G.NarutoOffense,G.NarutoChidori].find(api=>api?.supports(mode));
+  const techniqueFor = mode => [G.NarutoGaara,G.NarutoSupport,G.NarutoLee,G.NarutoOffense,G.NarutoChidori].find(api=>api?.supports(mode));
   function hit(pl, m, e, base, dx, dy, knock = m.knock || 0) {
     if (!e || e.dead) return 0;
     const k = G.Types.mult(m.type, e.types) * G.Weather.mult(m.type), crit = pl.critChance > 0 && Math.random() < pl.critChance;

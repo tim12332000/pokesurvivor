@@ -113,8 +113,11 @@ def main():
         sources[key], images[key] = atlas(key + '-v1.png', rows)
         opened_key = 'lee-opened-' + kind
         sources[opened_key], images[opened_key] = atlas('lee-gates-' + kind + '-v1.png', rows)
+    for kind, rows in (('common', 8), ('skills', 4)):
+        key = 'gaara-' + kind
+        sources[key], images[key] = atlas(key + '-v1.png', rows)
     # Standing reference is measured once, never independently per pose.
-    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened'):
+    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened', 'gaara'):
         common = sources[hero + '-common']
         common['bodyHeight'] = median(f['rect'][3] - 4 for f in common['frames'][:6])
     base = sources['naruto-common']
@@ -133,6 +136,10 @@ def main():
         lee_skills = sources[hero + '-skills']
         lee_skills['bodyHeight'] = median(lee_skills['frames'][i]['rect'][3] - 4
                                         for i in (3, 11))
+    # All four sand gestures recover upright. Effects must remain detached
+    # from the actor's head-to-feet scale reference.
+    sources['gaara-skills']['bodyHeight'] = median(
+        sources['gaara-skills']['frames'][i]['rect'][3] - 4 for i in (3, 7, 11, 15))
     # Preserve the original body's scale beneath the added hair spikes. Use
     # just the same upright references in each atlas, never individual poses.
     for kind, indices in (('common', (0, 1)), ('skills', (3, 11))):
@@ -147,7 +154,7 @@ def main():
                        for f in sources['one-tail']['frames'][:4])
     sources['one-tail']['bodyHeight'] = round(base['bodyHeight'] * form_head / base_head, 2)
     assets = {}
-    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened'):
+    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened', 'gaara'):
         common = sources[hero + '-common']
         sets = {
             'movement': (list(range(8, 12)) + list(range(16, 20))
@@ -165,9 +172,11 @@ def main():
     for hero, kinds in (('naruto', ('clones', 'rasengan', 'throw', 'cloak')),
                         ('sasuke', ('chidori', 'fireball', 'throw', 'sword')),
                         ('lee', ('whirlwind', 'lotus', 'gates', 'reverse')),
-                        ('lee-opened', ('whirlwind', 'lotus', 'gates', 'reverse'))):
+                        ('lee-opened', ('whirlwind', 'lotus', 'gates', 'reverse')),
+                        ('gaara', ('sand-burst', 'coffin', 'shield', 'tsunami'))):
         for row, kind in enumerate(kinds):
             assets[hero + '-' + kind] = sequence(sources[hero + '-skills'], range(row * 4, row * 4 + 4))
+    assets['gaara-throw'] = sequence(sources['gaara-common'], range(28, 32))
     (ART / 'animation-assets.json').write_text(json.dumps(assets, indent=2) + '\n', encoding='utf-8')
     form = sources['one-tail']
     animations = {}

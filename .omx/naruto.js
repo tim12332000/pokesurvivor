@@ -1,7 +1,7 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
-  const availableDexes=Object.freeze([30001,30002,30006]);
+  const availableDexes=Object.freeze([30001,30002,30006,30007]);
   const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
   const version='火影 beta 0.01';
   const roster = [
@@ -112,8 +112,8 @@
   const picker=document.createElement('section');picker.id='scr-naruto';picker.className='scr dim hidden';picker.translate=false;
   picker.innerHTML=`<div class="box"><div class="naruto-heading"><div><h2>火影忍者</h2><p class="naruto-version">${version}</p><p class="sub">選擇忍者，踏上你的忍道。</p></div><button id="naruto-close" class="btn small ghost">返回</button></div>
     <div class="naruto-actions"><button id="naruto-to-digimon" class="btn small">數碼寶貝</button></div>
-    <div class="naruto-grid"></div><p class="note">2 位忍者・招式為生存玩法改編・存檔保存在此瀏覽器</p>
-    <p class="note">像素素材：Path of the Ninja 2・Hwdphg 擷取・<a href="https://spritedatabase.net/game/59" target="_blank" rel="noopener noreferrer">Sprite Database</a>。角色與美術權利屬原權利人。</p></div>`;
+    <div class="naruto-grid"></div><p class="note">${availableDexes.length} 位忍者・招式為生存玩法改編・存檔保存在此瀏覽器</p>
+    <p class="note">角色動畫使用本專案重繪素材；動作研究參考 <a href="https://spritedatabase.net/game/55" target="_blank" rel="noopener noreferrer">Ninja Council 3</a>。角色權利屬原權利人。</p></div>`;
   document.body.append(picker);
   const grid=picker.querySelector('.naruto-grid');
   const hideOverlays=()=>['scr-naruto','scr-naruto-skills','scr-digimon','scr-digimon-skills'].forEach(id=>document.getElementById(id)?.classList.add('hidden'));
@@ -144,7 +144,7 @@
     const record=records.get(dex),button=document.createElement('button');
     button.type='button';button.className='naruto-card';button.dataset.quickNaruto=dex;
     button.append(G.UI.spriteCanvas(dex,128,112,{dir:0,shadow:true}));
-    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30006:'體術・木葉旋風・蓮華'}[dex]||record.team;
+    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30007:'砂術・砂縛柩・砂瀑大葬',30006:'體術・木葉旋風・蓮華'}[dex]||record.team;
     button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${identity}</small><span class="naruto-selection"></span>`);
     button.onclick=()=>choose(dex);quickPick.querySelector('.naruto-grid').append(button);
   }
@@ -204,7 +204,7 @@
   document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代＋數碼寶貝＋火影忍者';
   document.title=version+' · PokéSurvivor';
   const badge=document.querySelector('body>div[style*="pointer-events: none"]');
-  if(badge){badge.textContent=version+'・免費／非營利・原作 JPTER78';badge.style.maxWidth='calc(100vw - 16px)';}
+  if(badge){badge.classList.add('naruto-credit');badge.textContent=version+'・免費／非營利・原作 JPTER78';badge.style.maxWidth='calc(100vw - 16px)';}
   const style=document.createElement('style');style.textContent=`
     #scr-naruto{z-index:150;padding:20px;background:#08152bef}#scr-naruto>.box{width:min(680px,100%);max-height:92vh;overflow:auto;border-color:#e4a653}
     .naruto-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}.naruto-heading h2{margin-bottom:4px;color:#ffd23f}.naruto-heading>button{flex-shrink:0;white-space:nowrap}
@@ -215,7 +215,7 @@
     .naruto-card canvas{display:block;width:128px;height:112px;max-width:100%;image-rendering:pixelated}.naruto-card span{font-size:14px}
     #naruto-quick-pick{width:min(420px,100%);margin:12px auto;text-align:center}#naruto-quick-pick h2{margin:0;color:#ffd23f;font-size:22px}#naruto-quick-pick>p{margin:6px 0 12px;color:#c9d8ef;font-size:14px}
     #naruto-quick-pick .naruto-card.on{box-shadow:0 0 0 2px #ffc468}#naruto-quick-pick .naruto-selection{color:#ffcf7c}
-    @media(max-width:650px){#naruto-quick-pick{margin:6px auto}#naruto-quick-pick .naruto-card{gap:3px;padding:8px 6px}#naruto-quick-pick .naruto-card canvas{width:96px;height:84px}#naruto-quick-pick h2{font-size:19px}#naruto-quick-pick>p{margin:4px 0 8px}}
+    @media(max-width:650px){#naruto-quick-pick{margin:6px auto}#naruto-quick-pick .naruto-card{gap:3px;padding:8px 6px}#naruto-quick-pick .naruto-card canvas{width:96px;height:84px}#naruto-quick-pick h2{font-size:19px}#naruto-quick-pick>p{margin:4px 0 8px}body:has(#scr-menu.hidden)>.naruto-credit{bottom:calc(env(safe-area-inset-bottom,0px) + 130px)!important;font-size:10px!important}}
     @media(max-width:650px){.naruto-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{gap:4px;max-width:calc(100vw - 12px);flex-wrap:wrap;justify-content:flex-end}.topbar .btn.small{padding:4px 6px;font-size:12px}#scr-naruto{padding:10px}}
   `;document.head.append(style);
   if(!G.Digimon.enabled){

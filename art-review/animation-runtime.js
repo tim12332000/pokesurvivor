@@ -17,7 +17,11 @@
     'naruto-lee': 'redrawn sweeping roundhouse; close-range AOE',
     'naruto-lotus': 'redrawn step-in, rising kick, airborne drive and landing',
     'naruto-gates': 'learned five-stage passive; dedicated red-skin action set and green aura',
-    'naruto-reverse-lotus': 'redrawn committed aerial taijutsu combo and finisher'
+    'naruto-reverse-lotus': 'redrawn committed aerial taijutsu combo and finisher',
+    'naruto-gaara': 'redrawn directed sand-release gesture; real sand projectiles',
+    'naruto-sand-coffin': 'redrawn seal, enclosing fist, crush and recovery',
+    'naruto-sand-shield': 'redrawn defensive crossed-arm activation; actual passive shield',
+    'naruto-sand-tsunami': 'redrawn two-arm rise, downward burial and recovery'
   });
   function install(G, { enabled = () => true } = {}) {
     if (installed.has(G)) return G.AnimationLab;
@@ -26,7 +30,7 @@
     const states = new Map();
     const counters = { candidate: 0, source: 0, byState: {}, bySkill: {} };
     let world = G.World, owner = G.Game.player, drawingAir = false;
-    const heroes={30001:'naruto',30002:'sasuke',30006:'lee'};
+    const heroes={30001:'naruto',30002:'sasuke',30006:'lee',30007:'gaara'};
     const supported = anim => Object.hasOwn(heroes,anim?.dex);
     const hero = anim => heroes[anim.dex];
     const direction = anim => ['down', 'right', 'right', 'right', 'up', 'left', 'left', 'left'][((anim.dir || 0) % 8 + 8) % 8];
@@ -36,7 +40,7 @@
       return G.NarutoClones?.actors.find(a => a.anim === anim) || null;
     }
     function entry(anim) {
-      if (!states.has(anim)) states.set(anim, { age: 0, hurtAge: Infinity, deathAge: null, cast: null, sharingan: 0, gates: 0, kusanagi: false });
+      if (!states.has(anim)) states.set(anim, { age: 0, hurtAge: Infinity, deathAge: null, cast: null, sharingan: 0, gates: 0, gaaraShield: 0, kusanagi: false });
       return states.get(anim);
     }
     function clear() { states.clear(); }
@@ -64,6 +68,7 @@
       [G.NarutoChidori, 'cast', 'naruto-sasuke', .38],
       [G.NarutoFireball, 'cast', 'naruto-fireball', .68],
       [G.NarutoLee, 'cast', null, 1.8],
+      [G.NarutoGaara, 'cast', null, .7],
       [G.NarutoSupport, 'cast', null, .5]
     ]) {
       if (!api?.[method]) continue;
@@ -105,13 +110,15 @@
       if (supported(pl?.anim) && !pl.dead && pl.hp > 0) {
         const state = entry(pl.anim), level = G.NarutoSharingan?.stage(pl) || 0;
         const gates = G.NarutoGates?.stage(pl) || 0;
+        const gaaraShield = pl.dex === 30007 ? (G.NarutoGaara?.shieldStage?.(pl) || 0) : 0;
         const sword = !!G.NarutoKusanagi?.active(pl);
         // Passive synchronization may run immediately after a scene clear or
         // accepted attack. It must never replace that attack's presentation.
         if (!state.cast && level !== state.sharingan && level) record(pl, { id: 'naruto-sharingan' }, .62);
         if (!state.cast && gates !== state.gates && gates) record(pl, { id: 'naruto-gates' }, .5);
+        if (!state.cast && gaaraShield !== state.gaaraShield && gaaraShield) record(pl, { id: 'naruto-sand-shield' }, .6);
         if (!state.cast && sword && !state.kusanagi) record(pl, { id: 'naruto-kusanagi' }, .48);
-        state.sharingan = level; state.gates = gates; state.kusanagi = sword;
+        state.sharingan = level; state.gates = gates; state.gaaraShield = gaaraShield; state.kusanagi = sword;
       }
       for (const [anim] of states) if (anim !== pl?.anim && !G.NarutoClones?.actors.some(a => a.anim === anim)) states.delete(anim);
       return result;
@@ -152,6 +159,17 @@
         const frame=lee.phase==='windup'?0:lee.phase==='lift'?(lee.phaseAge<lee.durations.lift*.5?1:2):lee.phase==='combo'?1+lee.ticks%2:['suspend','descent'].includes(lee.phase)?2:3;
         return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:reverse?'lee-reverse':'lee-lotus',frame,mirror:Math.cos(pl.aim)<0,visualLift:lee.visualLift||0};
       }
+      const gaara=G.NarutoGaara?.active?.(pl);
+      if(gaara?.owner?.anim===anim){
+        const phase=gaara.phase, id=gaara.move.id;
+        const key=id==='naruto-sand-coffin'?'gaara-coffin':id==='naruto-sand-tsunami'?'gaara-tsunami':'gaara-sand-burst';
+        const frame=id==='naruto-gaara'&&phase==='windup'?(gaara.phaseAge<.08?0:1):
+          ['windup','seal','charge'].includes(phase)?0:
+          ['bind','close','raise','rise'].includes(phase)?1:
+          ['release','crush','surge','wave','burial','slam'].includes(phase)?2:3;
+        return {...base,state:'skill',id,phase,key,frame,age:gaara.age,
+          aim:gaara.aim,mirror:Math.cos(gaara.aim??pl.aim)<0};
+      }
       if (state.hurtAge < .3) return { ...base, state: 'hurt', phase: 'recoil', key: name + '-hurt', frame: row(dir) * 4 + Math.min(3, Math.floor(state.hurtAge / .3 * 4)), age: state.hurtAge };
       let cast = state.cast;
       if (!cast && pl?.comboT > 0) cast = { id: pl.mimickedId || 'naruto-kunai', age: .4 - pl.comboT, duration: .4, charge: .12, aim: pl.comboAim || 0 };
@@ -171,6 +189,10 @@
         if (cast.id === 'naruto-sharingan') return { ...action, key: 'sasuke-fireball', frame: cast.age < .4 ? 0 : 3 };
         if (cast.id === 'naruto-lee') return {...action,key:'lee-whirlwind',frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
         if (cast.id === 'naruto-gates') return {...action,key:'lee-gates',frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
+        if (['naruto-gaara','naruto-sand-coffin','naruto-sand-shield','naruto-sand-tsunami'].includes(cast.id)) {
+          const key={'naruto-gaara':'gaara-sand-burst','naruto-sand-coffin':'gaara-coffin','naruto-sand-shield':'gaara-shield','naruto-sand-tsunami':'gaara-tsunami'}[cast.id];
+          return {...action,key,frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
+        }
         if (cast.id === 'naruto-lotus'||cast.id === 'naruto-reverse-lotus') return {...action,key:cast.id==='naruto-lotus'?'lee-lotus':'lee-reverse',frame:3,phase:'recovery'};
         if (['naruto-kunai','naruto-shuriken','naruto-fuma-shuriken','naruto-rasenshuriken'].includes(cast.id)) return { ...action, key: name + '-throw', frame: phase === 'windup' ? Math.min(1, Math.floor(cast.age / Math.max(.01, cast.charge) * 2)) : phase === 'release' ? 2 : 3 };
         return { ...action, key: name + '-attack', frame: Math.min(3, Math.floor(cast.age / cast.duration * 4)) };

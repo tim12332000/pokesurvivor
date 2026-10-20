@@ -3639,6 +3639,916 @@
       }
     ]
   },
+  "gaara-movement": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          53,
+          472,
+          142,
+          194
+        ],
+        "anchor": [
+          54.5,
+          190
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          272,
+          472,
+          139,
+          194
+        ],
+        "anchor": [
+          75.0,
+          190
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          482,
+          472,
+          142,
+          194
+        ],
+        "anchor": [
+          61.0,
+          190
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          693,
+          472,
+          147,
+          194
+        ],
+        "anchor": [
+          77.5,
+          190
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          57,
+          889,
+          120,
+          208
+        ],
+        "anchor": [
+          57.0,
+          204
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          277,
+          890,
+          117,
+          207
+        ],
+        "anchor": [
+          66.5,
+          203
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          495,
+          889,
+          118,
+          208
+        ],
+        "anchor": [
+          47.5,
+          204
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          707,
+          889,
+          120,
+          208
+        ],
+        "anchor": [
+          71.0,
+          204
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          38,
+          677,
+          161,
+          193
+        ],
+        "anchor": [
+          72.0,
+          189
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          245,
+          679,
+          167,
+          192
+        ],
+        "anchor": [
+          117.0,
+          188
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          468,
+          678,
+          163,
+          193
+        ],
+        "anchor": [
+          73.5,
+          189
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          680,
+          680,
+          162,
+          190
+        ],
+        "anchor": [
+          73.0,
+          187
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          38,
+          677,
+          161,
+          193
+        ],
+        "anchor": [
+          72.0,
+          189
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          245,
+          679,
+          167,
+          192
+        ],
+        "anchor": [
+          117.0,
+          188
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          468,
+          678,
+          163,
+          193
+        ],
+        "anchor": [
+          73.5,
+          189
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          680,
+          680,
+          162,
+          190
+        ],
+        "anchor": [
+          73.0,
+          187
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 194.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "gaara-idle": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          64,
+          31,
+          115,
+          199
+        ],
+        "anchor": [
+          60.0,
+          196
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          277,
+          32,
+          116,
+          198
+        ],
+        "anchor": [
+          60.0,
+          194
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          64,
+          31,
+          115,
+          199
+        ],
+        "anchor": [
+          60.0,
+          196
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          277,
+          32,
+          116,
+          198
+        ],
+        "anchor": [
+          60.0,
+          194
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          502,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          55.0,
+          195
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          712,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          57.0,
+          196
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          502,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          55.0,
+          195
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          712,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          57.0,
+          196
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "gaara-hurt": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          62,
+          1116,
+          122,
+          192
+        ],
+        "anchor": [
+          58.0,
+          188
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          268,
+          1116,
+          132,
+          193
+        ],
+        "anchor": [
+          66.5,
+          189
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          64,
+          31,
+          115,
+          199
+        ],
+        "anchor": [
+          60.0,
+          196
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          277,
+          32,
+          116,
+          198
+        ],
+        "anchor": [
+          60.0,
+          194
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          493,
+          1121,
+          124,
+          188
+        ],
+        "anchor": [
+          59.5,
+          184
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          702,
+          1118,
+          127,
+          191
+        ],
+        "anchor": [
+          63.0,
+          187
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          502,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          55.0,
+          195
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          712,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          57.0,
+          196
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          480,
+          254,
+          148,
+          192
+        ],
+        "anchor": [
+          90.5,
+          188
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          707,
+          250,
+          120,
+          196
+        ],
+        "anchor": [
+          65.5,
+          192
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          480,
+          254,
+          148,
+          192
+        ],
+        "anchor": [
+          90.5,
+          188
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          707,
+          250,
+          120,
+          196
+        ],
+        "anchor": [
+          65.5,
+          192
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "gaara-death": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1331,
+          138,
+          179
+        ],
+        "anchor": [
+          68.0,
+          176
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          239,
+          1363,
+          175,
+          148
+        ],
+        "anchor": [
+          78.0,
+          144
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          426,
+          1387,
+          218,
+          124
+        ],
+        "anchor": [
+          85.5,
+          120
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          654,
+          1401,
+          219,
+          102
+        ],
+        "anchor": [
+          103.5,
+          99
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 194.5
+      }
+    ]
+  },
+  "gaara-attack": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1534,
+          133,
+          204
+        ],
+        "anchor": [
+          65.5,
+          200
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          261,
+          1535,
+          159,
+          205
+        ],
+        "anchor": [
+          65.0,
+          201
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          473,
+          1536,
+          183,
+          204
+        ],
+        "anchor": [
+          70.0,
+          200
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          705,
+          1535,
+          129,
+          204
+        ],
+        "anchor": [
+          64.5,
+          201
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 194.5
+      }
+    ]
+  },
   "naruto-clones": {
     "source": "redrawn/naruto-skills-v2.png",
     "bodyHeight": 250.0,
@@ -4724,6 +5634,346 @@
         ],
         "atlasIndex": 15,
         "bodyHeight": 251.33
+      }
+    ]
+  },
+  "gaara-sand-burst": {
+    "source": "redrawn/gaara-skills-v1.png",
+    "bodyHeight": 290.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          58,
+          10,
+          186,
+          286
+        ],
+        "anchor": [
+          95.5,
+          282
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          349,
+          12,
+          241,
+          286
+        ],
+        "anchor": [
+          101.5,
+          282
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          676,
+          16,
+          266,
+          284
+        ],
+        "anchor": [
+          116.5,
+          280
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          1002,
+          11,
+          187,
+          290
+        ],
+        "anchor": [
+          101.0,
+          285
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 290.0
+      }
+    ]
+  },
+  "gaara-coffin": {
+    "source": "redrawn/gaara-skills-v1.png",
+    "bodyHeight": 290.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          52,
+          319,
+          202,
+          296
+        ],
+        "anchor": [
+          109.0,
+          292
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          354,
+          316,
+          251,
+          297
+        ],
+        "anchor": [
+          113.0,
+          293
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          679,
+          319,
+          210,
+          298
+        ],
+        "anchor": [
+          110.5,
+          294
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          999,
+          317,
+          197,
+          298
+        ],
+        "anchor": [
+          113.0,
+          294
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 290.0
+      }
+    ]
+  },
+  "gaara-shield": {
+    "source": "redrawn/gaara-skills-v1.png",
+    "bodyHeight": 290.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          46,
+          633,
+          227,
+          292
+        ],
+        "anchor": [
+          118.5,
+          288
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          363,
+          634,
+          211,
+          288
+        ],
+        "anchor": [
+          113.5,
+          285
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          686,
+          633,
+          207,
+          290
+        ],
+        "anchor": [
+          104.5,
+          286
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          998,
+          634,
+          197,
+          289
+        ],
+        "anchor": [
+          115.0,
+          285
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 290.0
+      }
+    ]
+  },
+  "gaara-tsunami": {
+    "source": "redrawn/gaara-skills-v1.png",
+    "bodyHeight": 290.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          50,
+          935,
+          206,
+          302
+        ],
+        "anchor": [
+          108.0,
+          298
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          327,
+          937,
+          299,
+          300
+        ],
+        "anchor": [
+          139.0,
+          296
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          680,
+          967,
+          248,
+          270
+        ],
+        "anchor": [
+          110.5,
+          266
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          997,
+          935,
+          200,
+          302
+        ],
+        "anchor": [
+          114.5,
+          298
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 290.0
+      }
+    ]
+  },
+  "gaara-throw": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1534,
+          133,
+          204
+        ],
+        "anchor": [
+          65.5,
+          200
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          261,
+          1535,
+          159,
+          205
+        ],
+        "anchor": [
+          65.0,
+          201
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          473,
+          1536,
+          183,
+          204
+        ],
+        "anchor": [
+          70.0,
+          200
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          705,
+          1535,
+          129,
+          204
+        ],
+        "anchor": [
+          64.5,
+          201
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 194.5
       }
     ]
   }

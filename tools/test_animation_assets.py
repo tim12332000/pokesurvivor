@@ -25,8 +25,10 @@ def verify(data):
                                             'whirlwind','lotus','gates','reverse'))
     expected.update('lee-opened-'+kind for kind in ('movement','idle','hurt','death','attack',
                                                    'whirlwind','lotus','gates','reverse'))
+    expected.update('gaara-'+kind for kind in ('movement','idle','hurt','death','attack',
+                                              'sand-burst','coffin','shield','tsunami','throw'))
     assert set(data) == expected, set(data) ^ expected
-    assert len(outputs) == len(atlas_map) == 9
+    assert len(outputs) == len(atlas_map) == 11
     for source in atlas_map.values():
         path = ROOT/'art-review'/source['source']
         assert source['source'].startswith('redrawn/')
@@ -102,7 +104,7 @@ def browser_verify():
         report = page.evaluate('''async () => {
           const A = window.AnimationAssets;
           await A.load(); await A.load();
-          if (!A.ready || A.keys.length !== 36) throw Error('incomplete image decoding');
+          if (!A.ready || A.keys.length !== 46) throw Error('incomplete image decoding');
           const canvas = document.createElement('canvas'); canvas.width=canvas.height=240;
           const ctx=canvas.getContext('2d',{willReadFrequently:true});
           let count=0;
@@ -148,4 +150,4 @@ if __name__ == '__main__':
     contact_sheet(data)
     if args.browser:
         browser_verify()
-    print('PASS: 36 authored sequences, nine provenance hashes, valid alpha/crops/scales/mirrors')
+    print('PASS: 46 authored sequences, eleven provenance hashes, valid alpha/crops/scales/mirrors')

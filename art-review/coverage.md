@@ -1,47 +1,45 @@
-# 鳴人與佐助：完整動作審稿範圍
+# 火影角色：現用動作覆蓋清單
 
-範圍更新：2026-10-20。目標 **17 組：8 組共通動作、9 項技能**，現在皆接入[完整動作內測](http://127.0.0.1:8318/art-review/playtest.html)。其中使用 11 張已保留候選圖；缺少合格專用圖的 6 組採候選姿勢組合與既有技能特效，不使用退稿圖。歷次共退回 8 張圖，不代表 8 組缺少演出。正式遊戲未套用。素材核准狀態與內測接線狀態分開記錄於 [coverage.json](coverage.json)，實際演出對照見 [gameplay-contract.md](gameplay-contract.md)。
+更新：2026-10-21。現行 `redrawn/atlas-map.json` 登記 **11 張圖集、264 個實體影格**，`animation-assets.json` 登記 **46 組動畫序列**。角色為鳴人、佐助、小李與少年我愛羅，另含一尾與八門形態。序列可共用實體影格，兩種數量不混算。
 
-## 共通動作：8 組
+正常入口：[火影內測](http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW)；[動作實玩審稿](http://127.0.0.1:8004/art-review/playtest.html)；[圖集審閱室](index.html)。請確認服務來自目前工作目錄，不沿用其他 worktree 的 8318。
 
-| 審稿板 ID | 角色／動作 | 目標內容 |
-| --- | --- | --- |
-| sasuke-movement-v01 | 佐助移動 | 南、西、北、東各 4 張走／跑循環，共 16 幀 |
-| naruto-movement-v01 | 鳴人移動 | 南、西、北、東各 4 張走／跑循環，共 16 幀 |
-| sasuke-idle-v01 | 佐助待機 | 4 個正方向，各 4 幀呼吸／重心微動 |
-| naruto-idle-v01 | 鳴人待機 | 4 個正方向，各 4 幀呼吸／重心微動 |
-| sasuke-hurt-v01 | 佐助受傷 | 4 個正方向，各 4 幀受擊、後縮、恢復 |
-| naruto-hurt-v01 | 鳴人受傷 | 4 個正方向，各 4 幀受擊、後縮、恢復 |
-| sasuke-death-v01 | 佐助倒下 | 4 個正方向，各 4 幀失力、倒地、停留 |
-| naruto-death-v01 | 鳴人倒下 | 4 個正方向，各 4 幀失力、倒地、停留 |
+## 圖集與動作
 
-「四方向」只指前後左右四個正方向，**不宣稱已畫八方向**。斜向的輸入移動與斜向獨立美術是兩回事。倒下不可循環彈起；待機不可腳底飄移；受傷必須保留角色辨識與可回到待機的銜接。
+| 現用圖集 | 覆蓋內容 |
+| --- | --- |
+| `naruto-common-v1.png` | 鳴人待機、走跑、受傷、倒下與投擲；實體分身也使用本角色圖 |
+| `naruto-skills-v2.png` | 結印分身、螺旋丸、螺旋手裏劍等施術姿勢 |
+| `sasuke-common-v1.png` | 佐助待機、走跑、受傷、倒下與投擲 |
+| `sasuke-skills-v2.png` | 千鳥、豪火球、風魔手裏劍、草薙劍與寫輪眼等專用姿勢 |
+| `one-tail-v2.png` | 鳴人一尾專用待機、移動、受傷、攻擊、投擲與查克拉螺旋丸 |
+| `lee-common-v1.png` | 小李普通形態待機、走跑、受傷、倒下與普通攻擊 |
+| `lee-skills-v1.png` | 木葉旋風、表蓮華、開門起手與裏蓮華 |
+| `lee-gates-common-v1.png` | 開門後紅臉、白眼、豎髮形態的共通動作 |
+| `lee-gates-skills-v1.png` | 開門後完整技能專用動作，施術不回退普通臉 |
+| `gaara-common-v1.png` | 我愛羅待機、走跑、受傷、倒下、攻擊與投擲 |
+| `gaara-skills-v1.png` | 砂時雨、砂縛柩、砂之盾與流砂瀑流／大葬操砂姿勢 |
 
-原始鳴人素材已有四方向；佐助原始素材只有側向戰鬥圖，上下沿用側向、左右鏡射。本次候選圖提供佐助前後視角，已接入內測，仍待使用者審核。原始來源與限制記錄在 `.omx/naruto/sources.json`、`.omx/naruto/sprites.json`。
+我愛羅新增十組序列：`gaara-idle`、`gaara-movement`、`gaara-hurt`、`gaara-death`、`gaara-attack`、`gaara-throw`、`gaara-sand-burst`、`gaara-coffin`、`gaara-shield`、`gaara-tsunami`。登記及裁切的存在只證明有素材，不代表技能命中、選角或清理已通過實玩驗收。
 
-## 技能：9 項
+普通角色共通圖包含正面、背面與側面；側面向左使用鏡射。技能及變身圖以側面動作為主，上下施術可共用側面，不宣稱獨立八方向。倒下停在最後一格，移動與施術腳底一致，不能逐格放大蹲姿造成比例跳動。
 
-| 審稿板 ID | 技能 | 必須呈現 |
-| --- | --- | --- |
-| sasuke-chidori-v02 | 千鳥／雷切 | 左手蓄力、低身突進、命中、收勢；全序列可鏡射但不能幀間換手 |
-| sasuke-fireball-v01 | 豪火球 | 結印、吸氣、嘴前起火、噴吐與收勢 |
-| sasuke-fuma-v01 | 風魔手裏劍 | 扭腰蓄勢、握持、放手、弧線去程與回收；角色與武器分開考慮 |
-| sasuke-kusanagi-v01 | 草薙劍 | 啟動與拔刀語意、環繞劍姿態、收劍／停用；細銀刃黑柄 |
-| sasuke-sharingan-v01 | 寫輪眼進化 | 一、二、三勾玉啟動；萬花筒／天照黑炎；永恆萬花筒／須佐能乎輪廓，涵蓋五階段 |
-| naruto-clones-v02 | 多重影分身 | 交叉指印、持印、白煙、實體分身、落地與出拳 |
-| naruto-rasengan-v01 | 螺旋丸 | 掌心成球、旋轉壓縮、前移推掌、命中與收勢 |
-| naruto-rasenshuriken-v01 | 螺旋手裏劍 | 成形、持球與風刃、投擲、旋轉飛行與命中 |
-| naruto-cloak-v01 | 九尾外衣 | 紅色一尾外衣形成、低重心移動、查克拉反擊與消退 |
+## 行為契約與來源
 
-寫輪眼為一項技能，涵蓋五個進化階段。共通動作的 4 × 4 幀規則不強套技能板；保留的技能概念分鏡已挑選安全影格並校正腳底座標，退稿則以候選姿勢與既有特效組合。各項實際處理見 [gameplay-contract.md](gameplay-contract.md)。
+[遊戲演出契約](gameplay-contract.md) 說明真實遊戲的起手、命中、收勢與清理；[小李技能設計](lee-skill-design.md) 與 [我愛羅技能設計](gaara-skill-design.md) 保留原作考據、官方遊戲參考及本作數值改編。素材提示詞、參考與 SHA256 由 [製作來源](redrawn/provenance.json) 追蹤，使用者指定的 [Ninja Council 3 研究入口](https://spritedatabase.net/game/55) 保留為風格和動作研究，未當成新繪成品。
 
-## 狀態與驗收
+早期 `coverage.json` 的 17 組鳴人／佐助候選與退稿屬歷史審稿資料，不能再用其「正式遊戲未套用」文字判定現行分支。現用列表以 `manifest.json`、`animation-assets.json`、`redrawn/atlas-map.json` 和實際載入來源為準；瀏覽器「認可」紀錄亦不等於程式測試通過。
 
-- `planned`：只定義範圍，不能聲稱已有圖片。
-- `candidate`：已生成、主審初步保留，圖片存在；仍待使用者決定。
-- `approved`：必須有使用者明確核准；不可自行升格。
-- `rejected`：初審退回，不放進主要候選清單。
+## 驗收證據
 
-新增 13 張中保留 7 張共通動作；佐助倒下及五張技能稿列 `needs-revision`，不載入內測。另保留的 4 張技能分鏡已接入實際施術；早期千鳥、分身各退回一張，合計退回 8 張。內測的起手、發射幀、手／嘴錨點、飛行、命中與收勢驗證記錄於 `.omx/state/animation-complete/browser-acceptance.json`。
+由目前工作目錄啟動 `python tools/serve_animation_lab.py --port 8004`，執行下列對應檢查；是否通過只以此次輸出與報告為準，不因列表已有檔案就宣稱完成。
 
-每張除個別技能檢查外，皆需檢查：保持現有原圖角色風格與少年服裝、相同尺寸下辨識度、無多手多腳、各方向比例一致、腳底與手部特效錨點穩定、背景與格線不烘焙入可用精靈圖。最終仍由使用者審核，未經核准不合併。
+| 驗證範圍 | 指令／證據 |
+| --- | --- |
+| 圖集裁切、透明、影格與瀏覽器載入 | `python tools/test_animation_assets.py --browser` |
+| 正常入口全角色、真實素材與動作 | `python tools/test_redrawn_heroes.py`、`python tools/test_animation_complete.py`、`python tools/test_sandbox_redrawn.py` |
+| 小李連段與開門 | `python tools/test_rock_lee.py`、`python tools/test_lee_gates.py` 及對應專屬回歸 |
+| 我愛羅選角、學習、AOE、砂盾與手機 | `python tools/test_gaara.py`；`.omx/state/gaara/report.json` 及同目錄畫面 |
+| 發佈包實際包含新增資產 | `python tools/build_digimon_site.py` |
+
+我愛羅必驗：砂時雨與砂浪各三名範圍內、範圍外及隔牆敵人的實際 HP；砂縛柩束縛後單次傷害；砂浪分兩段且不重複結算；首領弱控制；砂盾切招持續、破盾不即補、升階差額、不疊加；冷卻卡、暫停、死亡、新局清理；桌機與手機的真實 `drawImage` 來源、腳底、比例及操作遮擋。

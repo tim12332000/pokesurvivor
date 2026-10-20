@@ -332,6 +332,14 @@ G.HUD = (() => {
       ctx.fillStyle = fused ? BOND : on ? col : 'rgba(180,200,230,.6)';
       ctx.textAlign = 'left';
       ctx.fillText(displayPassive ? '∞' : String(i + 1), x + 3, y + 10);
+      if (m.id === 'naruto-sand-shield') {
+        const shield = G.NarutoGaara?.shieldState(pl);
+        if (shield) {
+          ctx.font = F(800, 9); ctx.textAlign = 'right'; ctx.fillStyle = '#edd395';
+          ctx.fillText(Math.ceil(shield.amount) + '/' + shield.capacity, x + S - 3, y + 10);
+          ctx.textAlign = 'center'; ctx.fillText(shield.remaining.toFixed(1) + 's', x + S / 2, y - 4);
+        }
+      }
       ctx.restore();
 
       // nombre encima del activo (con un vínculo: "Ascuas +2")
