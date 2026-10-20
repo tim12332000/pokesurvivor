@@ -32,14 +32,14 @@ STAGES=r"""() => {
  }
  // A real XP level increase changes the preexisting healing bonus immediately.
  p.level=29;p.xp=0;p.xpNext=G.Player.xpFor(29);p.gainXp((p.xpNext+.001)/p.xpMul);
- A.assert(p.level===30&&near(p.regen,(4+1000*.05)*1.8),'player level did not update regeneration bonus immediately');
- p.regenFlat=0;p.hp=100;A.regenUpdate(1);A.assert(near(p.hp,190),'N5 LV30 should regenerate 9% max HP per second');out.level30Innate=90;
+ A.assert(p.level===30&&p.maxHp===1150&&near(p.regen,(4+1150*.05)*1.8),'player level did not update capacity/regeneration bonus immediately');
+ p.regenFlat=0;p.hp=100;A.regenUpdate(1);A.assert(near(p.hp,203.5),'N5 LV30 should regenerate 9% of the new maximum HP per second');out.level30Innate=103.5;
  p.regenFlat=4;let hpCard;for(let n=0;n<150&&!hpCard;n++)hpCard=G.LevelUp.offer(p,100).find(c=>c.key==='stat:hp');
  A.assert(hpCard,'max HP stat card missing');p.hp=100;hpCard.apply(p);
- A.assert(p.maxHp===1020&&p.hp===120,'maximum HP card was incorrectly healing-multiplied');
- const afterHp=(4+1020*.05)*1.8;A.assert(near(p.regen,afterHp),'max HP card did not change innate regeneration immediately');
+ A.assert(p.maxHp===1170&&p.hp===120,'maximum HP card was incorrectly healing-multiplied');
+ const afterHp=(4+1170*.05)*1.8;A.assert(near(p.regen,afterHp),'max HP card did not change innate regeneration immediately');
  A.regenUpdate(1);A.assert(near(p.hp,120+afterHp),'max HP scaling did not use actual new maximum');out.maxHpCard={maxHp:p.maxHp,perSecond:afterHp};
- p.addBuff('regen',2,100,1);p.hp=100;const buffed=(6+1020*.05)*1.8;A.regenUpdate(1);
+ p.addBuff('regen',2,100,1);p.hp=100;const buffed=(6+1170*.05)*1.8;A.regenUpdate(1);
  A.assert(near(p.hp-100,buffed)&&p.buffs.regen.n===1,'existing regeneration buff did not compose once');p.buffs.regen.n=0;out.buffPerSecond=buffed;
  p.hp=p.maxHp-1;A.regenUpdate(1);A.assert(p.hp===p.maxHp,'innate regeneration exceeded maximum HP');out.cap=true;
  G.Combat.clearFields(p);p.hp=100;A.regenUpdate(1);A.assert(near(p.hp-100,afterHp),'clearFields disabled learned regeneration');out.clearSafe=true;

@@ -14,6 +14,22 @@
     ].map(style => Object.freeze(style)))
   });
   let state = null;
+  const appliedHealth = new WeakMap();
+  function maxHealthBonus(owner = G.Game.player) {
+    const learned = owner?.mon?.dex === 30006 && owner.moves?.find(move => move.id === id);
+    return learned ? Math.max(1, Number.isFinite(owner.level) ? owner.level : 1) * Math.max(1, Math.min(5, learned.lvl | 0)) : 0;
+  }
+  function syncMaxHealth(owner = G.Game.player) {
+    if (!owner || !Number.isFinite(owner.maxHp) || !(owner.maxHp > 0)) return 0;
+    const bonus = maxHealthBonus(owner), delta = bonus - (appliedHealth.get(owner) || 0);
+    if (!delta) return bonus;
+    // Keep the additive gate component separate from flat and percentage cards.
+    owner.maxHp = Math.max(1, owner.maxHp + delta);
+    if (delta > 0 && !owner.dead && owner.hp > 0) owner.hp += delta;
+    owner.hp = Math.min(owner.hp, owner.maxHp);
+    appliedHealth.set(owner, bonus);
+    return bonus;
+  }
   function stage(owner = G.Game.player) {
     if (!owner || owner !== G.Game.player || owner.mon?.dex !== 30006 || owner.dead || !(owner.hp > 0)) return 0;
     const move = owner.moves?.find(m => m.id === id);
@@ -44,10 +60,23 @@
   const addMove = G.Player.prototype.addMove;
   G.Player.prototype.addMove = function(moveId, ...args) {
     if (moveId !== id || this.mon?.dex !== 30006) return addMove.call(this, moveId, ...args);
-    if (this.hasMove(id)) { migrate(this); return false; }
+    if (this.hasMove(id)) { migrate(this); syncMaxHealth(this); return false; }
     this.moves.push(G.Moves.instance(id, 1));
     migrate(this);
+    syncMaxHealth(this);
     return true;
+  };
+  const gainXp = G.Player.prototype.gainXp;
+  G.Player.prototype.gainXp = function(...args) {
+    const result = gainXp.apply(this, args);
+    syncMaxHealth(this);
+    return result;
+  };
+  const levelUp = G.Moves.levelUp;
+  G.Moves.levelUp = function(move, ...args) {
+    const result = levelUp.call(this, move, ...args);
+    if (result && move?.id === id && G.Game.player?.moves.includes(move)) syncMaxHealth(G.Game.player);
+    return result;
   };
   // Getter composition preserves stat cards, gear, slow effects, and other buffs.
   for (const key of ['atk', 'spd', 'regen']) {
@@ -78,6 +107,7 @@
   function update(dt) {
     const owner = G.Game.player;
     migrate(owner);
+    syncMaxHealth(owner);
     const level = stage(owner);
     if (!level) { clear(); return; }
     if (state?.owner !== owner || state.world !== G.World) {
@@ -130,7 +160,7 @@
   C.clearFields = function(owner) { const result = clearFields.call(this, owner); clear(owner); return result; };
   C.drawGroundFields = function(ctx) { ground.call(this, ctx); draw(ctx, true); };
   C.drawAirFields = function(ctx) { air.call(this, ctx); draw(ctx, false); };
-  G.NarutoGates = { config, stage, level: stage, bonusPercent, healingMultiplier,
+  G.NarutoGates = { config, stage, level: stage, bonusPercent, healingMultiplier, maxHealthBonus, syncMaxHealth,
     active: owner => stage(owner) > 0,
     redSkin: owner => stage(owner) > 0, redForm: owner => stage(owner) >= 3,
     intense: owner => stage(owner) >= 3, migrate, update, clear,

@@ -21,12 +21,12 @@ CHECK = r"""() => {
  }throw Error('real candidate unavailable after 100 offers')};
  let card=findCard(G.LevelUp.offer,p).card;
  if(!card)throw Error('real candidate unavailable');
- card.apply(p);near(p.maxHp,262.6);near(p.hp,132.6);
+ card.apply(p);near(p.maxHp,268.66);near(p.hp,138.66);
  if(p.statsTaken.maxHealthPercent!==1||p.slots.length!==slots)throw Error('card accounting/slots');
  out.first={max:p.maxHp,hp:p.hp};
- card.apply(p);near(p.maxHp,265.226);near(p.hp,135.226);
- flat.apply(p);near(p.maxHp,285.226);near(p.hp,155.226);
- card.apply(p);near(p.maxHp,288.07826);near(p.hp,158.07826);
+ card.apply(p);near(p.maxHp,271.3466);near(p.hp,141.3466);
+ flat.apply(p);near(p.maxHp,291.3466);near(p.hp,161.3466);
+ card.apply(p);near(p.maxHp,294.260066);near(p.hp,164.260066);
  out.mixed={max:p.maxHp,hp:p.hp,count:p.statsTaken.maxHealthPercent};
  p.hp=p.maxHp;card.apply(p);near(p.hp,p.maxHp);
  p.regenFlat=0;
