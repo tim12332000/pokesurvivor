@@ -1,91 +1,109 @@
-/* One-tail Naruto: original sprite stays intact beneath a procedural pixel cloak. */
+/* Red one-tail cloak, referenced to the official Valley of the End frames. */
 (() => {
   'use strict';
-  const G = window.G;
-  const snap = value => Math.round(value / 2) * 2;
-  const polygon = (ctx, points, color) => {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    points.forEach(([x, y], i) => i ? ctx.lineTo(snap(x), snap(y)) : ctx.moveTo(snap(x), snap(y)));
-    ctx.closePath(); ctx.fill();
-  };
-  function tail(ctx, age, side, depth) {
-    // Overlapping square cross-sections produce one tapering, moving tail.
-    const points = [];
-    for (let i = 0; i <= 18; i++) {
-      const t = i / 18;
-      points.push([side * (5 + 49 * t), -21 - depth * t - Math.sin(t * 2.7 + age * 5) * 9 * t]);
+  const G=window.G,TAU=Math.PI*2,cache=new WeakMap();
+  const snap=value=>Math.round(value/2)*2;
+  function silhouette(owner,age){
+    let frame=cache.get(owner.anim);
+    const stamp=[age,owner.anim.cur,owner.anim.frame,owner.anim.dir,G.AnimationLab?.enabled].join(':');
+    if(frame?.stamp===stamp)return frame;
+    if(!frame){
+      const mask=document.createElement('canvas'),tint=document.createElement('canvas');
+      mask.width=tint.width=192;mask.height=tint.height=192;
+      frame={mask,tint};cache.set(owner.anim,frame);
     }
-    for (let layer = 0; layer < 3; layer++) {
-      ctx.fillStyle = ['#71152d', '#d42b39', '#ff6749'][layer];
-      for (let i = 0; i < points.length; i++) {
-        const width = Math.max(2, snap((13 - i * .57) * [1, .73, .3][layer]));
-        const [x, y] = points[i];
-        ctx.fillRect(snap(x - width / 2), snap(y - width / 2), width, width);
+    const ctx=frame.mask.getContext('2d',{willReadFrequently:true});
+    ctx.clearRect(0,0,192,192);
+    owner.anim.draw(ctx,96,152,{flash:true});
+    const pixels=ctx.getImageData(0,0,192,192).data;
+    let top=152,left=96,right=96;
+    for(let y=0;y<192;y++)for(let x=0;x<192;x++){
+      if(pixels[(y*192+x)*4+3]<100)continue;
+      top=Math.min(top,y);left=Math.min(left,x);right=Math.max(right,x);
+    }
+    Object.assign(frame,{stamp,top:top-152,left:left-96,right:right-96});
+    const tint=frame.tint.getContext('2d');
+    tint.clearRect(0,0,192,192);tint.drawImage(frame.mask,0,0);
+    tint.globalCompositeOperation='source-in';tint.fillStyle='#ff511f';tint.fillRect(0,0,192,192);
+    tint.globalCompositeOperation='source-over';
+    return frame;
+  }
+  function polygon(ctx,points,color){
+    ctx.fillStyle=color;ctx.beginPath();
+    points.forEach(([x,y],i)=>i?ctx.lineTo(snap(x),snap(y)):ctx.moveTo(snap(x),snap(y)));
+    ctx.closePath();ctx.fill();
+  }
+  function tail(ctx,age,direction){
+    const angles=[Math.PI/2,Math.PI/4,0,-Math.PI/4,-Math.PI/2,-Math.PI*3/4,Math.PI,Math.PI*3/4];
+    const angle=angles[direction]??0,back=-Math.cos(angle);
+    const side=Math.abs(back)<.25?(direction===4?1:-1):Math.sign(back);
+    const points=[];
+    for(let i=0;i<=26;i++){
+      const t=i/26;
+      // One continuous tail: a thick lower-back root, an arched rise, a fine tip.
+      const x=side*(5+47*t+Math.sin(t*Math.PI)*9)+Math.sin(age*3.5+t*4)*5*t;
+      const y=-17-53*t+Math.sin(t*Math.PI)*16-Math.sin(angle)*8*t;
+      points.push([x,y]);
+    }
+    for(const [color,factor] of [['#9e252b',1],['#f24a29',.76],['#ff8c49',.28]]){
+      ctx.fillStyle=color;
+      for(let i=0;i<points.length;i++){
+        const t=i/(points.length-1),width=Math.max(2,snap((17*(1-t)+2)*factor));
+        ctx.fillRect(snap(points[i][0]-width/2),snap(points[i][1]-width/2),width,width);
       }
     }
   }
-  function pulse(ctx, radius, flash) {
-    // A short, broken pixel ring communicates the actual counterattack radius.
-    if (!(flash > 0)) return;
-    ctx.save(); ctx.globalAlpha *= Math.min(1, flash * 5);
-    const r = Math.min(500, Math.max(12, radius));
-    const advance = 1 - Math.min(1, flash / .25);
-    ctx.fillStyle = '#ff6c55';
-    for (let i = 0; i < 40; i++) {
-      const angle = i * Math.PI / 20;
-      ctx.fillRect(snap(Math.cos(angle) * r * (.8 + advance * .2)),
-        snap(Math.sin(angle) * r * (.8 + advance * .2)), 4, 2);
+  function pulse(ctx,radius,flash){
+    if(!(flash>0))return;
+    ctx.save();ctx.globalAlpha*=Math.min(.55,flash*4);
+    const advance=1-Math.min(1,flash/.18),r=Math.max(12,Math.min(500,radius));
+    ctx.fillStyle='#ff8155';
+    for(let i=0;i<40;i++){const a=i*TAU/40;ctx.fillRect(snap(Math.cos(a)*r*(.8+advance*.2)),snap(Math.sin(a)*r*(.8+advance*.2)),4,2);}
+    ctx.restore();
+  }
+  function draw(ctx,f,ground){
+    const owner=f.owner;
+    if(!owner?.anim||owner.dead||!(owner.hp>0)||!Number.isFinite(owner.x)||!Number.isFinite(owner.y))return;
+    const age=Math.max(0,f.age||0),scale=Math.min(1.4,Math.max(.65,owner.anim.scale??1));
+    const fade=Math.max(0,Math.min(1,age/.2,(f.ttl-age)/.3));
+    if(!fade)return;
+    const frame=silhouette(owner,age),direction=owner.anim.dir??0;
+    ctx.save();ctx.translate(owner.x,owner.y);ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=fade;
+    if(ground){
+      ctx.save();ctx.scale(scale,scale);ctx.globalAlpha*=.68;tail(ctx,age,direction);ctx.restore();
+      // A dilated silhouette follows the actual knees, hands, head and casting pose.
+      ctx.save();ctx.globalAlpha*=.20;
+      for(const [dx,dy] of [[-3,0],[3,0],[0,-3],[0,2],[-2,-2],[2,-2]])ctx.drawImage(frame.tint,-96+dx*scale,-152+dy*scale);
+      ctx.restore();
+      ctx.save();ctx.globalAlpha*=.7;ctx.scale(scale,scale);
+      const top=frame.top/scale;
+      polygon(ctx,[[-13,top+16],[-13,top-5],[-7,top+3],[-3,top+12]],'#ec4d2b');
+      polygon(ctx,[[5,top+12],[9,top-4],[15,top+5],[14,top+18]],'#f15a2d');
+      ctx.restore();
+    }else{
+      // Thin translucent chakra sheath, with the outfit still visible underneath.
+      ctx.save();ctx.globalAlpha*=.22+Math.sin(age*9)*.035;
+      ctx.drawImage(frame.tint,-96,-152);ctx.restore();
+      ctx.save();ctx.scale(scale,scale);
+      // Deterministic boiling motes cling to the silhouette instead of a fixed coat.
+      const top=frame.top/scale,left=frame.left/scale,right=frame.right/scale;
+      for(let i=0;i<18;i++){
+        const life=(age*.8+i*.173)%1,side=i%2?-1:1;
+        const edge=side<0?left:right;
+        const x=edge+side*(2+Math.sin(i*2.7+age*4)*2),y=-5-life*Math.max(12,-top-4);
+        ctx.save();ctx.globalAlpha*=(1-life)*.55;ctx.fillStyle=i%3?'#fb5a31':'#ffad6b';
+        const size=i%4?2:4;ctx.fillRect(snap(x),snap(y),size,size);ctx.restore();
+      }
+      // The existing counter pulse briefly stretches a single chakra claw forward.
+      if(f.pulseFlash>0){
+        const t=1-Math.min(1,f.pulseFlash/.18),angle=owner.aim||0;
+        ctx.save();ctx.translate(0,-28);ctx.rotate(angle);ctx.globalAlpha*=Math.sin(t*Math.PI)*.55;
+        polygon(ctx,[[7,-5],[22+t*25,-7],[31+t*25,-4],[24+t*25,-1],[34+t*25,1],[23+t*25,3],[29+t*25,6],[18+t*25,7],[7,4]],'#ff633d');
+        ctx.restore();
+      }
+      pulse(ctx,(f.m?.radius||76)/scale,f.pulseFlash);ctx.restore();
     }
     ctx.restore();
   }
-  function draw(ctx, f, ground) {
-    const owner = f.owner;
-    if (!owner || !Number.isFinite(owner.x) || !Number.isFinite(owner.y)) return;
-    const age = Math.max(0, f.age || 0);
-    const scale = Math.min(1.4, Math.max(.65, owner.anim?.scale ?? 1));
-    const direction = owner.anim?.dir8 ?? owner.anim?.dir ?? 0;
-    const side = direction >= 1 && direction <= 3 ? -1 : 1;
-    const depth = direction >= 3 && direction <= 5 ? -18 : 14;
-    ctx.save();
-    ctx.translate(snap(owner.x), snap(owner.y)); ctx.scale(scale, scale);
-    ctx.globalAlpha *= Math.min(1, age * 8, Math.max(0, f.ttl - age) * 4);
-    if (ground) {
-      ctx.globalAlpha *= .75;
-      ctx.fillStyle = '#9f273844'; ctx.fillRect(-20, -2, 40, 6);
-      tail(ctx, age, side, depth);
-      polygon(ctx, [[-19, -28], [-17, -48], [-13, -50], [-15, -62], [-9, -58], [-3, -63],
-        [3, -63], [10, -59], [16, -63], [14, -49], [18, -45], [20, -26], [14, -7], [-14, -7]], '#bd243d');
-      return ctx.restore();
-    }
-    // Leave the face and central hair visible: the front sheath starts at the shoulders.
-    ctx.globalAlpha *= .55 + Math.sin(age * 10) * .06;
-    polygon(ctx, [[-15, -40], [-18, -34], [-17, -23], [-12, -19], [-10, -7], [-5, -7],
-      [-5, -23], [5, -23], [5, -7], [11, -7], [13, -20], [18, -23], [18, -34], [14, -40],
-      [10, -34], [8, -27], [-8, -27], [-11, -35]], '#f5453c');
-    ctx.globalAlpha /= .55 + Math.sin(age * 10) * .06;
-    polygon(ctx, [[-14, -53], [-17, -65], [-11, -61], [-7, -55]], '#e83543');
-    polygon(ctx, [[8, -55], [15, -65], [14, -52]], '#e83543');
-    ctx.fillStyle = '#ff8c60';
-    for (const sign of [-1, 1]) {
-      const fist = Math.sin(age * 9 + sign) * 2;
-      ctx.fillRect(sign < 0 ? -18 : 14, snap(-29 + fist), 4, 6);
-      for (let claw = 0; claw < 3; claw++) ctx.fillRect(sign < 0 ? -20 - claw * 2 : 18 + claw * 2,
-        snap(-25 + fist + claw * 2), 2, 4);
-    }
-    // Deterministic boiling bubbles follow simulation time and freeze with pause.
-    for (let i = 0; i < 12; i++) {
-      const life = (age * .7 + i * .137) % 1;
-      const x = Math.sin(i * 2.4 + age * 2) * (15 + i % 3 * 3);
-      const y = -8 - life * 55;
-      ctx.globalAlpha *= (1 - life) * .7;
-      ctx.fillStyle = i % 3 ? '#ee3548' : '#ff9870';
-      const size = i % 3 ? 2 : 4;
-      ctx.fillRect(snap(x), snap(y), size, size);
-      ctx.globalAlpha /= Math.max(.0001, (1 - life) * .7);
-    }
-    pulse(ctx, (f.m?.radius || 76) / scale, f.pulseFlash);
-    ctx.restore();
-  }
-  G.NarutoCloakVFX = { draw };
+  G.NarutoCloakVFX={draw};
 })();

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>火影動作演出 · 美術審閱室</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="gallery.js" defer></script>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <p class="eyebrow">NARUTO · ANIMATION LAB</p>
+      <h1>動作演出審閱室</h1>
+      <p class="intro">鳴人、佐助與一尾形態的原創重繪圖集。參考 Ninja Council 3 的比例、輪廓和動作語彙，重新繪製整套角色；目前已套用動畫實驗室內測。</p>
+      <p><a href="http://127.0.0.1:8318/art-review/playtest.html?v=redrawn-heroes2" target="_blank" rel="noopener">開啟完整內測：移動、升級、九項技能與一尾變身 ↗</a></p>
+      <div class="meta"><span id="branch">讀取分支資訊…</span><span id="base"></span></div>
+      <nav aria-label="參考資料"><a href="coverage.md" target="_blank" rel="noopener">完整動作清單 ↗</a><a href="research.md" target="_blank" rel="noopener">研究與來源 ↗</a><a href="README.md" target="_blank" rel="noopener">資料夾與審閱說明 ↗</a></nav>
+    </header>
+    <section class="review-note" aria-label="審閱說明"><strong>等待你的最終審核</strong><p>候選圖已先由製作端篩選。按「認可」只會記錄在這個瀏覽器；合併仍需你明確同意，不會自動發生。</p></section>
+    <section class="toolbar" aria-label="篩選與匯出">
+      <div><label for="character">角色</label><select id="character"><option value="all">所有角色</option></select><label for="category">類別</label><select id="category"><option value="all">所有動作</option><option value="movement">方向移動</option><option value="common">共通動作</option><option value="skill">技能演出</option></select><span id="count" role="status"></span></div>
+      <button id="export" class="primary" type="button">匯出審閱紀錄 JSON</button>
+    </section>
+    <p id="message" role="status">正在讀取候選作品…</p>
+    <div id="gallery" class="gallery"></div>
+    <footer>目前圖集與製作來源集中於 <code>art-review/redrawn/</code>；舊版候選清單已封存。<br>審閱紀錄存於目前瀏覽器；關閉或清除瀏覽器資料前，請先匯出。</footer>
+  </main>
+</body>
+</html>

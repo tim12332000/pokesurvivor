@@ -1,5 +1,6 @@
 """Build only the public game files, excluding local state and the upstream domain."""
 from pathlib import Path
+import json
 import re
 import shutil
 import subprocess
@@ -18,6 +19,23 @@ tracked = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().
 public_new = subprocess.check_output(
     ['git', 'ls-files', '--others', '--exclude-standard', '-z', '--', 'assets', 'css', 'js'],
     cwd=ROOT).decode().split('\0')
+# Reviewed character runtime only; gallery controls and source references stay local.
+review_runtime = ['art-review/' + name for name in [
+    'cast-continuity.js', 'animation-assets.js', 'animation-runtime.js',
+    'kyuubi-form.js', 'animation-assets.json', 'kyuubi-frames.json']]
+metadata = json.loads((ROOT / 'art-review/animation-assets.json').read_text('utf-8'))
+sources = {item['source'] for item in metadata.values()}
+sources.add(json.loads((ROOT / 'art-review/kyuubi-frames.json').read_text('utf-8'))['source'])
+for source in sorted(sources):
+    path = Path('art-review') / source
+    assert source.startswith('redrawn/') and path.suffix == '.png'
+    assert (ROOT / path).resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
+    review_runtime.append(path.as_posix())
+assert len(sources) == 5, 'Unexpected reviewed hero atlas inventory'
+for name in review_runtime + ['.omx/redrawn-init.js']:
+    target = OUT / name
+    target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(ROOT / name, target)
 for name in filter(None, tracked + public_new):
     if name in excluded:
         continue
@@ -44,7 +62,7 @@ html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼�
 html = html.replace('<html lang="es">', '<html lang="zh-TW">')
 html = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="免費遊玩、非營利、無廣告、無付費內容。原作由 JPTER78 開發，感謝原作者；本網站為非官方跨界修改版。">', html)
 for source in re.findall(r'<(?:script|link)\b[^>]*(?:src|href)="([^"]+)"', html):
-    if source.startswith(('js/', 'css/', '.omx/')):
+    if source.startswith(('js/', 'css/', '.omx/', 'art-review/')):
         assert (OUT / source.split('?', 1)[0]).is_file(), f'Missing runtime script: {source}'
 html_path.write_text(html, encoding='utf-8')
 (OUT / 'index.html').write_text('''<!doctype html>

@@ -57,11 +57,11 @@ with sync_playwright() as p:
         assert(pl.activeGroup()===offensive&&pl.activeGroup().includes(kunai),'Learning passive selected Sharingan and stopped attacks');
         assert(near(kunai.t,.77),'Learning passive reset offensive cooldown');S.sync(pl);assert(S.stage(pl)===1&&near(pl.magnet,120),'Fresh learned passive did not apply');
         reset(0);pl.moves=[];pl.slots=[];pl.bind={};pl.active=0;
-        for(const moveId of ['naruto-sasuke','naruto-kunai','naruto-shuriken','naruto-fireball'])assert(pl.addMove(moveId),'Full-slot fixture failed '+moveId);
+        for(const moveId of ['naruto-sasuke','naruto-kunai','naruto-shuriken','naruto-fireball','naruto-kusanagi'])assert(pl.addMove(moveId),'Full-slot fixture failed '+moveId);
         pl.level=6;pl.bind['naruto-kunai']=1;pl.arrange();pl.setActive(pl.slots.findIndex(s=>s.some(m=>m.id==='naruto-kunai')));
         const signature=G.LevelUp.offer(pl,100).find(c=>c.key==='new:'+id);
         assert(signature&&signature.apply(pl),'Guaranteed level-6 full-slot Sharingan replacement missing');
-        assert(pl.slots.length===4&&pl.hasMove(id)&&!pl.hasMove('naruto-kunai'),'Sharingan did not replace shared kunai slot');
+        assert(pl.slots.length===5&&pl.hasMove(id)&&!pl.hasMove('naruto-kunai'),'Sharingan did not replace shared kunai slot');
         assert(pl.bind[id]===1&&pl.bind['naruto-kunai']==null,'Replacement lost the shared-slot binding');
         assert(pl.activeGroup().some(m=>!m.passive)&&pl.activeGroup().every(m=>m.id!==id),'Full-slot passive replacement left attacks disabled');
         S.sync(pl);assert(S.stage(pl)===1&&near(pl.magnet,120),'Full-slot passive failed to apply stage 1');

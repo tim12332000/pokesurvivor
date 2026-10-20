@@ -192,7 +192,7 @@
       if (!valid(a)) continue;
       const alpha = Math.min(.82, Math.max(0, a.ttl - a.age) * 2);
       a.anim.draw(ctx, a.x, a.y, { alpha });
-      if (a.comboT > 0) {
+      if (a.comboT > 0 && !G.AnimationLab?.enabled) {
         const aim = a.comboAim || 0, x = a.x + Math.cos(aim) * 18, y = a.y - G.LIFT + Math.sin(aim) * 12;
         ctx.save(); ctx.globalAlpha = Math.min(.85, a.comboT * 3); ctx.translate(x, y);
         ctx.fillStyle = '#b8f3ff'; ctx.beginPath(); ctx.arc(0, 0, 7, 0, TAU); ctx.fill();

@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>鳴人・佐助統一重繪內測</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101827;color:#eef4ff;font:14px system-ui;height:100dvh;display:flex;flex-direction:column;overflow:hidden}
+header{padding:8px 12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:0 0 auto}a{color:#a9ceff}button,select{padding:8px 10px;background:#263956;color:white;border:1px solid #607493;border-radius:6px;min-height:40px;max-width:100%}button:disabled,select:disabled{opacity:.45}#levelup{background:#7b5418;border-color:#e5bc69}small{color:#bdcbe0}#status{padding:0 12px 8px;font-size:12px;color:#b9cee7;flex:0 0 auto}iframe{display:block;width:100%;flex:1 1 auto;min-height:0;border:0}label{display:inline-flex;gap:5px;align-items:center}#skill{max-width:240px}@media(max-width:500px){header{padding:6px;gap:5px;font-size:12px}button,select{padding:6px;min-height:36px}header small{display:none}#status{padding:0 6px 5px;font-size:11px}}
+</style>
+</head>
+<body>
+<header>
+<a href="index.html">← 圖片審稿</a><strong>統一重繪內測</strong>
+<button data-hero="30001" disabled>鳴人開局</button><button data-hero="30002" disabled>佐助開局</button>
+<button id="levelup" disabled>升一等</button><button id="training" disabled>解鎖本角色所有招式</button>
+<select id="skill" aria-label="選擇測試招式" disabled></select>
+<label><input id="candidate" type="checkbox" checked>自繪動作（關閉對照舊版）</label>
+<small>WASD／方向鍵／搖桿移動；1–5、Q／E 切招；自動索敵施放。</small>
+</header>
+<div id="status" role="status">載入完整動作素材與原遊戲中…</div>
+<iframe id="game" title="完整動作實玩" allow="autoplay; fullscreen" src="../.omx/digimon.html?lang=zh-TW&amp;animationLab=1"></iframe>
+<script src="cast-continuity.js?v=redrawn1" defer></script>
+<script src="animation-assets.js?v=redrawn1" defer></script>
+<script src="animation-runtime.js?v=redrawn1" defer></script>
+<script src="kyuubi-form.js?v=redrawn1" defer></script>
+<script src="playtest.js?v=redrawn1" defer></script>
+</body>
+</html>

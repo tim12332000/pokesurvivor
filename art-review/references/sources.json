@@ -1,0 +1,106 @@
+{
+  "checked_at": "2026-10-20",
+  "scope": "Independent animation presentation review branch; no runtime integration",
+  "source_policy": "Primary official pages only. Public reference availability is not a license to redistribute source artwork. Official product photos inspected in system temporary storage only.",
+  "timing_policy": "All proposed timings, frame counts, pose transitions, orbit/return paths and balances are game adaptations, not source claims.",
+  "abilities": [
+    {
+      "id": "sasuke-chidori",
+      "priority": "first-batch",
+      "sources": [
+        {"url": "https://naruto-official.com/en/news/01_1282", "publisher": "NARUTO OFFICIAL SITE", "verified": "Article text: Sasuke uses Chidori against Gaara after training with Kakashi."},
+        {"url": "https://tamashiiweb.com/item/14256/?wovn=en", "publisher": "Bandai Spirits / TAMASHII NATIONS", "verified": "Official young-Sasuke product includes Chidori effects. Product photo 07 visually inspected.", "image_url": "https://tamashiiweb.com/storage/images/products/imported/item_0000014256_I69HJzJR_07.jpg"}
+      ],
+      "visual_observation": "Photo 07: left arm lowered near the hip, right hand across near the left arm, bent knee; branching blue lightning surrounds the low left hand.",
+      "review_red_flag": "Canonical charge reference uses Sasuke's LEFT hand. Whole-sequence game mirroring is allowed, but anatomical hand identity must remain consistent between frames. Reject an unmirrored right-hand charge even if an image-generation prompt mistakenly requested it.",
+      "proposed_action": "Distinct low-hand charge, forward-leaning hand-led thrust, short branching electric trails and recovery. Match hand attachment in both mirrored directions.",
+      "adaptation": "Multi-target chain, acceleration, camera freeze and invincibility remain existing survival-game mechanics. Chidori and Kakashi's Lightning Blade are not claimed to be canonically identical names."
+    },
+    {
+      "id": "sasuke-fireball",
+      "priority": "first-batch",
+      "sources": [
+        {"url": "https://naruto-official.com/en/anime/naruto1/list/01_354", "publisher": "NARUTO OFFICIAL SITE", "verified": "Episode 130 description identifies Sasuke's Fireball as an Uchiha family technique taught by his father."},
+        {"url": "https://tamashiiweb.com/item/14256/?wovn=en", "publisher": "Bandai Spirits / TAMASHII NATIONS", "verified": "Product photos 06 (chest-level seal) and 08 (fire-breathing stance) visually inspected.", "image_url": "https://tamashiiweb.com/storage/images/products/imported/item_0000014256_I69HJzJR_08.jpg"}
+      ],
+      "visual_observation": "Photo 08: right hand close to mouth, narrow flame connection widening to a large orange/yellow fire head; opposite arm opens back for balance.",
+      "proposed_action": "Chest seal, mouth-level breathing pose, narrow mouth jet widening into the fireball, visible exhale recovery.",
+      "adaptation": "Persistent growing collision AOE, travel distance growth and wall blocking are existing game rules; product photo does not establish continuous damage ticks or exact timing."
+    },
+    {
+      "id": "naruto-shadow-clones",
+      "priority": "first-batch",
+      "sources": [
+        {"url": "https://naruto-official.com/en/anime/naruto1/list/01_225", "publisher": "NARUTO OFFICIAL SITE", "verified": "Official episode-one introduction identifies Naruto stealing the sealing scroll and discovering a rare power; does not describe individual fingers."},
+        {"url": "https://naruto-official.com/en/news/01_1282", "publisher": "NARUTO OFFICIAL SITE", "verified": "Official early-series retrospective discusses Naruto's graduation and later transformation/shadow-clone teamwork against Zabuza."}
+      ],
+      "visual_observation": "Existing game reference uses the Team 7 hands-together row. Full official animation and individual finger positions were not frame-verified in this research pass.",
+      "proposed_action": "Recognizable crossed-finger silhouette at chest height, brief hold, white smoke puffs and staggered clone landing; reject arms-raised substitute.",
+      "adaptation": "Exact seal depiction is an art direction proposal here; 8/16/24/32/40 counts, independent combat and duration are game mechanics."
+    },
+    {
+      "id": "naruto-rasengan",
+      "priority": "first-batch",
+      "sources": [
+        {"url": "https://naruto-official.com/en/news/01_1521", "publisher": "NARUTO OFFICIAL SITE", "verified": "Minato Column 5 explains intense chakra rotation compressed in the palm, with manga references to chapters 155 and 167."},
+        {"url": "https://naruto-official.com/en/news/01_2185", "publisher": "NARUTO OFFICIAL SITE / Shinobi Striker development team", "verified": "Official licensed-game adaptation describes young Naruto finishing a shadow-clone combo with an assisted Rasengan; this is game presentation, not an exhaustive manga rule."}
+      ],
+      "visual_observation": "Official explanatory text establishes a contained rotating palm sphere. Blue-white color, proposed pose sequence and helper staging are art direction rather than independently frame-measured findings.",
+      "proposed_action": "Palm-supported tight rotating sphere, optional brief clone assistance, forward body weight and hand-led impact; avoid turning it into a detached generic light bullet.",
+      "adaptation": "AOE radius, knockback, repeated casts and short startup are survival-game design."
+    },
+    {
+      "id": "sasuke-fuma-shuriken",
+      "priority": "backlog",
+      "sources": [
+        {"url": "https://tamashiiweb.com/item/14256/?wovn=en", "publisher": "Bandai Spirits / TAMASHII NATIONS", "verified": "Product description associates Fuma Shuriken with the Zabuza battle; photo 05 visually inspected.", "image_url": "https://tamashiiweb.com/storage/images/products/imported/item_0000014256_I69HJzJR_05.jpg"}
+      ],
+      "visual_observation": "Four broad black curved blades with thin silver edges and a central hand grip. Throw preparation includes torso twist and an extended balancing arm.",
+      "proposed_action": "Wind-up with weapon near hip, torso rotation, distinct release and recovery; keep the weapon silhouette readable during spin.",
+      "adaptation": "Curved homing-style outbound path, automatic return and multiple simultaneous weapons are requested game mechanics."
+    },
+    {
+      "id": "sasuke-kusanagi",
+      "priority": "backlog",
+      "sources": [
+        {"url": "https://naruto-official.com/en/news/01_1710", "publisher": "NARUTO OFFICIAL SITE", "verified": "Uchiha sword technique entry describes iai-style draw-and-slash and lightning-coated blade."},
+        {"url": "https://tamashiiweb.com/item/13854/?wovn=en", "publisher": "Bandai Spirits / TAMASHII NATIONS", "verified": "Official Shippuden Sasuke product lists sword, sheathed/partly sheathed sword and Chidori effect; blade silhouette was not newly photo-inspected in this pass."}
+      ],
+      "visual_observation": "Documented draw-and-cut sword handling; use the already accepted slender silver blade and black handle as the project's visual baseline.",
+      "proposed_action": "Brief draw-like activation pose and restrained blue edge streaks; make the selected-skill orbit legible without hiding Sasuke.",
+      "adaptation": "Young-Sasuke appearance plus later swordsmanship is cross-era adaptation; autonomous flying-sword orbit/multiplicity is not canonical sword handling. Preserve disappear-on-skill-switch behavior."
+    },
+    {
+      "id": "sasuke-sharingan",
+      "priority": "backlog",
+      "sources": [
+        {"url": "https://naruto-official.com/en/news/01_1316", "publisher": "NARUTO OFFICIAL SITE", "verified": "Official revenge-arc retrospective covers Sasuke and Itachi; use for later-stage technique context, not exact icon tracing."},
+        {"url": "https://naruto-official.com/en/news/01_1340", "publisher": "NARUTO OFFICIAL SITE / NINJA VOLTAGE announcement", "verified": "Licensed-game announcement supplies Susanoo combat-presentation context; game balance is not manga evidence."}
+      ],
+      "visual_observation": "Use the user's supplied red/black progression chart and already accepted circular icons as the exact project pattern reference. No eye whites.",
+      "proposed_action": "Subtle activation flash and clear stage-dependent iris silhouette; reserve larger black flame and purple rib/arm presentation for their own evolved stages.",
+      "adaptation": "Five cumulative stages, passive dodge, pickup radius, extra projectile, pull vortex and run-permanent black fire are game adaptations."
+    },
+    {
+      "id": "naruto-rasenshuriken",
+      "priority": "backlog",
+      "sources": [
+        {"url": "https://naruto-official.com/en/news/01_1521", "publisher": "NARUTO OFFICIAL SITE", "verified": "Rasengan evolution section identifies Wind Style: Rasen Shuriken and manga chapter 339."},
+        {"url": "https://naruto-official.com/en/news/01_1316", "publisher": "NARUTO OFFICIAL SITE", "verified": "Kakuzu battle recap describes a failed first attempt followed by a clone-assisted misdirection and direct hit."}
+      ],
+      "visual_observation": "Text establishes wind-nature evolution of the Rasengan; a rotating bright core with broad wind-blade silhouette is proposed art direction, not measured animation frames.",
+      "proposed_action": "Separate formation, held spinning silhouette, release and wind impact; keep visual distinction from the compact Rasengan.",
+      "adaptation": "Free ranged throwing and repeat volleys reflect the current game, not a claim that the first Kakuzu-battle version could always be thrown."
+    },
+    {
+      "id": "naruto-one-tail-cloak",
+      "priority": "backlog",
+      "sources": [
+        {"url": "https://naruto-official.com/en/news/01_1296", "publisher": "NARUTO OFFICIAL SITE", "verified": "Final Valley retrospective documents Nine Tails' cloak increasing speed, chakra counterattacks and protection against Sasuke's fire jutsu."}
+      ],
+      "visual_observation": "Use the red one-tail project baseline. Do not substitute later golden chakra-mode costume or arbitrary multiple tails.",
+      "proposed_action": "Low aggressive stance, one distinct red chakra tail, compact claw/arm extensions and restrained ripple on counterattack.",
+      "adaptation": "Temporary attack/defense/speed bonuses and circular periodic counterattack are game design."
+    }
+  ]
+}

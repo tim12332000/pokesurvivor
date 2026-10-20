@@ -188,7 +188,7 @@ with sync_playwright() as p:
         G.U.pick=list=>list.find(id=>id==='naruto-rasenshuriken')||list.find(id=>id==='naruto-naruto')||pick(list);
         G.Naruto.choose(30001);G.Flow.play();
         const ids=G.Game.player.moves.map(m=>m.id);
-        if(ids.length!==2||ids.some(id=>!['naruto-shadow-clones','naruto-kunai','naruto-shuriken'].includes(id)))throw Error('Extra starter perk bypassed training levels');
+        if(ids.length!==1||ids[0]!=='naruto-shadow-clones')throw Error('Extra starter perk bypassed training levels');
       }finally{G.Upgrades.perks=perks;G.U.pick=pick;G.Game.quit();G.Flow.goMenu();}
     }''')
     # A fresh live run proves automatic summoning, and pause freezes actual actors.
