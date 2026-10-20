@@ -77,6 +77,7 @@ COMBAT = r"""() => {
  // Halved fan still hits three close enemies, sparing the former outer reach.
  A.leeArena();const m=A.select('naruto-lee'),r=m.radius;
  A.assert(r===62&&m.range===72.5,'whirlwind reach was not halved');
+ A.assert(m.cd===2,'whirlwind base cooldown is not two seconds');
  const es=[A.spawn(32.5,-22.5),A.spawn(40,0),A.spawn(32.5,22.5),A.spawn(100,0)];p.target=es[1];p.aim=0;
  const slash=G.FX.slash;let drawnRadius=null;G.FX.slash=function(...args){drawnRadius=args[3];return slash.apply(this,args)};
  try{A.actualCast(m.id);A.advance(.02)}finally{G.FX.slash=slash}

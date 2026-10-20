@@ -155,7 +155,7 @@
       desc: '向前連打三掌近身查克拉攻擊，總傷害分攤於三掌；維持狹窄、快速的近戰定位，不借用寧次的回天。'
     }],
     [30006, 'lee', '木葉旋風', 'Leaf Whirlwind', '01_1489', {
-      mode: 'melee', type: 'fighting', cd: .86, dmg: 37,
+      mode: 'melee', type: 'fighting', cd: 2, dmg: 37,
       range: 72.5, radius: 62, arc: 3.9, knock: 95,
       vis: { melee: 'claw', proj: 'wind', pal: 'grass' },
       desc: '旋身踢出大角度橫掃，適合清開貼身與側面的敵人。'
