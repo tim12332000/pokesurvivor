@@ -58,9 +58,9 @@ html_path = OUT / '.omx/digimon.html'
 html = html_path.read_text(encoding='utf-8')
 build_id = subprocess.check_output(['git','rev-parse','--short','HEAD'],cwd=ROOT).decode().strip()
 # Every deployment must fetch its matching scripts, including changed skill data.
-html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(")',
+html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',
               lambda match: match[1]+match[2]+'?v='+build_id+match[3], html)
-html = re.sub(r'(<link\b(?=[^>]*\brel="stylesheet")[^>]*\bhref=")(?!https?://)([^"?]+)(")',
+html = re.sub(r'(<link\b(?=[^>]*\brel="stylesheet")[^>]*\bhref=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',
               lambda match: match[1]+match[2]+'?v='+build_id+match[3], html)
 html = re.sub(r'<!-- seo:begin -->.*?<!-- seo:end -->', '', html, flags=re.S)
 html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼寶貝 × 火影忍者</title>', html, flags=re.S)
