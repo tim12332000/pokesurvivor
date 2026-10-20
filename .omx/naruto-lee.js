@@ -89,6 +89,14 @@
   }
   function enter(f, phase) {
     f.phase = phase; f.phaseAge = 0;
+    if (phase === 'windup' && f.kind === 'lee-reverse-lotus') {
+      // Approach time is part of the full 3.3-second action, not extra time.
+      const fixed = ['windup', 'lift', 'descent', 'slam', 'recovery'].reduce((sum, key) => sum + f.durations[key], 0);
+      const budget = Math.max(1 / 120, 3.3 - f.age - fixed);
+      const scale = Math.min(1, budget / reverseDurations.combo);
+      f.durations.combo *= scale;
+      f.comboDeadlines = f.comboDeadlines.map(time => time * scale);
+    }
     syncLift(f);
     if (phase === 'lift') hit(f, f.target, f.kind === 'lee-lotus' ? .2 : .1);
     if (phase === 'slam') {
@@ -141,7 +149,9 @@
     // Fixed simulation steps retain all combo hits under a delayed frame.
     let remaining = Math.min(dt, 4);
     while (remaining > 1e-9 && chain === f) {
-      const step = Math.min(remaining, 1 / 120); remaining -= step;
+      const phaseRemaining = f.kind === 'lee-reverse-lotus' && f.phase !== 'approach' ?
+        Math.max(1e-9, f.durations[f.phase] - f.phaseAge) : Infinity;
+      const step = Math.min(remaining, 1 / 120, phaseRemaining); remaining -= step;
       f.age += step; f.phaseAge += step;
       if (f.phase === 'approach') {
         if (!approach(f, step) || f.age > .6) { clear(); return; }

@@ -62,7 +62,8 @@ RISE=r"""params => {
    A.assert(Math.abs(effect.y-expected)<1e-8,'hit effect remained at ground instead of air body '+effect.kind);
  }
  A.assert(r.effects.filter(e=>e.kind==='dmgText').length===params.count&&r.effects.filter(e=>e.kind==='spark').length===params.count,'native damage number/spark path missing');
- A.assert(f.visualLift===60+8*params.count&&f.peakLift===f.visualLift,'peak height did not follow number of kicks');
+ A.assert(f.peakLift===60+8*params.count&&air.at(-1).lift===f.peakLift,'peak height did not follow number of kicks');
+ A.assert(Math.abs(f.visualLift-f.peakLift*(1-f.phaseAge/f.durations.descent))<1e-8,'descent lost its exact phase remainder');
  A.assert(p.x===ground.x&&p.y===ground.y&&r.e.x===ground.targetX&&r.e.y===ground.targetY,'visual rise moved ground collision coordinates');
  A.assert(L.isInvulnerable(p),'high descent lost reverse immunity');
  const pose=A.render();A.assert(pose.state.key==='lee-opened-reverse'&&pose.sources.every(s=>s.includes('lee-gates-skills-v1.png')),'rising combo lost actual redform source');
