@@ -65,6 +65,13 @@
   }
   function game(){return iframe.contentWindow?.G;}
   function focus(){iframe.focus();iframe.contentWindow.focus();}
+  document.querySelector('#levelup').onclick=()=>{
+    const G=game(),p=G?.Game.player;
+    if(!p||p.dead||!['playing','paused'].includes(G.Game.state))return;
+    document.querySelector('#levelup').disabled=true;
+    if(G.Game.state==='paused')G.Game.togglePause();
+    G.Game.debugLevelUp();focus();
+  };
   document.querySelectorAll('[data-hero]').forEach(button=>button.onclick=()=>{
     const G=game();if(!ready)return;
     detach();G.Naruto.choose(Number(button.dataset.hero));G.Flow.play();focus();
@@ -89,6 +96,7 @@
       window.CastContinuityLab?.install(G);
       attach(G);
       const p=G.Game.player;
+      document.querySelector('#levelup').disabled=!p||p.dead||!['playing','paused'].includes(G.Game.state);
       document.querySelector('#training').disabled=!p||p.dead||G.Game.state==='ui';
       const name=p?.dex===30002?'佐助':p?.dex===30001?'鳴人':'尚未開局';
       status.textContent=`${name} · ${G.Game.state} · ${checkbox.checked&&assets.has(p?.dex)?'實驗移動圖；施術沿用原版':'原版動作（無合格素材時自動保留）'} · 技能：${p?.activeMove()?.name||'—'}。這是實際遊戲，不是動畫播放影片。`;
