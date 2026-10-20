@@ -10,7 +10,7 @@
     ['sakura','Sakura Haruno','春野櫻','第七班',['fighting'],2,146,108],
     ['kakashi','Kakashi Hatake','旗木卡卡西','第七班導師',['electric'],5,112,119],
     ['hinata','Hinata Hyuga','日向雛田','第八班',['fighting','psychic'],2,118,115],
-    ['lee','Rock Lee','洛克李','第三班',['fighting'],1,130,132],
+    ['lee','Rock Lee','洛克李','第三班',['fighting'],1,180,132],
     ['gaara','Gaara','我愛羅','砂隱村',['ground'],4,136,104],
     ['itachi','Itachi Uchiha','宇智波鼬','曉',['psychic','fire'],5,110,117]
   ];
