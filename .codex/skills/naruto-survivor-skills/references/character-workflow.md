@@ -63,6 +63,7 @@ python tools/test_sandbox_redrawn.py
 python tools/test_rock_lee.py                 # 小李體術、學習進程、原生跳躍與手機操作
 node tools/test_lee_contact.js               # 浮點接觸邊界不會卡死
 python tools/test_lee_gates.py               # 八門被動、動態回血／跑速與開門形態
+python tools/test_lee_gates_regeneration.py  # 每秒最大生命百分比回血與既有回血量加成
 python tools/build_digimon_site.py
 ```
 

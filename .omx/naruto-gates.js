@@ -55,7 +55,8 @@
     if (!descriptor?.get) continue;
     Object.defineProperty(G.Player.prototype, key, { ...descriptor, get() {
       const value = descriptor.get.call(this), level = stage(this);
-      return value * (key === 'atk' ? (level ? config.atkMultipliers[level - 1] : 1) : healingMultiplier(this));
+      const innate = key === 'regen' && level ? this.maxHp * level * .01 : 0;
+      return (value + innate) * (key === 'atk' ? (level ? config.atkMultipliers[level - 1] : 1) : healingMultiplier(this));
     } });
   }
   const heal = G.Player.prototype.heal;

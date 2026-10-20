@@ -67,9 +67,9 @@ PASSIVE = r"""() => {
    A.assert(g.bonusPercent(p)===10*level+p.level&&near(g.healingMultiplier(p),factor),'wrong healing API formula');
    p.hp=10;p.heal(10);A.assert(near(p.hp-10,10*factor),'direct healing not scaled exactly once');
    p.hp=10;p.regenFlat=4;A.resume();p.update(.25);A.pause();
-   A.assert(near(p.hp-10,factor),'regeneration did not use healing formula');p.regenFlat=0;
+   A.assert(near(p.hp-10,(4+p.maxHp*level*.01)*.25*factor),'regeneration did not add innate Gates healing once');p.regenFlat=0;
    p.hp=10;p.bellHeal=2;A.resume();p.update(.25);A.pause();
-   A.assert(near(p.hp-10,factor)&&near(p.bellHeal,1),'shell bell did not scale once');p.bellHeal=0;
+   A.assert(near(p.hp-10,(1+p.maxHp*level*.01*.25)*factor)&&near(p.bellHeal,1),'shell bell or innate regeneration did not scale once');p.bellHeal=0;
    p.hp=10;p.lifestealRate=.1;p.onDealt(100);p.lifestealRate=0;
    A.assert(near(p.hp-10,10*factor),'lifesteal did not scale once');
    const specials=G.World.specialsNear;
@@ -140,10 +140,12 @@ def main():
                 page.evaluate(HUD)
                 result = {'passive':page.evaluate(PASSIVE)}
                 page.evaluate(r"""() => {const A=Acceptance,p=A.p();A.leeArena();p.regenFlat=0;p.hp=1;G.Pickups.clear();
-                  A.expectedBerry=1+p.maxHp*.3*G.NarutoGates.healingMultiplier(p);G.Pickups.drop('heal',p.x,p.y);A.resume();
+                  A.expectedBerry=p.maxHp*.3*G.NarutoGates.healingMultiplier(p);
+                  const heal=p.heal;p.heal=function(amount,...args){const before=this.hp;const result=heal.call(this,amount,...args);A.berryHealing=this.hp-before;this.heal=heal;return result};
+                  G.Pickups.drop('heal',p.x,p.y);A.resume();
                 }""")
                 page.wait_for_function('G.Pickups.count===0&&G.Game.player.hp>1')
-                result['pickup']=page.evaluate(r"""() => {const A=Acceptance,p=A.p();A.pause();A.assert(Math.abs(p.hp-A.expectedBerry)<1e-7,'real berry healing scaled incorrectly');return {hp:p.hp,expected:A.expectedBerry}}""")
+                result['pickup']=page.evaluate(r"""() => {const A=Acceptance,p=A.p();A.pause();A.assert(Math.abs(A.berryHealing-A.expectedBerry)<1e-7,'real berry healing scaled incorrectly');return {hp:p.hp,healing:A.berryHealing,expectedHealing:A.expectedBerry}}""")
                 report['viewports'][label] = result
                 target=page.evaluate('Acceptance.inspectHud().target')
                 before=page.evaluate('({active:G.Game.player.active,ids:G.Game.player.activeGroup().map(m=>m.id)})')

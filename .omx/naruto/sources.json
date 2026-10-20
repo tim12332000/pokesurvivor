@@ -58,7 +58,7 @@
       "owner": "Rock Lee",
       "url": "https://naruto-official.com/en/news/01_1652",
       "publisher": "NARUTO OFFICIAL SITE",
-      "adaptation": "Level-six learned passive, first five gates across skill levels1-5. Attack +30/35/40/45/50%; healing received and movement speed each +(10*skillLevel+characterLevel)%. Persistent stats and redface from the first gate are game adaptations; no active slot, timer or fatigue. Existing healing triggers remain required."
+      "adaptation": "Level-six learned passive, first five gates across skill levels1-5. Attack +30/35/40/45/50%; healing received and movement speed each +(10*skillLevel+characterLevel)%. Innate regeneration adds maxHP*skillLevel*0.01 per second (base1/2/3/4/5% maxHP/s), summed with old regeneration and multiplied once by the existing healing multiplier: (oldRegen+maxHP*N*0.01)*(1+(10*N+characterLevel)/100). Stage5 at character level30 contributes9% maxHP/s before other regeneration. Maximum HP, skill stage and character level update dynamically, capped at maxHP; uses the existing game update with no second timer, no paused advancement, no innate healing when dead, unlearned or owned by another character. Misses and afterimages do not trigger lifesteal; innate passive regeneration continues independently of landed attacks. Persistent stats, innate healing and redface from the first gate are survival-game adaptations; no active slot, timer or fatigue."
     },
     {
       "id": "naruto-reverse-lotus",
