@@ -58,7 +58,7 @@ LEVEL=r"""level => {
  A.assert(!G.NarutoLee.active&&elapsed>=2.1&&airborne>1.2,'airborne combo did not stay up longer '+elapsed+' air '+airborne);
  A.assert(air&&air.visualLift>=51&&air.targetLift>=51,'airborne height did not reach 52px');
  A.assert(descending.length>10&&descending.every((h,i)=>i===0||h<=descending[i-1]+.001)&&descending[0]>40&&descending.at(-1)<5,'descent did not visibly lower toward ground');
- A.assert(landing&&r.counts.get(r.primary)===7,'primary combo no longer exactly 7 hits');
+ A.assert(landing&&r.counts.get(r.primary)===5+2*(level-1)+2,'primary combo hit count did not scale with skill level');
  A.assert(r.side.every(e=>r.counts.get(e)===1),'landing did not hit 3 separated inside enemies exactly once');
  A.assert(r.counts.get(r.outside)===0&&r.outside.hp===100000,'outside boundary damaged');
  if(level===1)A.assert(r.counts.get(r.farther)===0,'Lv1 unexpectedly hit beyond small boundary');
@@ -70,14 +70,14 @@ LEVEL=r"""level => {
 
 REGRESSIONS=r"""() => {
  const A=Acceptance,p=A.p(),out={};
- // A large simulation delta still produces 7 primary hits and one landing splash.
- A.reverseFixture();let r=A.reverse;A.reverseStep(3);
- A.assert(!G.NarutoLee.active&&r.counts.get(r.primary)===7&&r.side.every(e=>r.counts.get(e)===1),'large dt lost or duplicated combo/AOE hits');out.largeDt=true;
+ // A large simulation delta preserves the current-level primary hit count and one landing splash.
+ A.reverseFixture();let r=A.reverse;const expectedHits=7+2*(r.m.lvl-1);A.reverseStep(3);
+ A.assert(!G.NarutoLee.active&&r.counts.get(r.primary)===expectedHits&&r.side.every(e=>r.counts.get(e)===1),'large dt lost or duplicated combo/AOE hits');out.largeDt=true;
  // Long airborne ownership suppresses cooldown punches until recovery completes.
  A.reverseFixture();r=A.reverse;const casts=[],cast=p.cast;
  p.cast=function(m,...args){casts.push(m.id);return cast.call(this,m,...args)};
  try{for(let n=0;n<350&&G.NarutoLee.active;n++){A.resume();G.Combat.tick(.01,p,0);A.pause();A.reverseStep(.01)}}finally{p.cast=cast}
- A.assert(!casts.includes('tackle')&&r.counts.get(r.primary)===7,'basic punched into long airborne chain');out.noBasicOverlap=true;
+ A.assert(!casts.includes('tackle')&&r.counts.get(r.primary)===expectedHits,'basic punched into long airborne chain');out.noBasicOverlap=true;
  // Bosses retain their native ground position throughout the longer sequence.
  A.leeArena();const boss=A.spawn(35,0,true);p.target=boss;A.actualCast('naruto-reverse-lotus');
  for(let n=0;n<300&&G.NarutoLee.active;n++){A.reverseStep(.01);A.assert(!G.NarutoLee.active?.visualLift&&!G.NarutoLee.liftFor(boss)&&!boss.jumpLift,'boss lifted')};out.bossGrounded=true;

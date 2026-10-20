@@ -149,7 +149,7 @@
       if(lee?.owner?.anim===anim){
         const reverse=lee.kind==='lee-reverse-lotus';
         if(lee.phase==='approach')return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:'lee-movement',frame:row(dir)*4+Math.floor(state.age*12)%4};
-        const frame=lee.phase==='windup'?0:lee.phase==='lift'?(lee.phaseAge<.12?1:2):lee.phase==='combo'?1+Math.floor(lee.phaseAge*18)%2:lee.phase==='descent'?2:3;
+        const frame=lee.phase==='windup'?0:lee.phase==='lift'?(lee.phaseAge<.12?1:2):lee.phase==='combo'?1+lee.ticks%2:lee.phase==='descent'?2:3;
         return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:reverse?'lee-reverse':'lee-lotus',frame,mirror:Math.cos(pl.aim)<0,visualLift:lee.visualLift||0};
       }
       if (state.hurtAge < .3) return { ...base, state: 'hurt', phase: 'recoil', key: name + '-hurt', frame: row(dir) * 4 + Math.min(3, Math.floor(state.hurtAge / .3 * 4)), age: state.hurtAge };

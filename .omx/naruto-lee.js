@@ -11,6 +11,8 @@
   const elite = e => !!(e.boss || e.elite || e.legend || e.judge);
   const supports = mode => modes.has(mode);
   const launchedReverse = f => f.kind === 'lee-reverse-lotus' && ['lift', 'combo', 'descent', 'slam', 'recovery'].includes(f.phase);
+  const isInvulnerable = owner => !!valid(chain) && chain.owner === owner && chain.kind === 'lee-reverse-lotus' &&
+    ['lift', 'combo', 'descent'].includes(chain.phase);
   const reach = f => (f.owner.r || 12) + (f.target.r || 10) + 12;
   function clearPath(ax, ay, bx, by) {
     const steps = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / 4));
@@ -42,6 +44,7 @@
     const target = targetFor(owner, move);
     chain = { owner, world: G.World, target, kind: move.digiMode, move: { ...move },
       durations: move.digiMode === 'lee-reverse-lotus' ? reverseDurations : durations,
+      comboHits: 5 + 2 * (Math.max(1, Math.min(5, move.lvl | 0)) - 1),
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
       visualLift: 0, targetLift: 0, ticks: 0 };
     owner.svx = owner.svy = 0;
@@ -112,8 +115,10 @@
       }
       if ((!alive(f.target) && !launchedReverse(f)) || Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24) { clear(); return; }
       if (f.phase === 'combo') {
-        const due = Math.min(5, Math.floor(f.phaseAge / (f.durations.combo / 5) + 1e-8));
-        while (f.ticks < due && alive(f.target)) { f.ticks++; hit(f, f.target, .12); }
+        const due = Math.min(f.comboHits, Math.floor(f.phaseAge / (f.durations.combo / f.comboHits) + 1e-8));
+        // Keep the planned aerial motion after a midair KO; hit() skips dead
+        // targets, so later swings cannot award damage or healing again.
+        while (f.ticks < due) { f.ticks++; hit(f, f.target, .12); }
       }
       if (f.phaseAge + 1e-9 >= f.durations[f.phase]) {
         const next = f.phase === 'windup' ? 'lift' : f.phase === 'lift' ?
@@ -133,6 +138,11 @@
   }
   // Contact movement belongs to the technique even when experimental art is disabled.
   // Keep the normal update for animation/status timers; restore only its ground motion.
+  const playerHurt = G.Player.prototype.hurt;
+  G.Player.prototype.hurt = function() {
+    if (isInvulnerable(this)) return;
+    return playerHurt.apply(this, arguments);
+  };
   const playerUpdate = G.Player.prototype.update;
   G.Player.prototype.update = function(dt) {
     if (chain && !valid(chain)) clear();
@@ -168,5 +178,5 @@
   C.updateFields = function(dt) { const result = previousUpdate.call(this, dt); update(dt); return result; };
   C.clearFields = function(owner) { previousClear.call(this, owner); clear(owner); };
   if (G.DigimonSkills?.clear) { const previous = G.DigimonSkills.clear; G.DigimonSkills.clear = owner => { previous(owner); clear(owner); }; }
-  G.NarutoLee = { supports, canCast, cast, clear, update, liftFor, get active() { return chain; } };
+  G.NarutoLee = { supports, canCast, cast, clear, update, liftFor, isInvulnerable, get active() { return chain; } };
 })();
