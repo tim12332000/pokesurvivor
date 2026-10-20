@@ -3,6 +3,7 @@
   if (G.NarutoLee) return;
   const C = G.Combat, modes = new Set(['lee-lotus', 'lee-reverse-lotus']);
   const durations = { windup: .18, lift: .24, combo: .42, slam: .16, recovery: .18 };
+  const basics = new WeakMap();
   let chain = null;
   const alive = actor => actor && !actor.dead && actor.hp > 0;
   const valid = f => f && f.owner === G.Game.player && f.world === G.World && alive(f.owner);
@@ -129,6 +130,28 @@
     this.frozen = true; this.svx = this.svy = 0;
     try { return playerUpdate.call(this, dt); }
     finally { this.frozen = frozen; this.x = x; this.y = y; }
+  };
+  const previousTick = C.tick;
+  C.tick = function(dt, owner, now) {
+    // Let a ready Lotus start first. Its complete contact sequence owns the body.
+    const result = previousTick.call(this, dt, owner, now);
+    if (G.Game.state !== 'playing' || !(dt > 0) || chain || owner?.dex !== 30006 ||
+        !valid({ owner, world: G.World }) ||
+        !owner.activeGroup().some(move => supports(move.digiMode) && move.t > 0)) return result;
+    let basic = basics.get(owner);
+    if (!basic || basic.world !== G.World) {
+      const move = G.Moves.instance('tackle');
+      move.name = '體術普攻'; move.type = 'fighting';
+      basic = { world: G.World, move }; basics.set(owner, basic);
+    }
+    const target = targetFor(owner, { range: basic.move.radius });
+    if (!target) { basic.move.t = Math.max(0, basic.move.t - dt); return result; }
+    const activeGroup = owner.activeGroup, selectedTarget = owner.target;
+    owner.activeGroup = () => [basic.move]; owner.target = target;
+    owner.aim = Math.atan2(target.y - owner.y, target.x - owner.x);
+    try { previousTick.call(this, dt, owner, now); }
+    finally { owner.activeGroup = activeGroup; owner.target = selectedTarget; }
+    return result;
   };
   const previousUpdate = C.updateFields, previousClear = C.clearFields;
   C.updateFields = function(dt) { const result = previousUpdate.call(this, dt); update(dt); return result; };

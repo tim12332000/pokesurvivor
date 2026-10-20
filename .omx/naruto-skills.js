@@ -278,7 +278,7 @@
     ['naruto-lotus', [30006], {
       name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:3, dmg:70,
       range:145, radius:60,
-      vis:{pal:'grass'}, desc:'小李 Lv.3 解鎖。踏入近身、上踢挑空，再旋身摔落。首領保持接地；落地小範圍震擊為本作改編。',
+      vis:{pal:'grass'}, desc:'小李 Lv.3 解鎖。踏入近身、上踢挑空，再旋身摔落。冷卻期間自動使用近身體術普攻，連段中不穿插；就緒時優先施放蓮華。首領保持接地；落地小範圍震擊為本作改編。',
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
@@ -296,7 +296,7 @@
     ['naruto-reverse-lotus', [30006], {
       name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, dmg:145,
       range:180, radius:64,
-      vis:{pal:'grass'}, desc:'小李 Lv.9 解鎖。近身上踢後五段高速體術連擊，最後重摔；首領不浮空。可獨立施放，開門期間享攻擊加成；獨立施放、數值與落地範圍為本作改編。',
+      vis:{pal:'grass'}, desc:'小李 Lv.9 解鎖。近身上踢後五段高速體術連擊，最後重摔；首領不浮空。冷卻期間自動使用近身體術普攻，連段中不穿插；就緒時優先施放蓮華。可獨立施放，開門期間享攻擊加成；獨立施放、數值與落地範圍為本作改編。',
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {
