@@ -246,7 +246,7 @@ G.HUD = (() => {
 
     // ---------- ranura de movimientos ----------
     const S = controls ? controls.S : 54, GAP = controls ? controls.GAP : 9;
-    const n = portrait ? Math.max(4, pl.slots.length) : Math.max(1, pl.slots.length);
+    const n = touch ? controls.slots.length : Math.max(1, pl.slots.length);
     const totalW = n * S + (n - 1) * GAP;
     const sx = controls ? controls.slots[0].x : (w - totalW) / 2;
     const sy = controls ? controls.slots[0].y : h - S - 18;
@@ -261,10 +261,17 @@ G.HUD = (() => {
       const slot = controls && controls.slots[i];
       const x = slot ? slot.x : sx + i * (S + GAP);
       const y0 = slot ? slot.y : sy;
-      const y = on && !portrait ? y0 - 6 : y0;
+      const y = on ? y0 - (touch ? 4 : 6) : y0;
       // Tocar (o hacer clic en) un icono activa ese movimiento.
-      if (m) G.Touch.addButton(x, y, S, S, () => { if (G.Game.state === 'playing' && pl.active !== i) { pl.setActive(i); G.Audio.sfx('click'); } }, GAP / 2 + 3);
+      const grow = touch && on ? S * 0.06 : 0;
+      if (m) G.Touch.addButton(x - grow, y - grow, S + grow * 2, S + grow * 2, () => { if (G.Game.state === 'playing' && pl.active !== i) { pl.setActive(i); G.Audio.sfx('click'); } }, touch ? 1 : GAP / 2 + 3);
       const col = m ? G.U.TYPE_COLOR[m.type] : '#4a5468';
+      ctx.save();
+      if (touch && on) {
+        ctx.translate(x + S / 2, y + S / 2);
+        ctx.scale(1.12, 1.12);
+        ctx.translate(-x - S / 2, -y - S / 2);
+      }
 
       // fondo
       roundRect(ctx, x, y, S, S, 12);
@@ -275,7 +282,7 @@ G.HUD = (() => {
       ctx.strokeStyle = fused ? BOND : m && m.evolved ? '#ffd23f' : on ? col : 'rgba(140,170,210,.22)';
       ctx.stroke();
 
-      if (!m) continue;
+      if (!m) { ctx.restore(); continue; }
 
       if (fused) {
         // Vínculo: los movimientos en una cuadrícula de 2×2, cada uno con su recarga.
@@ -319,13 +326,14 @@ G.HUD = (() => {
       ctx.fillStyle = fused ? BOND : on ? col : 'rgba(180,200,230,.6)';
       ctx.textAlign = 'left';
       ctx.fillText(String(i + 1), x + 3, y + 10);
+      ctx.restore();
 
       // nombre encima del activo (con un vínculo: "Ascuas +2")
       if (on) {
         ctx.font = F(700, 10);
         ctx.textAlign = 'center';
         ctx.fillStyle = fused ? BOND : col;
-        ctx.fillText(fused ? m.name + ' +' + (g.length - 1) : m.name, portrait ? controls.bar.x + controls.bar.w / 2 : x + S / 2, portrait ? controls.bar.y - 10 : y - 7, portrait ? controls.bar.w : w);
+        ctx.fillText(fused ? m.name + ' +' + (g.length - 1) : m.name, touch ? controls.bar.x + (controls.bar.w - S - GAP) / 2 : x + S / 2, touch ? controls.bar.y + S / 2 : y - 7, touch ? controls.bar.w - S - GAP - 8 : w);
       }
     }
 
@@ -355,7 +363,7 @@ G.HUD = (() => {
         ctx.font = F(700, 9);
         ctx.textAlign = 'center';
         ctx.fillStyle = '#ffd23f';
-        ctx.fillText(G.Items.BY[pl.item].name, portrait ? controls.bar.x + S / 2 : ix + S / 2, portrait ? iy + S / 2 : iy - 6, portrait ? S : w);
+        ctx.fillText(G.Items.BY[pl.item].name, ix + S / 2, iy - 6, touch ? S + 12 : w);
       }
     }
 

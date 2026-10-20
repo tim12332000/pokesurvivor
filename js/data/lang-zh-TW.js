@@ -1,5 +1,6 @@
 /* Traditional Chinese (Taiwan); names synced from pinned PokeAPI data. */
 G.I18n.add({
+  "Cambiado a: {x}": "已切換：{x}",
   "Acero": "鋼",
   "Agua": "水",
   "Bicho": "蟲",

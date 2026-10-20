@@ -412,6 +412,10 @@ kbd {
   background: rgba(10,20,50,.95); border: 2px solid var(--edge);
   text-shadow: 2px 2px 0 var(--shadow); animation: pop .2s ease-out;
 }
+body.touch .toast {
+  top: calc(env(safe-area-inset-top, 0px) + 100px); bottom: auto;
+  max-width: calc(100vw - 48px); text-align: center; pointer-events: none;
+}
 
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-thumb { background: rgba(244,248,255,.3); border-radius: 10px; }

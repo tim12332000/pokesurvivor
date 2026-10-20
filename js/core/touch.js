@@ -132,18 +132,18 @@ G.Touch = (() => {
 
   /** Shared screen geometry for the actual HUD and the draggable control editor. */
   function controlLayout(w,h,n=4,{defaults=false}={}) {
-    const vertical=portrait(w,h),sa=safeArea(),S=vertical?56:54,GAP=vertical?8:9,itemGap=vertical?8:18;
-    const slotsCount=vertical?Math.max(4,n):n,all=Math.max(n,4),bw=vertical?2*S+GAP:S+itemGap+all*S+(all-1)*GAP;
-    const rows=1+Math.ceil(slotsCount/2),bh=vertical?rows*S+(rows-1)*GAP:S;
+    const vertical=portrait(w,h),sa=safeArea(),GAP=12,itemGap=12;
+    const slotsCount=Math.max(4,n);
+    const S=Math.min(vertical?56:54,(w-sa.left-sa.right-28-(slotsCount-1)*GAP)/slotsCount);
+    const bw=slotsCount*S+(slotsCount-1)*GAP,bh=2*S+GAP;
     const custom=defaults?null:spot('bar');
     const left=sa.left+6,right=w-sa.right-6,bottom=h-sa.bottom-18;
-    let x=vertical?right-bw-6:(w-(slotsCount*S+(slotsCount-1)*GAP))/2-S-itemGap;
+    let x=(w-bw)/2;
     let y=bottom-bh;
     if(custom){x=custom[0]*w-bw/2;y=custom[1]*h-bh/2;}
     x=clamp(x,left,Math.max(left,right-bw));y=clamp(y,sa.top+24,Math.max(sa.top+24,bottom-bh));
-    const slots=Array.from({length:slotsCount},(_,i)=>({x:vertical?x+i%2*(S+GAP):x+S+itemGap+i*(S+GAP),
-      y:vertical?y+S+GAP+Math.floor(i/2)*(S+GAP):y,w:S,h:S}));
-    const item={x:vertical?x+S+GAP:x,y,w:S,h:S};
+    const slots=Array.from({length:slotsCount},(_,i)=>({x:x+i*(S+GAP),y:y+S+GAP,w:S,h:S}));
+    const item={x:x+bw-S,y,w:S,h:S};
     const bs=vertical?44:40,p=defaults?null:spot('pause');
     const pause={x:clamp(p?p[0]*w-bs/2:w-bs-12-sa.right,sa.left+4,Math.max(sa.left+4,w-sa.right-bs-4)),
       y:clamp(p?p[1]*h-bs/2:12+sa.top,sa.top+10,Math.max(sa.top+10,h-sa.bottom-bs-4)),w:bs,h:bs};

@@ -124,6 +124,7 @@ G.LayoutUI = (() => {
       node.style.width = rect.w + 'px';
       node.style.height = rect.h + 'px';
       node.style.margin = '0';
+      node.style.transform = i === 1 ? 'translateY(-4px) scale(1.12)' : '';
     });
     place('pause', layout.pause.w, layout.pause.h);
     place('stick', r * 2, r * 2).classList.toggle('hidden', mode !== 'fixed');
