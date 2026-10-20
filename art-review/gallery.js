@@ -244,7 +244,7 @@
     const visible = items.filter(item => (filter.value === 'all' || item.character === filter.value) && (categoryFilter.value === 'all' || item.category === categoryFilter.value));
     gallery.replaceChildren(...visible.map(card));
     document.getElementById('count').textContent = `${visible.length} 件候選作品`;
-    message.textContent = visible.length ? '目前五張原創圖集已接入內測。可切換動作、逐格檢查，或展開原尺寸圖集。' : '目前沒有符合篩選條件的候選作品。';
+    message.textContent = visible.length ? '目前原創圖集已接入遊戲。可切換角色與動作、逐格檢查，或展開原尺寸圖集。' : '目前沒有符合篩選條件的候選作品。';
   }
   filter.addEventListener('change', render);
   categoryFilter.addEventListener('change', render);

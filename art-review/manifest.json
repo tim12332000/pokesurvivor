@@ -2134,6 +2134,865 @@
           }
         ]
       }
+    },
+    {
+      "id": "lee-common-v1",
+      "title": "小李：共通動作",
+      "character": "小李",
+      "category": "common",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/lee-common-v1.png",
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "原創重繪小李，使用與鳴人、佐助一致的比例、描邊與像素風格；已接入正式遊戲入口。",
+      "improvements": [
+        "統一固定身高與腳底定位",
+        "完整動作已接入實際戰鬥"
+      ],
+      "limitations": [
+        "技能上下方向沿用側面動作"
+      ],
+      "references": [
+        {
+          "title": "Ninja Council 3：僅作風格研究",
+          "url": "https://spritedatabase.net/game/55"
+        },
+        {
+          "title": "原創製作來源與提示紀錄",
+          "url": "redrawn/provenance.json"
+        }
+      ],
+      "qa": {
+        "score": 92,
+        "verdict": "固定比例圖集與遊戲接線已驗證"
+      },
+      "animation": {
+        "fps": 8,
+        "bodyHeight": 182.0,
+        "frames": [
+          {
+            "rect": [
+              68,
+              45,
+              112,
+              184
+            ],
+            "anchor": [
+              56.0,
+              180
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              277,
+              45,
+              112,
+              184
+            ],
+            "anchor": [
+              55.5,
+              180
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              502,
+              41,
+              106,
+              188
+            ],
+            "anchor": [
+              53.5,
+              184
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              711,
+              41,
+              107,
+              188
+            ],
+            "anchor": [
+              54.0,
+              184
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              76,
+              257,
+              124,
+              186
+            ],
+            "anchor": [
+              50.5,
+              182
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              290,
+              257,
+              96,
+              186
+            ],
+            "anchor": [
+              48.5,
+              182
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              483,
+              268,
+              139,
+              175
+            ],
+            "anchor": [
+              80.0,
+              171
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              723,
+              257,
+              119,
+              185
+            ],
+            "anchor": [
+              48.0,
+              181
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              49,
+              480,
+              136,
+              179
+            ],
+            "anchor": [
+              65.5,
+              174
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              271,
+              480,
+              134,
+              178
+            ],
+            "anchor": [
+              73.0,
+              174
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              482,
+              479,
+              130,
+              180
+            ],
+            "anchor": [
+              65.0,
+              175
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              695,
+              481,
+              144,
+              178
+            ],
+            "anchor": [
+              76.5,
+              173
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              37,
+              681,
+              159,
+              188
+            ],
+            "anchor": [
+              72.5,
+              184
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              243,
+              680,
+              167,
+              189
+            ],
+            "anchor": [
+              115.0,
+              186
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              461,
+              683,
+              165,
+              187
+            ],
+            "anchor": [
+              111.5,
+              183
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              677,
+              682,
+              161,
+              187
+            ],
+            "anchor": [
+              115.5,
+              184
+            ],
+            "atlasIndex": 15
+          },
+          {
+            "rect": [
+              52,
+              895,
+              127,
+              203
+            ],
+            "anchor": [
+              63.5,
+              199
+            ],
+            "atlasIndex": 16
+          },
+          {
+            "rect": [
+              273,
+              892,
+              118,
+              206
+            ],
+            "anchor": [
+              68.0,
+              202
+            ],
+            "atlasIndex": 17
+          },
+          {
+            "rect": [
+              495,
+              894,
+              115,
+              204
+            ],
+            "anchor": [
+              46.0,
+              200
+            ],
+            "atlasIndex": 18
+          },
+          {
+            "rect": [
+              704,
+              893,
+              122,
+              205
+            ],
+            "anchor": [
+              69.5,
+              201
+            ],
+            "atlasIndex": 19
+          },
+          {
+            "rect": [
+              66,
+              1126,
+              113,
+              179
+            ],
+            "anchor": [
+              56.0,
+              175
+            ],
+            "atlasIndex": 20
+          },
+          {
+            "rect": [
+              272,
+              1124,
+              125,
+              181
+            ],
+            "anchor": [
+              62.5,
+              177
+            ],
+            "atlasIndex": 21
+          },
+          {
+            "rect": [
+              495,
+              1133,
+              114,
+              172
+            ],
+            "anchor": [
+              57.0,
+              168
+            ],
+            "atlasIndex": 22
+          },
+          {
+            "rect": [
+              705,
+              1122,
+              117,
+              183
+            ],
+            "anchor": [
+              58.0,
+              179
+            ],
+            "atlasIndex": 23
+          },
+          {
+            "rect": [
+              48,
+              1341,
+              131,
+              167
+            ],
+            "anchor": [
+              64.5,
+              163
+            ],
+            "atlasIndex": 24
+          },
+          {
+            "rect": [
+              234,
+              1370,
+              179,
+              137
+            ],
+            "anchor": [
+              79.0,
+              133
+            ],
+            "atlasIndex": 25
+          },
+          {
+            "rect": [
+              425,
+              1393,
+              215,
+              114
+            ],
+            "anchor": [
+              104.5,
+              110
+            ],
+            "atlasIndex": 26
+          },
+          {
+            "rect": [
+              661,
+              1412,
+              208,
+              86
+            ],
+            "anchor": [
+              102.0,
+              82
+            ],
+            "atlasIndex": 27
+          },
+          {
+            "rect": [
+              40,
+              1547,
+              136,
+              186
+            ],
+            "anchor": [
+              68.0,
+              183
+            ],
+            "atlasIndex": 28
+          },
+          {
+            "rect": [
+              246,
+              1547,
+              182,
+              186
+            ],
+            "anchor": [
+              70.5,
+              183
+            ],
+            "atlasIndex": 29
+          },
+          {
+            "rect": [
+              464,
+              1545,
+              187,
+              189
+            ],
+            "anchor": [
+              72.0,
+              185
+            ],
+            "atlasIndex": 30
+          },
+          {
+            "rect": [
+              703,
+              1544,
+              126,
+              189
+            ],
+            "anchor": [
+              63.0,
+              186
+            ],
+            "atlasIndex": 31
+          }
+        ],
+        "sequences": [
+          {
+            "name": "正面待機",
+            "indices": [
+              0,
+              1
+            ],
+            "loop": true
+          },
+          {
+            "name": "背面待機",
+            "indices": [
+              2,
+              3
+            ],
+            "loop": true
+          },
+          {
+            "name": "右向待機",
+            "indices": [
+              4,
+              5
+            ],
+            "loop": true
+          },
+          {
+            "name": "正面跑動",
+            "indices": [
+              8,
+              9,
+              10,
+              11
+            ],
+            "loop": true
+          },
+          {
+            "name": "右向跑動",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": true
+          },
+          {
+            "name": "左向跑動（鏡射）",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": true,
+            "mirror": true
+          },
+          {
+            "name": "背面跑動",
+            "indices": [
+              16,
+              17,
+              18,
+              19
+            ],
+            "loop": true
+          },
+          {
+            "name": "正面受傷",
+            "indices": [
+              20,
+              21,
+              0,
+              1
+            ],
+            "loop": false
+          },
+          {
+            "name": "背面受傷",
+            "indices": [
+              22,
+              23,
+              2,
+              3
+            ],
+            "loop": false
+          },
+          {
+            "name": "右向受傷",
+            "indices": [
+              6,
+              7,
+              4,
+              5
+            ],
+            "loop": false
+          },
+          {
+            "name": "倒下",
+            "indices": [
+              24,
+              25,
+              26,
+              27
+            ],
+            "loop": false
+          },
+          {
+            "name": "基本攻擊",
+            "indices": [
+              28,
+              29,
+              30,
+              31
+            ],
+            "loop": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "lee-skills-v1",
+      "title": "小李：體術技能",
+      "character": "小李",
+      "category": "skill",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/lee-skills-v1.png",
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "原創重繪小李，使用與鳴人、佐助一致的比例、描邊與像素風格；已接入正式遊戲入口。",
+      "improvements": [
+        "統一固定身高與腳底定位",
+        "完整動作已接入實際戰鬥"
+      ],
+      "limitations": [
+        "技能上下方向沿用側面動作"
+      ],
+      "references": [
+        {
+          "title": "Ninja Council 3：僅作風格研究",
+          "url": "https://spritedatabase.net/game/55"
+        },
+        {
+          "title": "原創製作來源與提示紀錄",
+          "url": "redrawn/provenance.json"
+        }
+      ],
+      "qa": {
+        "score": 92,
+        "verdict": "固定比例圖集與遊戲接線已驗證"
+      },
+      "animation": {
+        "fps": 8,
+        "bodyHeight": 248.0,
+        "frames": [
+          {
+            "rect": [
+              51,
+              63,
+              222,
+              257
+            ],
+            "anchor": [
+              110.0,
+              253
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              380,
+              38,
+              189,
+              283
+            ],
+            "anchor": [
+              64.0,
+              279
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              629,
+              58,
+              323,
+              263
+            ],
+            "anchor": [
+              101.0,
+              259
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              980,
+              67,
+              233,
+              254
+            ],
+            "anchor": [
+              113.5,
+              250
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              63,
+              407,
+              190,
+              230
+            ],
+            "anchor": [
+              93.5,
+              226
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              351,
+              336,
+              252,
+              300
+            ],
+            "anchor": [
+              89.0,
+              296
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              700,
+              366,
+              179,
+              272
+            ],
+            "anchor": [
+              86.5,
+              271
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              984,
+              440,
+              243,
+              198
+            ],
+            "anchor": [
+              125.0,
+              193
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              61,
+              673,
+              217,
+              253
+            ],
+            "anchor": [
+              108.0,
+              249
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              345,
+              686,
+              247,
+              240
+            ],
+            "anchor": [
+              123.5,
+              236
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              676,
+              638,
+              215,
+              288
+            ],
+            "anchor": [
+              108.0,
+              284
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              985,
+              677,
+              234,
+              250
+            ],
+            "anchor": [
+              113.5,
+              246
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              41,
+              1004,
+              268,
+              194
+            ],
+            "anchor": [
+              117.5,
+              190
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              360,
+              954,
+              278,
+              236
+            ],
+            "anchor": [
+              37.5,
+              232
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              680,
+              940,
+              244,
+              211
+            ],
+            "anchor": [
+              70.5,
+              207
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              992,
+              1009,
+              241,
+              191
+            ],
+            "anchor": [
+              188.0,
+              187
+            ],
+            "atlasIndex": 15
+          }
+        ],
+        "sequences": [
+          {
+            "name": "木葉旋風",
+            "indices": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "loop": false
+          },
+          {
+            "name": "表蓮華",
+            "indices": [
+              4,
+              5,
+              6,
+              7
+            ],
+            "loop": false
+          },
+          {
+            "name": "八門遁甲",
+            "indices": [
+              8,
+              9,
+              10,
+              11
+            ],
+            "loop": false
+          },
+          {
+            "name": "裏蓮華",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": false
+          }
+        ]
+      }
     }
   ]
 }

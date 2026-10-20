@@ -692,7 +692,7 @@
       G.Sprites.drawShadow(ctx, this.dex, this.x, this.y, this.scale);
       // Los que flotan ya van en el aire en su sprite: sólo se mecen un poco.
       // (Y los que saltan, en arco.)
-      const lift = (this.flying && !this.boss ? 1 + Math.sin(this.bob) * 1.5 : 0) + (this.jumpLift || 0);
+      const lift = (this.flying && !this.boss ? 1 + Math.sin(this.bob) * 1.5 : 0) + (this.jumpLift || 0) + (G.NarutoLee?.liftFor(this) || 0);
       this.anim.draw(ctx, this.x, this.y - lift, { flash: this.flash > 0, alpha });
       ctx.restore();
 

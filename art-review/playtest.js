@@ -57,7 +57,7 @@
         skillKey=key;
       }
       if(p?.activeMove())skill.value=p.activeMove().id;
-      const name=p?.dex===30002?'佐助':p?.dex===30001?'鳴人':'尚未開局';
+      const name=p?.mon?.chinese||({30001:'鳴人',30002:'佐助',30006:'小李'})[p?.dex]||'尚未開局';
       status.textContent=name+' · '+(checkbox.checked?'統一重繪版':'原版對照')+' · '+G.Game.state+' · '+(p?.activeMove()?.name||'先選角色開局')+'。角色圖重新繪製；可升級選卡或解鎖招式逐招測試。';
     }catch(error){ready=false;status.textContent='內測載入失敗：'+error.message;}
   },120);

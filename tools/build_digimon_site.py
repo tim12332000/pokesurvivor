@@ -31,7 +31,12 @@ for source in sorted(sources):
     assert source.startswith('redrawn/') and path.suffix == '.png'
     assert (ROOT / path).resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
     review_runtime.append(path.as_posix())
-assert len(sources) == 5, 'Unexpected reviewed hero atlas inventory'
+assert sources == {
+    'redrawn/naruto-common-v1.png', 'redrawn/naruto-skills-v2.png',
+    'redrawn/sasuke-common-v1.png', 'redrawn/sasuke-skills-v2.png',
+    'redrawn/one-tail-v2.png',
+    'redrawn/lee-common-v1.png', 'redrawn/lee-skills-v1.png',
+}, 'Unexpected reviewed hero atlas inventory'
 for name in review_runtime + ['.omx/redrawn-init.js']:
     target = OUT / name
     target.parent.mkdir(parents=True, exist_ok=True)

@@ -1,7 +1,7 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
-  const availableDexes=Object.freeze([30001,30002]);
+  const availableDexes=Object.freeze([30001,30002,30006]);
   const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
   const version='火影 beta 0.01';
   const roster = [
@@ -136,15 +136,16 @@
     button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${record.team}</small><span data-naruto-attack="${record.dex}"></span>`);
     button.onclick=()=>choose(record.dex);grid.append(button);
   }
-  // Keep both beta characters visible beside the play button, without opening a picker.
+  // Keep available beta characters visible beside the play button.
   const quickPick=document.createElement('section');quickPick.id='naruto-quick-pick';quickPick.translate=false;
   quickPick.setAttribute('aria-label','選擇出戰角色');
-  quickPick.innerHTML='<h2>選擇出戰角色</h2><p>點選鳴人或佐助，再按開始遊戲。</p><div class="naruto-grid"></div>';
+  quickPick.innerHTML='<h2>選擇出戰角色</h2><p>點選出戰角色，再按開始遊戲。</p><div class="naruto-grid"></div>';
   for(const dex of availableDexes){
     const record=records.get(dex),button=document.createElement('button');
     button.type='button';button.className='naruto-card';button.dataset.quickNaruto=dex;
     button.append(G.UI.spriteCanvas(dex,128,112,{dir:0,shadow:true}));
-    button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${dex===30001?'影分身・螺旋丸':'千鳥・豪火球'}</small><span class="naruto-selection"></span>`);
+    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30006:'體術・木葉旋風・蓮華'}[dex]||record.team;
+    button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${identity}</small><span class="naruto-selection"></span>`);
     button.onclick=()=>choose(dex);quickPick.querySelector('.naruto-grid').append(button);
   }
   const partnerCard=document.querySelector('#scr-menu .partner-card');partnerCard.after(quickPick);

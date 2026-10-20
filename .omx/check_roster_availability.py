@@ -30,17 +30,17 @@ with sync_playwright() as p:
         assert page.evaluate('G.DB.save.partner===30001')
         assert page.locator('#btn-digimon').is_hidden()
         page.locator('#btn-naruto').click()
-        assert page.locator('.naruto-card:visible').count() == 2
+        assert page.locator('.naruto-card[data-naruto]:visible').count() == 3
         assert page.locator('#naruto-to-digimon').is_hidden()
-        assert page.locator('.naruto-skill-entry').count()==2
+        assert page.locator('.naruto-skill-entry').count()==3
         page.screenshot(path=str(ROOT/f'.omx/roster-availability-{"mobile" if mobile else "desktop"}.png'), animations='disabled')
         assert page.evaluate('''() => {
             const original=G.DB.save.partner;
             G.Naruto.choose(30003);G.Digimon.choose(20001);G.Digimon.choose(20173);G.Digimon.openPicker();
             return G.DB.save.partner===original&&document.getElementById('scr-digimon').classList.contains('hidden')
-                &&G.DEX.filter(m=>m.gen===11).map(m=>m.dex).join(',')==='30001,30002'
+                &&G.DEX.filter(m=>m.gen===11).map(m=>m.dex).join(',')==='30001,30002,30006'
                 &&!G.DEX.some(m=>m.gen===10)&&!G.STARTERS.some(m=>m.dex>=20001&&m.dex<30001)
-                &&!G.STARTERS.some(m=>m.dex>30002)&&G.Gacha.featured(11).join(',')==='30001,30002'
+                &&!G.STARTERS.some(m=>m.dex>30002&&m.dex!==30006)&&G.Gacha.featured(11).join(',')==='30001,30002,30006'
                 &&G.Gacha.pull(G.DB.save,1,10)===null&&G.Digimon.records.size===33&&G.Naruto.records.size===8;
         }''')
         page.evaluate('G.Naruto.choose(30002);G.DB.save.stats.runs=12;G.DB.save.stats.bestTime=321;G.DB.commit()')
@@ -56,18 +56,18 @@ with sync_playwright() as p:
         page.locator('#scr-menu [data-go=gacha]').click()
         assert page.locator('#gacha-gens [data-gen="10"]').count()==0
         page.locator('#gacha-gens [data-gen="11"]').click()
-        assert page.locator('#gacha-feat canvas').count()==2
+        assert page.locator('#gacha-feat canvas').count()==3
         page.evaluate('G.Flow.goMenu()')
         page.locator('#scr-menu [data-go=dex]').click()
         assert page.locator('#dex-gens .gen-tab').count()==10
         page.locator('#dex-gens .gen-tab').last.click()
-        assert page.locator('#dex-grid .cell').count()==2
+        assert page.locator('#dex-grid .cell').count()==3
         page.evaluate('G.Flow.goMenu()')
         page.locator('#scr-menu [data-go=upgrades]').click()
-        assert page.evaluate("[...document.querySelectorAll('#upg-mon option')].every(o=>+o.value<20001||[30001,30002].includes(+o.value))")
+        assert page.evaluate("[...document.querySelectorAll('#upg-mon option')].every(o=>+o.value<20001||[30001,30002,30006].includes(+o.value))")
         page.evaluate('G.Flow.goMenu();G.DB.save.partner=30007;G.Game.startRun();G.Game.togglePause()')
         assert page.evaluate('G.Game.player.dex===30001')
         context.close()
     assert not errors,errors
-    print(json.dumps({'visibleNinjas':[30001,30002],'digimon':'hidden and guarded','saves':'progress preserved; unavailable partner falls back to Naruto','pokemon':'preserved','desktopAndMobile':True,'pageErrors':errors}))
+    print(json.dumps({'visibleNinjas':[30001,30002,30006],'digimon':'hidden and guarded','saves':'progress preserved; unavailable partner falls back to Naruto','pokemon':'preserved','desktopAndMobile':True,'pageErrors':errors}))
     browser.close()

@@ -13,7 +13,11 @@
     'naruto-kusanagi': 'redrawn draw/slash/recovery sequence; straight blade orbit',
     'naruto-sharingan': 'redrawn seal sequence; five-tier eye effects',
     'naruto-kunai': 'redrawn throw sequence',
-    'naruto-shuriken': 'redrawn throw sequence'
+    'naruto-shuriken': 'redrawn throw sequence',
+    'naruto-lee': 'redrawn sweeping roundhouse; close-range AOE',
+    'naruto-lotus': 'redrawn step-in, rising kick, airborne drive and landing',
+    'naruto-gates': 'redrawn partial-gates activation; temporary strength and fatigue',
+    'naruto-reverse-lotus': 'redrawn committed aerial taijutsu combo and finisher'
   });
   function install(G, { enabled = () => true } = {}) {
     if (installed.has(G)) return G.AnimationLab;
@@ -22,8 +26,9 @@
     const states = new Map();
     const counters = { candidate: 0, source: 0, byState: {}, bySkill: {} };
     let world = G.World, owner = G.Game.player, drawingAir = false;
-    const supported = anim => [30001, 30002].includes(anim?.dex);
-    const hero = anim => anim.dex === 30002 ? 'sasuke' : 'naruto';
+    const heroes={30001:'naruto',30002:'sasuke',30006:'lee'};
+    const supported = anim => Object.hasOwn(heroes,anim?.dex);
+    const hero = anim => heroes[anim.dex];
     const direction = anim => ['down', 'right', 'right', 'right', 'up', 'left', 'left', 'left'][((anim.dir || 0) % 8 + 8) % 8];
     const row = dir => ({ down: 0, up: 1, left: 2, right: 3 })[dir];
     function actor(anim) {
@@ -58,6 +63,7 @@
       [G.NarutoClones, 'beginCast', 'naruto-shadow-clones', .62],
       [G.NarutoChidori, 'cast', 'naruto-sasuke', .38],
       [G.NarutoFireball, 'cast', 'naruto-fireball', .68],
+      [G.NarutoLee, 'cast', null, 1.8],
       [G.NarutoSupport, 'cast', null, .5]
     ]) {
       if (!api?.[method]) continue;
@@ -137,6 +143,13 @@
       }
       const fire = G.NarutoFireball?.active;
       if (fire?.owner?.anim === anim) return { ...base, state: 'skill', id: 'naruto-fireball', phase: fire.phase, key: 'sasuke-fireball', frame: fire.phase === 'seal' ? Math.min(1, Math.floor(fire.t / .24 * 2)) : fire.phase === 'recovery' ? 3 : 2, mirror: Math.cos(fire.aim) < 0 };
+      const lee=G.NarutoLee?.active;
+      if(lee?.owner?.anim===anim){
+        const reverse=lee.kind==='lee-reverse-lotus';
+        if(lee.phase==='approach')return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:'lee-movement',frame:row(dir)*4+Math.floor(state.age*12)%4};
+        const frame=lee.phase==='windup'?0:lee.phase==='lift'?(lee.phaseAge<.12?1:2):lee.phase==='combo'?1+Math.floor(lee.phaseAge*18)%2:3;
+        return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:reverse?'lee-reverse':'lee-lotus',frame,mirror:Math.cos(pl.aim)<0,visualLift:lee.visualLift||0};
+      }
       if (state.hurtAge < .3) return { ...base, state: 'hurt', phase: 'recoil', key: name + '-hurt', frame: row(dir) * 4 + Math.min(3, Math.floor(state.hurtAge / .3 * 4)), age: state.hurtAge };
       let cast = state.cast;
       if (!cast && pl?.comboT > 0) cast = { id: pl.mimickedId || 'naruto-kunai', age: .4 - pl.comboT, duration: .4, charge: .12, aim: pl.comboAim || 0 };
@@ -154,6 +167,9 @@
         if (cast.id === 'naruto-nine-tails-cloak') return { ...action, key: 'naruto-cloak', frame: Math.min(3, Math.floor(cast.age / cast.duration * 4)) };
         if (cast.id === 'naruto-kusanagi') return { ...action, key: 'sasuke-sword', frame: Math.min(3, Math.floor(cast.age / cast.duration * 4)) };
         if (cast.id === 'naruto-sharingan') return { ...action, key: 'sasuke-fireball', frame: cast.age < .4 ? 0 : 3 };
+        if (cast.id === 'naruto-lee') return {...action,key:'lee-whirlwind',frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
+        if (cast.id === 'naruto-gates') return {...action,key:'lee-gates',frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
+        if (cast.id === 'naruto-lotus'||cast.id === 'naruto-reverse-lotus') return {...action,key:cast.id==='naruto-lotus'?'lee-lotus':'lee-reverse',frame:3,phase:'recovery'};
         if (['naruto-kunai','naruto-shuriken','naruto-fuma-shuriken','naruto-rasenshuriken'].includes(cast.id)) return { ...action, key: name + '-throw', frame: phase === 'windup' ? Math.min(1, Math.floor(cast.age / Math.max(.01, cast.charge) * 2)) : phase === 'release' ? 2 : 3 };
         return { ...action, key: name + '-attack', frame: Math.min(3, Math.floor(cast.age / cast.duration * 4)) };
       }
@@ -192,7 +208,7 @@
       if (!supported(this) || !enabled()) { counters.source++; return draw.apply(this, arguments); }
       const pose = stateFor(this);
       if (!assets.get(pose.key)) { counters.source++; return draw.apply(this, arguments); }
-      const rendered = assets.draw(ctx, pose.key, pose.frame, x, y, { scale: this.scale || 1, alpha: opts.alpha ?? 1, flash: !!opts.flash, mirror: pose.mirror, rotation: pose.rotation });
+      const rendered = assets.draw(ctx, pose.key, pose.frame, x, y-(pose.visualLift||0), { scale: this.scale || 1, alpha: opts.alpha ?? 1, flash: !!opts.flash, mirror: pose.mirror, rotation: pose.rotation });
       if (rendered === false) throw new Error('Animation frame unavailable: ' + pose.key + ':' + pose.frame);
       counters.candidate++; counters.byState[pose.state] = (counters.byState[pose.state] || 0) + 1;
       if (pose.id) counters.bySkill[pose.id] = (counters.bySkill[pose.id] || 0) + 1;

@@ -95,8 +95,11 @@ def main():
             version = 'v2' if kind == 'skills' else 'v1'
             sources[key], images[key] = atlas(key + '-' + version + '.png', rows)
     sources['one-tail'], images['one-tail'] = atlas('one-tail-v2.png', 6)
+    for kind, rows in (('common', 8), ('skills', 4)):
+        key = 'lee-' + kind
+        sources[key], images[key] = atlas(key + '-v1.png', rows)
     # Standing reference is measured once, never independently per pose.
-    for hero in ('naruto', 'sasuke'):
+    for hero in ('naruto', 'sasuke', 'lee'):
         common = sources[hero + '-common']
         common['bodyHeight'] = median(f['rect'][3] - 4 for f in common['frames'][:6])
     base = sources['naruto-common']
@@ -109,11 +112,16 @@ def main():
     sasuke_skills = sources['sasuke-skills']
     sasuke_skills['bodyHeight'] = median(sasuke_skills['frames'][i]['rect'][3] - 4
                                          for i in (3, 7, 11, 15))
+    # Whirlwind and gates finish upright. Both lotus rows finish in a low
+    # landing, so those poses cannot define the fixed standing body scale.
+    lee_skills = sources['lee-skills']
+    lee_skills['bodyHeight'] = median(lee_skills['frames'][i]['rect'][3] - 4
+                                    for i in (3, 11))
     form_head = median(hair_width(images['one-tail'], f)
                        for f in sources['one-tail']['frames'][:4])
     sources['one-tail']['bodyHeight'] = round(base['bodyHeight'] * form_head / base_head, 2)
     assets = {}
-    for hero in ('naruto', 'sasuke'):
+    for hero in ('naruto', 'sasuke', 'lee'):
         common = sources[hero + '-common']
         sets = {
             'movement': (list(range(8, 12)) + list(range(16, 20))
@@ -129,7 +137,8 @@ def main():
                 entry['directions'] = {'down': 0, 'up': 1, 'left': 2, 'right': 3}
             assets[hero + '-' + kind] = entry
     for hero, kinds in (('naruto', ('clones', 'rasengan', 'throw', 'cloak')),
-                        ('sasuke', ('chidori', 'fireball', 'throw', 'sword'))):
+                        ('sasuke', ('chidori', 'fireball', 'throw', 'sword')),
+                        ('lee', ('whirlwind', 'lotus', 'gates', 'reverse'))):
         for row, kind in enumerate(kinds):
             assets[hero + '-' + kind] = sequence(sources[hero + '-skills'], range(row * 4, row * 4 + 4))
     (ART / 'animation-assets.json').write_text(json.dumps(assets, indent=2) + '\n', encoding='utf-8')
@@ -148,7 +157,9 @@ def main():
     (ART / 'kyuubi-frames.json').write_text(json.dumps(form_json, indent=2) + '\n', encoding='utf-8')
     (ART / 'redrawn/atlas-map.json').write_text(json.dumps(sources, indent=2) + '\n', encoding='utf-8')
     # Review every physical frame at the exact same world scale as the game.
-    contact = Image.new('RGB', (1120, 2100), '#315f32')
+    contact_height = sum(40 + ((len(source['frames']) + 7) // 8) * 100
+                         for source in sources.values())
+    contact = Image.new('RGB', (1120, contact_height), '#315f32')
     draw = ImageDraw.Draw(contact)
     top = 0
     for key, source in sources.items():

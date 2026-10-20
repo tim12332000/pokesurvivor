@@ -276,16 +276,22 @@
       source_url:'https://naruto-official.com/en/news/01_1668'
     }],
     ['naruto-lotus', [30006], {
-      name:'表蓮華', mode:'lotus', type:'fighting', cd:3, dmg:70,
-      range:145, radius:60, windup:.25, liftDuration:.35,
-      vis:{pal:'grass'}, desc:'選定近身敵人，踢起後短暫滯空，再以落地重擊收尾；首領不會被完整浮空。落地小範圍衝擊為本作改編。',
+      name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:3, dmg:70,
+      range:145, radius:60,
+      vis:{pal:'grass'}, desc:'小李 Lv.3 解鎖。踏入近身、上踢挑空，再旋身摔落。首領保持接地；落地小範圍震擊為本作改編。',
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
-      name:'八門遁甲強化', mode:'gates', type:'fighting', cd:15, dmg:0,
+      name:'八門遁甲・開門', mode:'gates', type:'fighting', learnLevel:6, cd:15, dmg:0,
       fieldDuration:5, atkMul:1.3, speedMul:1.2, fatigueDuration:2, fatigueSpeedMul:.8,
-      vis:{pal:'grass'}, desc:'附近有敵人時短暫提升攻擊 30% 與移速 20%，結束後疲勞 2 秒、移速降低 20%；不可疊加或藉切換技能繞過疲勞。本版只採部分開門強化。',
+      vis:{pal:'grass'}, desc:'小李 Lv.6 解鎖。部分開門：5 秒攻擊 +30%、速度 +20%，結束後 2 秒疲勞減速 20%。加成與疲勞數值為本作平衡；不含成年後高階八門招式。',
       source_url:'https://naruto-official.com/en/news/01_1652'
+    }],
+    ['naruto-reverse-lotus', [30006], {
+      name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, dmg:145,
+      range:180, radius:64,
+      vis:{pal:'grass'}, desc:'小李 Lv.9 解鎖。近身上踢後五段高速體術連擊，最後重摔；首領不浮空。可獨立施放，開門期間享攻擊加成；獨立施放、數值與落地範圍為本作改編。',
+      source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {
       name:'砂縛柩・砂瀑送葬', mode:'sand-coffin', type:'ground', cd:3.5, dmg:80,
@@ -330,7 +336,7 @@
   );
   const kinds = { 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
     sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
-    lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
+    'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
 

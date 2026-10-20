@@ -36,6 +36,38 @@
       "url": "https://naruto-official.com/en/news/01_1710",
       "visual_reference": "https://tamashiiweb.com/item/13854/?wovn=en",
       "adaptation": "Official source documents Sasuke sword techniques and lightning-coated blade. Autonomous orbit while the sword skill is selected, multiple flying swords and numerical progression are survival-game adaptations; no claim of canonical autonomous orbit."
+    },
+    {
+      "id": "naruto-lee",
+      "owner": "Rock Lee",
+      "url": "https://naruto-official.com/en/news/01_1489",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "canonBasis": "Official taijutsu demonstration includes Leaf Whirlwind.",
+      "adaptation": "Existing close-range arc attack numerical balance retained; original redrawn sprites, no downloaded game frames."
+    },
+    {
+      "id": "naruto-lotus",
+      "owner": "Rock Lee",
+      "url": "https://naruto-official.com/en/news/01_1652",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "canonBasis": "Young Lee removes training weights and uses Front Lotus; later fourth and fifth gates support Reverse Lotus.",
+      "adaptation": "Level-three contact step-in, uppercut/lift and slam. 70 total damage and 35% secondary landing splash are survival-game mechanics. Bosses stay grounded."
+    },
+    {
+      "id": "naruto-gates",
+      "owner": "Rock Lee",
+      "url": "https://naruto-official.com/en/news/01_1652",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "adaptation": "Level-six partial gate buff: five seconds of 30% attack and 20% speed, then two seconds of 20% speed fatigue; no adult sixth/eighth-gate techniques."
+    },
+    {
+      "id": "naruto-reverse-lotus",
+      "owner": "Rock Lee",
+      "url": "https://naruto-official.com/en/anime/naruto1/list/01_273",
+      "additionalSource": "https://naruto-official.com/en/news/01_1652",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "canonBasis": "Official episode summary distinguishes Primary Lotus and Hidden Lotus while showing the danger of the Eight Inner Gates.",
+      "adaptation": "Level-nine single-target high-speed five-hit combo and landing finisher; standalone casting, 145 total damage and small secondary splash are game adaptations. Uses current attack including Gates buff."
     }
   ],
   "animationReferences": [

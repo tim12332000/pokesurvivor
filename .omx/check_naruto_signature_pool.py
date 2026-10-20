@@ -25,7 +25,7 @@ with sync_playwright() as p:
         result = page.evaluate(r'''() => {
           const assert=(ok,msg)=>{if(!ok)throw Error(msg)},retired=['naruto-kunai','naruto-shuriken'];
           const checks=[];
-          for(const dex of [30001,30002]){
+          for(const dex of [30006,30001,30002]){
             G.Game.toUI();G.Naruto.choose(dex);G.Flow.play();G.Game.togglePause();
             const pl=G.Game.player,main=G.NarutoSkillCatalog.byDex.get(dex).id;
             assert(pl.moves.length===(dex===30002?2:1)&&pl.hasMove(main),'Wrong initial signature '+dex);

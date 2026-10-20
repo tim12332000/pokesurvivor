@@ -1,11 +1,20 @@
 ---
 name: naruto-survivor-skills
-description: 設計或修正 PokéSurvivor 跨界版本的火影忍者角色、忍術、AOE／AEO 範圍技與動畫；新增或調整火影角色時使用。
+description: 新增或調整 PokéSurvivor 的火影角色、忍術、AOE／AEO、素材重繪與變身動畫；涵蓋素材研究、同風格製作、遊戲接線及驗證。
 ---
 
 # 火影角色技能
 
 適用於含有 `.omx/naruto.js` 的 PokéSurvivor 專案。先確認目前工作目錄與角色；不要把這些規則套用到其他遊戲。
+
+## 新增角色與素材流程
+
+- 新角色、素材重繪或變身形態先讀 [references/character-workflow.md](references/character-workflow.md)。依角色需要決定圖集數量與影格數，不照抄鳴人／佐助的固定規格。
+- 使用者指定的素材研究入口是 [Ninja Council 3 / 最強忍者大結集 4](https://spritedatabase.net/game/55)。用於理解比例、描邊、配色和動作語意；本專案目前採重新繪製路線，不能未經要求就直接套用擷取圖或以換色冒充新圖。使用者後續另有明確素材要求時依新要求處理。
+- 製作新點陣圖時使用已安裝的 `imagegen` skill；先以現用角色圖作共同風格基準，保存生成提示詞、輸入參考與輸出雜湊。現用範例在 `art-review/redrawn/provenance.json`。
+- 驗收同尺寸的遊戲畫面，檢查普通、施術、分身與變身的頭身、描邊和像素密度是否一致。不能只看高解析圖集或把所有蹲姿都放大到相同總高度。
+- 變身期間切換專用動畫組；外衣、尾巴已在圖中時不重複疊加。不要以普通受傷格、旋轉站姿或加一層色罩代替缺少的變身動作。到期、死亡、換場與重開要還原。
+- 新增整個角色且需要玩法設計時，可讓專門技能設計 subagent 研究其他遊戲的官方／作者資料，與美術、戰鬥實作、測試並行。先定技能分工、學習等級、連動與代價，再接入；不直接照搬別款遊戲的操作或數值。小李範例見 `art-review/lee-skill-design.md`。
 
 ## 原作特色與範圍技
 
@@ -20,8 +29,11 @@ description: 設計或修正 PokéSurvivor 跨界版本的火影忍者角色、�
 - 角色／動畫：`.omx/naruto.js`、`.omx/naruto/sprites.json`；原始素材來源與雜湊在 `.omx/naruto/sources.json`。
 - 技能／圖鑑：`.omx/naruto-skills.js`。共用戰鬥擴充在 `.omx/digimon-skill-combat.js`；新機制應沿用傷害、敵人狀態、碰撞與場景清除規則。
 - 輔助、防禦、暫時加成在 `.omx/naruto-support.js`；單體控制與持續地面技在 `.omx/naruto-offense.js`。清場時必須連同暫時屬性與碰撞一起還原。
+- 小李分段體術在 `.omx/naruto-lee.js`；接近移動須檢查碰撞。技能浮空使用獨立視覺高度，不得覆寫／扣除敵人原生 `jumpLift`；暫停、取消與死亡保留原生跳躍狀態。
 - 固定角色學習選項在 `.omx/naruto-training.js`；額外起始技能的抽選發生在開局流程切換為 playing 之前，也必須遵守角色等級限制。滿槽替換要保留技能群組參照與按鍵綁定。
-- `.omx/make_digimon.py` 產生入口與素材資料；`tools/build_digimon_site.py` 僅打包 Git 已追蹤的執行檔。
+- 重繪資料：`art-review/animation-assets.json`、`art-review/redrawn/atlas-map.json`；載入與繪製為 `animation-assets.js`，角色／施術動作分派為 `animation-runtime.js`。一尾專用接點是 `kyuubi-form.js`、`kyuubi-frames.json`，不要直接套到其他角色的變身。
+- 正常遊戲入口由 `.omx/redrawn-init.js` 載入；`js/main.js` 等待 `PS_REDRAWN_READY`。審稿 iframe 的 `animationLab=1` 由父頁安裝，避免重複掛接。只在審稿頁看得到不算正式入口完成。
+- `.omx/make_digimon.py` 產生入口與素材資料；`tools/build_digimon_site.py` 打包執行檔及明確列入的角色圖集，不帶入審稿控制。新增角色時同步產生器、載入順序及打包名單。
 - 動作要核對原圖的朝向與鏡射。原圖存在攻擊／結印影格時接上實際動畫，不能只讓站姿晃動。缺少原始方向或動作時註明，不宣稱完整動畫。
 
 ## 完成依據
@@ -29,4 +41,5 @@ description: 設計或修正 PokéSurvivor 跨界版本的火影忍者角色、�
 - AOE 至少用三個分散的有效範圍內敵人與一個範圍外敵人驗證。測試前後 HP，確認真的群傷且不越界；不能只確認「有傷害」。
 - 延遲／分階段招式驗證施放、命中、束縛、爆發的先後與單次傷害，並檢查死亡目標、死亡玩家、場景清除和重新開局不殘留。控場對首領保留合理抗性。
 - 用實際遊戲畫面檢查範圍、目標腳底位置、遮擋及像素風格，再跑相關瀏覽器回歸。依改動使用 `.omx/check_naruto.py`、`.omx/check_naruto_animations.py` 和機制專屬測試。
+- 新素材至少驗證正常入口、選單頭像、真實移動／自動施術、分身／變身、手機尺寸與到期清理。以實際繪製來源確認未回退舊圖；桌機／手機比較同一影格，不把自然動畫相位差當成錯誤。具體測試指令與現有固定角色限制見工作流程參考。
 - 提交前同步程式、技能池、測試與來源文件。只有目前任務已授權發布時才 commit／push／部署；本 SKILL 不額外授權外部操作，也不改動原作者 PR。
