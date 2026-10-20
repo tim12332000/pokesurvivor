@@ -9,12 +9,16 @@ class LabServer(ThreadingHTTPServer):
     request_queue_size = 128
 
 
+class LabHandler(SimpleHTTPRequestHandler):
+    protocol_version = 'HTTP/1.1'
+
+
 if __name__ == '__main__':
     parser=argparse.ArgumentParser()
     parser.add_argument('--port',type=int,default=8318)
     args=parser.parse_args()
     root = Path(__file__).resolve().parents[1]
-    handler = partial(SimpleHTTPRequestHandler, directory=str(root))
+    handler = partial(LabHandler, directory=str(root))
     with LabServer(('127.0.0.1', args.port), handler) as server:
         print(f'Local preview: http://127.0.0.1:{args.port}/.omx/digimon.html?lang=zh-TW', flush=True)
         server.serve_forever()
