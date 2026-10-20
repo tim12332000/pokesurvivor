@@ -105,19 +105,33 @@ COMBAT=r"""() => {
 }"""
 
 COOLDOWN=r"""id => {
- const A=Acceptance,p=A.p(),m=p.moves.find(m=>m.id===id),original=p.cdMul,out=[];
+ const A=Acceptance,p=A.p(),m=p.moves.find(m=>m.id===id),original=p.cdMul,out=[],near=(a,b)=>Math.abs(a-b)<1e-6;
  try {
    for(let level=1;level<=5;level++) {
      if(m.lvl<level){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+m.id);A.assert(card&&card.apply(p)!==false,'cooldown upgrade fixture '+level)}
-     A.assert(m.cd===5&&m.minCooldown===5,'upgraded reverse cooldown is not fixed at five seconds');
-     for(const reduction of [1,.76,.1]) {
-       A.basicFixture(m.id);p.cdMul=reduction;p.target=A.spawn(35,0);p.aim=0;m.t=0;A.basicCasts=[];
-       A.basicTick(.001);A.assert(m.t===5,'cooldown reduction bypassed five-second floor');
-       for(let n=0;n<499;n++)A.basicStep(.01);
-       A.assert(A.basicCasts.filter(c=>c.id===m.id).length===1,'reverse recast before five seconds');
-       A.assert(A.basicCasts.some(c=>c.id==='tackle'),'five-second cooldown lost basic attack window');
-       A.basicStep(.02);A.assert(A.basicCasts.filter(c=>c.id===m.id).length===2&&m.t===5,'reverse did not recast at five seconds');
-       out.push({level,reduction,cooldown:m.t});
+     A.assert(m.cd===5&&!m.minCooldown,'skill upgrade changed base cooldown or blocked reduction cards');
+     for(const cards of [0,1,2]) {
+       A.basicFixture(m.id);p.cdMul=1;
+       const counts={...p.statsTaken};
+       try {
+         p.statsTaken={...counts,cd:0};
+         for(let n=0;n<cards;n++){
+           let card;
+           for(let attempt=0;attempt<40&&!card;attempt++)card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:cd');
+           A.assert(card,'cooldown reduction card missing');card.apply(p);
+         }
+       } finally {p.statsTaken=counts}
+       const expected=5*.92**cards;
+       A.assert(near(p.cdMul,.92**cards),'cooldown card multiplier incorrect');
+       p.target=A.spawn(35,0);p.aim=0;m.t=0;A.basicCasts=[];
+       A.basicTick(.001);A.assert(near(m.t,expected),'cooldown card did not shorten actual timer');
+       const steps=Math.floor((expected-.02)/.01);
+       for(let n=0;n<steps;n++)A.basicStep(.01);
+       A.assert(A.basicCasts.filter(c=>c.id===m.id).length===1,'Lotus recast before reduced cooldown');
+       A.assert(A.basicCasts.some(c=>c.id==='tackle'),'cooldown lost basic attack window');
+       A.basicStep(expected-steps*.01+.001);
+       A.assert(A.basicCasts.filter(c=>c.id===m.id).length===2&&near(m.t,expected),'Lotus did not recast at reduced cooldown');
+       out.push({level,cards,cooldown:m.t});
      }
    }
  } finally {p.cdMul=original;G.Combat.clearFields(p)}
@@ -127,10 +141,10 @@ COOLDOWN=r"""id => {
  ctx.fillRect=function(x,y,w,h){rects.push({style:String(this.fillStyle).replaceAll(' ',''),w,h});return fill(x,y,w,h)};
  try{
    for(const move of p.moves)move.t=0;
-   m.t=2.5;G.HUD.draw(ctx,canvas.width,canvas.height,p,{time:30});
+   m.t=m.cd*p.cdMul/2;G.HUD.draw(ctx,canvas.width,canvas.height,p,{time:30});
  } finally {for(const [move,time] of timers)move.t=time}
  A.assert(rects.some(r=>r.style==='rgba(0,0,0,0.6)'&&r.w>=40&&Math.abs(r.h/r.w-.5)<1e-7),
-   'HUD did not show half of the fixed five-second cooldown');
+   'HUD did not show half of the card-adjusted cooldown');
  return {cases:out,hudHalfProgress:true};
 }"""
 
@@ -161,8 +175,8 @@ def main():
                 page.wait_for_function('G.Game.player?.dex===30006&&G.Game.state==="playing"')
                 page.evaluate(HARNESS);page.evaluate(SETUP);page.evaluate(HELPERS)
                 result={'combat':page.evaluate(COMBAT)};report['viewports'][label]=result
-                result['fixedForwardCooldown']=page.evaluate(COOLDOWN,'naruto-lotus')
-                result['fixedReverseCooldown']=page.evaluate(COOLDOWN,'naruto-reverse-lotus')
+                result['forwardCooldownCards']=page.evaluate(COOLDOWN,'naruto-lotus')
+                result['reverseCooldownCards']=page.evaluate(COOLDOWN,'naruto-reverse-lotus')
                 page.evaluate(AUDIT);result['art']=page.evaluate(ART)
                 for name,pose in result['art'].items():
                     (OUT/f'{label}-{name}.png').write_bytes(base64.b64decode(pose.pop('png').split(',',1)[1]))
