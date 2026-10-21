@@ -323,11 +323,11 @@
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-shield', [30007], {
-      name:'砂之盾', mode:'gaara-shield-passive', passive:true, type:'ground', learnLevel:6, cd:12, dmg:0,
+      name:'砂之盾', mode:'gaara-shield', type:'ground', learnLevel:6, cd:12, dmg:0,
       shieldAmount:45, range:180,
       ups:[{t:'砂盾容量提高至 60',m:{shieldAmount:60}},{t:'砂盾容量提高至 75',m:{shieldAmount:75}},
         {t:'砂盾容量提高至 90',m:{shieldAmount:90}},{t:'砂盾容量提高至 110',m:{shieldAmount:110}}],
-      vis:{pal:'naruto-sand'}, desc:'被動砂盾容量＝當階基礎容量（45／60／75／90／110）＋玩家等級×技能等級。升級只補容量差額，每 12 秒補滿，冷卻卡有效；不占主動欄、不回血。',
+      vis:{pal:'naruto-sand'}, desc:'選中時砂盾環繞並吸傷，容量＝當階基礎容量（45／60／75／90／110）＋玩家等級×技能等級。每 12 秒補滿；切走停用並保留盾量與補充進度，不回血。',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-tsunami', [30007], {
@@ -339,14 +339,14 @@
       source_url:'https://naruto-official.com/en/news/01_1695'
     }],
     ['naruto-sand-prison', [30007], {
-      name:'流砂牢', mode:'gaara-sand-prison', passive:true, type:'ground', learnLevel:12,
+      name:'流砂牢', mode:'gaara-sand-prison', type:'ground', learnLevel:12,
       cd:6, dmg:12, range:300, radius:90, fieldDuration:3, fieldTick:.5, bossSlow:.35,
       ups:[{t:'每次傷害提高至 15',m:{dmg:1.25}},
         {t:'砂地半徑提高至 105',m:{radius:105/90}},
         {t:'每次傷害提高至 18',m:{dmg:1.2}},
         {t:'每次傷害提高至 24・半徑 120',m:{dmg:24/18,radius:120/105}}],
       vis:{pal:'naruto-sand'},
-      desc:'被動每 6 秒在附近敵人腳下生成圓形砂地，持續 3 秒，每 0.5 秒造成傷害。困住普通地面敵人，精英與首領僅減速 35%；飛行與跳躍中無效。最多一片、不占主動欄，冷卻卡有效。',
+      desc:'選中後每 6 秒在附近敵人腳下生成圓形砂地，持續 3 秒，每 0.5 秒傷害並困住普通地面敵人，精英與首領減速 35%；飛行與跳躍中無效。切走立即解除，重選重新計時；冷卻卡有效。',
       source_url:'https://naruto-official.com/en/news/01_1695'
     }],
     ['naruto-black-flames', [30008], {
@@ -378,7 +378,7 @@
       source_url:'https://tamashiiweb.com/item/14256/?wovn=en'
     }]
   );
-  const kinds = { 'gaara-sand-burst':'projectile', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield-passive':'buff', 'gaara-sand-prison':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
+  const kinds = { 'gaara-sand-burst':'projectile', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield':'buff', 'gaara-sand-prison':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
     sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'gates-passive':'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
   const definitions = new Map(), byDex = new Map(), references = new Map();

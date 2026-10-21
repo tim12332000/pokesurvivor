@@ -1,4 +1,4 @@
-﻿"""Behavior fixtures shared by the normal Gaara browser acceptance runner."""
+"""Behavior fixtures shared by the normal Gaara browser acceptance runner."""
 
 PROJECTILES = r"""() => {
  const A=Acceptance,p=A.p(),out={},N=G.NarutoGaara,near=(a,b)=>Math.abs(a-b)<1e-5;
@@ -100,17 +100,19 @@ SHIELD_CONTEXT = r"""() => {
  const A=Acceptance,p=A.p(),N=G.NarutoGaara,out=[];
  const contexts=[{fromX:100,fromY:0},{fromX:0,fromY:100},{fromX:-100,fromY:0},{fromX:0,fromY:-100},{vx:-10,vy:0},null];
  for(const [i,context] of contexts.entries()){
-   A.gaaraArena();A.advance(.001);const hp=p.hp;p.invuln=0;p.hurt(2,null,true,context);
+   A.gaaraArena();A.select('naruto-sand-shield');A.advance(.001);const hp=p.hp;p.invuln=0;p.hurt(2,null,true,context);
    const s=N.shieldState(p),aim=s.flashAim,expected=[0,Math.PI/2,Math.PI,-Math.PI/2,0,null][i];
    A.assert(p.hp===hp&&s.flash>0,'directional hit bypassed shield');
    A.assert(expected===null?aim===null:Math.abs(Math.atan2(Math.sin(aim-expected),Math.cos(aim-expected)))<1e-6,'shield source direction '+i+' '+aim);
    out.push({context,aim});
  }
- A.gaaraArena();A.advance(.001);p.target=A.spawn(90,0);A.actualCast('naruto-sand-coffin');A.advance(.3);
- const action=N.active(p),phase=action.phase;p.invuln=0;p.hurt(2,null,true,{fromX:100,fromY:0});
- A.assert(N.active(p)===action&&action.phase===phase&&A.render().state.key==='gaara-coffin','shield hit overrode active skill');
- G.Combat.clearFields(p);A.gaaraArena();A.advance(.001);p.invuln=0;p.hurt(2,null,true);
- const remaining=N.shieldState(p).remaining;A.advance(remaining-.1);p.target=A.spawn(90,0);A.actualCast('naruto-sand-coffin');A.advance(.11);
- A.assert(N.shieldState(p).amount===N.shieldState(p).capacity&&A.render().state.key==='gaara-coffin','passive refill overrode active skill');
- A.finish();return out;
+ A.gaaraArena();A.select('naruto-sand-shield');A.advance(1);p.invuln=0;p.hurt(8,null,true,{fromX:100,fromY:0});
+ const before=N.shieldState(p);A.select('naruto-sand-coffin');
+ const hp=p.hp;p.invuln=0;p.hurt(3,null,true,{fromX:100,fromY:0});
+ A.assert(p.hp===hp-3&&!N.shieldState(p),'unselected shield absorbed native damage or remained visible');
+ A.advance(15);A.select('naruto-sand-shield');const after=N.shieldState(p);
+ A.assert(after.amount===before.amount&&Math.abs(after.progress-before.progress)<1e-6,'switching shield refilled capacity or advanced frozen clock');
+ A.advance(.25);A.assert(N.shieldState(p).progress>before.progress,'reselected shield clock failed to resume');
+ out.push({unselectedHurt:true,frozenProgress:true,noFreeRefill:true});
+ return out;
 }"""

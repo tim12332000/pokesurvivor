@@ -203,7 +203,7 @@
     if (original) { const group = original.call(pl); custom = group.filter(m => m && m.digimonSkill); if (!custom.length) return vanilla.tick(dt, pl, now); pl.activeGroup = function() { return original.call(this).filter(m => !m.digimonSkill); }; }
     try { vanilla.tick(dt, pl, now); } finally { if (original) pl.activeGroup = original; }
     for(const m of custom) {
-      if(m.passive)continue;
+      if(m.passive||G.NarutoGaara?.maintains(pl,m))continue;
       if(m.digiMode==='kusanagi-orbit'&&G.NarutoKusanagi?.active(pl))continue;
       m.t-=dt;if(m.t>0)continue;
       const target=pl.target,handler=techniqueFor(m.digiMode);

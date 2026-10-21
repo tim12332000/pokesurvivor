@@ -1,11 +1,11 @@
-﻿"""Native Gaara level growth and slotless quicksand acceptance fixtures."""
+"""Native Gaara level growth and selected quicksand acceptance fixtures."""
 
 GROWTH = r"""() => {
  const A=Acceptance,p=A.p(),N=G.NarutoGaara,near=(a,b)=>Math.abs(a-b)<1e-5;
  const m=p.moves.find(m=>m.id==='naruto-sand-shield'),snapshot={...m},level=p.level,cd=p.cdMul;
  const out={};
  try {
-   m.lvl=1;p.level=12;p.cdMul=1;A.gaaraArena();A.advance(1);
+   m.lvl=1;p.level=12;p.cdMul=1;A.gaaraArena();A.select(m.id);A.advance(1);
    let s=N.shieldState(p);A.assert(s.capacity===57,'Lv12 stage1 capacity');
    const hp=p.hp;p.invuln=0;p.hurt(20,null,true);s=N.shieldState(p);
    const amount=s.amount,progress=s.progress;p.level=13;A.advance(.000001);s=N.shieldState(p);
@@ -30,11 +30,19 @@ PRISON = r"""() => {
  p.level=12;A.assert(G.Moves.poolFor(p.mon).includes(id),'prison absent from Lv12 pool');
  const slots=p.slots.length,card=G.LevelUp.offer(p,100).find(c=>c.key==='new:'+id);
  A.assert(card&&card.apply(p)!==false,'prison real learn card missing');
- const m=p.moves.find(m=>m.id===id);A.assert(m.passive&&p.moves.length===5&&p.slots.length===slots&&!p.slots.some(s=>s.includes(m)),'fifth passive consumed active slot');
- p.cdMul=1;A.gaaraArena();A.spawn(180,0);A.advance(5.99);
- A.assert(!N.sandPrisonState(p)&&near(N.prisonCooldownState(p).remaining,.01),'passive cast immediately after learn');
+ const m=p.moves.find(m=>m.id===id);A.assert(!m.passive&&p.moves.length===5&&p.slots.length===slots+1&&p.slots.some(s=>s.includes(m)),'fifth selected skill missing active slot');
+ p.cdMul=1;A.gaaraArena();A.select(id);A.spawn(180,0);A.advance(5.99);
+ A.assert(!N.sandPrisonState(p)&&near(N.prisonCooldownState(p).remaining,.01),'prison cast immediately after selection');
  A.advance(.01);A.assert(N.sandPrisonState(p)?.radius===90,'prison did not spawn after six seconds');
- out.slotless=true;
+ out.fiveSelectableSlots=true;
+ // Switching away immediately releases native root and discards the interval.
+ const first=N.sandPrisonState(p),victim=G.EnemyMgr.all().find(e=>N.rooted(e));
+ A.assert(first&&victim,'selected prison switch fixture missing');A.select('naruto-gaara');
+ A.assert(!N.sandPrisonState(p)&&!N.rooted(victim),'unselected prison retained field or root');
+ A.advance(20);A.assert(!N.sandPrisonState(p)&&!N.prisonCooldownState(p),'unselected learned prison generated field');
+ A.select(id);A.advance(5.99);A.assert(!N.sandPrisonState(p),'reselect banked prior prison interval');
+ A.advance(.01);A.assert(N.sandPrisonState(p),'reselected prison did not restart six-second interval');
+ out.switchReleasesRoot=true;out.unselectedInactive=true;out.reselectFullInterval=true;
  // Native Enemy.update and knockback, rather than only checking a status flag.
  A.gaaraArena();const e=A.spawn(180,0);e.spd=60;A.advance(6);
  const field=N.sandPrisonState(p),x=e.x,y=e.y;e.kx=100;e.ky=50;
@@ -73,7 +81,7 @@ PRISON = r"""() => {
  A.gaaraArena();const target=A.spawn(180,0);A.advance(6);const hidden=A.spawn(240,0);G.World.isWall=(x,y)=>x>=210&&x<=214;
  try{A.advance(.5);A.assert(target.hp<100000&&hidden.hp===100000&&!N.rooted(hidden),'field damaged/rooted through wall')}finally{G.World.isWall=wall}
  out.targeting=true;
- // Real cooldown card changes the periodic passive clock; quantity never multiplies fields.
+ // Real cooldown card changes the selected prison clock; quantity never multiplies fields.
  const counts={...p.statsTaken};p.statsTaken={...counts,cd:0};p.cdMul=1;
  try{let cd;for(let n=0;n<40&&!cd;n++)cd=G.LevelUp.offer(p,100).find(c=>c.key==='stat:cd');A.assert(cd&&cd.apply(p)!==false,'prison real cooldown card missing');
    A.gaaraArena();p.quantityBonus=20;A.spawn(180,0);A.advance(5.51);A.assert(!N.sandPrisonState(p),'cooldown card prison early');A.advance(.01);A.assert(N.sandPrisonState(p),'cooldown card ignored');A.advance(5.52);A.assert(N.sandPrisonState(p)&&near(N.sandPrisonState(p).age,0),'periodic prison doubled or missed');
@@ -94,10 +102,27 @@ PRISON = r"""() => {
  out.cleanup=true;p.level=originalLevel;p.cdMul=originalCd;p.quantityBonus=originalQuantity;A.gaaraArena();return out;
 }"""
 
+SELECTED = r"""() => {
+ const A=Acceptance,p=A.p(),N=G.NarutoGaara,out={};
+ for(const id of ['naruto-sand-coffin','naruto-sand-tsunami']){
+   A.gaaraArena();const e=A.spawn(90,0);p.target=e;A.actualCast(id);A.advance(id.includes('coffin')?.3:.9);
+   A.assert(N.active(p)&&e.slow>0,'selected cancellation fixture missing '+id);const hp=e.hp;
+   A.select('naruto-sand-shield');
+   A.assert(!N.active(p)&&e.slow===0,'unselected action/control survived '+id);
+   A.advance(4);A.assert(e.hp===hp,'cancelled unselected action dealt delayed damage '+id);out[id]=true;
+ }
+ // The fifth selected skill also retains the native automatic basic attack.
+ A.gaaraArena();const m=A.select('naruto-sand-prison');m.t=10;p.target=A.spawn(90,0);
+ const cast=p.cast,casts=[];p.cast=function(move,...args){casts.push(move.id);return cast.call(this,move,...args)};
+ try{A.resume();G.Combat.tick(.61,p,0)}finally{p.cast=cast;A.pause()}
+ A.assert(casts.length===1&&casts[0]==='naruto-gaara'&&p.activeGroup().includes(m),'prison selection suppressed constant basic');
+ out.prisonBasic=true;return out;
+}"""
+
 
 def capture_prison(page, label, out):
     result = page.evaluate(r"""() => {
-      const A=Acceptance,p=A.p();p.cdMul=1;A.gaaraArena();A.select('naruto-gaara');
+      const A=Acceptance,p=A.p();p.cdMul=1;A.gaaraArena();A.select('naruto-sand-prison');
       A.spawn(170,0);A.spawn(205,20);A.spawn(140,-25);A.advance(6.8);
       const s=G.NarutoGaara.sandPrisonState(p);A.assert(s&&s.radius===120,'missing native prison screenshot fixture');
       return {x:s.x,y:s.y,radius:s.radius,age:s.age,ticks:s.ticks};
@@ -107,10 +132,10 @@ def capture_prison(page, label, out):
 
 
 RESTART = r"""() => {
- const A=Acceptance,p=A.p(),N=G.NarutoGaara;A.gaaraArena();p.cdMul=1;const e=A.spawn(180,0);A.advance(6);
+ const A=Acceptance,p=A.p(),N=G.NarutoGaara;A.gaaraArena();A.select('naruto-sand-prison');p.cdMul=1;const e=A.spawn(180,0);A.advance(6);
  A.assert(N.sandPrisonState(p)&&N.rooted(e),'native restart fixture missing');
  G.Game.startRun();
- A.assert(G.Game.player!==p&&!N.sandPrisonState(p)&&!N.rooted(e)&&!G.Game.player.hasMove('naruto-sand-prison'),'native restart retained field or passive');
+ A.assert(G.Game.player!==p&&!N.sandPrisonState(p)&&!N.rooted(e)&&!G.Game.player.hasMove('naruto-sand-prison'),'native restart retained field or learned skill');
  G.Combat.updateFields(.01);A.pause();
- A.assert(!N.sandPrisonState()&&!N.prisonCooldownState(),'native restart recreated learned passive');return true;
+ A.assert(!N.sandPrisonState()&&!N.prisonCooldownState(),'native restart recreated unlearned skill');return true;
 }"""

@@ -24,7 +24,7 @@ DIRECTIONS = {
 
 FIXTURE = r"""([kind,context]) => {
  const A=Acceptance,p=A.p(),N=G.NarutoGaara;
- A.gaaraArena();A.select('naruto-gaara');p.cdMul=1;A.advance(.8);
+ A.gaaraArena();A.select('naruto-sand-shield');p.cdMul=1;A.advance(.8);
  const original=N.shieldState(p),hp=p.hp;
  if(kind==='low'){
    p.invuln=0;p.hurt(original.capacity-5,null,true,context);A.advance(.8);

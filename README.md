@@ -4,7 +4,7 @@
 原始 PokéSurvivor 由 [JPTER78](https://github.com/JPTER78/pokesurvivor) 開發，感謝原作者的創作與分享。
 本網站為非官方修改版，保留原始授權與版權聲明；[原始版網站](https://pokesurvivor.com)。
 
-火影內測入口：<http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW>，以 `python tools/serve_animation_lab.py --port 8004` 啟動目前工作目錄。角色範圍為鳴人、佐助、小李與少年我愛羅；我愛羅採遠程連發砂時雨、精英優先單體砂縛柩、自動砂盾、大範圍砂浪大葬與被動流砂牢，學習等級為 Lv.1／3／6／9／12。砂時雨五階 3／3／4／4／5 彈；砂浪基礎冷卻 8 秒、五階總傷害 240／288／288／360／450。砂盾容量加計「角色等級 × 技能階數」；流砂牢每 6 秒於目標腳底生成固定真圓砂地，持續 3 秒，地面普通怪定身並定期受傷。設計與官方來源見 [我愛羅技能設計](art-review/gaara-skill-design.md)，圖集與實玩說明見 [動作覆蓋清單](art-review/coverage.md) 和 [遊戲演出契約](art-review/gameplay-contract.md)。
+火影內測入口：<http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW>，以 `python tools/serve_animation_lab.py --port 8004` 啟動目前工作目錄。角色範圍為鳴人、佐助、小李與少年我愛羅；我愛羅採遠程連發砂時雨、精英優先單體砂縛柩、砂盾、大範圍砂浪大葬與流砂牢，學習等級為 Lv.1／3／6／9／12。五招皆佔主動槽，我愛羅最多五槽；砂時雨普攻常駐，其餘僅目前選中的技能生效。砂盾切走停止吸傷與環砂，容量和補充進度凍結保留，切回不重補；流砂牢切走立即清除砂地與控制，重選重新等待完整 6 秒。砂時雨五階 3／3／4／4／5 彈；砂浪基礎冷卻 8 秒、五階總傷害 240／288／288／360／450。砂盾容量加計「角色等級 × 技能階數」；流砂牢選中後每 6 秒於目標腳底生成固定真圓砂地，持續 3 秒，地面普通怪定身並定期受傷。設計與官方來源見 [我愛羅技能設計](art-review/gaara-skill-design.md)，圖集與實玩說明見 [動作覆蓋清單](art-review/coverage.md) 和 [遊戲演出契約](art-review/gameplay-contract.md)。
 
 新增火影角色的完整流程保存在 [角色與素材 SKILL](.codex/skills/naruto-survivor-skills/SKILL.md) 與 [工作流程](.codex/skills/naruto-survivor-skills/references/character-workflow.md)：先考據與設計，再產圖、裁切登記、戰鬥接線、正常入口和手機驗收。不能只增加選角或 PNG。現行素材登記為 11 張圖集、264 個實體影格、46 組動畫序列；我愛羅專屬驗收指令為 `python tools/test_gaara.py`，結果寫入 `.omx/state/gaara/report.json`，是否通過以當次輸出為準。
 

@@ -20,7 +20,7 @@
     'naruto-reverse-lotus': 'redrawn committed aerial taijutsu combo and finisher',
     'naruto-gaara': 'redrawn directed sand-release gesture; real sand projectiles',
     'naruto-sand-coffin': 'redrawn seal, enclosing fist, crush and recovery',
-    'naruto-sand-shield': 'brief learned guard; directional passive sand wall without interrupting casts',
+    'naruto-sand-shield': 'selected guard; orbiting sand and directional impact wall',
     'naruto-sand-tsunami': 'redrawn two-arm rise, downward burial and recovery'
   });
   function install(G, { enabled = () => true } = {}) {

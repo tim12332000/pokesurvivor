@@ -1,4 +1,4 @@
-/* Young Gaara: owned simulation-time sand techniques and a learned sand shield. */
+/* Young Gaara: constant basic attack and selection-gated sand techniques. */
 (() => {
   if (G.NarutoGaara) return;
   const C = G.Combat, shieldId = 'naruto-sand-shield', prisonId = 'naruto-sand-prison';
@@ -15,6 +15,9 @@
   const valid = f => !!f && f.owner === G.Game.player && f.world === G.World && alive(f.owner) && f.owner.mon?.dex === 30007;
   const elite = e => !!(e.boss || e.elite || e.legend || e.judge);
   const supports = mode => modes.has(mode);
+  const selected = (owner, id) => valid({ owner, world: G.World }) &&
+    owner.activeGroup().some(m => m.id === id && owner.moves.includes(m));
+  const maintains = (owner, move) => owner?.mon?.dex === 30007 && [shieldId, prisonId].includes(move?.id);
   function clearPath(ax, ay, bx, by) {
     const steps = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / 4));
     for (let i = 1; i <= steps; i++) {
@@ -151,14 +154,16 @@
       }
     }
   }
-  function shieldStage(owner = G.Game.player) {
+  function learnedShieldStage(owner = G.Game.player) {
     if (!owner || owner !== G.Game.player || owner.mon?.dex !== 30007 || !alive(owner)) return 0;
     const move = owner.moves.find(m => m.id === shieldId);
     return move ? Math.max(1, Math.min(5, move.lvl | 0)) : 0;
   }
+  const shieldStage = (owner = G.Game.player) => selected(owner, shieldId) ? learnedShieldStage(owner) : 0;
   function syncShield(owner) {
-    const stage = shieldStage(owner);
+    const stage = learnedShieldStage(owner);
     if (!stage) { shield = null; return; }
+    if (!selected(owner, shieldId)) return;
     const capacity = capacities[stage - 1] + Math.max(1, owner.level || 1) * stage;
     if (!valid(shield)) shield = { owner, world: G.World, capacity, amount: capacity, progress: 0, flash: 0, flashAim: null, hitAim: null, broken: false, age: 0 };
     else if (shield.capacity !== capacity) {
@@ -166,7 +171,7 @@
     }
   }
   function prisonMove(owner = G.Game.player) {
-    return valid({ owner, world: G.World }) ? owner.moves.find(m => m.id === prisonId) : null;
+    return selected(owner, prisonId) ? owner.moves.find(m => m.id === prisonId) : null;
   }
   function syncPrison(owner = G.Game.player) {
     if (!prisonMove(owner)) { prison = null; return; }
@@ -216,11 +221,29 @@
   }
   const addMove = G.Player.prototype.addMove;
   G.Player.prototype.addMove = function(id, ...args) {
-    if (![shieldId, prisonId].includes(id) || this.mon?.dex !== 30007) return addMove.call(this, id, ...args);
-    if (this.hasMove(id)) return false;
-    this.moves.push(G.Moves.instance(id));
-    if (id === shieldId) syncShield(this); else syncPrison(this);
-    return true;
+    if (this.mon?.dex === 30007) this.maxMoves = Math.max(5, this.maxMoves);
+    return addMove.call(this, id, ...args);
+  };
+  function syncSelection(owner) {
+    if (!valid({ owner, world: G.World })) return;
+    // Restore old learned passive instances as selectable slots.
+    owner.maxMoves = Math.max(5, owner.maxMoves);
+    for (const move of owner.moves) if (maintains(owner, move)) {
+      move.passive = false;
+      if (!owner.slots.some(group => group.includes(move))) owner.slots.push([move]);
+    }
+    if (valid(action) && action.kind !== 'gaara-sand-burst' && !selected(owner, action.move.id)) {
+      releaseSlows(action); action = null;
+    }
+    if (valid(shield) && !selected(owner, shieldId)) shield.flash = 0;
+    if (!selected(owner, prisonId)) prison = null;
+    syncShield(owner);
+  }
+  const setActive = G.Player.prototype.setActive;
+  G.Player.prototype.setActive = function(...args) {
+    const result = setActive.apply(this, args);
+    syncSelection(this);
+    return result;
   };
   const levelUp = G.Moves.levelUp;
   G.Moves.levelUp = function(move, ...args) {
@@ -232,7 +255,7 @@
   G.Player.prototype.hurt = function(amount, type = null, pure = false, context = null) {
     if (this !== G.Game.player || this.invuln > 0 || this.dead || this.frozen || !(amount > 0)) return hurt.call(this, amount, type, pure, context);
     syncShield(this);
-    if (!valid(shield) || shield.amount <= 0) return hurt.call(this, amount, type, pure, context);
+    if (!selected(this, shieldId) || !valid(shield) || shield.amount <= 0) return hurt.call(this, amount, type, pure, context);
     const typed = type ? amount * G.Types.mult(type, this.mon.types) * G.Weather.mult(type) : amount;
     const close = this.activeGroup().some(m => m.kind === 'melee') ? .75 : 1;
     const damage = pure ? Math.max(1, typed) : Math.max(1, typed * (1 - this.reduction) * close);
@@ -264,9 +287,9 @@
     if (prison && (!valid(prison) || !prisonMove(prison.owner))) prison = null;
     for (let i = bullets.length - 1; i >= 0; i--) if (!valid(bullets[i])) bullets.splice(i, 1);
     if (G.Game.state !== 'playing' || !(dt > 0) || !Number.isFinite(dt)) return;
-    syncShield(G.Game.player);
+    syncSelection(G.Game.player);
     updatePrison(dt);
-    if (shield) {
+    if (shield && selected(shield.owner, shieldId)) {
       shield.age += dt; shield.flash = Math.max(0, shield.flash - dt);
       shield.progress += dt / Math.max(.05, 12 * shield.owner.cdMul);
       if (shield.progress >= 1) { shield.progress %= 1; shield.amount = shield.capacity; }
@@ -300,8 +323,8 @@
     if (owner?.mon?.dex === 30007 && G.Game.state !== 'playing') return;
     const result = tick.call(this, dt, owner, now);
     if (G.Game.state !== 'playing' || !valid({ owner, world: G.World }) || !(dt > 0)) return result;
-    const selected = owner.activeGroup(), special = selected.find(m => ['gaara-coffin', 'gaara-tsunami'].includes(m.digiMode));
-    if (!special || selected.some(m => m.digiMode === 'gaara-sand-burst')) return result;
+    const group = owner.activeGroup();
+    if (group.some(m => m.digiMode === 'gaara-sand-burst')) return result;
     let timer = (basicTimers.get(owner) ?? .6) - dt;
     if (timer <= 0 && !action) {
       const basic = owner.moves.find(m => m.id === 'naruto-gaara');
@@ -322,7 +345,7 @@
   }
   C.drawGroundFields = function(ctx) {
     ground.call(this, ctx);
-    if (valid(shield)) G.NarutoSandVFX?.drawShield(ctx, shield, 'ground');
+    if (valid(shield) && selected(shield.owner, shieldId)) G.NarutoSandVFX?.drawShield(ctx, shield, 'ground');
     if (valid(action) && action.kind === 'gaara-tsunami') G.NarutoSandVFX?.drawGround(ctx, sandField(action));
     if (valid(prison) && prisonMove(prison.owner) && prison.field) G.NarutoSandVFX?.drawPrison(ctx, prison.field);
   };
@@ -334,13 +357,13 @@
       else G.NarutoSandVFX?.drawSandRelease(ctx, action);
     }
     for (const bullet of bullets) if (valid(bullet)) G.NarutoSandVFX?.drawBullet(ctx, bullet);
-    if (valid(shield)) G.NarutoSandVFX?.drawShield(ctx, shield);
+    if (valid(shield) && selected(shield.owner, shieldId)) G.NarutoSandVFX?.drawShield(ctx, shield);
   };
-  G.NarutoGaara = { supports, canCast, cast, clear, update, shieldStage, capacities,
+  G.NarutoGaara = { supports, canCast, cast, clear, update, shieldStage, capacities, maintains,
     active: owner => valid(action) && (!owner || action.owner === owner) ? action : null,
     shieldState: owner => {
       syncShield(G.Game.player);
-      return valid(shield) && (!owner || shield.owner === owner) ? { ...shield, remaining: Math.max(0, (1 - shield.progress) * 12 * shield.owner.cdMul) } : null;
+      return valid(shield) && selected(shield.owner, shieldId) && (!owner || shield.owner === owner) ? { ...shield, remaining: Math.max(0, (1 - shield.progress) * 12 * shield.owner.cdMul) } : null;
     },
     sandPrisonState: owner => {
       if (prison && (!valid(prison) || !prisonMove(prison.owner))) prison = null;
