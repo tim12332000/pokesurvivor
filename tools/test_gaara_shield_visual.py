@@ -122,6 +122,9 @@ def main():
                 for kind in ('idle', 'low'):
                     page.evaluate(FIXTURE, [kind, DIRECTIONS['right']])
                     save_frame(page, label, kind, result, captures)
+                    if kind == 'idle':
+                        page.evaluate('Acceptance.advance(.7)')
+                        save_frame(page, label, 'idle-flow', result, captures)
                 for name, direction in DIRECTIONS.items():
                     page.evaluate(FIXTURE, ['hit', direction])
                     for age in (0, .08, .16):

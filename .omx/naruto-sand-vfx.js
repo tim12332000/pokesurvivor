@@ -322,17 +322,41 @@
     // NC3's GUARD reference uses pale flowing sand and a gray-brown edge.
     const sand = ['#79705a', '#aaa28e', '#d4cdbb', '#f0ebdd'];
     ctx.save();
-    // Capacity already lives in the HUD. A few loose grains show readiness
-    // without adding another bar or an opaque shell around the character.
-    if (layer === 'ground' && reserve > 0) {
-      ctx.globalAlpha *= .35 + reserve * .3;
-      for (let i = 0; i < 10; i++) {
-        const t = ((s.age || 0) * .35 + grain(i + 883)) % 1;
-        const angle = grain(i + 791) * Math.PI * 2 + t * .6;
-        const r = 13 + grain(i + 919) * 7;
-        ctx.fillStyle = sand[i % 3 === 0 ? 3 : 2];
-        ctx.fillRect(pixel(p.x + Math.cos(angle) * r), pixel(p.y + Math.sin(angle) * r * .4 - t * 4), 2, 2);
+    // Pale sand stays in motion before a hit. Split the orbit around the
+    // sprite so the rear stream passes behind it and the near stream in front.
+    if (reserve > 0) {
+      ctx.save();
+      ctx.globalAlpha *= .65 + reserve * .25;
+      const time = (s.age || 0) * 1.2;
+      for (let stream = 0; stream < 3; stream++) {
+        for (let i = 0; i < 22; i++) {
+          const t = i / 21;
+          const angle = time + stream * Math.PI * 2 / 3 + t * 1.6;
+          const near = Math.sin(angle) >= 0;
+          if (near ? layer !== 'air' : layer !== 'ground') continue;
+          const radius = 25 + Math.sin(angle * 2 + time * .4) * 2;
+          const x = p.x + Math.cos(angle) * radius;
+          const y = p.y - 15 + Math.sin(angle) * 11 + Math.sin(angle * 2 - time) * 3;
+          const thickness = 2 + Math.sin(t * Math.PI) * 3;
+          ctx.fillStyle = sand[1];
+          ctx.fillRect(pixel(x), pixel(y), 4, thickness + 2);
+          ctx.fillStyle = sand[2];
+          ctx.fillRect(pixel(x), pixel(y - 1), 4, thickness);
+          ctx.fillStyle = sand[3];
+          ctx.fillRect(pixel(x), pixel(y - 1), 3, 2);
+        }
       }
+      // Loose grains keep the separated ribbons from reading as a solid hoop.
+      for (let i = 0; i < 12; i++) {
+        const angle = time + grain(i + 791) * Math.PI * 2;
+        const near = Math.sin(angle) >= 0;
+        if (near ? layer !== 'air' : layer !== 'ground') continue;
+        const r = 28 + grain(i + 919) * 5;
+        ctx.fillStyle = sand[i % 3 === 0 ? 3 : 2];
+        ctx.fillRect(pixel(p.x + Math.cos(angle) * r),
+          pixel(p.y - 15 + Math.sin(angle) * 12 + Math.sin(angle * 2 - time) * 4), 2, 2);
+      }
+      ctx.restore();
     }
     const sourceAim = s.flashAim ?? s.hitAim;
     const aim = sourceAim ?? Math.PI / 2;
