@@ -89,8 +89,8 @@
     G.FX.burst(f.owner.x, f.owner.y - 16, '#d6ae67', 10, 65);
   }
   const hurt = G.Player.prototype.hurt;
-  G.Player.prototype.hurt = function(amount, type = null, pure = false) {
-    if (this !== G.Game.player || this.invuln > 0 || this.dead || this.frozen || !(amount > 0) || pure) return hurt.call(this, amount, type, pure);
+  G.Player.prototype.hurt = function(amount, type = null, pure = false, context = null) {
+    if (this !== G.Game.player || this.invuln > 0 || this.dead || this.frozen || !(amount > 0) || pure) return hurt.call(this, amount, type, pure, context);
     const cloak = active(this, 'nine-tails-cloak');
     if (cloak) amount *= Math.max(.5,Math.min(1,finite(cloak.m.damageTakenMul,.75)));
     const eye = active(this, 'sharingan');
@@ -100,7 +100,7 @@
       return;
     }
     const shield = active(this, 'sand-shield');
-    if (!shield) return hurt.call(this, amount, type, pure);
+    if (!shield) return hurt.call(this, amount, type, pure, context);
     const typed = type ? amount * G.Types.mult(type, this.mon.types) * G.Weather.mult(type) : amount;
     const close = this.activeGroup().some(m => m.kind === 'melee') ? .75 : 1;
     const damage = Math.max(1, typed * (1 - this.reduction) * close);
@@ -109,7 +109,7 @@
     if (shield.shield <= .0001) breakShield(shield);
     if (absorb >= damage) { this.invuln = Math.max(this.invuln || 0, .45); return; }
     // Preserve the original type, damage reduction, invulnerability and death handling.
-    return hurt.call(this, amount * (damage - absorb) / damage, type, pure);
+    return hurt.call(this, amount * (damage - absorb) / damage, type, pure, context);
   };
   function wallIntersects(f, ax, ay, bx, by, radius = 0) {
     // Slab intersection in the wall's local coordinates catches fast projectiles.

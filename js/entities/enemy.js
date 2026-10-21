@@ -279,7 +279,10 @@
         } else if (le.slow) terrainMul = le.slow < 0.5 ? 0.45 : 0.55;
       }
 
-      const spd = this.spd * (1 - this.slow) * terrainMul * G.Weather.speedFor(this.types);
+      const sandRoot = G.NarutoGaara?.rooted?.(this) || false;
+      const effectiveSlow = Math.max(this.slow, G.NarutoGaara?.prisonSlow?.(this) || 0);
+      const spd = sandRoot ? 0 : this.spd * (1 - effectiveSlow) * terrainMul * G.Weather.speedFor(this.types);
+      if (sandRoot) this.kx = this.ky = 0;
       let [dx, dy] = G.U.norm(pl.x - this.x, pl.y - this.y);
       const dist = G.U.dist(this.x, this.y, pl.x, pl.y);
       // Duende del tesoro: huye de ti (en zigzag) en cuanto te acercas.
@@ -319,7 +322,7 @@
         this.skillCd -= dt;
         if (this.skillCd <= 0) {
           if (this.behavior === 'shielder') { this.skillCd = 6; this.castShields(); }
-          else if (dist < 250) { this.skillCd = G.U.rand(5, 7); this.startJump(pl); return; }
+          else if (!sandRoot && dist < 250) { this.skillCd = G.U.rand(5, 7); this.startJump(pl); return; }
           else this.skillCd = 0.5;
         }
       }

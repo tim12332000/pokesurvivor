@@ -10,6 +10,8 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 from test_animation_complete import CHROME, HARNESS
 from test_redrawn_heroes import AUDIT
+from test_gaara_redesign import PROJECTILES, PRIORITY, TIMING, SHIELD_CONTEXT
+from test_gaara_growth import GROWTH, PRISON, RESTART, capture_prison
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / '.omx/state/gaara'
@@ -66,12 +68,13 @@ COMBAT = r"""() => {
    const m=A.actualCast(id),s=G.NarutoGaara.active(p);
    A.assert(s&&s.owner===p&&s.move.id===m.id,'missing owned Gaara action '+id);
    const phases=A.finish(),damage=es.map(e=>100000-e.hp);
-   if(id==='naruto-sand-coffin')A.assert(damage[1]>0&&damage.filter(n=>n>0).length===1,'coffin hit another target '+damage);
+   if(id==='naruto-sand-coffin')A.assert(damage[es.indexOf(s.target)]>0&&damage.filter(n=>n>0).length===1,'coffin hit another target '+damage);
+   else if(id==='naruto-gaara')A.assert(damage[1]>0&&damage.filter(n=>n>0).length===1,'sand shower splashed '+damage);
    else A.assert(damage.slice(0,3).every(n=>n>0)&&damage[3]===0,'dispersed AOE coverage '+id+' '+damage);
    A.assert(owned.every(Boolean),'Gaara bypassed native owned hurt '+id);
-   const expected=id==='naruto-gaara'?['windup','release','recovery']:id==='naruto-sand-coffin'?['seal','bind','crush','recovery']:['seal','raise','surge','burial','recovery'];
+   const expected=id==='naruto-gaara'?['windup','release','recovery']:id==='naruto-sand-coffin'?['seal','bind','crush','recovery']:['seal','raise','surge','burial','impact','recovery'];
    A.assert(phases.join(',')===expected.join(','),'missing/out-of-order phases '+id+' '+phases);
-   const count=id==='naruto-sand-tsunami'?2:1;
+   const count=id==='naruto-gaara'?3:id==='naruto-sand-tsunami'?2:1;
    A.assert(hits.every((n,i)=>n===(damage[i]>0?count:0)),'duplicate/missing native damage '+id+' '+hits);
    const before=damage.slice();for(let n=0;n<100;n++)A.advance(.01);
    A.assert(es.every((e,i)=>100000-e.hp===before[i]),'completed action dealt duplicate damage '+id);
@@ -141,13 +144,26 @@ CONTROL = r"""() => {
 UPGRADES = r"""() => {
  const A=Acceptance,p=A.p(),out={},original=p.cdMul;
  for(const id of ['naruto-gaara','naruto-sand-coffin','naruto-sand-tsunami']){
-   const m=p.moves.find(m=>m.id===id),cd=id==='naruto-gaara'?1.2:5;out[id]=[];
+   const m=p.moves.find(m=>m.id===id),cd=id==='naruto-gaara'?1.2:id==='naruto-sand-tsunami'?8:5;out[id]=[];
    for(let level=1;level<=5;level++){
      if(level>1){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+id);A.assert(card&&card.apply(p)!==false,'upgrade card '+id+' '+level)}
      A.assert(m.lvl===level&&m.cd===cd&&!m.minCooldown,'skill upgrade changed base CD '+id+' '+level);
      A.gaaraArena();p.cdMul=.92;p.target=A.spawn(90,0);A.actualCast(id);
      A.assert(Math.abs(m.t-cd*.92)<1e-6,'cooldown modifier ignored '+id);
-     out[id].push({level,damage:m.dmg,cd:m.cd,actual:m.t});
+     if(id==='naruto-gaara'){
+       const bases=[3,3,4,4,5],totals=[28,34,34,42,52],ranges=[260,260,280,280,300];
+       A.assert(m.count===bases[level-1]&&Math.abs(m.dmg-totals[level-1])<1e-6&&m.range===ranges[level-1],'sand shower level contract '+level);
+       G.Combat.clearFields(p);
+       for(const bonus of [0,2,20]){
+         A.gaaraArena();p.quantityBonus=bonus;const e=A.spawn(230,0);p.target=e;let hits=0,raw=0;const hurt=e.hurt;e.hurt=function(...args){hits++;raw+=args[0];return hurt.apply(this,args)};
+         A.actualCast(id);const f=G.NarutoGaara.active(p);A.assert(f.count===m.count+bonus,'quantity applied twice');
+         for(let n=0;n<200;n++)A.advance(.01);
+         const expected=m.dmg*(m.count+bonus)/m.count*p.atk*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
+         A.assert(hits===m.count+bonus&&Math.abs(raw-expected)<1e-5&&100000-e.hp===Math.round(expected/(m.count+bonus))*(m.count+bonus),'upgraded bullet count/damage '+level+'/'+bonus+' '+hits+'/'+(100000-e.hp));
+         A.assert(!G.NarutoGaara.active(p)&&!G.NarutoGaara.bullets.length,'quantity burst remained active');
+       }
+     }
+     out[id].push({level,damage:m.dmg,count:m.count,cd:m.cd,actual:m.t});
    }
  }p.cdMul=original;A.gaaraArena();return out;
 }"""
@@ -158,7 +174,7 @@ SHIELD = r"""() => {
  for(let level=1;level<=5;level++){
    if(level>1){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+m.id);A.assert(card&&card.apply(p)!==false,'shield upgrade card '+level)}
    A.gaaraArena();A.advance(.001);
-   const capacity=[45,60,75,90,110][level-1],s=G.NarutoGaara.shieldState(p);
+   const capacity=[45,60,75,90,110][level-1]+p.level*level,s=G.NarutoGaara.shieldState(p);
    A.assert(s&&s.capacity===capacity&&s.amount===capacity&&G.NarutoGaara.shieldStage(p)===level,'shield stage capacity '+level);
    const hp=p.hp;p.invuln=0;p.hurt(capacity-5,null,true);
    A.assert(p.hp===hp&&near(G.NarutoGaara.shieldState(p).amount,5),'shield failed real hurt absorption');
@@ -238,6 +254,38 @@ ART = r"""() => {
 }"""
 
 
+def capture_effects(page, label):
+    """Capture the native game canvas, including ground and air effects."""
+    cases = [
+        ('sand-flight', 'naruto-gaara', .25),
+        ('coffin-bind', 'naruto-sand-coffin', .5),
+        ('coffin-crush', 'naruto-sand-coffin', 1.35),
+        ('tsunami-surge', 'naruto-sand-tsunami', .8),
+        ('tsunami-burial', 'naruto-sand-tsunami', 1.35),
+        ('tsunami-impact', 'naruto-sand-tsunami', 1.65),
+    ]
+    result = {}
+    for name, move, age in cases:
+        result[name] = page.evaluate("""([id,age]) => {
+          const A=Acceptance,p=A.p();A.gaaraArena();p.target=A.spawn(230,0);p.aim=0;A.actualCast(id);
+          for(let elapsed=0;elapsed<age-1e-8;elapsed+=.01)A.advance(Math.min(.01,age-elapsed));
+          const f=G.NarutoGaara.active(p);return {phase:f?.phase,age:f?.age,bullets:G.NarutoGaara.bullets.length};
+        }""", [move, age])
+        page.locator('#game').screenshot(path=str(OUT / f'{label}-effect-{name}.png'))
+    for name, context in [('right', {'fromX': 100, 'fromY': 0}),
+                          ('down', {'fromX': 0, 'fromY': 100}),
+                          ('left', {'fromX': -100, 'fromY': 0}),
+                          ('up', {'fromX': 0, 'fromY': -100}),
+                          ('neutral', None), ('broken', {'fromX': 100, 'fromY': 0})]:
+        result['shield-' + name] = page.evaluate("""([name,context]) => {
+          const A=Acceptance,p=A.p();A.gaaraArena();A.advance(.001);p.invuln=0;
+          const amount=name==='broken'?G.NarutoGaara.shieldState(p).amount:2;p.hurt(amount,null,true,context);
+          const s=G.NarutoGaara.shieldState(p);return {aim:s.flashAim,amount:s.amount,broken:s.broken};
+        }""", [name, context])
+        page.locator('#game').screenshot(path=str(OUT / f'{label}-effect-shield-{name}.png'))
+    return result
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     report = {'errors': [], 'failedRequests': [], 'viewports': {}}
@@ -297,15 +345,24 @@ def main():
                       A.assert(p.x>x,'touch did not move Gaara');return {dx:p.x-x}}""")
                     client.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
                 result['combat'] = page.evaluate(COMBAT)
+                result['projectiles'] = page.evaluate(PROJECTILES)
+                result['priority'] = page.evaluate(PRIORITY)
+                result['timing'] = page.evaluate(TIMING)
+                result['shieldContext'] = page.evaluate(SHIELD_CONTEXT)
+                result['effects'] = capture_effects(page, label)
                 result['cleanup'] = page.evaluate(CLEANUP)
                 result['control'] = page.evaluate(CONTROL)
                 result['shield'] = page.evaluate(SHIELD)
                 result['cooldownBasic'] = page.evaluate(BASIC)
                 result['upgrades'] = page.evaluate(UPGRADES)
                 result['art'] = page.evaluate(ART)
+                result['shieldGrowth'] = page.evaluate(GROWTH)
+                result['sandPrison'] = page.evaluate(PRISON)
+                result['sandPrisonEffects'] = capture_prison(page, label, OUT)
                 for name, pose in result['art'].items():
                     (OUT / f'{label}-{name}.png').write_bytes(base64.b64decode(pose.pop('png').split(',', 1)[1]))
                 page.screenshot(path=str(OUT / f'{label}.png'))
+                result['prisonNativeRestart'] = page.evaluate(RESTART)
                 context.close()
             browser.close()
         assert not report['errors'], report['errors']

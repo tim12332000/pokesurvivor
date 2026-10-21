@@ -162,13 +162,13 @@
     }],
     [30007, 'gaara', '砂時雨', 'Sand Shower (game adaptation)', '01_1695', {
       mode: 'gaara-sand-burst', type: 'ground', cd: 1.2, dmg: 28,
-      range: 155, radius: 155, width: 130, knock: 12,
-      ups:[{t:'傷害提高至 34',m:{dmg:34/28}},
-        {t:'距離 175・寬 150',m:{range:175,width:150/130,radius:175/155}},
-        {t:'傷害提高至 42',m:{dmg:42/34}},
-        {t:'傷害 52・距離 195・寬 170',m:{dmg:52/42,range:195,width:170/150,radius:195/175}}],
+      range: 260, count: 3, knock: 12,
+      ups:[{t:'整輪傷害提高至 34',m:{dmg:34/28}},
+        {t:'砂彈 4 枚・距離 280',m:{count:1,range:280}},
+        {t:'整輪傷害提高至 42',m:{dmg:42/34}},
+        {t:'整輪傷害 52・砂彈 5 枚・距離 300',m:{dmg:52/42,count:1,range:300}}],
       vis: { pal: 'naruto-sand' },
-      desc:'操砂橫掃前方扇形範圍。基礎冷卻 1.2 秒；升級增加傷害及範圍，冷卻縮減卡有效。'
+      desc:'連發 3 枚直線砂彈，整輪基礎傷害 28，首次碰到敵人或牆即消散，不爆炸、不追蹤、不貫穿。數量卡增加彈數，單彈傷害不變；基礎冷卻 1.2 秒，冷卻卡有效。'
     }],
     [30008, 'itachi', '月讀', 'Tsukuyomi', '01_1316', {
       mode: 'single-illusion', type: 'psychic', cd: 3.6, dmg: 30, range: 260,
@@ -319,7 +319,7 @@
       range:280, fieldDuration:1.1, slow:.95, bossSlow:.3,
       ups:[{t:'傷害 +20%',m:{dmg:1.2}},{t:'索敵距離提高至 310',m:{range:310}},
         {t:'傷害 +25%',m:{dmg:1.25}},{t:'傷害 +25%・索敵距離 340',m:{dmg:1.25,range:340}}],
-      vis:{pal:'naruto-sand'}, desc:'束縛 1.1 秒後壓縮單一敵人，首領僅減速 30%。基礎冷卻 5 秒，升級不變；冷卻期間自動砂術普攻。',
+      vis:{pal:'naruto-sand'}, desc:'優先鎖定可見精英或首領，束縛 1.1 秒後壓縮單一敵人，首領僅減速 30%。基礎冷卻 5 秒，升級不變；冷卻期間自動砂彈普攻。',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-shield', [30007], {
@@ -327,15 +327,26 @@
       shieldAmount:45, range:180,
       ups:[{t:'砂盾容量提高至 60',m:{shieldAmount:60}},{t:'砂盾容量提高至 75',m:{shieldAmount:75}},
         {t:'砂盾容量提高至 90',m:{shieldAmount:90}},{t:'砂盾容量提高至 110',m:{shieldAmount:110}}],
-      vis:{pal:'naruto-sand'}, desc:'學會即獲得 45 砂盾，不占主動欄。每 12 秒補滿、冷卻卡可加速；可升至 110，不能疊加或回血。',
+      vis:{pal:'naruto-sand'}, desc:'被動砂盾容量＝當階基礎容量（45／60／75／90／110）＋玩家等級×技能等級。升級只補容量差額，每 12 秒補滿，冷卻卡有效；不占主動欄、不回血。',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-tsunami', [30007], {
-      name:'流砂瀑流・砂瀑大葬', mode:'gaara-tsunami', type:'ground', learnLevel:9, cd:5, dmg:150,
+      name:'流砂瀑流・砂瀑大葬', mode:'gaara-tsunami', type:'ground', learnLevel:9, cd:8, dmg:240,
       range:310, radius:310, width:240, knock:0, waveDuration:.65, bindDuration:.5,
       ups:[{t:'傷害 +20%',m:{dmg:1.2}},{t:'距離 345・寬 270',m:{range:345,radius:345/310,width:270/240}},
         {t:'傷害 +25%',m:{dmg:1.25}},{t:'傷害 +25%・距離 380・寬 300',m:{dmg:1.25,range:380,radius:380/345,width:300/270}}],
-      vis:{pal:'naruto-sand'}, desc:'砂浪造成 25% 傷害，束縛 0.5 秒後大葬造成 75%。普通敵人減速 95%、首領 35%。基礎冷卻 5 秒，冷卻期間自動砂術普攻。',
+      vis:{pal:'naruto-sand'}, desc:'砂浪推進造成 25% 傷害，完整束縛 0.5 秒後下壓大葬造成 75%；離開砂地不受大葬，晚進場不補傷。普通敵人減速 95%、首領 35%。基礎冷卻 8 秒，冷卻卡有效，冷卻期間自動砂彈普攻。',
+      source_url:'https://naruto-official.com/en/news/01_1695'
+    }],
+    ['naruto-sand-prison', [30007], {
+      name:'流砂牢', mode:'gaara-sand-prison', passive:true, type:'ground', learnLevel:12,
+      cd:6, dmg:12, range:300, radius:90, fieldDuration:3, fieldTick:.5, bossSlow:.35,
+      ups:[{t:'每次傷害提高至 15',m:{dmg:1.25}},
+        {t:'砂地半徑提高至 105',m:{radius:105/90}},
+        {t:'每次傷害提高至 18',m:{dmg:1.2}},
+        {t:'每次傷害提高至 24・半徑 120',m:{dmg:24/18,radius:120/105}}],
+      vis:{pal:'naruto-sand'},
+      desc:'被動每 6 秒在附近敵人腳下生成圓形砂地，持續 3 秒，每 0.5 秒造成傷害。困住普通地面敵人，精英與首領僅減速 35%；飛行與跳躍中無效。最多一片、不占主動欄，冷卻卡有效。',
       source_url:'https://naruto-official.com/en/news/01_1695'
     }],
     ['naruto-black-flames', [30008], {
@@ -367,7 +378,7 @@
       source_url:'https://tamashiiweb.com/item/14256/?wovn=en'
     }]
   );
-  const kinds = { 'gaara-sand-burst':'cone', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield-passive':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
+  const kinds = { 'gaara-sand-burst':'projectile', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield-passive':'buff', 'gaara-sand-prison':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
     sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'gates-passive':'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
   const definitions = new Map(), byDex = new Map(), references = new Map();

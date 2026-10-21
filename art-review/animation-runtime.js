@@ -20,7 +20,7 @@
     'naruto-reverse-lotus': 'redrawn committed aerial taijutsu combo and finisher',
     'naruto-gaara': 'redrawn directed sand-release gesture; real sand projectiles',
     'naruto-sand-coffin': 'redrawn seal, enclosing fist, crush and recovery',
-    'naruto-sand-shield': 'redrawn defensive crossed-arm activation; actual passive shield',
+    'naruto-sand-shield': 'brief learned guard; directional passive sand wall without interrupting casts',
     'naruto-sand-tsunami': 'redrawn two-arm rise, downward burial and recovery'
   });
   function install(G, { enabled = () => true } = {}) {
@@ -116,7 +116,7 @@
         // accepted attack. It must never replace that attack's presentation.
         if (!state.cast && level !== state.sharingan && level) record(pl, { id: 'naruto-sharingan' }, .62);
         if (!state.cast && gates !== state.gates && gates) record(pl, { id: 'naruto-gates' }, .5);
-        if (!state.cast && gaaraShield !== state.gaaraShield && gaaraShield) record(pl, { id: 'naruto-sand-shield' }, .6);
+        if (!state.cast && !G.NarutoGaara?.active?.(pl) && gaaraShield !== state.gaaraShield && gaaraShield) record(pl, { id: 'naruto-sand-shield' }, .2);
         if (!state.cast && sword && !state.kusanagi) record(pl, { id: 'naruto-kusanagi' }, .48);
         state.sharingan = level; state.gates = gates; state.gaaraShield = gaaraShield; state.kusanagi = sword;
       }
@@ -163,10 +163,12 @@
       if(gaara?.owner?.anim===anim){
         const phase=gaara.phase, id=gaara.move.id;
         const key=id==='naruto-sand-coffin'?'gaara-coffin':id==='naruto-sand-tsunami'?'gaara-tsunami':'gaara-sand-burst';
-        const frame=id==='naruto-gaara'&&phase==='windup'?(gaara.phaseAge<.08?0:1):
+        const frame=id==='naruto-sand-tsunami'?
+          (phase==='seal'?0:['raise','surge','burial'].includes(phase)?1:phase==='impact'?2:3):
+          id==='naruto-gaara'&&phase==='windup'?(gaara.phaseAge<.06?0:1):
           ['windup','seal','charge'].includes(phase)?0:
           ['bind','close','raise','rise'].includes(phase)?1:
-          ['release','crush','surge','wave','burial','slam'].includes(phase)?2:3;
+          ['release','crush','slam'].includes(phase)?2:3;
         return {...base,state:'skill',id,phase,key,frame,age:gaara.age,
           aim:gaara.aim,mirror:Math.cos(gaara.aim??pl.aim)<0};
       }

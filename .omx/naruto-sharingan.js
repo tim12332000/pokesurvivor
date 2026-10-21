@@ -60,12 +60,12 @@
     return added;
   };
   const hurt = G.Player.prototype.hurt;
-  G.Player.prototype.hurt = function(amount, type = null, pure = false) {
-    if (this !== G.Game.player) return hurt.call(this, amount, type, pure);
+  G.Player.prototype.hurt = function(amount, type = null, pure = false, context = null) {
+    if (this !== G.Game.player) return hurt.call(this, amount, type, pure, context);
     const level = sync(this), dash = G.NarutoChidori?.active;
     const immuneDash = dash?.owner === this && ['dash','return'].includes(dash.phase) && dash.world === G.World;
     if (!level || this.invuln > 0 || this.dead || this.frozen || pure || !(amount > 0) || immuneDash)
-      return hurt.call(this, amount, type, pure);
+      return hurt.call(this, amount, type, pure, context);
     if (Math.random() < config.dodgeChance) {
       this.invuln = Math.max(this.invuln || 0, config.dodgeInvulnerability);
       image(this, config.dodgeInvulnerability);
@@ -73,7 +73,7 @@
       if (level >= 2) counter(this);
       return;
     }
-    return hurt.call(this, amount * (G.NarutoSharinganPowers?.damageTakenMultiplier(this) ?? 1), type, pure);
+    return hurt.call(this, amount * (G.NarutoSharinganPowers?.damageTakenMultiplier(this) ?? 1), type, pure, context);
   };
   function update(dt) {
     const owner = G.Game.player, level = sync(owner);

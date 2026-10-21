@@ -566,7 +566,7 @@ G.Combat = (() => {
           continue;
         }
         if (G.U.dist2(p.x, p.y, pl.x, pl.y) < (p.r + pl.r) * (p.r + pl.r)) {
-          pl.hurt(p.dmg, p.mtype);
+          pl.hurt(p.dmg, p.mtype, false, { fromX: p.x, fromY: p.y, vx: p.vx, vy: p.vy });
           G.FX.burst(p.x, p.y - G.LIFT, p.color, 7, 110);
           projectiles.splice(i, 1);
         }
@@ -682,7 +682,7 @@ G.Combat = (() => {
       if (e.touchCd > 0 || e.behavior === 'thief') continue;
       e.touchCd = 0.55;
       e.strike(pl);
-      pl.hurt(e.dmg, e.atkType);
+      pl.hurt(e.dmg, e.atkType, false, { fromX: e.x, fromY: e.y });
       if (pl.hasItem('rockyhelmet')) e.hurt(15 + pl.level * 4, '#9aa6b5', e.x - pl.x, e.y - pl.y, 80, null, pl);
       const [nx, ny] = G.U.norm(e.x - pl.x, e.y - pl.y);
       e.kx += nx * 150; e.ky += ny * 150;

@@ -340,6 +340,13 @@ G.HUD = (() => {
           ctx.textAlign = 'center'; ctx.fillText(shield.remaining.toFixed(1) + 's', x + S / 2, y - 4);
         }
       }
+      if (m.id === 'naruto-sand-prison') {
+        const prison = G.NarutoGaara?.sandPrisonState(pl);
+        const cooldown = G.NarutoGaara?.prisonCooldownState(pl);
+        ctx.font = F(800, 9); ctx.textAlign = 'center'; ctx.fillStyle = '#edd395';
+        if (prison) ctx.fillText(prison.remaining.toFixed(1) + 's', x + S / 2, y - 4);
+        else if (cooldown) ctx.fillText(cooldown.remaining.toFixed(1) + 's', x + S / 2, y - 4);
+      }
       ctx.restore();
 
       // nombre encima del activo (con un vínculo: "Ascuas +2")
