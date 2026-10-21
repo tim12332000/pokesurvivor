@@ -163,12 +163,12 @@
     [30007, 'gaara', '砂時雨', 'Sand Shower (game adaptation)', '01_1695', {
       mode: 'gaara-sand-burst', type: 'ground', cd: 1.2, dmg: 28,
       range: 260, count: 3, knock: 12,
-      ups:[{t:'整輪傷害提高至 34',m:{dmg:34/28}},
+      ups:[{t:'整輪基礎傷害 34＋角色等級',m:{dmg:34/28}},
         {t:'砂彈 4 枚・距離 280',m:{count:1,range:280}},
-        {t:'整輪傷害提高至 42',m:{dmg:42/34}},
-        {t:'整輪傷害 52・砂彈 5 枚・距離 300',m:{dmg:52/42,count:1,range:300}}],
+        {t:'整輪基礎傷害 42＋角色等級',m:{dmg:42/34}},
+        {t:'整輪基礎傷害 52＋角色等級・砂彈 5 枚・距離 300',m:{dmg:52/42,count:1,range:300}}],
       vis: { pal: 'naruto-sand' },
-      desc:'連發 3 枚直線砂彈，整輪基礎傷害 28，首次碰到敵人或牆即消散，不爆炸、不追蹤、不貫穿。數量卡增加彈數，單彈傷害不變；基礎冷卻 1.2 秒，冷卻卡有效。'
+      desc:'連發追蹤砂流，沿用護衛的碎砂與尾流演出，平滑轉彎追擊目標。整輪基礎傷害＝當階傷害（28／34／34／42／52）＋角色等級，每級 +1，平均分配至當階原有彈數。首次碰到敵人或牆即消散，不爆炸、不貫穿，追蹤不增加飛行射程。數量卡增加彈數，單彈傷害不變；基礎冷卻 1.2 秒，冷卻卡有效。'
     }],
     [30008, 'itachi', '月讀', 'Tsukuyomi', '01_1316', {
       mode: 'single-illusion', type: 'psychic', cd: 3.6, dmg: 30, range: 260,
@@ -316,18 +316,22 @@
     }],
     ['naruto-sand-coffin', [30007], {
       name:'砂縛柩・砂瀑送葬', mode:'gaara-coffin', type:'ground', learnLevel:3, cd:5, dmg:110,
-      range:280, fieldDuration:1.1, slow:.95, bossSlow:.3,
+      range:280, count:1, fieldDuration:1.1, slow:.95, bossSlow:.3,
       ups:[{t:'傷害 +20%',m:{dmg:1.2}},{t:'索敵距離提高至 310',m:{range:310}},
         {t:'傷害 +25%',m:{dmg:1.25}},{t:'傷害 +25%・索敵距離 340',m:{dmg:1.25,range:340}}],
-      vis:{pal:'naruto-sand'}, desc:'優先鎖定可見精英或首領，束縛 1.1 秒後壓縮單一敵人，首領僅減速 30%。基礎冷卻 5 秒，升級不變；冷卻期間自動砂彈普攻。',
+      vis:{pal:'naruto-sand'}, desc:'優先鎖定可見精英或首領，同時束縛數量＝min（1＋角色等級，10）＋數量卡加成（最多 +20），合計最多 30 名不同敵人。束縛 1.1 秒後每名壓縮一次，單體基礎傷害＝當階傷害（110／132／132／165／206.25）＋角色等級，每級 +1，不造成起手傷害；首領僅減速 30%。基礎冷卻 5 秒，升級不變；冷卻期間自動砂彈普攻。',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-shield', [30007], {
-      name:'砂之盾', mode:'gaara-shield', type:'ground', learnLevel:6, cd:12, dmg:0,
-      shieldAmount:45, range:180,
-      ups:[{t:'砂盾容量提高至 60',m:{shieldAmount:60}},{t:'砂盾容量提高至 75',m:{shieldAmount:75}},
-        {t:'砂盾容量提高至 90',m:{shieldAmount:90}},{t:'砂盾容量提高至 110',m:{shieldAmount:110}}],
-      vis:{pal:'naruto-sand'}, desc:'選中時砂盾環繞並吸傷，容量＝當階基礎容量（45／60／75／90／110）＋玩家等級×技能等級。每 12 秒補滿；切走停用並保留盾量與補充進度，不回血。',
+      name:'砂之盾', mode:'gaara-shield', passive:true, type:'ground', learnLevel:1, cd:12, dmg:0,
+      shieldAmount:45, range:400, guardCount:2, guardSpeedBonus:200,
+      ups:[{t:'基礎盾量 60・基礎護衛數 2 團',m:{shieldAmount:60,guardCount:2}},
+        {t:'基礎盾量 75・基礎護衛數 3 團',m:{shieldAmount:75,guardCount:3}},
+        {t:'基礎盾量 90・基礎護衛數 3 團',m:{shieldAmount:90,guardCount:3}},
+        {t:'基礎盾量 110・基礎護衛數 4 團',m:{shieldAmount:110,guardCount:4}}],
+      vis:{pal:'naruto-sand'},
+      desc:'Lv.1 起可學，學會後常駐，不用選、不占主動槽。盾量＝基礎盾量（45／60／75／90／110）＋角色等級×技能階數，每 12 秒補滿；升級只補容量差額，不重設進度。同時召出基礎護衛數（2／2／3／3／4）＋角色等級團游砂，上限 10 團，各自平滑追彈、可穿牆，半徑 400、速度＝角色目前移速＋200。防守優先，有敵彈時停止追人；無敵彈時自動接觸攻擊範圍內敵人，五階基礎傷害 20／25／30／35／40，命中後攻擊冷卻 1 秒，期間仍可攔彈。每團接觸抹除敵彈後獨立回航，在身旁凝聚 2.5 秒恢復；冷卻卡影響兩種補充，數量卡不增加護衛。不攔雷射、地面傷害或近戰。',
+      descEn:'Learnable from character Lv.1; always active without an active slot. Shield capacity is tier base (45/60/75/90/110) plus character level times skill tier, refilling every 12 seconds. Upgrades add only the capacity difference and preserve refill progress. Also summons tier base (2/2/3/3/4) plus character level independent sand guardians, capped at 10. They turn smoothly, pass through walls, roam within range 400 at current player speed plus 200, and erase enemy bullets on contact. Defense takes priority: incoming bullets interrupt enemy pursuit. With no incoming bullets, guardians contact-attack nearby enemies for tier base damage 20/25/30/35/40. Each hit starts a 1-second attack-only cooldown; interception remains available. Each returns and reforms near the player for 2.5 seconds. Cooldown bonuses affect both cycles; quantity adds no guardians. Cannot intercept lasers, ground hazards or melee.',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-tsunami', [30007], {
@@ -340,14 +344,26 @@
     }],
     ['naruto-sand-prison', [30007], {
       name:'流砂牢', mode:'gaara-sand-prison', type:'ground', learnLevel:12,
-      cd:6, dmg:12, range:300, radius:90, fieldDuration:3, fieldTick:.5, bossSlow:.35,
+      cd:6, dmg:12, range:300, radius:90, fieldDuration:5, fieldTick:.5, bossSlow:.35,
       ups:[{t:'每次傷害提高至 15',m:{dmg:1.25}},
         {t:'砂地半徑提高至 105',m:{radius:105/90}},
         {t:'每次傷害提高至 18',m:{dmg:1.2}},
         {t:'每次傷害提高至 24・半徑 120',m:{dmg:24/18,radius:120/105}}],
       vis:{pal:'naruto-sand'},
-      desc:'選中後每 6 秒在附近敵人腳下生成圓形砂地，持續 3 秒，每 0.5 秒傷害並困住普通地面敵人，精英與首領減速 35%；飛行與跳躍中無效。切走立即解除，重選重新計時；冷卻卡有效。',
+      desc:'選中後每 6 秒在附近敵人腳下生成圓形砂地，持續 5 秒，每 0.5 秒傷害一次、共 10 次。困住普通地面敵人並持續捲向中心；精英與首領減速 35%，受到較弱牽引。飛行與跳躍中無效，不穿牆拉人。切走立即解除，重選重新計時；冷卻卡有效。',
       source_url:'https://naruto-official.com/en/news/01_1695'
+    }],
+    ['naruto-sand-armor', [30007], {
+      name:'砂鎧・崩砂反擊', nameEn:'Sand Armor: Shattering Counter', mode:'gaara-sand-armor', type:'ground', learnLevel:15,
+      cd:10, dmg:70, range:180, radius:110, armorReduction:.3, fieldDuration:3,
+      ups:[{t:'減傷提高至 35%・崩砂傷害 85',m:{armorReduction:.35,dmg:85/70}},
+        {t:'崩砂半徑提高至 125',m:{radius:125/110}},
+        {t:'減傷提高至 40%・崩砂傷害 105',m:{armorReduction:.4,dmg:105/85}},
+        {t:'減傷提高至 45%・崩砂傷害 130・半徑 140',m:{armorReduction:.45,dmg:130/105,radius:140/125}}],
+      vis:{pal:'naruto-sand'},
+      desc:'選中且附近有敵人時凝聚砂鎧，持續 3 秒並減傷 30%～45%。實際受傷三次或時間結束時，崩砂造成周圍傷害並擊退普通敵人。切走解除且不反擊；冷卻自起手計算 10 秒並保留，傷害、範圍與冷卻卡有效，數量卡無效。本作改編。',
+      descEn:'While selected with a nearby enemy, gain sand armor for 3 seconds and reduce damage by 30%–45%. After three damaging hits or expiry, shatter to damage nearby enemies and knock back ordinary foes. Switching cancels the counter and preserves the 10-second cast cooldown. Quantity has no effect. Game adaptation.',
+      source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-black-flames', [30008], {
       name:'天照', mode:'black-flames', type:'fire', cd:4.8, dmg:12,
@@ -378,9 +394,10 @@
       source_url:'https://tamashiiweb.com/item/14256/?wovn=en'
     }]
   );
-  const kinds = { 'gaara-sand-burst':'projectile', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield':'buff', 'gaara-sand-prison':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
+  const kinds = { 'gaara-sand-burst':'projectile', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield':'buff', 'gaara-sand-prison':'buff', 'gaara-sand-armor':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
     sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'gates-passive':'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
+  kinds['gaara-sand-guard'] = 'buff';
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
 
@@ -464,7 +481,7 @@
     return move;
   };
   const instance=G.Moves.instance,levelUp=G.Moves.levelUp;
-  G.Moves.instance=(...args)=>nameSharingan(instance(...args));
+  G.Moves.instance=(id,...args)=>nameSharingan(instance(id==='naruto-sand-guard'?'naruto-sand-shield':id,...args));
   G.Moves.levelUp=move=>{const changed=levelUp(move);if(changed)nameSharingan(move);return changed;};
 
   const guide = document.createElement('section');
@@ -501,7 +518,7 @@
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
-      link.textContent = `官方招式來源 · ${move.name}`;
+      link.textContent = move.id==='naruto-sand-shield' ? '官方砂術參考 · 護盾與護衛機制為本作改編' : `官方招式來源 · ${move.name}`;
       item.append(heading, detail, extraStats, link);
     }
     guide.querySelector('.naruto-skill-entries').append(item);

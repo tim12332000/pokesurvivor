@@ -25,7 +25,7 @@
     if (!validOwner(owner) || !alive(enemy) || !(base > 0)) return;
     const mult = G.Types.mult(type, enemy.types), amount = base * mult * G.Weather.mult(type);
     if (!(amount > 0)) return;
-    enemy.hurt(amount, type === 'fire' ? '#a265c9' : '#c593ff', enemy.x - x, enemy.y - y, 0, G.Types.label(mult), owner);
+    enemy.hurt(amount, type === 'fire' ? '#a265c9' : '#c593ff', enemy.x - x, enemy.y - y, 0, G.Types.label(mult), owner, 'naruto-sharingan');
     owner.onDealt(amount); owner.dmgDealt += amount;
   }
   function scorched(enemy) {

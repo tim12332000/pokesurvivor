@@ -270,7 +270,7 @@ G.HUD = (() => {
     const sx = controls ? controls.slots[0].x : (w - totalW) / 2;
     const sy = controls ? controls.slots[0].y : h - S - 18;
     const BOND = '#ff8ad8';
-    const cdOf = m => m.passive || m.kind === 'orbit' || G.NarutoGaara?.maintains(pl, m) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul), 0, 1);
+    const cdOf = m => m.passive || m.kind === 'orbit' || (m.id !== 'naruto-sand-armor' && G.NarutoGaara?.maintains(pl, m)) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul), 0, 1);
 
     for (let i = 0; i < n; i++) {
       const g = groups[i] || [];
@@ -356,6 +356,17 @@ G.HUD = (() => {
           ctx.font = F(800, 9); ctx.textAlign = 'right'; ctx.fillStyle = '#edd395';
           ctx.fillText(Math.ceil(shield.amount) + '/' + shield.capacity, x + S - 3, y + 10);
           ctx.textAlign = 'center'; ctx.fillText(shield.remaining.toFixed(1) + 's', x + S / 2, y - 4);
+        }
+        const guard = G.NarutoSandGuard?.state(pl);
+        if (guard) {
+          ctx.fillStyle = 'rgba(10,16,28,.82)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
+          ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#d4cdbb';
+          ctx.fillText('護衛 ' + guard.readyCount + '/' + guard.count, x + S / 2, y + S - 17, S - 8);
+          const reforming = guard.guardians.filter(cloud => !cloud.ready);
+          if (reforming.length) {
+            const progress = reforming.reduce((sum, cloud) => sum + cloud.rechargeProgress, 0) / reforming.length;
+            bar(ctx, x + 7, y + S - 13, S - 14, 2, progress, '#d4cdbb');
+          }
         }
       }
       if (m.id === 'naruto-sand-prison') {

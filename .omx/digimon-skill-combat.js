@@ -18,7 +18,7 @@
     if (!e || e.dead) return 0;
     const k = G.Types.mult(m.type, e.types) * G.Weather.mult(m.type), crit = pl.critChance > 0 && Math.random() < pl.critChance;
     const dmg = base * k * (crit ? 1.5 : 1) * (m.narutoSkill ? G.NarutoSupport?.precisionMultiplier(pl,e)||1 : 1);
-    e.hurt(dmg, color(m), dx, dy, knock, crit ? 'crit' : G.Types.label(G.Types.mult(m.type, e.types)), pl);
+    e.hurt(dmg, color(m), dx, dy, knock, crit ? 'crit' : G.Types.label(G.Types.mult(m.type, e.types)), pl, m.id);
     pl.onDealt(dmg); pl.dmgDealt += dmg;
     if (m.burn) e.applyBurn(m.burn); if (m.poison) e.applyPoison(m.poison); if (m.slow) e.applySlow(m.slow);
     return dmg;
@@ -47,7 +47,7 @@
     const v = vis(m), p = G.Projectiles.spawn({ x: origin.x + Math.cos(a) * 3, y: origin.y + Math.sin(a) * 3,
       vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed, dmg: m.dmg * pl.atk * ratio * (explosive ? .2 : 1),
       r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
-      hits: new Set(), vis: v, owner: pl, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
+      hits: new Set(), vis: v, owner: pl, mid: m.id, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
       slow: m.slow || 0, knock: m.knock || 0, digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
     if(m.fumaReturn) {
       Object.assign(p,{fumaReturn:true,boom:m.boom,bsp:m.speed*1.1,fumaPierce:p.pierce,fumaLearned:pl.hasMove(m.id)});

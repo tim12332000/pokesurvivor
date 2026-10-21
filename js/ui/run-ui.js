@@ -220,7 +220,51 @@ G.RunUI = (() => {
     renderBond();
   }
 
+  // Adapted from upstream e868b5e: use this branch's effective stats and skills.
+  function pauseSummary() {
+    const pl = G.Game.player;
+    if (!pl) return '';
+    const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const tr = value => esc(G.T(value));
+    const num = (value, digits = 0) => (Number.isFinite(value) ? value : 0).toLocaleString(G.I18n.lang, { maximumFractionDigits: digits });
+    const pct = value => num(value * 100, 1) + '%';
+    const time = G.Game.st.time;
+    const moves = pl.moves.map(m => {
+      const seconds = Math.max(1, time - (m.since || 0));
+      const dealt = m.dealt || 0;
+      const damage = dealt > 0 || (m.kind !== 'buff' && !m.passive);
+      const type = G.U.TYPE_NAME[m.type] || m.type;
+      return `<tr data-move-id="${esc(m.id)}"><td>${G.Icons.html(G.SharinganIcons?.forMove(m) || 'move:' + m.id, 18)}
+        <span>${tr(m.name)} <small>Lv.${m.lvl}</small><small class="sum-type">${tr(type)}</small></span></td>
+        <td class="num" data-damage="${dealt}">${damage ? num(dealt) : '—'}</td>
+        <td class="num" data-dps="${dealt / seconds}">${damage ? num(dealt / seconds, 1) : '—'}</td></tr>`;
+    }).join('');
+    const stats = [
+      ['Vida', num(pl.hp) + ' / ' + num(pl.maxHp)],
+      ['Ataque', '×' + num(pl.atk, 2)], ['Velocidad', num(pl.spd)],
+      ['Crítico', pct(pl.critChance || 0)], ['Reducción de daño', pct(pl.reduction)],
+      ['Recarga', '×' + num(pl.cdMul, 2)], ['Regeneración', num(pl.regen, 1) + '/s'],
+      ['Radio de recogida', num(pl.magnet)], ['Experiencia', '×' + num(pl.xpMul, 2)]
+    ];
+    if (pl.quantityBonus) stats.push(['Proyectiles adicionales', '+' + num(pl.quantityBonus)]);
+    if (pl.lifestealRate) stats.push(['Robo de vida', pct(pl.lifestealRate)]);
+    if (pl.percentHealthDamage) stats.push(['Daño de vida máxima', pct(pl.percentHealthDamage)]);
+    const it = pl.item && G.Items.BY[pl.item];
+    const cards = Object.entries(pl.statsTaken || {}).filter(([, count]) => count > 0).map(([id, count]) => {
+      const stat = G.LevelUp.STATS.find(s => s.id === id);
+      return stat ? `<span class="chip">${G.Icons.html(stat.icon, 12)} ${tr(stat.title)} ×${count}</span>` : '';
+    }).join('');
+    return `<h3>${tr('Tus ataques')}</h3><div class="sum-table-wrap"><table class="sum-moves">
+      <thead><tr><th scope="col">${tr('Movimientos')}</th><th scope="col" class="num">${tr('Daño')}</th><th scope="col" class="num">DPS</th></tr></thead>
+      <tbody>${moves}</tbody></table></div>
+      <p class="sum-note">${tr('DPS desde que aprendiste el ataque (mínimo 1 s de juego). El daño incluye escudos y exceso de daño, pero no quemaduras, veneno ni entorno.')}</p>
+      <h3>${tr('Tus estadísticas')}</h3><div class="sum-stats">${stats.map(([label, value]) => `<div><span>${tr(label)}</span><b>${value}</b></div>`).join('')}</div>
+      <h3>${tr('Objeto y cartas')}</h3><p class="sum-item">${it ? G.Icons.html(pl.item, 18) + ' <b>' + tr(it.name) + '</b>: ' + tr(it.desc) : tr('Sin objeto.')}</p>
+      <div class="chips">${cards || tr('Aún no has cogido cartas de mejora.')}</div>`;
+  }
+
   function showPause(coop = false) {
+    $('pause-sum').innerHTML = pauseSummary();
     G.UI.soundControls($('pause-sound'));
     $('pause-coop').classList.toggle('hidden', !coop);
     $('btn-quit').textContent = coop ? 'Salir de la partida' : 'Abandonar run';

@@ -2,7 +2,7 @@
 
 PROJECTILES = r"""() => {
  const A=Acceptance,p=A.p(),out={},N=G.NarutoGaara,near=(a,b)=>Math.abs(a-b)<1e-5;
- const damage=(m,e)=>m.dmg*p.atk*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
+ const damage=(m,e)=>(m.dmg+p.level)*p.atk*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
  A.gaaraArena();const far=A.spawn(230,0),side=A.spawn(230,45);p.target=far;
  let raw=0;const hurt=far.hurt;far.hurt=function(amount,...args){raw+=amount;return hurt.call(this,amount,...args)};
  const m=A.actualCast('naruto-gaara');A.assert(m.dmg===28,'starter nominal damage');A.advance(.13);
@@ -29,7 +29,7 @@ PROJECTILES = r"""() => {
  }
  A.gaaraArena();const target=A.spawn(230,0);p.target=target;A.actualCast('naruto-gaara');A.advance(.13);
  target.y=100;G.EnemyMgr.rebuildGrid();A.advance(2);
- A.assert(target.hp===100000&&N.bullets.length===0,'sand homed or exceeded range');
+ A.assert(target.hp<100000&&N.bullets.length===0,'sand failed to home onto moved target or exceeded range');
  for(const reason of ['clear','owner-death','world','owner']){
    A.gaaraArena();const e=A.spawn(230,0);p.target=e;A.actualCast('naruto-gaara');A.advance(.13);
    A.assert(N.bullets.length>0,'missing cleanup bullet');const world=G.World,game=G.Game;
@@ -40,7 +40,7 @@ PROJECTILES = r"""() => {
    try{A.advance(.01);A.assert(N.bullets.length===0,'bullet leaked '+reason)}finally{G.World=world;G.Game=game;p.dead=false}
    A.advance(1);A.assert(e.hp===100000,'cancelled bullet delayed damage '+reason);
  }
- return {...out,wall:true,cleanup:true,pause:true,noHoming:true};
+ return {...out,wall:true,cleanup:true,pause:true,homing:true};
 }"""
 
 PRIORITY = r"""() => {
@@ -50,7 +50,7 @@ PRIORITY = r"""() => {
    const wall=G.World.isWall;G.World.isWall=(x,y)=>x>=180&&x<=185;
    try{A.actualCast('naruto-sand-coffin');A.assert(G.NarutoGaara.active(p).target===elite,'coffin missed visible '+strong);A.finish()}
    finally{G.World.isWall=wall}
-   A.assert(elite.hp<100000&&normal.hp===100000&&hidden.hp===100000,'coffin priority splashed');out.push(strong);
+   A.assert(elite.hp<100000&&normal.hp<100000&&hidden.hp===100000,'coffin missed visible targets or crossed wall');out.push(strong);
  }
  A.gaaraArena();const near=A.spawn(60,0),far=A.spawn(120,0);p.target=far;A.actualCast('naruto-sand-coffin');
  A.assert(G.NarutoGaara.active(p).target===near,'coffin did not fall back to nearest ordinary enemy');A.finish();
@@ -100,19 +100,19 @@ SHIELD_CONTEXT = r"""() => {
  const A=Acceptance,p=A.p(),N=G.NarutoGaara,out=[];
  const contexts=[{fromX:100,fromY:0},{fromX:0,fromY:100},{fromX:-100,fromY:0},{fromX:0,fromY:-100},{vx:-10,vy:0},null];
  for(const [i,context] of contexts.entries()){
-   A.gaaraArena();A.select('naruto-sand-shield');A.advance(.001);const hp=p.hp;p.invuln=0;p.hurt(2,null,true,context);
+   A.gaaraArena();A.select('naruto-gaara');A.advance(.001);const hp=p.hp;p.invuln=0;p.hurt(2,null,true,context);
    const s=N.shieldState(p),aim=s.flashAim,expected=[0,Math.PI/2,Math.PI,-Math.PI/2,0,null][i];
    A.assert(p.hp===hp&&s.flash>0,'directional hit bypassed shield');
    A.assert(expected===null?aim===null:Math.abs(Math.atan2(Math.sin(aim-expected),Math.cos(aim-expected)))<1e-6,'shield source direction '+i+' '+aim);
    out.push({context,aim});
  }
- A.gaaraArena();A.select('naruto-sand-shield');A.advance(1);p.invuln=0;p.hurt(8,null,true,{fromX:100,fromY:0});
+ A.gaaraArena();A.select('naruto-gaara');A.advance(1);p.invuln=0;p.hurt(8,null,true,{fromX:100,fromY:0});
  const before=N.shieldState(p);A.select('naruto-sand-coffin');
  const hp=p.hp;p.invuln=0;p.hurt(3,null,true,{fromX:100,fromY:0});
- A.assert(p.hp===hp-3&&!N.shieldState(p),'unselected shield absorbed native damage or remained visible');
- A.advance(15);A.select('naruto-sand-shield');const after=N.shieldState(p);
- A.assert(after.amount===before.amount&&Math.abs(after.progress-before.progress)<1e-6,'switching shield refilled capacity or advanced frozen clock');
- A.advance(.25);A.assert(N.shieldState(p).progress>before.progress,'reselected shield clock failed to resume');
- out.push({unselectedHurt:true,frozenProgress:true,noFreeRefill:true});
+ A.assert(p.hp===hp&&N.shieldState(p).amount===before.amount-3,'passive shield stopped after switch');
+ A.advance(.25);const after=N.shieldState(p);
+ A.assert(Math.abs(after.progress-before.progress-.25/(12*p.cdMul))<1e-6,'switch reset or froze passive clock');
+ A.advance(12*p.cdMul);A.assert(N.shieldState(p).amount===after.capacity,'passive refresh failed while coffin selected');
+ out.push({passiveAbsorbs:true,continuedProgress:true});
  return out;
 }"""

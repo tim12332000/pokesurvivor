@@ -45,7 +45,7 @@
       for(let i=0;i<hits&&!e.dead;i++){
         const crit=f.critChance>0&&Math.random()<f.critChance,damage=base*k*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(pl,e)||1);
         if(damage<=0)continue;
-        e.hurt(damage,p.color,e.x-p.x,e.y-p.y,m.knock||0,crit?'crit':G.Types.label(G.Types.mult(m.type,e.types)),pl);
+        e.hurt(damage,p.color,e.x-p.x,e.y-p.y,m.knock||0,crit?'crit':G.Types.label(G.Types.mult(m.type,e.types)),pl,m.id);
         pl.dmgDealt+=damage;pl.onDealt(damage);if(m.burn)e.applyBurn(m.burn);
       }
     }

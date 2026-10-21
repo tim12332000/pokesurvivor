@@ -58,7 +58,7 @@
       const x = owner.x + Math.cos(angle) * radius, y = owner.y + Math.sin(angle) * radius;
       if (!G.World.isFree(x, y, 10, true) || !clearPath(owner.x, owner.y, x, y, 10) || living(owner).some(a => Math.hypot(a.x - x, a.y - y) < 25)) continue;
       let formationIndex=0;while(occupied.has(formationIndex))formationIndex++;occupied.add(formationIndex);
-      const a = { id: ++serial, formationIndex, owner, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || config.duration,
+      const a = { id: ++serial, formationIndex, owner, moveId: move.id, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || config.duration,
         lvl, dmg: Number.isFinite(move.dmg) ? move.dmg : config.punchDamage, punchCd: move.punchCd || config.punchCooldown,
         cd: .16 + count % 8 * .08, anim: new G.Sprites.Animator(30001, 1), target: null, dead: false, comboT: 0,
         cloneTechniqueCdMul: move.cloneTechniqueCdMul ?? 1, cloneTechniqueDamageMul: move.cloneTechniqueDamageMul ?? 1,
@@ -78,11 +78,11 @@
     summons.push({owner,world:G.World,move:{...move},t:0,duration});
     return true;
   }
-  function hit(a, enemy, base, type, knock = 12) {
+  function hit(a, enemy, base, type, knock = 12, moveId = a.moveId) {
     if (enemy.dead || !valid(a)) return;
     const typeK = G.Types.mult(type, enemy.types), crit = a.owner.critChance > 0 && Math.random() < a.owner.critChance;
     const dmg = base * typeK * G.Weather.mult(type) * (crit ? 1.5 : 1);
-    enemy.hurt(dmg, '#a9dcff', enemy.x - a.x, enemy.y - a.y, knock, crit ? 'crit' : G.Types.label(typeK), a.owner);
+    enemy.hurt(dmg, '#a9dcff', enemy.x - a.x, enemy.y - a.y, knock, crit ? 'crit' : G.Types.label(typeK), a.owner, moveId);
     a.owner.onDealt(dmg); a.owner.dmgDealt += dmg;
   }
   function moveToward(a, x, y, speed, dt) {
@@ -147,7 +147,7 @@
               const aim = Math.atan2(e.y - a.y, e.x - a.x);
               if (rasengan) {
                 a.anim.play('Attack'); a.comboT = .4; a.comboAim = aim;
-                hit(a, e, technique.dmg * a.owner.atk * a.cloneTechniqueDamageMul, technique.type || 'fighting', technique.knock || 28);
+                hit(a, e, technique.dmg * a.owner.atk * a.cloneTechniqueDamageMul, technique.type || 'fighting', technique.knock || 28, technique.id);
                 G.FX.beam(a.x, a.y - G.LIFT, aim, distance(a, e), 8, '#83dcff', { pal: 'water' });
               } else if (G.DigimonSkills?.fireFrom) {
                 const shots = G.DigimonSkills.fireFrom(a.owner, technique, a.x, a.y, aim, a.cloneTechniqueDamageMul) || [];

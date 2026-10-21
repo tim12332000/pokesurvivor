@@ -4,6 +4,22 @@
  * son los oficiales en inglés.
  */
 G.I18n.add({
+  "Crítico": "Critical chance",
+  "Reducción de daño": "Damage reduction",
+  "Recarga": "Cooldown multiplier",
+  "Regeneración": "Regeneration",
+  "Experiencia": "Experience multiplier",
+  "Tus ataques": "Move damage",
+  "Daño": "Damage",
+  "Tus estadísticas": "Current stats",
+  "Objeto y cartas": "Held item and upgrade cards",
+  "Sin objeto.": "No held item.",
+  "Aún no has cogido cartas de mejora.": "No upgrade cards yet.",
+  "Radio de recogida": "Pickup range",
+  "Proyectiles adicionales": "Extra quantity",
+  "Robo de vida": "Lifesteal",
+  "Daño de vida máxima": "Max HP damage",
+  "DPS desde que aprendiste el ataque (mínimo 1 s de juego). El daño incluye escudos y exceso de daño, pero no quemaduras, veneno ni entorno.": "DPS averages damage since learning the move, using at least 1 second of game time. Damage includes shields and overkill, but excludes burn, poison and environmental damage.",
   "Cambiado a: {x}": "Switched to: {x}",
   // ---------------- tipos y regiones ----------------
   'Acero': 'Steel', 'Agua': 'Water', 'Bicho': 'Bug', 'Dragón': 'Dragon', 'Eléctrico': 'Electric', 'Fantasma': 'Ghost',

@@ -118,7 +118,7 @@
     const damage = move.dmg * ratio * f.attack * mult * G.Weather.mult(move.type) *
       (crit ? 1.5 : 1) * (G.NarutoSupport?.precisionMultiplier(owner, enemy) || 1);
     f.primaryHit = enemy === f.target;
-    try { enemy.hurt(damage, '#f2ddab', enemy.x - owner.x, enemy.y - owner.y, 0, crit ? 'crit' : G.Types.label(mult), owner); }
+    try { enemy.hurt(damage, '#f2ddab', enemy.x - owner.x, enemy.y - owner.y, 0, crit ? 'crit' : G.Types.label(mult), owner, move.id); }
     finally { f.primaryHit = false; }
     owner.onDealt(damage); owner.dmgDealt += damage;
     G.FX.burst(enemy.x, enemy.y - (enemy.jumpLift || 0) - hitLiftFor(enemy), '#f2ddab', 5, 40);

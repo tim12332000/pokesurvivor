@@ -8,14 +8,14 @@
     apply: owner => { owner.percentHealthDamage = Math.round(((owner.percentHealthDamage || 0) + perPick) * 100) / 100; }
   });
   const hurt = G.Enemy.prototype.hurt;
-  G.Enemy.prototype.hurt = function(amount, color, dirX, dirY, knock, eff, owner) {
+  G.Enemy.prototype.hurt = function(amount, color, dirX, dirY, knock, eff, owner, moveId) {
     const rate = owner?.percentHealthDamage;
     const bonus = !this.dead && this.hp > 0 && owner && !owner.dead && owner.hp > 0 &&
       G.Game.everyone().includes(owner) && Number.isFinite(amount) && amount > 0 &&
       Number.isFinite(rate) && rate > 0 && Number.isFinite(this.maxHp) && this.maxHp > 0
         ? this.maxHp * rate : 0;
     // One native hit preserves shields, knockback, death, networking and hit VFX.
-    const result = hurt.call(this, amount + bonus, color, dirX, dirY, knock, eff);
+    const result = hurt.call(this, amount + bonus, color, dirX, dirY, knock, eff, owner, moveId);
     if (bonus > 0) {
       // Match existing combat accounting, including damage absorbed by shields.
       owner.onDealt(bonus);

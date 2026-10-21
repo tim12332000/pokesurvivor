@@ -80,7 +80,7 @@
 }
 </script>
 <!-- seo:end -->
-<link rel="stylesheet" href="css/style.css?v=ad9a9f0bc949">
+<link rel="stylesheet" href="css/style.css?v=4df81b73618a">
 <link rel="stylesheet" href=".omx/mobile-portrait.css?v=55b1c18c840a">
 </head>
 <body>
@@ -535,11 +535,12 @@
 </section>
 
 <section id="scr-pause" class="scr dim hidden">
-  <div class="box center" style="width:min(460px,100%)">
+  <div class="box center pause-box">
     <h2>Pausa</h2>
     <p class="sub kbd-hint"><kbd>WASD</kbd> moverse · <kbd>1</kbd>–<kbd>4</kbd> movimiento · <kbd>Q</kbd>/<kbd>E</kbd> ciclar · <kbd>Esc</kbd> pausa</p>
     <p class="sub touch-hint">Arrastra el dedo para moverte · toca un ataque para cambiarlo</p>
     <p id="pause-coop" class="note hidden">Partida en grupo: el juego sigue mientras estás aquí.</p>
+    <div id="pause-sum" class="pause-summary"></div>
     <div id="pause-sound" class="sound-inline"></div>
     <div class="row" style="justify-content:center">
       <button id="btn-resume" class="btn gold">Continuar</button>
@@ -561,8 +562,8 @@
 <!-- scripts:begin -->
 <script defer src="js/core/util.js?v=49b60d6649b2"></script>
 <script defer src="js/core/i18n.js?v=fd5a1d7d19bc"></script>
-<script defer src="js/data/lang-en.js?v=b95743158ad6"></script>
-<script defer src="js/data/lang-zh-TW.js?v=16f781f6859f"></script>
+<script defer src="js/data/lang-en.js?v=ec5f8b1ceb23"></script>
+<script defer src="js/data/lang-zh-TW.js?v=5496218f94d2"></script>
 <script defer src="js/core/settings.js?v=43e40e704b45"></script>
 <script defer src="js/data/music.js?v=6121a274d329"></script>
 <script defer src="js/data/pokedex.js?v=d33494dbb6ea"></script>
@@ -576,7 +577,7 @@
 <script defer src="js/core/sprites.js?v=85d31b4e6445"></script>
 <script defer src="js/core/camera.js?v=22bc9a3c1f6b"></script>
 <!-- datos de juego -->
-<script defer src="js/data/moves.js?v=75f6612c276a"></script>
+<script defer src="js/data/moves.js?v=eeaa46960b70"></script>
 <script defer src="js/data/types.js?v=52910f46f49a"></script>
 <script defer src="js/data/starters.js?v=9c03f9703246"></script>
 <script defer src="js/data/enemies.js?v=9e3bdd45fe4d"></script>
@@ -592,11 +593,11 @@
 <script defer src="js/entities/vfx.js?v=e54ce69d910e"></script>
 <script defer src="js/entities/fx.js?v=1b56c95f90dd"></script>
 <script defer src="js/entities/projectile.js?v=946c3c0606f1"></script>
-<script defer src="js/entities/enemy.js?v=6cef78933fef"></script>
+<script defer src="js/entities/enemy.js?v=1b328ea30ec7"></script>
 <script defer src="js/entities/pickup.js?v=9b481659231b"></script>
 <script defer src="js/entities/player.js?v=145f3deb59ed"></script>
 <!-- sistemas -->
-<script defer src="js/systems/combat.js?v=14ac60b71874"></script>
+<script defer src="js/systems/combat.js?v=f1890e025fbc"></script>
 <script defer src="js/systems/spawner.js?v=4e78484b0586"></script>
 <script defer src="js/systems/levelup.js?v=adccb708c564"></script>
 <script defer src="js/systems/gacha.js?v=957b89be9521"></script>
@@ -617,13 +618,13 @@
 <!-- interfaz -->
 <script defer src="js/ui/icons.js?v=76b1def7e482"></script>
 <script defer src="js/ui/ui.js?v=9e34d59c2691"></script>
-<script defer src="js/ui/hud.js?v=c9ec2c57eacc"></script>
+<script defer src="js/ui/hud.js?v=520534341c59"></script>
 <script defer src="js/ui/login.js?v=839aa624a741"></script>
 <script defer src="js/ui/test.js?v=1c8ef567fcb3"></script>
 <script defer src="js/ui/menu.js?v=79e9528376a3"></script>
 <script defer src="js/ui/slots.js?v=08dcfc80596f"></script>
 <script defer src="js/ui/gacha-ui.js?v=8c7652755d68"></script>
-<script defer src="js/ui/run-ui.js?v=16da449d14bf"></script>
+<script defer src="js/ui/run-ui.js?v=1909b00c107e"></script>
 <script defer src="js/ui/social-ui.js?v=63c6982d45b1"></script>
 <script defer src="js/ui/ranking-ui.js?v=85badc53f008"></script>
 <script defer src="js/ui/mod-ui.js?v=ed25a26a73af"></script>
@@ -633,45 +634,46 @@
 <script defer src="js/ui/news-ui.js?v=0adf567487a0"></script>
 <script defer src="js/core/updater.js?v=c77d626bb051"></script>
 <!-- juego -->
-<script defer src="js/game.js?v=03b6b384a9dd"></script>
+<script defer src="js/game.js?v=8c66867268e3"></script>
 <script defer src=".omx/unlimited.js?v=b53079f10b98"></script>
 <script defer src=".omx/digimon/pixel-data.js?v=8ad11f94bfa9"></script>
 <script defer src=".omx/digimon.js?v=c8db9fcd79b9"></script>
 <script defer src=".omx/digimon/evolutions-data.js?v=fa7c99494cf4"></script>
-<script defer src=".omx/digimon-evolution.js?v=13d431fe2e57"></script>
+<script defer src=".omx/digimon-evolution.js?v=1fcbbc83f425"></script>
 <script defer src=".omx/digimon-size.js?v=3cc85daa3b64"></script>
 <script defer src=".omx/digimon/skills-sources.js?v=2f1681b78e04"></script>
 <script defer src=".omx/digimon-skills.js?v=9eda6bf4c6c4"></script>
-<script defer src=".omx/digimon-skill-combat.js?v=1af700c40d82"></script>
-<script defer src=".omx/naruto-sand-vfx.js?v=a2a8f7cb4991"></script>
+<script defer src=".omx/digimon-skill-combat.js?v=59ea63c49a4c"></script>
+<script defer src=".omx/naruto-sand-vfx.js?v=d0aa66e7fbf9"></script>
 <script defer src=".omx/naruto/sprites-data.js?v=21530b31df48"></script>
 <script defer src=".omx/naruto.js?v=a36a0ec50dc3"></script>
-<script defer src=".omx/naruto-clones.js?v=6d76ca8227dd"></script>
+<script defer src=".omx/naruto-clones.js?v=229895828ca7"></script>
 <script defer src=".omx/naruto-cloak-vfx.js?v=8c10e6858377"></script>
-<script defer src=".omx/naruto-support.js?v=e33b1999ed9b"></script>
-<script defer src=".omx/naruto-offense.js?v=8e3f6d525ef7"></script>
-<script defer src=".omx/naruto-lee.js?v=d334c08d6eba"></script>
+<script defer src=".omx/naruto-support.js?v=ff7d3e831652"></script>
+<script defer src=".omx/naruto-offense.js?v=962e8a37d293"></script>
+<script defer src=".omx/naruto-lee.js?v=adc76b34f9da"></script>
 <script defer src=".omx/naruto-gates.js?v=2b42062228cb"></script>
-<script defer src=".omx/naruto-gaara.js?v=3e8ee3a7124c"></script>
-<script defer src=".omx/naruto-chidori.js?v=063caa07ffb4"></script>
+<script defer src=".omx/naruto-gaara.js?v=aae0f7d2581f"></script>
+<script defer src=".omx/naruto-sand-guard.js"></script>
+<script defer src=".omx/naruto-chidori.js?v=f0c56f91466a"></script>
 <script defer src=".omx/naruto-fireball-cast.js?v=4ddf0a6e56c1"></script>
-<script defer src=".omx/naruto-fireball-aoe.js?v=7dfab5a7cb3b"></script>
-<script defer src=".omx/naruto-sharingan.js?v=4d6df8428931"></script>
-<script defer src=".omx/naruto-sharingan-powers.js?v=b168fb6156af"></script>
-<script defer src=".omx/naruto-kusanagi.js?v=c95f8f8cef9f"></script>
-<script defer src=".omx/naruto-skills.js?v=cb6f0ed05c33"></script>
-<script defer src=".omx/naruto-training.js?v=f0a7d9b47caf"></script>
+<script defer src=".omx/naruto-fireball-aoe.js?v=8badf31aa53c"></script>
+<script defer src=".omx/naruto-sharingan.js?v=ea04402e0b97"></script>
+<script defer src=".omx/naruto-sharingan-powers.js?v=3fc7cbf156e4"></script>
+<script defer src=".omx/naruto-kusanagi.js?v=177e9a510f31"></script>
+<script defer src=".omx/naruto-skills.js?v=631f74179bc7"></script>
+<script defer src=".omx/naruto-training.js?v=400419e4b7d5"></script>
 <script defer src=".omx/quantity.js?v=5522cebc4952"></script>
 <script defer src=".omx/lifesteal.js?v=4462a1157904"></script>
-<script defer src=".omx/percent-health-damage.js?v=a2b346f7ae35"></script>
+<script defer src=".omx/percent-health-damage.js?v=3b5bf7f1c714"></script>
 <script defer src=".omx/max-health-percent.js?v=24201ba355dc"></script>
 <script defer src=".omx/run-attributes.js?v=0d0418fb6471"></script>
 <script defer src=".omx/starter-balance.js?v=0c3e68fcc6bb"></script>
 <script defer src=".omx/naruto-sharingan-icons.js?v=ad3bde0d21ab"></script>
-<script defer src=".omx/dev-controls.js?v=4b18a4708999"></script>
+<script defer src=".omx/dev-controls.js?v=7ecfc8a7e36b"></script>
 <script defer src="art-review/cast-continuity.js?v=f5e5eee3d67d"></script>
 <script defer src="art-review/animation-assets.js?v=0a57995c49b6"></script>
-<script defer src="art-review/animation-runtime.js?v=11f6de6e5088"></script>
+<script defer src="art-review/animation-runtime.js?v=1d9505496b05"></script>
 <script defer src="art-review/kyuubi-form.js?v=f4f7a807f9ab"></script>
 <script defer src=".omx/redrawn-init.js?v=20d5b008b8b3"></script>
 <script defer src="js/main.js?v=b2b76325cd83"></script>

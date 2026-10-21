@@ -73,7 +73,7 @@
           const mult = G.Types.mult(move.type, enemy.types), damage = move.dmg * owner.atk * mult * G.Weather.mult(move.type);
           if (!(damage > 0)) continue;
           state.hits.set(enemy, state.age + config.tick);
-          enemy.hurt(damage, '#b6ddff', enemy.x - owner.x, enemy.y - owner.y, move.knock || 0, G.Types.label(mult), owner);
+          enemy.hurt(damage, '#b6ddff', enemy.x - owner.x, enemy.y - owner.y, move.knock || 0, G.Types.label(mult), owner, move.id);
           owner.onDealt(damage); owner.dmgDealt += damage;
         }
       }

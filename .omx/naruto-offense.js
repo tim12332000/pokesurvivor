@@ -52,7 +52,7 @@
     if (!valid(f) || !alive(e)) return;
     const type = f.m.type || 'normal', mult = G.Types.mult(type, e.types), crit = f.owner.critChance > 0 && Math.random() < f.owner.critChance;
     const damage = amount * f.atk * mult * G.Weather.mult(type) * (crit ? 1.5 : 1);
-    e.hurt(damage, color, e.x - f.x, e.y - f.y, 0, crit ? 'crit' : G.Types.label(mult), f.owner);
+    e.hurt(damage, color, e.x - f.x, e.y - f.y, 0, crit ? 'crit' : G.Types.label(mult), f.owner, f.m.id);
     f.owner.onDealt(damage); f.owner.dmgDealt += damage;
   }
   function cast(pl, move) {

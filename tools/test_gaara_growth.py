@@ -5,7 +5,7 @@ GROWTH = r"""() => {
  const m=p.moves.find(m=>m.id==='naruto-sand-shield'),snapshot={...m},level=p.level,cd=p.cdMul;
  const out={};
  try {
-   m.lvl=1;p.level=12;p.cdMul=1;A.gaaraArena();A.select(m.id);A.advance(1);
+   m.lvl=1;p.level=12;p.cdMul=1;A.gaaraArena();A.select('naruto-gaara');A.advance(1);
    let s=N.shieldState(p);A.assert(s.capacity===57,'Lv12 stage1 capacity');
    const hp=p.hp;p.invuln=0;p.hurt(20,null,true);s=N.shieldState(p);
    const amount=s.amount,progress=s.progress;p.level=13;A.advance(.000001);s=N.shieldState(p);
@@ -30,7 +30,9 @@ PRISON = r"""() => {
  p.level=12;A.assert(G.Moves.poolFor(p.mon).includes(id),'prison absent from Lv12 pool');
  const slots=p.slots.length,card=G.LevelUp.offer(p,100).find(c=>c.key==='new:'+id);
  A.assert(card&&card.apply(p)!==false,'prison real learn card missing');
- const m=p.moves.find(m=>m.id===id);A.assert(!m.passive&&p.moves.length===5&&p.slots.length===slots+1&&p.slots.some(s=>s.includes(m)),'fifth selected skill missing active slot');
+ const m=p.moves.find(m=>m.id===id);A.assert(!m.passive&&p.moves.length===5&&p.slots.length===slots+1&&p.slots.some(s=>s.includes(m)),'prison missing active slot');
+ p.level=15;const armorCard=G.LevelUp.offer(p,100).find(c=>c.key==='new:naruto-sand-armor');
+ A.assert(armorCard&&armorCard.apply(p)!==false&&p.slots.length===5,'five genuine active slots including armor');
  p.cdMul=1;A.gaaraArena();A.select(id);A.spawn(180,0);A.advance(5.99);
  A.assert(!N.sandPrisonState(p)&&near(N.prisonCooldownState(p).remaining,.01),'prison cast immediately after selection');
  A.advance(.01);A.assert(N.sandPrisonState(p)?.radius===90,'prison did not spawn after six seconds');
@@ -54,8 +56,8 @@ PRISON = r"""() => {
  // Three victims spread across the circle, with a fourth beyond its boundary.
  A.gaaraArena();const es=[A.spawn(180,0),A.spawn(240,0),A.spawn(180,60),A.spawn(280,0)];
  const hits=es.map(()=>0),owners=es.map(()=>true);es.forEach((e,i)=>{const hurt=e.hurt;e.hurt=function(...args){hits[i]++;owners[i]&&=args[6]===p;return hurt.apply(this,args)}});
- A.advance(9);const damage=es.map(e=>100000-e.hp),expected=Math.round(12*p.atk*G.Types.mult(m.type,es[0].types)*G.Weather.mult(m.type))*6;
- A.assert(damage.slice(0,3).every(n=>n===expected)&&damage[3]===0&&hits.slice(0,3).every(n=>n===6)&&hits[3]===0,'large-dt circle damage/ticks wrong '+JSON.stringify({damage,hits,expected}));
+ A.advance(11);const damage=es.map(e=>100000-e.hp),expected=Math.round(12*p.atk*G.Types.mult(m.type,es[0].types)*G.Weather.mult(m.type))*10;
+ A.assert(damage.slice(0,3).every(n=>n===expected)&&damage[3]===0&&hits.slice(0,3).every(n=>n===10)&&hits[3]===0,'large-dt circle damage/ticks wrong '+JSON.stringify({damage,hits,expected}));
  A.assert(owners.every(Boolean)&&!N.sandPrisonState(p)&&es.every(e=>!N.rooted(e)),'expired prison retained control or lost ownership');out.circle={damage,hits};
  // Boss resistance uses the stronger native slow without overwriting its timer.
  A.gaaraArena();const boss=A.spawn(180,0,true);boss.spd=100;boss.flying=false;boss.bossInit();boss.ai.mode='close';boss.ai.modeT=100;boss.ai.cd=100;A.advance(6);
@@ -107,11 +109,11 @@ SELECTED = r"""() => {
  for(const id of ['naruto-sand-coffin','naruto-sand-tsunami']){
    A.gaaraArena();const e=A.spawn(90,0);p.target=e;A.actualCast(id);A.advance(id.includes('coffin')?.3:.9);
    A.assert(N.active(p)&&e.slow>0,'selected cancellation fixture missing '+id);const hp=e.hp;
-   A.select('naruto-sand-shield');
+   A.select('naruto-gaara');
    A.assert(!N.active(p)&&e.slow===0,'unselected action/control survived '+id);
    A.advance(4);A.assert(e.hp===hp,'cancelled unselected action dealt delayed damage '+id);out[id]=true;
  }
- // The fifth selected skill also retains the native automatic basic attack.
+ // The selected prison also retains the native automatic basic attack.
  A.gaaraArena();const m=A.select('naruto-sand-prison');m.t=10;p.target=A.spawn(90,0);
  const cast=p.cast,casts=[];p.cast=function(move,...args){casts.push(move.id);return cast.call(this,move,...args)};
  try{A.resume();G.Combat.tick(.61,p,0)}finally{p.cast=cast;A.pause()}

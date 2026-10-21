@@ -38,7 +38,7 @@ PROGRESSION = r"""() => {
  A.assert(p.moves.length===1&&p.hasMove(starter),'Gaara must start with sandburst only');
  for(const level of [1,3,6,9]){
    p.level=level;const pool=G.Moves.poolFor(p.mon),cards=G.LevelUp.offer(p,100);
-   ids.forEach((id,i)=>{const eligible=level>=[3,6,9][i];A.assert(pool.includes(id)===eligible,'pool gate '+id+' Lv'+level);
+   ids.forEach((id,i)=>{const eligible=level>=[3,1,9][i];A.assert(pool.includes(id)===eligible,'pool gate '+id+' Lv'+level);
      A.assert(cards.some(c=>c.key==='new:'+id)===eligible,'learn card gate '+id+' Lv'+level)});
    out.levels.push({level,pool,cards:cards.map(c=>c.key)});
  }
@@ -49,14 +49,11 @@ PROGRESSION = r"""() => {
  }p.mon=original;p.level=12;
  for(const id of ids){const n=p.slots.length,card=G.LevelUp.offer(p,100).find(c=>c.key==='new:'+id);
    A.assert(card&&card.apply(p)!==false,'learn actual signature '+id);
-   A.assert(p.slots.length===n+1&&p.slots.some(s=>s.some(m=>m.id===id&&!m.passive)),'learned skill missing selectable slot '+id);
-   if(id==='naruto-sand-shield'){
-     A.select(id);
-     A.advance(.001);A.shieldPose=A.render();
-     A.assert(A.shieldPose.state.key==='gaara-shield','learned shield never used dedicated animation');
-   }
+   const passive=id==='naruto-sand-shield',m=p.moves.find(m=>m.id===id);
+   A.assert(p.slots.length===n+(passive?0:1)&&!!m.passive===passive,'learned skill slot/passive '+id);
  }
- A.assert(p.moves.length===4&&p.slots.length===4&&p.maxMoves>=5,'incomplete Gaara loadout');
+ A.assert(p.moves.length===4&&p.slots.length===3&&p.maxMoves>=5,'incomplete Gaara loadout');
+ A.select(starter);A.advance(.001);A.shieldPose=A.render();
  return {...out,slots:p.slots.length};
 }"""
 
@@ -69,7 +66,7 @@ COMBAT = r"""() => {
    const m=A.actualCast(id),s=G.NarutoGaara.active(p);
    A.assert(s&&s.owner===p&&s.move.id===m.id,'missing owned Gaara action '+id);
    const phases=A.finish(),damage=es.map(e=>100000-e.hp);
-   if(id==='naruto-sand-coffin')A.assert(damage[es.indexOf(s.target)]>0&&damage.filter(n=>n>0).length===1,'coffin hit another target '+damage);
+   if(id==='naruto-sand-coffin')A.assert(damage[es.indexOf(s.target)]>0&&damage.slice(0,3).every(n=>n>0)&&damage[3]===0,'coffin missed snapshotted targets '+damage);
    else if(id==='naruto-gaara')A.assert(damage[1]>0&&damage.filter(n=>n>0).length===1,'sand shower splashed '+damage);
    else A.assert(damage.slice(0,3).every(n=>n>0)&&damage[3]===0,'dispersed AOE coverage '+id+' '+damage);
    A.assert(owned.every(Boolean),'Gaara bypassed native owned hurt '+id);
@@ -159,7 +156,7 @@ UPGRADES = r"""() => {
          A.gaaraArena();p.quantityBonus=bonus;const e=A.spawn(230,0);p.target=e;let hits=0,raw=0;const hurt=e.hurt;e.hurt=function(...args){hits++;raw+=args[0];return hurt.apply(this,args)};
          A.actualCast(id);const f=G.NarutoGaara.active(p);A.assert(f.count===m.count+bonus,'quantity applied twice');
          for(let n=0;n<200;n++)A.advance(.01);
-         const expected=m.dmg*(m.count+bonus)/m.count*p.atk*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
+         const expected=(m.dmg+p.level)*(m.count+bonus)/m.count*p.atk*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
          A.assert(hits===m.count+bonus&&Math.abs(raw-expected)<1e-5&&100000-e.hp===Math.round(expected/(m.count+bonus))*(m.count+bonus),'upgraded bullet count/damage '+level+'/'+bonus+' '+hits+'/'+(100000-e.hp));
          A.assert(!G.NarutoGaara.active(p)&&!G.NarutoGaara.bullets.length,'quantity burst remained active');
        }
@@ -174,7 +171,7 @@ SHIELD = r"""() => {
  const m=p.moves.find(m=>m.id==='naruto-sand-shield'),baseHp=p.maxHp,cd=p.cdMul;
  for(let level=1;level<=5;level++){
    if(level>1){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+m.id);A.assert(card&&card.apply(p)!==false,'shield upgrade card '+level)}
-   A.gaaraArena();A.select(m.id);A.advance(.001);
+   A.gaaraArena();A.select('naruto-gaara');A.advance(.001);
    const capacity=[45,60,75,90,110][level-1]+p.level*level,s=G.NarutoGaara.shieldState(p);
    A.assert(s&&s.capacity===capacity&&s.amount===capacity&&G.NarutoGaara.shieldStage(p)===level,'shield stage capacity '+level);
    const hp=p.hp;p.invuln=0;p.hurt(capacity-5,null,true);
@@ -186,26 +183,26 @@ SHIELD = r"""() => {
    A.assert(G.NarutoGaara.shieldState(p).amount===0,'shield refreshed early');A.advance(.02);
    A.assert(G.NarutoGaara.shieldState(p).amount===capacity&&p.hp===hurtHp,'shield did not refresh without HP heal');
    A.advance(.2);A.assert(G.NarutoGaara.shieldState(p).amount===capacity,'shield stacked above capacity');
-   A.assert(p.maxHp===baseHp&&p.slots.some(s=>s.includes(m))&&!m.passive,'shield mutated health or lost selectable slot');
+   A.assert(p.maxHp===baseHp&&!p.slots.some(s=>s.includes(m))&&m.passive,'shield mutated health or consumed an active slot');
    out.push({level,capacity,hpOverflow:hp-p.hp,refresh:12*p.cdMul});
  }
- // Obtain a real cooldown card and check the selected shield refresh.
+ // Obtain a real cooldown card and check the passive shield refresh.
  const counts={...p.statsTaken};p.statsTaken={...counts,cd:0};
  try{
    p.cdMul=1;let card;for(let n=0;n<40&&!card;n++)card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:cd');
    A.assert(card&&card.apply(p)!==false,'real cooldown card unavailable');
-   A.gaaraArena();A.select(m.id);A.advance(.001);const s=G.NarutoGaara.shieldState(p);
+   A.gaaraArena();A.select('naruto-gaara');A.advance(.001);const s=G.NarutoGaara.shieldState(p);
    A.assert(near(s.remaining,12*.92-.001),'cooldown card did not optimize shield refresh');
    const progress=s.progress;G.Combat.updateFields(1);A.assert(G.NarutoGaara.shieldState(p).progress===progress,'paused shield refreshed');
  }finally{p.statsTaken=counts;p.cdMul=cd}
- // The native HUD must include the selectable shield card.
+ // The native HUD must include the passive shield status.
  for(const lethal of [false,true]){
-   A.gaaraArena();A.select(m.id);A.advance(.001);const s=G.NarutoGaara.shieldState(p);if(lethal)p.hp=.25;
+   A.gaaraArena();A.select('naruto-gaara');A.advance(.001);const s=G.NarutoGaara.shieldState(p);if(lethal)p.hp=.25;
    const hp=p.hp;p.invuln=0;p.hurt(s.amount+.5,null,true);
    A.assert(G.NarutoGaara.shieldState(p)?.amount===0||lethal,'fractional overflow shield not depleted');
    A.assert(lethal?p.dead&&p.hp===0:!p.dead&&near(p.hp,hp-.5),'fractional native overflow wrong '+lethal);
  }
- A.gaaraArena();A.select(m.id);A.advance(.001);
+ A.gaaraArena();A.select('naruto-gaara');A.advance(.001);
  const cv=document.createElement('canvas');cv.width=innerWidth;cv.height=innerHeight;const ctx=cv.getContext('2d'),texts=[],draw=ctx.fillText.bind(ctx);
  ctx.fillText=(text,...args)=>{texts.push(String(text));return draw(text,...args)};
  G.HUD.draw(ctx,cv.width,cv.height,p,{time:30});
@@ -215,16 +212,16 @@ SHIELD = r"""() => {
 
 BASIC = r"""() => {
  const A=Acceptance,p=A.p(),out=[];
- for(const id of ['naruto-sand-coffin','naruto-sand-shield','naruto-sand-tsunami']){
+ for(const id of ['naruto-sand-coffin','naruto-sand-tsunami']){
    G.Combat.clearFields(p);A.gaaraArena();const m=A.select(id);m.t=10;p.target=A.spawn(90,0);const casts=[],cast=p.cast;
    const slots=p.slots.slice(),active=p.active,shield=G.NarutoGaara.shieldStage(p),fn=p.activeGroup;
    p.cast=function(move,...args){casts.push(move.id);return cast.call(this,move,...args)};
    try{A.resume();G.Combat.tick(.61,p,0)}finally{p.cast=cast;A.pause()}
    A.assert(casts.length===1&&casts[0]==='naruto-gaara','cooldown window did not use real sand basic '+id+' '+casts);
    A.assert(G.NarutoGaara.active(p)?.move.id==='naruto-gaara','basic had no actual sand action');
-   A.assert(Math.abs(m.t-(id==='naruto-sand-shield'?10:9.39))<1e-6,'selected timer advanced twice during basic '+id+' '+m.t);
+   A.assert(Math.abs(m.t-9.39)<1e-6,'selected timer advanced twice during basic '+id+' '+m.t);
    A.assert(p.active===active&&p.activeGroup===fn&&p.slots.every((s,i)=>s===slots[i]),'basic changed selected slots');
-   A.assert(G.NarutoGaara.shieldStage(p)===shield,'basic changed selected shield availability');
+   A.assert(G.NarutoGaara.shieldStage(p)===shield,'basic changed passive shield availability');
    out.push({selected:id,basic:casts[0],cooldown:m.t});
  }
  return out;
@@ -237,7 +234,7 @@ ART = r"""() => {
    p.walking=true;p.anim.play('Walk');out['movement-'+direction]=A.render();
    A.assert(out['idle-'+direction].state.key==='gaara-idle'&&out['movement-'+direction].state.key==='gaara-movement','common direction mapping '+direction);
  }
- A.gaaraArena();A.select('naruto-sand-shield');A.advance(.001);p.invuln=0;p.hurt(G.NarutoGaara.shieldState(p).amount+1,null,true);out.hurt=A.render();out.flash=A.render(p.anim,{flash:true,alpha:.5});
+ A.gaaraArena();A.select('naruto-gaara');A.advance(.001);p.invuln=0;p.hurt(G.NarutoGaara.shieldState(p).amount+1,null,true);out.hurt=A.render();out.flash=A.render(p.anim,{flash:true,alpha:.5});
  A.assert(out.hurt.state.key==='gaara-hurt','native HP damage did not render hurt');
  A.gaaraArena();p.dead=true;p.hp=0;p.anim.play('Faint',{hold:true});out.death=A.render();
  A.assert(out.death.state.key==='gaara-death','dead actor did not render dedicated death');
@@ -279,7 +276,7 @@ def capture_effects(page, label):
                           ('up', {'fromX': 0, 'fromY': -100}),
                           ('neutral', None), ('broken', {'fromX': 100, 'fromY': 0})]:
         result['shield-' + name] = page.evaluate("""([name,context]) => {
-          const A=Acceptance,p=A.p();A.gaaraArena();A.select('naruto-sand-shield');A.advance(.001);p.invuln=0;
+          const A=Acceptance,p=A.p();A.gaaraArena();A.select('naruto-gaara');A.advance(.001);p.invuln=0;
           const amount=name==='broken'?G.NarutoGaara.shieldState(p).amount:2;p.hurt(amount,null,true,context);
           const s=G.NarutoGaara.shieldState(p);return {aim:s.flashAim,amount:s.amount,broken:s.broken};
         }""", [name, context])
@@ -325,7 +322,7 @@ def main():
                 page.wait_for_function('G.Game.player.active===1')
                 result['keyboardSkillSwitch'] = page.evaluate('Acceptance.pause();G.Game.player.activeGroup().map(m=>m.id)')
                 if mobile:
-                    slot = page.evaluate('G.Touch.controlLayout(innerWidth,innerHeight,G.Game.player.slots.length).slots[2]')
+                    slot = page.evaluate('G.Touch.controlLayout(innerWidth,innerHeight,G.Game.player.slots.length+G.Game.player.moves.filter(m=>m.passive&&!G.Game.player.slots.some(s=>s.includes(m))).length).slots[2]')
                     page.evaluate('Acceptance.resume()')
                     page.touchscreen.tap(slot['x'] + slot['w'] / 2, slot['y'] + slot['h'] / 2)
                     page.wait_for_function('G.Game.player.active===2')
@@ -364,11 +361,11 @@ def main():
                 result['allSlotClicks'] = []
                 for index in (1, 2, 3, 0, 4):
                     if mobile:
-                        slot = page.evaluate('(index)=>G.Touch.controlLayout(innerWidth,innerHeight,G.Game.player.slots.length).slots[index]', index)
+                        slot = page.evaluate('(index)=>G.Touch.controlLayout(innerWidth,innerHeight,G.Game.player.slots.length+G.Game.player.moves.filter(m=>m.passive&&!G.Game.player.slots.some(s=>s.includes(m))).length).slots[index]', index)
                         page.touchscreen.tap(slot['x'] + slot['w'] / 2, slot['y'] + slot['h'] / 2)
                     else:
                         slot = page.evaluate("""index => {
-                          const n=G.Game.player.slots.length,S=54,GAP=9;
+                          const n=G.Game.player.slots.length+G.Game.player.moves.filter(m=>m.passive&&!G.Game.player.slots.some(s=>s.includes(m))).length,S=54,GAP=9;
                           return {x:(innerWidth-(n*S+(n-1)*GAP))/2+index*(S+GAP)+S/2,y:innerHeight-S/2-18};
                         }""", index)
                         page.mouse.click(slot['x'], slot['y'])

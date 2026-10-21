@@ -72,6 +72,9 @@
     if (signature) {
       const previousId = signature.id;
       const replacement = G.Moves.instance(next.start, Math.min(signature.lvl, G.Moves.BY_ID[next.start].maxLvl));
+      // The evolved signature continues the same run-local damage history.
+      Object.assign(replacement, { dealt: signature.dealt || 0, since: signature.since || 0,
+        damageIds: [...(signature.damageIds || []), previousId] });
       for (const key of Object.keys(signature)) delete signature[key];
       Object.assign(signature, replacement);
       if (player.bind[previousId] !== undefined) {
