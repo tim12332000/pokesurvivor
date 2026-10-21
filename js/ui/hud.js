@@ -79,14 +79,32 @@ G.HUD = (() => {
       bx += tw + 5;
     }
 
+    // Run controls stay below health/buffs, with room for touch targets.
+    const runButtonY = py + 56;
+    const runButton = (x, width, text, on, action, enabled = true) => {
+      roundRect(ctx, x, runButtonY, width, 36, 8);
+      ctx.fillStyle = on ? 'rgba(45,57,79,.96)' : 'rgba(10,16,28,.9)'; ctx.fill();
+      ctx.strokeStyle = on ? '#ffd23f' : 'rgba(140,170,210,.55)'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.font = F(700, 12); ctx.textAlign = 'center';
+      ctx.fillStyle = enabled ? (on ? '#ffd23f' : '#eaf2ff') : '#8fa3c4';
+      ctx.fillText(text, x + width / 2, runButtonY + 23);
+      if (enabled) G.Touch.addButton(x, runButtonY, width, 36, () => {
+        if (G.Game.state === 'playing' && !pl.dead) action();
+      }, 4);
+    };
+    runButton(16, 100, '倍速 ×' + G.Game.playbackSpeed, G.Game.playbackSpeed > 1,
+      () => G.Game.cyclePlaybackSpeed(), !G.Coop.active);
+    runButton(124, 124, '自動選卡：' + (G.Game.autoPickUpgrades ? '開' : '關'), G.Game.autoPickUpgrades,
+      () => G.Game.toggleAutoPickUpgrades());
+
     // ---------- reloj / bioma / kills ----------
     ctx.textAlign = 'center';
     ctx.font = F(800, 26);
     ctx.fillStyle = 'rgba(255,255,255,.95)';
-    ctx.fillText(G.U.mmss(st.time), w / 2, portrait ? 85 + safeTop : 42);
+    ctx.fillText(G.U.mmss(st.time), w / 2, portrait ? 145 + safeTop : 42);
     ctx.font = F(600, 10);
     ctx.fillStyle = '#8fa3c4';
-    ctx.fillText(G.World.biomeName().toUpperCase() + '  ·  ' + pl.kills + ' DERROTADOS  ·  ' + pl.coins + ' MONEDAS', w / 2, portrait ? 101 + safeTop : 58, portrait ? w - 24 : w);
+    ctx.fillText(G.World.biomeName().toUpperCase() + '  ·  ' + pl.kills + ' DERROTADOS  ·  ' + pl.coins + ' MONEDAS', w / 2, portrait ? 161 + safeTop : 58, portrait ? w - 24 : w);
 
     // ---------- clima (arriba a la derecha) ----------
     const wx = G.Weather.current;

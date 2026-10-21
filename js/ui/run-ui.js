@@ -72,6 +72,25 @@ G.RunUI = (() => {
     cb(c);
   }
 
+  /** Apply one of the current upgrade offers through the normal pick path. */
+  function pickRandom() {
+    if (!offers?.length) return false;
+    const player = G.Game.player, group = player?.slots[player.active];
+    if (!player || !group) { pick(Math.floor(Math.random() * offers.length)); return true; }
+    const setActive = player.setActive, ownSelection = Object.hasOwn(player, 'setActive');
+    // Prevent the temporary switch itself: switching back afterwards would
+    // already have cancelled the current sand field or skill animation.
+    player.setActive = function(...args) {
+      if (!this.slots.includes(group)) return setActive.apply(this, args);
+    };
+    try { pick(Math.floor(Math.random() * offers.length)); }
+    finally {
+      if (ownSelection) player.setActive = setActive;
+      else delete player.setActive;
+    }
+    return true;
+  }
+
   /** Cooperativo: quién falta por elegir. */
   function setWaiting(names) {
     const me = G.Social.me ? G.Social.me.name : '';
@@ -213,5 +232,5 @@ G.RunUI = (() => {
     $('btn-quit').onclick = onQuit;
   }
 
-  return { showLevelUp, reroll, showItemChoice, showBond, pickBond, bondBack, pick, setWaiting, closeLevelUp, showOver, wirePause, showPause };
+  return { showLevelUp, reroll, showItemChoice, showBond, pickBond, bondBack, pick, pickRandom, setWaiting, closeLevelUp, showOver, wirePause, showPause };
 })();

@@ -4,7 +4,7 @@
   const button=document.createElement('button');
   button.id='dev-level-up';button.className='btn small gold hidden';button.translate=false;
   button.textContent='升一等';button.title='測試用：升一等並選擇升級';
-  button.style.cssText='position:fixed;left:12px;top:calc(env(safe-area-inset-top,0px) + 72px);z-index:50;min-width:84px;min-height:44px;touch-action:manipulation';
+  button.style.cssText='position:fixed;left:12px;top:calc(env(safe-area-inset-top,0px) + 176px);z-index:50;min-width:84px;min-height:44px;touch-action:manipulation';
   document.body.append(button);
   const notice=document.createElement('p');notice.translate=false;notice.id='dev-network-notice';
   notice.textContent='測試按鈕會透過 ipify 查詢目前的公網 IPv4，用於判斷是否顯示個人測試控制。本網站不將完整 IP 寫入遊戲存檔；查詢失敗不影響一般遊玩。';

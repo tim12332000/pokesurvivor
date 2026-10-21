@@ -76,6 +76,7 @@ G.Game = (() => {
 
   /** @param coop  { seed, host, members } para una partida en grupo */
   function startRun(coop = null) {
+    speedK = 1; autoPickUpgrades = false;
     holdBy = []; awayBy = null;
     const save = G.DB.save;
     const mon = G.DEX_BY[save.partner];
@@ -551,7 +552,7 @@ G.Game = (() => {
 
   let deathT = 0;
 
-  let frameDt = 0, speedK = 1;
+  let frameDt = 0, speedK = 1, autoPickUpgrades = false;
   let fpsShown = 60, fpsAcc = 0, fpsN = 0;
   // El siguiente fotograma se pide ANTES de nada: si algo falla a mitad, el
   // juego sigue (antes se quedaba congelado para siempre y había que recargar;
@@ -579,7 +580,7 @@ G.Game = (() => {
 
   function frame(ts) {
     const real = (ts - last) / 1000 || 0;
-    const dt = Math.min(1 / 30, real) * speedK;
+    const dt = Math.min(1 / 30, real) * (state === 'playing' ? speedK : 1);
     last = ts;
     if (state === 'playing') G.Settings.sample(real);
     fpsAcc += real; fpsN++;
@@ -587,8 +588,17 @@ G.Game = (() => {
     frameDt = state === 'playing' ? dt : 0;
 
     handleKeys();
+    if (state === 'levelup' && autoPickUpgrades && pl && !pl.dead && !G.SettingsUI.isOpen)
+      G.RunUI.pickRandom();
 
-    if (state === 'playing') update(dt);
+    if (state === 'playing') {
+      // Faster play uses the same small simulation steps as normal speed.
+      let remaining = dt;
+      while (remaining > 1e-9 && state === 'playing') {
+        const step = Math.min(1 / 30, remaining);
+        update(step); remaining -= step;
+      }
+    }
     else if (pl && state !== 'ui') { G.FX.update(dt * 0.25); pl.anim.update(dt * 0.25); }
     // La red se atiende siempre (también con las cartas de nivel abiertas).
     if (G.Coop.active && pl && state !== 'ui' && state !== 'over') G.Coop.tick(dt);
@@ -859,6 +869,17 @@ G.Game = (() => {
     debugTime(t) { tampered = true; time = t; },
     /** Para grabar vídeos: cámara lenta (0,5 = mitad de velocidad). */
     debugSpeed(k) { if (k > 1) tampered = true; speedK = k; },
+    cyclePlaybackSpeed() {
+      if (state !== 'playing' || !pl || pl.dead || G.Coop.active) return;
+      speedK = speedK >= 3 ? 1 : speedK + 1;
+      if (speedK > 1) tampered = true;
+    },
+    toggleAutoPickUpgrades() {
+      if (state !== 'playing' || !pl || pl.dead) return;
+      autoPickUpgrades = !autoPickUpgrades;
+    },
+    get playbackSpeed() { return speedK; },
+    get autoPickUpgrades() { return autoPickUpgrades; },
     togglePause,
     /** Abandona la partida en curso (p. ej. al cerrar sesión desde Ajustes). */
     quit() { if (state !== 'ui' && state !== 'over') quitRun(); },
