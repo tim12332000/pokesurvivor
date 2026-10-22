@@ -1,19 +1,20 @@
 /* Level-based Chidori pursuit is this edition's gameplay adaptation. */
 (() => {
   if (G.NarutoChidori) return;
-  const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), minCooldown: .5, followupRangeMultiplier: 3, endInvulnerability: .3, telegraphDuration: .2,
+  const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), minCooldown: .5, followupRangeMultiplier: 3, endInvulnerability: .3, flashDuration: .09,
     speed: 1000, speedStep: .15, maxSpeedMultiplier: 3, damageStep: .05,
     retargetDelay: .045, retargetDelayDecay: .85, minRetargetDelay: .012, screenPadding: 48, returnDuration: .12, step: 4 });
   const limitOf = (move,owner=G.Game.player) => {
     const base=config.counts[Math.max(0,Math.min(config.counts.length-1,(move?.lvl|0)-1))];
     return G.Quantity?.countAtCast(owner,move,base) ?? base;
   };
-  const chains = new Map();
+  const chains = new Map(), flashes = new Map();
   const activeFor = owner => chains.get(owner) || null;
   const controlled = owner => owner === G.Game.player || !!G.SelfClones?.isControlled(owner);
   const valid = c => c && controlled(c.owner) && c.world === G.World && !c.owner.dead && c.owner.hp > 0;
   const clear = owner => {
     for (const [actor] of chains) if (!owner || actor === owner) { actor.svx = actor.svy = 0; chains.delete(actor); }
+    for (const actor of flashes.keys()) if (!owner || actor === owner) flashes.delete(actor);
   };
   function complete(c) {
     if(activeFor(c.owner)!==c)return;
@@ -45,9 +46,9 @@
   function aimAt(c, target, initial=false) {
     if (!target || c.dashes >= c.limit) { end(c); return; }
     c.target=target;c.dashOrigin=null;c.legRange=rangeFor(c);
-    c.phase=initial?'charge':'aim';
-    c.telegraphDuration=Math.max(config.telegraphDuration,initial?(c.move.charge||0):c.retargetDelay);
-    c.wait=c.telegraphDuration;c.telegraphAge=0;c.telegraph=null;
+    c.phase=initial?'charge':'retarget';
+    c.telegraphDuration=initial?(c.move.charge||0):c.retargetDelay;
+    c.wait=c.telegraphDuration;
     c.owner.aim=Math.atan2(target.y-c.owner.y,target.x-c.owner.x);
     c.owner.svx=c.owner.svy=0;
   }
@@ -55,7 +56,9 @@
     if (!lockedTargetValid(c)) { aimAt(c,next(c)); return; }
     c.legRange=rangeFor(c);c.dashOrigin={x:c.owner.x,y:c.owner.y};
     c.speed=config.speed*Math.min(config.maxSpeedMultiplier,1+c.hitCount*config.speedStep);
-    c.dashes++;c.travel=0;c.phase='dash';c.telegraph=null;
+    c.dashes++;c.travel=0;c.phase='dash';
+    flashes.set(c.owner,{owner:c.owner,world:c.world,dashes:c.dashes,age:0,
+      start:{...c.dashOrigin},target:{x:c.target.x,y:c.target.y,dex:c.target.dex},telegraph:null});
     c.owner.cast(c.move);
   }
   function finish(c) {
@@ -89,7 +92,10 @@
     if(c.phase!=='dash') {
       if(!lockedTargetValid(c)){aimAt(c,next(c),c.phase==='charge');return;}
       c.owner.aim=Math.atan2(c.target.y-c.owner.y,c.target.x-c.owner.x);
-      c.telegraphAge+=dt;c.wait-=dt;if(c.wait<=1e-9)begin(c);return;
+      const waiting=Math.max(0,c.wait);c.wait-=dt;
+      if(c.wait>1e-9)return;
+      begin(c);dt=Math.max(0,dt-waiting);
+      if(c.phase!=='dash'||dt<=0)return;
     }
     if(!lockedTargetValid(c)){finish(c);return;}
     const pl=c.owner,m=c.move,e=c.target;
@@ -109,7 +115,11 @@
       else if(c.travel>=c.legRange-.001)end(c);
     }
   }
-  function update(dt) { if(!(dt>0)||!Number.isFinite(dt))return;for (const c of [...chains.values()]) updateChain(c,dt); }
+  function update(dt) {
+    if(!(dt>0)||!Number.isFinite(dt))return;
+    for(const [owner,flash] of flashes)if((flash.age+=dt)>=config.flashDuration||!valid(flash))flashes.delete(owner);
+    for (const c of [...chains.values()]) updateChain(c,dt);
+  }
   const canCast = (pl,m) => controlled(pl) && pl.dex === 30002 && !pl.dead && pl.hp > 0 && !activeFor(pl) && !(G.NarutoFireball?.activeFor?.(pl) || (pl === G.Game.player && G.NarutoFireball?.active)) &&
     G.EnemyMgr.all().some(e=>targetAlive(e)&&inViewport(e,G.Camera)&&Math.hypot(e.x-pl.x,e.y-pl.y)<=(m?.range||170));
   function cast(pl,m) {
@@ -119,14 +129,15 @@
       speed:config.speed,retargetDelay:config.retargetDelay,phase:'charge',wait:Math.max(0,m.charge||0)};
     const first=next(c);if(!first)return false;
     aimAt(c,first,true);
-    chains.set(pl,c);pl.svx=pl.svy=0;if(pl===G.Game.player)holdCamera(c);return true;
+    chains.set(pl,c);pl.svx=pl.svy=0;if(pl===G.Game.player)holdCamera(c);
+    if(c.wait<=0)begin(c);return true;
   }
   function poseFor(animator){
     const c=[...chains.values()].find(c=>c.owner.anim===animator);
     if(!valid(c))return null;
     const source=G.Naruto.records.get(30002).pixel.chidori;
     if(!source)return null;
-    const charging=['charge','aim'].includes(c.phase),duration=Math.max(.001,c.telegraphDuration||c.move.charge||0);
+    const charging=['charge','retarget'].includes(c.phase),duration=Math.max(.001,c.telegraphDuration||c.move.charge||0);
     const index=Math.min(source.chargeFrames.length-1,Math.floor(Math.max(0,1-c.wait/duration)*source.chargeFrames.length));
     const frame=charging?source.chargeFrames[index]:source.dashFrame;
     const dir=G.Sprites.dirFromAngle(c.owner.aim),direction=['down','right','right','right','up','left','left','left'][dir];
@@ -268,7 +279,7 @@
   const clearSkills=G.DigimonSkills.clear;
   G.DigimonSkills.clear=function(owner){clearSkills(owner);clear(owner);};
   function targetTelegraph(c,scale) {
-    // Cache midpoint/fork topology once per acquisition; only endpoints follow.
+    // Purely visual bolt: both endpoints snapshot at emission, never combat targets.
     if(!c.telegraph){
       const seed=(c.target.dex||0)+(c.target.x|0)+(c.dashes+1)*71;
       const noise=(i,salt)=>G.U.hash(i,salt,seed),forks=[];
@@ -285,7 +296,7 @@
       const points=[[0,0]];split(points[0],[1,0],5,22,1,points);
       c.telegraph={points,forks};
     }
-    const t=c.telegraph,pl=c.owner,e=c.target,reveal=Math.min(1,c.telegraphAge/.055);
+    const t=c.telegraph,pl=c.start,e=c.target,reveal=1;
     const key=[pl.x,pl.y,e.x,e.y,scale,Math.floor(reveal*10)].join(':');
     if(t.key===key)return t;
     const main=new Path2D(),branches=new Path2D(),dx=e.x-pl.x,dy=e.y-pl.y,d=Math.max(.001,Math.hypot(dx,dy));
@@ -303,13 +314,14 @@
     Object.assign(t,{key,main,branches});return t;
   }
   function drawTelegraphs(ctx){
-    for(const c of chains.values()){
-      if(!valid(c)||!['charge','aim'].includes(c.phase)||!lockedTargetValid(c))continue;
-      const scale=G.Camera.scale||1,t=targetTelegraph(c,scale);
+    for(const flash of flashes.values()){
+      if(!valid(flash)||flash.age>=config.flashDuration)continue;
+      const scale=G.Camera.scale||1,t=targetTelegraph(flash,scale);
+      const fade=1-flash.age/config.flashDuration;
       ctx.save();ctx.lineJoin=ctx.lineCap='round';ctx.shadowBlur=0;
-      ctx.strokeStyle='#bc861c';ctx.lineWidth=3/scale;ctx.globalAlpha=.24;ctx.stroke(t.main);
-      ctx.strokeStyle='#ffe878';ctx.lineWidth=1.65/scale;ctx.globalAlpha=.82;ctx.stroke(t.main);
-      ctx.lineWidth=.9/scale;ctx.globalAlpha=.46;ctx.stroke(t.branches);ctx.restore();
+      ctx.strokeStyle='#bc861c';ctx.lineWidth=3/scale;ctx.globalAlpha=.24*fade;ctx.stroke(t.main);
+      ctx.strokeStyle='#ffe878';ctx.lineWidth=1.65/scale;ctx.globalAlpha=.82*fade;ctx.stroke(t.main);
+      ctx.lineWidth=.9/scale;ctx.globalAlpha=.46*fade;ctx.stroke(t.branches);ctx.restore();
     }
   }
   C.drawAirFields=function(ctx){oldAir.call(this,ctx);drawTelegraphs(ctx);for(const chain of chains.values())if(valid(chain)&&['dash','return'].includes(chain.phase)){
