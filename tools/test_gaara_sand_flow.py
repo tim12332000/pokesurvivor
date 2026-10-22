@@ -22,7 +22,7 @@ FLOW = r"""() => {
    groups:(g.flowGroups||[]).map(f=>({id:f.id,x:f.x,y:f.y,active:f.active,blend:f.blend,members:[...f.members]})),
    guardians:g.guardians.map(s=>({index:s.index,x:s.x,y:s.y,heading:s.heading,phase:s.phase,
      ready:s.ready,recharge:s.rechargeProgress,group:s.flowGroupId,blend:s.flowBlend,target:!!s.target}))}};
- A.flowSettle=(count=10)=>{p.level=count===3?1:20;p.moves.find(m=>m.id===A.guardId).lvl=1;
+ A.flowSettle=(count=10)=>{p.level=count-2;p.moves.find(m=>m.id===A.guardId).lvl=1;
    const g=A.guardReset();A.advanceGuard(12);return g};
  A.flowDraw=()=>{
    const g=A.guard(),canvas=document.createElement('canvas');canvas.width=1000;canvas.height=1000;
@@ -164,7 +164,7 @@ DECORATIVE = r"""() => {
 LIFECYCLE = r"""() => {
  const A=Acceptance,p=A.p(),g=A.flowSettle(3),first=g.guardians[0],out={};
  A.spend(first);first.x=first.y=0;first.rechargeProgress=.3;
- const refs=[...g.guardians];p.level=20;A.guard();
+ const refs=[...g.guardians];p.level=8;A.guard();
  A.assert(g.count===10&&refs.every((s,i)=>g.guardians[i]===s)&&!first.ready&&first.rechargeProgress===.3,'growth destroyed independent charge/ref');
  const snapshot=JSON.stringify(A.flowSnapshot());G.Combat.resolve(.5,p,0);
  A.assert(snapshot===JSON.stringify(A.flowSnapshot()),'paused flow advanced');

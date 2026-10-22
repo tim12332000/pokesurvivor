@@ -39,7 +39,7 @@ G.Combat = (() => {
     }
     m.t = Math.max(0.05, m.cd * pl.cdMul);
     pl.cast(m);
-    if (G.Coop.active) G.Coop.cast(pl, m);
+    if (G.Coop.active && !G.SelfClones?.isActor(pl)) G.Coop.cast(pl, m);
     // Vínculo: su icono destella en el HUD al lanzarse (uno que explota pegado al
     // enemigo, como Ascuas tras Ataque Rápido, casi no se ve).
     m.castAt = performance.now();
@@ -98,8 +98,8 @@ G.Combat = (() => {
         x: pl.x + Math.cos(a) * 3, y: pl.y + Math.sin(a) * 3,
         vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed,
         dmg: m.dmg * pl.atk, r: m.size, life: m.life,
-        pierce: quantity(pl,m.pierce,0), color: col, homing: m.homing || 0,
-        hits: new Set(), vis, ghost, owner: pl
+        pierce: Math.max(0,(m.pierce|0)+(G.Quantity?.bonus(pl)||0)), color: col, homing: m.homing || 0,
+        hits: new Set(), vis, ghost, owner: pl, damageSplash: true
       }, payload(m)));
     }
     G.FX.spark(pl.x + Math.cos(pl.aim) * pl.r, pl.y - G.LIFT + Math.sin(pl.aim) * pl.r,
@@ -116,7 +116,7 @@ G.Combat = (() => {
         x: pl.x + Math.cos(a) * 3, y: pl.y + Math.sin(a) * 3,
         vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed,
         dmg: m.dmg * pl.atk, r: m.size, life: m.life,
-        pierce: quantity(pl,m.pierce,0), color: col, homing: m.homing || 0,
+        pierce: Math.max(0,(m.pierce|0)+(G.Quantity?.bonus(pl)||0)), color: col, homing: m.homing || 0,
         hits: new Set(), vis, ghost, owner: pl
       }, payload(m)));
     }
@@ -221,7 +221,7 @@ G.Combat = (() => {
       G.Projectiles.spawn(Object.assign({
         x: pl.x, y: pl.y, vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed,
         dmg: m.dmg * pl.atk, r: m.size, life: out * 4 + 1.5, pierce: 999, color: col,
-        hits: new Set(), vis, ghost, owner: pl, boom: out, bsp: m.speed * 1.1
+        hits: new Set(), vis, ghost, owner: pl, boom: out, bsp: m.speed * 1.1, damageSplash: true
       }, payload(m)));
     }
   }
@@ -346,7 +346,7 @@ G.Combat = (() => {
       const sp = m.speed * G.U.rand(0.85, 1.1);
       G.Projectiles.spawn(Object.assign({
         x: pl.x + Math.cos(a) * 4, y: pl.y + Math.sin(a) * 4, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
-        dmg: m.dmg * pl.atk, r: m.size, life: m.life * G.U.rand(0.85, 1.05), pierce: quantity(pl,m.pierce,0), color: col,
+        dmg: m.dmg * pl.atk, r: m.size, life: m.life * G.U.rand(0.85, 1.05), pierce: Math.max(0,(m.pierce|0)+(G.Quantity?.bonus(pl)||0)), color: col,
         hits: new Set(), vis, ghost, owner: pl
       }, payload(m)));
     }
@@ -394,7 +394,7 @@ G.Combat = (() => {
             const a = Math.atan2(tg.y - f.y, tg.x - f.x);
             G.Projectiles.spawn(Object.assign({
               x: f.x, y: f.y, vx: Math.cos(a) * (m.speed || 300), vy: Math.sin(a) * (m.speed || 300),
-              dmg: f.dmg, r: m.size || 6, life: 1.4, pierce: quantity(f.owner,m.pierce,0), color: f.col,
+              dmg: f.dmg, r: m.size || 6, life: 1.4, pierce: Math.max(0,(m.pierce|0)+(G.Quantity?.bonus(f.owner)||0)), color: f.col,
               hits: new Set(), vis: f.vis, ghost: f.ghost, owner: f.owner
             }, payload(m)));
             f.kick = 0.12;
@@ -652,13 +652,15 @@ G.Combat = (() => {
           break;
         }
 
-        const crit = isCrit(pl);
+        const source = p.owner || pl;
+        const crit = isCrit(source);
         const k = (p.mtype ? typeK(p.mtype, e) : 1) * (crit ? CRIT_MUL : 1);
-        e.hurt(p.dmg * k, p.color, p.vx || (e.x - pl.x), p.vy || (e.y - pl.y), p.knock,
-               crit ? 'crit' : p.mtype ? G.Types.label(G.Types.mult(p.mtype, e.types)) : null, pl, p.mid);
+        e.hurt(p.dmg * k, p.color, p.vx || (e.x - source.x), p.vy || (e.y - source.y), p.knock,
+               crit ? 'crit' : p.mtype ? G.Types.label(G.Types.mult(p.mtype, e.types)) : null, source, p.mid);
         if (Math.random() < 0.5) G.FX.sp('impact', p.vis ? p.vis.pal : 'normal', e.x, e.y - e.bodyH * 0.5, { life: 0.12, scale: 1 });
-        pl.dmgDealt += p.dmg * k;
-        pl.onDealt(p.dmg * k);
+        source.dmgDealt += p.dmg * k;
+        source.onDealt(p.dmg * k);
+        if (p.damageSplash) G.DamageSplash?.hit(source, e, p.dmg * k, p.color, p.mid);
         if (p.burn) e.applyBurn(p.burn);
         if (p.poison) e.applyPoison(p.poison);
         if (p.slow) e.applySlow(p.slow);

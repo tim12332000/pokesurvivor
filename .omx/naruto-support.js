@@ -1,5 +1,6 @@
 /* Naruto support skills use simulation time and never alter permanent stats or map tiles. */
 (() => {
+  const controlled = owner => G.SelfClones?.isControlled(owner) ?? (owner === G.Game.player);
   if (G.NarutoSupport) return;
   const C = G.Combat, effects = [], locks = [], TAU = Math.PI * 2;
   const modes = new Set(['medical-heal', 'regeneration', 'sharingan', 'byakugan', 'sand-shield', 'earth-wall', 'nine-tails-cloak']);
@@ -12,7 +13,7 @@
     'earth-wall': { fieldDuration: 3, width: 100, range: 72 },
     'nine-tails-cloak': { fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75, radius:76, pulseDamage:12, pulseInterval:.65, knock:18 }
   };
-  const valid = f => f.owner === G.Game.player && f.world === G.World && !f.owner.dead && f.owner.hp > 0;
+  const valid = f => controlled(f.owner) && f.world === G.World && !f.owner.dead && f.owner.hp > 0;
   const active = (owner, mode) => effects.find(f => f.owner === owner && f.mode === mode && valid(f));
   const nearby = (x, y, radius) => [...new Set(G.EnemyMgr.queryCircle(x, y, radius))].filter(e => !e.dead);
   const finite = (v, fallback) => Number.isFinite(v) ? v : fallback;
@@ -38,7 +39,7 @@
   }
   function canCast(owner, move) {
     const mode = move?.digiMode;
-    if (!modes.has(mode) || owner !== G.Game.player || owner.dead || owner.hp <= 0 || !owner.mon?.naruto) return false;
+    if (!modes.has(mode) || !controlled(owner) || owner.dead || owner.hp <= 0 || !owner.mon?.naruto) return false;
     if (mode === 'nine-tails-cloak' && owner.mon.dex !== 30001) return false;
     if (active(owner, mode) || locks.some(f => f.owner === owner && f.mode === mode && valid(f))) return false;
     if (mode === 'medical-heal') return owner.hp < owner.maxHp;
@@ -90,7 +91,7 @@
   }
   const hurt = G.Player.prototype.hurt;
   G.Player.prototype.hurt = function(amount, type = null, pure = false, context = null) {
-    if (this !== G.Game.player || this.invuln > 0 || this.dead || this.frozen || !(amount > 0) || pure) return hurt.call(this, amount, type, pure, context);
+    if (!controlled(this) || this.invuln > 0 || this.dead || this.frozen || !(amount > 0) || pure) return hurt.call(this, amount, type, pure, context);
     const cloak = active(this, 'nine-tails-cloak');
     if (cloak) amount *= Math.max(.5,Math.min(1,finite(cloak.m.damageTakenMul,.75)));
     const eye = active(this, 'sharingan');

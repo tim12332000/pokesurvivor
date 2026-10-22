@@ -110,6 +110,10 @@ G.Rift = (() => {
 
   /** En cada ordenador: viaje a la arena. */
   function begin(cfg) {
+    const travel = () => beginScene(cfg);
+    return G.SelfClones ? G.SelfClones.withSceneTransition(travel) : travel();
+  }
+  function beginScene(cfg) {
     const pl = G.Game.player;
     const ts = TS();
     arena = Object.assign({}, cfg, {
@@ -211,6 +215,10 @@ G.Rift = (() => {
 
   /** En cada ordenador: vuelta al mapa. */
   function finish() {
+    const travel = () => finishScene();
+    return G.SelfClones ? G.SelfClones.withSceneTransition(travel) : travel();
+  }
+  function finishScene() {
     const pl = G.Game.player;
     const a = arena;
     arena = null;

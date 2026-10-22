@@ -89,7 +89,7 @@ G.LevelUp = (() => {
     // acumulaban sin fin (velocidad, recarga y experiencia por las nubes) y el
     // juego acababa colgándose. Las que piden una evolución salen siempre.
     const room = s => !s.max || (pl.statsTaken[s.id] || 0) < s.max;
-    const pickStats = G.U.pickN(STATS.filter(s => !waiting[s.id] && room(s)), 5).concat(STATS.filter(s => waiting[s.id]));
+    const pickStats = STATS.filter(s => room(s) || waiting[s.id]);
     for (const s of pickStats) {
       const evoFor = waiting[s.id];
       out.push({
@@ -105,13 +105,25 @@ G.LevelUp = (() => {
   }
 
   /** Devuelve 3 cartas distintas, elegidas por peso. */
-  function offer(pl, n = 3) {
-    const pool = candidates(pl);
+  function offer(pl, n = 3, mapCandidates = null) {
+    const available = candidates(pl);
+    const pool = mapCandidates ? mapCandidates(available) : available;
     const picked = [];
     const used = new Set();
     // Si hay una evolución lista, su carta dorada sale siempre.
     const evo = pool.findIndex(c => c.type === 'evo');
     if (evo >= 0) { const c = pool.splice(evo, 1)[0]; used.add(c.key); picked.push(c); }
+
+    // First-display skill milestones reserve a choice without changing later weights.
+    // Only the card UI consumes that opportunity; constructing offers is read-only.
+    for (let i = 0; i < pool.length && picked.length < n;) {
+      const c = pool[i];
+      if (!c.guaranteed) { i++; continue; }
+      pool.splice(i, 1);
+      if (used.has(c.key)) continue;
+      used.add(c.key);
+      picked.push(c);
+    }
 
     while (picked.length < n && pool.length) {
       const total = pool.reduce((a, c) => a + c.w, 0);

@@ -27,31 +27,31 @@ EXACT=r"""() => {
  p.xp=0;p.xpNext=G.Player.xpFor(7);let needed=0;for(let level=7;level<30;level++)needed+=G.Player.xpFor(level);
  const levels=p.gainXp((needed+.0001)/p.xpMul);A.assert(levels===23&&p.level===30,'actual multi-level XP gain failed');
  N(p.maxHp,410);N(p.hp,410);A.assert(g.maxHealthBonus(p)===150,'Lv30 N5 bonus not exactly 150');out.push({level:30,skill:5,max:p.maxHp,hp:p.hp,levelsAtOnce:levels});
- A.healthCard('stat:maxHealthPercent');N(p.maxHp,414.1);N(p.hp,414.1);out.push({growth:1,max:p.maxHp,hp:p.hp});
- A.nextHealthLevel();N(p.maxHp,419.1);N(p.hp,419.1);A.assert(g.maxHealthBonus(p)===155,'Lv31 N5 bonus incorrect');out.push({level:31,skill:5,max:p.maxHp,hp:p.hp});
+ A.healthCard('stat:maxHealthPercent');N(p.maxHp,451);N(p.hp,451);out.push({growth:1,max:p.maxHp,hp:p.hp});
+ A.nextHealthLevel();N(p.maxHp,456);N(p.hp,456);A.assert(g.maxHealthBonus(p)===155,'Lv31 N5 bonus incorrect');out.push({level:31,skill:5,max:p.maxHp,hp:p.hp});
  // Neither repeated explicit synchronization nor ordinary field updates refill missing HP.
- p.hp=70;for(let n=0;n<10000;n++){g.syncMaxHealth(p);G.Combat.updateFields(0)}N(p.maxHp,419.1);N(p.hp,70);
- A.assert(!p.addMove('naruto-gates'),'duplicate learned gates accepted');N(p.maxHp,419.1);N(p.hp,70);
+ p.hp=70;for(let n=0;n<10000;n++){g.syncMaxHealth(p);G.Combat.updateFields(0)}N(p.maxHp,456);N(p.hp,70);
+ A.assert(!p.addMove('naruto-gates'),'duplicate learned gates accepted');N(p.maxHp,456);N(p.hp,70);
  const world=G.World;G.Combat.clearFields(p);G.Combat.updateFields(0);G.World={...world};G.Combat.updateFields(0);G.World=world;G.Combat.updateFields(0);
- N(p.maxHp,419.1);N(p.hp,70);out.push({syncs:10000,max:p.maxHp,hp:p.hp,worldAndClearStable:true});
- p.dead=true;p.hp=0;g.syncMaxHealth(p);N(p.maxHp,419.1);N(p.hp,0);A.assert(g.stage(p)===0&&g.maxHealthBonus(p)===155,'death removed learned capacity or retained active buffs');
- p.level=32;g.syncMaxHealth(p);N(p.maxHp,424.1);N(p.hp,0);for(let n=0;n<100;n++)g.syncMaxHealth(p);N(p.hp,0);
- p.revive(.5);N(p.maxHp,424.1);N(p.hp,212.05);g.syncMaxHealth(p);N(p.hp,212.05);out.push({deadLevel:32,max:p.maxHp,revived:p.hp});
+ N(p.maxHp,456);N(p.hp,70);out.push({syncs:10000,max:p.maxHp,hp:p.hp,worldAndClearStable:true});
+ p.dead=true;p.hp=0;g.syncMaxHealth(p);N(p.maxHp,456);N(p.hp,0);A.assert(g.stage(p)===0&&g.maxHealthBonus(p)===155,'death removed learned capacity or retained active buffs');
+ p.level=32;g.syncMaxHealth(p);N(p.maxHp,461);N(p.hp,0);for(let n=0;n<100;n++)g.syncMaxHealth(p);N(p.hp,0);
+ p.revive(.5);N(p.maxHp,461);N(p.hp,230.5);g.syncMaxHealth(p);N(p.hp,230.5);out.push({deadLevel:32,max:p.maxHp,revived:p.hp});
  return out;
 }"""
 
 MIXED=r"""() => {
  const A=Acceptance,p=A.p(),N=A.healthNear,g=G.NarutoGates;p.hp=100;
  A.healthCard('new:naruto-gates');N(p.maxHp,266);N(p.hp,106);
- A.healthCard('stat:maxHealthPercent');N(p.maxHp,268.66);N(p.hp,108.66);
- A.healthCard('stat:hp');N(p.maxHp,288.66);N(p.hp,128.66);
- A.healthCard('up:naruto-gates');N(p.maxHp,294.66);N(p.hp,134.66);
- A.nextHealthLevel();N(p.maxHp,296.66);N(p.hp,136.66);
- A.healthCard('stat:maxHealthPercent');N(p.maxHp,299.6266);N(p.hp,139.6266);
- A.healthCard('up:naruto-gates');N(p.maxHp,306.6266);N(p.hp,146.6266);A.assert(g.maxHealthBonus(p)===21,'mixed cards changed the exact additive Gates component');
+ A.healthCard('stat:maxHealthPercent');N(p.maxHp,292.6);N(p.hp,132.6);
+ A.healthCard('stat:hp');N(p.maxHp,312.6);N(p.hp,152.6);
+ A.healthCard('up:naruto-gates');N(p.maxHp,318.6);N(p.hp,158.6);
+ A.nextHealthLevel();N(p.maxHp,320.6);N(p.hp,160.6);
+ A.healthCard('stat:maxHealthPercent');N(p.maxHp,352.66);N(p.hp,192.66);
+ A.healthCard('up:naruto-gates');N(p.maxHp,359.66);N(p.hp,199.66);A.assert(g.maxHealthBonus(p)===21,'mixed cards changed the exact additive Gates component');
  const move=p.moves.find(m=>m.id==='naruto-gates');p.hp=100;move.lvl=4;G.Combat.updateFields(0);
- N(p.maxHp,313.6266);N(p.hp,107);p.level=8;G.Combat.updateFields(0);N(p.maxHp,317.6266);N(p.hp,111);
- for(let n=0;n<10000;n++)g.syncMaxHealth(p);N(p.maxHp,317.6266);N(p.hp,111);
+ N(p.maxHp,366.66);N(p.hp,107);p.level=8;G.Combat.updateFields(0);N(p.maxHp,370.66);N(p.hp,111);
+ for(let n=0;n<10000;n++)g.syncMaxHealth(p);N(p.maxHp,370.66);N(p.hp,111);
  return {max:p.maxHp,hp:p.hp,level:p.level,skill:move.lvl,gateBonus:g.maxHealthBonus(p),flatCards:1,growthCards:p.statsTaken.maxHealthPercent};
 }"""
 

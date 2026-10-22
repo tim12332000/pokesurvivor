@@ -43,8 +43,8 @@ G.Projectiles = (() => {
     for (let i = list.length - 1; i >= 0; i--) {
       const p = list[i];
       p.t += dt;
-      if(p.fireballAOE&&(!p.owner||p.owner!==player||p.owner.dead||p.owner.hp<=0)){list.splice(i,1);continue;}
-      if(p.fumaReturn&&(!p.owner||p.owner!==player||p.owner.dead||p.owner.hp<=0||(p.fumaLearned&&!p.owner.hasMove('naruto-fuma-shuriken')))) { list.splice(i,1);continue; }
+      if(p.fireballAOE&&(!p.owner||(p.owner!==player&&!G.SelfClones?.isActor(p.owner))||p.owner.dead||p.owner.hp<=0)){list.splice(i,1);continue;}
+      if(p.fumaReturn&&(!p.owner||(p.owner!==player&&!G.SelfClones?.isActor(p.owner))||p.owner.dead||p.owner.hp<=0||(p.fumaLearned&&!p.owner.hasMove('naruto-fuma-shuriken')))) { list.splice(i,1);continue; }
 
       if (p.orb) {
         // Gira alrededor de su jugador.

@@ -37,7 +37,7 @@
     const row = dir => ({ down: 0, up: 1, left: 2, right: 3 })[dir];
     function actor(anim) {
       if (G.Game.player?.anim === anim) return G.Game.player;
-      return G.NarutoClones?.actors.find(a => a.anim === anim) || null;
+      return G.SelfClones?.actors().find(a => a.anim === anim) || G.NarutoClones?.actors.find(a => a.anim === anim) || null;
     }
     function entry(anim) {
       if (!states.has(anim)) states.set(anim, { age: 0, hurtAge: Infinity, deathAge: null, cast: null, sharingan: 0, gates: 0, gaaraShield: 0, kusanagi: false });
@@ -120,7 +120,7 @@
         if (!state.cast && sword && !state.kusanagi) record(pl, { id: 'naruto-kusanagi' }, .48);
         state.sharingan = level; state.gates = gates; state.gaaraShield = gaaraShield; state.kusanagi = sword;
       }
-      for (const [anim] of states) if (anim !== pl?.anim && !G.NarutoClones?.actors.some(a => a.anim === anim)) states.delete(anim);
+      for (const [anim] of states) if (anim !== pl?.anim && !G.SelfClones?.actors().some(a => a.anim === anim) && !G.NarutoClones?.actors.some(a => a.anim === anim)) states.delete(anim);
       return result;
     };
     const clearFields = G.Combat.clearFields;
@@ -145,14 +145,14 @@
         const age = state.deathAge ?? 0;
         return { ...base, state: 'death', phase: age >= .8 ? 'hold' : 'collapse', key: name + '-death', frame: Math.min(3, Math.floor(age * 5)), mirror: dir === 'left', age };
       }
-      const chidori = G.NarutoChidori?.active;
+      const chidori = G.NarutoChidori?.activeFor?.(pl) || G.NarutoChidori?.active;
       if (chidori?.owner?.anim === anim) {
         const progress = 1 - chidori.wait / Math.max(.001, chidori.move.charge || .09);
         return { ...base, state: 'skill', id: 'naruto-sasuke', phase: chidori.phase, key: 'sasuke-chidori', frame: chidori.phase === 'charge' ? Math.min(1, Math.max(0, Math.floor(progress * 2))) : chidori.phase === 'return' ? 3 : 2, mirror: Math.cos(pl.aim) < 0 };
       }
-      const fire = G.NarutoFireball?.active;
+      const fire = G.NarutoFireball?.activeFor?.(pl) || G.NarutoFireball?.active;
       if (fire?.owner?.anim === anim) return { ...base, state: 'skill', id: 'naruto-fireball', phase: fire.phase, key: 'sasuke-fireball', frame: fire.phase === 'seal' ? Math.min(1, Math.floor(fire.t / .24 * 2)) : fire.phase === 'recovery' ? 3 : 2, mirror: Math.cos(fire.aim) < 0 };
-      const lee=G.NarutoLee?.active;
+      const lee=G.NarutoLee?.activeFor?.(pl)||G.NarutoLee?.active;
       if(lee?.owner?.anim===anim){
         const reverse=lee.kind==='lee-reverse-lotus';
         if(lee.phase==='approach')return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:'lee-movement',frame:row(dir)*4+Math.floor(state.age*12)%4};
@@ -204,13 +204,14 @@
     }
     function stateFor(anim) {
       const pose = baseStateFor(anim);
-      if (anim.dex === 30006 && G.NarutoGates?.redSkin(actor(anim))) {
+      const owner = actor(anim);
+      if (anim.dex === 30006 && G.NarutoGates?.redSkin(owner?.sourceOwner || owner)) {
         return { ...pose, key: pose.key.replace(/^lee-/, 'lee-opened-'), form: 'gates' };
       }
       return pose;
     }
     function handFor(pl, frame = 2) {
-      if (!enabled() || pl?.dex !== 30002 || pl !== G.Game.player) return null;
+      if (!enabled() || pl?.dex !== 30002 || (pl !== G.Game.player && !G.SelfClones?.isActor(pl))) return null;
       const pose=stateFor(pl.anim),side=Math.cos(pose.aim ?? pl.aim ?? 0)<0?-1:1;
       const [x,y]=[[-15,-52],[-24,-42],[44,-33],[14,-32]][frame],scale=pl.anim.scale||1;
       return {x:pl.x+x*side*scale,y:pl.y+y*scale+G.LIFT};

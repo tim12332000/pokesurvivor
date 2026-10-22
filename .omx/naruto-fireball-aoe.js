@@ -1,5 +1,6 @@
 /* Growing fireballs are moving flame areas, never impact-consumed bombs. */
 (() => {
+  const controlled = owner => G.SelfClones?.isControlled(owner) ?? (owner === G.Game.player);
   if(G.NarutoFireballAOE)return;
   const active=new Set(),config=Object.freeze({tick:.2});
   function track(p,move,owner) {
@@ -59,7 +60,7 @@
     const live=new Set(G.Projectiles.all());
     for(const p of [...active]) {
       const f=p.fireballAOE;
-      if(f.owner!==G.Game.player||f.world!==G.World||f.owner.dead||f.owner.hp<=0||(!live.has(p)&&p.t<p.life)) {
+      if(!controlled(f.owner)||f.world!==G.World||f.owner.dead||f.owner.hp<=0||(!live.has(p)&&p.t<p.life)) {
         G.Projectiles.remove(p);active.delete(p);continue;
       }
       pulse(p,p.t>=p.life);

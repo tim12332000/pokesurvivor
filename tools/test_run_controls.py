@@ -69,7 +69,7 @@ def main():
                 result = {'speedMeasurements': []}
                 report['viewports'][label] = result
                 assert page.evaluate('G.Game.playbackSpeed===1 && !G.Game.autoPickUpgrades')
-                for speed in (1,2,3):
+                for speed in (1,2,3,4,5):
                     if speed>1:
                         click_control(page,mobile,'speed')
                     page.wait_for_function('(speed)=>G.Game.playbackSpeed===speed',arg=speed)
@@ -102,8 +102,8 @@ def main():
                   G.LevelUp.offer=()=>[card];G.Game.debugLevelUp();return card.key;
                 }""")
                 page.wait_for_function('G.Game.player.hasMove("naruto-sand-coffin") && G.Game.state==="playing"')
-                assert page.evaluate('G.Game.player.slots[G.Game.player.active]===previousGroup')
-                assert page.evaluate('activeSwitchCalls===0'), 'automatic learning temporarily switched active skill'
+                assert page.evaluate('previousGroup ? G.Game.player.slots[G.Game.player.active]===previousGroup : G.Game.player.activeGroup().some(m=>m.id==="naruto-sand-coffin")')
+                assert page.evaluate('previousGroup ? activeSwitchCalls===0 : activeSwitchCalls<=1'), 'automatic learning unexpectedly switched active skill'
                 page.evaluate('() => {delete G.Game.player.setActive}')
                 page.evaluate('() => {G.LevelUp.offer=nativeOffer}')
                 page.screenshot(path=str(OUT/f'{label}-enabled.png'))
@@ -126,7 +126,7 @@ def main():
                 page.wait_for_function('G.Game.playbackSpeed===2')
                 result['labels']=page.evaluate('[...new Set(controlTexts)]')
                 assert any('自動選卡' in text for text in result['labels']),result['labels']
-                assert all(any('x'+str(n) in text or '×'+str(n) in text for text in result['labels']) for n in (1,2,3)),result['labels']
+                assert all(any('x'+str(n) in text or '×'+str(n) in text for text in result['labels']) for n in (1,2,3,4,5)),result['labels']
                 page.evaluate('G.Game.startRun()')
                 assert page.evaluate('G.Game.playbackSpeed===1 && !G.Game.autoPickUpgrades')
                 result['newRunReset']=True

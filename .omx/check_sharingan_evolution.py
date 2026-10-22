@@ -41,7 +41,7 @@ with sync_playwright() as p:
       const reset=(level=1)=>{
         G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();G.FX.clear();
         pl.mon=G.Naruto.records.get(30002);pl.dex=30002;pl.x=pl.y=pl.aim=0;pl.dead=false;pl.hp=pl.maxHp;pl.invuln=0;pl.frozen=0;
-        pl.quantityBonus=0;pl.critChance=0;pl.atkMul=1;pl.dmgReduce=0;pl.lifestealRate=0;pl.magnet=100;pl.buffs.atk={n:0,t:0,amount:0};
+        pl.quantityPicks=0;pl.quantityBonus=0;pl.critChance=0;pl.atkMul=1;pl.dmgReduce=0;pl.lifestealRate=0;pl.magnet=100;pl.buffs.atk={n:0,t:0,amount:0};
         pl.moves=[];pl.slots=[];pl.bind={};pl.active=0;pl.target=null;
         pl.addMove('naruto-kunai');if(level){pl.addMove(id);Object.assign(pl.moves.find(m=>m.id===id),G.Moves.instance(id,level));}
         S.sync(pl);
@@ -49,23 +49,33 @@ with sync_playwright() as p:
       const step=t=>{for(let elapsed=0;elapsed<t-1e-9;elapsed+=1/120){G.EnemyMgr.rebuildGrid();G.Combat.updateFields(Math.min(1/120,t-elapsed));}};
       const enemy=(x,y,hp=100000,boss=false)=>{const e=new G.Enemy({dex:19,hp,spd:0,dmg:0,xp:0,behavior:'chase'},x,y,{hp:1,spd:1,dmg:1});e.types=['normal'];e.boss=boss;G.EnemyMgr.add(e);G.EnemyMgr.rebuildGrid();return e;};
       const releaseTime=move=>move.id==='naruto-fireball'?G.NarutoFireball.config.sealDuration:move.charge||0;
-      const countShot=(move)=>{G.Projectiles.clear();assert(G.DigimonSkills.cast(pl,move),'Cast failed '+move.id);step(releaseTime(move)+.02);return G.Projectiles.all().length;};
+      const selectThrow=move=>{if(move.id==='naruto-fuma-shuriken'){if(!pl.hasMove(move.id))assert(pl.addMove(move.id),'Could not learn throw fixture');pl.setActive(pl.slots.findIndex(group=>group.some(m=>m.id===move.id)));}};
+      const countShot=(move)=>{G.Projectiles.clear();selectThrow(move);assert(G.DigimonSkills.cast(pl,move),'Cast failed '+move.id);step(releaseTime(move)+.02);return G.Projectiles.all().length;};
       const out={};
       try {
         reset(0);const offensive=pl.activeGroup(),kunai=offensive[0];kunai.t=.77;
         assert(pl.addMove(id),'Fresh Sharingan learn failed');
         assert(pl.activeGroup()===offensive&&pl.activeGroup().includes(kunai),'Learning passive selected Sharingan and stopped attacks');
+        assert(pl.slots.length===1&&!pl.slots.flat().some(m=>m.id===id)&&pl.bind[id]==null,'Fresh passive occupied a selectable slot');
         assert(near(kunai.t,.77),'Learning passive reset offensive cooldown');S.sync(pl);assert(S.stage(pl)===1&&near(pl.magnet,120),'Fresh learned passive did not apply');
         reset(0);pl.moves=[];pl.slots=[];pl.bind={};pl.active=0;
         for(const moveId of ['naruto-sasuke','naruto-kunai','naruto-shuriken','naruto-fireball','naruto-kusanagi'])assert(pl.addMove(moveId),'Full-slot fixture failed '+moveId);
         pl.level=6;pl.bind['naruto-kunai']=1;pl.arrange();pl.setActive(pl.slots.findIndex(s=>s.some(m=>m.id==='naruto-kunai')));
+        const oldActive=pl.activeGroup(),oldMoves=pl.moves.slice(),oldBindings=JSON.stringify(pl.bind),oldCount=pl.slots.length;
         const signature=G.LevelUp.offer(pl,100).find(c=>c.key==='new:'+id);
-        assert(signature&&signature.apply(pl),'Guaranteed level-6 full-slot Sharingan replacement missing');
-        assert(pl.slots.length===5&&pl.hasMove(id)&&!pl.hasMove('naruto-kunai'),'Sharingan did not replace shared kunai slot');
-        assert(pl.bind[id]===1&&pl.bind['naruto-kunai']==null,'Replacement lost the shared-slot binding');
-        assert(pl.activeGroup().some(m=>!m.passive)&&pl.activeGroup().every(m=>m.id!==id),'Full-slot passive replacement left attacks disabled');
+        assert(signature&&signature.apply(pl),'Guaranteed level-6 full-slot Sharingan missing');
+        assert(pl.slots.length===oldCount&&oldMoves.every(move=>pl.moves.includes(move))&&pl.hasMove(id),'Full-slot passive replaced an active move');
+        assert(JSON.stringify(pl.bind)===oldBindings&&pl.bind[id]==null,'Full-slot passive changed active bindings');
+        assert(pl.activeGroup()===oldActive&&!pl.slots.flat().some(move=>move.id===id),'Full-slot passive changed selected attacks');
         S.sync(pl);assert(S.stage(pl)===1&&near(pl.magnet,120),'Full-slot passive failed to apply stage 1');
-        out.learning='fresh passive learning preserves offensive slot and cooldown; level-6 full-slot shared-tool replacement keeps offense active';
+        const learned=pl.moves.find(move=>move.id===id);Object.assign(learned,{lvl:4,t:.37,dealt:1234,since:56});
+        pl.slots.push([learned]);pl.bind[id]=2;pl.arrange();
+        assert(pl.activeGroup().length===oldActive.length&&oldActive.every(move=>pl.activeGroup().includes(move))&&pl.slots.length===oldCount&&!pl.slots.flat().includes(learned),'Legacy passive migration changed active selection');
+        assert(pl.moves.includes(learned)&&learned.lvl===4&&near(learned.t,.37)&&learned.dealt===1234&&learned.since===56,'Legacy migration lost passive progression or statistics');
+        assert(pl.bind[id]==null&&JSON.stringify(pl.bind)===oldBindings,'Legacy migration retained passive binding or changed offense bindings');
+        pl.slots.push([learned]);pl.active=pl.slots.length-1;pl.bind[id]=1;pl.arrange();
+        assert(pl.activeGroup().some(move=>!move.passive)&&!pl.slots.flat().includes(learned)&&pl.bind[id]==null,'Legacy selected passive migration left an empty attack slot');
+        out.learning='fresh and full-slot passive learning preserve active moves, selection, bindings and cooldown; legacy migration preserves evolution and statistics';
         for(let lv=1;lv<=5;lv++){reset(lv);assert(S.stage(pl)===lv,'Instance did not evolve to '+lv);assert(near(pl.magnet,120),'Magnet bonus missing');S.sync(pl);assert(near(pl.magnet,120),'Magnet stacked');}
         pl.magnet*=1.3;pl.moves=pl.moves.filter(m=>m.id!==id);S.sync(pl);assert(near(pl.magnet,130),'Unlearn erased later magnet card');
         reset(3);pl.setActive(0);assert(S.stage(pl)===3,'Switching active slot disabled learned Sharingan');
@@ -77,7 +87,7 @@ with sync_playwright() as p:
         reset(1);Math.random=()=>.051;const before=pl.hp;pl.hurt(10);assert(pl.hp<before,'Dodge exceeded 5%');
         reset(2);Math.random=()=>.049;pl.hurt(10);assert(G.Projectiles.count===3,'Stage 2 must counter with three shuriken');
         assert(G.Projectiles.all().every(p=>p.owner===pl),'Counter lost ownership');
-        reset(2);pl.quantityBonus=2;pl.hurt(10);assert(G.Projectiles.count===5,'Counter failed quantity +2');
+        reset(2);pl.quantityPicks=2;pl.quantityBonus=2;pl.hurt(10);assert(G.Projectiles.count===4,'Counter failed multiplicative quantity scaling');
         reset(2);pl.hurt(10);const firstCounter=G.Projectiles.count;pl.invuln=0;step(.17);pl.hurt(10);assert(G.Projectiles.count===firstCounter+3,'Second legitimate dodge failed to counter');
         const burst=G.FX.burst,sound=G.Audio.sfx;G.FX.burst=()=>{};G.Audio.sfx=()=>{};
         try{for(const [flag,value,amount,pure] of [['invuln',1,10,false],['frozen',1,10,false],['dead',true,10,false],['hp',0,10,false],['invuln',0,0,false],['invuln',0,10,true]]){
@@ -91,14 +101,14 @@ with sync_playwright() as p:
         for(const moveId of ['naruto-kunai','naruto-shuriken','naruto-fireball','naruto-fuma-shuriken']){
           console.log('CHECK: projectile '+moveId);
           reset(2);pl.target=enemy(150,0);const base=G.Moves.instance(moveId),n=countShot(base);
-          reset(3);pl.target=enemy(150,0);assert(countShot(G.Moves.instance(moveId))===n+1,moveId+' missing ranged +1');
-          reset(3);pl.quantityBonus=2;pl.target=enemy(150,0);const snap=G.Quantity.snapshot(pl,G.Moves.instance(moveId));
-          assert(snap.quantityBonusAtCast===2&&snap.count===base.count+3,'Quantity/Sharingan did not combine exactly once');
+          reset(3);pl.target=enemy(150,0);const actual=countShot(G.Moves.instance(moveId));assert(actual===n+1,moveId+' missing ranged +1; base='+n+' actual='+actual);
+          reset(3);pl.quantityPicks=2;pl.quantityBonus=2;pl.target=enemy(150,0);const snap=G.Quantity.snapshot(pl,G.Moves.instance(moveId));
+          assert(snap.quantityBonusAtCast===2&&snap.count===Math.floor(base.count*1.25**2)+1,'Quantity/Sharingan did not combine exactly once');
           assert(G.Quantity.snapshot(pl,snap).count===snap.count,'Snapshot applied bonus twice');
         }
         for(const moveId of ['naruto-fireball','naruto-fuma-shuriken']){
           console.log('CHECK: snapshot '+moveId);
-          reset(3);pl.target=enemy(150,0);const m=G.Moves.instance(moveId);G.DigimonSkills.cast(pl,m);
+          reset(3);pl.target=enemy(150,0);const m=G.Moves.instance(moveId);selectThrow(m);G.DigimonSkills.cast(pl,m);
           pl.moves.find(m=>m.id===id).lvl=1;step(releaseTime(m)+.02);
           assert(G.Projectiles.count===m.count+1,'Delayed '+moveId+' lost cast-time bonus');
         }

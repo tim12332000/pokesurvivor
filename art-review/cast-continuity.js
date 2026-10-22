@@ -7,9 +7,9 @@
     const toggle=document.createElement('label'),checkbox=document.createElement('input');checkbox.type='checkbox';checkbox.id='continuity';checkbox.checked=true;
     toggle.append(checkbox,document.createTextNode('實驗：投擲出手銜接'));if(controls)document.querySelector('header')?.append(toggle);
     checkbox.onchange=()=>{const frame=document.querySelector('#game');frame.focus();frame.contentWindow.focus();};
-    const valid=c=>c&&c.world===G.World&&c.owner===G.Game.player&&!c.owner.dead&&c.owner.hp>0;
+    const valid=c=>c&&c.world===G.World&&(c.owner===G.Game.player||G.SelfClones?.isActor(c.owner))&&!c.owner.dead&&c.owner.hp>0;
     const selected=p=>p.activeGroup().some(m=>m.id==='naruto-fuma-shuriken');
-    const active=p=>{const c=casts.get(p);return !!(checkbox.checked&&valid(c)&&c.id==='naruto-fuma-shuriken'&&selected(p)&&clock-c.time<=c.duration+.14&&!G.NarutoChidori?.active&&!G.NarutoFireball?.active);};
+    const active=p=>{const c=casts.get(p);return !!(checkbox.checked&&valid(c)&&c.id==='naruto-fuma-shuriken'&&selected(p)&&clock-c.time<=c.duration+.14&&!G.NarutoChidori?.activeFor?.(p)&&!G.NarutoFireball?.activeFor?.(p));};
     const frames=[{rect:[100,97,29,50],anchor:[14.5,50],hand:[24,28]},{rect:[140,104,50,43],anchor:[25,43],hand:[47,13]},
       {rect:[196,107,50,40],anchor:[25,40],hand:[47,11]},{rect:[252,108,48,39],anchor:[24,39],hand:[45,14]}];
     const pose=c=>frames[c.released?3:Math.min(2,Math.floor(Math.max(0,(clock-c.time)/c.duration)*3))];
@@ -20,18 +20,18 @@
     G.VFX.draw=function(ctx,shape,...args){const c=casts.get(G.Game.player);if(drawingAir&&checkbox.checked&&valid(c)&&c.id==='naruto-fuma-shuriken'&&!c.released&&shape==='naruto-fuma-shuriken')return;return fx.call(this,ctx,shape,...args);};
     const render=G.Sprites.Animator.prototype.draw;
     G.Sprites.Animator.prototype.draw=function(ctx,x,y,opts={}){
-      const p=G.Game.player;if(!p||p.anim!==this||!active(p))return render.apply(this,arguments);
+      const p=G.Game.player?.anim===this?G.Game.player:G.SelfClones?.actors().find(a=>a.anim===this);if(!p||p.anim!==this||!active(p))return render.apply(this,arguments);
       const c=casts.get(p),f=pose(c),r=G.Naruto.records.get(30002),k=64*this.scale/44,side=Math.cos(c.aim)>=0?1:-1;
       if(!c.released){const h=hand(p,c,f);G.VFX.draw(ctx,'naruto-fuma-shuriken','naruto-fuma-steel',h.x,h.y-G.LIFT,{scale:c.move.digiVis?.projScale||.9,angle:0,frame:0});}
       ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.scale(side*k,k);ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=opts.alpha??1;
       ctx.drawImage(opts.flash?G.Sprites.white(r.image):r.image,...f.rect,-f.anchor[0],-f.anchor[1],f.rect[2],f.rect[3]);ctx.restore();
     };
     const cast=G.DigimonSkills.cast,playerCast=G.Player.prototype.cast,spawn=G.Projectiles.spawn,update=G.Combat.updateFields,clear=G.Combat.clearFields,setActive=G.Player.prototype.setActive;
-    const recordCast=(owner,move)=>{if(owner===G.Game.player&&owner.dex===30002&&['naruto-fireball','naruto-fuma-shuriken'].includes(move.id))casts.set(owner,{id:move.id,owner,move,time:clock,aim:owner.aim,world:G.World,duration:move.charge||.2,released:false});};
+    const recordCast=(owner,move)=>{if((owner===G.Game.player||G.SelfClones?.isActor(owner))&&owner.dex===30002&&['naruto-fireball','naruto-fuma-shuriken'].includes(move.id))casts.set(owner,{id:move.id,owner,move,time:clock,aim:owner.aim,world:G.World,duration:move.charge||.2,released:false});};
     // The real auto-cast loop calls a lexical skill function, not the exported API.
     G.Player.prototype.cast=function(move){
       recordCast(this,move);const result=playerCast.apply(this,arguments);
-      if(checkbox.checked&&this===G.Game.player&&this.dex===30002&&move.id==='naruto-fuma-shuriken'){
+      if(checkbox.checked&&(this===G.Game.player||G.SelfClones?.isActor(this))&&this.dex===30002&&move.id==='naruto-fuma-shuriken'){
         const timing=G.Sprites.animMeta(this.dex,'Attack'),seconds=timing.d.reduce((a,b)=>a+b,0)/60;
         this.anim.play('Attack',{speed:seconds/((move.charge||.2)+.14)});
       }
@@ -75,7 +75,7 @@
       const actorPose=prototype?frames[3]:G.Naruto.frameFor(G.Naruto.records.get(owner.dex),owner.anim.cur,owner.anim.dir,owner.anim.frame);
       const event={skill:c.id,time:clock,castAge:clock-c.time,actorAnimation:prototype?'Attack':owner.anim.cur,sourceFrame:actorPose.rect,
         spawn:{x:options.x,y:options.y},expected,originError:Math.hypot(options.x-expected.x,options.y-expected.y),
-        phase:fire?(G.NarutoFireball.active?.t>=G.NarutoFireball.config.sealDuration?'breath':'seal'):prototype?'release':'generic-cast',mode:prototype?'prototype':'audit-only'};
+        phase:fire?(G.NarutoFireball.activeFor(owner)?.t>=G.NarutoFireball.config.sealDuration?'breath':'seal'):prototype?'release':'generic-cast',mode:prototype?'prototype':'audit-only'};
       events.push(event);if(events.length>100)events.shift();
       const host=document.getElementById('cast-audit');
       if(host)host.textContent=`${fire?'豪火球':'風魔手裏劍'} · 出手 ${(event.castAge*1000).toFixed(0)}ms · ${event.actorAnimation} · 發射點距參考 ${event.originError.toFixed(1)}px · ${event.mode}`;

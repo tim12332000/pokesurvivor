@@ -1,6 +1,7 @@
 /* Sasuke's sword is canonical; autonomous orbit is this edition's adaptation. */
 (() => {
   if (G.NarutoKusanagi) return;
+  const owners = () => [...new Set([...G.Game.everyone(), ...(G.SelfClones?.actors() || [])])];
   const id = 'naruto-kusanagi', states = new Map();
   // Redrawn from the official Shippuden figure: straight steel, plain black hilt,
   // flush collar. Keep a cached pixel sprite crisp while it rotates.
@@ -23,7 +24,7 @@
   const selected = owner => !!owner?.activeGroup().some(m => m.id === id);
   function clear(owner) { if (owner) states.delete(owner); else states.clear(); }
   function activate(owner) {
-    if (!learned(owner) || !selected(owner) || !G.Game.everyone().includes(owner)) return false;
+    if (!learned(owner) || !selected(owner) || !owners().includes(owner)) return false;
     if (states.get(owner)?.world !== G.World)
       states.set(owner, { owner, world: G.World, age: 0, hits: new Map(), blades: [] });
     return true;
@@ -44,7 +45,7 @@
     return result;
   };
   function blades(state, move) {
-    const count = Math.max(1, (move.count || 1) + (G.Quantity?.bonus(state.owner) || 0) + (G.NarutoSharingan?.projectileBonus(state.owner, move) || 0));
+    const count = (G.Quantity?.count(state.owner,move.count || 1) ?? Math.max(1,move.count || 1)) + (G.NarutoSharingan?.projectileBonus(state.owner, move) || 0);
     return Array.from({ length: count }, (_, index) => {
       const angle = state.age * config.angularSpeed + index * Math.PI * 2 / count;
       return { x: state.owner.x + Math.cos(angle) * move.radius,
@@ -58,10 +59,10 @@
     return Math.hypot(enemy.x - ax - t * vx, enemy.y - ay - t * vy) <= config.bladeRadius + (enemy.r || 0);
   }
   function update(dt) {
-    const owners = G.Game.everyone();
-    for (const [owner, state] of states) if (!owners.includes(owner) || !learned(owner) || !selected(owner) || state.world !== G.World) clear(owner);
+    const activeOwners = owners();
+    for (const [owner, state] of states) if (!activeOwners.includes(owner) || !learned(owner) || !selected(owner) || state.world !== G.World) clear(owner);
     if (!(dt > 0) || !Number.isFinite(dt)) return;
-    for (const owner of owners) {
+    for (const owner of activeOwners) {
       const move = learned(owner); if (!move) continue;
       const state = states.get(owner); if (!state) continue;
       const steps = Math.max(1, Math.ceil(Math.min(dt, .35) / (1 / 60))), step = Math.min(dt, .35) / steps;
@@ -72,7 +73,7 @@
           if (!alive(enemy) || (state.hits.get(enemy) ?? -Infinity) > state.age || !state.blades.some(blade => contact(enemy, blade))) continue;
           const mult = G.Types.mult(move.type, enemy.types), damage = move.dmg * owner.atk * mult * G.Weather.mult(move.type);
           if (!(damage > 0)) continue;
-          state.hits.set(enemy, state.age + config.tick);
+          state.hits.set(enemy, state.age + config.tick * (G.Giant?.interval(owner) || 1));
           enemy.hurt(damage, '#b6ddff', enemy.x - owner.x, enemy.y - owner.y, move.knock || 0, G.Types.label(mult), owner, move.id);
           owner.onDealt(damage); owner.dmgDealt += damage;
         }

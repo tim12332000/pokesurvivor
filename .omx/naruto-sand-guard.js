@@ -4,33 +4,37 @@
   const C = G.Combat, id = 'naruto-sand-shield';
   const config = Object.freeze({
     ranges: Object.freeze([400, 400, 400, 400, 400]),
-    speedBonus: 200,
+    speedBonus: 200, maxGuardians: 100,
     capacities: Object.freeze([2, 2, 3, 3, 4]),
-    attackDamages: Object.freeze([20, 25, 30, 35, 40]), attackCooldown: 1,
+    attackDamages: Object.freeze([10, 12.5, 15, 17.5, 20]), attackCooldown: 1,
     recharge: 2.5, radius: 14, turnRate: 3.6
   });
-  let guard = null;
+  const guards = new Map();
+  const controlled = owner => G.SelfClones?.isControlled(owner) ?? owner === G.Game.player;
   const finite = Number.isFinite;
   const learned = owner => {
     G.NarutoSkillCatalog?.migrateGaaraPassives?.(owner);
     return owner?.moves?.find(m => m.id === id);
   };
   function valid(s) {
-    return s && s.owner === G.Game.player && s.world === G.World &&
+    return s && controlled(s.owner) && s.world === G.World &&
       !s.owner.dead && s.owner.hp > 0 && s.owner.mon?.dex === 30007 && !!learned(s.owner);
   }
-  function clear(owner) { if (!owner || guard?.owner === owner) guard = null; }
+  function clear(owner) { if (owner) guards.delete(owner); else guards.clear(); }
   function state(owner = G.Game.player) {
-    if (guard && !valid(guard)) guard = null;
-    if (owner !== G.Game.player || owner?.dead || !(owner?.hp > 0) || owner.mon?.dex !== 30007) return null;
+    let guard = guards.get(owner);
+    if (guard && !valid(guard)) { guards.delete(owner); guard = null; }
+    if (!controlled(owner) || owner?.dead || !(owner?.hp > 0) || owner.mon?.dex !== 30007) return null;
     const move = learned(owner);
     if (!move) return null;
-    const tier = Math.max(1, Math.min(5, move.lvl | 0)), count = Math.min(10, config.capacities[tier - 1] + Math.max(1, owner.level | 0));
+    const tier = Math.max(1, Math.min(5, move.lvl | 0));
+    const count = Math.min(config.maxGuardians, G.Quantity.count(owner, config.capacities[tier - 1] + Math.max(1, owner.level | 0)));
     if (!guard) guard = { owner, world: G.World, guardians: [], flowAge: 0, flowClock: .1,
       flowPairChecks: 0, flowPoolCount: 1,
-      flowDwell: new Float32Array(100), flowJoined: new Uint8Array(100),
+      flowDwell: new Float32Array(config.maxGuardians ** 2), flowJoined: new Uint8Array(config.maxGuardians ** 2),
       flowGroups: Array.from({ length: 3 }, (_, id) => ({ id, x: owner.x, y: owner.y,
         aimX: owner.x, aimY: owner.y, heading: 0, phase: 0, blend: 0, active: false, members: [] })) };
+    guards.set(owner, guard);
     // Growth creates only the added clouds; existing returns and recharge persist.
     while (guard.guardians.length < count) {
       const index = guard.guardians.length, angle = index * 2.399963229728653;
@@ -81,7 +85,7 @@
     for (let i = 0; i < group.guardians.length; i++) {
       const a = group.guardians[i];
       for (let j = i + 1; j < group.guardians.length; j++) {
-        const b = group.guardians[j], key = i * 10 + j;
+        const b = group.guardians[j], key = i * config.maxGuardians + j;
         checks++;
         const eligible = a.flowGroupId >= 0 && a.flowGroupId === b.flowGroupId;
         if (!eligible) {
@@ -208,6 +212,7 @@
     enemy.hurt(damage, '#d4cdbb', enemy.x - s.x, enemy.y - s.y, move.knock || 0,
       crit ? 'crit' : G.Types.label(mult), owner, move.id);
     owner.onDealt(damage); owner.dmgDealt += damage;
+    G.DamageSplash?.hit(owner, enemy, damage, '#d4cdbb', move.id);
     return true;
   }
   function update(dt, owner) {
@@ -226,13 +231,6 @@
       const elapsed = i * h;
       const claimed = new Set(), contacts = [], motions = [];
       const candidates = new Map(), assignments = new Map();
-      let defending = false;
-      for (const q of projectiles) {
-        if (removed.has(q.p)) continue;
-        const x = q.x + q.vx * elapsed, y = q.y + q.vy * elapsed;
-        if ((!finite(q.p.life) || (q.p.t || 0) - q.dt + elapsed < q.p.life) &&
-          Math.hypot(x - owner.x, y - owner.y) <= group.range + q.r) { defending = true; break; }
-      }
       for (const s of group.guardians) {
         const list = [];
         if (s.ready) for (const q of projectiles) {
@@ -267,7 +265,7 @@
       for (const s of group.guardians) {
         s.attackWait = s.attackCooldown;
         s.attackCooldown = Math.max(0, s.attackCooldown - h);
-        if (defending || !s.ready || s.attackCooldown > 0 ||
+        if (assignments.has(s) || !s.ready || s.attackCooldown > 0 ||
           Math.hypot(s.x - owner.x, s.y - owner.y) > s.range) s.attackTarget = null;
         else {
           if (!attackable(s.attackTarget, group)) {
@@ -355,9 +353,9 @@
       // spends an interception charge or prevents next-step defensive pursuit.
       for (const motion of motions) {
         const s = motion.s;
-        if (!defending && s.ready && motion.attackAt !== null && !s.attackCooldown &&
+        if (!assignments.has(s) && s.ready && motion.attackAt !== null && !s.attackCooldown &&
           attack(s, motion.attackTarget, group)) {
-          s.attackCooldown = Math.max(0, config.attackCooldown - (h - motion.attackAt));
+          s.attackCooldown = Math.max(0, config.attackCooldown * (G.Giant?.interval(group.owner) || 1) - (h - motion.attackAt));
           s.attackTarget = null; s.phase = 'wander';
           s.contact = { x: s.x, y: s.y, age: 0 };
           s.contactX = s.x; s.contactY = s.y; s.flash = 1;
@@ -392,15 +390,22 @@
     group.readyCount = group.guardians.reduce((n, s) => n + Number(s.ready), 0);
   }
   const resolve = C.resolve, clearFields = C.clearFields, drawAir = C.drawAirFields;
-  C.resolve = function(dt, owner, now) { update(dt, owner); return resolve.call(this, dt, owner, now); };
+  C.resolve = function(dt, owner, now) {
+    update(dt, owner);
+    for (const [actor, guard] of guards) if (!valid(guard)) guards.delete(actor);
+    return resolve.call(this, dt, owner, now);
+  };
   C.clearFields = function(owner) { clear(owner); return clearFields.call(this, owner); };
   C.drawAirFields = function(ctx) {
     drawAir.call(this, ctx);
-    if (guard && !valid(guard)) guard = null;
-    if (guard) {
+    for (const [owner, guard] of guards) {
+      if (!valid(guard)) { guards.delete(owner); continue; }
       if (G.NarutoSandVFX?.drawGuardGroup) G.NarutoSandVFX.drawGuardGroup(ctx, guard);
       else for (const s of guard.guardians) G.NarutoSandVFX?.drawGuard?.(ctx, s);
     }
   };
-  G.NarutoSandGuard = { state, clear, config };
+  G.NarutoSandGuard = { state, clear, config,
+    updateClones: (dt, owner) => {
+      for (const actor of G.SelfClones?.actors() || []) if (actor.sourceOwner === owner) update(dt, actor);
+    } };
 })();

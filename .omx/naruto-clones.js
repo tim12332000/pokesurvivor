@@ -1,5 +1,6 @@
 /* Local Naruto shadow clones: temporary combat actors, never players or saves. */
 (() => {
+  const controlled = owner => G.SelfClones?.isControlled(owner) ?? (owner === G.Game.player);
   if (G.NarutoClones) return;
   const actors = [], smoke = [], C = G.Combat, TAU = Math.PI * 2;
   // Balance knobs: UI descriptions, upgrades and actor limits all read this object.
@@ -7,9 +8,12 @@
     duration: 6, sealDuration: .4, punchDamage: 8, punchCooldown: .65 });
   const summons = [];
   let serial = 0;
-  const valid = a => a.owner === G.Game.player && !a.owner.dead && a.owner.hp > 0 && a.world === G.World;
+  const valid = a => controlled(a.owner) && !a.owner.dead && a.owner.hp > 0 && a.world === G.World;
   const living = owner => actors.filter(a => !a.dead && a.owner === owner && valid(a));
-  const limitOf = (move,owner=G.Game.player) => config.counts[Math.min(config.counts.length-1,Math.max(0,(move.lvl||1)-1))]+(move.quantityBonusAtCast??G.Quantity?.bonus(owner)??0);
+  const limitOf = (move,owner=G.Game.player) => {
+    const base=config.counts[Math.min(config.counts.length-1,Math.max(0,(move.lvl||1)-1))];
+    return G.Quantity?.countAtCast(owner,move,base) ?? base;
+  };
   function formation(index) {
     let ring=0,slots=8;
     while(index>=slots){index-=slots;ring++;slots=8+ring*4;}
@@ -18,7 +22,7 @@
   }
   const mimicIds = new Set(['naruto-naruto', 'naruto-rasenshuriken', 'naruto-kunai', 'naruto-shuriken']);
   const selectedTechnique = owner => (owner.activeGroup?.() || []).find(m => mimicIds.has(m.id) && owner.moves?.some(learned => learned === m || learned.id === m.id)) || null;
-  const canCast = (owner,move) => owner===G.Game.player&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move,owner)&&!summons.some(s=>s.owner===owner);
+  const canCast = (owner,move) => controlled(owner)&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move,owner)&&!summons.some(s=>s.owner===owner);
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
   const nearby = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
   function clearPath(ax, ay, bx, by, radius = 0) {
@@ -49,7 +53,7 @@
     for (let i = list.length - 1; i >= 0; i--) if (list[i].narutoClone && (!owner || list[i].owner === owner)) list.splice(i, 1);
   }
   function cast(owner, move) {
-    if (owner !== G.Game.player || owner.dead || owner.hp <= 0 || owner.mon?.dex !== 30001) return false;
+    if (!controlled(owner) || owner.dead || owner.hp <= 0 || owner.mon?.dex !== 30001) return false;
     const lvl = move.lvl || 1, limit = limitOf(move,owner);
     let count = living(owner).length, spawned = false;
     const occupied=new Set(living(owner).map(a=>a.formationIndex));
@@ -84,6 +88,7 @@
     const dmg = base * typeK * G.Weather.mult(type) * (crit ? 1.5 : 1);
     enemy.hurt(dmg, '#a9dcff', enemy.x - a.x, enemy.y - a.y, knock, crit ? 'crit' : G.Types.label(typeK), a.owner, moveId);
     a.owner.onDealt(dmg); a.owner.dmgDealt += dmg;
+    G.DamageSplash?.hit(a.owner, enemy, dmg, '#a9dcff', moveId);
   }
   function moveToward(a, x, y, speed, dt) {
     const d = Math.hypot(x - a.x, y - a.y);
@@ -121,7 +126,7 @@
       const projectiles = G.Projectiles.all();
       for (let i = projectiles.length - 1; i >= 0; i--) {
         const p = projectiles[i];
-        if (p.narutoClone && (p.owner !== G.Game.player || p.owner.dead || p.owner.hp <= 0)) projectiles.splice(i, 1);
+        if (p.narutoClone && (!controlled(p.owner) || p.owner.dead || p.owner.hp <= 0)) projectiles.splice(i, 1);
       }
       for (const a of actors) {
         if (a.dead) continue;
@@ -154,9 +159,9 @@
                 for (const p of shots) p.narutoClone = true;
                 a.anim.play('Shoot');
               }
-              a.cooldowns.set(technique.id, Math.max(.1, (technique.cd || 1) * a.cloneTechniqueCdMul));
+              a.cooldowns.set(technique.id, Math.max(.1, (technique.cd || 1) * a.cloneTechniqueCdMul * (G.Giant?.interval(a.owner) || 1)));
             } else if (!technique && a.cd <= 0 && clearPath(a.x, a.y, e.x, e.y)) {
-              a.cd = a.punchCd; a.anim.play('Attack', { speed: 1.3 });
+              a.cd = a.punchCd * (G.Giant?.interval(a.owner) || 1); a.anim.play('Attack', { speed: 1.3 });
               hit(a, e, a.dmg * a.owner.atk, 'fighting');
               G.FX.spark(e.x, e.y - (e.bodyH || 30) * .5, '#a9dcff', e.x - a.x, e.y - a.y, 3);
             }

@@ -853,7 +853,7 @@
   }
   function drawGuardGroup(ctx, group) {
     if (!group || !group.owner || group.owner.dead || !Array.isArray(group.guardians)) return;
-    const budget = { left: GUARD_PAINT_LIMIT }, merged = new Float64Array(10);
+    const budget = { left: GUARD_PAINT_LIMIT }, merged = new Float64Array(group.guardians.length);
     const pools = Array.isArray(group.flowGroups) ? group.flowGroups : [];
     for (let poolIndex = 0; poolIndex < Math.min(3, pools.length); poolIndex++) {
       const pool = pools[poolIndex];
@@ -882,7 +882,7 @@
       guardRect(ctx, budget, x - length * .3, y + 3, length * .6, 2, COLORS[0], .1);
       guardRibbon(ctx, budget, spine, width, phase, clamp(weight), 8);
     }
-    for (let i = 0; i < Math.min(10, group.guardians.length); i++) {
+    for (let i = 0; i < group.guardians.length; i++) {
       const s = group.guardians[i];
       if (s && (!G.Camera?.sees || G.Camera.sees(s.x, s.y, 80))) guardFront(ctx, s, budget, merged[i]);
     }

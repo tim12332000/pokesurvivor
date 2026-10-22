@@ -69,10 +69,10 @@ MIGRATION = r"""()=>{
 }"""
 
 CAPTURE = r"""skill=>{
- const A=Acceptance,p=A.p(),id='naruto-sand-shield';p.level=20;A.gaaraArena();A.select(skill);A.spawn(100,0);
+ const A=Acceptance,p=A.p(),id='naruto-sand-shield';p.level=100;A.gaaraArena();A.select(skill);A.spawn(100,0);
  if(skill==='naruto-sand-armor'){A.resume();G.Combat.tick(.001,p,0);A.pause()}
  else {A.actualCast(skill);A.advance(.3)}
- A.advanceGuard(.4);const g=A.guard();A.assert(g.count===10&&g.guardians.length===10,'ten guardian screenshot');
+ A.advanceGuard(.4);const g=A.guard();A.assert(g.count===40&&g.guardians.length===40,'forty guardian screenshot');
  p.invuln=0;A.resume();p.hurt(2,null,true,{fromX:100,fromY:0});A.pause();
  const canvas=document.getElementById('game'),ctx=canvas.getContext('2d'),texts=[],icons=[],fill=ctx.fillText,draw=G.Icons.draw;
  ctx.fillText=function(t,...args){texts.push(String(t));return fill.call(this,t,...args)};

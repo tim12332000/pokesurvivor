@@ -1,5 +1,6 @@
 /* Local Digimon skill layer. Loaded after systems/combat.js and entities/vfx.js. */
 (() => {
+  const controlled = owner => G.SelfClones?.isControlled(owner) ?? (owner === G.Game.player);
   const C = G.Combat;
   if (!C || !G.VFX || C._digimonSkillEngineInstalled) return;
   C._digimonSkillEngineInstalled = true;
@@ -10,8 +11,8 @@
   const cloneMove = m => Object.assign({}, m, { digiVis: m.digiVis && Object.assign({}, m.digiVis), secondary: m.secondary && Object.assign({}, m.secondary) });
   const color = m => G.VFX.PAL[m.digiVis?.pal]?.[2] || G.U.TYPE_COLOR[m.type] || '#fff';
   const vis = m => Object.assign({}, G.VFX.forMove(m), m.digiVis || {});
-  const valid = f => f.owner && f.owner === G.Game.player && !f.owner.dead && f.owner.hp > 0 && f.world === G.World;
-  const cap = () => { const limit=CAP*(1+(G.Quantity?.bonus(G.Game.player)||0)); while (fields.length > limit) fields.shift(); };
+  const valid = f => f.owner && controlled(f.owner) && !f.owner.dead && f.owner.hp > 0 && f.world === G.World;
+  const cap = () => { const limit=G.Quantity?.count(G.Game.player,CAP)??CAP; while (fields.length > limit) fields.shift(); };
   const targets = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
   const techniqueFor = mode => [G.NarutoGaara,G.NarutoSupport,G.NarutoLee,G.NarutoOffense,G.NarutoChidori].find(api=>api?.supports(mode));
   function hit(pl, m, e, base, dx, dy, knock = m.knock || 0) {
@@ -48,7 +49,8 @@
       vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed, dmg: m.dmg * pl.atk * ratio * (explosive ? .2 : 1),
       r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
       hits: new Set(), vis: v, owner: pl, mid: m.id, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
-      slow: m.slow || 0, knock: m.knock || 0, digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
+      slow: m.slow || 0, knock: m.knock || 0, damageSplash: !explosive && !m.fireballAOE && !m.blastRadius,
+      digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
     if(m.fumaReturn) {
       Object.assign(p,{fumaReturn:true,boom:m.boom,bsp:m.speed*1.1,fumaPierce:p.pierce,fumaLearned:pl.hasMove(m.id)});
       const target=pl.target,locked=target&&!target.dead&&G.EnemyMgr.all().includes(target)&&G.U.dist(pl.x,pl.y,target.x,target.y)<=m.range;
@@ -66,7 +68,7 @@
     return p;
   }
   function fireFrom(owner,move,x,y,aim,damageScale=1) {
-    if(owner!==G.Game.player||owner.dead||owner.hp<=0||![x,y,aim,damageScale].every(Number.isFinite))return [];
+    if(!controlled(owner)||owner.dead||owner.hp<=0||![x,y,aim,damageScale].every(Number.isFinite))return [];
     if(!['naruto-rasenshuriken','naruto-kunai','naruto-shuriken'].includes(move.id))return [];
     const m=cloneMove(G.Quantity?.snapshot(owner,move)||move);m.dmg*=Math.max(0,damageScale);
     const count=Math.max(1,m.count|0),out=[];
@@ -211,7 +213,7 @@
       if(m.digiMode==='shadow-clones'&&!G.NarutoClones?.canCast(pl,m)){m.t=.15;continue;}
       if(['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode)&&(!target||target.dead||G.U.dist(pl.x,pl.y,target.x,target.y)>(m.range||m.radius||520))){m.t=.05;continue;}
       m.t=Math.max(m.minCooldown||.05,m.cd*pl.cdMul);const snapshot=cloneMove(m);
-      pl.cast(m);if(G.Coop.active)G.Coop.cast(pl,m);m.castAt=performance.now();
+      pl.cast(m);if(G.Coop.active&&!G.SelfClones?.isActor(pl))G.Coop.cast(pl,m);m.castAt=performance.now();
       if(!cast(pl,snapshot))m.t=.25;
     }
   };
@@ -239,7 +241,7 @@
     }
   };
   C.clearFields = clear;
-  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); const live=new Set(G.Projectiles.all()); for (const p of [...bombs]) { const b = p.digiBomb, alive = live.has(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || b.owner !== G.Game.player || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; if(m.id==='naruto-fireball')G.FX.sp('naruto-great-fireball-burst','naruto-fireball',p.x,p.y-G.LIFT,{life:.24,scale:b.r/51,frameRate:12}); G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
+  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); const live=new Set(G.Projectiles.all()); for (const p of [...bombs]) { const b = p.digiBomb, alive = live.has(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || !controlled(b.owner) || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; if(m.id==='naruto-fireball')G.FX.sp('naruto-great-fireball-burst','naruto-fireball',p.x,p.y-G.LIFT,{life:.24,scale:b.r/51,frameRate:12}); G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
   // Native pixel additions; VFX's public tables are the same used by the cache.
   G.VFX.PAL.holy = ['#786022','#b38a32','#e2c56b','#fff0b0','#fffdf0'];
   G.VFX.PAL.blueflame = ['#133e70','#267ed1','#58c5ff','#b3f1ff','#fff'];

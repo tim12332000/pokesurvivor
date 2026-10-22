@@ -36,9 +36,24 @@ G.Icons = (() => {
     heart: { pal: { r: '#ff5f6d', s: '#c23a4b', w: '#ffd3d8' }, rows: [
       '............', '.kkk....kkk.', 'kwwrk..krrrk', 'kwrrrkkrrrsk', 'krrrrrrrrrsk', 'krrrrrrrrrsk',
       '.krrrrrrrsk.', '..krrrrrsk..', '...krrrsk...', '....krsk....', '.....kk.....', '............'] },
+    selfClone: { pal: { w: '#d5efff', c: '#59cced' }, rows: [
+      '..kk...kk...', '.kwwk.kcck..', '.kwwk.kcck..', '..kk...kk...', '.kwwk.kcck..', 'kwwwwkcccck.',
+      'kwwwwkcccck.', '.kwwk.kcck..', '.kwwk.kcck..', '.kw.k.kc.k..', '.kk.k.kk.k..', '............'] },
+    giant: { pal: { p: '#ba8cff', d: '#7046ba', w: '#e8d6ff', g: '#ffd85c' }, rows: [
+      '....kkkk....', '...kwwwpk...', '...kppppk...', '....kkkk....', '..kkppppkk..', '.kwpppppppk.',
+      'kwppppppppdk', 'kkkppppppkkk', '..kppkkppk..', '..kppkkppk..', '.kpppk.kpppk', '.kkkkk.kkkkk'] },
+    lifesteal: { pal: { r: '#e93663', s: '#9e1749', w: '#ffe0ed' }, rows: [
+      '.....kk.....', '....krrk....', '...kwrrrk...', '..kwwrrrrk..', '.kwrrrrrrrk.', 'krrwwrwwrrsk',
+      'krrwwwwwrrsk', 'krrrwwwrrrsk', '.krrrwrrrsk.', '..krrrrrsk..', '...ksssk....', '....kkk.....'] },
+    healthGrowth: { pal: { r: '#ff5f6d', s: '#c23a4b', w: '#ffd3d8', g: '#5fe08a' }, rows: [
+      '.........g..', '........ggg.', '.kk..kkggggg', 'kwwkkrrk.g..', 'kwrrrrsk.g..', 'krrrrrsk.g..',
+      '.krrrsk..g..', '..krsk...g..', '...kk....g..', '............', '............', '............'] },
     fist: { pal: { r: '#ff5f6d', s: '#c23a4b', w: '#ffd3d8', c: '#e8e8f0' }, rows: [
       '............', '..kkkkkk....', '.krrrrrrk...', 'krwwrrrrrkk.', 'krwrrrrrrrrk', 'krrrrrrrkrsk',
       'krrrrrrrkrsk', '.krrrrrrskk.', '..kssssssk..', '..kcccccck..', '..kkkkkkkk..', '............'] },
+    damageSplash: { pal: { c: '#22c7df', w: '#a9f4ff', o: '#ed8747', y: '#fff2b3' }, rows: [
+      '.....cc.....', '....cwwc....', '...cwwwwc...', '.....cc.....', '.c...kk...c.', 'ccckoyyokccc',
+      'cwwkoyyokwwc', '.c...kk...c.', '.....cc.....', '...cwwwwc...', '....cwwc....', '.....cc.....'] },
     up: { pal: { g: '#5fe08a', d: '#2f9a52', w: '#c8ffd8' }, rows: [
       '.....kk.....', '....kwgk....', '...kwgggk...', '..kwgggggk..', '.kwgggggggk.', 'kkkkggggkkkk',
       '...kggggk...', '...kggggk...', '...kggddk...', '...kgdddk...', '...kddddk...', '...kkkkkk...'] },

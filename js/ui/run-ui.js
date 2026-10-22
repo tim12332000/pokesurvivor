@@ -57,6 +57,7 @@ G.RunUI = (() => {
       el.onclick = () => pick(i);
       box.appendChild(el);
     });
+    for (const card of list) card.onShown?.(G.Game.player);
   }
 
   function pick(i) {
@@ -246,9 +247,11 @@ G.RunUI = (() => {
       ['Recarga', '×' + num(pl.cdMul, 2)], ['Regeneración', num(pl.regen, 1) + '/s'],
       ['Radio de recogida', num(pl.magnet)], ['Experiencia', '×' + num(pl.xpMul, 2)]
     ];
-    if (pl.quantityBonus) stats.push(['Proyectiles adicionales', '+' + num(pl.quantityBonus)]);
+    if (pl.quantityPicks) stats.push(['數量倍率', '×' + num(G.Quantity?.multiplier(pl)||1, 2)]);
+    else if (pl.quantityBonus) stats.push(['Proyectiles adicionales', '+' + num(pl.quantityBonus)]);
     if (pl.lifestealRate) stats.push(['Robo de vida', pct(pl.lifestealRate)]);
     if (pl.percentHealthDamage) stats.push(['Daño de vida máxima', pct(pl.percentHealthDamage)]);
+    if (pl.damageSplashPicks) stats.push(['傷害擴散', pct(G.DamageSplash?.rate(pl)||0)]);
     const it = pl.item && G.Items.BY[pl.item];
     const cards = Object.entries(pl.statsTaken || {}).filter(([, count]) => count > 0).map(([id, count]) => {
       const stat = G.LevelUp.STATS.find(s => s.id === id);

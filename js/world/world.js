@@ -149,14 +149,15 @@ G.World = (() => {
       let type = null, kind = 0;
       // Interactivos (raros), lejos del claro del principio.
       const hs = H(tx, ty, seed + 909);
-      if (open && Math.hypot(tx, ty) > 12 && hs < 0.0032) {
-        type = hs < 0.0004 ? 'altar' : hs < 0.0008 ? 'spring' : hs < 0.0011 ? 'bigchest' : 'trap';
+      if (open && Math.hypot(tx, ty) > 12 && hs < 0.0035) {
+        // Add a second equally sized chest interval; preserve other interactives.
+        type = hs < 0.0004 ? 'altar' : hs < 0.0008 ? 'spring' : hs < 0.0011 || hs >= 0.0032 ? 'bigchest' : 'trap';
         kind = Math.floor(H(tx, ty, seed + 910) * (type === 'altar' ? 4 : 3));
       }
       if (type) { /* ya elegido */ }
       else if (open && h < (grove ? 0.07 : 0.006)) type = 'tree';
       else if (open && h > 0.992) type = 'rock';
-      else if (open && h > 0.985 && h <= 0.992 && H(tx, ty, seed + 606) < 0.07) type = 'chest';
+      else if (open && h > 0.985 && h <= 0.992 && H(tx, ty, seed + 606) < 0.14) type = 'bigchest';
       else if (fbm(tx / 5, ty / 5, seed + 707) > 0.66 && H(tx, ty, seed + 808) < 0.75) type = 'grass';
       if (!type) continue;
 
@@ -490,7 +491,8 @@ G.World = (() => {
   }
 
   function drawProp(ctx, p, t) {
-    const P = G.Sprites.PX;
+    const chest = p.type === 'chest' || p.type === 'bigchest';
+    const P = G.Sprites.PX * (chest ? 1.25 : 1);
     const variant = p.type === 'grass' ? (Math.sin(t * 2.4 + p.wiggle) > 0.55 ? 1 : 0)
                   : p.type === 'rock' ? (p.hp < p.maxHp * 0.5 ? 1 : 0)
                   : p.type === 'altar' ? p.kind * 2 + (p.used ? 1 : 0)
@@ -513,6 +515,25 @@ G.World = (() => {
       ctx.globalAlpha = 0.22 + Math.sin(t * 3 + p.wiggle) * 0.1;
       ctx.fillStyle = col;
       ctx.beginPath(); ctx.arc(p.x, p.y - h + 11 * P, 13, 0, 6.2832); ctx.fill();
+      ctx.restore();
+    }
+    if (chest) {
+      const pulse = (Math.sin(t * 3 + p.x * .03 + p.y * .02) + 1) / 2;
+      ctx.save();
+      ctx.fillStyle = `rgba(255,205,64,${.12 + pulse * .07})`;
+      ctx.strokeStyle = `rgba(255,226,128,${.6 + pulse * .2})`;
+      ctx.lineWidth = 2;
+      ctx.beginPath();ctx.ellipse(p.x, p.y - 2, w * .65, 9 + pulse * 2, 0, 0, 6.2832);
+      ctx.fill();ctx.stroke();
+      // Pixel glints draw directly, without adding persistent FX particles.
+      ctx.fillStyle = '#fff3b0';
+      for (let i = 0; i < 3; i++) {
+        const phase = t * 1.6 + i * 2.1 + p.x * .03;
+        const sx = Math.round(p.x + Math.sin(phase) * w * .6);
+        const sy = Math.round(p.y - h * (.45 + i * .25) - pulse * 4);
+        ctx.globalAlpha = .5 + .5 * Math.sin(phase) ** 2;
+        ctx.fillRect(sx - 3, sy, 8, 2);ctx.fillRect(sx, sy - 3, 2, 8);
+      }
       ctx.restore();
     }
     if (p.type === 'bigchest' && p.open > 0) {

@@ -57,11 +57,13 @@ DEFENSE = r"""() => {
  const incoming=A.nativeShot(320,120,-1,0);A.offenseStep();
  A.assert(s.target===incoming&&!s.attackTarget&&e.hits.length===0,'ongoing attack did not immediately yield to defense');
  out.preempted=true;
- // All ready guardians suspend offense, including guardians not assigned a shot.
- const g=A.guardReset();g.guardians.forEach((c,i)=>{c.x=40+i*20;c.y=0;c.heading=0});e=A.watchEnemy(230,0);
+ // Only the assigned interceptor yields; the others can still hit enemies.
+ const g=A.guardReset();g.guardians.forEach((c,i)=>{c.x=40+i*20;c.y=0;c.heading=0});e=A.watchEnemy(50,0);
  A.nativeShot(340,160,-1,0);A.offenseStep();
- A.assert(g.guardians.every(c=>!c.attackTarget),'unassigned guardian attacked during local defense threat');
- out.globalPriority=true;
+ A.assert(g.guardians.filter(c=>c.target).length===1,'single shot must have one interceptor');
+ A.assert(g.guardians.filter(c=>c.target).every(c=>!c.attackTarget),'interceptor kept attacking');
+ A.assert(e.hits.length>0&&g.guardians.some(c=>!c.target&&c.attackCooldown>0),'unassigned guardians stopped attacking');
+ out.independentPriority=true;
  // Offensive cooldown must not delay an actual projectile interception.
  s=A.offenseReset();e=A.watchEnemy();A.assert(A.waitFor(()=>e.hits.length>0,2),'cooldown defense fixture did not hit');
  const cooldown=s.attackCooldown;A.assert(cooldown>.9,'missing attack cooldown');
@@ -79,11 +81,20 @@ TIERS_AND_BOUNDS = r"""() => {
  const A=Acceptance,p=A.p(),move=p.moves.find(m=>m.id===A.guardId),out={tiers:[]};
  for(let tier=1;tier<=5;tier++){
    move.lvl=tier;const s=A.offenseReset(),e=A.watchEnemy(110,0);
-   const expected=[20,25,30,35,40][tier-1]*p.atk*G.Types.mult(move.type,e.types)*G.Weather.mult(move.type);
+   const expected=[10,12.5,15,17.5,20][tier-1]*p.atk*G.Types.mult(move.type,e.types)*G.Weather.mult(move.type);
    A.offenseStep();A.assert(e.hits.length===1&&Math.abs(e.hits[0].damage-expected)<1e-7,'wrong native damage tier '+tier);
-   out.tiers.push({tier,base:[20,25,30,35,40][tier-1],nativeDamage:e.hits[0].damage});
+   out.tiers.push({tier,base:[10,12.5,15,17.5,20][tier-1],nativeDamage:e.hits[0].damage});
  }
- move.lvl=1;p.level=20;const g=A.guardReset();A.assert(g.count===10,'query fixture missing ten guardians');
+ out.healthIndependent=[];
+ for(const flag of [null,'boss','elite','legend','judge']){
+   const s=A.offenseReset(),e=A.watchEnemy(110,0);
+   e.hp=e.maxHp=10000000;if(flag)e[flag]=true;
+   const expected=20*p.atk*G.Types.mult(move.type,e.types)*G.Weather.mult(move.type);
+   A.offenseStep();
+   A.assert(e.hits.length===1&&Math.abs(e.hits[0].damage-expected)<1e-7,'guardian retained max-HP damage: '+flag);
+   out.healthIndependent.push({kind:flag||'normal',damage:e.hits[0].damage});
+ }
+ move.lvl=1;p.level=8;const g=A.guardReset();A.assert(g.count===10,'query fixture missing ten guardians');
  A.watchEnemy(390,0);let queries=0,terrain=0,baselineQueries=0;
  const query=G.EnemyMgr.queryCircle,wall=G.World.isWall,block=G.World.projectileBlock;
  G.EnemyMgr.queryCircle=function(...args){queries++;return query.apply(this,args)};
@@ -95,6 +106,27 @@ TIERS_AND_BOUNDS = r"""() => {
  A.assert(queries-baselineQueries===1,'enemy search duplicated across ten guardians/substeps: '+queries+' control '+baselineQueries);
  A.assert(terrain===0,'phasing offense queried terrain: '+terrain);
  out.bounds={guardians:g.count,seconds:.5,queries,baselineQueries,guardQueries:queries-baselineQueries,terrain};p.level=1;return out;
+}"""
+
+BOSS_PERCENT = r"""() => {
+ const A=Acceptance,p=A.p(),move=p.moves.find(m=>m.id===A.guardId),out=[];
+ try{
+   for(const flag of [null,'elite','boss','legend','judge']){
+     const s=A.offenseReset(),e=A.watchEnemy(110,0);
+     p.percentHealthDamage=.02;
+     e.hp=e.maxHp=10000000;if(flag)e[flag]=true;
+     const base=G.NarutoSandGuard.config.attackDamages[move.lvl-1]*p.atk*G.Types.mult(move.type,e.types)*G.Weather.mult(move.type);
+     const immune=['boss','legend','judge'].includes(flag),before=e.hp;
+     A.offenseStep();
+     const expected=Math.round(base+(immune?0:e.maxHp*.02));
+     A.assert(e.hits.length===1&&before-e.hp===expected,'guardian percent-health immunity wrong: '+flag);
+     const after=e.hp;
+     e.hurt(10,'#fff',0,0,0,null,p,'naruto-gaara');
+     A.assert(after-e.hp===(immune?20010:200010),'wrong percent-health scaling for other skills: '+flag);
+     out.push({kind:flag||'normal',guardianDamage:before-after,otherSkillDamage:after-e.hp});
+   }
+ }finally{p.percentHealthDamage=0}
+ return out;
 }"""
 
 CANCELLATION = r"""() => {
@@ -142,7 +174,7 @@ def main():
                 for setup in [HARNESS, SETUP, FIXTURE, SETUP_OFFENSE]:
                     page.evaluate(setup)
                 result = report['viewports'][label] = {}
-                for name, script in [('attack', ATTACK), ('defense', DEFENSE), ('tiersAndBounds', TIERS_AND_BOUNDS), ('cancellation', CANCELLATION)]:
+                for name, script in [('attack', ATTACK), ('defense', DEFENSE), ('tiersAndBounds', TIERS_AND_BOUNDS), ('bossPercent', BOSS_PERCENT), ('cancellation', CANCELLATION)]:
                     result[name] = page.evaluate(script)
                 context.close()
             browser.close()

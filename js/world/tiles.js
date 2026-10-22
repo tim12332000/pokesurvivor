@@ -543,8 +543,8 @@ G.Tiles = (() => {
     /** Cofre grande con candado. */
     bigchest() {
       const P = Pix(24, 20);
-      const wood = pack('#6b3a1e'), woodL = pack('#8e5329'), woodD = pack('#432210');
-      const iron = pack('#9aa6b5'), ironD = pack('#5d6773'), gold = pack('#f2c443'), goldD = pack('#b5832a');
+      const wood = pack('#a75324'), woodL = pack('#dc8b3b'), woodD = pack('#633015');
+      const iron = pack('#fff0a6'), ironD = pack('#dcae39'), gold = pack('#fff49c'), goldD = pack('#edbd3b');
       for (let y = 2; y < 19; y++) for (let x = 1; x < 23; x++) {
         let c = y < 8 ? woodL : wood;
         if (y === 8 || y === 9) c = ironD;
@@ -608,14 +608,15 @@ G.Tiles = (() => {
 
     chest() {
       const P = Pix(16, 14);
-      const gold = pack('#f2c443'), goldD = pack('#b5832a'), wood = pack('#8a4f2a'), woodD = pack('#5e3418');
-      const lid = pack('#c4662e');
+      const gold = pack('#fff1a0'), goldD = pack('#e9b936'), wood = pack('#bc6c2c'), woodD = pack('#713b19');
+      const lid = pack('#eea34a');
       for (let y = 2; y < 13; y++) for (let x = 1; x < 15; x++) {
         let c = y < 6 ? lid : wood;
         if (y === 6) c = goldD;
         if (x === 1 || x === 14) c = woodD;
         if ((x === 4 || x === 11) && y > 1) c = y < 6 ? gold : goldD;
         if (y === 12) c = woodD;
+        if (y === 2 || y === 11) c = gold;
         P.set(x, y, c);
       }
       for (let x = 6; x < 10; x++) for (let y = 5; y < 9; y++) P.set(x, y, (x + y) % 3 ? gold : goldD);

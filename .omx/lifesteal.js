@@ -2,7 +2,7 @@
 (() => {
   if(G.Lifesteal)return;
   const perPick=.01;
-  G.LevelUp.STATS.push({id:'lifesteal',icon:'heart',title:'吸血 +1%',
+  G.LevelUp.STATS.push({id:'lifesteal',icon:'lifesteal',title:'吸血 +1%',
     desc:'造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。',
     apply:owner=>{owner.lifestealRate=Math.round(((owner.lifestealRate||0)+perPick)*100)/100;}
   });

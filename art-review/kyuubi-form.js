@@ -21,9 +21,9 @@
     if(installed.has(G))return G.KyuubiForm;
     installed.add(G);
     const effect=owner=>G.NarutoSupport?.effects.find(f=>f.owner===owner&&f.world===G.World&&f.mode==='nine-tails-cloak'&&f.age<f.ttl);
-    const active=owner=>!!(image&&enabled()&&owner===G.Game.player&&owner?.dex===30001&&!owner.dead&&owner.hp>0&&effect(owner));
+    const active=owner=>!!(image&&enabled()&&(owner===G.Game.player||G.SelfClones?.isActor(owner))&&owner?.dex===30001&&!owner.dead&&owner.hp>0&&effect(owner));
     function poseFor(animator){
-      const owner=G.Game.player;
+      const owner=G.Game.player?.anim===animator?G.Game.player:G.SelfClones?.actors().find(a=>a.anim===animator);
       if(owner?.anim!==animator||!active(owner))return null;
       const action=G.AnimationLab.stateFor(animator),buff=effect(owner);
       let animation='idle',age=action.age;

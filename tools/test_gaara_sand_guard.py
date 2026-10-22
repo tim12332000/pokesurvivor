@@ -110,8 +110,8 @@ TIERS = r"""() => {
   A.assert(g.guardians.every(c=>c.speed===p.spd+200&&c.range===400&&c.ready),'per-cloud fixed stats');
   for(let i=0;i<g.guardians.length;i++)for(let j=i+1;j<g.guardians.length;j++)A.assert(Math.hypot(g.guardians[i].x-g.guardians[j].x,g.guardians[i].y-g.guardians[j].y)>1,'clouds overlap spawn');out.push({tier,count:g.count});
  }
- for(const level of [1,7,20])for(let tier=1;tier<=5;tier++){p.level=level;p.moves.find(m=>m.id===id).lvl=tier;const g=A.guardReset();A.assert(g.count===Math.min(10,[2,2,3,3,4][tier-1]+level),'growth count')}
- p.level=1;p.moves.find(m=>m.id===id).lvl=1;let g=A.guardReset(),first=g.guardians[0];A.spend(first);first.rechargeProgress=.4;const old=g.guardians.slice();p.level=4;g=A.guard();A.assert(g.count===6&&old.every((c,i)=>g.guardians[i]===c)&&!first.ready&&first.rechargeProgress===.4,'growth reset existing clouds');p.level=20;g=A.guard();A.assert(g.count===10&&g.guardians.length===10&&!first.ready,'cap or spent state wrong');p.quantityBonus=20;A.assert(A.guard().count===10,'quantity card inflated count');p.quantityBonus=0;
+ for(const level of [1,7,20,36,37,38,40,100])for(let tier=1;tier<=5;tier++){p.level=level;p.moves.find(m=>m.id===id).lvl=tier;const g=A.guardReset();A.assert(g.count===Math.min(40,[2,2,3,3,4][tier-1]+level),'growth count')}
+ p.level=1;p.moves.find(m=>m.id===id).lvl=1;let g=A.guardReset(),first=g.guardians[0];A.spend(first);first.rechargeProgress=.4;const old=g.guardians.slice();p.level=4;g=A.guard();A.assert(g.count===6&&old.every((c,i)=>g.guardians[i]===c)&&!first.ready&&first.rechargeProgress===.4,'growth reset existing clouds');p.level=100;g=A.guard();A.assert(g.count===40&&g.guardians.length===40&&!first.ready,'cap or spent state wrong');p.quantityBonus=20;A.assert(A.guard().count===40,'quantity exceeded cap');p.level=1;p.quantityBonus=2;A.assert(A.guard().count===5,'quantity did not add guardians');p.level=100;p.quantityBonus=0;g=A.guard();
  const index=p.activeSlot;p.setActive(0);A.assert(A.guard()===g&&!first.ready,'slot switch reset passive');p.setActive(index||0);p.moves.find(m=>m.id===id).lvl=5;
  A.assert(!G.LevelUp.offer(p,100).some(c=>c.key==='up:'+id),'tier six offered');
  p.level=15;for(const skill of ['naruto-sand-coffin','naruto-sand-tsunami','naruto-sand-prison','naruto-sand-armor']){const card=G.LevelUp.offer(p,100).find(c=>c.key==='new:'+skill);A.assert(card&&card.apply(p)!==false,'full-slot fixture '+skill)}
@@ -208,7 +208,7 @@ def main():
                 # Each guardian fixture depletes HP absorption while keeping the merged skill learned.
                 for stage, script in [
                     ('three-clouds', "Acceptance.p().level=1;Acceptance.p().moves.find(m=>m.id===Acceptance.guardId).lvl=1;Acceptance.guardReset();Acceptance.advanceGuard(.7)"),
-                    ('ten-clouds', "Acceptance.p().level=20;Acceptance.guardReset();Acceptance.advanceGuard(1)"),
+                    ('forty-clouds', "Acceptance.p().level=100;Acceptance.guardReset();Acceptance.advanceGuard(1)"),
                     ('parallel-pursuit', "Acceptance.p().level=1;Acceptance.guardReset();Acceptance.guard().guardians.forEach((c,i)=>{c.x=100;c.y=(i-1)*100;c.heading=0});window.guardShots=[Acceptance.nativeShot(260,-100),Acceptance.nativeShot(260,100)];Acceptance.guardStep(.12)"),
                     ('parallel-contact', "for(let n=0;n<100&&window.guardShots.some(q=>G.Projectiles.all().includes(q));n++)Acceptance.guardStep()"),
                     ('mixed-return-reform', "G.Projectiles.clear();const s=Acceptance.guard().guardians.find(c=>!c.ready);s.x=0;s.y=0;Acceptance.guardStep(.1)"),
@@ -217,7 +217,7 @@ def main():
                     page.evaluate(script)
                     state = page.evaluate('Acceptance.snapshot()')
                     if stage == 'three-clouds': assert state['count'] == 3
-                    elif stage == 'ten-clouds': assert state['count'] == 10
+                    elif stage == 'forty-clouds': assert state['count'] == 40
                     elif stage == 'parallel-pursuit': assert sum(s['target'] for s in state['guardians']) == 2
                     elif stage == 'parallel-contact': assert sum(not s['ready'] for s in state['guardians']) == 2
                     elif stage == 'native-late-impact': assert state['hp'] < state['maxHp']

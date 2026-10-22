@@ -9,9 +9,9 @@
     swordRadius: 100, swordOffset: 55, swordDamage: 55, swordType: 'psychic', swordDuration: .22
   });
   const holes = [], fields = [], slashes = [];
-  let state = null;
+  const states = new Map();
   const alive = e => e && !e.dead && e.hp > 0;
-  const validOwner = owner => owner === G.Game.player && owner?.mon?.dex === 30002 && alive(owner);
+  const validOwner = owner => (G.SelfClones?.isControlled(owner) ?? owner === G.Game.player) && owner?.mon?.dex === 30002 && alive(owner);
   const valid = f => validOwner(f.owner) && f.world === G.World;
   const boss = e => !!(e.boss || e.legend || e.judge);
   const nearby = (x, y, radius) => [...new Set(G.EnemyMgr.queryCircle(x, y, radius))]
@@ -19,7 +19,7 @@
   function clear(owner) {
     for (const list of [holes, fields, slashes]) for (let i = list.length - 1; i >= 0; i--)
       if (!owner || list[i].owner === owner) list.splice(i, 1);
-    if (!owner || state?.owner === owner) state = null;
+    if (owner) states.delete(owner); else states.clear();
   }
   function hit(owner, enemy, base, type, x, y) {
     if (!validOwner(owner) || !alive(enemy) || !(base > 0)) return;
@@ -28,8 +28,8 @@
     enemy.hurt(amount, type === 'fire' ? '#a265c9' : '#c593ff', enemy.x - x, enemy.y - y, 0, G.Types.label(mult), owner, 'naruto-sharingan');
     owner.onDealt(amount); owner.dmgDealt += amount;
   }
-  function scorched(enemy) {
-    return fields.some(f => Math.hypot(enemy.x - f.x, enemy.y - f.y) <= f.radius + (enemy.r || 0));
+  function scorched(owner, enemy) {
+    return fields.some(f => f.owner === owner && Math.hypot(enemy.x - f.x, enemy.y - f.y) <= f.radius + (enemy.r || 0));
   }
   function ignite(hole) {
     // Identical footprints may share one field; no age limit or field cap removes burned ground.
@@ -38,19 +38,23 @@
     G.FX.ring(hole.x, hole.y, 5, config.flameRadius, '#8d4db3', .3, 3);
   }
   function update(owner, stage, dt) {
-    if (!validOwner(owner) || stage < 4) { clear(); return; }
-    if (!state || state.owner !== owner || state.world !== G.World) {
-      clear(); state = { owner, world: G.World, stage, age: 0, holeCooldown: 0, swordCooldown: 0, burnClock: 0 };
+    if (!validOwner(owner) || stage < 4) { clear(owner); return; }
+    let state = states.get(owner);
+    if (!state || state.world !== G.World) {
+      clear(owner); state = { owner, world: G.World, stage, age: 0, holeCooldown: 0, swordCooldown: 0, burnClock: 0 };
+      states.set(owner, state);
     }
     state.stage = stage;
     if (!(dt > 0) || !Number.isFinite(dt)) return;
     state.age += dt; state.holeCooldown -= dt; state.swordCooldown -= dt;
-    for (const f of fields) f.age += dt;
+    for (const f of fields) if (f.owner === owner) f.age += dt;
     for (let i = slashes.length - 1; i >= 0; i--) {
+      if (slashes[i].owner !== owner) continue;
       slashes[i].age += dt;
       if (slashes[i].age >= config.swordDuration || stage < 5) slashes.splice(i, 1);
     }
     for (let i = holes.length - 1; i >= 0; i--) {
+      if (holes[i].owner !== owner) continue;
       const h = holes[i], step = Math.min(dt, Math.max(0, config.holeDuration - h.age));
       h.age += dt;
       for (const enemy of nearby(h.x, h.y, config.holeRadius)) {
@@ -63,20 +67,20 @@
       }
       if (h.age + 1e-9 >= config.holeDuration) { ignite(h); holes.splice(i, 1); }
     }
-    // One shared burn clock and one Set prevent overlapping patches multiplying DPS.
+    // Each owner has one burn clock; overlapping patches from that owner do not multiply DPS.
     state.burnClock += dt;
     while (state.burnClock + 1e-9 >= config.flameTick) {
       state.burnClock -= config.flameTick;
       const burning = new Set();
-      for (const f of fields) for (const enemy of nearby(f.x, f.y, f.radius)) burning.add(enemy);
+      for (const f of fields.filter(f => f.owner === owner)) for (const enemy of nearby(f.x, f.y, f.radius)) burning.add(enemy);
       for (const enemy of burning) {
         const rate = boss(enemy) ? config.bossFlameMaxHpPerSecond : config.flameMaxHpPerSecond;
-        hit(owner, enemy, enemy.maxHp * rate * config.flameTick, 'fire', enemy.x, enemy.y);
+        hit(owner, enemy, enemy.maxHp * rate * config.flameTick * (G.SelfClones?.isActor(owner) ? G.SelfClones.ratio : 1), 'fire', enemy.x, enemy.y);
       }
     }
     if (state.holeCooldown <= 0) {
       const candidates = nearby(owner.x, owner.y, config.holeRange)
-        .filter(enemy => !scorched(enemy) && !holes.some(h => Math.hypot(h.x - enemy.x, h.y - enemy.y) <= config.flameRadius));
+        .filter(enemy => !scorched(owner, enemy) && !holes.some(h => h.owner === owner && Math.hypot(h.x - enemy.x, h.y - enemy.y) <= config.flameRadius));
       candidates.sort((a, b) => Math.hypot(a.x - owner.x, a.y - owner.y) - Math.hypot(b.x - owner.x, b.y - owner.y));
       const target = candidates[0];
       if (target) {
@@ -131,7 +135,7 @@
   }
   function air(ctx) {
     ctx.save();
-    if (state?.stage >= 5 && valid(state)) {
+    for (const state of states.values()) if (state.stage >= 5 && valid(state)) {
       const x = Math.round(state.owner.x), y = Math.round(state.owner.y - 21);
       ctx.globalAlpha = .48 + Math.sin(state.age * 5) * .05;
       ctx.strokeStyle = '#a577eb'; ctx.lineWidth = 5;
@@ -162,7 +166,7 @@
   G.Combat.drawAirFields = function(ctx) { airFields.call(this, ctx); air(ctx); };
   G.NarutoSharinganPowers = {
     config, update, clear,
-    damageTakenMultiplier(owner) { return state?.stage >= 5 && state.owner === owner && valid(state) ? config.susanooDamageTakenMultiplier : 1; },
-    get fields() { return fields; }, get holes() { return holes; }, get slashes() { return slashes; }, get state() { return state; }
+    damageTakenMultiplier(owner) { const state = states.get(owner); return state?.stage >= 5 && valid(state) ? config.susanooDamageTakenMultiplier : 1; },
+    get fields() { return fields; }, get holes() { return holes; }, get slashes() { return slashes; }, stateFor: owner => states.get(owner), get state() { return states.get(G.Game.player); }
   };
 })();

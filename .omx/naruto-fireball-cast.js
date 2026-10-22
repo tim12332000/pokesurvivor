@@ -2,40 +2,43 @@
 (() => {
   if (G.NarutoFireball) return;
   const config = Object.freeze({sealDuration:.24, breathDuration:.16, recoveryDuration:.14});
-  let active = null;
-  const valid = f => f && f.owner === G.Game.player && f.world === G.World && !f.owner.dead && f.owner.hp > 0;
-  const clear = owner => { if (!owner || active?.owner === owner) active = null; };
+  const states = new Map();
+  const controlled = owner => G.SelfClones?.isControlled(owner) ?? (owner === G.Game.player);
+  const activeFor = owner => { const f = states.get(owner); return valid(f) ? f : null; };
+  const valid = f => f && controlled(f.owner) && f.world === G.World && !f.owner.dead && f.owner.hp > 0;
+  const clear = owner => { if (owner) states.delete(owner); else states.clear(); };
   // The rendered projectile is lifted by LIFT; its rear clears the breathing face.
   const origin = (pl, angle) => ({x:pl.x + Math.cos(angle)*24, y:pl.y - 22 + Math.sin(angle)*24});
   function cast(pl, move, release) {
-    if (pl !== G.Game.player || pl.dex !== 30002 || pl.dead || pl.hp <= 0 || active || G.NarutoChidori?.active) return false;
-    active = {owner:pl, world:G.World, move:{...move,digiVis:{...move.digiVis}}, release, aim:pl.aim, t:0, phase:'seal', released:false};
+    if (!controlled(pl) || pl.dex !== 30002 || pl.dead || pl.hp <= 0 || activeFor(pl) || (G.NarutoChidori?.activeFor ? G.NarutoChidori.activeFor(pl) : G.NarutoChidori?.active?.owner === pl)) return false;
+    states.set(pl, {owner:pl, world:G.World, move:{...move,digiVis:{...move.digiVis}}, release, aim:pl.aim, t:0, phase:'seal', released:false});
     return true;
   }
   function update(dt) {
-    const f = active;
-    if (!valid(f)) { clear(); return; }
-    f.t += Math.max(0,dt);
-    if (!f.released && f.t >= config.sealDuration) {
-      f.released = true;
-      f.release(f.owner,f.move,f.aim);
+    for (const [owner, f] of states) {
+      if (!valid(f)) { clear(owner); continue; }
+      f.t += Math.max(0,dt);
+      if (!f.released && f.t >= config.sealDuration) {
+        f.released = true;
+        f.release(f.owner,f.move,f.aim);
+      }
+      f.phase = f.t < config.sealDuration ? 'seal' : f.t < config.sealDuration+config.breathDuration ? 'breath' : 'recovery';
+      if (f.t >= config.sealDuration+config.breathDuration+config.recoveryDuration) clear(owner);
     }
-    f.phase = f.t < config.sealDuration ? 'seal' : f.t < config.sealDuration+config.breathDuration ? 'breath' : 'recovery';
-    if (f.t >= config.sealDuration+config.breathDuration+config.recoveryDuration) clear();
   }
   const playerCast=G.Player.prototype.cast, playerUpdate=G.Player.prototype.update;
   G.Player.prototype.cast=function(m) {
     return playerCast.call(this, this.dex===30002 && m.id==='naruto-fireball' ? {...m,kind:'buff'} : m);
   };
   G.Player.prototype.update=function(dt) {
-    if (active && !valid(active)) clear();
-    if (active?.owner !== this) return playerUpdate.call(this,dt);
+    if (states.has(this) && !activeFor(this)) clear(this);
+    if (!activeFor(this)) return playerUpdate.call(this,dt);
     const frozen=this.frozen; this.frozen=true; this.svx=this.svy=0;
     try { return playerUpdate.call(this,dt); } finally { this.frozen=frozen; }
   };
   const Animator=G.Sprites.Animator, draw=Animator.prototype.draw;
   Animator.prototype.draw=function(ctx,x,y,opts={}) {
-    const f=active, record=G.Naruto.records.get(30002);
+    const f=[...states.values()].find(f=>f.owner.anim===this), record=G.Naruto.records.get(30002);
     if (!valid(f) || f.owner.anim!==this || !record?.ready) return draw.call(this,ctx,x,y,opts);
     const side=Math.cos(f.aim)>=0 ? 1 : -1, k=64/44*this.scale;
     ctx.save(); ctx.translate(Math.round(x),Math.round(y)); ctx.scale(side*k,k);
@@ -65,16 +68,18 @@
   G.DigimonSkills.clear=function(owner){oldSkillsClear(owner);clear(owner);};
   C.drawAirFields=function(ctx) {
     oldAir.call(this,ctx);
-    const f=active;if(!valid(f)||f.phase!=='breath')return;
-    const pl=f.owner, side=Math.cos(f.aim)>=0?1:-1, mouth={x:pl.x+side*16,y:pl.y-44};
-    const end=origin(pl,f.aim), ex=end.x, ey=end.y-G.LIFT;
-    ctx.save();
-    for(let layer=0;layer<3;layer++) {
-      ctx.fillStyle=['#ab3721','#ff8028','#ffe8a2'][layer];
-      const width=[10,6,2][layer];
-      for(let i=0;i<=12;i++) {const t=i/12;ctx.fillRect(Math.round((mouth.x+(ex-mouth.x)*t)/2)*2-width/2,Math.round((mouth.y+(ey-mouth.y)*t)/2)*2-width/2,width,width);}
+    for (const f of states.values()) {
+      if(!valid(f)||f.phase!=='breath')continue;
+      const pl=f.owner, side=Math.cos(f.aim)>=0?1:-1, mouth={x:pl.x+side*16,y:pl.y-44};
+      const end=origin(pl,f.aim), ex=end.x, ey=end.y-G.LIFT;
+      ctx.save();
+      for(let layer=0;layer<3;layer++) {
+        ctx.fillStyle=['#ab3721','#ff8028','#ffe8a2'][layer];
+        const width=[10,6,2][layer];
+        for(let i=0;i<=12;i++) {const t=i/12;ctx.fillRect(Math.round((mouth.x+(ex-mouth.x)*t)/2)*2-width/2,Math.round((mouth.y+(ey-mouth.y)*t)/2)*2-width/2,width,width);}
+      }
+      ctx.restore();
     }
-    ctx.restore();
   };
-  G.NarutoFireball={config,cast,clear,update,origin,get active(){return active;}};
+  G.NarutoFireball={config,cast,clear,update,origin,activeFor,get active(){return activeFor(G.Game.player);}};
 })();

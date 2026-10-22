@@ -11,7 +11,7 @@ URL = 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&test=max-health-percen
 CHECK = r"""() => {
  const p=G.Game.player,out={},near=(a,b)=>{if(Math.abs(a-b)>1e-8)throw Error(a+' != '+b)};
  const def=G.LevelUp.STATS.find(s=>s.id==='maxHealthPercent'),flat=G.LevelUp.STATS.find(s=>s.id==='hp');
- if(!def||def.max||G.MaxHealthPercent.perPick!==.01)throw Error('missing repeatable stat');
+ if(!def||def.max||G.MaxHealthPercent.perPick!==.1)throw Error('missing repeatable stat');
  const save=JSON.stringify(G.DB.save);
  p.maxHp=260;p.hp=130;p.level=6;p.addMove('naruto-gates');
  if(G.NarutoGates.healingMultiplier(p)!==1.16)throw Error('Gates fixture missing');
@@ -21,23 +21,23 @@ CHECK = r"""() => {
  }throw Error('real candidate unavailable after 100 offers')};
  let card=findCard(G.LevelUp.offer,p).card;
  if(!card)throw Error('real candidate unavailable');
- card.apply(p);near(p.maxHp,268.66);near(p.hp,138.66);
+ card.apply(p);near(p.maxHp,292.6);near(p.hp,162.6);
  if(p.statsTaken.maxHealthPercent!==1||p.slots.length!==slots)throw Error('card accounting/slots');
  out.first={max:p.maxHp,hp:p.hp};
- card.apply(p);near(p.maxHp,271.3466);near(p.hp,141.3466);
- flat.apply(p);near(p.maxHp,291.3466);near(p.hp,161.3466);
- card.apply(p);near(p.maxHp,294.260066);near(p.hp,164.260066);
+ card.apply(p);near(p.maxHp,321.86);near(p.hp,191.86);
+ flat.apply(p);near(p.maxHp,341.86);near(p.hp,211.86);
+ card.apply(p);near(p.maxHp,376.046);near(p.hp,246.046);
  out.mixed={max:p.maxHp,hp:p.hp,count:p.statsTaken.maxHealthPercent};
  p.hp=p.maxHp;card.apply(p);near(p.hp,p.maxHp);
  p.regenFlat=0;
  const all=G.DEX.filter(mon=>mon.hp>0&&Number.isFinite(mon.hp));
  for(const mon of all){const actor=new G.Player(mon);actor.maxHp=260;actor.hp=130;
-   def.apply(actor);near(actor.maxHp,262.6);near(actor.hp,132.6);
+   def.apply(actor);near(actor.maxHp,286);near(actor.hp,156);
    if(actor.hp>actor.maxHp||actor.hp<=0)throw Error('invalid health '+mon.dex);
  }
  out.rosterCount=all.length;
  const row=G.RunAttributes.rows(p).find(r=>r.id==='maxHealthPercent');
- if(row?.text!=='生命成長 +1% ×4')throw Error('bad row '+JSON.stringify(row));
+ if(row?.text!=='生命成長 +10% ×4')throw Error('bad row '+JSON.stringify(row));
  if(JSON.stringify(G.DB.save)!==save)throw Error('stat persisted outside run');
  out.row=row.text;
  p.maxHp=260;p.hp=130;p.statsTaken={};p.level=5;p.invuln=999;
@@ -76,7 +76,7 @@ def main():
             page.wait_for_selector('#scr-levelup:not(.hidden) #cards .card')
             page.evaluate('() => {G.LevelUp.offer=HealthGrowthOffer}')
             page.evaluate('G.Game.player.maxHp=260;G.Game.player.hp=130')
-            assert '生命成長 +1%' in page.locator('#cards .card').first.inner_text()
+            assert '生命成長 +10%' in page.locator('#cards .card').first.inner_text()
             page.wait_for_function("""() => {
               const card=document.querySelector('#scr-levelup:not(.hidden) #cards .card');
               if(!card)return false;
@@ -88,7 +88,7 @@ def main():
             page.locator('#cards .card').first.click()
             result['ui'] = page.evaluate("""() => {
               const p=G.Game.player,result=HealthGrowthChoice;
-              if(Math.abs(result.max-262.6)>1e-8||Math.abs(result.hp-132.6)>1e-8||result.count!==1)throw Error('actual choice delta '+JSON.stringify(result));
+              if(Math.abs(result.max-286)>1e-8||Math.abs(result.hp-156)>1e-8||result.count!==1)throw Error('actual choice delta '+JSON.stringify(result));
               if(G.Game.state==='playing')G.Game.togglePause();G.UI.hide('scr-pause');
               return {...result,row:G.RunAttributes.rows(p).find(r=>r.id==='maxHealthPercent').text};
             }""")

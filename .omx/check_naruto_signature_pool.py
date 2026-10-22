@@ -53,7 +53,9 @@ with sync_playwright() as p:
           }
           const pl=G.Game.player;
           G.Projectiles.clear();pl.invuln=0;pl.dead=false;pl.hp=pl.maxHp;pl.frozen=0;pl.quantityBonus=0;
+          const active=pl.activeGroup(),slots=pl.slots.length,bindings=JSON.stringify(pl.bind);
           assert(pl.addMove('naruto-sharingan'),'Could not learn passive fixture');
+          assert(pl.slots.length===slots&&pl.activeGroup()===active&&JSON.stringify(pl.bind)===bindings&&!pl.slots.flat().some(m=>m.id==='naruto-sharingan'),'Passive fixture changed selectable skills or bindings');
           Object.assign(pl.moves.find(m=>m.id==='naruto-sharingan'),G.Moves.instance('naruto-sharingan',2));
           G.NarutoSharingan.sync(pl);
           const random=Math.random;Math.random=()=>.01;

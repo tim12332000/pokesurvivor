@@ -1,5 +1,6 @@
 """Build only the public game files, excluding local state and the upstream domain."""
 from pathlib import Path
+import hashlib
 import json
 import re
 import shutil
@@ -39,7 +40,7 @@ assert sources == {
     'redrawn/lee-gates-common-v1.png', 'redrawn/lee-gates-skills-v1.png',
     'redrawn/gaara-common-v1.png', 'redrawn/gaara-skills-v1.png',
 }, 'Unexpected reviewed hero atlas inventory'
-for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js']:
+for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js']:
     target = OUT / name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / name, target)
@@ -58,12 +59,16 @@ for name in filter(None, tracked + public_new):
 
 html_path = OUT / '.omx/digimon.html'
 html = html_path.read_text(encoding='utf-8')
-build_id = subprocess.check_output(['git','rev-parse','--short','HEAD'],cwd=ROOT).decode().strip()
-# Every deployment must fetch its matching scripts, including changed skill data.
+# Version the actual bytes, including local changes built before a commit.
+def version_asset(match):
+    source = match[2]
+    digest = hashlib.sha256((OUT / source).read_bytes()).hexdigest()[:12]
+    return match[1] + source + '?v=' + digest + match[3]
+
 html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',
-              lambda match: match[1]+match[2]+'?v='+build_id+match[3], html)
+              version_asset, html)
 html = re.sub(r'(<link\b(?=[^>]*\brel="stylesheet")[^>]*\bhref=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',
-              lambda match: match[1]+match[2]+'?v='+build_id+match[3], html)
+              version_asset, html)
 html = re.sub(r'<!-- seo:begin -->.*?<!-- seo:end -->', '', html, flags=re.S)
 html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼寶貝 × 火影忍者</title>', html, flags=re.S)
 html = html.replace('<html lang="es">', '<html lang="zh-TW">')

@@ -277,7 +277,7 @@ G.HUD = (() => {
       const m = g[0];
       const displayPassive = i >= pl.slots.length && !!m?.passive;
       const fused = g.length > 1;
-      const on = i === pl.active;
+      const on = !displayPassive && i === pl.active;
       const slot = controls && controls.slots[i];
       const x = slot ? slot.x : sx + i * (S + GAP);
       const y0 = slot ? slot.y : sy;
@@ -354,7 +354,7 @@ G.HUD = (() => {
         const shield = G.NarutoGaara?.shieldState(pl);
         if (shield) {
           ctx.font = F(800, 9); ctx.textAlign = 'right'; ctx.fillStyle = '#edd395';
-          ctx.fillText(Math.ceil(shield.amount) + '/' + shield.capacity, x + S - 3, y + 10);
+          ctx.fillText(Math.ceil(shield.amount) + '/' + Math.ceil(shield.capacity), x + S - 3, y + 10);
           ctx.textAlign = 'center'; ctx.fillText(shield.remaining.toFixed(1) + 's', x + S / 2, y - 4);
         }
         const guard = G.NarutoSandGuard?.state(pl);
@@ -368,6 +368,14 @@ G.HUD = (() => {
             bar(ctx, x + 7, y + S - 13, S - 14, 2, progress, '#d4cdbb');
           }
         }
+      }
+      if (m.digiMode === 'chidori-chain' && G.NarutoChidori) {
+        const chain = G.NarutoChidori.active;
+        const activeChain = chain?.owner === pl && chain.move.id === m.id ? chain : null;
+        const count = activeChain ? activeChain.limit : G.NarutoChidori.limitOf(m, pl);
+        ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
+        ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#9feaff';
+        ctx.fillText('連招 ' + (activeChain ? activeChain.hitCount + '/' : '') + count, x + S / 2, y + S - 17, S - 8);
       }
       if (m.id === 'naruto-sand-prison') {
         const prison = G.NarutoGaara?.sandPrisonState(pl);

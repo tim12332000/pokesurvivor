@@ -1,5 +1,6 @@
 /* Targeted Naruto techniques: simulation-time fields, owned by the current run. */
 (() => {
+  const controlled = owner => G.SelfClones?.isControlled(owner) ?? (owner === G.Game.player);
   if (G.NarutoOffense) return;
   const C = G.Combat, effects = [], modes = new Set(['lotus', 'sand-coffin', 'single-illusion', 'black-flames']);
   G.VFX.PAL['naruto-black-flame']=['#05050d','#111024','#29163f','#663772','#b66bc3'];
@@ -13,7 +14,7 @@
   const modeOf = m => m.digiMode || m.narutoMode || m.mode;
   const alive = e => e && !e.dead && e.hp > 0;
   const elite = e => !!(e.boss || e.legend || e.judge || e.elite);
-  const valid = f => f.owner === G.Game.player && alive(f.owner) && f.world === G.World;
+  const valid = f => controlled(f.owner) && alive(f.owner) && f.world === G.World;
   const nearby = (x, y, radius) => [...new Set(G.EnemyMgr.queryCircle(x, y, radius))]
     .filter(e => alive(e) && Math.hypot(e.x - x, e.y - y) <= radius + (e.r || 0));
   function clearPath(ax, ay, bx, by) {

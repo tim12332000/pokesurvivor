@@ -711,6 +711,7 @@ G.Game = (() => {
     for (const p of G.World.visibleProps(cam)) items.push({ y: p.flat ? p.y - 4000 : p.y, prop: p });
     for (const e of G.EnemyMgr.drawables(cam)) items.push({ y: e.y, ent: e });
     for (const e of extra) items.push({ y: e.y, ent: e });
+    for (const a of G.SelfClones?.drawables(cam) || []) items.push({ y: a.y, ent: a });
     const rift = G.Rift.drawable();
     if (rift) items.push({ y: rift.y, ent: rift });
     const arceus = pl && state !== 'ui' ? G.Judgment.drawable() : null;
@@ -871,7 +872,7 @@ G.Game = (() => {
     debugSpeed(k) { if (k > 1) tampered = true; speedK = k; },
     cyclePlaybackSpeed() {
       if (state !== 'playing' || !pl || pl.dead || G.Coop.active) return;
-      speedK = speedK >= 3 ? 1 : speedK + 1;
+      speedK = speedK >= 5 ? 1 : speedK + 1;
       if (speedK > 1) tampered = true;
     },
     toggleAutoPickUpgrades() {

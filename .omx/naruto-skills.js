@@ -122,17 +122,17 @@
     [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
       mode: 'shadow-clones', type: 'fighting', cd: clones.cooldown, dmg: clones.punchDamage, range: 240,
       cloneDuration: clones.duration, punchCd: clones.punchCooldown, vis: { pal: 'naruto-blue' },
-      desc:`結印 ${clones.sealDuration} 秒後召喚 ${clones.counts.join('／')} 隻分身，持續 ${clones.duration} 秒。分身模仿螺旋丸、螺旋手裏劍與忍具，各自造成完整傷害；受擊消散。`,
-      ups: clones.counts.slice(1).map(count=>({t:`影分身數量增加 → ${count} 隻；每隻完整傷害`,m:{}}))
+      desc:`需選中才會召喚，切招後既有分身保留至到期。結印 ${clones.sealDuration} 秒後召喚基礎 ${clones.counts.join('／')} 隻分身，持續 ${clones.duration} 秒；數量卡每張使分身數 ×1.25，累乘後取整。分身模仿螺旋丸、螺旋手裏劍與忍具，各自造成完整傷害；受擊消散。`,
+      ups: clones.counts.slice(1).map(count=>({t:`分身基礎數量 → ${count} 隻；每隻完整傷害`,m:{}}))
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
       mode: 'chidori-chain', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
       minCooldown: G.NarutoChidori.config.minCooldown,
       range: 170, radius: 170, width: 34, knock: 50,
       vis: { proj: 'bolt', melee: 'claw', pal: 'naruto-blue' },
-      desc:`連續突進 ${G.NarutoChidori.config.counts.join('／')} 次，數量加成每點 +1；不能連續攻擊同一目標。第二擊起每擊傷害再 ×1.05，速度逐擊加快、最高 ×3；施放時固定鏡頭，僅追擊畫面附近目標，結束返回原位。飛行可穿牆且無敵，返回後無敵 0.3 秒，結印與轉向仍可受傷；再次施放間隔至少 ${G.NarutoChidori.config.minCooldown} 秒。`,
+      desc:`基礎連續突進 ${G.NarutoChidori.config.counts.join('／')} 次，數量卡每張使追擊次數 ×1.25，累乘後取整；不能連續攻擊同一目標。第二擊起每擊傷害再 ×1.05，速度逐擊加快、最高 ×3；施放時固定鏡頭，僅追擊畫面附近目標，結束返回原位。飛行可穿牆且無敵，返回後無敵 0.3 秒，結印與轉向仍可受傷；再次施放間隔至少 ${G.NarutoChidori.config.minCooldown} 秒。`,
       ups: G.NarutoChidori.config.counts.slice(1).map((count,index)=>({
-        t: `追擊上限 → ${count} 名；${['傷害 +20%','冷卻 -10%','攻擊範圍 +12%','傷害 +25%'][index]}`,
+        t: `基礎追擊次數 → ${count} 次；${['傷害 +20%','冷卻 -10%','攻擊範圍 +12%','傷害 +25%'][index]}`,
         m: [{dmg:1.2},{cd:.9},{radius:1.12,width:1.12,life:1.12,range:170*1.12},{dmg:1.25}][index]
       }))
     }],
@@ -161,14 +161,14 @@
       desc:'旋身大角度橫掃，踢開近身與側面敵人。'
     }],
     [30007, 'gaara', '砂時雨', 'Sand Shower (game adaptation)', '01_1695', {
-      mode: 'gaara-sand-burst', type: 'ground', cd: 1.2, dmg: 28,
+      mode: 'gaara-sand-burst', passive: true, type: 'ground', cd: 1.2, dmg: 28,
       range: 260, count: 3, knock: 12,
       ups:[{t:'整輪基礎傷害 34＋角色等級',m:{dmg:34/28}},
         {t:'砂彈 4 枚・距離 280',m:{count:1,range:280}},
         {t:'整輪基礎傷害 42＋角色等級',m:{dmg:42/34}},
         {t:'整輪基礎傷害 52＋角色等級・砂彈 5 枚・距離 300',m:{dmg:52/42,count:1,range:300}}],
       vis: { pal: 'naruto-sand' },
-      desc:'連發追蹤砂流，沿用護衛的碎砂與尾流演出，平滑轉彎追擊目標。整輪基礎傷害＝當階傷害（28／34／34／42／52）＋角色等級，每級 +1，平均分配至當階原有彈數。首次碰到敵人或牆即消散，不爆炸、不貫穿，追蹤不增加飛行射程。數量卡增加彈數，單彈傷害不變；基礎冷卻 1.2 秒，冷卻卡有效。'
+      desc:'常駐自動普攻，不占主動槽、不需選招。連發追蹤砂流，沿用護衛的碎砂與尾流演出，平滑轉彎追擊目標。整輪基礎傷害＝當階傷害（28／34／34／42／52）＋角色等級，每級 +1，平均分配至當階原有彈數。首次碰到敵人或牆即消散，不爆炸、不貫穿，追蹤不增加飛行射程。數量卡增加彈數，單彈傷害不變；基礎冷卻 1.2 秒，冷卻卡有效。'
     }],
     [30008, 'itachi', '月讀', 'Tsukuyomi', '01_1316', {
       mode: 'single-illusion', type: 'psychic', cd: 3.6, dmg: 30, range: 260,
@@ -209,7 +209,7 @@
       fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75,
       radius:76, pulseDamage:12, pulseInterval:.65, knock:18,
       vis:{pal:'naruto-red'},
-      desc:'一尾外衣持續 8 秒：攻擊 +50%、移速 +25%、一般傷害 -25%，每 0.65 秒反擊近身敵人。切招仍有效，不能疊加。',
+      desc:'需選中才會施放。一尾外衣持續 8 秒：攻擊 +50%、移速 +25%、一般傷害 -25%，每 0.65 秒反擊近身敵人。切招仍有效，不能疊加。',
       ups:[{t:'外衣持續時間 → 9 秒',m:{fieldDuration:9}},
         {t:'外衣攻擊加成 → +65%',m:{atkMul:1.65}},
         {t:'外衣移速加成 → +35%',m:{speedMul:1.35}},
@@ -239,7 +239,7 @@
       name:'寫輪眼・進化', mode:'sharingan-evolution', passive:true, type:'psychic', cd:0, dmg:0,
       range:320,
       vis:{pal:'naruto-red'},
-      desc:'被動，五階效果累加：閃避 +5%、拾取範圍 +20%；閃避反擊手裏劍、反擊傷害 +35%；遠程彈道 +1；牽引後留下本局永久黑炎，每秒傷害最大生命 2%（首領 0.5%）；減傷 30% 並自動範圍斬擊。數量加成增加反擊彈數。',
+      desc:'常駐被動，學會即生效、不占主動槽。五階效果累加：閃避 +5%、拾取範圍 +20%；閃避反擊手裏劍、反擊傷害 +35%；遠程彈道 +1；牽引後留下本局永久黑炎，每秒傷害最大生命 2%（首領 0.5%）；減傷 30% 並自動範圍斬擊。數量加成增加反擊彈數。',
       ups:[
         {t:'進化二勾玉：閃避成功發射 3 枚看破手裏劍',m:{}},
         {t:'進化三勾玉：殘影、所有遠程彈道 +1',m:{}},
@@ -293,7 +293,7 @@
     ['naruto-gates', [30006], {
       name:'八門遁甲・開門', mode:'gates-passive', passive:true, type:'fighting', learnLevel:6, cd:0, dmg:0,
       vis:{pal:'grass'},
-      desc:'被動：生命上限＋LV×N；每秒回血 N%；回血量／跑速＋(10N＋LV)%，並提高攻擊。N＝技能等級，LV＝角色等級。',
+      desc:'常駐被動，學會即生效、不占主動槽：生命上限＋LV×N；每秒回血 N%；回血量／跑速＋(10N＋LV)%，並提高攻擊。N＝技能等級，LV＝角色等級。',
       ups:[
         {t:'休門：生命加成改為 LV×2；回血 2%/秒；攻擊＋35%；回血量／跑速＋(20＋LV)%',m:{}},
         {t:'生門：生命加成改為 LV×3；回血 3%/秒；攻擊＋40%；回血量／跑速＋(30＋LV)%',m:{}},
@@ -311,7 +311,7 @@
         {t:'空中連擊 +2（11 次）・突進距離 +12%・落地範圍擴大至 160',m:{range:201.6,radius:8/7}},
         {t:'空中連擊 +2（13 次）・傷害 +25%・落地範圍擴大至 180',m:{dmg:1.25,radius:9/8}}
       ],
-      vis:{pal:'grass'}, desc:'基礎冷卻 5 秒，技能升級不變，冷卻縮減卡有效。全程最多 3.3 秒。空中連擊＝5＋2×（技能等級－1）＋數量；第 n 擊傷害 ×1.10^n。每踢升高並加速，空中無敵，持續顯示累積傷害。致命傷延至落地才擊倒，落地造成範圍傷害；冷卻自動普攻。首領不浮空。',
+      vis:{pal:'grass'}, desc:'基礎冷卻 5 秒，冷卻卡有效，全程最多 3.3 秒。基礎空中連擊 5／7／9／11／13 次；數量卡每張使連擊數 ×1.25，累乘後取整。第 n 擊傷害 ×1.10^n，越踢越快、空中無敵。致命傷延至落地才擊倒，落地造成範圍傷害；冷卻自動普攻。首領不浮空。',
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {
@@ -319,19 +319,19 @@
       range:280, count:1, fieldDuration:1.1, slow:.95, bossSlow:.3,
       ups:[{t:'傷害 +20%',m:{dmg:1.2}},{t:'索敵距離提高至 310',m:{range:310}},
         {t:'傷害 +25%',m:{dmg:1.25}},{t:'傷害 +25%・索敵距離 340',m:{dmg:1.25,range:340}}],
-      vis:{pal:'naruto-sand'}, desc:'優先鎖定可見精英或首領，同時束縛數量＝min（1＋角色等級，10）＋數量卡加成（最多 +20），合計最多 30 名不同敵人。束縛 1.1 秒後每名壓縮一次，單體基礎傷害＝當階傷害（110／132／132／165／206.25）＋角色等級，每級 +1，不造成起手傷害；首領僅減速 30%。基礎冷卻 5 秒，升級不變；冷卻期間自動砂彈普攻。',
+      vis:{pal:'naruto-sand'}, desc:'優先鎖定可見精英或首領，基礎束縛數量＝1＋角色等級，最多 10 名；數量卡每張使目標數 ×1.25，累乘取整後最多 30 名。束縛 1.1 秒後每名壓縮一次，單體基礎傷害＝當階傷害（110／132／132／165／206.25）＋角色等級，每級 +1，不造成起手傷害；首領僅減速 30%。基礎冷卻 5 秒，冷卻期間自動砂彈普攻。',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-shield', [30007], {
       name:'砂之盾', mode:'gaara-shield', passive:true, type:'ground', learnLevel:1, cd:12, dmg:0,
       shieldAmount:45, range:400, guardCount:2, guardSpeedBonus:200,
-      ups:[{t:'基礎盾量 60・基礎護衛數 2 團',m:{shieldAmount:60,guardCount:2}},
-        {t:'基礎盾量 75・基礎護衛數 3 團',m:{shieldAmount:75,guardCount:3}},
-        {t:'基礎盾量 90・基礎護衛數 3 團',m:{shieldAmount:90,guardCount:3}},
-        {t:'基礎盾量 110・基礎護衛數 4 團',m:{shieldAmount:110,guardCount:4}}],
+      ups:[{t:'基礎盾量 120・基礎護衛數 2 團・砂鎧減傷 35%・反擊 85',m:{shieldAmount:60,guardCount:2}},
+        {t:'基礎盾量 150・基礎護衛數 3 團・反擊半徑 125',m:{shieldAmount:75,guardCount:3}},
+        {t:'基礎盾量 180・基礎護衛數 3 團・砂鎧減傷 40%・反擊 105',m:{shieldAmount:90,guardCount:3}},
+        {t:'基礎盾量 220・基礎護衛數 4 團・砂鎧減傷 45%・反擊 130・半徑 140',m:{shieldAmount:110,guardCount:4}}],
       vis:{pal:'naruto-sand'},
-      desc:'Lv.1 起可學，學會後常駐，不用選、不占主動槽。盾量＝基礎盾量（45／60／75／90／110）＋角色等級×技能階數，每 12 秒補滿；升級只補容量差額，不重設進度。同時召出基礎護衛數（2／2／3／3／4）＋角色等級團游砂，上限 10 團，各自平滑追彈、可穿牆，半徑 400、速度＝角色目前移速＋200。防守優先，有敵彈時停止追人；無敵彈時自動接觸攻擊範圍內敵人，五階基礎傷害 20／25／30／35／40，命中後攻擊冷卻 1 秒，期間仍可攔彈。每團接觸抹除敵彈後獨立回航，在身旁凝聚 2.5 秒恢復；冷卻卡影響兩種補充，數量卡不增加護衛。不攔雷射、地面傷害或近戰。',
-      descEn:'Learnable from character Lv.1; always active without an active slot. Shield capacity is tier base (45/60/75/90/110) plus character level times skill tier, refilling every 12 seconds. Upgrades add only the capacity difference and preserve refill progress. Also summons tier base (2/2/3/3/4) plus character level independent sand guardians, capped at 10. They turn smoothly, pass through walls, roam within range 400 at current player speed plus 200, and erase enemy bullets on contact. Defense takes priority: incoming bullets interrupt enemy pursuit. With no incoming bullets, guardians contact-attack nearby enemies for tier base damage 20/25/30/35/40. Each hit starts a 1-second attack-only cooldown; interception remains available. Each returns and reforms near the player for 2.5 seconds. Cooldown bonuses affect both cycles; quantity adds no guardians. Cannot intercept lasers, ground hazards or melee.',
+      desc:'常駐被動，不占主動槽。護盾總量×2（含等級與加血轉盾），每 12 秒補滿；游砂護衛分工攔彈，其餘持續攻敵，數量卡可增加，最多 100 團；五階接觸基礎傷害 10／12.5／15／17.5／20。護衛命中首領、傳說與審判者時不觸發生命剝奪。附近有敵人時每 10 秒獲得 3 秒砂鎧，減傷 30%～45%；扣血 3 次或到期時崩砂反擊。切招不中斷，冷卻卡有效。',
+      descEn:'Always active; uses no active slot. Shield refills every 12s; all shield capacity is doubled, including level and maximum-HP growth bonuses. Assigned sand guardians intercept bullets while the others keep attacking; quantity bonuses add guardians, up to 100. Tier base contact damage is 10/12.5/15/17.5/20. Guardian hits cannot trigger percent-health damage against bosses, legends or judges. With enemies nearby, gain 3s of armor every 10s for 30%-45% damage reduction; counter after three HP-damaging hits or expiry. Persists when switching skills. Cooldown bonuses apply.',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-tsunami', [30007], {
@@ -353,7 +353,7 @@
       desc:'選中後每 6 秒在附近敵人腳下生成圓形砂地，持續 5 秒，每 0.5 秒傷害一次、共 10 次。困住普通地面敵人並持續捲向中心；精英與首領減速 35%，受到較弱牽引。飛行與跳躍中無效，不穿牆拉人。切走立即解除，重選重新計時；冷卻卡有效。',
       source_url:'https://naruto-official.com/en/news/01_1695'
     }],
-    ['naruto-sand-armor', [30007], {
+    ['naruto-sand-armor', [], {
       name:'砂鎧・崩砂反擊', nameEn:'Sand Armor: Shattering Counter', mode:'gaara-sand-armor', type:'ground', learnLevel:15,
       cd:10, dmg:70, range:180, radius:110, armorReduction:.3, fieldDuration:3,
       ups:[{t:'減傷提高至 35%・崩砂傷害 85',m:{armorReduction:.35,dmg:85/70}},
@@ -361,8 +361,8 @@
         {t:'減傷提高至 40%・崩砂傷害 105',m:{armorReduction:.4,dmg:105/85}},
         {t:'減傷提高至 45%・崩砂傷害 130・半徑 140',m:{armorReduction:.45,dmg:130/105,radius:140/125}}],
       vis:{pal:'naruto-sand'},
-      desc:'選中且附近有敵人時凝聚砂鎧，持續 3 秒並減傷 30%～45%。實際受傷三次或時間結束時，崩砂造成周圍傷害並擊退普通敵人。切走解除且不反擊；冷卻自起手計算 10 秒並保留，傷害、範圍與冷卻卡有效，數量卡無效。本作改編。',
-      descEn:'While selected with a nearby enemy, gain sand armor for 3 seconds and reduce damage by 30%–45%. After three damaging hits or expiry, shatter to damage nearby enemies and knock back ordinary foes. Switching cancels the counter and preserves the 10-second cast cooldown. Quantity has no effect. Game adaptation.',
+      desc:'砂之盾附帶的常駐效果，不單獨學習或選用。附近有敵人時凝聚砂鎧，持續 3 秒並減傷 30%～45%。實際受傷三次或時間結束時，崩砂造成周圍傷害並擊退普通敵人。切招仍有效；冷卻自起手計算 10 秒，傷害、範圍與冷卻卡有效，數量卡無效。本作改編。',
+      descEn:'A permanent component of Sand Shield, not a separately learned or selected skill. With a nearby enemy, gain sand armor for 3 seconds and reduce damage by 30%–45%. After three damaging hits or expiry, shatter to damage nearby enemies and knock back ordinary foes. Switching skills preserves the armor and the 10-second cast cooldown. Quantity has no effect. Game adaptation.',
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-black-flames', [30008], {
@@ -374,7 +374,7 @@
     ['naruto-kusanagi', [30002], {
       name:'草薙劍・環繞', mode:'kusanagi-orbit', type:'steel', learnLevel:1,
       cd:1,dmg:28,radius:58,count:1,knock:8,
-      desc:'選用並施放後，飛行劍持續環繞攻擊，切招即消失。同一敵人每 0.35 秒最多命中一次；數量加成及三勾玉彈道加成各增加一把劍。',
+      desc:'選用並施放後，飛行劍持續環繞攻擊，切招即消失。同一敵人每 0.35 秒最多命中一次；數量卡每張使劍數 ×1.25，累乘取整後，三勾玉再額外加一把劍。',
       ups:[{t:'環繞劍 +1 把',m:{count:1}},
         {t:'劍刃傷害 +30%、環繞範圍 +10%',m:{dmg:1.3,radius:1.1}},
         {t:'環繞劍再 +1 把',m:{count:1}},
@@ -386,7 +386,7 @@
       cd:1.6,dmg:34,speed:460,life:4,range:552,size:32,count:1,pierce:3,arc:.24,charge:.2,knock:24,
       fumaReturn:true,boom:.65,fumaCurve:130,
       vis:{proj:'naruto-fuma-shuriken',pal:'naruto-fuma-steel',projScale:.9},
-      desc:'旋轉鋼刃沿弧線出擊並返回，去、回各最多命中四名敵人，每名每程一次；牆壁會擋下。數量加成增加枚數與穿透，每枚造成完整傷害。',
+      desc:'旋轉鋼刃沿弧線出擊並返回，基礎去、回各最多命中四名敵人，每名每程一次；牆壁會擋下。數量卡每張使枚數 ×1.25，累乘後取整，穿透每張 +1；每枚造成完整傷害。',
       ups:[{t:'手裏劍 +1 枚、穿透 +1',m:{count:1,pierce:1}},
         {t:'手裏劍傷害 +20%',m:{dmg:1.2}},
         {t:'冷卻 -15%',m:{cd:.85}},
@@ -488,7 +488,14 @@
   guide.id = 'scr-naruto-skills';
   guide.className = 'scr dim hidden';
   guide.translate = false;
-  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。Lv.3、Lv.6 起保證出現特色技能選項；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
+  guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
+  function activationLabel(move) {
+    if (move.id === 'naruto-gaara') return '常駐普攻 · 不用選招 · 不占主動槽';
+    if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';
+    if (['naruto-kusanagi', 'naruto-sand-prison'].includes(move.id)) return '主動 · 需保持選中';
+    if (['naruto-shadow-clones', 'naruto-nine-tails-cloak'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';
+    return '主動 · 選中後自動施放';
+  }
   for (const [dex, definition] of byDex) {
     if(!G.Naruto.availableDexes.includes(dex))continue;
     const record = G.Naruto.records.get(dex), reference = references.get(dex);
@@ -499,7 +506,7 @@
     const description = document.createElement('p');
     description.textContent = definition.desc;
     const stats = document.createElement('small');
-    stats.textContent = definition.passive ? '學會即生效 · 五階段進化' : `冷卻 ${definition.cd} 秒 · ${definition.dmg ? '基礎傷害 '+definition.dmg : '輔助技能'} · 可升至 Lv.5`;
+    stats.textContent = `${activationLabel(definition)} · 冷卻 ${definition.cd} 秒 · 可升至 Lv.5`;
     const source = document.createElement('a');
     source.href = reference.source_url;
     source.target = '_blank';
@@ -513,7 +520,7 @@
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = move.passive ? '學會即生效 · 五階段進化' : `冷卻 ${move.cd} 秒 · ${move.dmg ? '基礎傷害 '+move.dmg : '輔助技能'}${move.blastRadius ? ' · 爆發半徑 '+move.blastRadius : ''} · 可升至 Lv.5`;
+      extraStats.textContent = `${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.5`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';

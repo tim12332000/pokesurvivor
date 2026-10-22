@@ -5,14 +5,19 @@
   const durations = { windup: .24, lift: .36, suspend: .42, descent: .22, slam: .20, recovery: .22 };
   const reverseDurations = { windup: .28, lift: .48, combo: 1.65, descent: .32, slam: .24, recovery: .28 };
   const basics = new WeakMap();
-  let chain = null, finalSummary = null;
+  const chains = new Map(), summaries = new Map(), releasingTargets = new WeakSet();
+  const activeFor = owner => chains.get(owner) || null;
+  const controlled = owner => owner === G.Game.player || !!G.SelfClones?.isControlled(owner);
+  const targetChain = enemy => [...chains.values()].filter(f => valid(f) && f.target === enemy && f.kind === 'lee-reverse-lotus' &&
+      ['lift', 'combo', 'descent', 'slam'].includes(f.phase))
+    .sort((a, b) => Number(!!b.primaryHit) - Number(!!a.primaryHit) || Number(!!b.pendingDeath) - Number(!!a.pendingDeath))[0];
   const alive = actor => actor && !actor.dead && actor.hp > 0;
-  const valid = f => f && f.owner === G.Game.player && f.world === G.World && alive(f.owner);
+  const valid = f => f && controlled(f.owner) && f.world === G.World && alive(f.owner);
   const elite = e => !!(e.boss || e.elite || e.legend || e.judge);
   const supports = mode => modes.has(mode);
   const launchedLotus = f => supports(f.kind) && ['lift', 'suspend', 'combo', 'descent', 'slam', 'recovery'].includes(f.phase);
-  const isInvulnerable = owner => !!valid(chain) && chain.owner === owner && chain.kind === 'lee-reverse-lotus' &&
-    ['lift', 'combo', 'descent'].includes(chain.phase);
+  const isInvulnerable = owner => { const f = activeFor(owner); return !!valid(f) && f.kind === 'lee-reverse-lotus' &&
+    ['lift', 'combo', 'descent'].includes(f.phase); };
   const reach = f => (f.owner.r || 12) + (f.target.r || 10) + 12;
   function clearPath(ax, ay, bx, by) {
     const steps = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / 4));
@@ -32,7 +37,7 @@
   function removeLift(f) {
     if (f) { f.targetLift = 0; f.visualLift = 0; }
   }
-  const hitLiftFor = enemy => valid(chain) && chain.target === enemy ? chain.targetLift : 0;
+  const hitLiftFor = enemy => Math.max(0, ...[...chains.values()].filter(f => valid(f) && f.target === enemy).map(f => f.targetLift));
   const liftFor = enemy => alive(enemy) ? hitLiftFor(enemy) : 0;
   function resetCamera(f) {
     if (f.cameraRaised && f.owner === G.Game.player && f.world === G.World && G.Camera) G.Camera.y = f.owner.y;
@@ -47,31 +52,36 @@
     f.targetLift = f.visualLift;
     // Follow only the excess height, keeping high-quantity kicks below the HUD.
     const camera = G.Camera;
-    if (reverse && camera?.h > 0 && Number.isFinite(camera.y)) {
+    if (f.owner === G.Game.player && reverse && camera?.h > 0 && Number.isFinite(camera.y)) {
       const ceiling = f.owner.y - f.visualLift - 140 + camera.h / 2;
       if (camera.y > ceiling) { camera.y = ceiling; f.cameraRaised = true; }
     }
   }
   function clear(owner) {
-    if (chain && (!owner || chain.owner === owner)) { releasePending(chain); resetCamera(chain); removeLift(chain); chain = null; }
-    if (finalSummary && (!owner || finalSummary.owner === owner)) finalSummary = null;
+    for (const [actor, f] of chains) if (!owner || actor === owner) {
+      releasePending(f); resetCamera(f); removeLift(f); chains.delete(actor);
+    }
+    for (const actor of summaries.keys()) if (!owner || actor === owner) summaries.delete(actor);
   }
-  const pendingDefeat = enemy => !!chain?.pendingDeath && valid(chain) && chain.target === enemy && !enemy.dead;
+  const pendingDefeat = enemy => [...chains.values()].some(f => f.pendingDeath && valid(f) && f.target === enemy && !enemy.dead);
   function releasePending(f) {
     if (!f.pendingDeath || f.releasing) return;
     f.releasing = true;
     const target = f.target;
     if (!target.dead) {
       target.hp = 0;
-      if (f.owner === G.Game.player && f.world === G.World) target.die();
+      if ((f.owner === G.Game.player || f.owner.sourceOwner === G.Game.player) && f.world === G.World) {
+        releasingTargets.add(target);
+        try { target.die(); } finally { releasingTargets.delete(target); }
+      }
       else { G.EnemyMgr.discard(target); target.dead = true; target.fade = 0; }
     }
     f.pendingDeath = false;
   }
   const enemyDie = G.Enemy.prototype.die;
   G.Enemy.prototype.die = function(...args) {
-    const f = chain;
-    if (valid(f) && f.kind === 'lee-reverse-lotus' && f.target === this && !this.remote &&
+    const f = targetChain(this);
+    if (!releasingTargets.has(this) && valid(f) && f.kind === 'lee-reverse-lotus' && f.target === this && !this.remote &&
         !f.releasing && !this.dead && this.hp <= 0 && ['lift', 'combo', 'descent', 'slam'].includes(f.phase)) {
       if (!f.pendingDeath) { f.pendingDeath = true; f.anchorX = this.x; f.anchorY = this.y; }
       this.hp = 1; this.kx = this.ky = 0; this.touchCd = Math.max(.1, this.touchCd || 0);
@@ -81,7 +91,7 @@
   };
   const enemyHurt = G.Enemy.prototype.hurt;
   G.Enemy.prototype.hurt = function(amount, ...args) {
-    const f = chain, primary = valid(f) && f.kind === 'lee-reverse-lotus' && f.primaryHit && f.target === this && !this.dead;
+    const f = [...chains.values()].find(f => valid(f) && f.primaryHit && f.target === this), primary = valid(f) && f.kind === 'lee-reverse-lotus' && f.primaryHit && f.target === this && !this.dead;
     const result = enemyHurt.call(this, amount, ...args);
     // Later percent-health wrappers pass the complete incoming hit through here.
     // Match the native displayed integer, retaining shield and critical semantics.
@@ -89,29 +99,29 @@
     return result;
   };
   function canCast(owner, move) {
-    return supports(move?.digiMode) && !chain && owner?.dex === 30006 && valid({ owner, world: G.World }) && !!targetFor(owner, move);
+    return supports(move?.digiMode) && !activeFor(owner) && owner?.dex === 30006 && valid({ owner, world: G.World }) && !!targetFor(owner, move);
   }
   function cast(owner, move) {
     if (!canCast(owner, move)) return false;
     const target = targetFor(owner, move);
     const snapshot = G.Quantity?.snapshot(owner, move) || { ...move };
-    const quantity = Number.isFinite(snapshot.quantityBonusAtCast) ? Math.max(0, Math.floor(snapshot.quantityBonusAtCast)) : 0;
     const reverse = move.digiMode === 'lee-reverse-lotus';
-    const comboHits = 5 + 2 * (Math.max(1, Math.min(5, snapshot.lvl | 0)) - 1) + quantity;
+    const baseHits = 5 + 2 * (Math.max(1, Math.min(5, snapshot.lvl | 0)) - 1);
+    const comboHits = G.Quantity?.countAtCast(owner,snapshot,baseHits) ?? baseHits;
     const comboDuration = reverseDurations.combo / (1 + .025 * Math.max(0, comboHits - 5));
     const firstInterval = comboDuration * .1 / (1 - .9 ** comboHits);
     let elapsed = 0;
     const comboDeadlines = reverse ? Array.from({ length: comboHits }, (_, i) => (elapsed += firstInterval * .9 ** i)) : [];
-    chain = { owner, world: G.World, target, kind: move.digiMode, move: snapshot,
+    const chain = { owner, world: G.World, target, kind: move.digiMode, move: snapshot,
       durations: reverse ? { ...reverseDurations, combo: comboDuration } : durations,
       comboHits, comboDeadlines, peakLift: reverse ? 60 + comboHits * 8 : 40,
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
       visualLift: 0, targetLift: 0, ticks: 0, totalDamage: 0, totalHits: 0, pendingDeath: false };
-    finalSummary = null;
+    chains.set(owner, chain); summaries.delete(owner);
     owner.svx = owner.svy = 0;
     return true;
   }
-  function hit(f, enemy, ratio) {
+  function hit(f, enemy, ratio, singleTarget = true) {
     if (!valid(f) || !alive(enemy) || !clearPath(f.owner.x, f.owner.y, enemy.x, enemy.y)) return;
     const owner = f.owner, move = f.move, mult = G.Types.mult(move.type, enemy.types);
     const crit = owner.critChance > 0 && Math.random() < owner.critChance;
@@ -121,6 +131,7 @@
     try { enemy.hurt(damage, '#f2ddab', enemy.x - owner.x, enemy.y - owner.y, 0, crit ? 'crit' : G.Types.label(mult), owner, move.id); }
     finally { f.primaryHit = false; }
     owner.onDealt(damage); owner.dmgDealt += damage;
+    if (singleTarget) G.DamageSplash?.hit(owner, enemy, damage, '#f2ddab', move.id);
     G.FX.burst(enemy.x, enemy.y - (enemy.jumpLift || 0) - hitLiftFor(enemy), '#f2ddab', 5, 40);
   }
   function enter(f, phase) {
@@ -138,23 +149,23 @@
     if (phase === 'slam') {
       resetCamera(f);
       removeLift(f);
-      hit(f, f.target, f.kind === 'lee-lotus' ? .8 : .3);
+      hit(f, f.target, f.kind === 'lee-lotus' ? .8 : .3, false);
       const radius = f.move.radius || 60;
       for (const enemy of new Set(G.EnemyMgr.queryCircle(f.target.x, f.target.y, radius))) {
-        if (enemy !== f.target && Math.hypot(enemy.x - f.target.x, enemy.y - f.target.y) <= radius + (enemy.r || 0)) hit(f, enemy, .35);
+        if (enemy !== f.target && Math.hypot(enemy.x - f.target.x, enemy.y - f.target.y) <= radius + (enemy.r || 0)) hit(f, enemy, .35, false);
       }
       if (f.kind === 'lee-reverse-lotus') {
         // The outside rim marks the actual damage radius from the landing frame.
         G.FX.ring(f.target.x, f.target.y, radius, radius, '#ffe0a3', .42, 4);
         G.FX.ring(f.target.x, f.target.y, 5, radius, '#f6a65e', .36, 6);
         G.FX.burst(f.target.x, f.target.y, '#ddc99a', 16, radius * .65);
-        G.Camera.kick(.18);
+        if (f.owner === G.Game.player) G.Camera.kick(.18);
         releasePending(f);
       } else {
         G.FX.ring(f.target.x, f.target.y, radius, radius, '#f2d5a0', .32, 3);
         G.FX.ring(f.target.x, f.target.y, 5, radius, '#ddc99a', .28, 4);
         G.FX.burst(f.target.x, f.target.y, '#ddc99a', 8, 65);
-        G.Camera.kick(.1);
+        if (f.owner === G.Game.player) G.Camera.kick(.1);
       }
     }
   }
@@ -178,28 +189,29 @@
     return f.phase !== 'approach' || f.travel < (f.move.range || 145) - .001;
   }
   function update(dt) {
-    if (finalSummary) {
-      if (!valid(finalSummary)) finalSummary = null;
-      else if (G.Game.state === 'playing' && dt > 0 && Number.isFinite(dt) && (finalSummary.ttl -= dt) <= 0) finalSummary = null;
+    for (const [owner, summary] of summaries) {
+      if (!valid(summary) || (G.Game.state === 'playing' && dt > 0 && Number.isFinite(dt) && (summary.ttl -= dt) <= 0)) summaries.delete(owner);
     }
-    if (!(dt > 0) || !Number.isFinite(dt) || !chain) return;
-    const f = chain;
+    if (!(dt > 0) || !Number.isFinite(dt)) return;
+    for (const f of [...chains.values()]) updateChain(f, dt);
+  }
+  function updateChain(f, dt) {
     if (f.pendingDeath && valid(f)) { f.target.x = f.anchorX; f.target.y = f.anchorY; f.target.kx = f.target.ky = 0; }
-    if (!valid(f) || (!alive(f.target) && !launchedLotus(f)) || !clearPath(f.owner.x, f.owner.y, f.target.x, f.target.y)) { clear(); return; }
+    if (!valid(f) || (!alive(f.target) && !launchedLotus(f)) || !clearPath(f.owner.x, f.owner.y, f.target.x, f.target.y)) { clear(f.owner); return; }
     if (G.Game.state !== 'playing') return;
     removeLift(f);
     // Fixed simulation steps retain all combo hits under a delayed frame.
     let remaining = Math.min(dt, 4);
-    while (remaining > 1e-9 && chain === f) {
+    while (remaining > 1e-9 && activeFor(f.owner) === f) {
       const phaseRemaining = f.kind === 'lee-reverse-lotus' && f.phase !== 'approach' ?
         Math.max(1e-9, f.durations[f.phase] - f.phaseAge) : Infinity;
       const step = Math.min(remaining, 1 / 120, phaseRemaining); remaining -= step;
       f.age += step; f.phaseAge += step;
       if (f.phase === 'approach') {
-        if (!approach(f, step) || f.age > .6) { clear(); return; }
+        if (!approach(f, step) || f.age > .6) { clear(f.owner); return; }
         continue;
       }
-      if ((!alive(f.target) && !launchedLotus(f)) || Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24) { clear(); return; }
+      if ((!alive(f.target) && !launchedLotus(f)) || Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24) { clear(f.owner); return; }
       if (f.phase === 'combo') {
         // A defeated bound target stays hittable until the landing resolves it.
         while (f.ticks < f.comboHits && f.phaseAge + 1e-9 >= f.comboDeadlines[f.ticks]) {
@@ -212,12 +224,12 @@
         if (!next) {
           const summary = f.kind === 'lee-reverse-lotus' && f.totalHits ?
             { owner: f.owner, world: f.world, totalDamage: f.totalDamage, totalHits: f.totalHits, ttl: 1 } : null;
-          clear(); finalSummary = summary; return;
+          clear(f.owner); if (summary) summaries.set(f.owner, summary); return;
         }
         enter(f, next);
       }
     }
-    if (chain !== f) return;
+    if (activeFor(f.owner) !== f) return;
     syncLift(f);
     if (f.visualLift > 0) f.target.applySlow(.95, .08);
   }
@@ -230,8 +242,9 @@
   };
   const playerUpdate = G.Player.prototype.update;
   G.Player.prototype.update = function(dt) {
-    if (chain && !valid(chain)) clear();
-    if (chain?.owner !== this) return playerUpdate.call(this, dt);
+    const chain = activeFor(this);
+    if (chain && !valid(chain)) clear(this);
+    if (!activeFor(this)) return playerUpdate.call(this, dt);
     const frozen = this.frozen, x = this.x, y = this.y;
     this.frozen = true; this.svx = this.svy = 0;
     try { return playerUpdate.call(this, dt); }
@@ -241,7 +254,7 @@
   C.tick = function(dt, owner, now) {
     // Let a ready Lotus start first. Its complete contact sequence owns the body.
     const result = previousTick.call(this, dt, owner, now);
-    if (G.Game.state !== 'playing' || !(dt > 0) || chain || owner?.dex !== 30006 ||
+    if (G.Game.state !== 'playing' || !(dt > 0) || activeFor(owner) || owner?.dex !== 30006 ||
         !valid({ owner, world: G.World }) ||
         !owner.activeGroup().some(move => supports(move.digiMode) && move.t > 0)) return result;
     let basic = basics.get(owner);
@@ -264,6 +277,7 @@
   C.clearFields = function(owner) { previousClear.call(this, owner); clear(owner); };
   if (G.DigimonSkills?.clear) { const previous = G.DigimonSkills.clear; G.DigimonSkills.clear = owner => { previous(owner); clear(owner); }; }
   const comboSummary = () => {
+    const chain = activeFor(G.Game.player), finalSummary = summaries.get(G.Game.player);
     const f = valid(chain) && chain.kind === 'lee-reverse-lotus' && chain.totalHits ? chain : finalSummary;
     return valid(f) ? Object.freeze({ totalDamage: f.totalDamage, totalHits: f.totalHits,
       pendingDeath: !!f.pendingDeath, finished: f === finalSummary }) : null;
@@ -282,5 +296,5 @@
     ctx.strokeText(text, w / 2, y, w - 24); ctx.fillText(text, w / 2, y, w - 24); ctx.restore();
   };
   G.NarutoLee = { supports, canCast, cast, clear, update, liftFor, hitLiftFor, isInvulnerable, pendingDefeat,
-    get comboSummary() { return comboSummary(); }, get active() { return chain; } };
+    get comboSummary() { return comboSummary(); }, activeFor, get active() { return activeFor(G.Game.player); } };
 })();

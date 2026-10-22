@@ -24,10 +24,11 @@ with sync_playwright() as p:
    result=pg.evaluate(r'''() => {
     const p=G.Game.player,id='naruto-kusanagi',assert=(v,m)=>{if(!v)throw Error(m)},out={};
     p.level=12;p.critChance=0;G.Combat.clearFields();G.EnemyMgr.clear();
-    for(const key of ['naruto-fireball','naruto-sharingan','naruto-fuma-shuriken'])assert(p.addMove(key),'existing signature missing');
+    for(const key of ['naruto-fireball','naruto-fuma-shuriken'])assert(p.addMove(key),'existing signature missing');
     const index=p.slots.findIndex(s=>s.some(m=>m.id==='naruto-fireball'));p.setActive(index);
-    let card=G.LevelUp.offer(p,3).find(c=>c.key==='new:'+id);assert(p.hasMove(id)||card&&card.apply(p),'fifth skill not offered/learnable');
-    assert(p.slots.length===5&&p.active===index,'lost signature or active offensive skill');out.fifthSlot=true;assert(G.Moves.BY_ID[id].learnLevel===1,'level1 unlock missing');
+    let card=G.LevelUp.offer(p,3).find(c=>c.key==='new:'+id);assert(p.hasMove(id)||card&&card.apply(p),'fourth active skill not offered/learnable');
+    assert(p.slots.length===4&&p.active===index,'lost signature or active offensive skill');out.activeSlots=4;
+    assert(p.addMove('naruto-sharingan')&&p.slots.length===4&&!p.slots.flat().some(m=>m.id==='naruto-sharingan'),'Sharingan consumed an active sword slot');assert(G.Moves.BY_ID[id].learnLevel===1,'level1 unlock missing');
     p.moves=p.moves.filter(m=>m.id!=='naruto-sharingan');G.NarutoSharingan.sync(p);
     const m=p.moves.find(m=>m.id===id),radius=m.radius;
     const enemy=(x,y)=>{const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},x,y,{hp:1,spd:1,dmg:1});e.types=['normal'];G.EnemyMgr.add(e);return e};
@@ -47,7 +48,7 @@ with sync_playwright() as p:
      G.Combat.updateFields(.001);out.levels.push({lvl:m.lvl,count:G.NarutoKusanagi.states.get(p).blades.length,dmg:m.dmg,radius:m.radius});
     }
     assert(out.levels.map(v=>v.count).join(',')==='1,2,2,3,3','five-stage count ladder wrong');
-    p.quantityBonus=0;const qty=G.LevelUp.STATS.find(s=>s.id==='quantity');qty.apply(p);qty.apply(p);G.Combat.updateFields(.001);assert(G.NarutoKusanagi.states.get(p).blades.length===5,'quantity card bonus missing');const eye=G.Moves.instance('naruto-sharingan',3);p.moves.push(eye);G.Combat.updateFields(.001);assert(G.NarutoKusanagi.states.get(p).blades.length===6,'Sharingan projectile +1 missing');p.moves=p.moves.filter(v=>v!==eye);G.NarutoSharingan.sync(p);
+    p.quantityPicks=0;p.quantityBonus=0;const qty=G.LevelUp.STATS.find(s=>s.id==='quantity');qty.apply(p);qty.apply(p);G.Combat.updateFields(.001);assert(G.NarutoKusanagi.states.get(p).blades.length===4,'multiplicative quantity card bonus missing');const eye=G.Moves.instance('naruto-sharingan',3);p.moves.push(eye);G.Combat.updateFields(.001);assert(G.NarutoKusanagi.states.get(p).blades.length===5,'Sharingan projectile +1 missing');p.moves=p.moves.filter(v=>v!==eye);G.NarutoSharingan.sync(p);
     p.setActive(0);assert(!G.NarutoKusanagi.states.has(p),'switch did not immediately remove orbit');
     const switchedHp=es.map(e=>e.hp);G.Combat.updateFields(.4);assert(es.every((e,i)=>e.hp===switchedHp[i]),'sword still damages after switch');
     assert(!G.NarutoKusanagi.activate(p),'inactive sword could be cast');
@@ -57,7 +58,7 @@ with sync_playwright() as p:
     p.dead=true;G.Combat.updateFields(.001);assert(!G.NarutoKusanagi.states.size,'death cleanup failed');p.dead=false;G.Combat.updateFields(.001);assert(!G.NarutoKusanagi.states.size,'revive auto-activated');G.NarutoKusanagi.activate(p);
     G.Combat.updateFields(.001);const moveIndex=p.moves.indexOf(m);p.moves.splice(moveIndex,1);G.Combat.updateFields(.001);assert(!G.NarutoKusanagi.states.size,'unlearn cleanup failed');p.moves.push(m);G.NarutoKusanagi.activate(p);
     G.Combat.updateFields(.001);const world=G.World;G.World={...world};G.Combat.updateFields(0);assert(!G.NarutoKusanagi.states.size,'world cleanup failed');G.World=world;G.NarutoKusanagi.activate(p);
-    G.Combat.updateFields(.001);p.quantityBonus=0;G.Combat.updateFields(.001);out.cleanup='owner clear/death/unlearn/world';
+    G.Combat.updateFields(.001);p.quantityPicks=0;p.quantityBonus=0;G.Combat.updateFields(.001);out.cleanup='owner clear/death/unlearn/world';
     const layout=G.Touch.controlLayout(innerWidth,innerHeight,5,{defaults:true});
     assert(layout.slots.length===5&&layout.slots.every(s=>s.x>=0&&s.y>=0&&s.x+s.w<=innerWidth&&s.y+s.h<=innerHeight),'five touch slots clipped');
     out.slots=layout.slots.length;return out;
