@@ -67,9 +67,60 @@
       })
     };
   });
+  function drawTsunamiBed(ctx, f, g) {
+    // Overlapping deposits follow the wave, rather than painting its hitbox.
+    const press = 1 - Math.pow(1 - g.collapse, 3);
+    ctx.save();
+    ctx.globalAlpha *= g.alpha;
+    for (let ribbon = 0; ribbon < 63; ribbon++) {
+      const lane = ribbon % 7, row = Math.floor(ribbon / 7);
+      const side = (lane - 3 + (grain(ribbon + 2100) - .5) * .7) / 3.7;
+      const center = g.range * (row + .35 + grain(ribbon + 2110) * .45) / 9;
+      const length = g.range / 9 * (1.3 + grain(ribbon + 2120) * .8);
+      const start = Math.max(0, center - length / 2);
+      if (start >= g.front) continue;
+      const banks = [[], []], ridge = [];
+      for (let step = 0; step <= 10; step++) {
+        const u = step / 10;
+        const along = start + Math.min(length, Math.max(0, g.front - start) * (1 - grain(ribbon + 2130) * .25)) * u;
+        const half = g.width * (.2 + .3 * along / g.range);
+        const bend = Math.sin(u * 5 + ribbon * 2.3) * half * .05;
+        const across = side * half * (1 - press * .09) + bend;
+        const taper = Math.pow(Math.sin(Math.PI * u), .45);
+        const breadth = half / 7 * (1.1 + grain(ribbon * 11 + step + 2200) * .6) * taper;
+        const lift = (3 + grain(ribbon + 2600) * 5) * taper * (1 - press);
+        for (let bank = 0; bank < 2; bank++) {
+          const p = point(f, along, across + (bank ? 1 : -1) * breadth);
+          banks[bank].push([p[0], p[1] - lift]);
+        }
+        const p = point(f, along, across);
+        ridge.push([p[0], p[1] - lift - 2 * taper * (1 - press)]);
+      }
+      const outline = banks[0].concat(banks[1].slice().reverse());
+      ctx.globalAlpha *= .28;
+      polygon(ctx, outline.map(p => [p[0], p[1] + 3 * (1 - press)]), COLORS[1]);
+      ctx.globalAlpha /= .28;
+      polygon(ctx, outline, COLORS[3]);
+      ctx.globalAlpha *= .24;
+      polygon(ctx, banks[0].concat(ridge.slice().reverse()), COLORS[4]);
+      ctx.globalAlpha /= .24;
+    }
+    // Sparse grains bridge the deposits without restoring a solid perimeter.
+    for (let index = 0; index < 120; index++) {
+      const u = grain(index + 2700), side = grain(index + 2900) * 2 - 1;
+      const along = g.front * u * (1 - side * side * .2);
+      const half = g.width * (.2 + .3 * along / g.range);
+      const p = point(f, along, side * half * .94);
+      const fall = (1 - press) * (f.t >= g.burst ? 7 : 2);
+      ctx.fillStyle = COLORS[index % 4 === 0 ? 4 : 2];
+      ctx.fillRect(p[0], pixel(p[1] - fall * grain(index + 3100)), 2, 2);
+    }
+    ctx.restore();
+  }
   function drawGround(ctx, f) {
     const g = geometry(f);
     if (!g.alpha || g.front < 2) return;
+    if (f.kind === 'gaara-tsunami') { drawTsunamiBed(ctx, f, g); return; }
     ctx.save();
     ctx.globalAlpha *= g.alpha;
     // Creamy sand stays connected behind the crest, with a noisy scalloped perimeter.
