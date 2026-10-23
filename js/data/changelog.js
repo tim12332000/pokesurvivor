@@ -7,6 +7,9 @@
  */
 G.CHANGELOG = [
   { d: '2026-10-23', title: ['Rebotes de Tenten', 'Tenten ricochets', '天天忍具連彈'], chg: [
+    ['La nota de proyecto gratuito y sin ánimo de lucro aparece discretamente en Ajustes > Acerca de; se retiran el aviso del menú y la marca sobre la partida.',
+     'The free, non-profit project note now appears briefly in Settings > About; the menu notice and gameplay watermark are removed.',
+     '免費、非營利說明集中於「設定 → 關於」，移除主選單公告與遊戲浮水印。'],
     ['En ordenador, el juego se abre en formato vertical como en el móvil, con teclado y ratón. El enlace «Cambiar a pantalla ancha» permite volver al formato ancho.',
      'Desktop browsers now default to the phone-style portrait layout with keyboard and mouse support. Use the wide-layout link to return to a full-width view.',
      '電腦瀏覽器預設採用手機直式版面，支援鍵盤與滑鼠；右上角「切換寬版」可回到寬版。'],

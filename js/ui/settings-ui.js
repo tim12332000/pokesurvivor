@@ -105,7 +105,7 @@ G.SettingsUI = (() => {
       renderAccount(box);
     } else {
       box.innerHTML = `<div class="about-logo">PokéSurvivor</div><p class="sub center">Versión ${esc(G.Naruto?.version||VERSION)}</p>`
-        + `<p id="about-free-notice" class="sub" translate="no"><b>免費遊玩、非營利</b>：無廣告、無付費內容。本網站為非官方跨界修改版。</p>`
+        + `<p id="about-free-notice" class="sub" translate="no">本作為免費、非營利的同人修改版，無廣告或付費內容。</p>`
         + `<p class="sub" translate="no">寶可夢及相關角色屬 Nintendo、Creatures、GAME FREAK 等原權利人所有，本網站與其並無隸屬關係。</p>`
         + section('Créditos')
         + `<ul class="credits">

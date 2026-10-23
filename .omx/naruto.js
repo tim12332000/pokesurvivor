@@ -266,7 +266,7 @@
   document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代＋數碼寶貝＋火影忍者';
   document.title=version+' · PokéSurvivor';
   const badge=document.querySelector('body>div[style*="pointer-events: none"]');
-  if(badge){badge.classList.add('naruto-credit');badge.textContent=version+'・免費／非營利・原作 JPTER78';badge.style.maxWidth='calc(100vw - 16px)';}
+  if(badge)badge.remove();
   const style=document.createElement('style');style.textContent=`
     #scr-naruto{z-index:150;padding:20px;background:#08152bef}#scr-naruto>.box{width:min(680px,100%);max-height:92vh;overflow:auto;border-color:#e4a653}
     .naruto-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}.naruto-heading h2{margin-bottom:4px;color:#ffd23f}.naruto-heading>button{flex-shrink:0;white-space:nowrap}

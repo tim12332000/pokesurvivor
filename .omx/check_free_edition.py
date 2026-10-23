@@ -7,7 +7,7 @@ import os
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parent.parent
-URL='https://tim12332000.github.io/pokesurvivor/.omx/digimon.html?lang=zh-TW&v=free-edition'
+URL='https://tim12332000.github.io/pokesurvivor/.omx/digimon.html?lang=zh-TW&v=free-edition&layout=wide'
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path=r'C:\Program Files\Google\Chrome\Application\chrome.exe',headless=True)
     context=browser.new_context(locale='zh-TW',viewport={'width':1280,'height':820},service_workers='block')
@@ -24,9 +24,8 @@ with sync_playwright() as p:
     page.evaluate('G.Naruto.choose(30001);G.Flow.goMenu()')
     assert page.locator('#btn-support, #scr-support').count()==0
     assert page.evaluate('!G.Funding&&!G.SupportUI')
-    notice=page.locator('#free-project-notice')
-    assert all(s in notice.inner_text() for s in ['免費','非營利','JPTER78','感謝'])
-    assert notice.locator('a').get_attribute('href')=='https://github.com/JPTER78/pokesurvivor'
+    assert page.locator('#free-project-notice,.naruto-credit,#sandbox-badge').count()==0
+    assert '非營利' not in page.locator('#scr-menu').inner_text()
     page.screenshot(path=str(ROOT/'.omx/free-edition-menu.png'),animations='disabled')
     page.evaluate("G.SettingsUI.open('about')")
     assert all(s in page.locator('#set-body').inner_text() for s in ['免費','非營利','JPTER78','感謝'])
@@ -44,11 +43,10 @@ with sync_playwright() as p:
     assert page.locator('#over-ask,.support-ask').count()==0
     page.set_viewport_size({'width':390,'height':844})
     page.evaluate('G.Game.quit();G.Flow.goMenu()')
-    page.locator('#free-project-notice').scroll_into_view_if_needed()
-    page.locator('#free-project-notice').evaluate("el=>el.scrollIntoView({block:'center'})")
+    assert page.locator('#free-project-notice,.naruto-credit,#sandbox-badge').count()==0
     page.screenshot(path=str(ROOT/'.omx/free-edition-mobile.png'),animations='disabled')
     assert not page.evaluate('document.documentElement.scrollWidth>innerWidth+1')
     assert not errors,errors
     assert not missing,missing
-    print(json.dumps({'menuAboutLegal':'free/non-profit and original-author thanks','paymentLinks':0,'postRunPrompt':'removed even after record or tenth run','startupErrors':errors,'missingAssets':missing}))
+    print(json.dumps({'menuNotices':'removed','aboutLegal':'free/non-profit and original-author thanks retained','paymentLinks':0,'postRunPrompt':'removed even after record or tenth run','startupErrors':errors,'missingAssets':missing}))
     browser.close()
