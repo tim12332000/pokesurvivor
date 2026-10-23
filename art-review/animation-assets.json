@@ -5976,5 +5976,1607 @@
         "bodyHeight": 194.5
       }
     ]
+  },
+  "tenten-movement": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          56,
+          475,
+          132,
+          208
+        ],
+        "anchor": [
+          67.0,
+          204
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          280,
+          472,
+          122,
+          211
+        ],
+        "anchor": [
+          59.5,
+          207
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          478,
+          473,
+          135,
+          210
+        ],
+        "anchor": [
+          67.0,
+          206
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          684,
+          473,
+          143,
+          210
+        ],
+        "anchor": [
+          76.0,
+          206
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          61,
+          901,
+          123,
+          212
+        ],
+        "anchor": [
+          64.0,
+          208
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          271,
+          902,
+          124,
+          215
+        ],
+        "anchor": [
+          69.0,
+          211
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          485,
+          900,
+          119,
+          217
+        ],
+        "anchor": [
+          50.5,
+          213
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          702,
+          903,
+          114,
+          214
+        ],
+        "anchor": [
+          70.5,
+          210
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          34,
+          684,
+          172,
+          203
+        ],
+        "anchor": [
+          73.0,
+          199
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          243,
+          689,
+          171,
+          199
+        ],
+        "anchor": [
+          116.0,
+          195
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          457,
+          688,
+          177,
+          199
+        ],
+        "anchor": [
+          77.0,
+          195
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          671,
+          695,
+          163,
+          192
+        ],
+        "anchor": [
+          75.0,
+          189
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          34,
+          684,
+          172,
+          203
+        ],
+        "anchor": [
+          73.0,
+          199
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          243,
+          689,
+          171,
+          199
+        ],
+        "anchor": [
+          116.0,
+          195
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          457,
+          688,
+          177,
+          199
+        ],
+        "anchor": [
+          77.0,
+          195
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          671,
+          695,
+          163,
+          192
+        ],
+        "anchor": [
+          75.0,
+          189
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 211.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "tenten-idle": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          76,
+          23,
+          114,
+          216
+        ],
+        "anchor": [
+          54.0,
+          212
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          290,
+          23,
+          115,
+          216
+        ],
+        "anchor": [
+          56.5,
+          212
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          76,
+          23,
+          114,
+          216
+        ],
+        "anchor": [
+          54.0,
+          212
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          290,
+          23,
+          115,
+          216
+        ],
+        "anchor": [
+          56.5,
+          212
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          493,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.0,
+          210
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.5,
+          210
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          493,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.0,
+          210
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.5,
+          210
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "tenten-hurt": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          53,
+          1124,
+          133,
+          217
+        ],
+        "anchor": [
+          66.0,
+          213
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          270,
+          1124,
+          137,
+          217
+        ],
+        "anchor": [
+          68.0,
+          213
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          76,
+          23,
+          114,
+          216
+        ],
+        "anchor": [
+          54.0,
+          212
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          290,
+          23,
+          115,
+          216
+        ],
+        "anchor": [
+          56.5,
+          212
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          468,
+          1123,
+          142,
+          218
+        ],
+        "anchor": [
+          62.5,
+          214
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          697,
+          1126,
+          128,
+          215
+        ],
+        "anchor": [
+          64.0,
+          211
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          493,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.0,
+          210
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.5,
+          210
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          475,
+          257,
+          160,
+          207
+        ],
+        "anchor": [
+          94.5,
+          203
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          701,
+          250,
+          121,
+          217
+        ],
+        "anchor": [
+          60.0,
+          213
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          475,
+          257,
+          160,
+          207
+        ],
+        "anchor": [
+          94.5,
+          203
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          701,
+          250,
+          121,
+          217
+        ],
+        "anchor": [
+          60.0,
+          213
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "tenten-death": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          41,
+          1360,
+          164,
+          177
+        ],
+        "anchor": [
+          71.0,
+          173
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          241,
+          1386,
+          176,
+          151
+        ],
+        "anchor": [
+          73.0,
+          147
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          422,
+          1401,
+          223,
+          136
+        ],
+        "anchor": [
+          19.0,
+          132
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          646,
+          1438,
+          224,
+          85
+        ],
+        "anchor": [
+          109.5,
+          82
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 211.0
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-attack": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1553,
+          139,
+          210
+        ],
+        "anchor": [
+          66.0,
+          206
+        ],
+        "atlasIndex": 28,
+        "hand": [
+          126,
+          115
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          257,
+          1554,
+          162,
+          209
+        ],
+        "anchor": [
+          69.5,
+          205
+        ],
+        "atlasIndex": 29,
+        "hand": [
+          141,
+          109
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          465,
+          1556,
+          183,
+          207
+        ],
+        "anchor": [
+          70.0,
+          203
+        ],
+        "atlasIndex": 30,
+        "hand": [
+          168,
+          98
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          1556,
+          130,
+          207
+        ],
+        "anchor": [
+          64.0,
+          203
+        ],
+        "atlasIndex": 31,
+        "hand": [
+          96,
+          111
+        ],
+        "bodyHeight": 211.0
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-fuma": {
+    "source": "redrawn/tenten-skills-v1.png",
+    "bodyHeight": 298,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          35,
+          12,
+          222,
+          299
+        ],
+        "anchor": [
+          111.0,
+          295
+        ],
+        "atlasIndex": 0,
+        "hand": [
+          172,
+          180
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          338,
+          17,
+          294,
+          293
+        ],
+        "anchor": [
+          115.5,
+          289
+        ],
+        "atlasIndex": 1,
+        "hand": [
+          279,
+          129
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          679,
+          13,
+          255,
+          299
+        ],
+        "anchor": [
+          106.0,
+          294
+        ],
+        "atlasIndex": 2,
+        "hand": [
+          154,
+          187
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          1012,
+          12,
+          201,
+          299
+        ],
+        "anchor": [
+          101.0,
+          295
+        ],
+        "atlasIndex": 3,
+        "hand": [
+          127,
+          171
+        ],
+        "bodyHeight": 298
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-tags": {
+    "source": "redrawn/tenten-skills-v1.png",
+    "bodyHeight": 298,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          32,
+          322,
+          270,
+          298
+        ],
+        "anchor": [
+          111.0,
+          295
+        ],
+        "atlasIndex": 4,
+        "hand": [
+          215,
+          148
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          335,
+          327,
+          299,
+          297
+        ],
+        "anchor": [
+          73.0,
+          296
+        ],
+        "atlasIndex": 5,
+        "hand": [
+          281,
+          126
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          672,
+          378,
+          273,
+          246
+        ],
+        "anchor": [
+          136.5,
+          242
+        ],
+        "atlasIndex": 6,
+        "hand": [
+          209,
+          201
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          1011,
+          321,
+          210,
+          303
+        ],
+        "anchor": [
+          105.5,
+          299
+        ],
+        "atlasIndex": 7,
+        "hand": [
+          134,
+          175
+        ],
+        "bodyHeight": 298
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-twin": {
+    "source": "redrawn/tenten-skills-v1.png",
+    "bodyHeight": 298,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          31,
+          635,
+          257,
+          292
+        ],
+        "anchor": [
+          122.5,
+          287
+        ],
+        "atlasIndex": 8,
+        "hand": [
+          232,
+          143
+        ],
+        "scrollLeft": [
+          22,
+          100
+        ],
+        "scrollRight": [
+          232,
+          116
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          350,
+          624,
+          270,
+          309
+        ],
+        "anchor": [
+          111.5,
+          257
+        ],
+        "atlasIndex": 9,
+        "hand": [
+          244,
+          134
+        ],
+        "scrollLeft": [
+          32,
+          84
+        ],
+        "scrollRight": [
+          244,
+          104
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          667,
+          631,
+          282,
+          302
+        ],
+        "anchor": [
+          34.5,
+          289
+        ],
+        "atlasIndex": 10,
+        "hand": [
+          262,
+          149
+        ],
+        "scrollLeft": [
+          29,
+          111
+        ],
+        "scrollRight": [
+          262,
+          119
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          992,
+          676,
+          222,
+          257
+        ],
+        "anchor": [
+          111.0,
+          253
+        ],
+        "atlasIndex": 11,
+        "hand": [
+          183,
+          153
+        ],
+        "scrollLeft": [
+          92,
+          124
+        ],
+        "scrollRight": [
+          183,
+          139
+        ],
+        "bodyHeight": 298
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-mastery": {
+    "source": "redrawn/tenten-skills-v1.png",
+    "bodyHeight": 298,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          51,
+          934,
+          220,
+          308
+        ],
+        "anchor": [
+          101.5,
+          304
+        ],
+        "atlasIndex": 12,
+        "hand": [
+          181,
+          133
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          371,
+          933,
+          206,
+          309
+        ],
+        "anchor": [
+          103.0,
+          305
+        ],
+        "atlasIndex": 13,
+        "hand": [
+          148,
+          173
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          692,
+          933,
+          210,
+          309
+        ],
+        "anchor": [
+          105.0,
+          305
+        ],
+        "atlasIndex": 14,
+        "hand": [
+          143,
+          177
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          1009,
+          940,
+          212,
+          302
+        ],
+        "anchor": [
+          106.0,
+          298
+        ],
+        "atlasIndex": 15,
+        "hand": [
+          149,
+          183
+        ],
+        "bodyHeight": 298
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "lee-bandage": {
+    "source": "redrawn/lee-bandage-v1.png",
+    "bodyHeight": 376.77,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          67,
+          42,
+          287,
+          388
+        ],
+        "anchor": [
+          138.5,
+          384
+        ],
+        "atlasIndex": 0,
+        "hand": [
+          227,
+          224
+        ],
+        "bodyHeight": 376.77
+      },
+      {
+        "rect": [
+          470,
+          42,
+          405,
+          388
+        ],
+        "anchor": [
+          155.5,
+          384
+        ],
+        "atlasIndex": 1,
+        "hand": [
+          368,
+          188
+        ],
+        "bodyHeight": 376.77
+      },
+      {
+        "rect": [
+          965,
+          42,
+          294,
+          388
+        ],
+        "anchor": [
+          147.5,
+          384
+        ],
+        "atlasIndex": 2,
+        "hand": [
+          205,
+          206
+        ],
+        "bodyHeight": 376.77
+      },
+      {
+        "rect": [
+          1402,
+          42,
+          309,
+          388
+        ],
+        "anchor": [
+          142.0,
+          384
+        ],
+        "atlasIndex": 3,
+        "hand": [
+          233,
+          202
+        ],
+        "bodyHeight": 376.77
+      }
+    ]
+  },
+  "lee-opened-bandage": {
+    "source": "redrawn/lee-bandage-v1.png",
+    "bodyHeight": 382.09,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          66,
+          439,
+          285,
+          424
+        ],
+        "anchor": [
+          139.0,
+          421
+        ],
+        "atlasIndex": 4,
+        "hand": [
+          229,
+          261
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          470,
+          442,
+          413,
+          422
+        ],
+        "anchor": [
+          155.0,
+          418
+        ],
+        "atlasIndex": 5,
+        "hand": [
+          368,
+          218
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          964,
+          441,
+          296,
+          422
+        ],
+        "anchor": [
+          148.0,
+          419
+        ],
+        "atlasIndex": 6,
+        "hand": [
+          206,
+          236
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          1399,
+          439,
+          318,
+          424
+        ],
+        "anchor": [
+          146.0,
+          421
+        ],
+        "atlasIndex": 7,
+        "hand": [
+          238,
+          239
+        ],
+        "bodyHeight": 382.09
+      }
+    ]
+  },
+  "tenten-throw": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1553,
+          139,
+          210
+        ],
+        "anchor": [
+          66.0,
+          206
+        ],
+        "atlasIndex": 28,
+        "hand": [
+          126,
+          115
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          257,
+          1554,
+          162,
+          209
+        ],
+        "anchor": [
+          69.5,
+          205
+        ],
+        "atlasIndex": 29,
+        "hand": [
+          141,
+          109
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          465,
+          1556,
+          183,
+          207
+        ],
+        "anchor": [
+          70.0,
+          203
+        ],
+        "atlasIndex": 30,
+        "hand": [
+          168,
+          98
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          1556,
+          130,
+          207
+        ],
+        "anchor": [
+          64.0,
+          203
+        ],
+        "atlasIndex": 31,
+        "hand": [
+          96,
+          111
+        ],
+        "bodyHeight": 211.0
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
   }
 }

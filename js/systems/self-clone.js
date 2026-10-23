@@ -329,7 +329,7 @@
       }
       for (const actor of live) for (const enemy of G.EnemyMgr.queryCircle(actor.x, actor.y, actor.r + 40)) {
         if (!isActor(actor)) break;
-        if (enemy.dead || enemy.touchCd > 0 || enemy.behavior === 'thief' || Math.hypot(enemy.x - actor.x, enemy.y - actor.y) > actor.r + enemy.r) continue;
+        if (enemy.dead || enemy.touchCd > 0 || enemy.behavior === 'thief' || G.NarutoLee?.bound?.(enemy) || Math.hypot(enemy.x - actor.x, enemy.y - actor.y) > actor.r + enemy.r) continue;
         enemy.touchCd = .55; enemy.strike(actor); actor.hurt(enemy.dmg, enemy.atkType);
       }
     }

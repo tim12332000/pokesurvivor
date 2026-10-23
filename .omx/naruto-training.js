@@ -54,6 +54,11 @@
   G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);return arrange.apply(this,args);};
   const addMove=G.Player.prototype.addMove;
   G.Player.prototype.addMove=function(id,...args){
+    if(this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery'].includes(id)){
+      if(this.hasMove(id))return false;
+      this.moves.push(G.Moves.instance(id,1));
+      this.arrange();return true;
+    }
     if(id===basicId&&this.mon?.dex===30007){
       if(this.hasMove(id)){migrateGaaraBasic(this);return false;}
       this.moves.push(G.Moves.instance(id,1));

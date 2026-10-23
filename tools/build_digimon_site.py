@@ -39,8 +39,10 @@ assert sources == {
     'redrawn/lee-common-v1.png', 'redrawn/lee-skills-v1.png',
     'redrawn/lee-gates-common-v1.png', 'redrawn/lee-gates-skills-v1.png',
     'redrawn/gaara-common-v1.png', 'redrawn/gaara-skills-v1.png',
+    'redrawn/tenten-common-v1.png', 'redrawn/tenten-skills-v1.png',
+    'redrawn/lee-bandage-v1.png',
 }, 'Unexpected reviewed hero atlas inventory'
-for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js']:
+for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js']:
     target = OUT / name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / name, target)

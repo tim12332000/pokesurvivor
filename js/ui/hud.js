@@ -271,6 +271,8 @@ G.HUD = (() => {
     const sy = controls ? controls.slots[0].y : h - S - 18;
     const BOND = '#ff8ad8';
     const cdOf = m => m.passive || m.kind === 'orbit' || (m.id !== 'naruto-sand-armor' && G.NarutoGaara?.maintains(pl, m)) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul), 0, 1);
+    const tentenState = pl.dex === 30009 ? G.NarutoTenten?.stateFor(pl) : null;
+    const tentenPose = pl.dex === 30009 ? G.NarutoTenten?.activeFor(pl) : null;
 
     for (let i = 0; i < n; i++) {
       const g = groups[i] || [];
@@ -376,6 +378,28 @@ G.HUD = (() => {
         ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
         ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#9feaff';
         ctx.fillText('連招 ' + (activeChain ? activeChain.hitCount + '/' : '') + count, x + S / 2, y + S - 17, S - 8);
+      }
+      if (G.NarutoLee?.supports(m.digiMode) && G.NarutoLee.bindLimitOf) {
+        const chain = G.NarutoLee.activeFor(pl);
+        const activeChain = chain?.move.id === m.id ? chain : null;
+        const count = activeChain ? activeChain.bindLimit : G.NarutoLee.bindLimitOf(m, pl);
+        const label = activeChain && !activeChain.pullable ? '近身' :
+          '綁定 ' + (activeChain ? activeChain.boundTargets.length + '/' : '') + count;
+        ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
+        ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#eee8d4';
+        ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
+      }
+      if (G.NarutoTenten?.supports(m.digiMode)) {
+        const state = tentenState, pose = tentenPose;
+        const count = pose?.m?.id === m.id ? pose.count : G.Quantity.count(pl, m.count || 1);
+        let label = '忍具 ' + count;
+        if (m.digiMode === 'tenten-mastery') label = '貫穿 +' + [1, 1, 2, 2, 3][Math.max(0, Math.min(4, m.lvl - 1))];
+        else if (m.digiMode === 'tenten-tags') label = '爆符 ' + (state?.tagCount || count);
+        else if (m.digiMode === 'tenten-fuma') label = state?.returning ? '回收 ' + state.returning : '迴刃 ' + count;
+        else if (m.digiMode === 'tenten-twin' && pose?.m?.id === m.id) label = '忍具 ' + pose.emitted + '/' + pose.count;
+        ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
+        ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#eee4c7';
+        ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
       }
       if (m.id === 'naruto-sand-prison') {
         const prison = G.NarutoGaara?.sandPrisonState(pl);

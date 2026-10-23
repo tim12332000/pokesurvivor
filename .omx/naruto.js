@@ -1,7 +1,7 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
-  const availableDexes=Object.freeze([30001,30002,30006,30007]);
+  const availableDexes=Object.freeze([30001,30002,30006,30007,30009]);
   const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
   const version='火影 beta 0.01';
   const roster = [
@@ -12,7 +12,8 @@
     ['hinata','Hinata Hyuga','日向雛田','第八班',['fighting','psychic'],2,118,115],
     ['lee','Rock Lee','洛克李','第三班',['fighting'],1,180,132],
     ['gaara','Gaara','我愛羅','砂隱村',['ground'],4,136,104],
-    ['itachi','Itachi Uchiha','宇智波鼬','曉',['psychic','fire'],5,110,117]
+    ['itachi','Itachi Uchiha','宇智波鼬','曉',['psychic','fire'],5,110,117],
+    ['tenten','Tenten','天天','第三班',['steel'],3,118,118]
   ];
   const records = new Map(), dictionary = {Naruto:'火影忍者'};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
@@ -42,7 +43,7 @@
       };
       image.onerror=()=>resolve(false);
     });
-    image.src='.omx/naruto/pixel/'+pixel.file;
+    image.src=pixel.source||'.omx/naruto/pixel/'+pixel.file;
     records.set(dex,record);dictionary[name]=chinese;
   }
   G.I18n.add(dictionary,'zh-TW');
@@ -144,7 +145,7 @@
     const record=records.get(dex),button=document.createElement('button');
     button.type='button';button.className='naruto-card';button.dataset.quickNaruto=dex;
     button.append(G.UI.spriteCanvas(dex,128,112,{dir:0,shadow:true}));
-    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30007:'砂術・砂縛柩・砂瀑大葬',30006:'體術・木葉旋風・蓮華'}[dex]||record.team;
+    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30007:'砂術・砂縛柩・砂瀑大葬',30006:'體術・木葉旋風・蓮華',30009:'忍具連投・雙昇龍'}[dex]||record.team;
     button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${identity}</small><span class="naruto-selection"></span>`);
     button.onclick=()=>choose(dex);quickPick.querySelector('.naruto-grid').append(button);
   }
@@ -165,7 +166,7 @@
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').hidden=!G.Digimon.enabled;
-  picker.querySelector('.naruto-grid + .note').textContent='目前開放鳴人與佐助；其他角色暫停開放。';
+  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位忍者：鳴人、佐助、小李、我愛羅、天天。`;
   document.getElementById('naruto-close').onclick=()=>{hideOverlays();G.Flow.goMenu();};
   const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='火影忍者';nav.translate=false;nav.onclick=openPicker;
   document.getElementById('btn-settings').before(nav);
@@ -193,7 +194,7 @@
     const tab=document.querySelector('#gacha-gens [data-gen="11"]');if(!tab)return;
     const small=tab.querySelector('small');if(small&&small.textContent!=='忍者')small.textContent='忍者';
     if(!tab.classList.contains('on'))return;
-    const description=document.getElementById('banner-desc'),copy='木葉與砂隱的忍者集結・8 位角色・招牌忍術';
+    const description=document.getElementById('banner-desc'),copy=`木葉與砂隱的忍者集結・${availableDexes.length} 位角色・招牌忍術`;
     if(description.textContent!==copy)description.textContent=copy;
     const rates=document.getElementById('gacha-rates');
     const shinyRow=rates.querySelectorAll(':scope > div')[5];if(shinyRow)shinyRow.remove();
@@ -220,7 +221,7 @@
   `;document.head.append(style);
   if(!G.Digimon.enabled){
     document.querySelector('#scr-menu .logo .t2').textContent='寶可夢 × 火影忍者';
-    document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代與鳴人、佐助';
+    document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代與 5 位火影忍者';
   }
   const startRun=G.Game.startRun;
   G.Game.startRun=function(...args){restoreAvailablePartner();return startRun.apply(this,args);};

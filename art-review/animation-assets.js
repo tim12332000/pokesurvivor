@@ -9,7 +9,7 @@
   function load() {
     if (pending) return pending;
     pending = (async () => {
-      const response = await fetch(new URL('animation-assets.json', base));
+      const response = await fetch(new URL('animation-assets.json', base), { cache: 'no-cache' });
       if (!response.ok) throw new Error(`Animation crop metadata: ${response.status}`);
       const metadata = await response.json();
       const images = new Map();

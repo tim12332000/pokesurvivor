@@ -21,7 +21,12 @@
     'naruto-gaara': 'redrawn directed sand-release gesture; real sand projectiles',
     'naruto-sand-coffin': 'redrawn seal, enclosing fist, crush and recovery',
     'naruto-sand-shield': 'selected guard; orbiting sand and directional impact wall',
-    'naruto-sand-tsunami': 'redrawn two-arm rise, downward burial and recovery'
+    'naruto-sand-tsunami': 'redrawn two-arm rise, downward burial and recovery',
+    'naruto-tenten': 'original directional kunai throw sequence',
+    'naruto-tenten-fuma': 'original prepare, release, catch and recover poses',
+    'naruto-tenten-tags': 'original paper kunai preparation, toss and seal gesture',
+    'naruto-tenten-twin': 'original twin-scroll opening, aerial release and landing',
+    'naruto-tenten-mastery': 'original small-scroll inspection, seal and stow sequence'
   });
   function install(G, { enabled = () => true } = {}) {
     if (installed.has(G)) return G.AnimationLab;
@@ -30,7 +35,7 @@
     const states = new Map();
     const counters = { candidate: 0, source: 0, byState: {}, bySkill: {} };
     let world = G.World, owner = G.Game.player, drawingAir = false;
-    const heroes={30001:'naruto',30002:'sasuke',30006:'lee',30007:'gaara'};
+    const heroes={30001:'naruto',30002:'sasuke',30006:'lee',30007:'gaara',30009:'tenten'};
     const supported = anim => Object.hasOwn(heroes,anim?.dex);
     const hero = anim => heroes[anim.dex];
     const direction = anim => ['down', 'right', 'right', 'right', 'up', 'left', 'left', 'left'][((anim.dir || 0) % 8 + 8) % 8];
@@ -40,7 +45,7 @@
       return G.SelfClones?.actors().find(a => a.anim === anim) || G.NarutoClones?.actors.find(a => a.anim === anim) || null;
     }
     function entry(anim) {
-      if (!states.has(anim)) states.set(anim, { age: 0, hurtAge: Infinity, deathAge: null, cast: null, sharingan: 0, gates: 0, gaaraShield: 0, kusanagi: false });
+      if (!states.has(anim)) states.set(anim, { age: 0, hurtAge: Infinity, deathAge: null, cast: null, sharingan: 0, gates: 0, gaaraShield: 0, kusanagi: false, tentenMastery: 0 });
       return states.get(anim);
     }
     function clear() { states.clear(); }
@@ -69,7 +74,8 @@
       [G.NarutoFireball, 'cast', 'naruto-fireball', .68],
       [G.NarutoLee, 'cast', null, 1.8],
       [G.NarutoGaara, 'cast', null, .7],
-      [G.NarutoSupport, 'cast', null, .5]
+      [G.NarutoSupport, 'cast', null, .5],
+      [G.NarutoTenten, 'cast', null, .4]
     ]) {
       if (!api?.[method]) continue;
       const original = api[method];
@@ -97,6 +103,11 @@
       sync();
       const state = entry(this), pl = actor(this);
       state.age += dt; state.hurtAge += dt;
+      if (pl?.dex === 30009 && !pl.dead && pl.hp > 0) {
+        const mastery = G.NarutoTenten?.stage?.(pl) || 0;
+        if (mastery > state.tentenMastery && !G.NarutoTenten?.activeFor?.(pl)) record(pl, {id:'naruto-tenten-mastery'}, .45);
+        state.tentenMastery = mastery;
+      }
       if (pl?.dead || pl?.hp <= 0 || this.cur === 'Faint') state.deathAge = (state.deathAge ?? 0) + dt;
       else state.deathAge = null;
       if (state.cast) { state.cast.age += dt; if (state.cast.age > state.cast.duration) state.cast = null; }
@@ -155,8 +166,13 @@
       const lee=G.NarutoLee?.activeFor?.(pl)||G.NarutoLee?.active;
       if(lee?.owner?.anim===anim){
         const reverse=lee.kind==='lee-reverse-lotus';
-        if(lee.phase==='approach')return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:'lee-movement',frame:row(dir)*4+Math.floor(state.age*12)%4};
-        const frame=lee.phase==='windup'?0:lee.phase==='lift'?(lee.phaseAge<lee.durations.lift*.5?1:2):lee.phase==='combo'?1+lee.ticks%2:['suspend','descent'].includes(lee.phase)?2:3;
+        if(lee.phase==='approach'&&!lee.pullable)return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:'lee-movement',frame:row(dir)*4+Math.floor(state.age*12)%4};
+        if ((lee.phase === 'approach' && lee.pullable) || lee.phase === 'windup') {
+          const frame = lee.phase === 'windup' ? 3 : lee.bandageStage === 'extend' ? (lee.age < .05 ? 0 : 1) : 2;
+          return {...base, state:'skill', id:lee.move.id, phase:lee.phase, key:'lee-bandage', frame,
+            aim:pl.aim, mirror:Math.cos(pl.aim)<0, visualLift:lee.visualLift||0};
+        }
+        const frame=['approach','windup'].includes(lee.phase)?0:lee.phase==='lift'?(lee.phaseAge<lee.durations.lift*.5?1:2):lee.phase==='combo'?1+lee.ticks%2:['suspend','descent'].includes(lee.phase)?2:3;
         return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:reverse?'lee-reverse':'lee-lotus',frame,mirror:Math.cos(pl.aim)<0,visualLift:lee.visualLift||0};
       }
       const gaara=G.NarutoGaara?.active?.(pl);
@@ -171,6 +187,20 @@
           ['release','crush','slam'].includes(phase)?2:3;
         return {...base,state:'skill',id,phase,key,frame,age:gaara.age,
           aim:gaara.aim,mirror:Math.cos(gaara.aim??pl.aim)<0};
+      }
+      const tenten = pl?.dex === 30009 ? G.NarutoTenten?.activeFor?.(pl) : null;
+      if (tenten && (!tenten.owner || tenten.owner === pl)) {
+        const mode = tenten.mode || tenten.kind;
+        const suffix = ({'tenten-kunai':'throw', 'tenten-fuma':'fuma',
+                         'tenten-tags':'tags', 'tenten-twin':'twin', 'tenten-mastery':'mastery'})[mode];
+        if (suffix) {
+          const age = Math.max(0, tenten.age || 0), duration = Math.max(.001, tenten.duration || .4);
+          return {...base, state:'skill', id:mode === 'tenten-kunai' ? 'naruto-tenten' : 'naruto-' + mode,
+            phase:tenten.phase || 'release', key:'tenten-' + suffix,
+            frame:suffix === 'fuma' ? (tenten.phase === 'catch' ? (age < duration * .5 ? 2 : 3) : tenten.phase === 'recovery' ? 3 : tenten.phase === 'prepare' ? 0 : 1) : Math.min(3, Math.floor(age / duration * 4)), age,
+            aim:tenten.aim ?? pl.aim, mirror:Math.cos(tenten.aim ?? pl.aim ?? 0) < 0,
+            visualLift:suffix === 'twin' ? Math.sin(Math.min(1,age/duration)*Math.PI)*12*(pl.anim.scale||1) : 0};
+        }
       }
       if (state.hurtAge < .3) return { ...base, state: 'hurt', phase: 'recoil', key: name + '-hurt', frame: row(dir) * 4 + Math.min(3, Math.floor(state.hurtAge / .3 * 4)), age: state.hurtAge };
       let cast = state.cast;
@@ -195,6 +225,10 @@
           const key={'naruto-gaara':'gaara-sand-burst','naruto-sand-coffin':'gaara-coffin','naruto-sand-shield':'gaara-shield','naruto-sand-tsunami':'gaara-tsunami'}[cast.id];
           return {...action,key,frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
         }
+        if (cast.id === 'naruto-tenten' || cast.id.startsWith('naruto-tenten-')) {
+          const suffix = cast.id === 'naruto-tenten' ? 'throw' : cast.id.slice('naruto-tenten-'.length);
+          return {...action, key:'tenten-' + suffix, frame:Math.min(3,Math.floor(cast.age / cast.duration * 4))};
+        }
         if (cast.id === 'naruto-lotus'||cast.id === 'naruto-reverse-lotus') return {...action,key:cast.id==='naruto-lotus'?'lee-lotus':'lee-reverse',frame:3,phase:'recovery'};
         if (['naruto-kunai','naruto-shuriken','naruto-fuma-shuriken','naruto-rasenshuriken'].includes(cast.id)) return { ...action, key: name + '-throw', frame: phase === 'windup' ? Math.min(1, Math.floor(cast.age / Math.max(.01, cast.charge) * 2)) : phase === 'release' ? 2 : 3 };
         return { ...action, key: name + '-attack', frame: Math.min(3, Math.floor(cast.age / cast.duration * 4)) };
@@ -215,6 +249,26 @@
       const pose=stateFor(pl.anim),side=Math.cos(pose.aim ?? pl.aim ?? 0)<0?-1:1;
       const [x,y]=[[-15,-52],[-24,-42],[44,-33],[14,-32]][frame],scale=pl.anim.scale||1;
       return {x:pl.x+x*side*scale,y:pl.y+y*scale+G.LIFT};
+    }
+    function handForTenten(pl, side = 0) {
+      if (pl?.dex !== 30009 || !pl.anim) return null;
+      const pose = stateFor(pl.anim), asset = assets.get(pose.key), frame = asset?.frames[pose.frame];
+      const point = side < 0 ? frame?.scrollLeft : side > 0 ? frame?.scrollRight : frame?.hand;
+      if (!point) return null;
+      const k = 64 * (pl.anim.scale || 1) / asset.bodyHeight;
+      const mirror = !!pose.mirror !== !!frame.mirror ? -1 : 1;
+      // Projectile coordinates include LIFT; drawing subtracts it again.
+      return {x:pl.x + (point[0]-frame.anchor[0])*k*mirror,
+              y:pl.y + (point[1]-frame.anchor[1])*k - (pose.visualLift||0) + G.LIFT};
+    }
+    function handForLee(pl) {
+      if (!enabled() || pl?.dex !== 30006) return null;
+      const pose = stateFor(pl.anim), asset = assets.get(pose.key), frame = asset?.frames[pose.frame];
+      if (!frame?.hand) return null;
+      const k = 64 * (pl.anim.scale || 1) / asset.bodyHeight;
+      const side = !!pose.mirror !== !!frame.mirror ? -1 : 1;
+      return {x:pl.x + (frame.hand[0]-frame.anchor[0]) * k * side,
+              y:pl.y + (frame.hand[1]-frame.anchor[1]) * k - (pose.visualLift||0)};
     }
     function adapter(ctx, pose, anim, x, y, opts) {
       if (pose.state !== 'skill' || opts.flash) return;
@@ -261,7 +315,7 @@
       }
       return vfx.apply(this, arguments);
     };
-    G.AnimationLab = { stateFor, handFor, counters, clear, coverage: { common: ['idle', 'movement', 'hurt', 'death'], skills: skillCoverage, sasukeDeath: 'redrawn fall sequence' }, get enabled() { return !!enabled(); } };
+    G.AnimationLab = { stateFor, handFor, handForLee, handForTenten, counters, clear, coverage: { common: ['idle', 'movement', 'hurt', 'death'], skills: skillCoverage, sasukeDeath: 'redrawn fall sequence' }, get enabled() { return !!enabled(); } };
     return G.AnimationLab;
   }
   window.AnimationRuntime = { install };

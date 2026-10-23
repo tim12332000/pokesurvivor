@@ -16,6 +16,22 @@ G.Icons = (() => {
                  '..kmwmmmnk..', '.kmwmsmmmnk.', '.kmmsssmmnk.', '.kmmmsmmmnk.', '..kmmmmmnk..', '...kkkkkk...'];
 
   const UI = {
+    // Tenten: kunai, returning blade, honed scroll, explosive tag, twin scrolls.
+    tentenKunai: { pal: { w:'#edf3f4', s:'#8295a2', r:'#c95e79' }, rows: [
+      '.........kk.', '........kwk.', '.......kwwk.', '......kwwsk.', '.....kwwsk..', '....kwwsk...',
+      '...kwwsk....', '...kssk.....', '..krkk......', '.krk........', 'krk.........', '.k..........'] },
+    tentenFuma: { pal: { w:'#e5edf0', s:'#677985', r:'#cb8390' }, rows: [
+      '.....kkk....', '....kssk....', '....kwsk....', '.kkkkwsk....', 'ksswwwwkkkk.', 'kksswrrwwssk',
+      'ksswwrrwsskk', '.kkkkwwwwssk', '....kswkkkk.', '....kswk....', '....kssk....', '....kkk.....'] },
+    tentenMastery: { pal: { w:'#f5e5c6', s:'#987543', r:'#bc6d86', b:'#c6e5ef' }, rows: [
+      '.kkk........', 'krwrk.......', 'krwwkkkk....', 'krwwwwwrk...', 'krwwwwwrk..b', 'krwwwwwrk.bb',
+      'krwwwkkk.bbb', 'krwwkbkb..b.', 'krwkbkbk..b.', 'krkbkbk.....', '.kkbkk......', '..kk........'] },
+    tentenTags: { pal: { w:'#f6e2bb', r:'#ca443e', y:'#ffd876', s:'#90754d' }, rows: [
+      '....y.......', '...yry......', '....r.......', '..kkkkkk....', '..kwrrwk....', '..kwrwwk....',
+      '..kwwwrk....', '..kwrrwk....', '..kwrwwk....', '..kwwssk....', '..kkkkkk....', '............'] },
+    tentenTwin: { pal: { w:'#f4e4c5', r:'#bd5d7c', s:'#98774b' }, rows: [
+      '.kkk....kkk.', 'krwwk..kwwrk', 'krwwk..kwwrk', '.kwwskkwwwk.', '..kwwsswwk..', '...kwwwwk...',
+      '...kwwwwk...', '..kwwsswwk..', '.kwwwkkwwwk.', 'krwwk..kwwrk', 'krwwk..kwwrk', '.kkk....kkk.'] },
     gear: { pal: { g: '#c9d6ff', d: '#7f93c9' }, rows: [
       '....kkkk....', '.kk.kggk.kk.', '.kgkkggkkgk.', '..kggggggk..', 'kkggkkkkggkk', 'kgggk..kgddk',
       'kgggk..kgddk', 'kkggkkkkddkk', '..kggddddk..', '.kgkkddkkdk.', '.kk.kddk.kk.', '....kkkk....'] },
@@ -308,7 +324,7 @@ G.Icons = (() => {
     if (cv) return cv;
     if (name.startsWith('move:')) {
       const m = G.Moves.BY_ID[name.slice(5)];
-      cv = emblem(m ? m.type : 'normal', m ? m.kind : null);
+      cv = m?.icon&&UI[m.icon]?fromRows(UI[m.icon]):emblem(m ? m.type : 'normal', m ? m.kind : null);
     } else if (name.startsWith('type:')) {
       cv = emblem(name.slice(5));
     } else {

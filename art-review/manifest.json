@@ -4711,6 +4711,60 @@
           }
         ]
       }
+    },
+    {
+      "id": "tenten-common-v1",
+      "title": "tenten-common-v1",
+      "character": "Tenten",
+      "category": "common",
+      "kind": "original AI redraw",
+      "image": "redrawn/tenten-common-v1.png",
+      "status": "production",
+      "runtimePreview": true,
+      "summary": "32 original poses: front/back/side idle, directional movement and hurt, genuine collapse and basic throw.",
+      "improvements": [
+        "Genuine separate poses, with fixed standing body scale.",
+        "Alpha crop and foot anchor registration; left uses explicit mirroring."
+      ],
+      "limitations": [
+        "Side-only attacks use a documented right-facing fallback for vertical aim."
+      ]
+    },
+    {
+      "id": "tenten-skills-v1",
+      "title": "tenten-skills-v1",
+      "character": "Tenten",
+      "category": "skills",
+      "kind": "original AI redraw",
+      "image": "redrawn/tenten-skills-v1.png",
+      "status": "production",
+      "runtimePreview": true,
+      "summary": "16 original poses for Fuma prepare/release/catch/recovery, explosive tags, twin scrolls and tool mastery.",
+      "improvements": [
+        "Genuine separate poses, with fixed standing body scale.",
+        "Alpha crop and foot anchor registration; left uses explicit mirroring."
+      ],
+      "limitations": [
+        "Side-only attacks use a documented right-facing fallback for vertical aim."
+      ]
+    },
+    {
+      "id": "lee-bandage-v1",
+      "title": "lee-bandage-v1",
+      "character": "Rock Lee",
+      "category": "skills",
+      "kind": "original AI redraw",
+      "image": "redrawn/lee-bandage-v1.png",
+      "status": "production",
+      "runtimePreview": true,
+      "summary": "Eight original wrist-unwind, cast, reel and tension poses across normal/opened gates forms; measured wrist grips attach the cloth.",
+      "improvements": [
+        "Genuine separate poses, with fixed standing body scale.",
+        "Alpha crop and foot anchor registration; left uses explicit mirroring."
+      ],
+      "limitations": [
+        "Side-only attacks use a documented right-facing fallback for vertical aim."
+      ]
     }
   ]
 }

@@ -177,6 +177,14 @@
       desc:'對一名可見敵人造成精神傷害並短暫減速；首領減速較弱。'
     }]
   ];
+  const tentenSource='https://naruto-official.com/es/anime/naruto1/list/01_267';
+  profiles.push([30009,'tenten','忍具連投','Ninja Tools (game adaptation)','tenten',{
+    mode:'tenten-kunai',passive:true,icon:'tentenKunai',type:'steel',cd:1.1,dmg:8,
+    range:300,count:3,speed:490,life:1,size:5,burstInterval:.07,
+    ups:[{t:'單枚傷害 +20%',m:{dmg:1.2}},{t:'基礎苦無 4 枚',m:{count:1}},
+      {t:'單枚傷害 +20%',m:{dmg:1.2}},{t:'基礎苦無 5 枚・單枚傷害 +25%',m:{count:1,dmg:1.25}}],
+    desc:'常駐自動普攻，不占主動槽、不需選招。小卷軸解封後短連投苦無，基礎 3／3／4／4／5 枚，單枚傷害 8／9.6／9.6／11.52／14.4。射程 300，冷卻 1.1 秒。苦無實際飛行並被牆遮擋，優先分配不同敵人；數量卡使枚數 ×1.25，累乘取整，單枚傷害不變。'
+  }]);
   const shared = [
     ['naruto-kunai', {
       name: '苦無投擲', mode: 'shot', type: 'steel', cd: .68, dmg: 17,
@@ -287,7 +295,7 @@
         {t:'攻擊範圍與持續時間 +12%',m:{radius:1.12,width:1.12,life:1.12,range:162.4}},
         {t:'傷害 +25%',m:{dmg:1.25}}
       ],
-      vis:{pal:'grass'}, desc:'基礎冷卻 5 秒，技能升級不變，冷卻縮減卡有效。挑空、抱身下墜重摔，造成落地範圍傷害；目標空中倒下仍完成落地。冷卻時自動近身普攻，連段中不插普攻；首領不浮空。',
+      vis:{pal:'grass'}, desc:'基礎冷卻 5 秒，冷卻縮減卡有效。繃帶同時拉近 3 名一般地面敵人，數量卡使綁定數 ×1.25，取整後最多 12 名。主目標接挑空、抱身重摔，其餘吃落地震擊；主目標空中倒下仍完成落地。冷卻自動近身普攻，連段中不插普攻；首領不被拉動、不浮空，由小李接近。',
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
@@ -308,10 +316,10 @@
       ups:[
         {t:'空中連擊 +2（7 次）・傷害 +20%・落地範圍擴大至 120',m:{dmg:1.2,radius:1.2}},
         {t:'空中連擊 +2（9 次）・落地範圍擴大至 140',m:{radius:7/6}},
-        {t:'空中連擊 +2（11 次）・突進距離 +12%・落地範圍擴大至 160',m:{range:201.6,radius:8/7}},
+        {t:'空中連擊 +2（11 次）・繃帶射程 +12%・落地範圍擴大至 160',m:{range:201.6,radius:8/7}},
         {t:'空中連擊 +2（13 次）・傷害 +25%・落地範圍擴大至 180',m:{dmg:1.25,radius:9/8}}
       ],
-      vis:{pal:'grass'}, desc:'基礎冷卻 5 秒，冷卻卡有效，全程最多 3.3 秒。基礎空中連擊 5／7／9／11／13 次；數量卡每張使連擊數 ×1.25，累乘後取整。第 n 擊傷害 ×1.10^n，越踢越快、空中無敵。致命傷延至落地才擊倒，落地造成範圍傷害；冷卻自動普攻。首領不浮空。',
+      vis:{pal:'grass'}, desc:'基礎冷卻 5 秒，冷卻卡有效，全程最多 3.3 秒。繃帶同時拉近 3 名一般地面敵人，數量卡使綁定數 ×1.25，最多 12 名。主目標接空中連擊，其餘吃落地震擊。基礎空中連擊 5／7／9／11／13 次；數量卡每張使連擊數 ×1.25，累乘取整。第 n 擊傷害 ×1.10^n，越踢越快、空中無敵。致命傷延至落地才擊倒；冷卻自動普攻。首領不被拉動、不浮空，由小李接近。',
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {
@@ -397,7 +405,38 @@
   const kinds = { 'gaara-sand-burst':'projectile', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield':'buff', 'gaara-sand-prison':'buff', 'gaara-sand-armor':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
     sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'gates-passive':'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
     'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
+  extra.push(
+    ['naruto-tenten-fuma',[30009],{
+      name:'風魔迴刃',mode:'tenten-fuma',icon:'tentenFuma',type:'steel',learnLevel:3,
+      cd:3.2,dmg:12,count:2,range:260,speed:390,size:12,pierce:3,
+      ups:[{t:'每程單枚傷害 +20%',m:{dmg:1.2}},{t:'飛行距離 290',m:{range:290}},
+        {t:'飛行距離 320・傷害 +20%',m:{range:320,dmg:1.2}},{t:'每程單枚傷害 +25%',m:{dmg:1.25}}],
+      desc:'兩枚大型四刃手裏劍沿弧線飛出再返回。去、回每程每敵人最多命中一次，每枚對單一目標最多兩次，牆壁會擋下。每程單枚傷害 12／14.4／14.4／17.28／21.6。數量卡使枚數 ×1.25，累乘取整；每張穿透 +1。選中後自動施放，切招保留已發射忍具。招式路線與數值為本作改編。',source_url:tentenSource
+    }],
+    ['naruto-tenten-mastery',[30009],{
+      name:'忍具精通',mode:'tenten-mastery',icon:'tentenMastery',passive:true,type:'steel',learnLevel:6,
+      cd:0,dmg:0,pierceBonus:1,speedMul:1.1,
+      ups:[{t:'忍具速度 +15%',m:{speedMul:1.15}},{t:'苦無額外穿透 +2・忍具速度 +20%',m:{pierceBonus:2,speedMul:1.2}},
+        {t:'忍具速度 +25%',m:{speedMul:1.25}},{t:'苦無額外穿透 +3・忍具速度 +30%',m:{pierceBonus:3,speedMul:1.3}}],
+      desc:'常駐被動，學會即生效、不占主動槽。苦無額外穿透 +1／1／2／2／3，忍具飛行速度 +10／15／20／25／30%。不增加同一枚忍具對 Boss 的重複命中。分身完整繼承技能等級，傷害只套用一次 1/3。被動機制為本作改編。',source_url:tentenSource
+    }],
+    ['naruto-tenten-tags',[30009],{
+      name:'起爆卷・散華',mode:'tenten-tags',icon:'tentenTags',type:'fire',learnLevel:9,
+      cd:5.5,dmg:36,count:2,range:280,radius:60,fieldDuration:.65,speed:420,
+      ups:[{t:'每枚爆炸傷害 +20%',m:{dmg:1.2}},{t:'爆炸半徑 66',m:{radius:1.1}},
+        {t:'每枚爆炸傷害 +20%',m:{dmg:1.2}},{t:'每枚爆炸傷害 +25%・半徑 72',m:{dmg:1.25,radius:72/66}}],
+      desc:'投出基礎兩枚附札苦無，落點固定，紙札顯示 0.65 秒後各爆炸一次。接觸與落地不額外傷害，敵人可走出爆炸圈。每枚基傷 36／43.2／43.2／51.84／64.8，半徑 60／60／66／66／72。數量卡使枚數 ×1.25，累乘取整。落點與爆炸範圍相符；招名與機制為本作改編。',source_url:tentenSource
+    }],
+    ['naruto-tenten-twin',[30009],{
+      name:'雙昇龍',mode:'tenten-twin',icon:'tentenTwin',type:'steel',learnLevel:12,
+      cd:7,dmg:8,count:12,range:340,speed:510,size:5,arc:Math.PI*110/180,burstInterval:.05,burstDuration:.6,
+      ups:[{t:'基礎忍具 14 枚',m:{count:2}},{t:'基礎忍具 16 枚・單枚傷害 +20%',m:{count:2,dmg:1.2}},
+        {t:'基礎忍具 18 枚',m:{count:2}},{t:'基礎忍具 20 枚・單枚傷害 +25%',m:{count:2,dmg:1.25}}],
+      desc:'雙卷紙軸交錯展開，短躍中由雙側分四批發出忍具，形成約 110° 前方扇面。基礎 12／14／16／18／20 枚，單枚傷害 8／8／9.6／9.6／12，射程 340。整輪發射約 0.6 秒，數量卡使枚數 ×1.25，累乘取整，不增加站定時間。可走位、沒有額外無敵，螺旋紙卷與尾跡不造成傷害。',source_url:tentenSource
+    }]
+  );
   kinds['gaara-sand-guard'] = 'buff';
+  Object.assign(kinds,{'tenten-kunai':'projectile','tenten-fuma':'projectile','tenten-mastery':'buff','tenten-tags':'meteor','tenten-twin':'projectile'});
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
 
@@ -456,7 +495,7 @@
     const label = document.querySelector(`[data-naruto-attack="${dex}"]`);
     if (label) label.textContent = name;
     byDex.set(dex, definition);
-    references.set(dex, { name: english, source_url: `https://naruto-official.com/en/news/${article}` });
+    references.set(dex, { name: english, source_url: dex===30009?tentenSource:`https://naruto-official.com/en/news/${article}` });
   }
   shared.forEach(([id, design]) => register(id, design));
   for (const [id, owners, design] of extra) {
@@ -490,7 +529,7 @@
   guide.translate = false;
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   function activationLabel(move) {
-    if (move.id === 'naruto-gaara') return '常駐普攻 · 不用選招 · 不占主動槽';
+    if (['naruto-gaara','naruto-tenten'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
     if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';
     if (['naruto-kusanagi', 'naruto-sand-prison'].includes(move.id)) return '主動 · 需保持選中';
     if (['naruto-shadow-clones', 'naruto-nine-tails-cloak'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';
@@ -511,7 +550,7 @@
     source.href = reference.source_url;
     source.target = '_blank';
     source.rel = 'noopener noreferrer';
-    source.textContent = `官方參考 · ${reference.name}`;
+    source.textContent = dex===30009?'官方動畫參考 · 忍具機制為本作改編':`官方參考 · ${reference.name}`;
     item.append(title, description, stats, source);
     for (const id of extraPools.get(dex) || []) {
       const move = definitions.get(id);
@@ -520,12 +559,12 @@
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = `${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.5`;
+      extraStats.textContent = `Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.5`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
-      link.textContent = move.id==='naruto-sand-shield' ? '官方砂術參考 · 護盾與護衛機制為本作改編' : `官方招式來源 · ${move.name}`;
+      link.textContent = dex===30009 ? '官方動畫參考 · 招式與數值依本作改編' : move.id==='naruto-sand-shield' ? '官方砂術參考 · 護盾與護衛機制為本作改編' : `官方招式來源 · ${move.name}`;
       item.append(heading, detail, extraStats, link);
     }
     guide.querySelector('.naruto-skill-entries').append(item);

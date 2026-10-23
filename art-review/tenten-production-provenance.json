@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-23",
+  "generator": "built-in image_gen",
+  "status": "production atlas candidates registered by actual alpha bounds; runtime acceptance required",
+  "outputs": [
+    {
+      "file": "art-review/redrawn/tenten-common-v1.png",
+      "sha256": "f8d39572d12d4be528ce96053a26c6e745ecf6f9cd33bc355190b047123ed1f8",
+      "kind": "new original generated pixel-art atlas",
+      "prompt": "Create a NEW ORIGINAL production pixel-art sprite atlas of YOUNG TENTEN, Naruto Part I Chunin Exams. Reference1 is our newly drawn Tenten concept: EXACT SAME identity, outfit and palette. Reference2 is our game Rock Lee common atlas: match its compact roughly3-head-tall body proportions,48-logical-pixel standing body, deep navy single-logical-pixel outlines, hard pixel clusters and flat two-tone shading. Tenten has brown twin round hair buns, short sidebangs, small Konoha metal forehead protector on navy band, pale pink short-sleeve Chinese collar top with red piping/closures, navy cropped trousers, white leg wraps, navy open-toe sandals, small closed ivory/red weapon scroll on belt. Same costume and anatomy allframes; no Lee green clothes. TRUE transparent PNG alpha. EXACT FOUR COLUMNS EIGHT ROWS=32 full-body separated poses, tall1:2 atlas, evenly spaced rectangularcells with generous margins, no overlaps. SAME CHARACTER BODY SCALE allposes, crouching/falling shorter naturally never enlargehead. No labels, grid, backgrounds, floor shadows,particles,glow or giant weapon VFX. ROW1 front/down idlebreathing2poses, back/up idlebreathing2poses. ROW2 rightside idle2poses, rightside hurt recoil/recover2poses. ROW3 front/down running4distinctalternatingframes. ROW4 rightside running4distinctframes. ROW5 back/up running4distinctframes. ROW6 front/down hurtrecoil/recover2,back/uphurtrecoil/recover2. ROW7 right-facing collapse4poses:kneesbuckle,kneel,tipover,lyingstill,body same scale. ROW8 right-facing BASIC KUNAI THROW4poses:open small belt scroll waist-height,left hand keepsscroll andright draws kunai,rightarm extends andRELEASES kunai(emptyhand),rightarm withdraws+closes scroll. Tinyhandheldkunai onlyno flyingweapons painted. All32figures unique clearlymeaningful movement, feetbaseline perrow, no gridline, clean alpha. Newly drawn original no tracing commercialsprites. Pixelartnotairbrushed.",
+      "references": [
+        {
+          "path": "art-review/redrawn/tenten-concept-v1.png",
+          "sha256": "8d932177ff3446e2c7570f71d8bd0c6f7acfd9b2a5b0f3a5981d734362764d31"
+        },
+        {
+          "path": "art-review/redrawn/lee-common-v1.png",
+          "sha256": "91a0bf6d44d26be8fdff54ad1aaf87b420aff242f98cdc56183fa6942f1149b6"
+        }
+      ],
+      "transparent_background": true
+    },
+    {
+      "file": "art-review/redrawn/tenten-skills-v1.png",
+      "sha256": "77d200c22bf9c9d4574ebd141f2276b32efd3a2f87da34d2d1065f66957b7fc5",
+      "kind": "new original generated pixel-art atlas",
+      "prompt": "Draw a NEW ORIGINAL production pixel-art skill sprite atlas for YOUNG TENTEN from NarutoPartI. Reference1 is our NEW Tenten common atlas: EXACT SAME character costume, body scale,headsize,palette,outline andpixeldensity. Brown twinroundbuns,navyKonoha foreheadband,peachskin,pink short-sleeve Chinese top withredpiping,navycroppedpants,whitelegwraps,navyopen-toesandals,smallscrollhip. Reference2 own Tenten conceptforidentity only. TRUEtransparent PNG alpha. EXACT4COLUMNS4ROWS=16 fullbodyfigures, squareatlas,equallyspacedcells,generousmargin,nooverlaporgridlabels. ALLfacingRIGHT, leftmirrorhandledbygame. SAME FIXEDbody scaleincludingcrouch/jump; doNOT enlargeheadwhenkneeling. No largeVFX,particles,glow,smoke,shadows,bg,text. Eachrow is 4clearnewactionposes: ROW1 FUMA RETURN SHURIKEN:1bothhandsdrawalargeblack/silverfourbladeshurikenclosebody,2rightarmstrongforwardthrowrelease emptyhand,leftbalances,3openhands catch returninglargefourbladeatshoulderlevel,4stow/recoverstance. Weaponheldonlypre/catch,NOTflyingexternalweapons. ROW2 EXPLOSIVETAG KUNAI:1left hand openssmallscrollandrightdrawskunaiwithtinycreamredpaperseal,2rightarmtossesforward(released emptyhand),3leftopenhand downwardguidinggroundplacementrightarmwithdraws,4relaxedrecoverystowscroll. ROW3 TWIN RISING DRAGONS:1bothhandsopenTWOseparateivory/redsmallscrollsleftandrightbody,2shortjumpkneesbentbothscrollsheldspreadoutward(figurefixedscale),3midairalternatingrightthrowleftscrollsteady clearasymmetricbodygesture,4landingkneesbenthandsclosingtwoscrolls; noflyingdragonsorweaponrainpainted. ROW4 WEAPONMASTERY LEARN INSPECTION:1holdsmallscrollandinspectkunaiedge,2wipe/polishkunaiwithtinyclothgesture,3bothhandsrollscrollclosedatwaist,4weaponstowedready. All16distinctclearposes showhands andgroundfeetanchorswheregrounded. Characterheightbetweenheadandfeet EXACTreferencecommons, sameyouthfulproportionsandcleanpixelart. Originalnewdrawingnottracedcommercialsprites.",
+      "references": [
+        {
+          "path": "art-review/redrawn/tenten-common-v1.png",
+          "sha256": "f8d39572d12d4be528ce96053a26c6e745ecf6f9cd33bc355190b047123ed1f8"
+        },
+        {
+          "path": "art-review/redrawn/tenten-concept-v1.png",
+          "sha256": "8d932177ff3446e2c7570f71d8bd0c6f7acfd9b2a5b0f3a5981d734362764d31"
+        }
+      ],
+      "transparent_background": true
+    }
+  ],
+  "directionNotes": "Common down/up/right independently drawn; left mirrored. Skill actions right-facing, left mirrored; up/down directional fallback is explicit."
+}

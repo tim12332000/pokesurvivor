@@ -98,6 +98,50 @@ def lee_neck_to_feet(image, frame):
     return frame['anchor'][1] - min(green_rows)
 
 
+
+def write_registered_entries(path, entries):
+    """Retain untouched/custom registrations and their numeric/key formatting."""
+    previous = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    for key, value in entries.items():
+        if key not in previous or previous[key] != value:
+            previous[key] = value
+    path.write_text(json.dumps(previous, indent=2) + '\n', encoding='utf-8')
+
+
+def register_tenten_fallback(common):
+    """Keep the genuine new art available to portraits and the source renderer."""
+    path = ROOT / '.omx/naruto/sprites.json'
+    metadata = json.loads(path.read_text(encoding='utf-8'))
+    rects = lambda indices: [common['frames'][i]['rect'] for i in indices]
+    sides = lambda indices: {'default': rects(indices), 'right': rects(indices),
+                             'left': rects(indices)}
+    metadata['tenten'] = {
+        'file': 'tenten-common-v1.png',
+        'source': 'art-review/' + common['source'],
+        'bodyHeight': common['bodyHeight'],
+        'frames': {'down': rects((0, 1)), 'up': rects((2, 3)),
+                   'right': rects((4, 5)), 'left': rects((4, 5))},
+        'mirror': ['left'],
+        'directionNote': 'Genuine front/back idle, walk and hurt views; left is mirrored from right. Side-only throws and death explicitly reuse right-facing poses for up/down.',
+        'animations': {
+            'Idle': {'frames': {'down': rects((0, 1)), 'up': rects((2, 3)),
+                               'right': rects((4, 5)), 'left': rects((4, 5))}, 'mirror': ['left'], 'durations': [12, 12]},
+            'Walk': {'frames': {'down': rects(range(8, 12)), 'up': rects(range(16, 20)),
+                               'right': rects(range(12, 16)), 'left': rects(range(12, 16))}, 'mirror': ['left'], 'durations': [6] * 4},
+            'Hurt': {'frames': {'down': rects((20, 21)), 'up': rects((22, 23)),
+                               'right': rects((6, 7)), 'left': rects((6, 7))}, 'mirror': ['left']},
+            **{name: {'frames': sides(range(28, 32)), 'mirror': ['left'], 'durations': [5] * 4,
+                       'directionFallback': {'up': 'right', 'down': 'right'}}
+               for name in ('Attack', 'Shoot', 'Charge')},
+            'Faint': {'frames': sides(range(24, 28)), 'mirror': ['left'], 'durations': [10] * 4,
+                      'directionFallback': {'up': 'right', 'down': 'right'}}
+        }
+    }
+    path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+    (path.parent / 'sprites-data.js').write_text('window.PS_NARUTO_SPRITES = ' +
+        json.dumps(metadata, ensure_ascii=False) + ';\n', encoding='utf-8')
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     sources = {}
@@ -113,11 +157,33 @@ def main():
         sources[key], images[key] = atlas(key + '-v1.png', rows)
         opened_key = 'lee-opened-' + kind
         sources[opened_key], images[opened_key] = atlas('lee-gates-' + kind + '-v1.png', rows)
-    for kind, rows in (('common', 8), ('skills', 4)):
-        key = 'gaara-' + kind
-        sources[key], images[key] = atlas(key + '-v1.png', rows)
+    for hero in ('gaara', 'tenten'):
+        for kind, rows in (('common', 8), ('skills', 4)):
+            key = hero + '-' + kind
+            sources[key], images[key] = atlas(key + '-v1.png', rows)
+    sources['lee-bandage'], images['lee-bandage'] = atlas('lee-bandage-v1.png', 2)
+    # Measured cloth exit at the wrist/leading fist in each genuine pose.
+    for frame, point in zip(sources['lee-bandage']['frames'],
+                            ((294,266),(838,230),(1170,248),(1635,244),
+                             (295,700),(838,660),(1170,677),(1637,678))):
+        frame['hand'] = [point[0]-frame['rect'][0], point[1]-frame['rect'][1]]
+    # Measured points in the original atlases, never an assumed global actor.
+    for frame, point in zip(sources['tenten-common']['frames'][28:32],
+                            ((171,1668),(398,1663),(633,1654),(795,1667))):
+        frame['hand'] = [point[0]-frame['rect'][0], point[1]-frame['rect'][1]]
+    for frame, point in zip(sources['tenten-skills']['frames'],
+                            ((207,192),(617,146),(833,200),(1139,183),
+                             (247,470),(616,453),(881,579),(1145,496),
+                             (263,778),(594,758),(929,780),(1175,829),
+                             (232,1067),(519,1106),(835,1110),(1158,1123))):
+        frame['hand'] = [point[0]-frame['rect'][0], point[1]-frame['rect'][1]]
+    for frame, left, right in zip(sources['tenten-skills']['frames'][8:12],
+                                  ((53,735),(382,708),(696,742),(1084,800)),
+                                  ((263,751),(594,728),(929,750),(1175,815))):
+        frame['scrollLeft'] = [left[0]-frame['rect'][0], left[1]-frame['rect'][1]]
+        frame['scrollRight'] = [right[0]-frame['rect'][0], right[1]-frame['rect'][1]]
     # Standing reference is measured once, never independently per pose.
-    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened', 'gaara'):
+    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened', 'gaara', 'tenten'):
         common = sources[hero + '-common']
         common['bodyHeight'] = median(f['rect'][3] - 4 for f in common['frames'][:6])
     base = sources['naruto-common']
@@ -140,6 +206,8 @@ def main():
     # from the actor's head-to-feet scale reference.
     sources['gaara-skills']['bodyHeight'] = median(
         sources['gaara-skills']['frames'][i]['rect'][3] - 4 for i in (3, 7, 11, 15))
+    sources['tenten-skills']['bodyHeight'] = median(
+        sources['tenten-skills']['frames'][i]['rect'][3] - 4 for i in (3, 7, 15))
     # Preserve the original body's scale beneath the added hair spikes. Use
     # just the same upright references in each atlas, never individual poses.
     for kind, indices in (('common', (0, 1)), ('skills', (3, 11))):
@@ -154,7 +222,7 @@ def main():
                        for f in sources['one-tail']['frames'][:4])
     sources['one-tail']['bodyHeight'] = round(base['bodyHeight'] * form_head / base_head, 2)
     assets = {}
-    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened', 'gaara'):
+    for hero in ('naruto', 'sasuke', 'lee', 'lee-opened', 'gaara', 'tenten'):
         common = sources[hero + '-common']
         sets = {
             'movement': (list(range(8, 12)) + list(range(16, 20))
@@ -173,11 +241,27 @@ def main():
                         ('sasuke', ('chidori', 'fireball', 'throw', 'sword')),
                         ('lee', ('whirlwind', 'lotus', 'gates', 'reverse')),
                         ('lee-opened', ('whirlwind', 'lotus', 'gates', 'reverse')),
-                        ('gaara', ('sand-burst', 'coffin', 'shield', 'tsunami'))):
+                        ('gaara', ('sand-burst', 'coffin', 'shield', 'tsunami')),
+                        ('tenten', ('fuma', 'tags', 'twin', 'mastery'))):
         for row, kind in enumerate(kinds):
             assets[hero + '-' + kind] = sequence(sources[hero + '-skills'], range(row * 4, row * 4 + 4))
+    for hero, indices in (('lee', range(4)), ('lee-opened', range(4, 8))):
+        bandage = sources['lee-bandage']
+        base_common = sources[hero + '-common']
+        neck = lee_neck_to_feet(images['lee-bandage'], bandage['frames'][indices[-1]])
+        base_neck = median(lee_neck_to_feet(images[hero + '-common'], f) for f in base_common['frames'][4:6])
+        bandage['bodyHeight'] = round(base_common['bodyHeight'] * neck / base_neck, 2)
+        assets[hero + '-bandage'] = sequence(bandage, indices)
+    # The atlas has one common body scale; the alternate head adds height.
+    sources['lee-bandage']['bodyHeight'] = assets['lee-bandage']['bodyHeight']
     assets['gaara-throw'] = sequence(sources['gaara-common'], range(28, 32))
-    (ART / 'animation-assets.json').write_text(json.dumps(assets, indent=2) + '\n', encoding='utf-8')
+    assets['tenten-throw'] = sequence(sources['tenten-common'], range(28, 32))
+    for key, entry in assets.items():
+        if key.startswith('tenten-') and 'directions' not in entry:
+            entry.update(facing='right', directionFallback={'up': 'right', 'down': 'right'},
+                         mirrorDirections=['left'])
+    register_tenten_fallback(sources['tenten-common'])
+    write_registered_entries(ART / 'animation-assets.json', assets)
     form = sources['one-tail']
     animations = {}
     for kind, indices, fps, loop in (
@@ -191,7 +275,7 @@ def main():
     form_json = {'source': form['source'], 'bodyHeight': form['bodyHeight'],
                  'facing': 'right', 'animations': animations}
     (ART / 'kyuubi-frames.json').write_text(json.dumps(form_json, indent=2) + '\n', encoding='utf-8')
-    (ART / 'redrawn/atlas-map.json').write_text(json.dumps(sources, indent=2) + '\n', encoding='utf-8')
+    write_registered_entries(ART / 'redrawn/atlas-map.json', sources)
     # Review every physical frame at the exact same world scale as the game.
     contact_height = sum(40 + ((len(source['frames']) + 7) // 8) * 100
                          for source in sources.values())

@@ -283,6 +283,10 @@
         } else if (le.slow) terrainMul = le.slow < 0.5 ? 0.45 : 0.55;
       }
 
+      if (G.NarutoLee?.bound?.(this)) {
+        if (this.shieldT > 0 && (this.shieldT -= dt) <= 0) this.shield = 0;
+        return;
+      }
       const sandRoot = G.NarutoGaara?.rooted?.(this) || false;
       const effectiveSlow = Math.max(this.slow, G.NarutoGaara?.prisonSlow?.(this) || 0);
       const spd = sandRoot ? 0 : this.spd * (1 - effectiveSlow) * terrainMul * G.Weather.speedFor(this.types);
@@ -857,7 +861,7 @@
 
     function separate(dt) {
       for (const e of list) {
-        if (e.dead) continue;
+        if (e.dead || G.NarutoLee?.bound?.(e)) continue;
         const cx = Math.floor(e.x / CELL), cy = Math.floor(e.y / CELL);
         let px = 0, py = 0, n = 0;
         for (let j = -1; j <= 1; j++) {

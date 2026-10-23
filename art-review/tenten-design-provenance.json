@@ -1,0 +1,31 @@
+{
+  "status": "design concept only; not a registered production sprite atlas",
+  "generator": "built-in image_gen",
+  "date": "2026-10-23",
+  "prompt": "Create one NEW ORIGINAL compact game sprite concept of young TENTEN from Naruto Part I Chunin Exams era, for the same pixel-art survivor game as the reference Rock Lee atlas. Reference is STYLE AND BODY PROPORTIONS ONLY: do NOT copy Lee character, poses or green clothes. ONE isolated full-body Tenten, THREE-QUARTER RIGHT SIDE, about 3-heads-tall youthful proportions matching the reference, compact readable head, dark navy crisp thin outline, hard pixel clusters, limited two-tone cel shading, no painterly smoothing. Young Chinese-inspired outfit: brown hair in two clearly visible round buns, short side bangs, small Konoha metal forehead protector on dark blue cloth, pale pink short-sleeve high-collar Chinese-style top with deep red piping and closures, dark navy cropped trousers, white leg wraps, dark navy open-toed ninja sandals, small weapon pouch. Standing in a balanced grounded ready stance, knees slightly bent; BOTH hands grip the end handles of ONE open warm ivory paper weapon scroll horizontally in front of her waist, paper with a few tiny dark seal marks. Another closed scroll strapped neatly on back hip. Eyes confidently look toward RIGHT. Full figure wholly inside ample transparent padding, no other figures, NO panels, NO grid, NO text or labels, no ground shadow, no background, no glow, no giant effects, no scenery. True transparent alpha background. This is original drawn concept art, not traced commercial sprites. Render at large preview size with visibly pixelated edges, maintaining same logical pixel density and proportions as the reference; exact atlas registration is not requested.",
+  "transparent_background": true,
+  "reference": {
+    "path": "art-review/redrawn/lee-common-v1.png",
+    "sha256": "91a0bf6d44d26be8fdff54ad1aaf87b420aff242f98cdc56183fa6942f1149b6"
+  },
+  "output": {
+    "path": "art-review/redrawn/tenten-concept-v1.png",
+    "sha256": "8d932177ff3446e2c7570f71d8bd0c6f7acfd9b2a5b0f3a5981d734362764d31",
+    "size": [
+      1227,
+      1282
+    ],
+    "mode": "RGBA",
+    "visibleAlphaBounds": [
+      286,
+      90,
+      1008,
+      1209
+    ]
+  },
+  "limitations": [
+    "One right-facing ready pose only; no independent walk, cast, hurt or death frames.",
+    "Original generated design artwork, not commercial extracted sprites.",
+    "No production roster or asset manifest entry."
+  ]
+}

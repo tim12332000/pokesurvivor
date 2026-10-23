@@ -1,0 +1,30 @@
+{
+  "date": "2026-10-23",
+  "generator": "built-in image_gen",
+  "outputs": [
+    {
+      "file": "art-review/redrawn/lee-bandage-v1.png",
+      "sha256": "1da10f796ff9caeffa66ecaafc0cffbf068260dfdb29a9336048ba02fd7995dc",
+      "kind": "new original generated pixel-art atlas",
+      "prompt": "Draw a NEW ORIGINAL production pixel-art skill atlas for young ROCK LEE matching EXACT existing game character andbodyproportions. Reference1 own Lee common atlas,ref2 own Lee skills atlas,ref3 own Gates-opened common. EXACT FOUR COLUMNS TWO ROWS=8 fullbody separated right-facing poses, landscape2:1, same fixed compact about3-head-tall body scale/outline/pixel density asreferences. TRUEtransparent PNG, generousclearcellmargins,no grid,text,background,shadows,glow. ROW1 NORMAL LEE: bowlblackhair,normalpeachskinblackeyes,greenjumpsuit,whitewrappedwrists,redbeltmetalplate,orangelegwarmers,navysandals. Four new intentional bandage gestures: COL1 unwind wrist wrap withoppositehand, plantedfeetandkneesready;COL2 rightarm openhandextends forward letting SMALL looseend wristclothunroll, leftarmback, bodyleansforward;COL3 BOTH HANDS gripandREEL PULL towardchest, elbowsbent,weightshiftsback,feetplanted,clothsmallbetweengrips;COL4 firmtwo-hand tensionholdthenrelaxedrelease,feetplanted,clothtailfewpixels. ROW2 SAME EXACT4POSES andgarmentpalette/size but OPENED GATES formmatchingref3: visiblyREDface+hands,solidWHITEeyes,raisedspikyblackhair; NOT normalface,notredclothes,notglow. Framehandsandwristposes must clearlydiffer, do NOT reuse punching oridleframes. Do NOT draw long rope, long ribbons, wrappedvictims or largeVFX; longclothwillberenderedindependently bygame. Onlyshortwristattachedlooseclothend allowed. Do NOT changebody scale withleanorcrouch. Fullbodynonoverlapfeetvisible, onebody/cell. Originalnewlydrawnnotcommercialspritecopy. Crisp pixel clusters no smoothing.",
+      "references": [
+        {
+          "path": "art-review/redrawn/lee-common-v1.png",
+          "sha256": "91a0bf6d44d26be8fdff54ad1aaf87b420aff242f98cdc56183fa6942f1149b6"
+        },
+        {
+          "path": "art-review/redrawn/lee-skills-v1.png",
+          "sha256": "90b8501c0e5c6ac3403260448ab23a90f76704085a0c4fa6fa373feecba6993b"
+        },
+        {
+          "path": "art-review/redrawn/lee-gates-common-v1.png",
+          "sha256": "bb3384b70b73cda93e6a8161f1b8f20f0f90337a563b3e9f4e12f5992aa00f6d"
+        }
+      ],
+      "transparent_background": true
+    }
+  ],
+  "layout": "4 columns,2 rows; normal gestures 0..3 and opened-gates gestures4..7",
+  "research": "art-review/lee-bandage-redesign.md",
+  "note": "Original source sheets are motion research only; no commercial source pixels used in this atlas."
+}
