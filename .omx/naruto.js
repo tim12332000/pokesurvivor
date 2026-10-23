@@ -1,7 +1,7 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
-  const availableDexes=Object.freeze([30001,30002,30006,30007,30009]);
+  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010]);
   const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
   const version='火影 beta 0.01';
   const roster = [
@@ -13,7 +13,8 @@
     ['lee','Rock Lee','洛克李','第三班',['fighting'],1,180,132],
     ['gaara','Gaara','我愛羅','砂隱村',['ground'],4,136,104],
     ['itachi','Itachi Uchiha','宇智波鼬','曉',['psychic','fire'],5,110,117],
-    ['tenten','Tenten','天天','第三班',['steel'],3,150,144]
+    ['tenten','Tenten','天天','第三班',['steel'],3,150,144],
+    ['pain','Pain — Six Paths','沛恩六道','曉',['psychic'],5,120,108]
   ];
   const records = new Map(), dictionary = {Naruto:'火影忍者'};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
@@ -33,6 +34,7 @@
     let loading;
     Object.defineProperty(record,'loaded',{get(){
       if(record.ready)return Promise.resolve(true);
+      if(slug==='pain')return G.PainArt.ready.then(()=>{record.ready=true;return true;});
       if(loading)return loading;
       loading=new Promise(resolve=>{
       image.onload=()=>{
@@ -91,6 +93,20 @@
       if(!record)return super.draw(ctx,x,y,opts);
       const pixel=record.pixel;
       const ui=previews.has(ctx.canvas);
+      if(this.dex===30010){
+        const actor=G.Game.player?.anim===this?G.Game.player:(G.SelfClones?.actors()||[]).find(a=>a.anim===this);
+        const pose=actor?G.NarutoPain?.activeFor(actor):null;
+        const casting=pose&&['gravity','planet'].includes(pose.kind);
+        const state=this.cur==='Faint'?'death':this.cur==='Hurt'?'hurt':casting?'special':this.cur==='Walk'?'move':['Attack','Shoot','Charge'].includes(this.cur)?'strike':'idle';
+        const fps=G.PainArt?.metadata?.bodies.tendo.animations[state]?.fps||2;
+        const time=casting?pose.age:this.frame/fps;
+        if(ui){const width=ctx.canvas.width*.85,height=ctx.canvas.height*.8;G.PainArt?.portrait(ctx,{path:'tendo',x:x-width/2,y:y-height,width,height});}
+        else {
+          const height=G.NarutoPain?.visualHeight('tendo',actor||{anim:this})??80*this.scale;
+          G.PainArt?.draw(ctx,{path:'tendo',x,y,height,state,time,facing:this.dir>=5?-1:1,alpha:opts.alpha??1});
+        }
+        return;
+      }
       if(ui&&pixel.preview){
         if(!record.previewImage){
           if(Date.now()<(record.previewRetryAt||0))return;
@@ -164,7 +180,7 @@
     const record=records.get(dex),button=document.createElement('button');
     button.type='button';button.className='naruto-card';button.dataset.quickNaruto=dex;
     button.append(G.UI.spriteCanvas(dex,128,112,{dir:0,shadow:true}));
-    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30007:'砂術・砂縛柩・砂瀑大葬',30006:'體術・木葉旋風・蓮華',30009:'忍具連投・雙昇龍'}[dex]||record.team;
+    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30007:'砂術・砂縛柩・砂瀑大葬',30006:'體術・木葉旋風・蓮華',30009:'忍具連投・雙昇龍',30010:'六道協戰・神羅天征・地爆天星'}[dex]||record.team;
     button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${identity}</small><span class="naruto-selection"></span>`);
     button.onclick=()=>choose(dex);quickPick.querySelector('.naruto-grid').append(button);
   }
@@ -186,7 +202,8 @@
     30002:['雷遁突進','千鳥穿梭連擊，搭配火遁壓制成群敵人。'],
     30006:['近身體術','旋風掃開敵群，以繃帶拉近敵人、蓮華重摔。'],
     30007:['砂術防守','砂盾護身、砂兵協戰，掌控周圍戰場。'],
-    30009:['忍具遠攻','連投忍具、鋪設陷阱，以卷軸展開大範圍攻勢。']
+    30009:['忍具遠攻','連投忍具、鋪設陷阱，以卷軸展開大範圍攻勢。'],
+    30010:['六道協同','天道引斥控場，五道分工護衛，以通靈、飛彈與地爆天星壓制敵群。']
   };
   let previewDex;
   const syncQuickPick=()=>{
@@ -217,7 +234,7 @@
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').hidden=!G.Digimon.enabled;
-  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位忍者：鳴人、佐助、小李、我愛羅、天天。`;
+  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位忍者：鳴人、佐助、小李、我愛羅、天天、沛恩六道。`;
   document.getElementById('naruto-close').onclick=()=>{hideOverlays();G.Flow.goMenu();};
   const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='火影忍者';nav.translate=false;nav.onclick=openPicker;
   document.getElementById('btn-settings').before(nav);

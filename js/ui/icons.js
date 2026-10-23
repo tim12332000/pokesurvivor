@@ -16,6 +16,58 @@ G.Icons = (() => {
                  '..kmwmmmnk..', '.kmwmsmmmnk.', '.kmmsssmmnk.', '.kmmmsmmmnk.', '..kmmmmmnk..', '...kkkkkk...'];
 
   const UI = {
+    // Signature ninja skills: distinct silhouettes on the shared 12-pixel UI grid.
+    shadowClones: { pal: { w:'#eef7ff', b:'#58cfff', o:'#ffad47' }, rows: [
+      '..kk...kk...', '.kwok.kwbk..', '.kook.kbbk..', '..kk...kk...', '.kook.kbbk..', 'kooookbbbbk.',
+      'kookokbbkbk.', '.kok.kbk....', '.kok.kbk....', '.kok.kbk....', '.kkk.kkk....', '............'] },
+    rasengan: { pal: { w:'#eef7ff', b:'#58cfff', d:'#2378bc' }, rows: [
+      '....kkkk....', '..kkbbbbkk..', '.kbwwwwbbdk.', '.kbwkkkwbdk.', 'kbwkbbdkwbdk', 'kbwkbwbdkwdk',
+      'kbwkdkkdkwdk', 'kbbwddddkwdk', '.kbbwwwwbdk.', '.kdbbbbbdk..', '..kkdddkk...', '....kkk.....'] },
+    rasenshuriken: { pal: { w:'#eef7ff', b:'#58cfff', d:'#2378bc' }, rows: [
+      '.....kk.....', '....kwbk....', '....kwbk....', '....kwbk....', 'kkkkkbbkkkkk', 'kwwbbwwbbbdk',
+      '.kbbwwwwbdk.', '..kkbwwbkk..', '....kbbk....', '....kbdk....', '....kdk.....', '.....k......'] },
+    nineTailsCloak: { pal: { w:'#eef7ff', o:'#ffad47', r:'#e85863' }, rows: [
+      '.kk......kk.', 'krrk....krrk', 'krork..krork', '.krorkkrork.', '.krrrrrrrrk.', 'krrwkrrkwrrk',
+      'krrkkrrkkrrk', '.krrrrrrrrk.', '..krrkkrrk..', '...krrrrk...', '..krrkkrrk..', '.kkkk..kkkk.'] },
+    chidori: { pal: { w:'#eef7ff', s:'#8495b6', b:'#58cfff' }, rows: [
+      '...b.....b..', '..bwb...bwb.', '...b..b..b..', '.....bwb....', '.b..kkbkk...', 'bwbkwwwbbk..',
+      '.b.kwwbbbk..', '...kwwbbk.b.', '...kkbbk.bwb', '..ksssk...b.', '.ksssk......', '..kkk.......'] },
+    greatFireball: { pal: { w:'#eef7ff', o:'#ffad47', r:'#e85863' }, rows: [
+      '......kk....', '.....krk....', '..k.krork...', '..krkrwrk...', '.krorwwwrk..', '.krowwwwrk..',
+      'krowwwwwwrk.', 'krwwwwwwork.', 'krwwwwworrk.', '.kroooorrk..', '..krrrrrk...', '...kkkkk....'] },
+    kusanagi: { pal: { w:'#eef7ff', s:'#8495b6', p:'#b893ef' }, rows: [
+      '.....pp..kk.', '...pp...kwk.', '..p....kwsk.', '.p....kwsk..', 'p....kwsk..p', 'p...kwsk...p',
+      'p..kwsk....p', '.p.kpk....p.', '..kppk...p..', '.ksk..ppp...', 'ksk.........', '.k..........'] },
+    fumaShuriken: { pal: { w:'#eef7ff', s:'#8495b6' }, rows: [
+      '......kkkk..', '.....ksswk..', '.....kswk...', 'kkk..ksk....', 'kwwkkksk....', '.kssskksskk.',
+      '..kksskksssk', '....kskkkwwk', '....ksk..kkk', '...kwsk.....', '..kwssk.....', '..kkkk......'] },
+    leafWhirlwind: { pal: { w:'#eef7ff', s:'#8495b6', g:'#7bce72' }, rows: [
+      '..gggggg....', '.g......gg..', 'g.........g.', 'g...kkkk....', '....kggk....', '....kggk....',
+      '...kkggkk...', '..kwwggggk..', '.kwwgggggsk.', '.ksssssssk..', '..kkkkkkk.g.', '....gggggg..'] },
+    frontLotus: { pal: { w:'#eef7ff', p:'#b893ef' }, rows: [
+      '.....p......', '..p.kpk.p...', '.kpkpppkpk..', '.kpppppppk..', '..kpppppk...', '...kkkkk....',
+      '....kwwk....', '...kwwk.....', '..kwwk......', '.kwwk.......', 'kwwk........', '.kk.........'] },
+    eightGates: { pal: { w:'#eef7ff', r:'#e85863', g:'#7bce72' }, rows: [
+      '..r..rr..r..', '.rr.krwk.rr.', '.r..krrk..r.', 'r....kk....r', 'r..kkggkk..r', 'r.kggggggk.r',
+      'r.kkkggkkk.r', '.r..kggk..r.', '.r.kgkkgk.r.', '..rkgrrgkr..', '..kkk..kkk..', '...rrrrrr...'] },
+    reverseLotus: { pal: { w:'#eef7ff', r:'#e85863' }, rows: [
+      '.kk.........', 'kwwk........', '.kwwk.......', '..kwwk......', '...kwwk.....', '....kwwk....',
+      '...kwwk.....', '..kwwk......', '...kk..r....', '.r..r.rr..r.', '..rrrrrrrr..', 'rrrrrrrrrrrr'] },
+    sandShower: { pal: { y:'#efce7c', a:'#a77843' }, rows: [
+      '..kkkkkkk...', '.kyyyyyyyk..', '..kaaaaak...', '...kkkkk....', '..y..y..y...', '.y..y..y....',
+      '...y..y..y..', '..y..y..y...', '.y..y..y....', '...y..y..y..', '..a..a..a...', '............'] },
+    sandCoffin: { pal: { w:'#eef7ff', r:'#e85863', y:'#efce7c', a:'#a77843' }, rows: [
+      '....kkkk....', '...kyyyak...', '..kywwyyak..', '..kykrrkyk..', '.kyykrrkyak.', '.kyykrrkyak.',
+      '.kyyyyyyaak.', '.kyyyyyyaak.', '..kyyyyaak..', '..kyaaaak...', '...kaakk....', '....kk......'] },
+    sandShield: { pal: { w:'#eef7ff', y:'#efce7c', a:'#a77843' }, rows: [
+      '.kkkkkkkkkk.', '.kyyyyyyyak.', '.kywwyyyaak.', '.kywyyyyaak.', '.kyyyyyyaak.', '.kyyyyyyaak.',
+      '..kyyyyaak..', '..kyyyyaak..', '...kyyaak...', '....kaak....', '.....kk.....', '............'] },
+    sandTsunami: { pal: { w:'#eef7ff', y:'#efce7c', a:'#a77843' }, rows: [
+      '.....kkkk...', '...kkyyyak..', '..kyywwyak..', '.kywwykkk...', '.kywyyk.....', 'kywwyyk.....',
+      'kywyyyak....', 'kyyyyyyakk..', 'kyyyyyyyyaak', 'kyaaaaaaaaak', '.kkkkkkkkkk.', '............'] },
+    sandPrison: { pal: { r:'#e85863', y:'#efce7c', a:'#a77843' }, rows: [
+      '............', '...kkkkkk...', '.kkyyyyyykk.', 'kyyaaaaaayyk', 'kyakkkkkaayk', 'kyakrrrkaayk',
+      'kyakrrrkaayk', 'kyakkkkkaayk', 'kyyaaaaaayyk', '.kkyyyyyykk.', '...kkkkkk...', '............'] },
     tentenGuard: { pal: { w:'#f5e5c6', s:'#8da8b5', r:'#bc6d86', b:'#94e8dc' }, rows: [
       '.....kk.....', '..b..kwk.b..', '.b...ksk..b.', 'b..kkkkkk..b', '..krwwwrk...', 'kkkrwbrwkkkk',
       'kwkrwbrwkswk', 'kkkrwwrwkkkk', '..krwwwrk...', 'b..kkkkkk..b', '.b..ksk...b.', '..b.kwk..b..'] },

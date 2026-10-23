@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "method": "built-in image_gen.imagegen",
+  "classification": "Original generated production animation artwork; not official extracted sprites",
+  "referenceRoles": {
+    "art-review/redrawn/gaara-common-v1.png": "Style, chibi proportions, outline and cel shading reference",
+    "art-review/redrawn/pain-six-paths-concept-v1.png": "Six Path identity reference only; never used as runtime sprites"
+  },
+  "directionPolicy": "All six bodies have right three-quarter poses; left is mirrored; vertical movement reuses side pose. No independent up/down atlas.",
+  "runtime": {
+    "script": "art-review/pain-art.js",
+    "manifest": "art-review/pain-frames.json",
+    "physicalFrames": 104,
+    "activeBodies": 6,
+    "summonTypes": 2
+  },
+  "assets": [
+    {
+      "path": "art-review/redrawn/pain-tendo-v1.png",
+      "references": [
+        "art-review/redrawn/gaara-common-v1.png",
+        "art-review/redrawn/pain-six-paths-concept-v1.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: production transparent game animation sprite sheet. Reference image 1 supplies exact chibi sprite style, outlines, density, shading and proportions; reference image 2 supplies Pain six paths identities only. Produce ONE character Tendo / Deva Path: spiky orange hair, slender build, pierced nose and ears, black forehead band with scratched metal plate, purple Rinnegan, Akatsuki black cloak with red cloud motifs. Own hand weapon a short black chakra rod. Special action wide open palm repulsion. Match existing Gaara sprites, 2.5 head tall compact body. Sheet has exactly 4 columns and 4 rows, 16 separate full-body poses. Equal cell spacing, generous transparent gutter, no grid, no labels, no effects hiding anatomy. Character always same scale, head size and costume, standing poses ~180px high within each cell, no cropped limbs. Face three quarter towards right in all poses except downed. Row1: calm idle, second breathing idle, running left foot forward arms back, running right foot forward arms back. Row2: four genuine running poses with alternating feet, bent knees, swinging cloak hem, distinct left/right stride, do not merely rotate standing pose. Row3: strike windup, strike extended, special windup hand pose, special full extension. Row4: hurt torso recoil, knee buckles and hand to ground, falls onto side, fully prone on side. Death drawing naturally short with original anatomical scale, never stretch head or body. Thin ink dark outline, saturated orange hair, violet eyes, black/navy cloak red cloud white outline. Truly transparent background; no shadow, ground, text, watermark. Every pose is newly drawn animation, character center at each cell, same ground baseline.",
+      "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1692b-cfff-7450-9917-a144181d1547\\exec-55592596-edda-4c9f-84df-7b335b0156f2.png",
+      "animation": "16 original physical drawings; 2 idle, 6 run, 2 strike, 2 special, 4 hurt/death"
+    },
+    {
+      "path": "art-review/redrawn/pain-asura-v1.png",
+      "references": [
+        "art-review/redrawn/gaara-common-v1.png",
+        "art-review/redrawn/pain-six-paths-concept-v1.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: production transparent game animation sprite sheet. Reference image 1 supplies exact chibi sprite style, outlines, density, shading and proportions; reference image 2 supplies Pain six paths identities only. Produce ONE character Asura Path: bald head with six dark metal scalp studs, broad muscular shoulders, purple Rinnegan, Akatsuki cloak. Distinct mechanical gun forearm and folding missile shoulder. Strike raises gun barrel; special unfolds gun forearm and points forward. Match existing Gaara sprites, 2.5 head tall compact body. Sheet has exactly 4 columns and 4 rows, 16 separate full-body poses. Equal cell spacing, generous transparent gutter, no grid, no labels, no effects hiding anatomy. Character always same scale, head size and costume, standing poses ~180px high within each cell, no cropped limbs. Face three quarter towards right in all poses except downed. Row1: calm idle, second breathing idle, running left foot forward arms back, running right foot forward arms back. Row2: four genuine running poses with alternating feet, bent knees, swinging cloak hem, distinct left/right stride, do not merely rotate standing pose. Row3: strike windup, strike extended, special windup hand pose, special full extension. Row4: hurt torso recoil, knee buckles and hand to ground, falls onto side, fully prone on side. Death drawing naturally short with original anatomical scale, never stretch head or body. Thin ink dark outline, saturated orange hair, violet eyes, black/navy cloak red cloud white outline. Truly transparent background; no shadow, ground, text, watermark. Every pose is newly drawn animation, character center at each cell, same ground baseline.",
+      "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1692b-cfff-7450-9917-a144181d1547\\exec-a457d128-9792-41d9-84ff-381252aacde2.png",
+      "animation": "16 original physical drawings; 2 idle, 6 run, 2 strike, 2 special, 4 hurt/death"
+    },
+    {
+      "path": "art-review/redrawn/pain-animal-v1.png",
+      "references": [
+        "art-review/redrawn/gaara-common-v1.png",
+        "art-review/redrawn/pain-six-paths-concept-v1.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: production transparent game animation sprite sheet. Reference image 1 supplies exact chibi sprite style, outlines, density, shading and proportions; reference image 2 supplies Pain six paths identities only. Produce ONE character Animal Path: orange hair tied in small top bun with straight face-framing locks, slender body, purple Rinnegan, Akatsuki cloak. Strike handseal; special kneels and slams palm on ground to summon. Match existing Gaara sprites, 2.5 head tall compact body. Sheet has exactly 4 columns and 4 rows, 16 separate full-body poses. Equal cell spacing, generous transparent gutter, no grid, no labels, no effects hiding anatomy. Character always same scale, head size and costume, standing poses ~180px high within each cell, no cropped limbs. Face three quarter towards right in all poses except downed. Row1: calm idle, second breathing idle, running left foot forward arms back, running right foot forward arms back. Row2: four genuine running poses with alternating feet, bent knees, swinging cloak hem, distinct left/right stride, do not merely rotate standing pose. Row3: strike windup, strike extended, special windup hand pose, special full extension. Row4: hurt torso recoil, knee buckles and hand to ground, falls onto side, fully prone on side. Death drawing naturally short with original anatomical scale, never stretch head or body. Thin ink dark outline, saturated orange hair, violet eyes, black/navy cloak red cloud white outline. Truly transparent background; no shadow, ground, text, watermark. Every pose is newly drawn animation, character center at each cell, same ground baseline.",
+      "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1692b-cfff-7450-9917-a144181d1547\\exec-3465b512-a94f-4dab-991f-1f598f1201c6.png",
+      "animation": "16 original physical drawings; 2 idle, 6 run, 2 strike, 2 special, 4 hurt/death"
+    },
+    {
+      "path": "art-review/redrawn/pain-human-v1.png",
+      "references": [
+        "art-review/redrawn/gaara-common-v1.png",
+        "art-review/redrawn/pain-six-paths-concept-v1.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: production transparent game animation sprite sheet. Reference image 1 supplies exact chibi sprite style, outlines, density, shading and proportions; reference image 2 supplies Pain six paths identities only. Produce ONE character Human Path: very long straight orange hair reaching waist with center part, slim tall silhouette, purple Rinnegan, Akatsuki cloak. Strike reaching open hand grabbing; special claw hand extended at head height. Match existing Gaara sprites, 2.5 head tall compact body. Sheet has exactly 4 columns and 4 rows, 16 separate full-body poses. Equal cell spacing, generous transparent gutter, no grid, no labels, no effects hiding anatomy. Character always same scale, head size and costume, standing poses ~180px high within each cell, no cropped limbs. Face three quarter towards right in all poses except downed. Row1: calm idle, second breathing idle, running left foot forward arms back, running right foot forward arms back. Row2: four genuine running poses with alternating feet, bent knees, swinging cloak hem, distinct left/right stride, do not merely rotate standing pose. Row3: strike windup, strike extended, special windup hand pose, special full extension. Row4: hurt torso recoil, knee buckles and hand to ground, falls onto side, fully prone on side. Death drawing naturally short with original anatomical scale, never stretch head or body. Thin ink dark outline, saturated orange hair, violet eyes, black/navy cloak red cloud white outline. Truly transparent background; no shadow, ground, text, watermark. Every pose is newly drawn animation, character center at each cell, same ground baseline.",
+      "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1692b-cfff-7450-9917-a144181d1547\\exec-d1e71f2d-88bb-462c-8958-01329b246d38.png",
+      "animation": "16 original physical drawings; 2 idle, 6 run, 2 strike, 2 special, 4 hurt/death"
+    },
+    {
+      "path": "art-review/redrawn/pain-preta-v1.png",
+      "references": [
+        "art-review/redrawn/gaara-common-v1.png",
+        "art-review/redrawn/pain-six-paths-concept-v1.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: production transparent game animation sprite sheet. Reference image 1 supplies exact chibi sprite style, outlines, density, shading and proportions; reference image 2 supplies Pain six paths identities only. Produce ONE character Preta Path: stocky round wide body, short orange spiky hair, purple Rinnegan, cheek piercings, Akatsuki cloak. Strike two palms forward; special both arms wide palms forward absorption stance. Match existing Gaara sprites, 2.5 head tall compact body. Sheet has exactly 4 columns and 4 rows, 16 separate full-body poses. Equal cell spacing, generous transparent gutter, no grid, no labels, no effects hiding anatomy. Character always same scale, head size and costume, standing poses ~180px high within each cell, no cropped limbs. Face three quarter towards right in all poses except downed. Row1: calm idle, second breathing idle, running left foot forward arms back, running right foot forward arms back. Row2: four genuine running poses with alternating feet, bent knees, swinging cloak hem, distinct left/right stride, do not merely rotate standing pose. Row3: strike windup, strike extended, special windup hand pose, special full extension. Row4: hurt torso recoil, knee buckles and hand to ground, falls onto side, fully prone on side. Death drawing naturally short with original anatomical scale, never stretch head or body. Thin ink dark outline, saturated orange hair, violet eyes, black/navy cloak red cloud white outline. Truly transparent background; no shadow, ground, text, watermark. Every pose is newly drawn animation, character center at each cell, same ground baseline.",
+      "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1692b-cfff-7450-9917-a144181d1547\\exec-39e10bab-9701-46a2-bd4f-71edf962e8b1.png",
+      "animation": "16 original physical drawings; 2 idle, 6 run, 2 strike, 2 special, 4 hurt/death"
+    },
+    {
+      "path": "art-review/redrawn/pain-naraka-v1.png",
+      "references": [
+        "art-review/redrawn/gaara-common-v1.png",
+        "art-review/redrawn/pain-six-paths-concept-v1.png"
+      ],
+      "prompt": "Use case: stylized-concept. Asset type: production transparent game animation sprite sheet. Reference image 1 supplies exact chibi sprite style, outlines, density, shading and proportions; reference image 2 supplies Pain six paths identities only. Produce ONE character Naraka Path: tall square angular face, short tall upward orange hair, purple Rinnegan, Akatsuki cloak. Strike handseal; special two hands in prayer then raised single palm invocation. Match existing Gaara sprites, 2.5 head tall compact body. Sheet has exactly 4 columns and 4 rows, 16 separate full-body poses. Equal cell spacing, generous transparent gutter, no grid, no labels, no effects hiding anatomy. Character always same scale, head size and costume, standing poses ~180px high within each cell, no cropped limbs. Face three quarter towards right in all poses except downed. Row1: calm idle, second breathing idle, running left foot forward arms back, running right foot forward arms back. Row2: four genuine running poses with alternating feet, bent knees, swinging cloak hem, distinct left/right stride, do not merely rotate standing pose. Row3: strike windup, strike extended, special windup hand pose, special full extension. Row4: hurt torso recoil, knee buckles and hand to ground, falls onto side, fully prone on side. Death drawing naturally short with original anatomical scale, never stretch head or body. Thin ink dark outline, saturated orange hair, violet eyes, black/navy cloak red cloud white outline. Truly transparent background; no shadow, ground, text, watermark. Every pose is newly drawn animation, character center at each cell, same ground baseline.",
+      "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1692b-cfff-7450-9917-a144181d1547\\exec-76d53f46-1f6c-4d98-a6e0-6c0ee885f475.png",
+      "animation": "16 original physical drawings; 2 idle, 6 run, 2 strike, 2 special, 4 hurt/death"
+    }
+  ],
+  "summons": {
+    "path": "art-review/redrawn/pain-summons-v1.png",
+    "prompt": "Use case stylized-concept. Production transparent game summon sprite sheet, 4 columns and 2 rows, 8 separate sprites, no labels, no grid, transparent background. Match reference Gaara sprite exact chibi outlined flat cel-shaded hand drawn style. Row1 FOUR frames of Animal Path summoned giant grey rhinoceros, purple ripple Rinnegan eye, black metal piercings on head, one long nose horn, bulky four-legged grey body, facing right: braced ready, gallop front legs extended rear legs gathered, gallop forelegs gathered rear extended, heavy head-down horn charge. Row2 FOUR frames of Naraka Path King of Hell: large separate spooky purple-grey demon HEAD and ornamental dark purple top border around it, orange forehead symbol simple nontext mark, purple ripple eyes, heavy square jaw and wide open mouth; a summon torso made of dark smoke curling below the neck with mouth closed, mouth opening, fully open mouth showing long purple tongue, closing mouth. Skull shape remains consistent, no gore. Each sprite is fully separate in equal cell with generous transparent margin, every visible pixel part of asset, absolutely no painted background, gradient, shadow or glow. True alpha PNG. Do not include any human characters.",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1692b-cfff-7450-9917-a144181d1547\\exec-ee93922d-3445-4337-b112-625b8f335d33.png",
+    "frames": 8,
+    "notes": "First rhino ready pose excluded from playback because narrow generated gutter risks clipping; gallop uses 3 full poses. King mouth uses all 4."
+  },
+  "inspection": {
+    "alpha": "All sheets checked for alpha zero in gutters and composited on green checkerboard. Animal/Human contain hidden background RGB under alpha zero; original pixels preserved.",
+    "contactSheet": ".omx/state/pain-art/atlas-contact.png",
+    "sourcePixels": "Unmodified original PNGs copied into project. Cropping metadata only; no pixel redraw by Python.",
+    "discardedEdits": [
+      "Animal/Human background extraction attempts were unnecessary after checking actual alpha; not consumed."
+    ]
+  },
+  "limitations": [
+    "Right/left only animation; vertical motion uses side pose.",
+    "Shared 48px standing body scale; prone frames retain original shorter anatomy."
+  ],
+  "sha256": {
+    "art-review/redrawn/gaara-common-v1.png": "1d041bab4c5a06ed9a10f9416c442e78e099cbc2c1cbfbc8593ae413505db6d5",
+    "art-review/redrawn/pain-six-paths-concept-v1.png": "048d634af83351f4ce24a42ac97f071eff29aea51a0442df1af953dc7571f351",
+    "art-review/redrawn/pain-tendo-v1.png": "510a31a4e2c5360ba4e8f764c563567b1bcd92f10df63682fddc0e93e3941efa",
+    "art-review/redrawn/pain-asura-v1.png": "67a397127cc86a12567d932536654ea13b3dad4af1b15e48dc55a8eb0cb1ec65",
+    "art-review/redrawn/pain-animal-v1.png": "53191aac9dee455046d4001898da96ccf2acc53ab74f5f78283bf5123f62f6e2",
+    "art-review/redrawn/pain-human-v1.png": "4a0dfe3aac2c267c4ba84832767e47f0b30750ad3617b78482cc1ba0cd7dfe7b",
+    "art-review/redrawn/pain-preta-v1.png": "d25c0d319c0b1298343cb73855c53ec881ea09a39d9025f1234d354a935c5cf1",
+    "art-review/redrawn/pain-naraka-v1.png": "bd5810f15632091dad3432aaa85594931c8d0a4bc328bd1aa7e0e4944a0da76e",
+    "art-review/redrawn/pain-summons-v1.png": "cb58b0355316f7e76b9c1fddfcacf152a5fcf1f0f157604b5b36ae083e2422ca",
+    "art-review/pain-frames.json": "7997d57f8e96a238bdab515c0f9b6aae97a1424db7cfdcfa4055a1208ecd38ac",
+    "art-review/pain-art.js": "c0c0b89583d737152d7091cc6012a07187baf2eed582dd6f5b9c731b2ae90d10"
+  }
+}

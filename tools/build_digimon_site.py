@@ -49,7 +49,15 @@ assert sources == {
     'redrawn/tenten-twin-release-v1.png',
     'redrawn/lee-bandage-v1.png',
 }, 'Unexpected reviewed hero atlas inventory'
-for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:
+pain = json.loads((ROOT / 'art-review/pain-frames.json').read_text('utf-8'))
+assert set(pain['bodies']) == {'tendo','asura','animal','human','preta','naraka','rhino','king'}, 'Six distinct Pain bodies and both summons are required'
+review_runtime.extend(['art-review/pain-art.js', 'art-review/pain-frames.json'])
+for item in pain['bodies'].values():
+    path = Path('art-review') / item['source']
+    assert item['source'].startswith('redrawn/') and path.suffix == '.png'
+    assert (ROOT / path).resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
+    review_runtime.append(path.as_posix())
+for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:
     target = OUT / name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / name, target)

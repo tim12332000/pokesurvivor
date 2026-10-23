@@ -698,7 +698,9 @@ G.Game = (() => {
     }
     // Tras caer, deja que se vea la animación de Faint antes del resumen.
     // (En la arena de la grieta no: allí caer sólo te echa de vuelta.)
-    if (pl.dead && !coop && !G.Rift.inArena) {
+    const painRescue = !!G.NarutoPain?.canRevivePlayer(pl);
+    if (painRescue) deathT = 0;
+    if (pl.dead && !coop && (!G.Rift.inArena || pl.mon?.dex === 30010) && !painRescue) {
       deathT += dt;
       pl.update(dt);
       G.EnemyMgr.update(dt * 0.3, pl);
@@ -739,8 +741,10 @@ G.Game = (() => {
     G.Pickups.update(dt, all, onCollect);
     G.Hazards.update(dt);
     G.Interact.update(dt, pl);
-    G.Rift.update(dt, pl, time);
-    G.Judgment.update(dt, pl, time);
+    if (!painRescue) {
+      G.Rift.update(dt, pl, time);
+      G.Judgment.update(dt, pl, time);
+    }
     G.Events.update(dt, all, time);
     G.Weather.update(dt, time, pl);
     G.FX.update(dt);
@@ -760,7 +764,7 @@ G.Game = (() => {
 
   /** Anfitrión: si caéis todos, se acaba (tras ver caer al último). */
   function checkAllDown(dt) {
-    if (G.Rift.inArena || !G.Coop.players().every(p => p.dead)) { deathT = 0; return; }
+    if (G.Rift.inArena || !G.Coop.players().every(p => p.dead) || G.Coop.players().some(p => G.NarutoPain?.canRevivePlayer(p))) { deathT = 0; return; }
     deathT += dt;
     if (deathT > 1.6) {
       deathT = 0;
@@ -965,7 +969,7 @@ G.Game = (() => {
     quit() { if (state !== 'ui' && state !== 'over') quitRun(); },
     /** Para grabar vídeos: abre las cartas de subir de nivel. */
     debugLevelUp() { tampered = true; pl.level++; pendingLevels++; },
-    toUI() { cancelChest(); state = 'ui'; Backdrop.restore(); },
+    toUI() { cancelChest(); state = 'ui'; G.NarutoPain?.clear(); Backdrop.restore(); },
     get state() { return state; }, get player() { return pl; }, st
   };
 })();

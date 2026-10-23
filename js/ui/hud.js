@@ -30,6 +30,7 @@ G.HUD = (() => {
     ctx.textBaseline = 'alphabetic';
     G.Touch.clearButtons();
     const touch = G.Touch.active;
+    const autoPain = pl.dex === 30010;
     const groups = [...pl.slots, ...pl.moves.filter(move => move.passive && !pl.slots.some(group => group.includes(move))).map(move => [move])];
     const controls = touch ? G.Touch.controlLayout(w, h, Math.max(1, groups.length)) : null;
     const portrait = !!(controls && controls.portrait);
@@ -270,7 +271,7 @@ G.HUD = (() => {
     const sx = controls ? controls.slots[0].x : (w - totalW) / 2;
     const sy = controls ? controls.slots[0].y : h - S - 18;
     const BOND = '#ff8ad8';
-    const cdOf = m => m.passive || m.kind === 'orbit' || (m.id !== 'naruto-sand-armor' && G.NarutoGaara?.maintains(pl, m)) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul), 0, 1);
+    const cdOf = m => {if(autoPain){const status=G.PainUI.skillState(pl,m);return G.U.clamp(status.remaining/status.duration,0,1);}return m.passive || m.kind === 'orbit' || (m.id !== 'naruto-sand-armor' && G.NarutoGaara?.maintains(pl, m)) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul), 0, 1);};
     const tentenState = pl.dex === 30009 ? G.NarutoTenten?.stateFor(pl) : null;
     const tentenPose = pl.dex === 30009 ? G.NarutoTenten?.activeFor(pl) : null;
     const tentenGuard = pl.dex === 30009 ? G.NarutoTenten?.guardFor?.(pl) : null;
@@ -289,7 +290,7 @@ G.HUD = (() => {
       const grow = touch && on ? S * 0.06 : 0;
       if (m) G.Touch.addButton(x - grow, y - grow, S + grow * 2, S + grow * 2, () => {
         if (G.Game.state !== 'playing') return;
-        if (displayPassive) { G.UI.toast(m.name + ' · Lv.' + m.lvl, 1600); return; }
+        if (displayPassive) { G.UI.toast(m.name + ' · Lv.' + m.lvl+(autoPain?' · 自動 · '+G.PainUI.skillState(pl,m).label:''), 1600); return; }
         if (pl.active !== i) { pl.setActive(i); G.Audio.sfx('click'); }
       }, touch ? 1 : GAP / 2 + 3);
       const col = m ? G.U.TYPE_COLOR[m.type] : '#4a5468';
@@ -353,6 +354,11 @@ G.HUD = (() => {
       ctx.fillStyle = fused ? BOND : on ? col : 'rgba(180,200,230,.6)';
       ctx.textAlign = 'left';
       ctx.fillText(displayPassive ? '∞' : String(i + 1), x + 3, y + 10);
+      if(autoPain){
+        const status=G.PainUI.skillState(pl,m);
+        ctx.font=F(800,9);ctx.textAlign='center';ctx.fillStyle=status.label==='倒下'?'#f3b69c':'#d9cbef';
+        ctx.fillText(status.label,x+S/2,y-4,S+GAP-2);
+      }
       if (m.id === 'naruto-sand-shield') {
         const shield = G.NarutoGaara?.shieldState(pl);
         if (shield) {
@@ -478,7 +484,7 @@ G.HUD = (() => {
       ctx.font = F(600, 10);
       ctx.textAlign = 'center';
       ctx.fillStyle = 'rgba(180,200,230,.55)';
-      ctx.fillText(touch ? 'Arrastra el dedo para moverte  ·  toca un ataque para cambiarlo'
+      ctx.fillText(autoPain ? '你只需移動，六道會自動出招' : touch ? 'Arrastra el dedo para moverte  ·  toca un ataque para cambiarlo'
                          : `WASD moverse  ·  1-${Math.max(4, pl.slots.length)} / Q / E o clic en un ataque para cambiarlo  ·  Esc pausa`, w / 2, portrait ? h - Math.min(44, G.Touch.safeArea().bottom) - 5 : h - 4, w - 24);
     }
 

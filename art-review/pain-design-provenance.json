@@ -1,0 +1,31 @@
+{
+  "status": "concept only; not a registered production sprite atlas",
+  "generator": "built-in image_gen",
+  "date": "2026-10-23",
+  "prompt": "Use case: stylized-concept. Asset type: original pixel-action-game CHARACTER CONCEPT LINEUP, not a runtime animation atlas. Primary request: design all SIX PATHS OF PAIN from Naruto Shippuden, Pain invasion of Konoha era, together in one clean lineup. Input image1 is our own Gaara common-animation sheet: STYLE AND BODY-PROPORTION reference only; do not depict Gaara, do not copy its poses. Match its compact approximately 3-head-tall human proportions, small readable faces, slim short game-sprite limbs, crisp dark navy outlines, hard pixel clusters and limited two-tone shading; no painting or gradients. Transparent background. Wide landscape composition with EXACTLY SIX isolated full-body figures in ONE evenly spaced horizontal row, all feet on the same baseline, generous clear gaps and margins, all heads and sandals completely visible. Full bodies at comparable scale but retain natural differences in width and height. All wear authentic black Akatsuki cloaks with red cloud motifs, red inner collars, scratched Rain forehead protectors, navy open-toe sandals, pale skin, distinct black facial piercings, recognizable lavender Rinnegan eyes. From LEFT to RIGHT: 1 DEVA PATH/TENDO, Yahiko body, short spiky orange hair, slim balanced leader stance, one open palm calmly extended forward at chest height. 2 ASURA PATH/SHURADO, broad muscular body, bald head with recognizable head hardware, one sleeve drawn back and forearm mechanically opened into a compact cylindrical missile launcher; normal human legs, no giant robot suit, no launched missile. 3 FEMALE ANIMAL PATH/CHIKUSHODO, slender young woman with orange hair tied up and straight face-framing strands, palms preparing a summoning seal at waist, clearly female canonical second Animal Path. 4 HUMAN PATH/NINGENDO, tall slim man, long straight orange hair falling past shoulders, one hand slightly reaching forward to grasp a head, no victim. 5 PRETA PATH/GAKIDO, noticeably stockier broad round torso, short orange hair, both palms open before body to absorb a jutsu, no magical shield. 6 NARAKA PATH/JIGOKUDO, broad stern square face, upright short spiked orange hair and distinctive face piercings, hands close in a summoning seal. Exactly one of each canonical body, not six duplicates of Tendo. Quiet readable ready poses, cloak hem shapes distinguish silhouettes. No summons, no King of Hell, no chakra effects, no energy circles, no smoke, no shadows, no scenery, no inset portraits, no text, no captions, no labels, no grid, no logo. Newly drawn original game concept art; not copied or traced commercial sprites. Empty transparent alpha between and around all six actors.",
+  "transparent_background": true,
+  "reference": {
+    "path": "art-review/redrawn/gaara-common-v1.png",
+    "sha256": "1d041bab4c5a06ed9a10f9416c442e78e099cbc2c1cbfbc8593ae413505db6d5"
+  },
+  "output": {
+    "path": "art-review/redrawn/pain-six-paths-concept-v1.png",
+    "sha256": "048d634af83351f4ce24a42ac97f071eff29aea51a0442df1af953dc7571f351",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "visibleAlphaBounds": [
+      33,
+      19,
+      2143,
+      706
+    ]
+  },
+  "limitations": [
+    "Six front-facing ready poses only; no runtime frames registered.",
+    "Canonical detail and same-size gameplay readability require separate verification."
+  ],
+  "visual_verdict": ".omx/state/pain-design/ralph-progress.json"
+}

@@ -2,6 +2,19 @@
 (() => {
   const sandShieldId='naruto-sand-shield', sandGuardId='naruto-sand-guard', basicId='naruto-gaara';
   const gaaraPassives=new Set([sandShieldId,sandGuardId,'naruto-sand-armor']);
+  const painMove=move=>move.id==='naruto-pain'||move.id.startsWith('naruto-pain-');
+  function migratePainPassives(player) {
+    if(player.mon?.dex!==30010)return;
+    for(const move of player.moves)if(painMove(move)){
+      move.passive=true;
+      if(player.bind)delete player.bind[move.id];
+    }
+    if(!player.slots.some(group=>group.some(painMove)))return;
+    const selected=player.slots[player.active];
+    player.slots=player.slots.map(group=>group.filter(move=>!painMove(move))).filter(group=>group.length);
+    const index=player.slots.findIndex(group=>group.some(move=>selected?.includes(move)));
+    player.active=index>=0?index:0;
+  }
   function migrateGaaraBasic(player) {
     const basic=player.moves.find(move=>move.id===basicId);
     if(!basic)return;
@@ -51,10 +64,10 @@
   }
   G.NarutoSkillCatalog.migrateGaaraPassives=migrateGaaraPassives;
   const arrange=G.Player.prototype.arrange;
-  G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);return arrange.apply(this,args);};
+  G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);migratePainPassives(this);return arrange.apply(this,args);};
   const addMove=G.Player.prototype.addMove;
   G.Player.prototype.addMove=function(id,...args){
-    if((this.mon?.dex===30001&&id==='naruto-shadow-clones')||this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery','naruto-tenten-bounce','naruto-tenten-guard'].includes(id)){
+    if((this.mon?.dex===30001&&id==='naruto-shadow-clones')||this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery','naruto-tenten-bounce','naruto-tenten-guard'].includes(id)||this.mon?.dex===30010&&painMove({id})){
       if(this.hasMove(id))return false;
       this.moves.push(G.Moves.instance(id,1));
       this.arrange();
@@ -82,7 +95,7 @@
   const poolFor=G.Moves.poolFor;
   G.Moves.poolFor=mon=>{
     const player=G.Game.player;
-    if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateGaaraPassives(player);}
+    if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateGaaraPassives(player);migratePainPassives(player);}
     const ids=poolFor(mon);
     if(!mon.naruto||mon!==player?.mon||(G.Game.state==='ui'&&!startingRun))return ids;
     const milestones=milestonesFor(mon.dex);
@@ -117,6 +130,7 @@
   G.LevelUp.offer=(player,n=3)=>{
     G.NarutoSharingan?.migrate(player);
     migrateGaaraPassives(player);
+    migratePainPassives(player);
     if(!player.mon?.naruto)return offer(player,n);
     const retired=['naruto-kunai','naruto-shuriken'];
     return offer(player,n,candidates=>{

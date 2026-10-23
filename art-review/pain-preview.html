@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>沛恩六道 · 角色概念</title>
+<style>
+:root{font-family:system-ui,"Microsoft JhengHei",sans-serif;color:#eee9e4;background:#13151a;font-synthesis:none}*{box-sizing:border-box}body{margin:0}main{max-width:1140px;margin:auto;padding:44px 24px 32px}a{color:#e3b8aa;text-underline-offset:4px}header{display:flex;align-items:end;justify-content:space-between;gap:24px}.eyebrow{font-size:12px;letter-spacing:.2em;color:#d29178;margin:0 0 12px}h1{font-size:clamp(32px,5vw,56px);letter-spacing:.1em;margin:0}header p{color:#b9b4af;line-height:1.8;margin:14px 0 0;max-width:620px}.badge{white-space:nowrap;border:1px solid #6f4642;border-radius:30px;padding:8px 14px;font-size:12px;color:#e1b2a0}.lineup{margin:32px 0 16px;background:radial-gradient(ellipse at 50% 80%,#33333d,transparent 70%),#1c1f26;border:1px solid #37353b;border-radius:16px;overflow:hidden}.lineup img{width:100%;height:auto;display:block;image-rendering:pixelated}.lineup figcaption{padding:0 20px 18px;color:#a8a4a1;font-size:12px;line-height:1.7}.choices{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin:18px 0}button{font:inherit;min-height:48px;border:1px solid #47404a;border-radius:10px;background:#20232a;color:#c8c4c1;cursor:pointer;padding:12px 5px}button:hover{border-color:#ae7668}button[aria-pressed=true]{background:#663c36;color:#fff;border-color:#d89a80}button:focus-visible,a:focus-visible{outline:3px solid #e7b599;outline-offset:4px}.detail{background:#20232a;border:1px solid #3c383e;border-radius:16px;padding:26px;display:grid;grid-template-columns:1fr 1.1fr;gap:32px;min-height:258px}.tag{font-size:12px;color:#d9a691}h2{font-size:27px;margin:8px 0 12px}h3{font-size:16px;margin:0 0 12px}#role,#action{line-height:1.85;color:#c9c4bf;margin:0}#skills{font-size:17px;line-height:1.7;color:#f0d8c8;margin:8px 0 18px}.stage{padding-left:16px;border-left:2px solid #a46c5c}.stage small{display:block;line-height:1.8;color:#b8aaa2;margin-top:12px}.notes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:28px}.notes p{font-size:14px;color:#b4aea9;line-height:1.8;margin:0}footer{border-top:1px solid #38353b;margin-top:30px;padding-top:20px;display:flex;justify-content:space-between;gap:16px;color:#9f9993;font-size:12px;line-height:1.8}footer nav{display:flex;gap:18px;flex-wrap:wrap}@media(max-width:640px){main{padding:28px 16px}header{display:block}.badge{display:inline-block;margin-top:16px}.lineup{margin-top:22px}.choices{grid-template-columns:repeat(3,1fr)}.detail{grid-template-columns:1fr;gap:22px;padding:22px;min-height:0}.notes{grid-template-columns:1fr;gap:18px}.lineup figcaption{padding:0 12px 12px}footer{display:block}footer nav{margin-top:12px}}
+</style>
+</head>
+<body>
+<main>
+<header><div><p class="eyebrow">NARUTO · CHARACTER CONCEPT 02</p><h1>沛恩六道</h1><p>操控天道，五道協同。以引力改變敵人的位置，用機械、通靈與支援接管戰場。</p></div><span class="badge">角色設計提案</span></header>
+<figure class="lineup"><img src="redrawn/pain-six-paths-concept-v1.png" width="2172" height="724" alt="沛恩六道像素風概念圖。由左至右為伸掌的天道、機械前臂的修羅道、結印的女性畜生道、長髮的人間道、雙掌張開的餓鬼道、結印的地獄道。"><figcaption>六道同框外型提案 · 依現用角色風格重新繪製。每道一個準備姿勢，正式動作圖集尚待製作。</figcaption></figure>
+<div class="choices" role="group" aria-label="選擇要查看的六道"><button type="button" data-path="tendo" aria-pressed="true" aria-controls="details">天道</button><button type="button" data-path="asura" aria-pressed="false" aria-controls="details">修羅道</button><button type="button" data-path="animal" aria-pressed="false" aria-controls="details">畜生道</button><button type="button" data-path="human" aria-pressed="false" aria-controls="details">人間道</button><button type="button" data-path="preta" aria-pressed="false" aria-controls="details">餓鬼道</button><button type="button" data-path="naraka" aria-pressed="false" aria-controls="details">地獄道</button></div>
+<section class="detail" id="details" aria-live="polite" aria-atomic="true"><div><span class="tag" id="tag">玩家本體 · 引斥控場</span><h2 id="name">天道</h2><p id="role">掌控敵人的進退；近身有威脅時先斥開，保持施術與走位的空間。</p><p id="skills">黑棒連射／萬象天引・神羅天征／地爆天星</p></div><div class="stage"><h3>動作與戰鬥節奏</h3><p id="action">Lv.1 黑棒普攻常駐；Lv.3 收掌拉近後張掌斥開；Lv.15 托起黑核，以碎石聚攏再崩落。施術中仍可走位。</p><small id="limit">天道倒下即結束。距離 80 內有敵人時不再拉怪，直接使用斥力；沒有額外無敵。</small></div></section>
+<section class="notes" aria-label="共同設計規則"><div><h3>六個身體，各有職責</h3><p>五道各有耐久、倒下與復歸。五種主動只執行目前選中的招式；吸收與修復學會後自動運作。</p></div><div><h3>看到的動作，就是真實事件</h3><p>飛彈從機械臂離架，犀牛真的衝過敵群，抓取必須貼近。塵環與碎石標示實際作用範圍。</p></div><div><h3>保留六道的唯一身分</h3><p>數量卡增加黑棒與飛彈。分身共用五道支援，不另外複製整隊；傷害與冷卻仍需後續實玩調校。</p></div></section>
+<footer><span>概念預覽 · 非戰鬥試玩 · 人間道與地獄道的原作分鏡仍待核實</span><nav aria-label="設計文件"><a href="pain-skill-design.md">玩法設計</a><a href="pain-production-design.md">動作與素材規格</a><a href="pain-design-provenance.json">素材來源</a></nav></footer>
+</main>
+<script>
+(() => {
+  'use strict';
+  const paths = {
+    tendo: {name:'天道',tag:'玩家本體 · 引斥控場',role:'掌控敵人的進退；近身有威脅時先斥開，保持施術與走位的空間。',skills:'黑棒連射／萬象天引・神羅天征／地爆天星',action:'Lv.1 黑棒普攻常駐；Lv.3 收掌拉近後張掌斥開；Lv.15 托起黑核，以碎石聚攏再崩落。施術中仍可走位。',limit:'天道倒下即結束。距離 80 內有敵人時不再拉怪，直接使用斥力；沒有額外無敵。'},
+    asura: {name:'修羅道',tag:'前側護衛 · 機械火力',role:'以寬肩與展開的機械前臂辨識，負責向不同敵人分配飛彈，再以落點爆炸處理怪群。',skills:'Lv.6 飛彈齊射 · 可選主動',action:'開臂、飛彈離架、飛行追蹤、接觸爆炸、收臂。三枚飛彈依序發射，命中以真實路徑與爆炸範圍計算。',limit:'修羅道倒下不能發射。已離架飛彈可繼續飛行；數量卡只增加飛彈，不多生一個修羅道。'},
+    animal: {name:'畜生道',tag:'後側支援 · 通靈掃群',role:'採木葉入侵時期的女性身體，伏手召出犀牛，以直線衝撞打開怪群。',skills:'Lv.9 通靈衝陣 · 可選主動',action:'結印、伏手、少量白煙、犀牛現身、向前奔跑。犀牛腳底沿真實地面路線移動，通道寬度與身體一致。',limit:'最多一隻犀牛；遇牆停止，切招清除。同一敵人每次衝陣只受傷一次，沒有隱形持續傷害。'},
+    human: {name:'人間道',tag:'側翼近戰 · 單體爆發',role:'長髮、清瘦輪廓與前伸抓取手形成辨識。走近重要目標，貼住頭部再完成魂魄牽引。',skills:'Lv.12 魂魄牽引 · 可選主動',action:'追擊最多兩秒，接觸後抓取 0.6 秒。淡色魂影上提時結算一次固定傷害，再回到隊形。',limit:'不瞬移、不即死。隔牆、失去接觸或施術道倒下即取消；抽魂的直接原作分鏡仍待核實。'},
+    preta: {name:'餓鬼道',tag:'近身守衛 · 自動吸收',role:'以較厚的身體和雙掌防禦姿勢辨識，守在天道附近，攔下真正碰到雙掌的忍術彈。',skills:'Lv.6 封術吸印 · 常駐被動',action:'學會後自動張掌接彈；接觸點的能量縮入雙掌，一次吸收一顆，再進入恢復。切主動招不停止守衛。',limit:'物理忍具、近戰、地面技與雷射不吸收；沒有全身無敵、回血或遠距消彈。'},
+    naraka: {name:'地獄道',tag:'後方支援 · 身體修復',role:'以方正臉型、短直立髮和結印姿勢辨識，待在隊伍後方，讓倒下的支援道更快返回。',skills:'Lv.12 閻王修復 · 常駐被動',action:'有其他支援道倒下才開始修復等待。週期到期後召出閻王，完成 0.8 秒演出，讓一具身體復歸。',limit:'不能修復天道或自己，不能同時救回整隊；修復與自動復歸只生效一次。原作分鏡仍待核實。'}
+  };
+  const buttons = [...document.querySelectorAll('[data-path]')];
+  for (const button of buttons) button.addEventListener('click', () => {
+    const selected = paths[button.dataset.path];
+    for (const item of buttons) item.setAttribute('aria-pressed', String(item === button));
+    for (const key of ['name','tag','role','skills','action','limit']) document.getElementById(key).textContent = selected[key];
+  });
+})();
+</script>
+</body>
+</html>

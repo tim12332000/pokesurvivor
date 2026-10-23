@@ -120,13 +120,13 @@
   const clones=G.NarutoClones.config;
   const profiles = [
     [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
-      mode: 'shadow-clones', passive: true, type: 'fighting', cd: clones.cooldown, dmg: clones.punchDamage, range: 240,
+      mode: 'shadow-clones', icon:'shadowClones', passive: true, type: 'fighting', cd: clones.cooldown, dmg: clones.punchDamage, range: 240,
       cloneDuration: clones.duration, punchCd: clones.punchCooldown, vis: { pal: 'naruto-blue' },
       desc:`學會後自動召喚，不占主動槽；冷卻 ${clones.cooldown} 秒。結印 ${clones.sealDuration} 秒後召喚基礎 ${clones.counts.join('／')} 隻分身，持續 ${clones.duration} 秒；數量卡每張使分身數 ×1.25，累乘後取整。分身模仿螺旋丸、螺旋手裏劍與忍具，各自造成完整傷害；每隻受擊 ${clones.hitsToDismiss} 次後消散。`,
       ups: clones.counts.slice(1).map(count=>({t:`分身基礎數量 → ${count} 隻；每隻完整傷害`,m:{}}))
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
-      mode: 'chidori-chain', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
+      mode: 'chidori-chain', icon:'chidori', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
       minCooldown: G.NarutoChidori.config.minCooldown,
       range: 170, radius: 170, width: 34, knock: 50,
       vis: { proj: 'bolt', melee: 'claw', pal: 'naruto-blue' },
@@ -155,13 +155,13 @@
       desc:'向前連打三掌，總傷害由三掌分攤。'
     }],
     [30006, 'lee', '木葉旋風', 'Leaf Whirlwind', '01_1489', {
-      mode: 'melee', type: 'fighting', cd: 2, dmg: 37,
+      mode: 'melee', type: 'fighting', cd: 2, icon:'leafWhirlwind', dmg: 37,
       range: 72.5, radius: 62, arc: 3.9, knock: 95,
       vis: { melee: 'claw', proj: 'wind', pal: 'grass' },
       desc:'旋身大角度橫掃，踢開近身與側面敵人。'
     }],
     [30007, 'gaara', '砂時雨', 'Sand Shower (game adaptation)', '01_1695', {
-      mode: 'gaara-sand-burst', passive: true, type: 'ground', cd: 1.2, dmg: 28,
+      mode: 'gaara-sand-burst', icon:'sandShower', passive: true, type: 'ground', cd: 1.2, dmg: 28,
       range: 260, count: 3, knock: 12,
       ups:[{t:'整輪基礎傷害 34＋角色等級',m:{dmg:34/28}},
         {t:'砂彈 4 枚・距離 280',m:{count:1,range:280}},
@@ -185,6 +185,16 @@
       {t:'單枚傷害 +20%',m:{dmg:1.2}},{t:'基礎苦無 5 枚・單枚傷害 +25%',m:{count:1,dmg:1.25}}],
     desc:'常駐自動普攻，不占主動槽、不需選招。小卷軸解封後短連投苦無，基礎 3／3／4／4／5 枚，單枚傷害 8／9.6／9.6／11.52／14.4。射程 300，冷卻 1.1 秒。苦無實際飛行並被牆遮擋，優先分配不同敵人；數量卡使枚數 ×1.25，累乘取整，單枚傷害不變。可穿過自己的落地爆符，提前引爆並使該次爆炸傷害 +25%。'
   }]);
+  const painSource='https://naruto-official.com/en/news/01_1321';
+  const painUps=(counts=null)=>[1.2,1.4/1.2,1.7/1.4,2/1.7].map((ratio,i)=>({
+    t:`傷害倍率 → ${[1.2,1.4,1.7,2][i]}${counts?`・基礎數量 ${counts[i+1]}`:''}`,
+    m:{dmg:ratio,...(counts&&counts[i+1]!==counts[i]?{count:counts[i+1]-counts[i]}:{})}
+  }));
+  profiles.push([30010,'pain','黑棒連射','Six Paths of Pain','01_1321',{
+    mode:'pain-basic',passive:true,icon:'painRod',type:'psychic',cd:1.2,dmg:10,
+    count:2,range:280,speed:440,size:4,ups:painUps([2,2,3,3,4]),
+    desc:'常駐普攻，不占主動槽。天道連射黑棒，碰敵或牆即止。基礎 2／2／3／3／4 根，每根傷害倍率 1／1.2／1.4／1.7／2。數量卡 ×1.25 累乘取整，最多 40 根。五道生命為本體 60%（人間／餓鬼 80%），低血撤回，安全脫戰後恢復至半血。出生／復歸整備 1.5 秒；倒下 16 秒後尋找安全位置復歸。天道倒下時，已現身且存活的地獄道可用閻王救回；兩道都倒下則結束。'
+  }]);
   const shared = [
     ['naruto-kunai', {
       name: '苦無投擲', mode: 'shot', type: 'steel', cd: .68, dmg: 17,
@@ -199,21 +209,21 @@
   ];
   const extra = [
     ['naruto-naruto', [30001], {
-      name: '螺旋丸', mode: 'dash', type: 'fighting', cd: 2, dmg: 48, charge: .6,
+      icon:'rasengan', name: '螺旋丸', mode: 'dash', type: 'fighting', cd: 2, dmg: 48, charge: .6,
       range: 125, radius: 125, width: 56, knock: 100,
       vis: { proj: 'wind', melee: 'impact', pal: 'naruto-blue' },
       desc:'原地集氣 0.6 秒後向前突進，突進中免傷；收招衝擊推開周圍一般敵人，並獲得 0.5 秒保護。每個沿途目標只受一次傷害；選用時，現存影分身各自接近敵人並施放完整傷害的螺旋丸。',
       source_url: 'https://naruto-official.com/en/news/01_1423'
     }],
     ['naruto-rasenshuriken', [30001], {
-      name: '風遁・螺旋手裏劍', mode: 'shot', type: 'flying', cd: 2.5, dmg: 58,
+      icon:'rasenshuriken', name: '風遁・螺旋手裏劍', mode: 'shot', type: 'flying', cd: 2.5, dmg: 58,
       speed: 350, life: 1.3, size: 15, range: 455, blastRadius: 110, knock: 65,
       vis: { proj: 'naruto-wind-shuriken', trail: 'wind', pal: 'naruto-blue' },
       desc:'投擲旋轉手裏劍，命中後爆發風刃，傷害周圍敵人。',
       source_url: 'https://naruto-official.com/en/news/01_1423'
     }],
     ['naruto-nine-tails-cloak', [30001], {
-      name:'九尾查克拉外衣', mode:'nine-tails-cloak', type:'fighting', cd:18, dmg:0, learnLevel:9,
+      icon:'nineTailsCloak', name:'九尾查克拉外衣', mode:'nine-tails-cloak', type:'fighting', cd:18, dmg:0, learnLevel:9,
       fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75,
       radius:76, pulseDamage:12, pulseInterval:.65, knock:18,
       vis:{pal:'naruto-red'},
@@ -225,7 +235,7 @@
       source_url:'https://naruto-official.com/en/news/01_1296'
     }],
     ['naruto-fireball', [30002, 30008], {
-      name: '火遁・豪火球之術', mode: 'shot', type: 'fire', cd: 2.3, dmg: 49,
+      icon:'greatFireball', name: '火遁・豪火球之術', mode: 'shot', type: 'fire', cd: 2.3, dmg: 49,
       speed: 300, life: 1.4, size: 52, range: 420, burn: .12,
       fireballAOE:true, fireballTick:.2,
       fireballGrowth: {startRatio:.2,endRatio:1.4,distance:300},
@@ -296,7 +306,7 @@
       source_url:'https://naruto-official.com/en/news/01_1668'
     }],
     ['naruto-lotus', [30006], {
-      name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:5, dmg:110,
+      icon:'frontLotus', name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:5, dmg:110,
       range:145, radius:60,
       ups:[
         {t:'傷害 +20%',m:{dmg:1.2}},
@@ -308,7 +318,7 @@
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
-      name:'八門遁甲・開門', mode:'gates-passive', passive:true, type:'fighting', learnLevel:6, cd:0, dmg:0,
+      icon:'eightGates', name:'八門遁甲・開門', mode:'gates-passive', passive:true, type:'fighting', learnLevel:6, cd:0, dmg:0,
       vis:{pal:'grass'},
       desc:'常駐被動，學會即生效、不占主動槽：生命上限＋LV×N；每秒回血 N%；回血量／跑速＋(10N＋LV)%，並提高攻擊。N＝技能等級，LV＝角色等級。',
       ups:[
@@ -320,7 +330,7 @@
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-reverse-lotus', [30006], {
-      name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, dmg:210,
+      icon:'reverseLotus', name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:5, dmg:210,
       range:180, radius:100,
       ups:[
         {t:'空中連擊 +2（7 次）・傷害 +20%・落地範圍擴大至 120',m:{dmg:1.2,radius:1.2}},
@@ -332,7 +342,7 @@
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {
-      name:'砂縛柩・砂瀑送葬', mode:'gaara-coffin', type:'ground', learnLevel:3, cd:5, dmg:110,
+      icon:'sandCoffin', name:'砂縛柩・砂瀑送葬', mode:'gaara-coffin', type:'ground', learnLevel:3, cd:5, dmg:110,
       range:280, count:1, fieldDuration:1.1, slow:.95, bossSlow:.3,
       ups:[{t:'傷害 +20%',m:{dmg:1.2}},{t:'索敵距離提高至 310',m:{range:310}},
         {t:'傷害 +25%',m:{dmg:1.25}},{t:'傷害 +25%・索敵距離 340',m:{dmg:1.25,range:340}}],
@@ -340,7 +350,7 @@
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-shield', [30007], {
-      name:'砂之盾', mode:'gaara-shield', passive:true, type:'ground', learnLevel:1, cd:12, dmg:0,
+      icon:'sandShield', name:'砂之盾', mode:'gaara-shield', passive:true, type:'ground', learnLevel:1, cd:12, dmg:0,
       shieldAmount:45, range:400, guardCount:2, guardSpeedBonus:200,
       ups:[{t:'基礎盾量 120・基礎護衛數 2 團・砂鎧減傷 35%・反擊 85',m:{shieldAmount:60,guardCount:2}},
         {t:'基礎盾量 150・基礎護衛數 3 團・反擊半徑 125',m:{shieldAmount:75,guardCount:3}},
@@ -352,7 +362,7 @@
       source_url:'https://naruto-official.com/en/news/01_1555'
     }],
     ['naruto-sand-tsunami', [30007], {
-      name:'流砂瀑流・砂瀑大葬', mode:'gaara-tsunami', type:'ground', learnLevel:9, cd:8, dmg:240,
+      icon:'sandTsunami', name:'流砂瀑流・砂瀑大葬', mode:'gaara-tsunami', type:'ground', learnLevel:9, cd:8, dmg:240,
       range:310, radius:310, width:240, knock:0, waveDuration:.65, bindDuration:.5,
       ups:[{t:'傷害 +20%',m:{dmg:1.2}},{t:'距離 345・寬 270',m:{range:345,radius:345/310,width:270/240}},
         {t:'傷害 +25%',m:{dmg:1.25}},{t:'傷害 +25%・距離 380・寬 300',m:{dmg:1.25,range:380,radius:380/345,width:300/270}}],
@@ -360,7 +370,7 @@
       source_url:'https://naruto-official.com/en/news/01_1695'
     }],
     ['naruto-sand-prison', [30007], {
-      name:'流砂牢', mode:'gaara-sand-prison', type:'ground', learnLevel:12,
+      icon:'sandPrison', name:'流砂牢', mode:'gaara-sand-prison', type:'ground', learnLevel:12,
       cd:6, dmg:12, range:300, radius:90, fieldDuration:5, fieldTick:.5, bossSlow:.35,
       ups:[{t:'每次傷害提高至 15',m:{dmg:1.25}},
         {t:'砂地半徑提高至 105',m:{radius:105/90}},
@@ -389,7 +399,7 @@
       source_url:'https://naruto-official.com/en/news/01_1316'
     }],
     ['naruto-kusanagi', [30002], {
-      name:'草薙劍・環繞', mode:'kusanagi-orbit', type:'steel', learnLevel:1,
+      icon:'kusanagi', name:'草薙劍・環繞', mode:'kusanagi-orbit', type:'steel', learnLevel:1,
       cd:1,dmg:28,radius:58,count:1,knock:8,
       desc:'選用並施放後，飛行劍持續環繞攻擊，切招即消失。同一敵人每 0.35 秒最多命中一次；數量卡每張使劍數 ×1.25，累乘取整後，三勾玉再額外加一把劍。',
       ups:[{t:'環繞劍 +1 把',m:{count:1}},
@@ -399,7 +409,7 @@
       source_url:'https://naruto-official.com/en/news/01_1710'
     }],
     ['naruto-fuma-shuriken', [30002], {
-      name:'風魔手裏劍', mode:'shot', type:'steel', learnLevel:9,
+      icon:'fumaShuriken', name:'風魔手裏劍', mode:'shot', type:'steel', learnLevel:9,
       cd:1.6,dmg:34,speed:460,life:4,range:552,size:32,count:1,pierce:3,arc:.24,charge:.2,knock:24,
       fumaReturn:true,boom:.65,fumaCurve:130,
       vis:{proj:'naruto-fuma-shuriken',pal:'naruto-fuma-steel',projScale:.9},
@@ -450,6 +460,46 @@
       desc:'兩張卷軸繞身螺旋升空，放卷 0.12 秒後從卷軸分四批射出八種忍具，形成約 110° 前方扇面。基礎 24／28／32／36／40 枚，單枚傷害 8／8／9.6／9.6／12，射程 680，基礎穿透 1 次。整輪發射約 0.6 秒，數量卡使枚數 ×1.25，累乘取整，每張另加穿透 1 次。學會忍具連彈後可彈向 160 範圍內其他小怪或 Boss，沒有可達新目標時可用剩餘連彈次數追打同一目標，重複追擊至少間隔 0.08 秒。可走位、沒有額外無敵。回收蓄勢可強化整輪傷害 +30%；忍具可提前引爆自己的落地爆符。螺旋紙卷與尾跡不造成傷害。',source_url:tentenSource
     }]
   );
+  extra.push(
+    ['naruto-pain-gravity',[30010],{
+      name:'萬象天引・神羅天征',mode:'pain-gravity',icon:'painGravity',type:'psychic',learnLevel:3,passive:true,
+      cd:5,dmg:70,range:240,radius:150,ups:painUps(),
+      desc:'學會後天道自動施放，不用選招。80 內有敵人時優先斥開；否則牽引 240 內目標最多 110，0.35 秒後以天道目前位置造成半徑 150 的單次群傷。普通敵人推退 80，特殊敵人位移僅 25%；牆會阻擋，施術沒有無敵。',source_url:painSource
+    }],
+    ['naruto-pain-missiles',[30010],{
+      name:'修羅道・飛彈齊射',mode:'pain-missiles',icon:'painMissile',type:'steel',learnLevel:6,passive:true,
+      cd:4,dmg:22,count:3,range:320,radius:48,speed:400,ups:painUps([3,3,4,4,5]),
+      desc:'學會後修羅道自動展開機械臂，分散發射追蹤飛彈，不用選招。碰敵或牆後爆炸，基礎 3／3／4／4／5 枚，爆炸半徑 48，每枚各命中一次。數量卡 ×1.25，最多 30 枚；修羅道倒下不能起手，已離架飛彈可飛完。',source_url:painSource
+    }],
+    ['naruto-pain-absorb',[30010],{
+      name:'餓鬼道・封術吸印',mode:'pain-absorb',icon:'painAbsorb',type:'psychic',learnLevel:6,
+      passive:true,cd:0,dmg:0,absorbCooldown:2.5,
+      ups:[2.3,2.1,1.9,1.7].map(value=>({t:`吸收恢復週期 ${value} 秒`,m:{absorbCooldown:value}})),
+      desc:'學會即自動守衛，不占主動槽。餓鬼道只吸收實際碰到雙掌的可吸收忍術彈，一次一顆；恢復 2.5／2.3／2.1／1.9／1.7 秒，受冷卻卡影響。物理忍具、雷射、地面技不吸收，沒有額外無敵或回血。',source_url:'https://naruto-official.com/en/anime/naruto2/list/01_609'
+    }],
+    ['naruto-pain-summon',[30010],{
+      name:'畜生道・通靈衝陣',mode:'pain-summon',icon:'painSummon',type:'ground',learnLevel:9,passive:true,
+      cd:6,dmg:90,range:300,width:90,speed:500,ups:painUps(),
+      desc:'學會後畜生道自動伏手召出犀牛，沿起手方向衝 300、通道寬 90，每敵人只受傷一次。最多一隻，不吃數量卡；遇牆停止。畜生道倒下不能施放，不用切招。',source_url:painSource
+    }],
+    ['naruto-pain-soul',[30010],{
+      name:'人間道・魂魄牽引',mode:'pain-soul',icon:'painSoul',type:'psychic',learnLevel:12,passive:true,
+      cd:5,dmg:140,range:180,fieldDuration:.6,ups:painUps(),
+      desc:'學會後人間道自動接近目標，抓取 0.6 秒後單次傷害。普通敵人減速 70%，特殊敵人 20%；越距、隔牆或人間道倒下即取消。追擊未抓到不耗冷卻，不瞬移、不即死。技能演出為本作改編。',source_url:painSource
+    }],
+    ['naruto-pain-repair',[30010],{
+      name:'地獄道・閻王修復',mode:'pain-repair',icon:'painRepair',type:'psychic',learnLevel:12,
+      passive:true,cd:0,dmg:0,repairCooldown:10,
+      ups:[9.5,9,8.5,8].map(value=>({t:`修復等待週期 ${value} 秒`,m:{repairCooldown:value}})),
+      desc:'學會即常駐，不占主動槽。有其他支援道倒下才等待 10／9.5／9／8.5／8 秒，再以 0.8 秒閻王演出修復一位，冷卻卡有效。天道倒下時優先救天道，半血復活並保護 2 秒；尚未學此招也能以第一階週期救天道。不能修復自己，不重複復歸、不刷新其他道生命或冷卻。危險位置延後復活，地獄道倒下則救援失敗。',source_url:painSource
+    }],
+    ['naruto-pain-planet',[30010],{
+      name:'天道・地爆天星',mode:'pain-planet',icon:'painPlanet',type:'psychic',learnLevel:15,passive:true,
+      cd:12,dmg:120,pulseDamage:15,range:320,radius:160,fieldDuration:1.5,ups:painUps(),
+      desc:'學會後遇到三名以上聚集敵人或特殊強敵時自動生成黑核。半徑 160，1.5 秒內每 0.5 秒傷害一次共三次，再崩落一次。第一階合計基傷 165；特殊敵人牽引僅 25%，不硬定身。最多一顆，施放後家族引斥技至少恢復 5 秒；不用選招。',source_url:painSource
+    }]
+  );
+  Object.assign(kinds,{'pain-basic':'projectile','pain-gravity':'aura','pain-missiles':'projectile','pain-summon':'dash','pain-soul':'melee','pain-absorb':'buff','pain-repair':'buff','pain-planet':'meteor'});
   kinds['gaara-sand-guard'] = 'buff';
   Object.assign(kinds,{'tenten-kunai':'projectile','tenten-fuma':'projectile','tenten-mastery':'buff','tenten-bounce':'buff','tenten-guard':'buff','tenten-tags':'meteor','tenten-twin':'projectile'});
   const definitions = new Map(), byDex = new Map(), references = new Map();
@@ -544,7 +594,7 @@
   guide.translate = false;
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   function activationLabel(move) {
-    if (['naruto-gaara','naruto-tenten'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
+    if (['naruto-gaara','naruto-tenten','naruto-pain'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
     if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';
     if (['naruto-kusanagi', 'naruto-sand-prison'].includes(move.id)) return '主動 · 需保持選中';
     if (['naruto-shadow-clones', 'naruto-nine-tails-cloak'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';

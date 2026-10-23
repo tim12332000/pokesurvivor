@@ -133,6 +133,15 @@
       "scope": "URA RENGE includes dedicated redface, white eyes, raised hair and persistent transformed combo poses. Clothes and bandages preserve their palette. Current form is an original edit of our own generated Lee atlases.",
       "runtimeActiveInLab": false,
       "replacementProvenance": "art-review/redrawn/provenance.json"
+    },
+    {
+      "id": "pain-original-production-v1",
+      "scope": "Six distinct paths, 96 original body poses and 8 summon frames. Right side and explicit horizontal mirror; vertical movement reuses side. Inner-test Tendo powers share two authored special poses.",
+      "runtimeActiveInLab": true,
+      "replacementProvenance": "art-review/pain-production-provenance.json",
+      "manifest": "art-review/pain-frames.json",
+      "researchEntry": "https://spritedatabase.net/game/55",
+      "sourceType": "original built-in image_gen artwork; not extracted commercial sprites"
     }
   ],
   "records": [

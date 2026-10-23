@@ -1,0 +1,1800 @@
+{
+  "version": 1,
+  "physicalFrames": 104,
+  "bodies": {
+    "tendo": {
+      "source": "redrawn/pain-tendo-v1.png",
+      "sha256": "510a31a4e2c5360ba4e8f764c563567b1bcd92f10df63682fddc0e93e3941efa",
+      "size": [
+        1246,
+        1263
+      ],
+      "bodyHeight": 290.5,
+      "directionPolicy": "right three-quarter; explicit horizontal mirror for left; same side pose for vertical travel",
+      "frames": [
+        {
+          "rect": [
+            74,
+            28,
+            159,
+            290
+          ],
+          "anchor": [
+            84.5,
+            288
+          ]
+        },
+        {
+          "rect": [
+            373,
+            27,
+            157,
+            291
+          ],
+          "anchor": [
+            81.5,
+            290
+          ]
+        },
+        {
+          "rect": [
+            634,
+            29,
+            261,
+            283
+          ],
+          "anchor": [
+            138.5,
+            281
+          ]
+        },
+        {
+          "rect": [
+            966,
+            29,
+            251,
+            287
+          ],
+          "anchor": [
+            134.5,
+            285
+          ]
+        },
+        {
+          "rect": [
+            33,
+            342,
+            232,
+            281
+          ],
+          "anchor": [
+            149.5,
+            278
+          ]
+        },
+        {
+          "rect": [
+            339,
+            343,
+            236,
+            280
+          ],
+          "anchor": [
+            148.5,
+            278
+          ]
+        },
+        {
+          "rect": [
+            655,
+            343,
+            243,
+            281
+          ],
+          "anchor": [
+            170.5,
+            279
+          ]
+        },
+        {
+          "rect": [
+            977,
+            342,
+            222,
+            284
+          ],
+          "anchor": [
+            127.0,
+            282
+          ]
+        },
+        {
+          "rect": [
+            37,
+            649,
+            232,
+            277
+          ],
+          "anchor": [
+            121.5,
+            275
+          ]
+        },
+        {
+          "rect": [
+            330,
+            647,
+            295,
+            281
+          ],
+          "anchor": [
+            115.0,
+            279
+          ]
+        },
+        {
+          "rect": [
+            674,
+            643,
+            227,
+            289
+          ],
+          "anchor": [
+            109.0,
+            287
+          ]
+        },
+        {
+          "rect": [
+            973,
+            643,
+            259,
+            291
+          ],
+          "anchor": [
+            126.0,
+            289
+          ]
+        },
+        {
+          "rect": [
+            50,
+            958,
+            215,
+            268
+          ],
+          "anchor": [
+            93.0,
+            266
+          ]
+        },
+        {
+          "rect": [
+            326,
+            1006,
+            245,
+            230
+          ],
+          "anchor": [
+            171.0,
+            228
+          ]
+        },
+        {
+          "rect": [
+            586,
+            1064,
+            311,
+            150
+          ],
+          "anchor": [
+            155.5,
+            148
+          ]
+        },
+        {
+          "rect": [
+            909,
+            1095,
+            314,
+            117
+          ],
+          "anchor": [
+            157.0,
+            115
+          ]
+        }
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 2,
+          "loop": true
+        },
+        "move": {
+          "frames": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 10,
+          "loop": true
+        },
+        "strike": {
+          "frames": [
+            8,
+            9,
+            9,
+            0
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "special": {
+          "frames": [
+            10,
+            11,
+            11,
+            0
+          ],
+          "fps": 8,
+          "loop": false
+        },
+        "hurt": {
+          "frames": [
+            12,
+            12,
+            0
+          ],
+          "fps": 9,
+          "loop": false
+        },
+        "death": {
+          "frames": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "fps": 7,
+          "loop": false
+        }
+      }
+    },
+    "asura": {
+      "source": "redrawn/pain-asura-v1.png",
+      "sha256": "67a397127cc86a12567d932536654ea13b3dad4af1b15e48dc55a8eb0cb1ec65",
+      "size": [
+        1159,
+        1356
+      ],
+      "bodyHeight": 287.5,
+      "directionPolicy": "right three-quarter; explicit horizontal mirror for left; same side pose for vertical travel",
+      "frames": [
+        {
+          "rect": [
+            19,
+            43,
+            200,
+            288
+          ],
+          "anchor": [
+            115.0,
+            286
+          ]
+        },
+        {
+          "rect": [
+            300,
+            44,
+            201,
+            287
+          ],
+          "anchor": [
+            116.0,
+            285
+          ]
+        },
+        {
+          "rect": [
+            591,
+            63,
+            226,
+            267
+          ],
+          "anchor": [
+            164.5,
+            266
+          ]
+        },
+        {
+          "rect": [
+            906,
+            63,
+            234,
+            271
+          ],
+          "anchor": [
+            156.0,
+            269
+          ]
+        },
+        {
+          "rect": [
+            22,
+            385,
+            240,
+            264
+          ],
+          "anchor": [
+            119.5,
+            262
+          ]
+        },
+        {
+          "rect": [
+            321,
+            387,
+            233,
+            265
+          ],
+          "anchor": [
+            142.0,
+            263
+          ]
+        },
+        {
+          "rect": [
+            607,
+            393,
+            244,
+            259
+          ],
+          "anchor": [
+            156.0,
+            257
+          ]
+        },
+        {
+          "rect": [
+            903,
+            386,
+            239,
+            263
+          ],
+          "anchor": [
+            152.0,
+            261
+          ]
+        },
+        {
+          "rect": [
+            14,
+            689,
+            221,
+            295
+          ],
+          "anchor": [
+            110.0,
+            293
+          ]
+        },
+        {
+          "rect": [
+            302,
+            686,
+            254,
+            301
+          ],
+          "anchor": [
+            119.0,
+            299
+          ]
+        },
+        {
+          "rect": [
+            620,
+            673,
+            215,
+            314
+          ],
+          "anchor": [
+            110.0,
+            312
+          ]
+        },
+        {
+          "rect": [
+            907,
+            671,
+            242,
+            316
+          ],
+          "anchor": [
+            116.5,
+            315
+          ]
+        },
+        {
+          "rect": [
+            25,
+            1032,
+            206,
+            255
+          ],
+          "anchor": [
+            94.0,
+            253
+          ]
+        },
+        {
+          "rect": [
+            295,
+            1067,
+            223,
+            218
+          ],
+          "anchor": [
+            109.0,
+            216
+          ]
+        },
+        {
+          "rect": [
+            540,
+            1126,
+            280,
+            155
+          ],
+          "anchor": [
+            140.0,
+            152
+          ]
+        },
+        {
+          "rect": [
+            832,
+            1146,
+            312,
+            145
+          ],
+          "anchor": [
+            156.0,
+            143
+          ]
+        }
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 2,
+          "loop": true
+        },
+        "move": {
+          "frames": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 10,
+          "loop": true
+        },
+        "strike": {
+          "frames": [
+            8,
+            9,
+            9,
+            0
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "special": {
+          "frames": [
+            10,
+            11,
+            11,
+            0
+          ],
+          "fps": 8,
+          "loop": false
+        },
+        "hurt": {
+          "frames": [
+            12,
+            12,
+            0
+          ],
+          "fps": 9,
+          "loop": false
+        },
+        "death": {
+          "frames": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "fps": 7,
+          "loop": false
+        }
+      }
+    },
+    "animal": {
+      "source": "redrawn/pain-animal-v1.png",
+      "sha256": "53191aac9dee455046d4001898da96ccf2acc53ab74f5f78283bf5123f62f6e2",
+      "size": [
+        1024,
+        1536
+      ],
+      "bodyHeight": 315.0,
+      "directionPolicy": "right three-quarter; explicit horizontal mirror for left; same side pose for vertical travel",
+      "frames": [
+        {
+          "rect": [
+            54,
+            79,
+            154,
+            314
+          ],
+          "anchor": [
+            83.5,
+            312
+          ]
+        },
+        {
+          "rect": [
+            307,
+            77,
+            154,
+            316
+          ],
+          "anchor": [
+            83.5,
+            314
+          ]
+        },
+        {
+          "rect": [
+            522,
+            90,
+            214,
+            294
+          ],
+          "anchor": [
+            103.0,
+            292
+          ]
+        },
+        {
+          "rect": [
+            792,
+            84,
+            202,
+            306
+          ],
+          "anchor": [
+            107.0,
+            304
+          ]
+        },
+        {
+          "rect": [
+            29,
+            431,
+            206,
+            307
+          ],
+          "anchor": [
+            162.5,
+            305
+          ]
+        },
+        {
+          "rect": [
+            299,
+            436,
+            212,
+            309
+          ],
+          "anchor": [
+            141.0,
+            307
+          ]
+        },
+        {
+          "rect": [
+            538,
+            445,
+            222,
+            297
+          ],
+          "anchor": [
+            150.0,
+            295
+          ]
+        },
+        {
+          "rect": [
+            799,
+            431,
+            201,
+            321
+          ],
+          "anchor": [
+            90.0,
+            319
+          ]
+        },
+        {
+          "rect": [
+            29,
+            810,
+            219,
+            289
+          ],
+          "anchor": [
+            114.0,
+            287
+          ]
+        },
+        {
+          "rect": [
+            274,
+            813,
+            262,
+            287
+          ],
+          "anchor": [
+            27.0,
+            285
+          ]
+        },
+        {
+          "rect": [
+            561,
+            786,
+            176,
+            318
+          ],
+          "anchor": [
+            88.5,
+            316
+          ]
+        },
+        {
+          "rect": [
+            785,
+            840,
+            218,
+            271
+          ],
+          "anchor": [
+            113.5,
+            269
+          ]
+        },
+        {
+          "rect": [
+            37,
+            1173,
+            187,
+            293
+          ],
+          "anchor": [
+            91.0,
+            291
+          ]
+        },
+        {
+          "rect": [
+            251,
+            1237,
+            229,
+            238
+          ],
+          "anchor": [
+            109.0,
+            236
+          ]
+        },
+        {
+          "rect": [
+            480,
+            1335,
+            269,
+            134
+          ],
+          "anchor": [
+            134.5,
+            132
+          ]
+        },
+        {
+          "rect": [
+            749,
+            1363,
+            265,
+            108
+          ],
+          "anchor": [
+            132.5,
+            106
+          ]
+        }
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 2,
+          "loop": true
+        },
+        "move": {
+          "frames": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 10,
+          "loop": true
+        },
+        "strike": {
+          "frames": [
+            8,
+            9,
+            9,
+            0
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "special": {
+          "frames": [
+            10,
+            11,
+            11,
+            0
+          ],
+          "fps": 8,
+          "loop": false
+        },
+        "hurt": {
+          "frames": [
+            12,
+            12,
+            0
+          ],
+          "fps": 9,
+          "loop": false
+        },
+        "death": {
+          "frames": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "fps": 7,
+          "loop": false
+        }
+      }
+    },
+    "human": {
+      "source": "redrawn/pain-human-v1.png",
+      "sha256": "4a0dfe3aac2c267c4ba84832767e47f0b30750ad3617b78482cc1ba0cd7dfe7b",
+      "size": [
+        1024,
+        1536
+      ],
+      "bodyHeight": 303.5,
+      "directionPolicy": "right three-quarter; explicit horizontal mirror for left; same side pose for vertical travel",
+      "frames": [
+        {
+          "rect": [
+            32,
+            69,
+            190,
+            303
+          ],
+          "anchor": [
+            104.0,
+            302
+          ]
+        },
+        {
+          "rect": [
+            288,
+            66,
+            187,
+            304
+          ],
+          "anchor": [
+            101.5,
+            303
+          ]
+        },
+        {
+          "rect": [
+            512,
+            78,
+            216,
+            283
+          ],
+          "anchor": [
+            171.5,
+            281
+          ]
+        },
+        {
+          "rect": [
+            777,
+            75,
+            222,
+            285
+          ],
+          "anchor": [
+            185.5,
+            283
+          ]
+        },
+        {
+          "rect": [
+            24,
+            419,
+            221,
+            289
+          ],
+          "anchor": [
+            117.5,
+            288
+          ]
+        },
+        {
+          "rect": [
+            282,
+            429,
+            223,
+            290
+          ],
+          "anchor": [
+            174.5,
+            288
+          ]
+        },
+        {
+          "rect": [
+            528,
+            423,
+            220,
+            296
+          ],
+          "anchor": [
+            148.0,
+            294
+          ]
+        },
+        {
+          "rect": [
+            785,
+            424,
+            221,
+            293
+          ],
+          "anchor": [
+            153.0,
+            291
+          ]
+        },
+        {
+          "rect": [
+            14,
+            767,
+            227,
+            309
+          ],
+          "anchor": [
+            114.5,
+            307
+          ]
+        },
+        {
+          "rect": [
+            270,
+            778,
+            239,
+            293
+          ],
+          "anchor": [
+            189.5,
+            292
+          ]
+        },
+        {
+          "rect": [
+            530,
+            778,
+            217,
+            295
+          ],
+          "anchor": [
+            108.0,
+            293
+          ]
+        },
+        {
+          "rect": [
+            762,
+            778,
+            260,
+            296
+          ],
+          "anchor": [
+            139.0,
+            295
+          ]
+        },
+        {
+          "rect": [
+            17,
+            1127,
+            204,
+            268
+          ],
+          "anchor": [
+            107.5,
+            266
+          ]
+        },
+        {
+          "rect": [
+            251,
+            1176,
+            234,
+            216
+          ],
+          "anchor": [
+            146.0,
+            214
+          ]
+        },
+        {
+          "rect": [
+            487,
+            1254,
+            270,
+            124
+          ],
+          "anchor": [
+            135.0,
+            123
+          ]
+        },
+        {
+          "rect": [
+            760,
+            1265,
+            259,
+            106
+          ],
+          "anchor": [
+            129.5,
+            104
+          ]
+        }
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 2,
+          "loop": true
+        },
+        "move": {
+          "frames": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 10,
+          "loop": true
+        },
+        "strike": {
+          "frames": [
+            8,
+            9,
+            9,
+            0
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "special": {
+          "frames": [
+            10,
+            11,
+            11,
+            0
+          ],
+          "fps": 8,
+          "loop": false
+        },
+        "hurt": {
+          "frames": [
+            12,
+            12,
+            0
+          ],
+          "fps": 9,
+          "loop": false
+        },
+        "death": {
+          "frames": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "fps": 7,
+          "loop": false
+        }
+      }
+    },
+    "preta": {
+      "source": "redrawn/pain-preta-v1.png",
+      "sha256": "d25c0d319c0b1298343cb73855c53ec881ea09a39d9025f1234d354a935c5cf1",
+      "size": [
+        1165,
+        1350
+      ],
+      "bodyHeight": 304.5,
+      "directionPolicy": "right three-quarter; explicit horizontal mirror for left; same side pose for vertical travel",
+      "frames": [
+        {
+          "rect": [
+            57,
+            44,
+            191,
+            304
+          ],
+          "anchor": [
+            104.5,
+            302
+          ]
+        },
+        {
+          "rect": [
+            357,
+            44,
+            193,
+            305
+          ],
+          "anchor": [
+            105.5,
+            303
+          ]
+        },
+        {
+          "rect": [
+            635,
+            62,
+            208,
+            288
+          ],
+          "anchor": [
+            132.0,
+            286
+          ]
+        },
+        {
+          "rect": [
+            922,
+            60,
+            207,
+            291
+          ],
+          "anchor": [
+            122.5,
+            289
+          ]
+        },
+        {
+          "rect": [
+            44,
+            378,
+            216,
+            287
+          ],
+          "anchor": [
+            135.0,
+            285
+          ]
+        },
+        {
+          "rect": [
+            343,
+            376,
+            211,
+            285
+          ],
+          "anchor": [
+            113.0,
+            284
+          ]
+        },
+        {
+          "rect": [
+            615,
+            382,
+            224,
+            283
+          ],
+          "anchor": [
+            129.5,
+            281
+          ]
+        },
+        {
+          "rect": [
+            915,
+            386,
+            229,
+            280
+          ],
+          "anchor": [
+            173.5,
+            278
+          ]
+        },
+        {
+          "rect": [
+            39,
+            690,
+            206,
+            291
+          ],
+          "anchor": [
+            103.5,
+            289
+          ]
+        },
+        {
+          "rect": [
+            296,
+            696,
+            257,
+            284
+          ],
+          "anchor": [
+            108.5,
+            282
+          ]
+        },
+        {
+          "rect": [
+            589,
+            695,
+            251,
+            293
+          ],
+          "anchor": [
+            125.5,
+            291
+          ]
+        },
+        {
+          "rect": [
+            864,
+            696,
+            280,
+            288
+          ],
+          "anchor": [
+            146.0,
+            286
+          ]
+        },
+        {
+          "rect": [
+            45,
+            1023,
+            190,
+            270
+          ],
+          "anchor": [
+            98.5,
+            268
+          ]
+        },
+        {
+          "rect": [
+            286,
+            1093,
+            258,
+            195
+          ],
+          "anchor": [
+            83.5,
+            193
+          ]
+        },
+        {
+          "rect": [
+            562,
+            1128,
+            288,
+            152
+          ],
+          "anchor": [
+            144.0,
+            150
+          ]
+        },
+        {
+          "rect": [
+            854,
+            1142,
+            304,
+            139
+          ],
+          "anchor": [
+            152.0,
+            137
+          ]
+        }
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 2,
+          "loop": true
+        },
+        "move": {
+          "frames": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 10,
+          "loop": true
+        },
+        "strike": {
+          "frames": [
+            8,
+            9,
+            9,
+            0
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "special": {
+          "frames": [
+            10,
+            11,
+            11,
+            0
+          ],
+          "fps": 8,
+          "loop": false
+        },
+        "hurt": {
+          "frames": [
+            12,
+            12,
+            0
+          ],
+          "fps": 9,
+          "loop": false
+        },
+        "death": {
+          "frames": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "fps": 7,
+          "loop": false
+        }
+      }
+    },
+    "naraka": {
+      "source": "redrawn/pain-naraka-v1.png",
+      "sha256": "bd5810f15632091dad3432aaa85594931c8d0a4bc328bd1aa7e0e4944a0da76e",
+      "size": [
+        1055,
+        1491
+      ],
+      "bodyHeight": 315.0,
+      "directionPolicy": "right three-quarter; explicit horizontal mirror for left; same side pose for vertical travel",
+      "frames": [
+        {
+          "rect": [
+            44,
+            53,
+            175,
+            315
+          ],
+          "anchor": [
+            97.0,
+            313
+          ]
+        },
+        {
+          "rect": [
+            303,
+            54,
+            175,
+            315
+          ],
+          "anchor": [
+            96.5,
+            313
+          ]
+        },
+        {
+          "rect": [
+            534,
+            70,
+            226,
+            299
+          ],
+          "anchor": [
+            141.0,
+            297
+          ]
+        },
+        {
+          "rect": [
+            816,
+            63,
+            204,
+            302
+          ],
+          "anchor": [
+            108.0,
+            300
+          ]
+        },
+        {
+          "rect": [
+            26,
+            433,
+            212,
+            283
+          ],
+          "anchor": [
+            120.0,
+            281
+          ]
+        },
+        {
+          "rect": [
+            296,
+            426,
+            203,
+            289
+          ],
+          "anchor": [
+            146.0,
+            287
+          ]
+        },
+        {
+          "rect": [
+            545,
+            423,
+            221,
+            294
+          ],
+          "anchor": [
+            162.0,
+            292
+          ]
+        },
+        {
+          "rect": [
+            811,
+            428,
+            226,
+            287
+          ],
+          "anchor": [
+            155.5,
+            285
+          ]
+        },
+        {
+          "rect": [
+            29,
+            750,
+            207,
+            317
+          ],
+          "anchor": [
+            109.0,
+            315
+          ]
+        },
+        {
+          "rect": [
+            294,
+            750,
+            198,
+            335
+          ],
+          "anchor": [
+            99.0,
+            333
+          ]
+        },
+        {
+          "rect": [
+            545,
+            751,
+            216,
+            340
+          ],
+          "anchor": [
+            106.0,
+            338
+          ]
+        },
+        {
+          "rect": [
+            823,
+            756,
+            210,
+            340
+          ],
+          "anchor": [
+            102.5,
+            338
+          ]
+        },
+        {
+          "rect": [
+            33,
+            1134,
+            204,
+            311
+          ],
+          "anchor": [
+            90.5,
+            309
+          ]
+        },
+        {
+          "rect": [
+            247,
+            1209,
+            244,
+            222
+          ],
+          "anchor": [
+            160.5,
+            221
+          ]
+        },
+        {
+          "rect": [
+            491,
+            1283,
+            255,
+            144
+          ],
+          "anchor": [
+            127.5,
+            143
+          ]
+        },
+        {
+          "rect": [
+            749,
+            1315,
+            294,
+            113
+          ],
+          "anchor": [
+            147.0,
+            111
+          ]
+        }
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "fps": 2,
+          "loop": true
+        },
+        "move": {
+          "frames": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "fps": 10,
+          "loop": true
+        },
+        "strike": {
+          "frames": [
+            8,
+            9,
+            9,
+            0
+          ],
+          "fps": 10,
+          "loop": false
+        },
+        "special": {
+          "frames": [
+            10,
+            11,
+            11,
+            0
+          ],
+          "fps": 8,
+          "loop": false
+        },
+        "hurt": {
+          "frames": [
+            12,
+            12,
+            0
+          ],
+          "fps": 9,
+          "loop": false
+        },
+        "death": {
+          "frames": [
+            12,
+            13,
+            14,
+            15
+          ],
+          "fps": 7,
+          "loop": false
+        }
+      }
+    },
+    "rhino": {
+      "source": "redrawn/pain-summons-v1.png",
+      "sha256": "cb58b0355316f7e76b9c1fddfcacf152a5fcf1f0f157604b5b36ae083e2422ca",
+      "size": [
+        1774,
+        887
+      ],
+      "bodyHeight": 298,
+      "directionPolicy": "right three-quarter; explicit horizontal mirror for left; same side pose for vertical travel",
+      "frames": [
+        {
+          "rect": [
+            14,
+            101,
+            456,
+            298
+          ],
+          "anchor": [
+            135.5,
+            296
+          ]
+        },
+        {
+          "rect": [
+            470,
+            56,
+            417,
+            334
+          ],
+          "anchor": [
+            344.0,
+            332
+          ]
+        },
+        {
+          "rect": [
+            889,
+            81,
+            465,
+            301
+          ],
+          "anchor": [
+            158.0,
+            299
+          ]
+        },
+        {
+          "rect": [
+            1362,
+            141,
+            397,
+            268
+          ],
+          "anchor": [
+            332.0,
+            266
+          ]
+        }
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            1,
+            2,
+            3,
+            2
+          ],
+          "fps": 8,
+          "loop": true
+        },
+        "move": {
+          "frames": [
+            1,
+            2,
+            3,
+            2
+          ],
+          "fps": 8,
+          "loop": true
+        },
+        "special": {
+          "frames": [
+            1,
+            2,
+            3,
+            2
+          ],
+          "fps": 8,
+          "loop": true
+        },
+        "strike": {
+          "frames": [
+            1,
+            2,
+            3,
+            2
+          ],
+          "fps": 8,
+          "loop": true
+        }
+      }
+    },
+    "king": {
+      "source": "redrawn/pain-summons-v1.png",
+      "sha256": "cb58b0355316f7e76b9c1fddfcacf152a5fcf1f0f157604b5b36ae083e2422ca",
+      "size": [
+        1774,
+        887
+      ],
+      "bodyHeight": 433,
+      "directionPolicy": "right three-quarter; explicit horizontal mirror for left; same side pose for vertical travel",
+      "frames": [
+        {
+          "rect": [
+            45,
+            420,
+            369,
+            433
+          ],
+          "anchor": [
+            185.0,
+            431
+          ]
+        },
+        {
+          "rect": [
+            506,
+            418,
+            346,
+            434
+          ],
+          "anchor": [
+            148.5,
+            433
+          ]
+        },
+        {
+          "rect": [
+            932,
+            419,
+            362,
+            440
+          ],
+          "anchor": [
+            203.5,
+            438
+          ]
+        },
+        {
+          "rect": [
+            1386,
+            420,
+            344,
+            430
+          ],
+          "anchor": [
+            209.0,
+            428
+          ]
+        }
+      ],
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 8,
+          "loop": true
+        },
+        "move": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 8,
+          "loop": true
+        },
+        "special": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 8,
+          "loop": true
+        },
+        "strike": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "fps": 8,
+          "loop": true
+        }
+      }
+    }
+  }
+}
