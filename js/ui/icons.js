@@ -16,6 +16,9 @@ G.Icons = (() => {
                  '..kmwmmmnk..', '.kmwmsmmmnk.', '.kmmsssmmnk.', '.kmmmsmmmnk.', '..kmmmmmnk..', '...kkkkkk...'];
 
   const UI = {
+    tentenBounce: { pal: { w:'#e6f1ec', s:'#77cbb9', r:'#be6b88' }, rows: [
+      '.kkk........', 'kwwwk.......', '.kkks.......', '....ss......', '.....ss.....', '......skkk..',
+      '......kwwwk.', '.....sskkk..', '....ss......', '...ss.......', '..krk.......', '.krrrk......'] },
     // Tenten: kunai, returning blade, honed scroll, explosive tag, twin scrolls.
     tentenKunai: { pal: { w:'#edf3f4', s:'#8295a2', r:'#c95e79' }, rows: [
       '.........kk.', '........kwk.', '.......kwwk.', '......kwwsk.', '.....kwwsk..', '....kwwsk...',

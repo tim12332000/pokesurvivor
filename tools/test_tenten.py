@@ -11,6 +11,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 from test_gaara import CHROME, HARNESS
 from test_redrawn_heroes import AUDIT
+from test_tenten_combos import COMBOS
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = Path(os.environ.get('TENTEN_OUT', str(ROOT / '.omx/state/tenten')))
@@ -103,6 +104,39 @@ COMBAT = r"""() => {
  return out;
 }"""
 
+MASTERY_RANGE = r"""() => {
+ const A=Acceptance,p=A.p(),T=G.NarutoTenten,original=p.moves,out=[];
+ const moves=original.filter(m=>!['naruto-tenten-mastery','naruto-tenten-bounce'].includes(m.id));
+ try {
+   for(let tier=0;tier<=5;tier++){
+     p.moves=[...moves];if(tier)p.moves.push(G.Moves.instance('naruto-tenten-mastery',tier));
+     for(const id of ['naruto-tenten','naruto-tenten-fuma','naruto-tenten-tags','naruto-tenten-twin']){
+       const move=p.moves.find(m=>m.id===id),baseRange=move.range,range=baseRange+tier*100;
+       A.reset();p.target=A.spawn(range+40,0);A.assert(!T.canCast(p,move),'range exceeded '+id+' '+tier);
+       A.reset();p.target=A.spawn(range-40,0);const target=p.target;
+       A.assert(T.canCast(p,move),'extended target not acquired '+id+' '+tier);
+       T.cast(p,{...move,count:1,quantityBonusAtCast:0,quantityMultiplierAtCast:1});
+       const pose=T.activeFor(p);A.near(pose.m.tentenRangeBonusAtCast,tier*100,'range snapshot');
+       A.finish(4);A.assert(target.hp<100000,'extended projectile did not hit '+id+' '+tier);
+       A.near(move.range,baseRange,'mastery mutated base range');
+       out.push({tier,id,range,damage:100000-target.hp});
+     }
+   }
+   // The extended hop acquires and physically reaches a boss beyond the base 160.
+   A.reset();p.moves.push(G.Moves.instance('naruto-tenten-bounce',1));
+   const first=A.spawn(100,0),boss=A.spawn(650,80,true);p.target=first;
+   const twin=p.moves.find(m=>m.id==='naruto-tenten-twin');
+   T.cast(p,{...twin,count:1,quantityBonusAtCast:0,quantityMultiplierAtCast:1});
+   const pose=T.activeFor(p);A.advance(.12);const shot=T.weapons.find(w=>w.mode==='tenten-twin');
+   A.near(shot.bounceRange,660,'extended hop range');
+   // Changes after casting must not increase subsequent batches a second time.
+   p.moves=p.moves.filter(m=>m.id!=='naruto-tenten-mastery');
+   A.finish(4);A.assert(boss.hp<100000&&shot.bounced===1,'extended boss hop failed');
+   A.near(pose.m.tentenRangeBonusAtCast,500,'cast range changed after mastery removal');
+   return out;
+ } finally {p.moves=original;A.reset();}
+}"""
+
 SCALING = r"""() => {
  const A=Acceptance,p=A.p(),T=G.NarutoTenten,out=[];
  for(const id of ['naruto-tenten','naruto-tenten-fuma','naruto-tenten-tags','naruto-tenten-twin']){
@@ -110,6 +144,10 @@ SCALING = r"""() => {
    for(let tier=1;tier<=5;tier++){
      if(tier>1){const c=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+id);A.assert(c&&c.apply(p)!==false,'upgrade '+id+' '+tier)}
      A.near(m.cd,baseCd,'tier changed cooldown');
+     if(id==='naruto-tenten-fuma')A.near(m.range,[260,260,380,500,500][tier-1],'fuma range '+tier);
+     if(id==='naruto-tenten-twin'){
+       A.near(m.range,680,'twin range');A.near(m.count,[24,28,32,36,40][tier-1],'twin count '+tier);A.near(m.pierce,1,'twin base pierce');
+     }
      for(const picks of [0,4,20]){
        A.reset();p.quantityBonus=p.quantityPicks=picks;const target=A.spawn(120,0);p.target=target;A.castNative(id);
        const pose=T.activeFor(p),snapshot=G.Quantity.snapshot(p,m);A.assert(pose&&pose.count===snapshot.count,'quantity not applied once '+id+' '+picks);
@@ -122,7 +160,8 @@ SCALING = r"""() => {
  for(let tier=1;tier<=5;tier++){
    if(tier>1){const c=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+master.id);A.assert(c&&c.apply(p)!==false,'mastery tier '+tier)}
    A.reset();p.target=A.spawn(100,0);A.castNative('naruto-tenten');const state=T.stateFor(p);
-   A.assert(state.masteryPierce===[1,1,2,2,3][tier-1],'mastery pierce '+tier);A.near(state.masterySpeed,1.05+.05*tier,'mastery speed');
+   A.assert(state.masteryPierce===[2,3,4,5,6][tier-1],'mastery pierce '+tier);A.near(state.masterySpeed,[1.1,1.2,1.4,1.8,2][tier-1],'mastery speed');
+   A.near(state.masteryRange,tier*100,'mastery range');
  }
  A.reset();return out;
 }"""
@@ -166,7 +205,7 @@ HUD = r"""() => {
  A.reset();const base=p.moves.find(m=>m.id==='naruto-tenten'),count=base.count;base.count=3;
  A.assert(read().includes('忍具 3'),'base HUD count absent');p.quantityPicks=p.quantityBonus=4;
  A.assert(read().includes('忍具 7'),'quantity HUD applied wrong count');
- A.assert(read().includes('貫穿 +3'),'tier5 mastery HUD missing');base.count=count;
+ A.assert(read().includes('貫穿 +6'),'tier5 mastery HUD missing');base.count=count;
  A.reset();p.target=A.spawn(180,0);A.castNative('naruto-tenten-twin');A.advance(.21);
  const pose=T.activeFor(p),snapshot=pose.count,label='忍具 '+pose.emitted+'/'+snapshot;
  A.assert(read().includes(label),'active twin emitted/count missing '+label);p.quantityPicks=p.quantityBonus=4;
@@ -175,7 +214,7 @@ HUD = r"""() => {
  A.reset();p.target=A.spawn(150,0);A.castNative('naruto-tenten-fuma');let returning=0;
  for(let i=0;i<100&&!returning;i++){A.advance();returning=T.stateFor(p)?.returning||0}
  A.assert(returning>0&&read().includes('回收 '+returning),'fuma returning HUD absent');
- A.reset();return {base:3,quantity4:7,mastery:3,twin:frozen,returning};
+ A.reset();return {base:3,quantity4:7,mastery:6,twin:frozen,returning};
 }"""
 
 PRESENTATION = r"""() => {
@@ -186,9 +225,9 @@ PRESENTATION = r"""() => {
      window.__TentenArtEnabled=drawing!=='disabled';A.assert(G.AnimationLab.enabled===window.__TentenArtEnabled,'renderer flag fixture not installed');
      A.reset();p.aim=0;p.anim.dir=2;const e=A.spawn(145,0);p.target=e;
      const random=Math.random;Math.random=()=>.5;
-     try{A.castNative(id);const origins=T.weapons.map(w=>({x:w.x,y:w.y,dx:w.dx,dy:w.dy}));
-       const hands=T.weapons.map(w=>{const h=G.AnimationLab.handForTenten(p,w.mode==='tenten-twin'?w.side:0);return {origin:[w.x,w.y],hand:h&&[h.x,h.y]}});
-       A.assert(hands.every(h=>h.hand&&Math.hypot(h.origin[0]-h.hand[0],h.origin[1]-h.hand[1])<.001),'weapon origin detached from hand '+id+' '+JSON.stringify(hands));
+     try{A.castNative(id);if(id.endsWith('twin'))A.advance(.12);const origins=T.weapons.map(w=>({x:w.sx,y:w.sy,dx:w.dx,dy:w.dy}));
+       const hands=T.weapons.map(w=>{const h=w.mode==='tenten-twin'?T.scrollFor(p,w.side)?.head:G.AnimationLab.handForTenten(p,0);return {origin:[w.sx,w.sy],hand:h&&[h.x,h.y]}});
+       A.assert(hands.every(h=>h.hand&&Math.hypot(h.origin[0]-h.hand[0],h.origin[1]-h.hand[1])<.001),'weapon origin detached from emitter '+id+' '+JSON.stringify(hands));
        const state=G.AnimationLab.stateFor(p.anim);A.assert(id!=='naruto-tenten-fuma'||state.frame===1,'fuma release retained heldblade');
        const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
        for(let i=0;i<150;i++){A.advance();if(drawing===true)A.render();else if(drawing==='disabled')p.anim.draw(ctx,100,100)}
@@ -204,12 +243,12 @@ ORIGINS = r"""() => {
  const A=Acceptance,p=A.p(),T=G.NarutoTenten,out=[],scale=p.anim.scale;
  try{for(const id of ['naruto-tenten','naruto-tenten-fuma','naruto-tenten-tags','naruto-tenten-twin'])for(const aim of [0,Math.PI,Math.PI/2,-Math.PI/2])for(const growth of [1,1.25]){
    A.reset();p.anim.scale=scale*growth;p.aim=aim;p.anim.dir=aim===Math.PI?6:aim===Math.PI/2?0:aim===-Math.PI/2?4:2;
-   p.target=A.spawn(Math.cos(aim)*160,Math.sin(aim)*160);A.castNative(id);
+   p.target=A.spawn(Math.cos(aim)*160,Math.sin(aim)*160);A.castNative(id);if(id.endsWith('twin'))A.advance(.12);
    const shots=T.weapons.filter(w=>w.owner===p);A.assert(shots.length,'origin fixture emitted nothing '+id);
-   for(const w of shots){const hand=G.AnimationLab.handForTenten(p,w.mode==='tenten-twin'?w.side:0);
-     A.assert(hand&&Math.hypot(w.x-hand.x,w.y-hand.y)<.001,'mirrored/grown tool detached from hand');
+   for(const w of shots){const hand=w.mode==='tenten-twin'?T.scrollFor(p,w.side)?.head:G.AnimationLab.handForTenten(p,0);
+     A.assert(hand&&Math.hypot(w.sx-hand.x,w.sy-hand.y)<.001,'mirrored/grown tool detached from emitter');
      A.assert(w.dx*Math.cos(aim)+w.dy*Math.sin(aim)>0,'tool fired behind target-facing actor '+id+' '+aim);
-     A.assert(Math.hypot(w.x-p.x,w.y-p.y)<100*growth,'origin escaped actor');}
+     A.assert(Math.hypot(w.sx-p.x,w.sy-p.y)<100*growth,'origin escaped actor');}
    out.push({id,aim,growth,shots:shots.length});
  }}finally{p.anim.scale=scale;A.reset()}return out;
 }"""
@@ -227,6 +266,8 @@ SOLID_PROPS = r"""() => {
    A.assert(w,'native-world tagged kunai failed to plant');return w;
  }
  try{
+   // Native terrain stays native, but its seed must guarantee adjacent cover.
+   native.reset(1);
    const props=native.propsInCircle(0,0,3200).filter(q=>q.solid&&q.destructible&&q.hp>0);
    let chosen;
    for(const rock of props.filter(q=>q.type==='rock')){for(let i=0;i<16;i++){
@@ -290,9 +331,17 @@ def main():
                 page.evaluate(AUDIT)
                 result = {}
                 report['viewports'][label] = result
-                for name, check in [('progression', PROGRESSION), ('combat', COMBAT), ('scaling', SCALING), ('lifecycle', LIFECYCLE), ('hud', HUD), ('presentationEquivalence', PRESENTATION), ('origins', ORIGINS), ('solidProps', SOLID_PROPS)]:
+                for name, check in [('progression', PROGRESSION), ('masteryRange', MASTERY_RANGE), ('combat', COMBAT), ('scaling', SCALING), ('lifecycle', LIFECYCLE), ('hud', HUD), ('presentationEquivalence', PRESENTATION), ('origins', ORIGINS), ('solidProps', SOLID_PROPS), ('combos', COMBOS)]:
                     print(label, name, flush=True)
                     result[name] = page.evaluate(check)
+                    if name == 'combos':
+                        page.screenshot(path=str(OUT / f'{label}-recovery-charge.png'))
+                        page.evaluate('''() => {const A=Acceptance,p=A.p(),T=G.NarutoTenten;A.reset();p.target=A.spawn(100,0);A.castNative('naruto-tenten-tags');
+                          for(let i=0;i<100&&!T.weapons.some(w=>w.landed);i++)A.advance();A.finish(.12)}''')
+                        page.screenshot(path=str(OUT / f'{label}-armed-tags.png'))
+                        page.evaluate('''() => {const A=Acceptance,p=A.p(),T=G.NarutoTenten;p.target.dead=true;G.EnemyMgr.rebuildGrid();p.target=A.spawn(180,0);A.castNative('naruto-tenten');
+                          for(let i=0;i<40&&!T.blasts.length;i++)A.advance();A.assert(T.blasts.some(b=>b.combo),'combo capture failed')}''')
+                        page.screenshot(path=str(OUT / f'{label}-combo-blast.png'))
                 page.evaluate('Acceptance.reset();Acceptance.select("naruto-tenten-fuma");Acceptance.resume()')
                 page.keyboard.press('Digit2')
                 page.wait_for_function('G.Game.player.active===1')

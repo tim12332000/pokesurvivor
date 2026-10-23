@@ -7578,5 +7578,129 @@
     "mirrorDirections": [
       "left"
     ]
+  },
+  "tenten-twin-release": {
+    "source": "redrawn/tenten-twin-release-v1.png",
+    "bodyHeight": 479,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          144,
+          118,
+          476,
+          483
+        ],
+        "anchor": [
+          201.5,
+          479
+        ],
+        "atlasIndex": 0,
+        "scrollLeft": [
+          56,
+          224
+        ],
+        "scrollRight": [
+          418,
+          205
+        ],
+        "hand": [
+          418,
+          205
+        ],
+        "bodyHeight": 479
+      },
+      {
+        "rect": [
+          739,
+          47,
+          415,
+          552
+        ],
+        "anchor": [
+          128.0,
+          549
+        ],
+        "atlasIndex": 1,
+        "scrollLeft": [
+          53,
+          145
+        ],
+        "scrollRight": [
+          371,
+          213
+        ],
+        "hand": [
+          371,
+          213
+        ],
+        "bodyHeight": 479
+      },
+      {
+        "rect": [
+          100,
+          669,
+          510,
+          481
+        ],
+        "anchor": [
+          231.5,
+          477
+        ],
+        "atlasIndex": 2,
+        "scrollLeft": [
+          56,
+          192
+        ],
+        "scrollRight": [
+          458,
+          232
+        ],
+        "hand": [
+          458,
+          232
+        ],
+        "bodyHeight": 479
+      },
+      {
+        "rect": [
+          736,
+          756,
+          454,
+          451
+        ],
+        "anchor": [
+          219.0,
+          447
+        ],
+        "atlasIndex": 3,
+        "scrollLeft": [
+          49,
+          199
+        ],
+        "scrollRight": [
+          402,
+          289
+        ],
+        "hand": [
+          402,
+          289
+        ],
+        "bodyHeight": 479
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
   }
 }

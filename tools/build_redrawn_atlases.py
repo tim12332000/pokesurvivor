@@ -32,7 +32,7 @@ def cuts(mask, count, vertical):
     return result + [length]
 
 
-def atlas(name, rows):
+def atlas(name, rows, columns=4):
     image = Image.open(ART / 'redrawn' / name).convert('RGBA')
     alpha = image.getchannel('A')
     mask = alpha.point(lambda a: 255 if a >= 24 else 0)
@@ -40,8 +40,8 @@ def atlas(name, rows):
     frames = []
     for row in range(rows):
         stripe = mask.crop((0, ys[row], image.width, ys[row + 1]))
-        xs = cuts(stripe, 4, False)
-        for col in range(4):
+        xs = cuts(stripe, columns, False)
+        for col in range(columns):
             cell = (xs[col], ys[row], xs[col + 1], ys[row + 1])
             box = mask.crop(cell).getbbox()
             if not box:
@@ -57,7 +57,7 @@ def atlas(name, rows):
             feet = solid.crop((0, max(0, foot_y - 8), crop.width, foot_y + 1)).getbbox()
             anchor_x = (feet[0] + feet[2]) / 2
             frames.append({'rect': [left, top, right - left, bottom - top],
-                           'anchor': [anchor_x, foot_y], 'atlasIndex': row * 4 + col})
+                           'anchor': [anchor_x, foot_y], 'atlasIndex': row * columns + col})
     return {'source': 'redrawn/' + name, 'frames': frames}, image
 
 
@@ -106,6 +106,23 @@ def write_registered_entries(path, entries):
         if key not in previous or previous[key] != value:
             previous[key] = value
     path.write_text(json.dumps(previous, indent=2) + '\n', encoding='utf-8')
+
+
+def register_menu_portraits(assets, images):
+    """Small exact-pixel crops keep the roster independent of gameplay atlases."""
+    path = ROOT / '.omx/naruto/sprites.json'
+    metadata = json.loads(path.read_text('utf-8'))
+    folder = ROOT / '.omx/naruto/portraits'
+    folder.mkdir(parents=True, exist_ok=True)
+    for slug, hero in [('naruto','naruto'),('sasuke','sasuke'),('rock-lee','lee'),('gaara','gaara'),('tenten','tenten')]:
+        frame = assets[hero+'-idle']['frames'][0]
+        x, y, w, h = frame['rect']
+        name = hero+'.png'
+        images[hero+'-common'].crop((x,y,x+w,y+h)).save(folder/name, optimize=True)
+        metadata[slug]['preview'] = {'source':'.omx/naruto/portraits/'+name,
+                                     'w':w,'h':h,'ax':frame['anchor'][0],'ay':frame['anchor'][1]}
+    path.write_text(json.dumps(metadata,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    (path.parent/'sprites-data.js').write_text('window.PS_NARUTO_SPRITES = '+json.dumps(metadata,ensure_ascii=False)+';\n',encoding='utf-8')
 
 
 def register_tenten_fallback(common):
@@ -162,6 +179,16 @@ def main():
             key = hero + '-' + kind
             sources[key], images[key] = atlas(key + '-v1.png', rows)
     sources['lee-bandage'], images['lee-bandage'] = atlas('lee-bandage-v1.png', 2)
+    release, images['tenten-twin-release'] = atlas('tenten-twin-release-v1.png', 2, columns=2)
+    sources['tenten-twin-release'] = release
+    # One standing reference for the complete toss/rise/apex/landing sequence.
+    release['bodyHeight'] = release['frames'][0]['rect'][3] - 4
+    for frame, left, right in zip(release['frames'],
+                                  ((200,342),(792,192),(156,861),(785,955)),
+                                  ((562,323),(1110,260),(558,901),(1138,1045))):
+        frame['scrollLeft'] = [left[0]-frame['rect'][0], left[1]-frame['rect'][1]]
+        frame['scrollRight'] = [right[0]-frame['rect'][0], right[1]-frame['rect'][1]]
+        frame['hand'] = list(frame['scrollRight'])
     # Measured cloth exit at the wrist/leading fist in each genuine pose.
     for frame, point in zip(sources['lee-bandage']['frames'],
                             ((294,266),(838,230),(1170,248),(1635,244),
@@ -256,11 +283,13 @@ def main():
     sources['lee-bandage']['bodyHeight'] = assets['lee-bandage']['bodyHeight']
     assets['gaara-throw'] = sequence(sources['gaara-common'], range(28, 32))
     assets['tenten-throw'] = sequence(sources['tenten-common'], range(28, 32))
+    assets['tenten-twin-release'] = sequence(release, range(4))
     for key, entry in assets.items():
         if key.startswith('tenten-') and 'directions' not in entry:
             entry.update(facing='right', directionFallback={'up': 'right', 'down': 'right'},
                          mirrorDirections=['left'])
     register_tenten_fallback(sources['tenten-common'])
+    register_menu_portraits(assets, images)
     write_registered_entries(ART / 'animation-assets.json', assets)
     form = sources['one-tail']
     animations = {}

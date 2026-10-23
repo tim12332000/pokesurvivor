@@ -196,8 +196,8 @@
         if (suffix) {
           const age = Math.max(0, tenten.age || 0), duration = Math.max(.001, tenten.duration || .4);
           return {...base, state:'skill', id:mode === 'tenten-kunai' ? 'naruto-tenten' : 'naruto-' + mode,
-            phase:tenten.phase || 'release', key:'tenten-' + suffix,
-            frame:suffix === 'fuma' ? (tenten.phase === 'catch' ? (age < duration * .5 ? 2 : 3) : tenten.phase === 'recovery' ? 3 : tenten.phase === 'prepare' ? 0 : 1) : Math.min(3, Math.floor(age / duration * 4)), age,
+            phase:tenten.phase || 'release', key:suffix==='twin'&&age>=.08?'tenten-twin-release':'tenten-' + suffix,
+            frame:suffix === 'fuma' ? (tenten.phase === 'catch' ? (age < duration * .5 ? 2 : 3) : tenten.phase === 'recovery' ? 3 : tenten.phase === 'prepare' ? 0 : 1) : suffix==='twin' ? (age<.08?0:Math.min(3,Math.floor((age-.08)/(duration-.08)*4))) : Math.min(3, Math.floor(age / duration * 4)), age,
             aim:tenten.aim ?? pl.aim, mirror:Math.cos(tenten.aim ?? pl.aim ?? 0) < 0,
             visualLift:suffix === 'twin' ? Math.sin(Math.min(1,age/duration)*Math.PI)*12*(pl.anim.scale||1) : 0};
         }
@@ -250,9 +250,9 @@
       const [x,y]=[[-15,-52],[-24,-42],[44,-33],[14,-32]][frame],scale=pl.anim.scale||1;
       return {x:pl.x+x*side*scale,y:pl.y+y*scale+G.LIFT};
     }
-    function handForTenten(pl, side = 0) {
+    function handForTenten(pl, side = 0, authoredPose = null) {
       if (pl?.dex !== 30009 || !pl.anim) return null;
-      const pose = stateFor(pl.anim), asset = assets.get(pose.key), frame = asset?.frames[pose.frame];
+      const pose = authoredPose || stateFor(pl.anim), asset = assets.get(pose.key), frame = asset?.frames[pose.frame];
       const point = side < 0 ? frame?.scrollLeft : side > 0 ? frame?.scrollRight : frame?.hand;
       if (!point) return null;
       const k = 64 * (pl.anim.scale || 1) / asset.bodyHeight;
@@ -293,9 +293,9 @@
     }
     const draw = G.Sprites.Animator.prototype.draw;
     G.Sprites.Animator.prototype.draw = function(ctx, x, y, opts = {}) {
-      if (!supported(this) || !enabled()) { counters.source++; return draw.apply(this, arguments); }
+      if (!supported(this) || !enabled() || G.Naruto?.isPreview(ctx.canvas)) { counters.source++; return draw.apply(this, arguments); }
       const pose = stateFor(this);
-      if (!assets.get(pose.key)) { counters.source++; return draw.apply(this, arguments); }
+      if (!assets.get(pose.key)?.image) { counters.source++; return draw.apply(this, arguments); }
       const rendered = assets.draw(ctx, pose.key, pose.frame, x, y-(pose.visualLift||0), { scale: this.scale || 1, alpha: opts.alpha ?? 1, flash: !!opts.flash, mirror: pose.mirror, rotation: pose.rotation });
       if (rendered === false) throw new Error('Animation frame unavailable: ' + pose.key + ':' + pose.frame);
       counters.candidate++; counters.byState[pose.state] = (counters.byState[pose.state] || 0) + 1;
@@ -310,8 +310,8 @@
         const pose = stateFor(pl.anim);
         // Retained boards already contain hand lightning / the Rasengan orb.
         const nearOwner = Math.hypot(x - pl.x, y - (pl.y - G.LIFT)) < 65 * (pl.anim.scale || 1);
-        if (pose.key === 'sasuke-chidori' && shape === 'bolt' && palette === 'naruto-blue' && nearOwner) return;
-        if (pose.key === 'naruto-rasengan' && shape === 'wind' && palette === 'naruto-blue' && nearOwner) return;
+        if (assets.get(pose.key)?.image && pose.key === 'sasuke-chidori' && shape === 'bolt' && palette === 'naruto-blue' && nearOwner) return;
+        if (assets.get(pose.key)?.image && pose.key === 'naruto-rasengan' && shape === 'wind' && palette === 'naruto-blue' && nearOwner) return;
       }
       return vfx.apply(this, arguments);
     };

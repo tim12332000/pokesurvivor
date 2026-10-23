@@ -36,6 +36,21 @@
         }
       ],
       "transparent_background": true
+    },
+    {
+      "file": "art-review/redrawn/tenten-twin-release-v1.png",
+      "sha256": "242137ec4cf84b749303f8fbabc33c5b707c497cd02a52b5d111495a5f43645d",
+      "kind": "new original generated release-pose atlas",
+      "generator": "built-in image_gen",
+      "originalGeneratedPath": "C:/Users/Tim/.codex/generated_images/01a16728-d475-7511-ab6e-d71fe4119985/exec-065ccdf9-d5a2-429d-8aa5-6b34d77b3772.png",
+      "prompt": "Use case: identity-preserve / precise-object-edit. Project game sprite atlas. Reference image is the existing original teenage ninja girl Tenten sprite sheet, used for EXACT character identity, costume, chibi proportions, dark pixel-friendly outlines, crisp palette and rendering style. Generate a NEW transparent 2 by 2 sprite sheet containing ONLY FOUR full-body animation frames of this SAME character, no objects or effects. Each character must fit completely inside its own equal-size quadrant with broad transparent gutters. All characters face RIGHT, same scale, approximately 2.7-head chibi proportions, matching pink short-sleeved Chinese-style top, navy trousers, bandaged right thigh, blue sandals, double brown hair buns, dark blue forehead protector with silver plate. Four action frames for twin-scroll THROW RELEASE: top left: both arms extended out and slightly up with clearly OPEN EMPTY hands and fingers, just released two scrolls; top right: aerial rising pose with one knee tucked, both OPEN EMPTY hands up, sleeves and sash following upward motion; bottom left: aerial apex with legs bent and arms opened in a balanced commanding gesture, EMPTY palms visible; bottom right: landing with both knees bent and hands spread EMPTY and open. Critical constraints: NO scrolls held, NO weapons held, NO blades, NO ribbons or paper, NO floating effects, NO duplicate character within a cell, NO text, NO grid lines, NO ground/shadow, fully transparent background. Preserve the same face, body-to-head ratio and line thickness across all 4 frames. These are real individual animation poses, not rotated or recolored copies. Match the supplied sprite style tightly, keep silhouette crisp at 64-pixel game height. Leave transparent space above and below all figures, ensure both feet and all fingertips visible.",
+      "references": [
+        {
+          "path": "art-review/redrawn/tenten-skills-v1.png",
+          "sha256": "77d200c22bf9c9d4574ebd141f2276b32efd3a2f87da34d2d1065f66957b7fc5"
+        }
+      ],
+      "transparent_background": true
     }
   ],
   "directionNotes": "Common down/up/right independently drawn; left mirrored. Skill actions right-facing, left mirrored; up/down directional fallback is explicit."

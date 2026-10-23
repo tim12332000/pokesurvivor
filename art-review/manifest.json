@@ -4765,6 +4765,24 @@
       "limitations": [
         "Side-only attacks use a documented right-facing fallback for vertical aim."
       ]
+    },
+    {
+      "id": "tenten-twin-release-v1",
+      "title": "Tenten twin-scroll empty-hand release",
+      "character": "Tenten",
+      "category": "skills",
+      "kind": "original AI redraw",
+      "image": "redrawn/tenten-twin-release-v1.png",
+      "status": "production",
+      "runtimePreview": true,
+      "summary": "Four open-hand toss, rise, apex and landing poses for detached physical scrolls.",
+      "improvements": [
+        "Four original poses with one standing body scale.",
+        "Measured open-palm anchors for both independently released scrolls."
+      ],
+      "limitations": [
+        "Side-facing poses use explicit mirroring and vertical fallback."
+      ]
     }
   ]
 }

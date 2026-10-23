@@ -4,27 +4,55 @@
   const base = new URL('./', document.currentScript.src);
   const assets = new Map();
   const flashes = new Map();
-  let pending, ready=false;
+  const images = new Map(), loadingImages = new Map();
+  const heroes = {30001:'naruto',30002:'sasuke',30006:'lee',30007:'gaara',30009:'tenten'};
+  let pending, metadataPending, metadataReady=false, ready=false;
 
-  function load() {
-    if (pending) return pending;
-    pending = (async () => {
+  function loadMetadata() {
+    if(metadataPending)return metadataPending;
+    metadataPending=(async()=>{
       const response = await fetch(new URL('animation-assets.json', base), { cache: 'no-cache' });
       if (!response.ok) throw new Error(`Animation crop metadata: ${response.status}`);
       const metadata = await response.json();
-      const images = new Map();
-      const decoded = await Promise.all(Object.entries(metadata).map(async ([key, spec]) => {
-        if (!images.has(spec.source)) {
-          const image = new Image();image.src = new URL(spec.source, base).href;
-          images.set(spec.source, image.decode().then(() => image));
-        }
-        const image = await images.get(spec.source);
-        return [key, {...spec, image}];
-      }));
-      decoded.forEach(([key, asset]) => assets.set(key, asset));
-      ready=true;
+      for(const [key,spec] of Object.entries(metadata))assets.set(key,{...spec,image:null});
+      metadataReady=true;
       return window.AnimationAssets;
-    })().catch(error => { pending = null; throw error; });
+    })().catch(error=>{metadataPending=null;throw error;});
+    return metadataPending;
+  }
+  function loadImage(source) {
+    if(images.has(source))return Promise.resolve(images.get(source));
+    if(loadingImages.has(source))return loadingImages.get(source);
+    const promise=(async()=>{
+      const image=new Image();image.src=new URL(source,base).href;await image.decode();
+      images.set(source,image);
+      for(const asset of assets.values())if(asset.source===source)asset.image=image;
+      ready=[...assets.values()].every(asset=>!!asset.image);
+      return image;
+    })().finally(()=>loadingImages.delete(source));
+    loadingImages.set(source,promise);return promise;
+  }
+  function heroKeys(dex) {
+    const hero=heroes[dex];
+    if(!hero)return [];
+    return [...assets.keys()].filter(key=>key.startsWith(hero+'-'));
+  }
+  function heroReady(dex) {
+    const keys=heroKeys(dex);
+    return metadataReady&&(!heroes[dex]||keys.length>0&&keys.every(key=>!!assets.get(key).image));
+  }
+  async function loadHero(dex) {
+    await loadMetadata();
+    await Promise.all([...new Set(heroKeys(dex).map(key=>assets.get(key).source))].map(loadImage));
+    return window.AnimationAssets;
+  }
+  function load() {
+    if(pending)return pending;
+    pending=(async()=>{
+      await loadMetadata();
+      await Promise.all([...new Set([...assets.values()].map(asset=>asset.source))].map(loadImage));
+      return window.AnimationAssets;
+    })().catch(error=>{pending=null;throw error;});
     return pending;
   }
 
@@ -48,7 +76,7 @@
 
   function draw(context, key, index, x, y, options = {}) {
     const asset = assets.get(key), frame = asset?.frames[index];
-    if (!frame) return false;
+    if (!frame || !asset.image) return false;
     const [sx, sy, width, height] = frame.rect;
     const [ax, ay] = frame.anchor;
     const scale = (64 / asset.bodyHeight) * (options.scale ?? 1);
@@ -69,6 +97,9 @@
 
   window.AnimationAssets = Object.freeze({
     load,
+    loadMetadata,
+    loadHero,
+    heroReady,
     get: key => assets.get(key),
     draw,
     get ready() { return ready; },

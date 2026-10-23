@@ -22,6 +22,7 @@
     G.Sprites.Animator.prototype.draw=function(ctx,x,y,opts={}){
       const p=G.Game.player?.anim===this?G.Game.player:G.SelfClones?.actors().find(a=>a.anim===this);if(!p||p.anim!==this||!active(p))return render.apply(this,arguments);
       const c=casts.get(p),f=pose(c),r=G.Naruto.records.get(30002),k=64*this.scale/44,side=Math.cos(c.aim)>=0?1:-1;
+      if(!r.ready){void r.loaded;return render.apply(this,arguments);}
       if(!c.released){const h=hand(p,c,f);G.VFX.draw(ctx,'naruto-fuma-shuriken','naruto-fuma-steel',h.x,h.y-G.LIFT,{scale:c.move.digiVis?.projScale||.9,angle:0,frame:0});}
       ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.scale(side*k,k);ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=opts.alpha??1;
       ctx.drawImage(opts.flash?G.Sprites.white(r.image):r.image,...f.rect,-f.anchor[0],-f.anchor[1],f.rect[2],f.rect[3]);ctx.restore();

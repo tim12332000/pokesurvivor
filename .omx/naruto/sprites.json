@@ -293,6 +293,13 @@
           12
         ]
       }
+    },
+    "preview": {
+      "source": ".omx/naruto/portraits/naruto.png",
+      "w": 96,
+      "h": 172,
+      "ax": 48.5,
+      "ay": 167
     }
   },
   "sakura": {
@@ -1159,6 +1166,13 @@
           "left"
         ]
       }
+    },
+    "preview": {
+      "source": ".omx/naruto/portraits/lee.png",
+      "w": 112,
+      "h": 184,
+      "ax": 56.0,
+      "ay": 180
     }
   },
   "gaara": {
@@ -1390,6 +1404,13 @@
           "right"
         ]
       }
+    },
+    "preview": {
+      "source": ".omx/naruto/portraits/gaara.png",
+      "w": 115,
+      "h": 199,
+      "ax": 60.0,
+      "ay": 196
     }
   },
   "sasuke": {
@@ -1701,6 +1722,13 @@
       ],
       "sourceNote": "Naruto: Path of the Ninja 2, Nintendo DS; Sasuke sheet ripped by Hwdphg. Three bottom-row Charging Chidori poses: one preparation pose and two original lightning poses. Dash reuses the genuine final forward-thrust Attack frame because this sheet has no Chidori running or up/down frames.",
       "boundsNote": "All three charge rects are exact connected foreground bounds, excluding the arrow and label. Anchors are crop-local character center/feet, aligned to source y=416 rather than the lower lightning edges. The dash hand is crop-local. Standard Charge/Shoot metadata is unchanged."
+    },
+    "preview": {
+      "source": ".omx/naruto/portraits/sasuke.png",
+      "w": 105,
+      "h": 187,
+      "ax": 52.0,
+      "ay": 183
     }
   },
   "itachi": {
@@ -2647,6 +2675,13 @@
           "down": "right"
         }
       }
+    },
+    "preview": {
+      "source": ".omx/naruto/portraits/tenten.png",
+      "w": 114,
+      "h": 216,
+      "ax": 54.0,
+      "ay": 212
     }
   }
 }

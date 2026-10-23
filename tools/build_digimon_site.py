@@ -32,6 +32,12 @@ for source in sorted(sources):
     assert source.startswith('redrawn/') and path.suffix == '.png'
     assert (ROOT / path).resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
     review_runtime.append(path.as_posix())
+portraits = json.loads((ROOT / '.omx/naruto/sprites.json').read_text('utf-8'))
+for hero in ('naruto', 'sasuke', 'rock-lee', 'gaara', 'tenten'):
+    source = portraits[hero]['preview']['source']
+    assert source.startswith('.omx/naruto/portraits/') and Path(source).suffix == '.png'
+    assert (ROOT / source).resolve().is_relative_to((ROOT / '.omx/naruto/portraits').resolve())
+    review_runtime.append(source)
 assert sources == {
     'redrawn/naruto-common-v1.png', 'redrawn/naruto-skills-v2.png',
     'redrawn/sasuke-common-v1.png', 'redrawn/sasuke-skills-v2.png',
@@ -40,6 +46,7 @@ assert sources == {
     'redrawn/lee-gates-common-v1.png', 'redrawn/lee-gates-skills-v1.png',
     'redrawn/gaara-common-v1.png', 'redrawn/gaara-skills-v1.png',
     'redrawn/tenten-common-v1.png', 'redrawn/tenten-skills-v1.png',
+    'redrawn/tenten-twin-release-v1.png',
     'redrawn/lee-bandage-v1.png',
 }, 'Unexpected reviewed hero atlas inventory'
 for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/menu-layout.css']:
@@ -81,7 +88,14 @@ for source in re.findall(r'<(?:script|link)\b[^>]*(?:src|href)="([^"]+)"', html)
 html_path.write_text(html, encoding='utf-8')
 (OUT / 'index.html').write_text('''<!doctype html>
 <html lang="zh-TW"><meta charset="utf-8"><meta name="robots" content="noindex">
-<meta http-equiv="refresh" content="0;url=.omx/digimon.html?lang=zh-TW">
+<script>
+const target=new URL('.omx/digimon.html',location.href);
+target.search=location.search;
+if(!target.searchParams.has('lang'))target.searchParams.set('lang','zh-TW');
+target.hash=location.hash;
+location.replace(target.href);
+</script>
+<noscript><meta http-equiv="refresh" content="0;url=.omx/digimon.html?lang=zh-TW"></noscript>
 <title>PokéSurvivor 跨界同人沙盒版</title>
 <a href=".omx/digimon.html?lang=zh-TW">開啟寶可夢 × 數碼寶貝 × 火影忍者</a></html>
 ''', encoding='utf-8')

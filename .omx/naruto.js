@@ -30,7 +30,11 @@
       return [anim,{...geometry,n:count,d:action?.durations||Array(count).fill(anim==='Walk'?8:action?(action.duration||7):24)}];
     }))};
     const record={...mon,chinese,team,slug,pixel,image,ready:false,attack:''};
-    record.loaded=new Promise(resolve=>{
+    let loading;
+    Object.defineProperty(record,'loaded',{get(){
+      if(record.ready)return Promise.resolve(true);
+      if(loading)return loading;
+      loading=new Promise(resolve=>{
       image.onload=()=>{
         if(pixel.background){
           const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
@@ -41,9 +45,10 @@
         }
         record.ready=true;resolve(true);
       };
-      image.onerror=()=>resolve(false);
-    });
-    image.src=pixel.source||'.omx/naruto/pixel/'+pixel.file;
+      image.onerror=()=>{loading=null;resolve(false);};
+      image.src=pixel.source||'.omx/naruto/pixel/'+pixel.file;
+      });return loading;
+    }});
     records.set(dex,record);dictionary[name]=chinese;
   }
   G.I18n.add(dictionary,'zh-TW');
@@ -84,11 +89,24 @@
     draw(ctx,x,y,opts={}) {
       const record=records.get(this.dex);
       if(!record)return super.draw(ctx,x,y,opts);
-      if(!record.ready)return;
       const pixel=record.pixel;
+      const ui=previews.has(ctx.canvas);
+      if(ui&&pixel.preview){
+        if(!record.previewImage){
+          if(Date.now()<(record.previewRetryAt||0))return;
+          record.previewImage=new Image();
+          record.previewImage.onerror=()=>{record.previewImage=null;record.previewRetryAt=Date.now()+1000;};
+          record.previewImage.src=pixel.preview.source;
+        }
+        const image=record.previewImage,frame=pixel.preview;
+        if(!image.complete||!image.naturalWidth)return;
+        const target=Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75),k=Math.min(target/frame.h,ctx.canvas.width*.88/frame.w);
+        ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=opts.alpha??1;
+        ctx.drawImage(image,-Math.round(frame.ax*k),-Math.round(frame.ay*k),Math.round(frame.w*k),Math.round(frame.h*k));ctx.restore();return;
+      }
+      if(!record.ready){void record.loaded;return;}
       const pose=G.NarutoChidori?.poseFor(this)||frameFor(record,this.cur,this.dir,this.frame);
       const [sx,sy,sw,sh]=pose.rect;
-      const ui=previews.has(ctx.canvas);
       const target=ui?Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75):64*this.scale;
       const stand=pixel.frames.down[0];
       const k=ui?Math.min(target/stand[3],ctx.canvas.width*.88/Math.max(sw,stand[2])):target/stand[3];
@@ -104,7 +122,7 @@
   const preload=G.Sprites.preload;
   G.Sprites.preload=(dexes,timeout,shiny)=>Promise.all([
     preload(dexes.filter(d=>!records.has(d)),timeout,shiny),
-    ...dexes.filter(d=>records.has(d)).map(d=>records.get(d).loaded)
+    ...dexes.filter(d=>records.has(d)).map(d=>Promise.all([records.get(d).loaded,G.NarutoAssets?.ensure(d)?.catch(()=>false)]))
   ]);
   const sprite=G.UI.sprite,spriteCanvas=G.UI.spriteCanvas;
   G.UI.sprite=(canvas,dex,opts)=>{if(records.has(dex))previews.add(canvas);return sprite(canvas,dex,opts);};
@@ -207,10 +225,20 @@
   document.querySelector('#scr-digimon .digimon-heading').after(shortcut);
 
   const ready=G.DB.ready;
+  const requestedHero=new URLSearchParams(location.search).get('hero')?.trim().toLowerCase();
+  const linkedHero=availableDexes.find(dex=>{
+    const record=records.get(dex);
+    return [record.slug,record.chinese,String(dex)].includes(requestedHero);
+  });
+  let linkApplied=false;
   G.DB.ready=async()=>{
     const restored=await ready(),save=G.DB.save;
     restoreAvailablePartner();
     for(const dex of records.keys())G.DB.grant(dex,'starter');
+    if(!linkApplied){
+      linkApplied=true;
+      if(linkedHero){save.partner=save.starter=linkedHero;save.partnerShiny=false;}
+    }
     if(!save.partner&&!(save.stats?.runs>0)){
       save.partner=save.starter=30001;save.partnerShiny=false;
     }
@@ -258,5 +286,5 @@
   }
   const startRun=G.Game.startRun;
   G.Game.startRun=function(...args){restoreAvailablePartner();return startRun.apply(this,args);};
-  G.Naruto={version,records,availableDexes,choose,openPicker,frameFor};
+  G.Naruto={version,records,availableDexes,choose,openPicker,frameFor,isPreview:canvas=>previews.has(canvas)};
 })();

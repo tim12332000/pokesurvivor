@@ -393,13 +393,18 @@ G.HUD = (() => {
         const state = tentenState, pose = tentenPose;
         const count = pose?.m?.id === m.id ? pose.count : G.Quantity.count(pl, m.count || 1);
         let label = '忍具 ' + count;
-        if (m.digiMode === 'tenten-mastery') label = '貫穿 +' + [1, 1, 2, 2, 3][Math.max(0, Math.min(4, m.lvl - 1))];
+        if (m.digiMode === 'tenten-mastery') label = '貫穿 +' + [2, 3, 4, 5, 6][Math.max(0, Math.min(4, m.lvl - 1))];
+        else if (m.digiMode === 'tenten-bounce') label = '連彈 ' + G.NarutoTenten.bounceCount(pl);
         else if (m.digiMode === 'tenten-tags') label = '爆符 ' + (state?.tagCount || count);
         else if (m.digiMode === 'tenten-fuma') label = state?.returning ? '回收 ' + state.returning : '迴刃 ' + count;
         else if (m.digiMode === 'tenten-twin' && pose?.m?.id === m.id) label = '忍具 ' + pose.emitted + '/' + pose.count;
         ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
         ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#eee4c7';
         ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
+        if (!m.passive && state?.chargeRemaining > 0) {
+          ctx.fillStyle = '#ffe3a0'; ctx.font = F(800, 8);
+          ctx.fillText('蓄勢 +30% ' + Math.ceil(state.chargeRemaining) + 's', x + S / 2, y + 10, S - 6);
+        }
       }
       if (m.id === 'naruto-sand-prison') {
         const prison = G.NarutoGaara?.sandPrisonState(pl);
