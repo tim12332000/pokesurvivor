@@ -54,7 +54,7 @@
   G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);return arrange.apply(this,args);};
   const addMove=G.Player.prototype.addMove;
   G.Player.prototype.addMove=function(id,...args){
-    if(this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery','naruto-tenten-bounce'].includes(id)){
+    if((this.mon?.dex===30001&&id==='naruto-shadow-clones')||this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery','naruto-tenten-bounce','naruto-tenten-guard'].includes(id)){
       if(this.hasMove(id))return false;
       this.moves.push(G.Moves.instance(id,1));
       this.arrange();return true;

@@ -4,8 +4,8 @@
   if (G.NarutoClones) return;
   const actors = [], smoke = [], C = G.Combat, TAU = Math.PI * 2;
   // Balance knobs: UI descriptions, upgrades and actor limits all read this object.
-  const config = Object.freeze({ counts: Object.freeze([8,16,24,32,40]), cooldown: 4,
-    duration: 6, sealDuration: .4, punchDamage: 8, punchCooldown: .65 });
+  const config = Object.freeze({ counts: Object.freeze([2,3,4,8,12]), cooldown: 12,
+    duration: 10, sealDuration: .4, punchDamage: 8, punchCooldown: .65, hitsToDismiss: 5 });
   const summons = [];
   let serial = 0;
   const valid = a => controlled(a.owner) && !a.owner.dead && a.owner.hp > 0 && a.world === G.World;
@@ -14,10 +14,10 @@
     const base=config.counts[Math.min(config.counts.length-1,Math.max(0,(move.lvl||1)-1))];
     return G.Quantity?.countAtCast(owner,move,base) ?? base;
   };
-  function formation(index) {
-    let ring=0,slots=8;
-    while(index>=slots){index-=slots;ring++;slots=8+ring*4;}
-    const angle=index*TAU/slots+ring*.25,radius=90+ring*32;
+  function formation(index, total) {
+    const rings=Math.ceil(total/8),perRing=Math.ceil(total/rings);
+    const ring=Math.floor(index/perRing),slots=Math.min(perRing,total-ring*perRing);
+    const angle=(index%perRing)*TAU/slots+ring*.25,radius=90+ring*32;
     return {x:Math.cos(angle)*radius,y:Math.sin(angle)*radius*.87};
   }
   const mimicIds = new Set(['naruto-naruto', 'naruto-rasenshuriken', 'naruto-kunai', 'naruto-shuriken']);
@@ -41,6 +41,11 @@
     while (smoke.length > 180) smoke.shift();
   }
   function dismiss(a) { if (!a.dead) { a.dead = true; puff(a); } }
+  function takeHit(a) {
+    if (a.dead) return;
+    a.hitsRemaining--;
+    if (a.hitsRemaining <= 0) dismiss(a);
+  }
   function clear(owner) {
     for (let i = actors.length - 1; i >= 0; i--) if (!owner || actors[i].owner === owner) actors.splice(i, 1);
     for (let i = summons.length - 1; i >= 0; i--) if (!owner || summons[i].owner === owner) summons.splice(i, 1);
@@ -57,13 +62,17 @@
     const lvl = move.lvl || 1, limit = limitOf(move,owner);
     let count = living(owner).length, spawned = false;
     const occupied=new Set(living(owner).map(a=>a.formationIndex));
-    for(let n=0;n<Math.max(96,limit*12)&&count<limit;n++) {
-      const angle=n*2.399963229728653,radius=56+18*Math.sqrt(n);
-      const x = owner.x + Math.cos(angle) * radius, y = owner.y + Math.sin(angle) * radius;
+    for(let n=0;n<limit*24&&count<limit;n++) {
+      const formationIndex=n%limit,attempt=Math.floor(n/limit);
+      if(occupied.has(formationIndex))continue;
+      const spot=formation(formationIndex,limit);
+      // Try the exact idle position first, then nearby free ground if blocked.
+      const angle=attempt*2.399963229728653,radius=attempt?18*Math.sqrt(attempt):0;
+      const x = owner.x + spot.x + Math.cos(angle) * radius, y = owner.y + spot.y + Math.sin(angle) * radius;
       if (!G.World.isFree(x, y, 10, true) || !clearPath(owner.x, owner.y, x, y, 10) || living(owner).some(a => Math.hypot(a.x - x, a.y - y) < 25)) continue;
-      let formationIndex=0;while(occupied.has(formationIndex))formationIndex++;occupied.add(formationIndex);
-      const a = { id: ++serial, formationIndex, owner, moveId: move.id, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || config.duration,
-        lvl, dmg: Number.isFinite(move.dmg) ? move.dmg : config.punchDamage, punchCd: move.punchCd || config.punchCooldown,
+      occupied.add(formationIndex);
+      const a = { id: ++serial, formationIndex, formationTotal:limit, owner, moveId: move.id, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || config.duration,
+        lvl, hitsRemaining:config.hitsToDismiss, dmg: Number.isFinite(move.dmg) ? move.dmg : config.punchDamage, punchCd: move.punchCd || config.punchCooldown,
         cd: .16 + count % 8 * .08, anim: new G.Sprites.Animator(30001, 1), target: null, dead: false, comboT: 0,
         cloneTechniqueCdMul: move.cloneTechniqueCdMul ?? 1, cloneTechniqueDamageMul: move.cloneTechniqueDamageMul ?? 1,
         // Retain one cooldown per technique across slot switches; phase spreads eight casts out.
@@ -167,13 +176,13 @@
             }
           }
         } else {
-          const spot=formation(a.formationIndex),x=a.owner.x+spot.x,y=a.owner.y+spot.y;
+          const spot=formation(a.formationIndex,a.formationTotal),x=a.owner.x+spot.x,y=a.owner.y+spot.y;
           if (Math.hypot(a.x - x, a.y - y) > 20) moving = moveToward(a, x, y, 165, sub);
         }
         if (a.age >= .25) for (const e of nearby(a.x, a.y, a.r + 45)) {
           if (e.behavior === 'thief' || e.touchCd > 0) continue;
           if (distance(a, e) <= a.r + (e.r || 0) && clearPath(a.x, a.y, e.x, e.y)) {
-            e.touchCd = .55; e.anim?.play('Attack'); dismiss(a); break;
+            e.touchCd = .55; e.anim?.play('Attack'); takeHit(a); break;
           }
         }
         a.anim.loop(moving ? 'Walk' : 'Idle', moving ? 1.4 : 1); a.anim.update(sub);
@@ -241,7 +250,7 @@
       const candidates = living(owner).filter(a => {
         const t = along(a); return a.age >= .25 && t <= playerT && Math.hypot(sx + dx * t - a.x, sy + dy * t - a.y) <= p.r + a.r && clearPath(sx, sy, a.x, a.y);
       }).sort((a, b) => along(a) - along(b));
-      if (candidates.length) { dismiss(candidates[0]); list.splice(i, 1); }
+      if (candidates.length) { takeHit(candidates[0]); list.splice(i, 1); }
     }
     return resolve.call(this, dt, owner, now);
   };
@@ -251,11 +260,20 @@
   C.drawGroundFields = function(ctx) { oldGround.call(this, ctx); ground(ctx); };
   C.clearFields = function(owner) { clearFields.call(this, owner); clear(owner); };
   if (G.DigimonSkills?.clear) { const previous = G.DigimonSkills.clear; G.DigimonSkills.clear = owner => { previous(owner); clear(owner); }; }
-  const levelUp=G.Moves.levelUp;
-  G.Moves.levelUp=function(move){
-    const upgraded=levelUp(move),owner=G.Game.player;
-    if(upgraded&&move.id==='naruto-shadow-clones'&&owner?.moves.includes(move)&&cast(owner,move))move.t=move.cd*owner.cdMul;
-    return upgraded;
+  // Learned clones run independently of the currently selected attack.
+  const tick = C.tick;
+  C.tick = function(dt, owner, now) {
+    if (dt > 0 && Number.isFinite(dt) && controlled(owner) && owner?.mon?.dex === 30001 && !owner.dead && owner.hp > 0) {
+      const move = owner.moves.find(m => m.id === 'naruto-shadow-clones');
+      if (move) {
+        move.t = Math.max(0, (move.t || 0) - dt);
+        if (move.t <= 0 && canCast(owner, move)) {
+          if (beginCast(owner, move)) move.t = move.cd * owner.cdMul;
+          else move.t = .15;
+        }
+      }
+    }
+    return tick.call(this, dt, owner, now);
   };
   G.NarutoClones = { config, cast, beginCast, canCast, limitOf, update, draw, clear, combo, get actors() { return actors; } };
 })();

@@ -106,6 +106,66 @@
     propHits(pl, m, x, y, radius, m.dmg * pl.atk * ratio, p => Math.abs(((Math.atan2(p.y - y, p.x - x) - aim + Math.PI * 3) % TAU) - Math.PI) <= arc / 2);
   }
   function field(pl, m, kind, o = {}) { fields.push(Object.assign({ kind, owner: pl, world: G.World, m: cloneMove(m), x: pl.x, y: pl.y, t: 0, col: color(m), v: vis(m) }, o)); cap(); }
+  const rasenganFor = owner => fields.find(f => f.kind === 'rasengan' && f.owner === owner && valid(f));
+  function rasenganPath(x, y, tx, ty, radius) {
+    const distance=Math.hypot(tx-x,ty-y),steps=Math.max(1,Math.ceil(distance/4));
+    for(let i=1;i<=steps;i++)if(!G.World.isFree(x+(tx-x)*i/steps,y+(ty-y)*i/steps,radius,true))return false;
+    return true;
+  }
+  function rasenganImpact(f) {
+    const pl=f.owner,r=f.m.radius*.75;
+    f.phase='impact';f.phaseAge=0;f.x=pl.x;f.y=pl.y;
+    pl.invuln=Math.max(pl.invuln||0,.5);
+    for(const e of targets(pl.x,pl.y,r)) {
+      const dx=e.x-pl.x,dy=e.y-pl.y,d=Math.hypot(dx,dy);
+      if(d>r+(e.r||0)||!rasenganPath(pl.x,pl.y,e.x,e.y,1))continue;
+      const nx=d>1e-6?dx/d:Math.cos(f.aim),ny=d>1e-6?dy/d:Math.sin(f.aim);
+      // The shockwave makes room without dealing a second copy of the dash damage.
+      if(e.boss||e.legend||e.judge)continue;
+      e.kx+=nx*300;e.ky+=ny*300;
+      e.touchCd=Math.max(e.touchCd||0,.4);
+    }
+    G.FX.spark(pl.x+Math.cos(f.aim)*22,pl.y-G.LIFT+Math.sin(f.aim)*22,'#b9f5ff',Math.cos(f.aim),Math.sin(f.aim),12);
+    G.Audio.sfx('hit');
+  }
+  function updateRasengan(f, dt) {
+    if(!f.owner.activeGroup().some(m=>m.id===f.m.id))return false;
+    let remaining=dt;
+    while(remaining>1e-9) {
+      const duration=f.phase==='charge'?Math.max(.01,f.m.charge||.6):f.phase==='dash'?.16:.28;
+      const step=Math.min(remaining,duration-f.phaseAge);remaining-=step;f.phaseAge+=step;
+      if(f.phase==='dash') {
+        const pl=f.owner,travel=f.m.range/.16*step,pieces=Math.max(1,Math.ceil(travel/4));
+        let blocked=false;
+        for(let i=0;i<pieces;i++) {
+          const x=pl.x+Math.cos(f.aim)*travel/pieces,y=pl.y+Math.sin(f.aim)*travel/pieces;
+          if(!G.World.isFree(x,y,pl.r,true)){blocked=true;break;}
+          pl.x=x;pl.y=y;
+          for(const e of targets(x,y,f.m.width/2+32)) {
+            if(f.hits.has(e)||Math.hypot(e.x-x,e.y-y)>f.m.width/2+e.r||!rasenganPath(x,y,e.x,e.y,1))continue;
+            f.hits.add(e);hit(pl,f.m,e,f.m.dmg*pl.atk,Math.cos(f.aim),Math.sin(f.aim));
+          }
+        }
+        if(blocked)f.phaseAge=duration;
+      }
+      if(f.phaseAge+1e-9<duration)break;
+      if(f.phase==='charge'){f.phase='dash';f.phaseAge=0;}
+      else if(f.phase==='dash')rasenganImpact(f);
+      else return false;
+    }
+    return true;
+  }
+  const playerUpdate=G.Player.prototype.update,playerHurt=G.Player.prototype.hurt;
+  G.Player.prototype.update=function(dt) {
+    const f=rasenganFor(this);
+    if(!f||f.phase==='impact')return playerUpdate.call(this,dt);
+    const frozen=this.frozen;this.frozen=true;
+    try{return playerUpdate.call(this,dt);}finally{this.frozen=frozen;}
+  };
+  G.Player.prototype.hurt=function(...args) {
+    if(rasenganFor(this)?.phase==='dash')return;
+    return playerHurt.apply(this,args);
+  };
   function inSand(f, e, front = f.m.range) {
     const dx=e.x-f.x,dy=e.y-f.y,ca=Math.cos(f.aim),sa=Math.sin(f.aim);
     const along=dx*ca+dy*sa,across=-dx*sa+dy*ca;
@@ -177,6 +237,11 @@
     if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.beginCast(pl,m);
     const handler=techniqueFor(m.digiMode);
     if(m.narutoSkill&&m.dmg>0&&!G.NarutoSupport?.supports(m.digiMode))m.dmg*=G.NarutoSupport?.takeAttackBonus(pl)||1;
+    if(m.id==='naruto-naruto') {
+      if(rasenganFor(pl))return false;
+      field(pl,m,'rasengan',{phase:'charge',phaseAge:0,aim:pl.aim,hits:new Set()});
+      return true;
+    }
     if(handler)return handler.cast(pl,m);
     if(m.id==='naruto-fireball'&&pl.dex===30002&&G.NarutoFireball)return G.NarutoFireball.cast(pl,m,(owner,move,aim)=>emit(owner,move,aim));
     if(m.charge>0)field(pl,m,'charge',{life:m.charge,aim:pl.aim,x:pl.x,y:pl.y});else emit(pl,m);
@@ -185,6 +250,7 @@
   function customUpdate(dt) {
     for (let i = fields.length - 1; i >= 0; i--) {
       const f = fields[i]; if (!valid(f)) { fields.splice(i, 1); continue; } f.t += dt;
+      if(f.kind==='rasengan'){if(!updateRasengan(f,dt))fields.splice(i,1);continue;}
       if (f.kind === 'charge' && f.t >= f.life) { emit(f.owner, f.m, f.aim); fields.splice(i, 1); continue; }
       if (f.kind === 'combo' && f.t >= f.delay) { sweep(f.owner, f.m, f.x, f.y, f.aim, f.m.radius, f.m.arc || 2, 1 / Math.max(1, (f.m.quantityBaseCount??f.m.count) | 0),Math.round(f.delay/(f.m.burstInterval||.12))%2?1:-1); fields.splice(i, 1); continue; }
       if (f.kind === 'sand-wave') updateSand(f);
@@ -220,11 +286,36 @@
   C.updateFields = update;
   C.drawGroundFields = ctx => { vanilla.ground(ctx); draw(ctx, ['gate','frost','charge']);
     for(const f of fields)if(f.kind==='sand-wave'&&valid(f))G.NarutoSandVFX?.drawGround(ctx,f);
+    for(const f of fields)if(f.kind==='rasengan'&&valid(f)&&f.phase==='impact') {
+      const progress=Math.min(1,f.phaseAge/.28),r=f.m.radius*.75*progress;
+      ctx.save();ctx.globalAlpha=1-progress;ctx.strokeStyle='#b9f5ff';ctx.lineWidth=3;
+      ctx.beginPath();ctx.ellipse(f.x,f.y,r,r*.87,0,0,TAU);ctx.stroke();
+      ctx.strokeStyle='#45bfff';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(f.x,f.y,r*.8,r*.696,0,0,TAU);ctx.stroke();ctx.restore();
+    }
   };
   C.drawAirFields = ctx => {
     vanilla.air(ctx);
     for(const f of fields) {
       if(!valid(f))continue;
+      if(f.kind==='rasengan') {
+        if(f.phase==='charge') {
+          const progress=Math.min(1,f.phaseAge/Math.max(.01,f.m.charge)),pl=f.owner;
+          const x=pl.x+Math.cos(f.aim)*20,y=pl.y-G.LIFT+Math.sin(f.aim)*16;
+          ctx.save();ctx.globalAlpha=.4+progress*.5;
+          for(let i=0;i<8;i++) {
+            const angle=i*TAU/8+f.phaseAge*10,radius=10+28*(1-progress)+Math.sin(i+f.phaseAge*20)*3;
+            ctx.fillStyle=i%2?'#b9f5ff':'#45bfff';
+            ctx.fillRect(Math.round((x+Math.cos(angle)*radius)/2)*2,Math.round((y+Math.sin(angle)*radius*.65)/2)*2,2,2);
+          }
+          ctx.restore();continue;
+        }
+        if(f.phase!=='dash')continue;
+        const pl=f.owner,x=pl.x-Math.cos(f.aim)*15,y=pl.y-pl.bodyH*.5-Math.sin(f.aim)*15;
+        // The authored pose already carries the hand-held Rasengan sphere.
+        ctx.save();ctx.globalAlpha=.45;ctx.strokeStyle='#7cddff';ctx.lineWidth=2;
+        for(let i=-1;i<=1;i++){const ox=-Math.sin(f.aim)*i*9,oy=Math.cos(f.aim)*i*9;ctx.beginPath();ctx.moveTo(x+ox,y+oy);ctx.lineTo(x+ox-Math.cos(f.aim)*42,y+oy-Math.sin(f.aim)*42);ctx.stroke();}
+        ctx.restore();continue;
+      }
       if(f.kind==='sand-wave'){G.NarutoSandVFX?.drawAir(ctx,f);continue;}
       if(f.kind==='charge') {
         const progress=Math.min(1,f.t/Math.max(.01,f.life));
@@ -255,5 +346,5 @@
   G.VFX.SHAPES['digi-gaia'] = { w: 15, h: 15, frames: 3, gen(P,f) { P.fill((x,y) => { const d=Math.hypot(x-7,y-7); return d<2?'w':d<4?'l':d<6?(f%2?'m':'d'):null; }); for(let i=0;i<4;i++){const a=i*Math.PI/2+f*.16;P.line(7+Math.cos(a)*3,7+Math.sin(a)*3,7+Math.cos(a)*6,7+Math.sin(a)*6,'m');} P.outline(); } };
   const priorForMove = G.VFX.forMove;
   G.VFX.forMove = m => { const v = priorForMove(m); return m && m.digimonSkill ? Object.assign(v, m.digiVis || {}) : v; };
-  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, fireFrom, update: customUpdate, clear, get activeEffects() { return fields; } });
+  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, fireFrom, rasenganFor, update: customUpdate, clear, get activeEffects() { return fields; } });
 })();

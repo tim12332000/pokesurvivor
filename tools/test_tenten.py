@@ -20,7 +20,7 @@ IDS = ['naruto-tenten', 'naruto-tenten-fuma', 'naruto-tenten-mastery', 'naruto-t
 
 SETUP = r"""() => {
  const A=Acceptance,p=A.p(),T=G.NarutoTenten; A.assert(T,'native Tenten module missing');
- A.reset=()=>{A.arena();G.SelfClones.clear();p.target=null;p.quantityBonus=0;p.quantityPicks=0;p.percentHealthDamage=0;p.lifestealRate=0;p.critChance=0;
+ A.reset=()=>{A.arena();G.SelfClones.clear();G.Pickups.clear();p.xp=0;p.xpNext=1e9;p.target=null;p.quantityBonus=0;p.quantityPicks=0;p.percentHealthDamage=0;p.lifestealRate=0;p.critChance=0;
    for(const m of p.moves)m.t=999;};
  A.spawn=(x,y,boss=false)=>{const e=new G.Enemy({dex:19,hp:100000,spd:0,dmg:0,xp:0,behavior:'chase'},x,y,{hp:1,spd:1,dmg:1});
    e.types=['normal'];e.boss=boss;G.EnemyMgr.add(e);G.EnemyMgr.rebuildGrid();return e;};
@@ -39,6 +39,12 @@ SETUP = r"""() => {
 
 PROGRESSION = r"""() => {
  const A=Acceptance,p=A.p(),ids=['naruto-tenten-fuma','naruto-tenten-mastery','naruto-tenten-tags','naruto-tenten-twin'],levels=[3,6,9,12],out=[];
+ A.assert(p.mon.hp===150&&p.mon.spd===144,'Tenten survival base stats');
+ const fresh=new G.Player(p.mon,{});
+ A.assert(fresh.maxHp===150&&fresh.hp===150&&fresh.baseSpd===144,'Tenten survival stats not applied to player');
+ const incoming=40,damage=incoming*G.Types.mult('fire',fresh.mon.types)*G.Weather.mult('fire');
+ fresh.hurt(incoming,'fire');A.near(fresh.hp,150-damage,'Tenten native incoming damage');
+ A.assert(!fresh.dead,'Tenten died to one baseline fire hit');
  A.assert(p.dex===30009&&p.hp>0&&p.moves.some(m=>m.id==='naruto-tenten'&&m.passive),'invalid native starter');
  A.assert(p.moves.length===1&&p.slots.length===0,'starter must be passive and slotless');
  for(let i=0;i<ids.length;i++){

@@ -6,6 +6,20 @@
  * Cada línea en español y en inglés.
  */
 G.CHANGELOG = [
+  { d: '2026-10-23', title: ['Rebotes de Tenten', 'Tenten ricochets', '天天忍具連彈'], chg: [
+    ['Los clones de Naruto se invocan automáticamente sin ocupar una ranura activa y resisten cinco impactos. Rasengan carga durante 0,6 s, avanza con protección y aparta a enemigos cercanos al terminar.',
+     'Naruto summons shadow clones automatically without using an active slot, and each clone withstands five hits. Rasengan charges for 0.6 seconds, dashes with protection and pushes nearby enemies away on arrival.',
+     '鳴人影分身自動召喚、不占主動槽，每隻承受五次命中後消散；螺旋丸集氣 0.6 秒後突進，突進免傷，抵達後推開周圍敵人並短暫保護。'],
+    ['Tenten corre un 12,5% más rápido de base (128 → 144) para facilitar las esquivas; conserva las bonificaciones de velocidad y retirada.',
+     'Tenten gains 12.5% base movement speed (128 → 144) for easier dodging, while keeping speed upgrades and her escape boost.',
+     '天天基礎跑速由 128 提高至 144（+12.5%），提升走位閃避能力，速度卡與護身疾退加速仍正常疊加。'],
+    ['La defensa de Tenten conserva el barrido y la retirada rápida, y añade un amuleto permanente que intercepta físicamente un proyectil, incluidos los de jefes, con una recarga independiente de 3 segundos.',
+     'Tenten keeps her defensive sweep and escape speed boost, and gains a permanent charm that physically intercepts one incoming projectile, including boss shots, on its own 3-second cooldown.',
+     '天天保留護身掃圈、擊退與疾退加速，另加常駐護身符，實際接觸後擋下一發來襲飛行彈，包含首領飛行彈，獨立冷卻 3 秒。'],
+    ['Los rebotes de Tenten priorizan enemigos nuevos y pueden volver a golpear al mismo objetivo si no hay otro nuevo al alcance. Cada repetición consume un rebote; los instrumentos de los Dragones Gemelos también pueden perseguir a un jefe solitario.',
+     'Tenten ricochets prioritize new enemies and can hit the same target again when no new target is reachable. Each repeat consumes a bounce; Twin Rising Dragons tools can also pursue a lone boss.',
+     '天天忍具連彈優先攻擊新目標，沒有可達新目標時可再次命中同一目標，每次消耗一次連彈；雙昇龍也可追打單獨首領。']
+  ] },
   { d: '2026-10-18', title: ['Chino tradicional', 'Traditional Chinese', '繁體中文'], new: [
     ['El chino tradicional ya se puede elegir en Ajustes > Gráficos > Idioma. También se detecta en navegadores en chino.',
      'Traditional Chinese is now available in Settings > Graphics > Language, and is detected for Chinese browser languages.',

@@ -57,8 +57,8 @@
     }
     get spd() {
       const owner = this.sourceOwner, liquid = G.World.liquidEffect(this.mon.types).slow || 1;
-      return owner.spd / buffFactor(owner, 'spd') / cloakFactor(owner, 'spd') * buffFactor(this, 'spd') * cloakFactor(this, 'spd') *
-        (this.inLiquid ? liquid : 1) / (owner.inLiquid ? liquid : 1) * (this.slowT > 0 ? .5 : 1) / (owner.slowT > 0 ? .5 : 1);
+      return owner.spd / (G.NarutoTenten?.speedMultiplier(owner) ?? 1) / buffFactor(owner, 'spd') / cloakFactor(owner, 'spd') * buffFactor(this, 'spd') * cloakFactor(this, 'spd') *
+        (this.inLiquid ? liquid : 1) / (owner.inLiquid ? liquid : 1) * (this.slowT > 0 ? .5 : 1) / (owner.slowT > 0 ? .5 : 1) * (G.NarutoTenten?.speedMultiplier(this) ?? 1);
     }
     get reduction() { return Math.min(.8, this.sourceOwner.dmgReduce + this.buffs.def.n * this.buffs.def.amount); }
     get regen() {

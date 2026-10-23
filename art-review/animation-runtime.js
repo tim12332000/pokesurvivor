@@ -26,7 +26,8 @@
     'naruto-tenten-fuma': 'original prepare, release, catch and recover poses',
     'naruto-tenten-tags': 'original paper kunai preparation, toss and seal gesture',
     'naruto-tenten-twin': 'original twin-scroll opening, aerial release and landing',
-    'naruto-tenten-mastery': 'original small-scroll inspection, seal and stow sequence'
+    'naruto-tenten-mastery': 'original small-scroll inspection, seal and stow sequence',
+    'naruto-tenten-guard': 'reuses authored tenten-mastery four-frame small-scroll open, seal and stow pose; independent eight-tool guard VFX preserves active twin, fuma and tags poses'
   });
   function install(G, { enabled = () => true } = {}) {
     if (installed.has(G)) return G.AnimationLab;
@@ -156,6 +157,8 @@
         const age = state.deathAge ?? 0;
         return { ...base, state: 'death', phase: age >= .8 ? 'hold' : 'collapse', key: name + '-death', frame: Math.min(3, Math.floor(age * 5)), mirror: dir === 'left', age };
       }
+      const rasengan=G.DigimonSkills?.rasenganFor?.(pl);
+      if(rasengan?.owner?.anim===anim)return {...base,state:'skill',id:'naruto-naruto',phase:rasengan.phase,key:'naruto-rasengan',frame:rasengan.phase==='charge'?(rasengan.phaseAge/Math.max(.01,rasengan.m.charge)<.4?0:1):rasengan.phase==='dash'?2:3,mirror:Math.cos(rasengan.aim)<0};
       const chidori = G.NarutoChidori?.activeFor?.(pl) || G.NarutoChidori?.active;
       if (chidori?.owner?.anim === anim) {
         const progress = 1 - chidori.wait / Math.max(.001, chidori.move.charge || .09);
@@ -189,6 +192,15 @@
           aim:gaara.aim,mirror:Math.cos(gaara.aim??pl.aim)<0};
       }
       const tenten = pl?.dex === 30009 ? G.NarutoTenten?.activeFor?.(pl) : null;
+      const guard = pl?.dex === 30009 ? G.NarutoTenten?.guardFor?.(pl) : null;
+      // Authored attack poses retain priority; guard VFX continue independently.
+      const committedTenten = ['tenten-twin', 'tenten-fuma', 'tenten-tags'].includes(tenten?.mode || tenten?.kind);
+      if (guard?.owner === pl && guard.age >= 0 && guard.age < .47 && !committedTenten) {
+        const age = guard.age;
+        return {...base, state:'skill', id:'naruto-tenten-guard', phase:guard.phase,
+          key:'tenten-mastery', frame:age < .12 ? Math.min(1, Math.floor(age / .06)) : age < .32 ? 2 : 3,
+          age, aim:guard.aim ?? pl.aim, mirror:Math.cos(guard.aim ?? pl.aim ?? 0) < 0};
+      }
       if (tenten && (!tenten.owner || tenten.owner === pl)) {
         const mode = tenten.mode || tenten.kind;
         const suffix = ({'tenten-kunai':'throw', 'tenten-fuma':'fuma',

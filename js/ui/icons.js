@@ -16,6 +16,9 @@ G.Icons = (() => {
                  '..kmwmmmnk..', '.kmwmsmmmnk.', '.kmmsssmmnk.', '.kmmmsmmmnk.', '..kmmmmmnk..', '...kkkkkk...'];
 
   const UI = {
+    tentenGuard: { pal: { w:'#f5e5c6', s:'#8da8b5', r:'#bc6d86', b:'#94e8dc' }, rows: [
+      '.....kk.....', '..b..kwk.b..', '.b...ksk..b.', 'b..kkkkkk..b', '..krwwwrk...', 'kkkrwbrwkkkk',
+      'kwkrwbrwkswk', 'kkkrwwrwkkkk', '..krwwwrk...', 'b..kkkkkk..b', '.b..ksk...b.', '..b.kwk..b..'] },
     tentenBounce: { pal: { w:'#e6f1ec', s:'#77cbb9', r:'#be6b88' }, rows: [
       '.kkk........', 'kwwwk.......', '.kkks.......', '....ss......', '.....ss.....', '......skkk..',
       '......kwwwk.', '.....sskkk..', '....ss......', '...ss.......', '..krk.......', '.krrrk......'] },

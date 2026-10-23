@@ -120,9 +120,9 @@
   const clones=G.NarutoClones.config;
   const profiles = [
     [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
-      mode: 'shadow-clones', type: 'fighting', cd: clones.cooldown, dmg: clones.punchDamage, range: 240,
+      mode: 'shadow-clones', passive: true, type: 'fighting', cd: clones.cooldown, dmg: clones.punchDamage, range: 240,
       cloneDuration: clones.duration, punchCd: clones.punchCooldown, vis: { pal: 'naruto-blue' },
-      desc:`需選中才會召喚，切招後既有分身保留至到期。結印 ${clones.sealDuration} 秒後召喚基礎 ${clones.counts.join('／')} 隻分身，持續 ${clones.duration} 秒；數量卡每張使分身數 ×1.25，累乘後取整。分身模仿螺旋丸、螺旋手裏劍與忍具，各自造成完整傷害；受擊消散。`,
+      desc:`學會後自動召喚，不占主動槽；冷卻 ${clones.cooldown} 秒。結印 ${clones.sealDuration} 秒後召喚基礎 ${clones.counts.join('／')} 隻分身，持續 ${clones.duration} 秒；數量卡每張使分身數 ×1.25，累乘後取整。分身模仿螺旋丸、螺旋手裏劍與忍具，各自造成完整傷害；每隻受擊 ${clones.hitsToDismiss} 次後消散。`,
       ups: clones.counts.slice(1).map(count=>({t:`分身基礎數量 → ${count} 隻；每隻完整傷害`,m:{}}))
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
@@ -199,10 +199,10 @@
   ];
   const extra = [
     ['naruto-naruto', [30001], {
-      name: '螺旋丸', mode: 'dash', type: 'fighting', cd: 1.25, dmg: 48, charge: .12,
+      name: '螺旋丸', mode: 'dash', type: 'fighting', cd: 2, dmg: 48, charge: .6,
       range: 125, radius: 125, width: 56, knock: 100,
       vis: { proj: 'wind', melee: 'impact', pal: 'naruto-blue' },
-      desc:'向前突進攻擊；選用時，現存影分身各自接近敵人並施放完整傷害的螺旋丸。',
+      desc:'原地集氣 0.6 秒後向前突進，突進中免傷；收招衝擊推開周圍一般敵人，並獲得 0.5 秒保護。每個沿途目標只受一次傷害；選用時，現存影分身各自接近敵人並施放完整傷害的螺旋丸。',
       source_url: 'https://naruto-official.com/en/news/01_1423'
     }],
     ['naruto-rasenshuriken', [30001], {
@@ -243,6 +243,15 @@
     }]
   ];
   extra.push(
+    ['naruto-tenten-guard',[30009],{
+      name:'操具・護身陣',mode:'tenten-guard',icon:'tentenGuard',passive:true,type:'steel',learnLevel:4,
+      cd:8,dmg:0,guardRadius:100,guardKnock:70,guardSpeedBonus:.15,
+      ups:[{t:'護身半徑 110・擊退 80・疾退速度 +20%',m:{guardRadius:110,guardKnock:80,guardSpeedBonus:.20}},
+        {t:'護身半徑 120・擊退 90・疾退速度 +25%',m:{guardRadius:120,guardKnock:90,guardSpeedBonus:.25}},
+        {t:'護身半徑 130・擊退 100・疾退速度 +30%',m:{guardRadius:130,guardKnock:100,guardSpeedBonus:.30}},
+        {t:'護身半徑 140・擊退 110・疾退速度 +35%',m:{guardRadius:140,guardKnock:110,guardSpeedBonus:.35}}],
+      desc:'常駐被動，不占主動槽。可見敵人靠近 80 距離時自動開卷，0.12 秒後掃開周圍普通敵人並攔截普通敵彈，再獲得 1.5 秒疾退加速。五階半徑 100／110／120／130／140，擊退 70／80／90／100／110，加速 +15／20／25／30／35%。護身陣基礎冷卻 8 秒，冷卻縮減有效、最低 3 秒。另外常駐一枚護身符，移動接觸後擋下一發來襲飛行彈，包含 Boss 飛行彈，獨立固定冷卻 3 秒。護符五階索敵 180／200／220／240／260，移速為角色有效移速加 240；不擋光束、地面、環繞或明確不可攔截攻擊，不穿牆。兩者均不造成傷害，護身陣不擊退首領與精英；數量卡不增加護符。招名與機制為本作改編。',source_url:tentenSource
+    }],
     ['naruto-sharingan', [30002], {
       name:'寫輪眼・進化', mode:'sharingan-evolution', passive:true, type:'psychic', cd:0, dmg:0,
       range:320,
@@ -410,21 +419,21 @@
       name:'忍具連彈',mode:'tenten-bounce',icon:'tentenBounce',passive:true,type:'steel',learnLevel:2,
       cd:0,dmg:0,
       ups:[{t:'基礎連彈 2 次',m:{}},{t:'基礎連彈 3 次',m:{}},{t:'基礎連彈 4 次',m:{}},{t:'基礎連彈 5 次',m:{}}],
-      desc:'常駐被動，不占主動槽。每枚忍具額外連彈次數＝技能等級＋數量卡張數，不設上限；首擊另計。命中後飛向 160 範圍內尚未被這枚忍具打過的小怪，雙昇龍另可連彈至 Boss；牆壁會擋下，其他忍具不選首領，精英或傳說敵人不列入一般連彈目標。苦無、迴刃與雙昇龍每次命中維持原傷害；附札苦無彈到最後落點才引爆。',source_url:tentenSource
+      desc:'常駐被動，不占主動槽。每枚忍具額外連彈次數＝技能等級＋數量卡張數，不設上限；首擊另計。命中後優先飛向 160 範圍內未命中的小怪，沒有可達新目標時可重複命中同一目標，每次重複追擊至少間隔 0.08 秒且消耗一次連彈。雙昇龍另可連彈至 Boss；牆壁會擋下，其他忍具不選首領，精英或傳說敵人不列入一般連彈目標。苦無、迴刃與雙昇龍每次命中維持原傷害；附札苦無彈到最後落點才引爆。',source_url:tentenSource
     }],
     ['naruto-tenten-fuma',[30009],{
       name:'風魔迴刃',mode:'tenten-fuma',icon:'tentenFuma',type:'steel',learnLevel:3,
       cd:3.2,dmg:12,count:2,range:260,speed:390,size:12,pierce:3,
       ups:[{t:'每程單枚傷害 +20%',m:{dmg:1.2}},{t:'飛行距離 380',m:{range:380}},
         {t:'飛行距離 500・傷害 +20%',m:{range:500,dmg:1.2}},{t:'每程單枚傷害 +25%',m:{dmg:1.25}}],
-      desc:'兩枚大型四刃手裏劍沿弧線飛出再返回。去、回每程每敵人最多命中一次，每枚對單一目標最多兩次，牆壁會擋下。每程單枚傷害 12／14.4／14.4／17.28／21.6，飛行距離 260／260／380／500／500。數量卡使枚數 ×1.25，累乘取整；每張穿透 +1。選中後自動施放，切招保留已發射忍具。命中後成功回收獲得 6 秒蓄勢，下一次主動整輪傷害 +30%，不疊加；普攻不消耗。可穿過落地爆符提前引爆。招式路線與數值為本作改編。',source_url:tentenSource
+      desc:'兩枚大型四刃手裏劍沿弧線飛出再返回。未學連彈時，去、回每程每敵人最多命中一次；學會後可消耗連彈額度重複追擊，牆壁會擋下。每程單枚傷害 12／14.4／14.4／17.28／21.6，飛行距離 260／260／380／500／500。數量卡使枚數 ×1.25，累乘取整；每張穿透 +1。選中後自動施放，切招保留已發射忍具。命中後成功回收獲得 6 秒蓄勢，下一次主動整輪傷害 +30%，不疊加；普攻不消耗。可穿過落地爆符提前引爆。招式路線與數值為本作改編。',source_url:tentenSource
     }],
     ['naruto-tenten-mastery',[30009],{
       name:'忍具精通',mode:'tenten-mastery',icon:'tentenMastery',passive:true,type:'steel',learnLevel:6,
       cd:0,dmg:0,pierceBonus:2,speedMul:1.1,
       ups:[{t:'苦無額外穿透 +3・忍具速度 +20%・飛行與索敵距離 +200',m:{pierceBonus:3,speedMul:1.2}},{t:'苦無額外穿透 +4・忍具速度 +40%・飛行與索敵距離 +300',m:{pierceBonus:4,speedMul:1.4}},
         {t:'苦無額外穿透 +5・忍具速度 +80%・飛行與索敵距離 +400',m:{pierceBonus:5,speedMul:1.8}},{t:'苦無額外穿透 +6・忍具速度 +100%・飛行與索敵距離 +500',m:{pierceBonus:6,speedMul:2}}],
-      desc:'常駐被動，學會即生效、不占主動槽。苦無額外穿透 +2／3／4／5／6，忍具飛行速度 +10／20／40／80／100%。所有忍具飛行、索敵與每跳連彈距離各 +100／200／300／400／500。不增加同一枚忍具對 Boss 的重複命中。分身完整繼承技能等級，傷害只套用一次 1/3。被動機制為本作改編。',source_url:tentenSource
+      desc:'常駐被動，學會即生效、不占主動槽。苦無額外穿透 +2／3／4／5／6，忍具飛行速度 +10／20／40／80／100%。所有忍具飛行、索敵與每跳連彈距離各 +100／200／300／400／500。重複命中次數依忍具連彈額度計算。分身完整繼承技能等級，傷害只套用一次 1/3。被動機制為本作改編。',source_url:tentenSource
     }],
     ['naruto-tenten-tags',[30009],{
       name:'起爆卷・散華',mode:'tenten-tags',icon:'tentenTags',type:'fire',learnLevel:9,
@@ -438,11 +447,11 @@
       cd:7,dmg:8,count:24,range:680,speed:510,size:5,pierce:1,arc:Math.PI*110/180,burstInterval:.05,burstDuration:.6,
       ups:[{t:'基礎忍具 28 枚',m:{count:4}},{t:'基礎忍具 32 枚・單枚傷害 +20%',m:{count:4,dmg:1.2}},
         {t:'基礎忍具 36 枚',m:{count:4}},{t:'基礎忍具 40 枚・單枚傷害 +25%',m:{count:4,dmg:1.25}}],
-      desc:'兩張卷軸繞身螺旋升空，放卷 0.12 秒後從卷軸分四批射出八種忍具，形成約 110° 前方扇面。基礎 24／28／32／36／40 枚，單枚傷害 8／8／9.6／9.6／12，射程 680，基礎穿透 1 次。整輪發射約 0.6 秒，數量卡使枚數 ×1.25，累乘取整，每張另加穿透 1 次。學會忍具連彈後可彈向 160 範圍內其他小怪或 Boss，同一枚不重複命中同一目標。可走位、沒有額外無敵。回收蓄勢可強化整輪傷害 +30%；忍具可提前引爆自己的落地爆符。螺旋紙卷與尾跡不造成傷害。',source_url:tentenSource
+      desc:'兩張卷軸繞身螺旋升空，放卷 0.12 秒後從卷軸分四批射出八種忍具，形成約 110° 前方扇面。基礎 24／28／32／36／40 枚，單枚傷害 8／8／9.6／9.6／12，射程 680，基礎穿透 1 次。整輪發射約 0.6 秒，數量卡使枚數 ×1.25，累乘取整，每張另加穿透 1 次。學會忍具連彈後可彈向 160 範圍內其他小怪或 Boss，沒有可達新目標時可用剩餘連彈次數追打同一目標，重複追擊至少間隔 0.08 秒。可走位、沒有額外無敵。回收蓄勢可強化整輪傷害 +30%；忍具可提前引爆自己的落地爆符。螺旋紙卷與尾跡不造成傷害。',source_url:tentenSource
     }]
   );
   kinds['gaara-sand-guard'] = 'buff';
-  Object.assign(kinds,{'tenten-kunai':'projectile','tenten-fuma':'projectile','tenten-mastery':'buff','tenten-bounce':'buff','tenten-tags':'meteor','tenten-twin':'projectile'});
+  Object.assign(kinds,{'tenten-kunai':'projectile','tenten-fuma':'projectile','tenten-mastery':'buff','tenten-bounce':'buff','tenten-guard':'buff','tenten-tags':'meteor','tenten-twin':'projectile'});
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
 

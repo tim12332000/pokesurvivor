@@ -568,7 +568,7 @@
         const shot = G.Projectiles.spawn({
           x: this.x, y: this.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp,
           dmg: this.shotDmg() * k, r: 7, life: 2.4, friendly: false, color: '#ff7a9e', mtype: type,
-          vis: G.VFX.forType(type)
+          vis: G.VFX.forType(type), interceptable: !(this.boss && this.ai?.cast)
         });
         if (G.Coop.isHost) G.Coop.enemyShot(shot, type);
       }

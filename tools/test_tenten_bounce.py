@@ -40,8 +40,16 @@ CHECK = r"""() => {
    A.assert(T.bounceCount(p)===45,'quantity must add linearly');single(base);const many=T.weapons[0];A.finish(15);
    A.assert(many.bounced===45&&es.filter(e=>e.hp<100000).length===46&&es[46].hp===100000,'ricochet capped or quantity reapplied');
    out.uncapped={quantity:40,bounces:many.bounced,hits:46};
-   arena(3);p.quantityPicks=p.quantityBonus=1000;A.assert(T.bounceCount(p)===1005,'hidden count ceiling');single(base);A.finish(3);
-   A.assert(!T.weapons.length,'few targets caused endless cycling');
+   arena(1);p.quantityPicks=p.quantityBonus=1000;A.assert(T.bounceCount(p)===1005,'hidden count ceiling');single(base);const longChain=T.weapons[0];A.finish(110);
+   A.assert(longChain.bounced===1005&&!T.weapons.length,'repeat hits exceeded or lost finite bounce budget');
+   out.repeatTiers=[];
+   for(let tier=1;tier<=5;tier++){
+     skill.lvl=tier;arena(1);const victim=p.target;single(base);const shot=T.weapons[0];A.finish(3);
+     A.near(100000-victim.hp,Math.max(1,Math.round(base.dmg*p.atk*G.Types.mult(base.type,victim.types)*G.Weather.mult(base.type)))*(tier+1),'single victim repeat damage');
+     A.assert(shot.bounced===tier&&shot.dead,'single victim did not exhaust bounce budget');
+     out.repeatTiers.push({tier,hits:tier+1});
+   }
+   skill.lvl=5;
    out.tools={};
    for(const moveId of ['naruto-tenten-fuma','naruto-tenten-tags','naruto-tenten-twin']){
      const targets=arena(7);single(p.moves.find(m=>m.id===moveId));const w=T.weapons[0];
@@ -60,15 +68,39 @@ CHECK = r"""() => {
    const ricochetKinds=[...new Set([...arsenalShots].filter(w=>w.bounced>0).map(w=>w.appearance.kind))].sort();
    A.assert(['shuriken','kunai','axe','senbon','spear','sickle','chakram','sword'].every(kind=>ricochetKinds.includes(kind)),'some twin tools do not ricochet '+ricochetKinds);
    out.allTwinTools=ricochetKinds;
-   // A single victim cannot be farmed; protected targets are not chain choices.
+   // Repeated hits retain the existing protected-target exclusions.
    arena(1);const first=p.target,protectedTargets=[A.spawn(160,40,true),A.spawn(170,-40),A.spawn(180,60),A.spawn(190,-60)];
    protectedTargets[1].elite=true;protectedTargets[2].legend=true;protectedTargets[3].judge=true;
    single(base);A.finish(1.5);A.assert(first.hp<100000&&protectedTargets.every(e=>e.hp===100000),'chain targeted protected enemies');
-   // Twin tools can chain from a mob into a boss, without farming either victim.
+   // Twin tools can revisit a boss after first reaching it from a mob.
    arena(1);const mob=p.target,boss=A.spawn(180,60,true),twinMove=p.moves.find(m=>m.id==='naruto-tenten-twin');
    single(twinMove);const bossShot=T.weapons[0];A.finish(3);
-   A.assert(mob.hp<100000&&boss.hp<100000&&bossShot.bounced===1&&bossShot.hits.size===2,'twin failed mob-to-boss ricochet or repeated a victim');
-   out.bossRicochet={bounces:bossShot.bounced,uniqueHits:bossShot.hits.size};
+   A.assert(mob.hp<100000&&boss.hp<100000&&bossShot.bounced===5&&bossShot.visited.size===2,'twin failed repeat mob-to-boss ricochet');
+   out.bossRicochet={bounces:bossShot.bounced,uniqueHits:bossShot.visited.size};
+   A.reset();p.target=A.spawn(180,0,true);const soloBoss=p.target;
+   single(twinMove);const soloShot=T.weapons[0];A.finish(3);
+   A.near(100000-soloBoss.hp,Math.max(1,Math.round(twinMove.dmg*p.atk*G.Types.mult(twinMove.type,soloBoss.types)*G.Weather.mult(twinMove.type)))*6,'solo boss repeat damage');
+   A.assert(soloShot.bounced===5&&soloShot.dead,'solo boss chain did not stop');out.soloBossHits=6;
+   arena(1);const timed=p.target;single(base);const timedShot=T.weapons[0];
+   for(let i=0;i<100&&timed.hp===100000;i++)A.advance();
+   const firstHP=timed.hp;A.advance(.04);A.assert(timed.hp===firstHP,'repeat interval was skipped');
+   const delay=timedShot.repeatDelay;G.Combat.updateFields(1);A.near(timedShot.repeatDelay,delay,'pause consumed repeat interval');
+   A.advance(.05);A.assert(timed.hp<firstHP,'repeat did not resume after interval');
+   timed.dead=true;A.finish(1);A.assert(timedShot.dead,'dead repeat target kept chain alive');out.repeatTiming=true;
+   arena(1);const tagVictim=p.target,tagMove=p.moves.find(m=>m.id==='naruto-tenten-tags');single(tagMove);
+   const tagShot=T.weapons[0];A.finish(.4);A.assert(tagVictim.hp===100000,'repeated tag contact dealt damage');A.finish(3);
+   A.near(100000-tagVictim.hp,Math.max(1,Math.round(tagMove.dmg*p.atk*G.Types.mult(tagMove.type,tagVictim.types)*G.Weather.mult(tagMove.type))),'repeated tag exploded more than once');
+   A.assert(tagShot.bounced===5&&tagShot.dead,'single-target tag did not finish');out.repeatTagSingleBlast=true;
+   // Skip a nearer blocked target and keep the farther reachable choice.
+   arena(1);const blocked=A.spawn(180,0),reachable=A.spawn(150,80),blockPath=G.World.projectileBlock;
+   single(base);G.World.projectileBlock=(x,y)=>x>135&&x<145&&Math.abs(y)<15?{destructible:false}:false;
+   try {
+     const shot=T.weapons[0];for(let i=0;i<100&&!shot.chaining;i++)A.advance();
+     A.assert(shot.chainTarget===reachable,'ricochet did not choose nearest reachable victim');
+     for(let i=0;i<100&&reachable.hp===100000;i++)A.advance();
+     A.assert(reachable.hp<100000&&blocked.hp===100000,'ricochet crossed blocked route');
+   } finally {G.World.projectileBlock=blockPath;}
+   out.nearestReachable=true;
    // Base piercing works without the ricochet passive and stops after two victims.
    const withBounce=p.moves;p.moves=withBounce.filter(m=>m.id!==id);
    try {

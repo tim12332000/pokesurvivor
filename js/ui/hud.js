@@ -273,6 +273,7 @@ G.HUD = (() => {
     const cdOf = m => m.passive || m.kind === 'orbit' || (m.id !== 'naruto-sand-armor' && G.NarutoGaara?.maintains(pl, m)) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul), 0, 1);
     const tentenState = pl.dex === 30009 ? G.NarutoTenten?.stateFor(pl) : null;
     const tentenPose = pl.dex === 30009 ? G.NarutoTenten?.activeFor(pl) : null;
+    const tentenGuard = pl.dex === 30009 ? G.NarutoTenten?.guardFor?.(pl) : null;
 
     for (let i = 0; i < n; i++) {
       const g = groups[i] || [];
@@ -391,9 +392,16 @@ G.HUD = (() => {
       }
       if (G.NarutoTenten?.supports(m.digiMode)) {
         const state = tentenState, pose = tentenPose;
-        const count = pose?.m?.id === m.id ? pose.count : G.Quantity.count(pl, m.count || 1);
+        const count = m.digiMode === 'tenten-guard' ? 0 : pose?.m?.id === m.id ? pose.count : G.Quantity.count(pl, m.count || 1);
         let label = '忍具 ' + count;
-        if (m.digiMode === 'tenten-mastery') label = '貫穿 +' + [2, 3, 4, 5, 6][Math.max(0, Math.min(4, m.lvl - 1))];
+        if (m.digiMode === 'tenten-guard') {
+          const guard = tentenGuard;
+          label = guard?.phase === 'prepare' && guard.age < .12 ? '展卷' :
+            guard?.phase === 'sweep' && guard.age < .47 ? '護身' :
+            guard?.boostRemaining > 0 ? '疾退 ' + guard.boostRemaining.toFixed(1) + 's' :
+            guard?.cooldownRemaining > 0 ? '冷卻 ' + guard.cooldownRemaining.toFixed(1) + 's' : '就緒';
+        }
+        else if (m.digiMode === 'tenten-mastery') label = '貫穿 +' + [2, 3, 4, 5, 6][Math.max(0, Math.min(4, m.lvl - 1))];
         else if (m.digiMode === 'tenten-bounce') label = '連彈 ' + G.NarutoTenten.bounceCount(pl);
         else if (m.digiMode === 'tenten-tags') label = '爆符 ' + (state?.tagCount || count);
         else if (m.digiMode === 'tenten-fuma') label = state?.returning ? '回收 ' + state.returning : '迴刃 ' + count;

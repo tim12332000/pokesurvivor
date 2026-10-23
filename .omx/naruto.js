@@ -13,7 +13,7 @@
     ['lee','Rock Lee','洛克李','第三班',['fighting'],1,180,132],
     ['gaara','Gaara','我愛羅','砂隱村',['ground'],4,136,104],
     ['itachi','Itachi Uchiha','宇智波鼬','曉',['psychic','fire'],5,110,117],
-    ['tenten','Tenten','天天','第三班',['steel'],3,118,118]
+    ['tenten','Tenten','天天','第三班',['steel'],3,150,144]
   ];
   const records = new Map(), dictionary = {Naruto:'火影忍者'};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {

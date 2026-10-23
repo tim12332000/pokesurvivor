@@ -2,7 +2,7 @@
 (() => {
   if (G.NarutoTenten) return;
   const C = G.Combat, TAU = Math.PI * 2, states = new Map(), weapons = [], blasts = [], impacts = [];
-  const modes = new Set(['tenten-kunai','tenten-fuma','tenten-mastery','tenten-bounce','tenten-tags','tenten-twin']);
+  const modes = new Set(['tenten-kunai','tenten-fuma','tenten-mastery','tenten-bounce','tenten-guard','tenten-tags','tenten-twin']);
   const tagGrid = new Map(), CELL = 64;
   const twinTools=[
     {kind:'shuriken',scale:1.1,palette:'silver'}, {kind:'kunai',scale:.85,palette:'blue'},
@@ -49,7 +49,129 @@
     return list.sort((a,b) => (a===owner.target?-1:0)-(b===owner.target?-1:0) ||
       (a.x-owner.x)**2+(a.y-owner.y)**2-(b.x-owner.x)**2-(b.y-owner.y)**2);
   }
-  function canCast(owner,m) { return valid(owner) && supports(m?.digiMode) && !['tenten-mastery','tenten-bounce'].includes(m.digiMode) && targets(owner,m).length>0; }
+  function canCast(owner,m) { return valid(owner) && supports(m?.digiMode) && !['tenten-mastery','tenten-bounce','tenten-guard'].includes(m.digiMode) && targets(owner,m).length>0; }
+  function guardFor(owner) {
+    if(!valid(owner))return null;
+    const m=owner.moves?.find(m=>m.id==='naruto-tenten-guard');if(!m)return null;
+    const s=states.get(owner);if(!s||s.world!==G.World)return null;
+    const g=s.guard, v=g?.visual, age=v?s.clock-v.started:Infinity;
+    const boostRemaining=Math.max(0,(g?.boostUntil||0)-s.clock),cooldownRemaining=g?.cooldown||0;
+    return {owner,m,age,duration:.47,tools:8,
+      phase:age<.12?'prepare':age<.47?'sweep':boostRemaining>0?'escape':cooldownRemaining>0?'cooldown':'ready',
+      ready:cooldownRemaining<=0,boostRemaining,cooldownRemaining,
+      radius:v?.radius??m.guardRadius,knock:v?.knock??m.guardKnock,speedBonus:g?.boostBonus??m.guardSpeedBonus,
+      x:age<.12?owner.x:v?.x??owner.x,y:age<.12?owner.y:v?.y??owner.y,aim:v?.aim??owner.aim??0,
+      activations:g?.activations||0,pushed:g?.pushed||0,intercepted:g?.intercepted||0};
+  }
+  function speedMultiplier(owner) {
+    const s=states.get(owner),g=s?.guard;
+    return valid(owner)&&s?.world===G.World&&owner.moves?.some(m=>m.id==='naruto-tenten-guard')&&g?.boostUntil>s.clock ? 1+g.boostBonus : 1;
+  }
+  function sweepGuard(s,g) {
+    const owner=s.owner,v=g.visual;v.swept=true;v.x=owner.x;v.y=owner.y;
+    v.rays=[];
+    for(let i=0;i<48;i++) {
+      const angle=i*TAU/48,dx=Math.cos(angle),dy=Math.sin(angle);let reach=0;
+      for(let r=0;r<=v.radius;r+=4) {
+        if(G.World.projectileBlock(v.x+dx*r,v.y+dy*r,1))break;reach=r;
+      }
+      v.rays.push({dx,dy,reach});
+    }
+    g.boostBonus=v.speedBonus;g.boostUntil=s.clock+1.5;g.pushed=0;g.intercepted=0;
+    for(const enemy of new Set(G.EnemyMgr.queryCircle(v.x,v.y,v.radius))) {
+      if(!alive(enemy)||enemy.boss||enemy.elite||enemy.legend||enemy.judge||enemy.remote||
+        Math.hypot(enemy.x-v.x,enemy.y-v.y)>v.radius||!clearPath(v.x,v.y,enemy.x,enemy.y))continue;
+      const angle=Math.atan2(enemy.y-v.y,enemy.x-v.x),dx=Math.cos(angle),dy=Math.sin(angle);
+      const sx=enemy.x,sy=enemy.y,steps=Math.ceil(v.knock/4);
+      for(let i=1;i<=steps;i++) {
+        const distance=Math.min(v.knock,i*4),x=sx+dx*distance,y=sy+dy*distance;
+        if(!G.World.isFree(x,y,enemy.r||10,true))break;
+        enemy.x=x;enemy.y=y;
+      }
+      if(enemy.x!==sx||enemy.y!==sy)g.pushed++;
+    }
+    if(g.pushed)G.EnemyMgr.rebuildGrid();
+    for(const shot of [...G.Projectiles.all()]) {
+      if(shot.friendly!==false||shot.interceptable!==true||shot.orb||shot.special||shot.unblockable||shot.beam||shot.groundField||shot.bossSpecial||
+        Math.hypot(shot.x-v.x,shot.y-v.y)>v.radius||!clearPath(v.x,v.y,shot.x,shot.y))continue;
+      G.Projectiles.remove(shot);g.intercepted++;
+      impact({owner},shot.x,shot.y,'metal');
+    }
+    if(owner===G.Game.player)G.Audio?.sfx('shot',{kind:'buff',type:'steel'});
+  }
+  function updateGuard(s,dt) {
+    const owner=s.owner,m=owner.moves?.find(m=>m.id==='naruto-tenten-guard');
+    if(!m){delete s.guard;delete s.talisman;return;}
+    if(owner.frozen){
+      const g=s.guard;
+      if(g){if(g.visual)g.visual.started+=dt;if(g.boostUntil>0)g.boostUntil+=dt;}
+      return;
+    }
+    const g=s.guard??(s.guard={cooldown:0,detectIn:0,boostUntil:0,boostBonus:0,visual:null,activations:0});
+    g.cooldown=Math.max(0,g.cooldown-dt);
+    if(g.visual&&!g.visual.swept&&s.clock-g.visual.started+1e-8>=.12)sweepGuard(s,g);
+    if(g.cooldown>0)return;
+    g.detectIn-=dt;if(g.detectIn>0)return;g.detectIn=.1;
+    const threat=G.EnemyMgr.queryCircle(owner.x,owner.y,80).find(e=>alive(e)&&
+      Math.hypot(e.x-owner.x,e.y-owner.y)<=80&&clearPath(owner.x,owner.y,e.x,e.y));
+    if(!threat)return;
+    g.cooldown=Math.max(3,m.cd*(owner.cdMul??1));g.activations++;
+    g.visual={started:s.clock,x:owner.x,y:owner.y,aim:Math.atan2(threat.y-owner.y,threat.x-owner.x),
+      radius:m.guardRadius,knock:m.guardKnock,speedBonus:m.guardSpeedBonus,swept:false};
+  }
+  function talismanFor(owner) {
+    const s=states.get(owner),g=s?.talisman;
+    if(!valid(owner)||s?.world!==G.World||!g||!owner.moves.some(m=>m.id==='naruto-tenten-guard'))return null;
+    return {...g,ready:g.cooldown<=1e-8,cooldownRemaining:g.cooldown};
+  }
+  function guardBlockable(p) {
+    return p.friendly===false&&!p.unblockable&&!p.guardUnblockable&&!p.uninterceptable&&
+      !p.hazard&&!p.laser&&!p.beam&&!p.ground&&!p.groundField&&!p.orb&&
+      [p.x,p.y,p.vx,p.vy].every(Number.isFinite);
+  }
+  function contactTime(dx,dy,vx,vy,r) {
+    const c=dx*dx+dy*dy-r*r;if(c<=0)return 0;
+    const a=vx*vx+vy*vy,b=2*(dx*vx+dy*vy),d=b*b-4*a*c;
+    return a>1e-12&&b<0&&d>=0 ? (-b-Math.sqrt(d))/(2*a) : Infinity;
+  }
+  function interceptGuard(owner,dt) {
+    if(!valid(owner)||owner.frozen||!(dt>0)||!Number.isFinite(dt))return;
+    const s=state(owner),m=owner.moves.find(m=>m.id==='naruto-tenten-guard');if(!m)return;
+    const g=s.talisman??(s.talisman={x:owner.x+32,y:owner.y,aim:0,cooldown:0,flash:0,intercepted:0,target:null});
+    const shots=G.Projectiles.all().filter(guardBlockable).map(p=>({p,
+      x:Number.isFinite(p.px)?p.px:p.x-p.vx*dt,y:Number.isFinite(p.py)?p.py:p.y-p.vy*dt,
+      vx:Number.isFinite(p.px)?(p.x-p.px)/dt:p.vx,vy:Number.isFinite(p.py)?(p.y-p.py)/dt:p.vy}));
+    const steps=Math.min(240,Math.max(1,Math.ceil(dt/.01))),h=dt/steps;
+    for(let i=0;i<steps;i++) {
+      g.cooldown=Math.max(0,g.cooldown-h);g.flash=Math.max(0,g.flash-h);g.target=null;
+      const threats=g.cooldown>1e-8?[]:shots.map(q=>{
+        const x=q.x+q.vx*i*h,y=q.y+q.vy*i*h;
+        return {...q,x,y,time:contactTime(x-owner.x,y-owner.y,q.vx,q.vy,(owner.r||10)+(q.p.r||0)+16)};
+      }).filter(q=>Math.hypot(q.x-owner.x,q.y-owner.y)<=180+(stage(m)-1)*20&&Number.isFinite(q.time)&&
+        clearPath(owner.x,owner.y,q.x,q.y)&&clearPath(g.x,g.y,q.x,q.y));
+      threats.sort((a,b)=>a.time-b.time);
+      const target=threats[0];g.target=target?.p||null;
+      const aim=target?Math.atan2(target.y-owner.y,target.x-owner.x):s.clock*.7;
+      const tx=target?target.x:owner.x+Math.cos(aim)*32,ty=target?target.y:owner.y+Math.sin(aim)*32;
+      const distance=Math.hypot(tx-g.x,ty-g.y),travel=Math.min(distance,(owner.spd+240)*h);
+      const vx=distance>1e-8?(tx-g.x)/distance*travel/h:0,vy=distance>1e-8?(ty-g.y)/distance*travel/h:0;
+      const nx=g.x+vx*h,ny=g.y+vy*h;
+      const free=clearPath(g.x,g.y,nx,ny,10),mx=free?vx:0,my=free?vy:0;
+      let first=null;
+      for(const q of threats) {
+        const time=contactTime(q.x-g.x,q.y-g.y,q.vx-mx,q.vy-my,10+(q.p.r||0));
+        const ownerHit=contactTime(q.x-owner.x,q.y-owner.y,q.vx,q.vy,(owner.r||10)+(q.p.r||0));
+        if(time<=h&&time<ownerHit&&(!first||time<first.time))first={q,time};
+      }
+      if(first) {
+        g.x+=mx*first.time;g.y+=my*first.time;g.cooldown=3;g.flash=.22;g.intercepted++;g.target=null;
+        G.Projectiles.remove(first.q.p);shots.splice(shots.findIndex(q=>q.p===first.q.p),1);
+        impact({owner,world:G.World},g.x,g.y,'metal');
+        if(owner===G.Game.player)G.Audio?.sfx('shot',{kind:'buff',type:'steel'});
+      } else {g.x+=mx*h;g.y+=my*h;}
+      g.aim=aim;
+    }
+  }
   const selected = (owner,id) => owner.activeGroup?.().some(m=>m.id===id);
   function origin(owner,aim,side=0,pose=null) {
     const authored=G.AnimationLab?.handForTenten?.(owner,side,pose);
@@ -176,11 +298,18 @@
     const range=spend?w.bounceRange:Math.max(0,w.range-w.travel);
     const list=[...new Set(G.EnemyMgr.queryCircle(w.x,w.y,range))].filter(e=>alive(e)&&
       ((w.mode==='tenten-twin'&&e.boss)||(!e.boss&&!e.elite&&!e.legend&&!e.judge))&&
-      !w.visited.has(e)&&Math.hypot(e.x-w.x,e.y-w.y)<=range&&clearPath(w.x,w.y,e.x,e.y,w.r));
-    list.sort((a,b)=>(a.x-w.x)**2+(a.y-w.y)**2-(b.x-w.x)**2-(b.y-w.y)**2);
-    if(!list.length)return false;
+      Math.hypot(e.x-w.x,e.y-w.y)<=range);
+    // Reach new enemies first; remaining hops may revisit a surviving target.
+    list.sort((a,b)=>Number(w.visited.has(a))-Number(w.visited.has(b)) ||
+      (a.x-w.x)**2+(a.y-w.y)**2-(b.x-w.x)**2-(b.y-w.y)**2);
+    // Only test farther candidates when the nearer ones are actually blocked.
+    const target=list.find(e=>clearPath(w.x,w.y,e.x,e.y,w.r));
+    if(!target)return false;
     if(spend){w.bounces--;w.bounced++;w.travel=0;w.range=w.bounceRange;w.bounceAt={x:w.x,y:w.y};w.bounceFlash=.16;}
-    w.chainTarget=list[0];w.chaining=true;w.spent=false;
+    // Only reopen the selected victim, once per paid hop, with a repeat interval.
+    w.repeatDelay=w.visited.has(target) ? .08 : 0;
+    w.hits.delete(target.id??target);
+    w.chainTarget=target;w.chaining=true;w.spent=false;
     w.angle=Math.atan2(w.chainTarget.y-w.y,w.chainTarget.x-w.x);w.dx=Math.cos(w.angle);w.dy=Math.sin(w.angle);
     return true;
   }
@@ -269,6 +398,7 @@
     }
     if(w.chaining) {
       if(!alive(w.chainTarget)&&!redirect(w,false)){finishChain(w);return;}
+      if(w.repeatDelay>0){const wait=Math.min(dt,w.repeatDelay);w.repeatDelay-=wait;w.age+=wait;dt-=wait;if(dt<=1e-8)return;}
       w.angle=Math.atan2(w.chainTarget.y-w.y,w.chainTarget.x-w.x);w.dx=Math.cos(w.angle);w.dy=Math.sin(w.angle);
       const distance=Math.min(w.range-w.travel,w.speed*dt);
       sweep(w,w.x+w.dx*distance,w.y+w.dy*distance);w.age+=dt;
@@ -317,6 +447,8 @@
   }
   function update(dt) {
     if(G.Game.state!=='playing'||!(dt>0))return;
+    for(const actor of [G.Game.player,...(G.SelfClones?.actors()||[])])
+      if(valid(actor)&&actor.moves?.some(m=>m.id==='naruto-tenten-guard'))state(actor);
     tagGrid.clear();
     for(const w of weapons)if(w.mode==='tenten-tags'&&w.landed&&!w.dead&&valid(w.owner)&&w.world===G.World) {
       const key=Math.floor(w.x/CELL)+','+Math.floor(w.y/CELL);
@@ -325,6 +457,7 @@
     for(const [owner,s] of states) {
       if(!valid(owner)||s.world!==G.World){clear(owner);continue;}
       s.clock+=dt;
+      updateGuard(s,dt);
       if(s.release&&(s.clock-s.release.started>.7||!selected(owner,s.release.id)))s.release=null;
       if(s.pose) { s.pose.age=s.clock-s.pose.started; if(s.pose.age>=s.pose.duration)s.pose=null; }
       if(s.pose&&s.pose.mode!=='tenten-kunai'&&s.pose.phase!=='catch'&&!selected(owner,s.pose.m.id))s.pose=null;
@@ -459,9 +592,79 @@
     }
     ctx.restore();
   }
+  function guardGround(ctx,s) {
+    const g=guardFor(s.owner),v=s.guard?.visual;
+    if(!g||g.age>=.47)return;
+    ctx.save();
+    if(g.phase==='prepare') {
+      ctx.strokeStyle='#f3d99b';ctx.globalAlpha=.45;ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.arc(g.x,g.y,18+10*Math.min(1,g.age/.12),0,TAU);ctx.stroke();
+      for(let i=0;i<8;i++){
+        const a=i*TAU/8,r=24;ctx.beginPath();ctx.moveTo(g.x+Math.cos(a)*r,g.y+Math.sin(a)*r);
+        ctx.lineTo(g.x+Math.cos(a)*(r+5),g.y+Math.sin(a)*(r+5));ctx.stroke();
+      }
+    } else if(v?.rays) {
+      const t=Math.min(1,(g.age-.12)/.35),r=g.radius*Math.min(1,t*2.4),alpha=1-t;
+      ctx.lineWidth=2;ctx.strokeStyle='#a9e8d3';ctx.fillStyle='#8bcdb7';ctx.globalAlpha=.07*alpha;
+      ctx.beginPath();v.rays.forEach((ray,i)=>{
+        const d=Math.min(r,ray.reach),x=g.x+ray.dx*d,y=g.y+ray.dy*d;
+        if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y);
+      });ctx.closePath();ctx.fill();ctx.globalAlpha=.65*alpha;ctx.stroke();
+    }
+    ctx.restore();
+  }
+  function guardAir(ctx,s) {
+    const owner=s.owner,g=guardFor(owner);if(!g)return;
+    const calm=G.Settings?.get('calm');
+    if(g.phase==='prepare') {
+      const hand=origin(owner,g.aim);
+      ctx.save();ctx.translate(hand.x,hand.y-G.LIFT+9);ctx.scale(.6,.6);
+      paperScroll(ctx,0,0,.12+g.age*2,g.aim*.12);ctx.restore();
+    } else if(g.phase==='sweep') {
+      const t=Math.min(1,(g.age-.12)/.35),radius=g.radius*Math.min(1,t*2.4),v=s.guard.visual;
+      for(let i=0;i<8;i++) {
+        const angle=i*TAU/8+(calm?0:t*.32),ray=v.rays[Math.round((angle/TAU*48)%48)];
+        const reach=Math.min(radius,ray?.reach??radius),x=g.x+Math.cos(angle)*reach,y=g.y+Math.sin(angle)*reach-G.LIFT;
+        if(reach<12)continue;
+        ctx.save();ctx.globalAlpha=Math.max(0,1-t)*.95;ctx.translate(x,y);ctx.rotate(angle);ctx.scale(.68,.68);
+        ctx.drawImage(sprite(i%2?'kunai':'shuriken','silver'),-20,-20);ctx.restore();
+      }
+    }
+    if(g.boostRemaining>0) {
+      const angle=owner.walking?owner.moveAngle:g.aim,dx=Math.cos(angle),dy=Math.sin(angle);
+      ctx.save();ctx.globalAlpha=Math.min(1,g.boostRemaining/.25)*.6;ctx.strokeStyle='#a7e8d2';ctx.lineWidth=2;
+      for(let i=0;i<3;i++) {
+        const side=(i-1)*7,offset=calm?0:Math.sin(s.clock*20+i)*3;
+        const x=owner.x-dx*(12+offset)-dy*side,y=owner.y-dy*(12+offset)+dx*side-5;
+        ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-dx*(10+i*3),y-dy*(10+i*3));ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+  function talismanGround(ctx,s) {
+    const g=talismanFor(s.owner);if(!g)return;
+    ctx.save();ctx.globalAlpha=g.ready ? .24 : .1;ctx.fillStyle='#17232b';
+    ctx.beginPath();ctx.ellipse(g.x,g.y,10,4,0,0,TAU);ctx.fill();ctx.restore();
+  }
+  function talismanAir(ctx,s) {
+    const g=talismanFor(s.owner);if(!g)return;
+    ctx.save();ctx.translate(Math.round(g.x),Math.round(g.y-G.LIFT));
+    ctx.globalAlpha=g.ready?1:.38;
+    ctx.fillStyle='#253c47';ctx.fillRect(-8,-12,16,24);
+    ctx.fillStyle='#e7d8b2';ctx.fillRect(-6,-10,12,20);
+    ctx.fillStyle='#90bdbb';ctx.fillRect(-7,-11,14,4);ctx.fillRect(-7,7,14,4);
+    ctx.strokeStyle='#ad5545';ctx.lineWidth=2;ctx.beginPath();
+    ctx.moveTo(-3,-5);ctx.lineTo(3,-5);ctx.lineTo(-2,0);ctx.lineTo(3,2);ctx.lineTo(-3,5);ctx.stroke();
+    if(!g.ready){ctx.globalAlpha=.8;ctx.strokeStyle='#a9ded8';ctx.lineWidth=2;ctx.beginPath();
+      ctx.arc(0,0,16,-Math.PI/2,-Math.PI/2+TAU*(1-g.cooldownRemaining/3));ctx.stroke();}
+    if(g.flash>0){ctx.globalAlpha=g.flash/.22;ctx.strokeStyle='#fff1b8';ctx.lineWidth=2;
+      for(let i=0;i<6;i++){const a=i*TAU/6;ctx.beginPath();ctx.moveTo(Math.cos(a)*12,Math.sin(a)*12);
+        ctx.lineTo(Math.cos(a)*21,Math.sin(a)*21);ctx.stroke();}}
+    ctx.restore();
+  }
   function air(ctx) {
     ctx.save();const calm=G.Settings?.get('calm');
-    for(const s of states.values())if(valid(s.owner)&&s.world===G.World)scrollEffects(ctx,s);
+    for(const s of states.values())if(valid(s.owner)&&s.world===G.World){scrollEffects(ctx,s);guardAir(ctx,s);talismanAir(ctx,s);}
     for(const w of weapons) {
       if(w.dead||!valid(w.owner)||w.world!==G.World||!G.Camera.sees(w.x,w.y,60))continue;
       if(w.mode==='tenten-fuma'&&w.seed<2) {
@@ -506,6 +709,7 @@
   }
   function ground(ctx) {
     ctx.save();ctx.lineWidth=1;
+    for(const s of states.values())if(valid(s.owner)&&s.world===G.World){guardGround(ctx,s);talismanGround(ctx,s);}
     for(const s of states.values())if(valid(s.owner)&&s.world===G.World&&s.pose?.mode==='tenten-twin')drawTwin(ctx,s.owner,s.pose,false);
     for(const w of weapons)if(w.mode==='tenten-tags'&&w.landed&&valid(w.owner)&&w.world===G.World){
       const radius=w.m.blastRadius||w.m.radius||60;
@@ -514,6 +718,13 @@
     }
     ctx.restore();
   }
+  const updateProjectiles=G.Projectiles.update;
+  G.Projectiles.update=function(dt,owner,enemies) {
+    const result=updateProjectiles.call(this,dt,owner,enemies);
+    if(G.Game.state==='playing')for(const actor of [owner,...(G.SelfClones?.actors()||[])])
+      if(valid(actor)&&actor.moves.some(m=>m.id==='naruto-tenten-guard'))interceptGuard(actor,dt);
+    return result;
+  };
   const oldTick=C.tick,oldUpdate=C.updateFields,oldClear=C.clearFields,oldAir=C.drawAirFields,oldGround=C.drawGroundFields;
   C.tick=function(dt,owner,now) {
     if((owner?.mon?.dex??owner?.dex)===30009&&G.Game.state!=='playing')return;
@@ -554,7 +765,7 @@
   function scrollFor(owner,side=1) {
     const pose=activeFor(owner);return pose?.mode==='tenten-twin'?twinScroll(owner,pose,side):null;
   }
-  G.NarutoTenten={supports,canCast,cast,clear,update,stage,bounceCount,stateFor,
+  G.NarutoTenten={supports,canCast,cast,clear,update,stage,bounceCount,stateFor,guardFor,talismanFor,speedMultiplier,
     activeFor,scrollFor,
     get weapons(){return weapons;},get blasts(){return blasts;},get impacts(){return impacts;}};
 })();
