@@ -140,7 +140,8 @@
   // Keep available beta characters visible beside the play button.
   const quickPick=document.createElement('section');quickPick.id='naruto-quick-pick';quickPick.translate=false;
   quickPick.setAttribute('aria-label','選擇出戰角色');
-  quickPick.innerHTML='<h2>選擇出戰角色</h2><p>點選出戰角色，再按開始遊戲。</p><div class="naruto-grid"></div>';
+  quickPick.innerHTML='<div class="launch-roster-heading"><div><span class="launch-eyebrow">忍者集結</span><h2>選擇出戰角色</h2></div><span class="launch-roster-count"></span></div><p>選一位夥伴，展開這次冒險。</p><div class="naruto-grid"></div>';
+  quickPick.querySelector('.launch-roster-count').textContent=`${availableDexes.length} 位忍者`;
   for(const dex of availableDexes){
     const record=records.get(dex),button=document.createElement('button');
     button.type='button';button.className='naruto-card';button.dataset.quickNaruto=dex;
@@ -149,10 +150,42 @@
     button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${identity}</small><span class="naruto-selection"></span>`);
     button.onclick=()=>choose(dex);quickPick.querySelector('.naruto-grid').append(button);
   }
-  const partnerCard=document.querySelector('#scr-menu .partner-card');partnerCard.after(quickPick);
+  const menu=document.getElementById('scr-menu'),partnerCard=menu.querySelector('.partner-card');
+  menu.classList.add('launch-menu');
+  const shell=document.createElement('div');shell.className='launch-shell';
+  const heading=menu.querySelector('.logo');heading.classList.add('launch-brand');
+  const content=document.createElement('div');content.className='launch-content';
+  const detail=document.createElement('section');detail.className='launch-detail';
+  detail.setAttribute('aria-label','目前出戰角色');
+  detail.innerHTML='<div class="launch-selected"><span class="launch-eyebrow">本次出戰</span><span class="launch-selected-badge">已選擇</span></div><div class="launch-portrait"></div><h2 class="launch-name"></h2><p class="launch-role"></p><p class="launch-description"></p>';
+  const play=menu.querySelector('[data-go="play"]');
+  const action=document.createElement('div');action.className='launch-action';action.append(play);
+  detail.append(partnerCard,action);content.append(quickPick,detail);
+  const secondary=menu.querySelector('.menu-right');secondary.className='menu-right launch-secondary';
+  shell.append(heading,content,secondary);menu.replaceChildren(shell);
+  const roles={
+    30001:['分身協戰','召喚影分身並肩作戰，以螺旋丸突破包圍。'],
+    30002:['雷遁突進','千鳥穿梭連擊，搭配火遁壓制成群敵人。'],
+    30006:['近身體術','旋風掃開敵群，以繃帶拉近敵人、蓮華重摔。'],
+    30007:['砂術防守','砂盾護身、砂兵協戰，掌控周圍戰場。'],
+    30009:['忍具遠攻','連投忍具、鋪設陷阱，以卷軸展開大範圍攻勢。']
+  };
+  let previewDex;
   const syncQuickPick=()=>{
     const selected=G.DB.save.partner;
     partnerCard.classList.toggle('hidden',availableDexes.includes(+selected));
+    const record=records.get(+selected),isNaruto=availableDexes.includes(+selected);
+    detail.dataset.selectedHero=selected;
+    action.dataset.heroName=isNaruto?record.chinese:G.I18n.t(G.DEX_BY[selected]?.name||'');
+    detail.classList.toggle('launch-fallback',!isNaruto);
+    if(previewDex!==selected){
+      const portrait=detail.querySelector('.launch-portrait');portrait.replaceChildren();
+      if(isNaruto)portrait.append(G.UI.spriteCanvas(+selected,220,174,{dir:0,shadow:true,scale:4,hero:true}));
+      previewDex=selected;
+    }
+    detail.querySelector('.launch-name').textContent=isNaruto?record.chinese:'';
+    detail.querySelector('.launch-role').textContent=isNaruto?roles[selected]?.[0]||record.team:'';
+    detail.querySelector('.launch-description').textContent=isNaruto?roles[selected]?.[1]||'選好角色，準備出發。':'';
     for(const button of quickPick.querySelectorAll('[data-quick-naruto]')){
       const on=+button.dataset.quickNaruto===selected;
       button.classList.toggle('on',on);button.setAttribute('aria-pressed',String(on));

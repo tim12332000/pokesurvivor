@@ -32,10 +32,10 @@ references = json.loads((root / '.omx/digimon/skills-reference.json').read_text(
 assert len(references['records']) == 33
 (root / '.omx/digimon/skills-sources.js').write_text('window.PS_DIGIMON_SKILL_REFERENCES = ' + json.dumps(references) + ';\n', encoding='utf-8')
 naruto = json.loads((root / '.omx/naruto/sprites.json').read_text(encoding='utf-8-sig'))
-assert len(naruto) == 8
+assert {'naruto', 'sakura', 'kakashi', 'hinata', 'rock-lee', 'gaara', 'sasuke', 'itachi', 'tenten'} <= naruto.keys()
 (root / '.omx/naruto/sprites-data.js').write_text('window.PS_NARUTO_SPRITES = ' + json.dumps(naruto) + ';\n', encoding='utf-8')
 html = (root / 'dev.html').read_text(encoding='utf-8')
-html = html.replace('</head>', '<link rel="stylesheet" href=".omx/mobile-portrait.css">\n</head>', 1)
+html = html.replace('</head>', '<link rel="stylesheet" href=".omx/mobile-portrait.css">\n<link rel="stylesheet" href=".omx/menu-layout.css">\n</head>', 1)
 html = html.replace('<head>', '<head>\n<base href="../">\n<script>window.PS_SANDBOX_KEY="ps.sandbox.digimon.v1";</script>', 1)
 main = '<script defer src="js/main.js"></script>'
 assert main in html

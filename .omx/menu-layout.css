@@ -1,0 +1,122 @@
+/* Character-first launch menu. All rules are scoped away from battle and dialogs. */
+body #scr-menu.launch-menu {
+  --launch-ink:#f0ebda; --launch-muted:#b6c2b3; --launch-line:#52614c;
+  display:flex; flex-direction:row;align-items:flex-start; justify-content:center; overflow:auto;
+  padding:94px 24px 64px; background:linear-gradient(110deg,#101b16b8,#111b15a6);
+  color:var(--launch-ink); isolation:isolate;
+}
+body #scr-menu.launch-menu.hidden {display:none}
+body #scr-menu.launch-menu .launch-shell {width:min(1120px,100%);min-width:0;margin:auto;flex:0 0 auto}
+body #scr-menu.launch-menu .launch-brand {text-align:left;margin:0 0 24px;padding:0}
+body #scr-menu.launch-menu .launch-brand .t1 {font-size:40px;line-height:1.1;letter-spacing:-1px}
+body #scr-menu.launch-menu .launch-brand .t2 {font-size:12px;letter-spacing:2px;color:#d6ddc9;margin-top:8px}
+body #scr-menu.launch-menu .launch-content {display:grid;grid-template-columns:minmax(0,1.65fr) minmax(260px,1fr);gap:22px;align-items:stretch}
+body #scr-menu.launch-menu #naruto-quick-pick {width:auto;min-width:0;margin:0;padding:24px;background:#18251eeF;border:1px solid var(--launch-line);border-radius:12px;text-align:left}
+body #scr-menu.launch-menu .launch-roster-heading {display:flex;justify-content:space-between;align-items:center;gap:8px}
+body #scr-menu.launch-menu .launch-eyebrow {font-size:11px;letter-spacing:2px;color:#c3af78}
+body #scr-menu.launch-menu #naruto-quick-pick h2 {font-size:24px;color:var(--launch-ink);margin:6px 0 0}
+body #scr-menu.launch-menu .launch-roster-count {border:1px solid var(--launch-line);padding:5px 8px;border-radius:5px;color:var(--launch-muted);font-size:11px;white-space:nowrap}
+body #scr-menu.launch-menu #naruto-quick-pick>p {font-size:12px;line-height:1.5;margin:8px 0 20px;color:var(--launch-muted)}
+body #scr-menu.launch-menu #naruto-quick-pick .naruto-grid {grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;max-height:362px;overflow-y:auto;padding:3px;scrollbar-color:#819066 #17241c;scrollbar-width:thin}
+body #scr-menu.launch-menu #naruto-quick-pick .naruto-card {position:relative;min-width:0;min-height:142px;gap:3px;padding:10px 5px 12px;border:1px solid #4b5b46;border-radius:7px;background:#25332a;color:var(--launch-ink);box-shadow:none;transition:background .15s,border-color .15s}
+body #scr-menu.launch-menu #naruto-quick-pick .naruto-card canvas {width:84px;height:74px}
+body #scr-menu.launch-menu #naruto-quick-pick .naruto-card b {font-size:15px;line-height:1.5;color:var(--launch-ink)}
+body #scr-menu.launch-menu #naruto-quick-pick .naruto-card small {font-size:10px;line-height:1.4;color:var(--launch-muted);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body #scr-menu.launch-menu #naruto-quick-pick .naruto-card .naruto-selection {font-size:10px;line-height:1.5;color:#b7c3af}
+body #scr-menu.launch-menu #naruto-quick-pick .naruto-card.on {border:2px solid #d9ba6c;padding:9px 4px 11px;background:#394333;box-shadow:inset 0 0 0 1px #131b14}
+body #scr-menu.launch-menu #naruto-quick-pick .naruto-card.on .naruto-selection {color:#e7cd88}
+body #scr-menu.launch-menu button:focus-visible {outline:3px solid #f0d88b;outline-offset:3px}
+body #scr-menu.launch-menu .launch-detail {min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;border:1px solid #7c7755;border-radius:12px;padding:22px 24px;background:radial-gradient(ellipse at 50% 28%,#43513a55,transparent 60%),#19231df5}
+body #scr-menu.launch-menu .launch-selected {display:flex;align-items:center;justify-content:space-between;width:100%}
+body #scr-menu.launch-menu .launch-selected-badge {font-size:10px;color:#d5dcb8;background:#354431;padding:4px 8px;border-radius:4px}
+body #scr-menu.launch-menu .launch-portrait {height:174px;width:220px;display:flex;align-items:center;justify-content:center;max-width:100%}
+body #scr-menu.launch-menu .launch-portrait canvas {width:220px;height:174px;max-width:100%;image-rendering:pixelated}
+body #scr-menu.launch-menu .launch-name {font-size:26px;color:var(--launch-ink);margin:4px 0 6px}
+body #scr-menu.launch-menu .launch-role {color:#d7bf82;font-size:12px;letter-spacing:2px;margin:0 0 12px}
+body #scr-menu.launch-menu .launch-description {color:var(--launch-muted);font-size:13px;line-height:1.8;max-width:250px;margin:0 0 20px;min-height:47px}
+body #scr-menu.launch-menu .launch-action {width:100%;margin-top:auto}
+body #scr-menu.launch-menu .menu-item.play {display:grid;grid-template-columns:26px 1fr;gap:0 8px;width:100%;min-height:62px;text-align:center;border:1px solid #efd287;background:#c4a45b;color:#172219;border-radius:6px;font-size:23px;padding:10px 12px;text-shadow:none;box-shadow:0 3px 0 #66542c}
+body #scr-menu.launch-menu .menu-item.play::before {display:none}
+body #scr-menu.launch-menu .menu-item.play small {font-size:11px;color:#31412c;line-height:1.4;white-space:normal}
+body #scr-menu.launch-menu .menu-item.play:hover {background:#dfc17c}
+body #scr-menu.launch-menu .launch-secondary {display:flex;width:100%;padding:0;margin-top:18px;gap:12px;overflow:visible;background:none}
+body #scr-menu.launch-menu .launch-secondary>.box {padding:0!important;border:0;border-radius:0;background:none;box-shadow:none;width:100%;margin:0;display:block}
+body #scr-menu.launch-menu .menu-list {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+body #scr-menu.launch-menu .menu-list .menu-item {display:flex;align-items:center;justify-content:center;flex-direction:column;min-height:62px;min-width:0;position:relative;padding:8px 5px;border:1px solid #4a5845;background:#19251ded;color:var(--launch-ink);border-radius:6px;font-size:14px;text-align:center;text-shadow:none;line-height:1.4}
+body #scr-menu.launch-menu .menu-list .menu-item::before {display:none}
+body #scr-menu.launch-menu .menu-list .menu-item small {display:none}
+body #scr-menu.launch-menu .menu-list .menu-item:hover {background:#34422f;border-color:#aa9a64}
+body #scr-menu.launch-menu .project-notice {font-size:10px;line-height:1.6;background:none;border:0;padding:0;color:#abb6a6;text-align:left}
+body #scr-menu.launch-menu .project-notice a {color:#d4c493}
+body #scr-menu.launch-menu .launch-secondary>.box:last-child {display:block!important;padding:0!important}
+body #scr-menu.launch-menu #menu-stats {font-size:11px!important;color:#aebba8!important;line-height:1.6}
+body #scr-menu.launch-menu .launch-fallback .launch-portrait,
+body #scr-menu.launch-menu .launch-fallback>.launch-name,
+body #scr-menu.launch-menu .launch-fallback>.launch-role,
+body #scr-menu.launch-menu .launch-fallback>.launch-description {display:none}
+body #scr-menu.launch-menu .partner-card {margin:12px 0 20px;width:100%}
+body #scr-menu.launch-menu #menu-partner {max-width:100%;height:174px;width:auto}
+body:has(#scr-menu.launch-menu:not(.hidden))>.naruto-credit {position:absolute!important;bottom:8px!important;right:12px!important;font-size:9px!important;opacity:.8}
+body:has(#scr-menu.launch-menu:not(.hidden)) #credits-line {display:none}
+@media (max-width:700px) {
+  body #scr-menu.launch-menu {padding:156px 12px 138px}
+  body #scr-menu.launch-menu .launch-brand {margin-bottom:14px}
+  body #scr-menu.launch-menu .launch-brand .t1 {font-size:28px}
+  body #scr-menu.launch-menu .launch-brand .t2 {font-size:10px;letter-spacing:1px;margin-top:4px}
+  body #scr-menu.launch-menu .launch-content {grid-template-columns:minmax(0,1fr);gap:10px}
+  body #scr-menu.launch-menu #naruto-quick-pick {padding:14px}
+  body #scr-menu.launch-menu #naruto-quick-pick h2 {font-size:19px;margin-top:3px}
+  body #scr-menu.launch-menu .launch-eyebrow {font-size:9px;letter-spacing:1.5px}
+  body #scr-menu.launch-menu #naruto-quick-pick>p {margin:5px 0 10px;font-size:11px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-grid {gap:7px;max-height:256px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card {min-height:107px;padding:6px 2px;gap:1px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card.on {padding:5px 1px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card canvas {width:64px;height:56px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card b {font-size:14px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card small {font-size:11px;max-width:92px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card .naruto-selection {font-size:11px;min-height:16px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card:not(.on) .naruto-selection {visibility:hidden}
+  body #scr-menu.launch-menu .launch-detail {order:-1;display:grid;grid-template-columns:80px minmax(0,1fr);gap:0 12px;padding:12px;text-align:left;align-items:center}
+  body #scr-menu.launch-menu .launch-selected {grid-column:2;grid-row:1;margin-bottom:5px}
+  body #scr-menu.launch-menu .launch-portrait {grid-column:1;grid-row:1 / 5;width:80px;height:98px}
+  body #scr-menu.launch-menu .launch-portrait canvas {width:112px;height:90px;max-width:none}
+  body #scr-menu.launch-menu .launch-name {grid-column:2;font-size:21px;margin:0 0 3px}
+  body #scr-menu.launch-menu .launch-role {grid-column:2;font-size:11px;letter-spacing:1px;margin:0 0 4px}
+  body #scr-menu.launch-menu .launch-description {grid-column:2;font-size:11px;line-height:1.5;min-height:0;margin:0;max-width:none}
+  body #scr-menu.launch-menu .launch-action {position:fixed;z-index:30;left:12px;right:12px;bottom:0;width:auto;margin:0;padding:9px 12px calc(env(safe-area-inset-bottom,0px) + 12px);border:1px solid #6f7452;border-bottom:0;border-radius:10px 10px 0 0;background:#18251ef7;box-shadow:0 -8px 18px #0b120e80}
+  body #scr-menu.launch-menu .launch-action::before {content:attr(data-hero-name) ' · 準備出戰';display:block;text-align:center;color:#d5dcc6;font-size:11px;line-height:1.4;margin-bottom:6px}
+  body #scr-menu.launch-menu .menu-item.play {min-height:54px;font-size:21px}
+  body #scr-menu.launch-menu .launch-secondary {margin-top:12px;gap:10px}
+  body #scr-menu.launch-menu .menu-list {grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  body #scr-menu.launch-menu .menu-list .menu-item {font-size:12px;min-height:44px;padding:8px 3px}
+  body #scr-menu.launch-menu .project-notice {font-size:9px}
+  body #scr-menu.launch-menu #menu-stats {font-size:10px!important}
+  body #scr-menu.launch-menu .launch-fallback .partner-card {grid-column:1 / -1;margin:0}
+  body #scr-menu.launch-menu .launch-fallback #menu-partner {height:100px}
+  body:has(#scr-menu.launch-menu:not(.hidden))>.naruto-credit {display:none}
+}
+@media (max-width:360px) {
+  body #scr-menu.launch-menu {padding-top:156px}
+  body #scr-menu.launch-menu .launch-detail {display:block;padding:0;border:0;background:none}
+  body #scr-menu.launch-menu .launch-detail>:not(.launch-action) {display:none}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-grid {grid-template-columns:repeat(2,minmax(0,1fr));max-height:225px}
+}
+@media (min-width:701px) and (max-height:540px) {
+  body #scr-menu.launch-menu {padding:74px 16px 28px}
+  body #scr-menu.launch-menu .launch-brand {margin-bottom:12px}
+  body #scr-menu.launch-menu .launch-brand .t1 {font-size:28px}
+  body #scr-menu.launch-menu .launch-content {gap:12px;grid-template-columns:minmax(0,1.6fr) minmax(240px,1fr)}
+  body #scr-menu.launch-menu #naruto-quick-pick {padding:14px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-grid {max-height:214px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card {min-height:102px;padding:4px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card.on {padding:3px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card canvas {width:64px;height:56px}
+  body #scr-menu.launch-menu #naruto-quick-pick .naruto-card small {display:none}
+  body #scr-menu.launch-menu .launch-detail {padding:12px;align-self:start}
+  body #scr-menu.launch-menu .launch-portrait {height:54px;width:70px}
+  body #scr-menu.launch-menu .launch-portrait canvas {height:54px;width:70px}
+  body #scr-menu.launch-menu .launch-name {font-size:20px;line-height:1.2;margin:4px 0}
+  body #scr-menu.launch-menu .launch-description {font-size:10px;line-height:1.4;min-height:0;margin-bottom:8px}
+  body #scr-menu.launch-menu .menu-item.play {min-height:48px;font-size:18px;line-height:1.1;padding:6px 10px}
+  body #scr-menu.launch-menu .launch-role {font-size:10px;line-height:1.2;margin-bottom:6px}
+}
