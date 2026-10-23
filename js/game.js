@@ -19,6 +19,8 @@ G.Game = (() => {
   let state = 'ui';
   let time = 0, last = 0, pendingLevels = 0;
   let pl = null;
+  const CHEST_OPEN_TIME = .65, CHEST_CHOICE_DELAY = 1;
+  let chestOpening = null;
   let caught = [];          // shinies conseguidos en esta run
   let biome = -1;
 
@@ -99,7 +101,7 @@ G.Game = (() => {
     G.World.reset(coop ? coop.seed : Math.floor(Math.random() * 1e6));
     G.World.setBiome(0, true);
     biome = 0;
-    time = 0; pendingLevels = 0;
+    time = 0; pendingLevels = 0; chestOpening = null;
     runReal = performance.now(); tampered = false;
 
     pl = new G.Player(mon, perks, !!save.partnerShiny && G.DB.ownsShiny(mon.dex));
@@ -146,6 +148,75 @@ G.Game = (() => {
     if (!pl) return 20;
     const k = (G.Coop.active ? G.Coop.xpFactor() : 1) * (pl.xpMul || 1);
     return Math.ceil((pl.xpNext - pl.xp + 1) / k);
+  }
+
+  function openChest(prop) {
+    if (state !== 'playing' || !pl || pl.dead || chestOpening || prop.used || prop.type !== 'bigchest') return false;
+    prop.used = true;
+    chestOpening = { prop, age: 0, opened: false };
+    state = 'chest';
+    G.Touch.reset();
+    G.Audio.sfx('select');
+    if (G.Coop.active) G.Coop.holdStart();
+    return true;
+  }
+
+  function rewardChestLevel() {
+    if (!pl || pl.dead || state === 'ui' || state === 'over' || (G.Coop.active && !G.Coop.isHost)) return;
+    pendingLevels += pl.gainXp(levelXp() * (G.Coop.active ? G.Coop.xpFactor() : 1));
+  }
+
+  function updateChest(dt) {
+    const chest = chestOpening;
+    if (!chest || document.hidden) return;
+    if (!pl || pl.dead) {
+      chestOpening = null;
+      state = 'playing';
+      if (G.Coop.active) G.Coop.holdEnd();
+      return;
+    }
+    chest.age += dt;
+    if (!chest.opened && chest.age + 1e-8 >= CHEST_OPEN_TIME) {
+      chest.opened = true;
+      chest.prop.directLevelReward = true;
+      G.World.breakProp(chest.prop);
+      G.Audio.sfx('chest');
+    }
+    if (chest.age + 1e-8 >= CHEST_OPEN_TIME + CHEST_CHOICE_DELAY) {
+      chestOpening = null;
+      state = holdBy.length ? 'held' : 'playing';
+      if (G.Coop.active) G.Coop.holdEnd();
+      if (!G.Coop.active || G.Coop.isHost) maybeLevelUp();
+    }
+  }
+
+  function drawChest() {
+    if (!chestOpening) return;
+    const age = chestOpening.age, opening = Math.min(1, age / CHEST_OPEN_TIME);
+    const calm = G.Settings.get('calm');
+    const img = G.Tiles.propSprite(biome, 'bigchest', 0), scale = Math.max(2, Math.min(7, Math.floor(w / 70)));
+    ctx.save();
+    ctx.fillStyle = 'rgba(5,10,22,.78)';ctx.fillRect(0, 0, w, h);
+    ctx.translate(w / 2, h * .45);
+    ctx.fillStyle = '#f6cc62';ctx.globalAlpha = .15 * opening;
+    ctx.beginPath();ctx.ellipse(0, 0, img.width * scale, img.height * scale, 0, 0, Math.PI * 2);ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.save();ctx.scale(scale, scale);
+    ctx.drawImage(img, 0, 8, img.width, img.height - 8, -img.width / 2, 0, img.width, img.height - 8);
+    ctx.save();ctx.translate(-img.width / 2, 0);ctx.rotate(-opening * .9);
+    ctx.drawImage(img, 0, 0, img.width, 8, 0, -8, img.width, 8);ctx.restore();
+    ctx.restore();
+    if (chestOpening.opened) {
+      ctx.fillStyle = '#fff2ab';
+      for (let i = 0; i < 8; i++) {
+        const a = i * Math.PI / 4 + (calm ? 0 : age * .3), radius = img.width * scale * .75;
+        const x = Math.cos(a) * radius, y = Math.sin(a) * radius;
+        ctx.fillRect(Math.round(x)-4, Math.round(y)-1, 9, 3);ctx.fillRect(Math.round(x)-1, Math.round(y)-4, 3, 9);
+      }
+    }
+    ctx.textAlign = 'center';ctx.fillStyle = '#ffe295';ctx.font = '700 22px Pixelify, monospace';
+    ctx.fillText(G.I18n.t(chestOpening.opened ? '¡Cofre abierto!' : 'Abriendo cofre…'), 0, img.height * scale + 35, w - 24);
+    ctx.restore();
   }
 
   // Destello de pantalla completa (viaje a la grieta).
@@ -206,7 +277,7 @@ G.Game = (() => {
       if (state === 'levelup') { state = holdBy.length ? 'held' : 'playing'; afterLevelUp(); }
     },
     /** ¿Estás eligiendo algo que para la partida (objeto o vínculo)? */
-    choosing() { return state === 'choice'; },
+    choosing() { return state === 'choice' || state === 'chest'; },
     inLevelUp() { return state === 'levelup'; },
     shiny(dex) { G.onShinyCaught({ dex, name: (G.DEX_BY[dex] || {}).name || '' }); },
     over(d) {
@@ -278,7 +349,7 @@ G.Game = (() => {
     const team = coop ? G.Coop.members.slice() : [];
     if (G.Coop.active) G.Coop.end();
     if (coop) G.Social.setPlaying(false);
-    state = 'over';
+    state = 'over'; chestOpening = null;
     G.Audio.music(null);
     G.Audio.sfx(dead ? 'gameover' : 'back');
     const save = G.DB.save;
@@ -508,6 +579,7 @@ G.Game = (() => {
   // ---------------- teclado ----------------
 
   function handleKeys() {
+    if (state === 'chest') return;
     if (G.SettingsUI.isOpen) { if (G.Input.tap('escape')) G.SettingsUI.close(); return; }
     // La Sentencia de Arceus: Espacio, Intro o Esc saltan la animación (si se puede).
     if (G.Judgment.cinematic && state === 'playing') {
@@ -599,6 +671,7 @@ G.Game = (() => {
         update(step); remaining -= step;
       }
     }
+    else if (state === 'chest') updateChest(dt);
     else if (pl && state !== 'ui') { G.FX.update(dt * 0.25); pl.anim.update(dt * 0.25); }
     // La red se atiende siempre (también con las cartas de nivel abiertas).
     if (G.Coop.active && pl && state !== 'ui' && state !== 'over') G.Coop.tick(dt);
@@ -665,6 +738,7 @@ G.Game = (() => {
     G.Pickups.update(dt, all, onCollect);
     G.Hazards.update(dt);
     G.Interact.update(dt, pl);
+    if (state === 'chest') return;
     G.Rift.update(dt, pl, time);
     G.Judgment.update(dt, pl, time);
     G.Events.update(dt, all, time);
@@ -712,6 +786,7 @@ G.Game = (() => {
     for (const e of G.EnemyMgr.drawables(cam)) items.push({ y: e.y, ent: e });
     for (const e of extra) items.push({ y: e.y, ent: e });
     for (const a of G.SelfClones?.drawables(cam) || []) items.push({ y: a.y, ent: a });
+    for (const a of G.NarutoPain?.drawables(cam) || []) items.push({ y: a.y, ent: a });
     const rift = G.Rift.drawable();
     if (rift) items.push({ y: rift.y, ent: rift });
     const arceus = pl && state !== 'ui' ? G.Judgment.drawable() : null;
@@ -769,6 +844,7 @@ G.Game = (() => {
       ctx.fillRect(0, 0, w, h);
       ctx.restore();
     }
+    drawChest();
   }
 
   // ---------------- fondo de los menús ----------------
@@ -865,7 +941,8 @@ G.Game = (() => {
   })();
 
   return {
-    init, startRun, everyone, levelXp, flash, offerBond,
+    init, startRun, everyone, levelXp, flash, offerBond, openChest, rewardChestLevel,
+    get chest() { return chestOpening ? { age: chestOpening.age, opened: chestOpening.opened, openingTime: CHEST_OPEN_TIME, choiceDelay: CHEST_CHOICE_DELAY } : null; },
     /** Para pruebas: salta el reloj de la run. */
     debugTime(t) { tampered = true; time = t; },
     /** Para grabar vídeos: cámara lenta (0,5 = mitad de velocidad). */
@@ -886,7 +963,7 @@ G.Game = (() => {
     quit() { if (state !== 'ui' && state !== 'over') quitRun(); },
     /** Para grabar vídeos: abre las cartas de subir de nivel. */
     debugLevelUp() { tampered = true; pl.level++; pendingLevels++; },
-    toUI() { state = 'ui'; Backdrop.restore(); },
+    toUI() { if (chestOpening && G.Coop.active) G.Coop.holdEnd(); chestOpening = null; state = 'ui'; Backdrop.restore(); },
     get state() { return state; }, get player() { return pl; }, st
   };
 })();

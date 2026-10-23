@@ -352,12 +352,15 @@ G.World = (() => {
   }
 
   /** Rompe el objeto de esa casilla (llega por la red en cooperativo). */
-  function breakAt(tx, ty) {
+  function breakAt(tx, ty, directLevelReward = false) {
     const k = tx + ',' + ty;
     if (broken.has(k)) return;
     const c = data.get(Math.floor(tx / N) + ',' + Math.floor(ty / N));
     const p = c && c.props.find(o => o.tx === tx && o.ty === ty);
-    if (p) destroyProp(p, true); else broken.add(k);
+    if (p) {
+      if (p.type === 'bigchest') p.directLevelReward = directLevelReward;
+      destroyProp(p, true);
+    } else broken.add(k);
   }
 
   function destroyProp(p, fromNet = false) {
@@ -408,7 +411,8 @@ G.World = (() => {
       for (let i = 0; i < tk; i++) G.Pickups.drop('ticket', p.x + G.U.rand(-16, 16), p.y + G.U.rand(-10, 10), 1);
       if (Math.random() < 0.15) G.Pickups.drop('ticket10', p.x, p.y - 10, 1);
       if (Math.random() < 0.5) G.Pickups.drop('item', p.x + 14, p.y - 14, G.Items.roll());
-      G.Pickups.dropXp(p.x, p.y, G.Game.levelXp());
+      if (p.directLevelReward) G.Game.rewardChestLevel();
+      else G.Pickups.dropXp(p.x, p.y, G.Game.levelXp());
       G.Progress.event('chest');
       return;
     }
@@ -534,14 +538,6 @@ G.World = (() => {
         ctx.globalAlpha = .5 + .5 * Math.sin(phase) ** 2;
         ctx.fillRect(sx - 3, sy, 8, 2);ctx.fillRect(sx, sy - 3, 2, 8);
       }
-      ctx.restore();
-    }
-    if (p.type === 'bigchest' && p.open > 0) {
-      ctx.save();
-      ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y - h / 2, 26, -Math.PI / 2, -Math.PI / 2 + 6.2832 * Math.min(1, p.open / G.Interact.CHEST_TIME));
-      ctx.stroke();
       ctx.restore();
     }
     if (p.type !== 'grass') {

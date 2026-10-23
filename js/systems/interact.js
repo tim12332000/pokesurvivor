@@ -4,8 +4,7 @@
  *
  *   altar     da un poder de 25 s (Furia, Rayo, Imán o Prisa) y se apaga
  *   spring    cura mientras estás encima; se agota y se recarga sola
- *   bigchest  quédate a su lado CHEST_TIME segundos (mientras te atacan) y se
- *             abre: monedas, tickets y experiencia para subir un nivel
+ *   bigchest  contacto: animación de apertura y elección de mejora tras 1 s
  *   trap      salta al pisarla (tú o un enemigo) y afecta a todo lo cercano:
  *             veneno, pegajosa (ralentiza) o explosiva
  *
@@ -14,7 +13,6 @@
  * el botín y el daño a los enemigos (ver world.destroyProp y coop.propBroken).
  */
 G.Interact = (() => {
-  const CHEST_TIME = 3.5;
   const POWER_TIME = 25;
   const POWERS = [
     { id: 'dmg', name: 'Furia', desc: 'daño ×2', color: '#ff5f6d', on: p => { p.atkMul *= 2; }, off: p => { p.atkMul /= 2; } },
@@ -38,11 +36,7 @@ G.Interact = (() => {
           if (!p.used && !pl.dead && d2 < Math.max(30, p.r + pl.r + 14) ** 2) usePower(pl, p);
           break;
         case 'bigchest':
-          if (!pl.dead && d2 < Math.max(46, p.r + pl.r + 24) ** 2) {
-            if (p.open === 0) G.Audio.sfx('select');
-            p.open += dt;
-            if (p.open >= CHEST_TIME) { p.open = 0; G.World.breakProp(p); }
-          } else if (p.open > 0) p.open = Math.max(0, p.open - dt * 1.5);
+          if (!p.used && !pl.dead && d2 <= (p.r + pl.r + 4) ** 2 && G.Game.openChest(p)) return;
           break;
         case 'trap':
           if (!pl.dead && d2 < 13 * 13) G.World.breakProp(p);
@@ -116,5 +110,5 @@ G.Interact = (() => {
     }
   }
 
-  return { update, trapEffect, POWERS, CHEST_TIME };
+  return { update, trapEffect, POWERS };
 })();

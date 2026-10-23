@@ -28,6 +28,8 @@
 
 ## 手機直向遊玩
 
+上鎖寶箱現在接觸即進入開箱演出：0.65 秒開蓋，之後再停留 1 秒才顯示升級選擇。過程暫停戰鬥，金幣、票券、道具照舊發放，升級經驗直接結算一次，避免還要追拾經驗球。新局、死亡與退出不殘留延遲選單；連線沿用群組暫停與主機結算，舊破箱事件仍相容。驗證：`python tools/test_gaara_chests.py`、`node tools/test_chest_coop.js`。
+
 電腦瀏覽器預設以置中的手機比例直式畫面遊玩，沿用手機選單、鏡頭與技能／暫停配置，鍵盤移動和滑鼠按鈕仍可使用。右上角「切換寬版」可回到完整瀏覽器寬度；網址加 `layout=wide` 也可直接開寬版。角色預選、語言、網址片段與同源存檔均保留。手機仍直接使用原有直向／橫向畫面，不套第二層框架。
 
 `.omx/desktop-portrait.js` 只在個人沙盒入口啟用，`.omx/portrait.html` 提供真正的直式 iframe 視窗；不是拉伸橫向 canvas。入口與打包由 `.omx/make_digimon.py`、`tools/build_digimon_site.py` 接線。執行 `python tools/test_desktop_portrait.py` 驗證三種電腦尺寸、鍵盤移動、滑鼠暫停、縮放、切換寬版、角色／語言保留及手機不重複嵌套。舊桌面角色回歸可指定 `TENTEN_URL` 為帶 `layout=wide` 的遊戲網址。

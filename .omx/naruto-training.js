@@ -57,7 +57,9 @@
     if((this.mon?.dex===30001&&id==='naruto-shadow-clones')||this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery','naruto-tenten-bounce','naruto-tenten-guard'].includes(id)){
       if(this.hasMove(id))return false;
       this.moves.push(G.Moves.instance(id,1));
-      this.arrange();return true;
+      this.arrange();
+      if(id==='naruto-tenten-guard')G.NarutoTenten?.ensureTalisman(this);
+      return true;
     }
     if(id===basicId&&this.mon?.dex===30007){
       if(this.hasMove(id)){migrateGaaraBasic(this);return false;}

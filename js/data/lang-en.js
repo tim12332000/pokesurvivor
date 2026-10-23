@@ -4,6 +4,8 @@
  * son los oficiales en inglés.
  */
 G.I18n.add({
+  "Abriendo cofre…": "Opening chest…",
+  "¡Cofre abierto!": "Chest opened!",
   "Crítico": "Critical chance",
   "Reducción de daño": "Damage reduction",
   "Recarga": "Cooldown multiplier",

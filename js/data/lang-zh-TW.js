@@ -1,5 +1,7 @@
 /* Traditional Chinese (Taiwan); names synced from pinned PokeAPI data. */
 G.I18n.add({
+  "Abriendo cofre…": "寶箱開啟中…",
+  "¡Cofre abierto!": "寶箱已開啟！",
   "Crítico": "暴擊率",
   "Reducción de daño": "減傷",
   "Recarga": "冷卻倍率",

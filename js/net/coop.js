@@ -274,8 +274,8 @@ G.Coop = (() => {
           emit(['c', from, ev[1], ev[2], ev[3], ev[4]], from);
           break;
         case 'pb':
-          G.World.breakAt(ev[1], ev[2]);
-          emit(['pb', ev[1], ev[2]], from);
+          G.World.breakAt(ev[1], ev[2], ev[3] === true);
+          emit(['pb', ev[1], ev[2], ev[3] === true], from);
           break;
         case 'lp': picked(from); break;
         case 'hs': holdOn(from); break;
@@ -363,7 +363,7 @@ G.Coop = (() => {
         if (G.U.dist2(ev[1], ev[2], local.x, local.y) < 500 * 500) G.Camera.kick(0.8);
         G.Audio.sfx('break');
         break;
-      case 'pb': G.World.breakAt(ev[1], ev[2]); break;
+      case 'pb': G.World.breakAt(ev[1], ev[2], ev[3] === true); break;
       case 'say': G.Spawner.say(ev[1], ev[2]); break;
       case 'heal': if (!local.dead) { local.heal(local.maxHp * ev[1]); G.FX.ring(local.x, local.y, 6, 60, '#5fe08a', 0.4, 3); } break;
       case 'lu': if (!ev[2] || ev[2] > seenSeq) { seenSeq = ev[2] || seenSeq; api.levelStart(ev[1]); } break;
@@ -407,8 +407,8 @@ G.Coop = (() => {
   function say(text, secs) { emit(['say', text, secs]); }
 
   function propBroken(p) {
-    if (host) emit(['pb', p.tx, p.ty]);
-    else outEv.push(['pb', p.tx, p.ty]);
+    if (host) emit(['pb', p.tx, p.ty, p.directLevelReward === true]);
+    else outEv.push(['pb', p.tx, p.ty, p.directLevelReward === true]);
   }
 
   /** Anfitrión: alguien ha cogido un objeto. Devuelve true si es para ti. */

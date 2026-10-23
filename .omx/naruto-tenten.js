@@ -102,6 +102,7 @@
   function updateGuard(s,dt) {
     const owner=s.owner,m=owner.moves?.find(m=>m.id==='naruto-tenten-guard');
     if(!m){delete s.guard;delete s.talisman;return;}
+    ensureTalisman(owner);
     if(owner.frozen){
       const g=s.guard;
       if(g){if(g.visual)g.visual.started+=dt;if(g.boostUntil>0)g.boostUntil+=dt;}
@@ -124,6 +125,20 @@
     if(!valid(owner)||s?.world!==G.World||!g||!owner.moves.some(m=>m.id==='naruto-tenten-guard'))return null;
     return {...g,ready:g.cooldown<=1e-8,cooldownRemaining:g.cooldown};
   }
+  function talismanHome(owner,aim=0) {
+    for(const radius of [32,20,0])for(let i=0;i<8;i++) {
+      const angle=aim+i*TAU/8,x=owner.x+Math.cos(angle)*radius,y=owner.y+Math.sin(angle)*radius;
+      if(!G.World.projectileBlock(x,y,10)&&clearPath(owner.x,owner.y,x,y,10))return {x,y};
+    }
+    return {x:owner.x,y:owner.y};
+  }
+  function ensureTalisman(owner) {
+    if(!valid(owner)||!owner.moves?.some(m=>m.id==='naruto-tenten-guard'))return null;
+    let s=states.get(owner);
+    if(s&&s.world!==G.World){clear(owner);s=null;}
+    s??=state(owner);
+    return s.talisman??(s.talisman={...talismanHome(owner),aim:0,cooldown:0,flash:0,intercepted:0,target:null});
+  }
   function guardBlockable(p) {
     return p.friendly===false&&!p.unblockable&&!p.guardUnblockable&&!p.uninterceptable&&
       !p.hazard&&!p.laser&&!p.beam&&!p.ground&&!p.groundField&&!p.orb&&
@@ -136,8 +151,13 @@
   }
   function interceptGuard(owner,dt) {
     if(!valid(owner)||owner.frozen||!(dt>0)||!Number.isFinite(dt))return;
-    const s=state(owner),m=owner.moves.find(m=>m.id==='naruto-tenten-guard');if(!m)return;
-    const g=s.talisman??(s.talisman={x:owner.x+32,y:owner.y,aim:0,cooldown:0,flash:0,intercepted:0,target:null});
+    const g=ensureTalisman(owner);if(!g)return;
+    const s=state(owner),m=owner.moves.find(m=>m.id==='naruto-tenten-guard');
+    // Recall only the prop, without sweeping across walls or restoring a charge.
+    if(!Number.isFinite(g.x)||!Number.isFinite(g.y)||G.World.projectileBlock(g.x,g.y,10)||
+      Math.hypot(g.x-owner.x,g.y-owner.y)>228+(stage(m)-1)*20||!clearPath(owner.x,owner.y,g.x,g.y,10)) {
+      Object.assign(g,talismanHome(owner,s.clock*.7));g.target=null;
+    }
     const shots=G.Projectiles.all().filter(guardBlockable).map(p=>({p,
       x:Number.isFinite(p.px)?p.px:p.x-p.vx*dt,y:Number.isFinite(p.py)?p.py:p.y-p.vy*dt,
       vx:Number.isFinite(p.px)?(p.x-p.px)/dt:p.vx,vy:Number.isFinite(p.py)?(p.y-p.py)/dt:p.vy}));
@@ -765,7 +785,7 @@
   function scrollFor(owner,side=1) {
     const pose=activeFor(owner);return pose?.mode==='tenten-twin'?twinScroll(owner,pose,side):null;
   }
-  G.NarutoTenten={supports,canCast,cast,clear,update,stage,bounceCount,stateFor,guardFor,talismanFor,speedMultiplier,
+  G.NarutoTenten={supports,canCast,cast,clear,update,stage,bounceCount,stateFor,guardFor,talismanFor,ensureTalisman,speedMultiplier,
     activeFor,scrollFor,
     get weapons(){return weapons;},get blasts(){return blasts;},get impacts(){return impacts;}};
 })();

@@ -134,6 +134,7 @@ G.Rift = (() => {
     const ps = G.Game.everyone();
     ps.forEach((p, i) => { p.x = arena.x + (i - (ps.length - 1) / 2) * 34; p.y = arena.y + ts * 3; });
     G.Camera.x = pl.x; G.Camera.y = pl.y;
+    for (const p of ps) G.NarutoTenten?.ensureTalisman(p);
     G.Game.flash('#c9a6ff', 0.9);
     G.Audio.sfx('rift');
     G.Spawner.say('Has entrado en la grieta…', 2.4, true);
@@ -236,6 +237,7 @@ G.Rift = (() => {
     pl.x = a.back.x; pl.y = a.back.y;
     if (pl.dead) pl.revive(0.3);
     G.Camera.x = pl.x; G.Camera.y = pl.y;
+    for (const p of G.Game.everyone()) G.NarutoTenten?.ensureTalisman(p);
     G.Game.flash('#c9a6ff', 0.8);
     if (pl.bonds > 0) G.Game.offerBond();
   }

@@ -14,6 +14,35 @@ CHECK = r"""() => {
  A.charm=()=>T.talismanFor(p);
  A.shot=(extra={})=>G.Projectiles.spawn({x:p.x+160,y:p.y,vx:-200,vy:0,r:4,dmg:12,life:10,friendly:false,...extra});
  const run=()=>{const before=A.charm().intercepted;for(let i=0;i<150&&A.charm().intercepted===before;i++)A.advance(.01)};
+ const originalMoves=p.moves;p.moves=originalMoves.filter(m=>m.id!==A.guardID);G.Combat.clearFields(p);
+ const learn=G.LevelUp.offer(p,100).find(c=>c.key==='new:'+A.guardID);A.assert(learn&&learn.apply(p)!==false,'guard learning failed');
+ A.assert(T.talismanFor(p)?.ready,'learned charm absent until combat tick');p.moves=originalMoves;
+ const terrain=G.World.projectileBlock;
+ G.World.projectileBlock=(x,y)=>x>20&&x<70?{destructible:false}:false;
+ try{A.charmReset();A.assert(!G.World.projectileBlock(A.charm().x,A.charm().y,10),'charm spawned inside wall')}
+ finally{G.World.projectileBlock=terrain}
+ A.charmReset();A.shot();run();const savedCD=A.charm().cooldownRemaining;
+ p.x+=700;A.advance(.01);
+ A.assert(Math.hypot(A.charm().x-p.x,A.charm().y-p.y)<=48,'charm stayed offscreen after displacement');
+ A.near(A.charm().cooldownRemaining,savedCD-.01,'recall reset charm cooldown');out.spawnAndRecall=true;
+ A.charmReset();
+ G.Rift.onEvent(['arena',{tx:5000,ty:5000,r:11,dex:150,shiny:false,type:'ground'}]);
+ A.assert(A.charm(),'arena transition did not immediately restore learned charm');A.advance(.01);
+ A.assert(G.Rift.inArena&&Math.hypot(A.charm().x-p.x,A.charm().y-p.y)<=48,'arena entry lost charm');
+ G.World.projectileBlock=(x,y)=>x>20&&x<70?{destructible:false}:false;
+ try {
+   G.Rift.onEvent(['al']);A.resume();G.Rift.update(1.21,p,0);A.pause();A.advance(.01);
+   A.assert(!G.Rift.inArena&&p.x===0&&p.y===0,'native arena did not return to map');
+   A.assert(A.charm()&&!G.World.projectileBlock(A.charm().x,A.charm().y,10)&&Math.hypot(A.charm().x-p.x,A.charm().y-p.y)<=48,'returning beside wall lost charm');
+ } finally {G.World.projectileBlock=terrain}
+ out.arenaReturn=true;
+ A.charmReset();const savedSlots=p.slots.map(group=>[...group]),savedActive=p.active,savedBonds=p.bonds;p.bonds=1;
+ G.Rift.onEvent(['arena',{tx:5000,ty:5000,r:11,dex:150,shiny:false,type:'ground'}]);
+ G.Rift.onEvent(['al']);A.resume();G.Rift.update(1.21,p,0);
+ A.assert(G.UI.isOpen('scr-bond')&&G.Game.state==='choice'&&A.charm(),'fusion prompt hid the learned charm after return');
+ G.RunUI.pickBond(0);G.RunUI.pickBond(1);
+ A.assert(G.Game.state==='playing'&&A.charm(),'finishing fusion changed charm visibility');
+ p.slots=savedSlots;p.active=savedActive;p.bonds=savedBonds;A.pause();out.fusionVisibility=true;
  A.charmReset();A.assert(A.charm()?.ready&&A.guard().ready,'both defenses not ready');
  A.assert(p.slots.flat().every(m=>m.id!==A.guardID),'charm consumed active slot');
  A.finish(.4);A.assert(A.charm().ready&&A.charm().intercepted===0,'idle spent charge');

@@ -7,6 +7,9 @@
  */
 G.CHANGELOG = [
   { d: '2026-10-23', title: ['Rebotes de Tenten', 'Tenten ricochets', '天天忍具連彈'], chg: [
+    ['Los cofres se abren al tocarlos: tras la animación y una pausa de un segundo aparece la elección de mejora. El amuleto de Tenten reaparece de inmediato al aprenderlo y al viajar a la arena o volver de ella, también durante la fusión de habilidades.',
+     'Touch chests to open them automatically; upgrade choices appear one second after the opening animation. Tenten’s charm now appears immediately when learned and after arena travel, including while fusion choices are open.',
+     '寶箱碰到即播放開箱演出，開蓋後等 1 秒直接選擇升級；天天護符學會、進出首領場景及技能合併選單期間會立即顯示，並修正卡牆或停留舊座標。'],
     ['La nota de proyecto gratuito y sin ánimo de lucro aparece discretamente en Ajustes > Acerca de; se retiran el aviso del menú y la marca sobre la partida.',
      'The free, non-profit project note now appears briefly in Settings > About; the menu notice and gameplay watermark are removed.',
      '免費、非營利說明集中於「設定 → 關於」，移除主選單公告與遊戲浮水印。'],
