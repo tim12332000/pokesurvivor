@@ -114,6 +114,7 @@ G.Rift = (() => {
     return G.SelfClones ? G.SelfClones.withSceneTransition(travel) : travel();
   }
   function beginScene(cfg) {
+    G.Game.cancelChest();
     const pl = G.Game.player;
     const ts = TS();
     arena = Object.assign({}, cfg, {
@@ -220,6 +221,7 @@ G.Rift = (() => {
     return G.SelfClones ? G.SelfClones.withSceneTransition(travel) : travel();
   }
   function finishScene() {
+    G.Game.cancelChest();
     const pl = G.Game.player;
     const a = arena;
     arena = null;

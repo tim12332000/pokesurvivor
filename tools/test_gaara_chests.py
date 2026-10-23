@@ -22,18 +22,21 @@ CHECK = r"""() => {
  const chest=chests[0];p.x=chest.x;p.y=chest.y;p.dead=false;p.target=null;
  assert(chest.hp===Infinity&&!chest.destructible,'replacement is not a locked chest');
  assert(!N.canCast(p,basic),'automatic basic still targets replacement chest');
- window.ChestCheck={chest,level:p.level,time:G.Game.st.time,drops:[],drop:G.Pickups.drop,xp:G.Pickups.dropXp,assert};
+ window.ChestCheck={chest,level:p.level,time:G.Game.st.time,drops:[],drop:G.Pickups.drop,xp:G.Pickups.dropXp,tick:G.Combat.tick,combatTicks:0,assert};
+ G.Combat.tick=function(...args){ChestCheck.combatTicks++;return ChestCheck.tick.apply(this,args)};
  G.Pickups.drop=function(type,...args){ChestCheck.drops.push(type);return ChestCheck.drop.call(this,type,...args)};
  G.Pickups.dropXp=function(...args){ChestCheck.drops.push('xp');return ChestCheck.xp.apply(this,args)};
  p.invuln=999;
  G.Game.togglePause();
  // Stop outside physical contact, then trigger with a single tiny step.
  p.x=chest.x+chest.r+p.r+5;
- G.Interact.update(.001,p);assert(G.Game.state==='playing','chest triggered before contact');
+ G.Interact.update(.001,p);assert(!G.Game.chest,'chest triggered before contact');
  p.x=chest.x+chest.r+p.r+3;
  G.Interact.update(.001,p);
- assert(G.Game.state==='chest'&&chest.used,'contact did not immediately begin opening');
+ assert(G.Game.state==='playing'&&G.Game.chest&&chest.used,'contact blocked play or failed to begin opening');
  assert(!G.Game.openChest(chest),'same chest triggered twice');
+ G.Camera.x=p.x;G.Camera.y=p.y;G.World.collide=()=>{};
+ ChestCheck.startX=p.x;
  return {smallChests:0,largeChestObservations:chests.length};
 }"""
 
@@ -57,19 +60,35 @@ def main():
             label='mobile' if mobile else 'desktop'
             result=report[label] = page.evaluate(CHECK)
             page.screenshot(path=str(out/f'{label}-opening.png'))
+            if mobile:
+                cdp=context.new_cdp_session(page)
+                cdp.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':60,'y':450}]})
+                cdp.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':120,'y':450}]})
+                page.wait_for_timeout(180)
+                cdp.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
+            else:
+                page.keyboard.down('KeyD');page.wait_for_timeout(180);page.keyboard.up('KeyD')
+            assert page.evaluate('G.Game.player.x>ChestCheck.startX+1'), 'opening blocked movement input'
+            assert page.evaluate("G.Game.state==='playing'&&ChestCheck.combatTicks>0"), 'opening paused combat'
+            result['movementAndCombat']=True
+            page.evaluate('G.Game.togglePause()')
+            paused_age=page.evaluate('G.Game.chest.age')
+            page.wait_for_timeout(180)
+            assert page.evaluate('G.Game.chest.age')==paused_age, 'manual pause advanced opening timer'
+            page.evaluate('G.Game.togglePause()')
             page.wait_for_function('G.Game.chest?.opened===true')
             result['openedAt']=page.evaluate('G.Game.chest.age')
-            page.evaluate('''() => {const C=ChestCheck;C.assert(!G.World.specialsNear(C.chest.x,C.chest.y,1).includes(C.chest),'opened chest still exists');
-              C.assert(G.Game.player.level===C.level+1,'chest did not directly award one level');
-              C.assert(C.drops.includes('coin')&&C.drops.includes('ticket')&&!C.drops.includes('xp'),'loot missing or duplicate XP');
+            page.evaluate('''() => {const C=ChestCheck;C.assert(C.chest.solid===false,'open lid still blocks player');
+              C.assert(G.Game.player.level===C.level,'chest awarded upgrade before delay');
               C.assert(!G.UI.isOpen('scr-levelup'),'cards appeared before post-open delay');}''')
             page.screenshot(path=str(out/f'{label}-opened.png'))
             page.wait_for_function('G.Game.chest?.age>=1.45')
             assert not page.locator('#scr-levelup').is_visible(), 'cards appeared less than 1 s after opening'
-            assert page.evaluate('G.Game.st.time===ChestCheck.time'), 'world did not pause during opening'
+            assert page.evaluate('G.Game.st.time>ChestCheck.time'), 'world paused during opening'
             page.wait_for_function("G.Game.state==='levelup'")
             assert page.locator('#scr-levelup').is_visible()
             assert page.evaluate('G.Game.chest===null')
+            assert page.evaluate("G.Game.player.level===ChestCheck.level+1&&ChestCheck.drops.includes('ticket')&&!ChestCheck.drops.includes('xp')"), 'reward missing or duplicate XP'
             page.screenshot(path=str(out/f'{label}-choices.png'))
             result['coinDrops']=page.evaluate("ChestCheck.drops.filter(t=>t==='coin').length")
             assert result['coinDrops']==9
@@ -77,7 +96,7 @@ def main():
             page.wait_for_function("G.Game.state==='playing'")
             # A repeated interaction with the consumed chest cannot award a second level.
             assert page.evaluate('!G.Game.openChest(ChestCheck.chest)')
-            page.evaluate('G.Pickups.drop=ChestCheck.drop;G.Pickups.dropXp=ChestCheck.xp')
+            page.evaluate('() => {G.Pickups.drop=ChestCheck.drop;G.Pickups.dropXp=ChestCheck.xp;G.Combat.tick=ChestCheck.tick;}')
             # Quitting mid-opening must not leave a delayed reward in the next run.
             page.evaluate('''() => {G.Game.toUI();G.Flow.play();const p=G.Game.player;
               G.Game.openChest({type:'bigchest',x:p.x,y:p.y,r:14,tx:900,ty:900,used:false});
@@ -95,7 +114,7 @@ def main():
                 assert page.evaluate('G.Game.player.level===ChestCheck.level+1&&G.Game.chest===null'), 'co-op chest reward/hold stalled'
                 page.evaluate('G.RunUI.pick(0)')
                 page.wait_for_function("G.Game.state==='playing'")
-                page.evaluate('G.Pickups.drop=ChestCheck.drop;G.Pickups.dropXp=ChestCheck.xp;G.Coop.end()')
+                page.evaluate('G.Pickups.drop=ChestCheck.drop;G.Pickups.dropXp=ChestCheck.xp;G.Combat.tick=ChestCheck.tick;G.Coop.end()')
                 result['nativeCoopHost']=True
             assert not errors, errors
             context.close()

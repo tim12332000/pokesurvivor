@@ -153,12 +153,16 @@ G.Game = (() => {
   function openChest(prop) {
     if (state !== 'playing' || !pl || pl.dead || chestOpening || prop.used || prop.type !== 'bigchest') return false;
     prop.used = true;
-    chestOpening = { prop, age: 0, opened: false };
-    state = 'chest';
-    G.Touch.reset();
+    chestOpening = { prop, age: 0, opened: false, solid: prop.solid };
     G.Audio.sfx('select');
-    if (G.Coop.active) G.Coop.holdStart();
     return true;
+  }
+
+  function cancelChest() {
+    if (!chestOpening) return;
+    chestOpening.prop.used = false;
+    chestOpening.prop.solid = chestOpening.solid;
+    chestOpening = null;
   }
 
   function rewardChestLevel() {
@@ -170,22 +174,19 @@ G.Game = (() => {
     const chest = chestOpening;
     if (!chest || document.hidden) return;
     if (!pl || pl.dead) {
-      chestOpening = null;
-      state = 'playing';
-      if (G.Coop.active) G.Coop.holdEnd();
+      cancelChest();
       return;
     }
     chest.age += dt;
     if (!chest.opened && chest.age + 1e-8 >= CHEST_OPEN_TIME) {
       chest.opened = true;
-      chest.prop.directLevelReward = true;
-      G.World.breakProp(chest.prop);
+      chest.prop.solid = false;
       G.Audio.sfx('chest');
     }
     if (chest.age + 1e-8 >= CHEST_OPEN_TIME + CHEST_CHOICE_DELAY) {
       chestOpening = null;
-      state = holdBy.length ? 'held' : 'playing';
-      if (G.Coop.active) G.Coop.holdEnd();
+      chest.prop.directLevelReward = true;
+      G.World.breakProp(chest.prop);
       if (!G.Coop.active || G.Coop.isHost) maybeLevelUp();
     }
   }
@@ -194,10 +195,12 @@ G.Game = (() => {
     if (!chestOpening) return;
     const age = chestOpening.age, opening = Math.min(1, age / CHEST_OPEN_TIME);
     const calm = G.Settings.get('calm');
-    const img = G.Tiles.propSprite(biome, 'bigchest', 0), scale = Math.max(2, Math.min(7, Math.floor(w / 70)));
+    const img = G.Tiles.propSprite(biome, 'bigchest', 0), scale = G.Sprites.PX * 1.25;
+    const prop = chestOpening.prop;
     ctx.save();
-    ctx.fillStyle = 'rgba(5,10,22,.78)';ctx.fillRect(0, 0, w, h);
-    ctx.translate(w / 2, h * .45);
+    ctx.fillStyle = 'rgba(0,0,0,.3)';
+    ctx.beginPath();ctx.ellipse(prop.x, prop.y, prop.r * 1.1, prop.r * .38, 0, 0, Math.PI * 2);ctx.fill();
+    ctx.translate(prop.x, prop.y - (img.height - 8) * scale);
     ctx.fillStyle = '#f6cc62';ctx.globalAlpha = .15 * opening;
     ctx.beginPath();ctx.ellipse(0, 0, img.width * scale, img.height * scale, 0, 0, Math.PI * 2);ctx.fill();
     ctx.globalAlpha = 1;
@@ -214,8 +217,6 @@ G.Game = (() => {
         ctx.fillRect(Math.round(x)-4, Math.round(y)-1, 9, 3);ctx.fillRect(Math.round(x)-1, Math.round(y)-4, 3, 9);
       }
     }
-    ctx.textAlign = 'center';ctx.fillStyle = '#ffe295';ctx.font = '700 22px Pixelify, monospace';
-    ctx.fillText(G.I18n.t(chestOpening.opened ? '¡Cofre abierto!' : 'Abriendo cofre…'), 0, img.height * scale + 35, w - 24);
     ctx.restore();
   }
 
@@ -277,7 +278,7 @@ G.Game = (() => {
       if (state === 'levelup') { state = holdBy.length ? 'held' : 'playing'; afterLevelUp(); }
     },
     /** ¿Estás eligiendo algo que para la partida (objeto o vínculo)? */
-    choosing() { return state === 'choice' || state === 'chest'; },
+    choosing() { return state === 'choice'; },
     inLevelUp() { return state === 'levelup'; },
     shiny(dex) { G.onShinyCaught({ dex, name: (G.DEX_BY[dex] || {}).name || '' }); },
     over(d) {
@@ -419,7 +420,7 @@ G.Game = (() => {
   // ---------------- subida de nivel ----------------
 
   function maybeLevelUp() {
-    if (pendingLevels <= 0 || state !== 'playing') return;
+    if (chestOpening || pendingLevels <= 0 || state !== 'playing') return;
     if (G.Coop.active) {
       // En grupo, las cartas salen a la vez para todos y se espera a que elijan.
       if (G.Coop.players().every(p => p.dead)) return;
@@ -436,6 +437,7 @@ G.Game = (() => {
       G.Audio.sfx('confirm');
       card.apply(pl);
       state = 'playing';
+      afterLevelUp();
     });
   }
 
@@ -449,7 +451,7 @@ G.Game = (() => {
    * @param quiet  no avisar si todavía no se puede
    */
   function offerBond(quiet = false) {
-    if (!pl || pl.bonds <= 0 || pl.dead || (state !== 'playing' && state !== 'held') || G.Rift.inArena) return;
+    if (chestOpening || !pl || pl.bonds <= 0 || pl.dead || (state !== 'playing' && state !== 'held') || G.Rift.inArena) return;
     if (['scr-bond', 'scr-pause', 'scr-item', 'scr-levelup'].some(G.UI.isOpen)) return;
     const opt = pl.bondOptions();
     if (!opt) {
@@ -498,7 +500,7 @@ G.Game = (() => {
   /** Has cogido un objeto: si no llevas ninguno te lo pones; si no, eliges. */
   function offerItem(id) {
     if (!pl || !G.Items.BY[id]) return;
-    if (state === 'levelup' || G.UI.isOpen('scr-levelup')) { laterItems.push(id); return; }
+    if (chestOpening || state === 'levelup' || G.UI.isOpen('scr-levelup')) { laterItems.push(id); return; }
     let mine = false;            // esta elección es la que ha parado el juego
     const take = got => {
       openItem = null;
@@ -579,7 +581,6 @@ G.Game = (() => {
   // ---------------- teclado ----------------
 
   function handleKeys() {
-    if (state === 'chest') return;
     if (G.SettingsUI.isOpen) { if (G.Input.tap('escape')) G.SettingsUI.close(); return; }
     // La Sentencia de Arceus: Espacio, Intro o Esc saltan la animación (si se puede).
     if (G.Judgment.cinematic && state === 'playing') {
@@ -660,6 +661,7 @@ G.Game = (() => {
     frameDt = state === 'playing' ? dt : 0;
 
     handleKeys();
+    if (state === 'playing') updateChest(Math.min(1 / 30, real));
     if (state === 'levelup' && autoPickUpgrades && pl && !pl.dead && !G.SettingsUI.isOpen)
       G.RunUI.pickRandom();
 
@@ -671,7 +673,6 @@ G.Game = (() => {
         update(step); remaining -= step;
       }
     }
-    else if (state === 'chest') updateChest(dt);
     else if (pl && state !== 'ui') { G.FX.update(dt * 0.25); pl.anim.update(dt * 0.25); }
     // La red se atiende siempre (también con las cartas de nivel abiertas).
     if (G.Coop.active && pl && state !== 'ui' && state !== 'over') G.Coop.tick(dt);
@@ -738,7 +739,6 @@ G.Game = (() => {
     G.Pickups.update(dt, all, onCollect);
     G.Hazards.update(dt);
     G.Interact.update(dt, pl);
-    if (state === 'chest') return;
     G.Rift.update(dt, pl, time);
     G.Judgment.update(dt, pl, time);
     G.Events.update(dt, all, time);
@@ -782,7 +782,10 @@ G.Game = (() => {
     // Todo lo que tiene "pies" se ordena por Y: objetos, enemigos, jugador.
     const items = [];
     // Los planos (manantiales, trampas) siempre debajo de todo lo demás.
-    for (const p of G.World.visibleProps(cam)) items.push({ y: p.flat ? p.y - 4000 : p.y, prop: p });
+    for (const p of G.World.visibleProps(cam)) {
+      if (p === chestOpening?.prop) items.push({ y: p.y, ent: { draw: drawChest } });
+      else items.push({ y: p.flat ? p.y - 4000 : p.y, prop: p });
+    }
     for (const e of G.EnemyMgr.drawables(cam)) items.push({ y: e.y, ent: e });
     for (const e of extra) items.push({ y: e.y, ent: e });
     for (const a of G.SelfClones?.drawables(cam) || []) items.push({ y: a.y, ent: a });
@@ -844,7 +847,6 @@ G.Game = (() => {
       ctx.fillRect(0, 0, w, h);
       ctx.restore();
     }
-    drawChest();
   }
 
   // ---------------- fondo de los menús ----------------
@@ -941,7 +943,7 @@ G.Game = (() => {
   })();
 
   return {
-    init, startRun, everyone, levelXp, flash, offerBond, openChest, rewardChestLevel,
+    init, startRun, everyone, levelXp, flash, offerBond, openChest, cancelChest, rewardChestLevel,
     get chest() { return chestOpening ? { age: chestOpening.age, opened: chestOpening.opened, openingTime: CHEST_OPEN_TIME, choiceDelay: CHEST_CHOICE_DELAY } : null; },
     /** Para pruebas: salta el reloj de la run. */
     debugTime(t) { tampered = true; time = t; },
@@ -963,7 +965,7 @@ G.Game = (() => {
     quit() { if (state !== 'ui' && state !== 'over') quitRun(); },
     /** Para grabar vídeos: abre las cartas de subir de nivel. */
     debugLevelUp() { tampered = true; pl.level++; pendingLevels++; },
-    toUI() { if (chestOpening && G.Coop.active) G.Coop.holdEnd(); chestOpening = null; state = 'ui'; Backdrop.restore(); },
+    toUI() { cancelChest(); state = 'ui'; Backdrop.restore(); },
     get state() { return state; }, get player() { return pl; }, st
   };
 })();

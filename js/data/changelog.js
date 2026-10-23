@@ -7,6 +7,9 @@
  */
 G.CHANGELOG = [
   { d: '2026-10-23', title: ['Rebotes de Tenten', 'Tenten ricochets', '天天忍具連彈'], chg: [
+    ['Los cofres se abren en el mapa sin detener el movimiento ni los ataques. La elección de mejora aparece un segundo después de abrirse, sin animación a pantalla completa.',
+     'Chests now open in place on the map without blocking movement or attacks. Upgrade choices appear one second after opening, with no full-screen animation.',
+     '寶箱改在地圖原位置演出，不中斷移動與攻擊、不遮住全畫面；開蓋後等 1 秒才顯示升級選擇。'],
     ['Los cofres se abren al tocarlos: tras la animación y una pausa de un segundo aparece la elección de mejora. El amuleto de Tenten reaparece de inmediato al aprenderlo y al viajar a la arena o volver de ella, también durante la fusión de habilidades.',
      'Touch chests to open them automatically; upgrade choices appear one second after the opening animation. Tenten’s charm now appears immediately when learned and after arena travel, including while fusion choices are open.',
      '寶箱碰到即播放開箱演出，開蓋後等 1 秒直接選擇升級；天天護符學會、進出首領場景及技能合併選單期間會立即顯示，並修正卡牆或停留舊座標。'],
