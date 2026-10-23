@@ -40,8 +40,9 @@ def main():
             frame = frame_element.element_handle().content_frame()
             ready(frame)
             state = dimensions(frame)
-            assert state['touch'] and state['portrait'] and not state['overflow'], state
-            assert state['hero'] == 30009 and abs(state['w']/state['h']-390/844) < .003, state
+            assert state['touch'] and not state['overflow'], state
+            assert state['portrait'] == (state['w'] <= 600), state
+            assert state['hero'] == 30009 and abs(state['w']/state['h']-3/4) < .003, state
             assert frame.evaluate('location.hash') == '#selected'
             bounds = frame_element.bounding_box()
             assert abs(bounds['x']-(width-bounds['width'])/2) < 1, bounds
