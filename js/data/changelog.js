@@ -7,6 +7,9 @@
  */
 G.CHANGELOG = [
   { d: '2026-10-23', title: ['Rebotes de Tenten', 'Tenten ricochets', '天天忍具連彈'], chg: [
+    ['En ordenador, el juego se abre en formato vertical como en el móvil, con teclado y ratón. El enlace «Cambiar a pantalla ancha» permite volver al formato ancho.',
+     'Desktop browsers now default to the phone-style portrait layout with keyboard and mouse support. Use the wide-layout link to return to a full-width view.',
+     '電腦瀏覽器預設採用手機直式版面，支援鍵盤與滑鼠；右上角「切換寬版」可回到寬版。'],
     ['Los clones de Naruto se invocan automáticamente sin ocupar una ranura activa y resisten cinco impactos. Rasengan carga durante 0,6 s, avanza con protección y aparta a enemigos cercanos al terminar.',
      'Naruto summons shadow clones automatically without using an active slot, and each clone withstands five hits. Rasengan charges for 0.6 seconds, dashes with protection and pushes nearby enemies away on arrival.',
      '鳴人影分身自動召喚、不占主動槽，每隻承受五次命中後消散；螺旋丸集氣 0.6 秒後突進，突進免傷，抵達後推開周圍敵人並短暫保護。'],

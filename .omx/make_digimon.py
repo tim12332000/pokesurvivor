@@ -36,7 +36,7 @@ assert {'naruto', 'sakura', 'kakashi', 'hinata', 'rock-lee', 'gaara', 'sasuke', 
 (root / '.omx/naruto/sprites-data.js').write_text('window.PS_NARUTO_SPRITES = ' + json.dumps(naruto) + ';\n', encoding='utf-8')
 html = (root / 'dev.html').read_text(encoding='utf-8')
 html = html.replace('</head>', '<link rel="stylesheet" href=".omx/mobile-portrait.css">\n<link rel="stylesheet" href=".omx/menu-layout.css">\n</head>', 1)
-html = html.replace('<head>', '<head>\n<base href="../">\n<script>window.PS_SANDBOX_KEY="ps.sandbox.digimon.v1";</script>', 1)
+html = html.replace('<head>', '<head>\n<base href="../">\n<script>window.PS_SANDBOX_KEY="ps.sandbox.digimon.v1";</script>\n<script src=".omx/desktop-portrait.js"></script>', 1)
 main = '<script defer src="js/main.js"></script>'
 assert main in html
 html = html.replace(main, '<script defer src=".omx/unlimited.js"></script>\n<script defer src=".omx/digimon/pixel-data.js"></script>\n<script defer src=".omx/digimon.js"></script>\n<script defer src=".omx/digimon/evolutions-data.js"></script>\n<script defer src=".omx/digimon-evolution.js"></script>\n<script defer src=".omx/digimon-size.js"></script>\n<script defer src=".omx/digimon/skills-sources.js"></script>\n<script defer src=".omx/digimon-skills.js"></script>\n<script defer src=".omx/digimon-skill-combat.js"></script>\n' + main, 1)

@@ -22,7 +22,7 @@ G.Settings = (() => {
   const fns = new Set();
 
   // Calidad automática: empieza alta (media en móvil) y baja si va a tirones.
-  const touchy = matchMedia('(pointer: coarse)').matches;
+  const touchy = matchMedia('(pointer: coarse)').matches || window.PS_PORTRAIT_VIEW === true;
   let autoLevel = touchy ? 1 : 2;
   let acc = 0, frames = 0, slowT = 0, fastT = 0;
 
