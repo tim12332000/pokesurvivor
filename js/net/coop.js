@@ -83,9 +83,11 @@ G.Coop = (() => {
       G.Sprites.preload([mon.dex], 8000, p.shiny);
       mates.set(m.uid, { uid: m.uid, name: m.name, color: COLORS[i], pl: p, connected: true, q: [], flushT: 0, xpMul: 1 });
     });
+    G.TemariCoop?.begin(cfg);
   }
 
   function end() {
+    G.TemariCoop?.clear();
     active = false; host = false; local = null;
     mates.clear(); outEv = []; waiting = new Set(); holds = new Set();
   }
@@ -181,6 +183,7 @@ G.Coop = (() => {
     const ev = m.q; m.q = [];
     const f = { k: 'f', t: r2(st.time), lv: st.level, xp: r2(st.xp), xn: st.xpNext, ki: st.kills, bo: st.bosses, co: st.coins, tk: [st.t1, st.t10],
                 p, e: enemyList(m.pl), ev };
+    if (G.TemariCoop) f.tm = G.TemariCoop.stamp();
     const ja = G.Judgment.netState();       // Arceus en la Sentencia
     if (ja) f.ja = ja;
     // Siempre: quién está eligiendo y, si hay cartas de nivel, cuáles (ver arriba).
@@ -238,6 +241,7 @@ G.Coop = (() => {
     const m = mates.get(u);
     if (!m || !m.connected) return;
     m.connected = false;
+    G.TemariCoop?.clearOwner(u);
     G.Projectiles.clearOrbs(m.pl);
     G.Spawner.say(m.name + ' ha dejado la partida', 2.6);
     if (waiting.has(u)) picked(u);
@@ -272,6 +276,9 @@ G.Coop = (() => {
         case 'c':
           G.Combat.ghostCast(m.pl, ev[1], ev[2], ev[3], ev[4]);
           emit(['c', from, ev[1], ev[2], ev[3], ev[4]], from);
+          break;
+        case 'tc': case 'td': case 'tx': case 'to': case 'te': case 'trc': case 'tr': case 'trh': case 'tp':
+          G.TemariCoop?.receive(from, ev);
           break;
         case 'pb':
           G.World.breakAt(ev[1], ev[2], ev[3] === true);
@@ -308,6 +315,7 @@ G.Coop = (() => {
   });
 
   function onHostFrame(msg) {
+    G.TemariCoop?.hostFrame(msg.tm);
     lastHostAt = performance.now();
     if (stalled) { stalled = false; updateAway(); }
     for (const ev of msg.ev || []) applyHostEvent(ev);
@@ -350,8 +358,11 @@ G.Coop = (() => {
       case 'eg': G.EnemyMgr.removeRemote(ev[1], false); break;
       case 'hn': { const e = G.EnemyMgr.get(ev[1]); if (e && !e.dead) e.showHurt(ev[2], ev[3]); break; }
       case 'es':
-        G.Projectiles.spawn({ x: ev[1], y: ev[2], vx: ev[3], vy: ev[4], dmg: ev[5], r: ev[6], life: ev[7],
-                              friendly: false, color: '#ff7a9e', vis: G.VFX.forType(ev[8]), mtype: ev[8], interceptable: ev[9] === true });
+        if (!G.TemariCoop || G.TemariCoop.acceptShot(ev[10])) G.Projectiles.spawn({ x: ev[1], y: ev[2], vx: ev[3], vy: ev[4], dmg: ev[5], r: ev[6], life: ev[7],
+                              friendly: false, color: '#ff7a9e', vis: G.VFX.forType(ev[8]), mtype: ev[8], interceptable: ev[9] === true, coopShotId: ev[10], ...(ev[11] || {}) });
+        break;
+      case 'tc': case 'td': case 'tx': case 'to': case 'te': case 'trc': case 'tr': case 'trh': case 'tp':
+        G.TemariCoop?.receive(hostUid, ev);
         break;
       case 'c': { const m = mates.get(ev[1]); if (m) G.Combat.ghostCast(m.pl, ev[2], ev[3], ev[4], ev[5]); break; }
       case 'item': api.item(ev[1]); break;
@@ -377,7 +388,7 @@ G.Coop = (() => {
       case 'jd': case 'jk': G.Judgment.onEvent(ev); break;
       case 'wx': G.Weather.onEvent(ev); break;
       case 'ev': G.Events.onNet(ev); break;
-      case 'hz': G.Hazards.add(ev[1], true); break;
+      case 'hz': if (!G.TemariCoop || G.TemariCoop.acceptShot(ev[1]?.coopShotId)) G.Hazards.add(ev[1], true); break;
       case 'fxr': G.FX.ring(ev[1], ev[2], 8, ev[3], ev[4], 0.5, 3); break;
     }
   }
@@ -387,6 +398,7 @@ G.Coop = (() => {
   /** Tu ataque: los demás lo repiten como fantasma. */
   function cast(pl, m) {
     if (!active || pl !== local) return;
+    if (G.TemariCoop?.ownsMove(m)) return; // Temari sends its actual cast snapshot, including card actors.
     if (host) emit(['c', me, m.id, m.lvl, r2(pl.aim), m.evolved ? 1 : 0]);
     else outEv.push(['c', m.id, m.lvl, r2(pl.aim), m.evolved ? 1 : 0]);
   }
@@ -401,7 +413,12 @@ G.Coop = (() => {
     emit(['ne', e.id, e.dex, r1(e.x), r1(e.y), e.boss ? 1 : 0, e.shiny ? 1 : 0, Math.ceil(e.maxHp), r2(e.dmg), e.behavior]);
   }
   function enemyGone(e, died) { emit([died ? 'ed' : 'eg', e.id]); }
-  function enemyShot(p, type) { emit(['es', r1(p.x), r1(p.y), r1(p.vx), r1(p.vy), r2(p.dmg), p.r, p.life, type, p.interceptable === true]); }
+  function enemyShot(p, type) {
+    const id = G.TemariCoop?.trackShot(p);
+    const flags = {};
+    for (const key of ['physical', 'special', 'unblockable', 'guardUnblockable', 'uninterceptable', 'beam', 'laser', 'ground', 'groundField', 'bossSpecial', 'hazard', 'orb']) if (p[key]) flags[key] = true;
+    emit(['es', r1(p.x), r1(p.y), r1(p.vx), r1(p.vy), r2(p.dmg), p.r, p.life, type, p.interceptable === true, id, flags]);
+  }
   function pickupAdded(o) { emit(['pk', o.id, o.kind, r1(o.x), r1(o.y), o.value]); }
   function pickupGone(id) { emit(['pc', id]); }
   function say(text, secs) { emit(['say', text, secs]); }
@@ -497,6 +514,11 @@ G.Coop = (() => {
     /** Anfitrión: evento para todos. Invitado: evento para el anfitrión. */
     broadcast(ev) { emit(ev); },
     toHost(ev) { if (active && !host) { outEv.push(ev); flushClient(true); } },
+    temariEvent(ev, except) {
+      if (!active) return;
+      if (host) { emit(ev, except); flushAll(); }
+      else { outEv.push(ev); flushClient(true); }
+    },
     mate(u) { return mates.get(u); },
     get mates() { return [...mates.values()]; },
     get members() { return members; },

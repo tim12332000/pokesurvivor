@@ -1,0 +1,18 @@
+{
+  "date": "2026-10-24",
+  "method": "Built-in imagegen",
+  "styleReferences": [
+    "redrawn/temari-common-v1.png",
+    "redrawn/temari-skills-v1.png"
+  ],
+  "prompts": [
+    {
+      "key": "cyclone-spin",
+      "prompt": "Create a NEW ORIGINAL game sprite sheet of young TEMARI performing a full 360-degree spinning giant fan sweep. Use the supplied Temari sheets as EXACT CHARACTER AND STYLE references: same blonde FOUR tied spiky ponytails, teal eyes, lavender tunic, dark purple sash, mesh underlayer, navy sandals, Sand headband at neck. Crisp pixel clusters and dark one-pixel-style outline, 3-head-tall proportions, hard flat cel shading matching reference. Exactly FOUR COLUMNS TWO ROWS = EIGHT full-body sequential frames, equal spacious cells, same anatomical scale and same feet pivot/baseline across poses. The huge cream fan has THREE PURPLE CIRCLES, no text. GENUINELY DRAW DIFFERENT VIEWS OF BODY, do NOT rotate the same flat image. Eight spin phases in reading order: 1 front-facing begins two-handed fan sweep toward right; 2 right three-quarter mid-sweep; 3 right side sweeping fan horizontally; 4 back-right three-quarter; 5 fully BACK facing with back of tunic and blonde ponytails, fan swept to left; 6 back-left three-quarter; 7 LEFT SIDE sweeping fan across; 8 front-left three-quarter finishing at front. Torso and arms twist, planted/pivoting feet and trailing sash show a powerful continuous turn, face stays anatomically correct and is NOT visible through back of head. Fan is part of each sprite, no wind VFX painted onto body. Full fan and limbs in each cell, at least 12 percent transparent margins, no neighbors touching. Transparent alpha background. No labels, no grid, no shadows, no ground, no other characters. Sixteen? NO: exactly EIGHT figures."
+    },
+    {
+      "key": "cyclone-wind",
+      "prompt": "Create a production pixel-art VFX animation atlas, EXACTLY FOUR COLUMNS TWO ROWS, EIGHT frames of the SAME thick sweeping WIND CRESCENT rotating internally/fluidly. STYLE references supplied are for pixel texture and flat shading only; NO CHARACTERS in output. Every equal square cell contains a large powerful scythe-like wind crescent on its RIGHT HALF: an invisible circular wind-eye pivot is at exact CENTER of each cell; the bright LEADING TIP points EAST at 3 o'clock, about 85 percent of half-cell-radius to the right of pivot. The crescent curls COUNTERCLOCKWISE behind that tip through the lower-right arc into a tapering tail, leaving central eye and left half EMPTY transparent. All EIGHT animation frames keep same pivot/orientation/size, only wind fibers, jagged crest contours and short flying fragments evolve through the eight phases, so the game can rotate the VFX atlas around the center as a brush. Thick layered white/cream wind blade, cool gray shadow facets, subtle desaturated mint inner highlights, 10-14 color limited palette, hard stepped PIXEL CLUSTERS with sharp carved tapered tips, chunks and broken streaks. Rich dense swept fibers, not smooth wire loops, not neon glow, not a green disc, not a tornado cone, not a full closed ring. Small dark gray-brown flecks near trailing tail for dust. No outer black hard cartoon stroke. Large clearly separated cells with 12 percent blank margin, nothing crosses adjacent cells. Fully transparent alpha, no black/color background, no ground, no text, no labels, no grid lines. Exactly EIGHT VFX sprites only."
+    }
+  ]
+}

@@ -9,7 +9,8 @@ import subprocess
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / 'dist-digimon'
 OUT.mkdir(exist_ok=True)
-excluded = {'js/app.min.js', 'js/data/funding.js', 'js/ui/support-ui.js'}
+excluded = {'js/app.min.js', 'js/data/funding.js', 'js/ui/support-ui.js',
+            'art-review/redrawn/temari-kamatari-v1.png', 'art-review/redrawn/temari-cyclone-wind-v1.png'}
 # Remove obsolete files from an existing local artifact as well as fresh CI builds.
 for name in excluded:
     stale=OUT/name
@@ -57,7 +58,10 @@ for item in pain['bodies'].values():
     assert item['source'].startswith('redrawn/') and path.suffix == '.png'
     assert (ROOT / path).resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
     review_runtime.append(path.as_posix())
-for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:
+review_runtime.extend(['art-review/temari-art.js', 'art-review/temari-frames.json'])
+for source in ('temari-common-v1.png', 'temari-skills-v1.png', 'temari-kamatari-v2.png', 'temari-spin-v1.png'):
+    review_runtime.append('art-review/redrawn/' + source)
+for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-temari.js', '.omx/naruto-temari-reflect.js', '.omx/temari-cyclone-vfx.js', '.omx/temari-coop.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:
     target = OUT / name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / name, target)

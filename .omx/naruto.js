@@ -1,7 +1,7 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
-  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010]);
+  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011]);
   const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
   const version='火影 beta 0.01';
   const roster = [
@@ -14,7 +14,8 @@
     ['gaara','Gaara','我愛羅','砂隱村',['ground'],4,136,104],
     ['itachi','Itachi Uchiha','宇智波鼬','曉',['psychic','fire'],5,110,117],
     ['tenten','Tenten','天天','第三班',['steel'],3,150,144],
-    ['pain','Pain — Six Paths','沛恩六道','曉',['psychic'],5,120,108]
+    ['pain','Pain — Six Paths','沛恩六道','曉',['psychic'],5,120,108],
+    ['temari','Temari','手鞠','砂隱村',['flying'],3,125,118]
   ];
   const records = new Map(), dictionary = {Naruto:'火影忍者'};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
@@ -23,18 +24,20 @@
     G.DEX.push(mon);G.DEX_BY[dex]=mon;
     const starter={dex,start,traits:['valiente','leal']};
     G.STARTERS.push(starter);G.STARTER_BY[dex]=starter;
-    const pixel=window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug],image=new Image();
+    // Temari has her own on-demand atlas; no legacy pixel sheet is required.
+    const pixel=slug==='temari'?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug],image=new Image();
     const geometry={w:32,h:36,ax:16,ay:36,n:1,r:1,d:[24]};
     G.SPRITE_META[dex]={s:1,sh:false,a:Object.fromEntries(G.Sprites.ANIMS.map(anim=>{
       const action=pixel.animations?.[anim];
-      const count=anim==='Walk'?4:action?Math.max(...Object.values(action.frames).map(frames=>frames.length)):1;
-      return [anim,{...geometry,n:count,d:action?.durations||Array(count).fill(anim==='Walk'?8:action?(action.duration||7):24)}];
+      const count=slug==='temari'?4:anim==='Walk'?4:action?Math.max(...Object.values(action.frames).map(frames=>frames.length)):1;
+      const duration=slug==='temari'?(anim==='Idle'?12:anim==='Faint'?9:6):anim==='Walk'?8:action?(action.duration||7):24;
+      return [anim,{...geometry,n:count,d:action?.durations||Array(count).fill(duration)}];
     }))};
     const record={...mon,chinese,team,slug,pixel,image,ready:false,attack:''};
     let loading;
     Object.defineProperty(record,'loaded',{get(){
       if(record.ready)return Promise.resolve(true);
-      if(slug==='pain')return G.PainArt.ready.then(()=>{record.ready=true;return true;});
+      if(slug==='pain'||slug==='temari')return (slug==='pain'?G.PainArt:G.TemariArt).ready.then(()=>{record.ready=true;return true;});
       if(loading)return loading;
       loading=new Promise(resolve=>{
       image.onload=()=>{
@@ -93,6 +96,25 @@
       if(!record)return super.draw(ctx,x,y,opts);
       const pixel=record.pixel;
       const ui=previews.has(ctx.canvas);
+      if(this.dex===30011){
+        if(!record.ready){void record.loaded;return;}
+        const actor=G.Game.player?.anim===this?G.Game.player:[...(G.SelfClones?.actors()||[]),...(G.Coop?.puppets?.()||[]),...(G.TemariCoop?.remoteActors?.()||[])].find(a=>a.anim===this);
+        const actionPose=actor?G.NarutoTemari?.activeFor(actor):null;
+        const reflectWall=actor?G.NarutoTemariReflect?.activeFor(actor):null;
+        const pose=actionPose||(reflectWall&&!reflectWall.permanent?{kind:'reflect',age:reflectWall.age}:null);
+        const dead=actor?.dead||this.cur==='Faint',hurt=actor?.flash>0||this.cur==='Hurt';
+        const state=dead?'death':hurt?'hurt':pose?.kind||(this.cur==='Walk'?'move':'idle');
+        const time=dead?(this.cur==='Faint'?(this.frame*9+this.t)/60:0):
+          actor?.flash>0?Math.max(0,.14-actor.flash):
+          this.cur==='Hurt'?(this.frame*6+this.t)/60:
+          pose?.age??(this.frame*(state==='idle'?12:6)+this.t)/60;
+        if(ui)G.TemariArt.draw(ctx,{x,y,height:Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75),state:'idle',time,dir:this.dir,facing:this.dir>=5?-1:1,alpha:opts.alpha??1});
+        else {
+          const stars=actor?.moves?.some(move=>move.digiMode==='temari-mastery')?(pose?.empowered?3:pose?.stars||1):1;
+          G.TemariArt.draw(ctx,actor||{},{x,y,height:72*this.scale,state,time,stars,dir:this.dir,facing:this.dir>=5?-1:1,flash:!dead&&opts.flash,alpha:opts.alpha??1});
+        }
+        return;
+      }
       if(this.dex===30010){
         const actor=G.Game.player?.anim===this?G.Game.player:(G.SelfClones?.actors()||[]).find(a=>a.anim===this);
         const pose=actor?G.NarutoPain?.activeFor(actor):null;
@@ -100,7 +122,7 @@
         const state=this.cur==='Faint'?'death':this.cur==='Hurt'?'hurt':casting?'special':this.cur==='Walk'?'move':['Attack','Shoot','Charge'].includes(this.cur)?'strike':'idle';
         const fps=G.PainArt?.metadata?.bodies.tendo.animations[state]?.fps||2;
         const time=casting?pose.age:this.frame/fps;
-        if(ui){const width=ctx.canvas.width*.85,height=ctx.canvas.height*.8;G.PainArt?.portrait(ctx,{path:'tendo',x:x-width/2,y:y-height,width,height});}
+        if(ui)G.PainArt?.draw(ctx,{path:'tendo',x,y,height:Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75),state:'idle',time,facing:this.dir>=5?-1:1,alpha:opts.alpha??1});
         else {
           const height=G.NarutoPain?.visualHeight('tendo',actor||{anim:this})??80*this.scale;
           G.PainArt?.draw(ctx,{path:'tendo',x,y,height,state,time,facing:this.dir>=5?-1:1,alpha:opts.alpha??1});
@@ -180,7 +202,7 @@
     const record=records.get(dex),button=document.createElement('button');
     button.type='button';button.className='naruto-card';button.dataset.quickNaruto=dex;
     button.append(G.UI.spriteCanvas(dex,128,112,{dir:0,shadow:true}));
-    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30007:'砂術・砂縛柩・砂瀑大葬',30006:'體術・木葉旋風・蓮華',30009:'忍具連投・雙昇龍',30010:'六道協戰・神羅天征・地爆天星'}[dex]||record.team;
+    const identity={30001:'影分身・螺旋丸',30002:'千鳥・豪火球',30007:'砂術・砂縛柩・砂瀑大葬',30006:'體術・木葉旋風・蓮華',30009:'忍具連投・雙昇龍',30010:'六道協戰・神羅天征・地爆天星',30011:'風遁・大鐮鼬・斬斬舞'}[dex]||record.team;
     button.insertAdjacentHTML('beforeend',`<b>${record.chinese}</b><small>${identity}</small><span class="naruto-selection"></span>`);
     button.onclick=()=>choose(dex);quickPick.querySelector('.naruto-grid').append(button);
   }

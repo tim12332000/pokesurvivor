@@ -25,6 +25,9 @@
     }
   }
   function clearActorEffects(actor) {
+    // This function uses the captured combat cleanup to avoid recursion. Later
+    // networking wrappers still need an explicit actor expiry notification.
+    G.TemariCoop?.actorRemoved?.(actor);
     clearFields.call(G.Combat, actor);
     clearActorProjectiles(actor);
   }
@@ -271,8 +274,10 @@
       }
       let moving = false;
       if (!busy) {
-        const move = actor.activeMove() || actor.moves.find(m => m.id === 'naruto-gaara');
-        const range = move?.range || move?.radius || 100, target = actor.target;
+        const move = actor.activeMove() || actor.moves.find(m => ['naruto-gaara','naruto-temari'].includes(m.id));
+        const mastery = actor.moves.find(m => m.digiMode === 'temari-mastery');
+        const masteryReach = move?.id === 'naruto-temari' && mastery ? [40,70,110,160,220][Math.max(0,Math.min(4,mastery.lvl-1))] : 0;
+        const range = (move?.range || move?.radius || 100) + masteryReach, target = actor.target;
         const angle = actor.cloneId * 2.4, gap = owner.r + actor.r + 28;
         let x = owner.x + Math.cos(angle) * gap, y = owner.y + Math.sin(angle) * gap, stop = 14;
         if (target && !actor.returningToOwner) {

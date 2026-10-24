@@ -14,7 +14,7 @@
     const guardianBossHit = (moveId === 'naruto-sand-shield' || moveId === 'naruto-sand-guard') &&
       boss;
     const bonus = !guardianBossHit && !G.DamageSplash?.isSecondary() && !this.dead && this.hp > 0 && owner && !owner.dead && owner.hp > 0 &&
-      (G.Game.everyone().includes(owner) || G.SelfClones?.isActor(owner)) && Number.isFinite(amount) && amount > 0 &&
+      (G.Game.everyone().includes(owner) || G.SelfClones?.isActor(owner) || G.NarutoTemariReflect?.isDamageOwner(owner)) && Number.isFinite(amount) && amount > 0 &&
       Number.isFinite(rate) && rate > 0 && Number.isFinite(this.maxHp) && this.maxHp > 0
         ? this.maxHp * rate * (boss ? bossMultiplier : 1) : 0;
     // One native hit preserves shields, knockback, death, networking and hit VFX.

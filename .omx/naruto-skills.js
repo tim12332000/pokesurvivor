@@ -195,6 +195,18 @@
     count:2,range:280,speed:440,size:4,ups:painUps([2,2,3,3,4]),
     desc:'常駐普攻，不占主動槽。天道連射黑棒，碰敵或牆即止。基礎 2／2／3／3／4 根，每根傷害倍率 1／1.2／1.4／1.7／2。數量卡 ×1.25 累乘取整，最多 40 根。五道生命為本體 60%（人間／餓鬼 80%），低血撤回，安全脫戰後恢復至半血。出生／復歸整備 1.5 秒；倒下 16 秒後尋找安全位置復歸。天道倒下時，已現身且存活的地獄道可用閻王救回；兩道都倒下則結束。'
   }]);
+  const temariSource='https://naruto-official.com/it/anime/naruto1/list/01_267';
+  const temariDamageUps=(values,ranges=null)=>values.slice(1).map((damage,i)=>({
+    t:`每次傷害 ${damage}${ranges?`・射程 ${ranges[i+1]}`:''}`,
+    m:{dmg:damage/values[i],...(ranges?{range:ranges[i+1]}:{})}
+  }));
+  profiles.push([30011,'temari','鐮鼬之術','Temari — Wind Release','temari',{
+    mode:'temari-wind',passive:true,icon:'temariFan',type:'flying',cd:1.6,dmg:10,
+    count:3,range:240,speed:420,size:9,arc:Math.PI/4,contactRadius:30,
+    ups:temariDamageUps([10,12,14.4,18,22.5],[240,250,270,290,310]).map((up,i)=>({...up,
+      t:up.t+`・角度${[75,105,135,180][i]}°`,m:{...up.m,arc:[75/45,105/75,135/105,180/135][i]}})),source_url:temariSource,
+    desc:'常駐風浪，不占主動槽。角度隨階級擴大45／75／105／135／180度，最高階掃過前方半圈。每輪floor(3×1.25^數量卡)道風浪造成鐮鼬切割，短暫吹起小怪、阻止前進；同輪連切不重置吹起時間，特殊敵人免疫。每次傷害10／12／14.4／18／22.5，冷卻1.6秒，射程240／250／270／290／310；牆會阻擋。精通使每波連切1＋精通等級＋數量卡次，每次重新檢查接觸。'
+  }]);
   const shared = [
     ['naruto-kunai', {
       name: '苦無投擲', mode: 'shot', type: 'steel', cd: .68, dmg: 17,
@@ -499,6 +511,45 @@
       desc:'學會後遇到三名以上聚集敵人或特殊強敵時自動生成黑核。半徑 160，1.5 秒內每 0.5 秒傷害一次共三次，再崩落一次。第一階合計基傷 165；特殊敵人牽引僅 25%，不硬定身。最多一顆，施放後家族引斥技至少恢復 5 秒；不用選招。',source_url:painSource
     }]
   );
+  extra.push(
+    ['naruto-temari-three-stars',[30011],{
+      name:'三星扇精通',mode:'temari-mastery',icon:'temariMastery',type:'flying',passive:true,learnLevel:3,cd:0,dmg:0,
+      masterySpeed:1.15,masteryReach:40,empowerMultiplier:1.15,deflectBase:1,
+      ups:[1,2,3,4].map(i=>({t:`總斬擊 ${i+2}＋數量・速度 ×${[1.15,1.25,1.4,1.6,1.85][i]}・射程 +${[40,70,110,160,220][i]}`,
+        m:{masterySpeed:[1.15,1.25,1.4,1.6,1.85][i],masteryReach:[40,70,110,160,220][i],empowerMultiplier:[1.15,1.2,1.25,1.3,1.35][i],deflectBase:[1,1,2,2,3][i]}})),
+      desc:'常駐被動，不占主動槽。每刃／每波總斬擊次數＝1＋精通等級＋數量卡。風刃與風浪速度 ×1.15／1.25／1.4／1.6／1.85、射程 +40／70／110／160／220。每第三輪普攻傷害 ×1.15／1.20／1.25／1.30／1.35；前方短暫掃開實體飛行彈，額度 floor([1,1,2,2,3]×1.25^數量卡)。招式機制與數值為本作改編。',source_url:temariSource
+    }],
+    ['naruto-temari-great-scythe',[30011],{
+      name:'風遁・大鐮鼬之術',mode:'temari-great-scythe',icon:'temariScythe',type:'flying',learnLevel:6,cd:5,dmg:70,
+      count:1,range:300,speed:360,radius:160,width:90,arc:Math.PI*110/180,knock:65,
+      ups:temariDamageUps([70,84,100.8,126,157.5]),
+      desc:'主動招式，冷卻 5 秒。每輪 floor(1.25^數量卡) 道風浪，對實際接觸的前方敵人造成群傷，每波每斬 70／84／100.8／126／157.5。精通使每波獨立再斬；牆會阻擋，敵人可離開範圍。每波首次擊退普通敵人 65，特殊敵人免疫。切招保留已施放風浪。',source_url:temariSource
+    }],
+    ['naruto-temari-blade-dance',[30011],{
+      name:'通靈・斬斬舞',mode:'temari-blade-dance',icon:'temariSummon',type:'flying',passive:true,learnLevel:9,cd:10,dmg:32,
+      count:1,range:360,speed:480,radius:65,slashCount:4,
+      ups:temariDamageUps([32,39,47,57,69]).map((up,i)=>({...up,m:{...up.m,slashCount:[4,4,5,5,6][i+1]}})),
+      desc:'常駐被動，不占主動欄。學會後floor(1.25^數量卡)隻鐮多利在附近自主遊走、停留，走遠會自行回到附近。自動接敵、斬擊後繼續閒逛，每隻獨立冷卻10秒。基礎斬擊4／4／5／5／6次；精通另加精通等級＋數量卡。每斬間隔0.12秒，傷害32／39／47／57／69，不分攤傷害；敵人可離開範圍。',source_url:temariSource
+    }],
+    ['naruto-temari-typhoon',[30011],{
+      name:'風遁・颱風迴旋',mode:'temari-typhoon',icon:'temariTyphoon',type:'flying',learnLevel:12,cd:8,dmg:30,
+      count:1,range:240,radius:240,pulseCount:3,sweepDuration:1.2,orbitDuration:1.2,
+      ups:temariDamageUps([30,36,44,54,66],[240,270,300,330,360]).map((up,i)=>({...up,
+        t:`每次傷害 ${[36,44,54,66][i]}・半徑 ${[270,300,330,360][i]}・基礎切割 ${[4,5,6,8][i]} 次`,
+        m:{...up.m,radius:[270/240,300/270,330/300,360/330][i],pulseCount:[4,5,6,8][i]}})),
+      desc:'選中後每 8 秒以起手位置為風眼，揮出 floor(1.25^數量卡) 道風流，各掃滿 360°。掃到的普通敵人沿真實弧線繞風眼一圈，最後掃到者也繞完整一圈；遇牆中止，強敵不搬動。每股對各目標基礎切割 3／4／5／6／8 次，精通另加技能階＋數量卡，每次基傷 30／36／44／54／66。半徑 240／270／300／330／360，不同風流與分身各自傷害；同敵不重設位移。本作改編。',
+      source_url:'https://naruto-official.com/en/news/01_1602'
+    }],
+    ['naruto-temari-reflect',[30011],{
+      name:'風遁・返風壁',mode:'temari-reflect',icon:'temariReflect',type:'flying',passive:true,learnLevel:15,cd:0,dmg:0,
+      radius:85,reflectMultiplier:1,
+      ups:[1,2,3,4].map(i=>({t:`半徑 ${[85,95,110,125,140][i]}・反射倍率 ${[1,1.2,1.4,1.7,2][i]}`,
+        m:{radius:[95/85,110/95,125/110,140/125][i-1],reflectMultiplier:[1,1.2,1.4,1.7,2][i]}})),
+      desc:'常駐被動，不占主動欄。持續以360度返風壁擋下並反射範圍內的敵方飛彈、首領特殊彈、光束與遠程落點攻擊，無開盾冷卻。每次反打floor(1.25^數量卡)道攻擊；每道為原攻擊傷害×反射倍率×攻擊力。倍率1／1.2／1.4／1.7／2，半徑85／95／110／125／140。近戰與環境傷害照常。本作改編。',
+      source_url:temariSource
+    }]
+  );
+  Object.assign(kinds,{'temari-wind':'cone','temari-mastery':'buff','temari-great-scythe':'cone','temari-blade-dance':'dash','temari-typhoon':'meteor','temari-reflect':'buff'});
   Object.assign(kinds,{'pain-basic':'projectile','pain-gravity':'aura','pain-missiles':'projectile','pain-summon':'dash','pain-soul':'melee','pain-absorb':'buff','pain-repair':'buff','pain-planet':'meteor'});
   kinds['gaara-sand-guard'] = 'buff';
   Object.assign(kinds,{'tenten-kunai':'projectile','tenten-fuma':'projectile','tenten-mastery':'buff','tenten-bounce':'buff','tenten-guard':'buff','tenten-tags':'meteor','tenten-twin':'projectile'});
@@ -560,7 +611,7 @@
     const label = document.querySelector(`[data-naruto-attack="${dex}"]`);
     if (label) label.textContent = name;
     byDex.set(dex, definition);
-    references.set(dex, { name: english, source_url: dex===30009?tentenSource:`https://naruto-official.com/en/news/${article}` });
+    references.set(dex, { name: english, source_url: dex===30011?temariSource:dex===30009?tentenSource:`https://naruto-official.com/en/news/${article}` });
   }
   shared.forEach(([id, design]) => register(id, design));
   for (const [id, owners, design] of extra) {
@@ -594,7 +645,7 @@
   guide.translate = false;
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   function activationLabel(move) {
-    if (['naruto-gaara','naruto-tenten','naruto-pain'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
+    if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
     if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';
     if (['naruto-kusanagi', 'naruto-sand-prison'].includes(move.id)) return '主動 · 需保持選中';
     if (['naruto-shadow-clones', 'naruto-nine-tails-cloak'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';

@@ -1,0 +1,69 @@
+{
+  "date": "2026-10-24",
+  "method": "Built-in image_gen imagegen tool",
+  "references": [
+    "redrawn/tenten-common-v1.png",
+    "redrawn/gaara-common-v1.png"
+  ],
+  "prompts": [
+    {
+      "key": "temari-common",
+      "prompt": "Create NEW ORIGINAL production pixel-art sprite atlas of young TEMARI from Naruto, in the EXACT rendering family of the supplied Tenten and Gaara atlases (STYLE REFERENCES ONLY; do not edit or reproduce their characters). Compact 3-head-tall full-body ninja, readable face, dark navy crisp outlines, flat pixel clusters and two-tone cel shading, NO smooth painting, no text/grid/labels. Temari has blonde hair in FOUR spiky ponytails, teal eyes, early-series pale lavender short tunic/dress, deep purple sash, dark mesh underlayer and navy shinobi sandals, metal Sand headband at neck. A large CLOSED cream folding war fan with dark edges is strapped diagonally on her back in common poses. Every figure same body size/proportions. Transparent alpha background. Exactly FOUR COLUMNS by SIX ROWS, 24 separate full-body figures in equal generous cells with wide transparent gutters. No touching adjacent cells, feet centered on cell baseline, body not enlarged for crouching/falling. Row1: front idle eyes open, front idle breathe, back idle, back idle breathe. Row2: right-facing side idle, side idle breathe, front run left step, front run right step. Row3: RIGHT-facing run FOUR alternating-leg cycle poses. Row4: BACK-facing run FOUR alternating-leg cycle poses. Row5: front hurt recoil, front recover, right side hurt recoil, right side recover. Row6: side RIGHT falling progression: knees bend, kneeling down, tipping onto side, fully lying still. Keep lavender outfit and FOUR blonde hair tufts consistent, no other characters, no effects, no ground shadows. Exact 24 figures only."
+    },
+    {
+      "key": "temari-skills",
+      "prompt": "Draw NEW ORIGINAL pixel-art production animation sprite sheet of young TEMARI in the same exact style as supplied Gaara and Tenten references (style only). Crisp navy outlines, 3-head-tall ninja proportions, flat pixel clusters, hard two-tone shading, no smooth painting. Young Temari: blonde FOUR spiky ponytails, teal eyes, pale lavender short tunic, dark purple sash, mesh underlayer, navy sandals, Sand forehead protector worn at neck. Her weapon is a huge cream folding fan with purple circular THREE STAR emblems and black spokes/edges. Exactly FOUR columns FOUR rows =16 full-body action sprites, all mostly facing RIGHT three-quarter. Equal cells with very wide transparent gutters; full fan must fit in its own cell without touching anything, body's height same in all standing poses. Transparent alpha, no text/no labels/no grids/no effects. Row1 BASIC fan swing: closed fan gripped preparation, fan opened to ONE purple circle, one-star fan horizontal forward swing, settle with fan raised. Row2 TWO/THREE STAR swing: fan half opened showing TWO purple circles, half-open forward swing, FULLY opened fan with THREE purple circles powerful horizontal swing, full-open fan follow-through. Row3 HEAVY WIND: two hands grip folded fan low, fully open THREE-star fan pulled behind ready, massive two-handed forward fan swing with clear extended arms and torso turn, fan lowered recovery. Row4 SUMMON: kneel and press hand on fan base, draw open fan close to floor summoning gesture, swing fan pointing forward to release summon, return to upright stance. No floating symbols, wind, beams, other characters or summons on this sheet. Sixteen genuinely different poses, faithful same costume and head proportions."
+    },
+    {
+      "key": "temari-kamatari",
+      "prompt": "Draw an ORIGINAL pixel-art animation sprite atlas for KAMATARI, Temari's summoned sickle weasel from Naruto, matching supplied compact Gaara/Tenten sprite outline and flat pixel shading. Character is a white/cream WEASEL with elongated furry body, pointed muzzle, small pink nose, dark eyepatch over ONE eye, dark small harness/scarf, holding a clearly readable curved steel SICKLE with dark handle in forepaws, fluffy tail. Small creature, no humans. Exactly FOUR COLUMNS TWO ROWS, EIGHT separate sprites, generous equal cells, consistent body size and foot anchor, transparent alpha background. Row1 RIGHT facing: ready crouch holding sickle, forward sprint stretched, forward sprint compressed, lunging forward sickle extended. Row2 FOUR distinct spinning sickle attack poses: blade held high before slash, horizontal slash right, follow-through blade down, turning return with tail curved. Keep weasel anatomy and recognizable eyepatch, not a cat or fox. Minimal short pale gray wind arcs permitted close to blade only, no large tornado or glow. Hard crisp pixel clusters, navy one-pixel style outline, limited colors, two-tone shading. No labels, text, grid lines, ground plane, shadows or background."
+    },
+    {
+      "key": "cyclone-spin",
+      "prompt": "Create a NEW ORIGINAL game sprite sheet of young TEMARI performing a full 360-degree spinning giant fan sweep. Use the supplied Temari sheets as EXACT CHARACTER AND STYLE references: same blonde FOUR tied spiky ponytails, teal eyes, lavender tunic, dark purple sash, mesh underlayer, navy sandals, Sand headband at neck. Crisp pixel clusters and dark one-pixel-style outline, 3-head-tall proportions, hard flat cel shading matching reference. Exactly FOUR COLUMNS TWO ROWS = EIGHT full-body sequential frames, equal spacious cells, same anatomical scale and same feet pivot/baseline across poses. The huge cream fan has THREE PURPLE CIRCLES, no text. GENUINELY DRAW DIFFERENT VIEWS OF BODY, do NOT rotate the same flat image. Eight spin phases in reading order: 1 front-facing begins two-handed fan sweep toward right; 2 right three-quarter mid-sweep; 3 right side sweeping fan horizontally; 4 back-right three-quarter; 5 fully BACK facing with back of tunic and blonde ponytails, fan swept to left; 6 back-left three-quarter; 7 LEFT SIDE sweeping fan across; 8 front-left three-quarter finishing at front. Torso and arms twist, planted/pivoting feet and trailing sash show a powerful continuous turn, face stays anatomically correct and is NOT visible through back of head. Fan is part of each sprite, no wind VFX painted onto body. Full fan and limbs in each cell, at least 12 percent transparent margins, no neighbors touching. Transparent alpha background. No labels, no grid, no shadows, no ground, no other characters. Sixteen? NO: exactly EIGHT figures."
+    },
+    {
+      "key": "cyclone-wind",
+      "prompt": "Create a production pixel-art VFX animation atlas, EXACTLY FOUR COLUMNS TWO ROWS, EIGHT frames of the SAME thick sweeping WIND CRESCENT rotating internally/fluidly. STYLE references supplied are for pixel texture and flat shading only; NO CHARACTERS in output. Every equal square cell contains a large powerful scythe-like wind crescent on its RIGHT HALF: an invisible circular wind-eye pivot is at exact CENTER of each cell; the bright LEADING TIP points EAST at 3 o'clock, about 85 percent of half-cell-radius to the right of pivot. The crescent curls COUNTERCLOCKWISE behind that tip through the lower-right arc into a tapering tail, leaving central eye and left half EMPTY transparent. All EIGHT animation frames keep same pivot/orientation/size, only wind fibers, jagged crest contours and short flying fragments evolve through the eight phases, so the game can rotate the VFX atlas around the center as a brush. Thick layered white/cream wind blade, cool gray shadow facets, subtle desaturated mint inner highlights, 10-14 color limited palette, hard stepped PIXEL CLUSTERS with sharp carved tapered tips, chunks and broken streaks. Rich dense swept fibers, not smooth wire loops, not neon glow, not a green disc, not a tornado cone, not a full closed ring. Small dark gray-brown flecks near trailing tail for dust. No outer black hard cartoon stroke. Large clearly separated cells with 12 percent blank margin, nothing crosses adjacent cells. Fully transparent alpha, no black/color background, no ground, no text, no labels, no grid lines. Exactly EIGHT VFX sprites only."
+    }
+  ],
+  "outputs": [
+    {
+      "source": "redrawn/temari-common-v1.png",
+      "sha256": "672ee3a97d1faca7e7783862083768e2fbf9088e2ebf7cde83bddfd3c1dfbb14",
+      "size": [
+        1024,
+        1536
+      ]
+    },
+    {
+      "source": "redrawn/temari-skills-v1.png",
+      "sha256": "09b5d763231a548b63d92f551ccbd1fabff1e7980fd6803f527bb0fcb84e4b33",
+      "size": [
+        1182,
+        1330
+      ]
+    },
+    {
+      "source": "redrawn/temari-kamatari-v2.png",
+      "sha256": "1f7bedfd624322cfd13a4b4427478e56d639f3ca774f9728575af3cf714c38d1",
+      "size": [
+        1774,
+        887
+      ]
+    },
+    {
+      "source": "redrawn/temari-spin-v1.png",
+      "sha256": "602b3521f745549aa7bc65f83dd3d676697bd9a732c73013f362adee72ce2c03",
+      "size": [
+        1774,
+        887
+      ]
+    },
+    {
+      "source": "temari-frames.json",
+      "sha256": "b2e0be37f45a1c810954c1eb93a6484351d1632953b4f3179480c34b169a464a"
+    }
+  ],
+  "activeEffectMethod": "Procedural Canvas; the old wind bitmap is archived, not loaded."
+}

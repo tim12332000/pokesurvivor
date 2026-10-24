@@ -270,7 +270,7 @@ G.Judgment = (() => {
         if (p.dead) continue;
         for (let i = 0; i < n; i++) {
           const a = Math.random() * 6.2832, d = i ? G.U.rand(40, 150) : 0;
-          H({ kind: 'zone', x: p.x + Math.cos(a) * d, y: p.y + Math.sin(a) * d * 0.8, r: 44, delay: 1.25 + i * 0.09, pct: 0.3, vis: 'pillar' });
+          H({ kind: 'zone', ranged:true, sourceX:A.x, sourceY:A.y, x: p.x + Math.cos(a) * d, y: p.y + Math.sin(a) * d * 0.8, r: 44, delay: 1.25 + i * 0.09, pct: 0.3, vis: 'pillar' });
         }
       }
       A.anim.play('Shoot', { speed: 0.9 });

@@ -1,0 +1,6 @@
+{
+  "method": "Built-in imagegen edit",
+  "reference": "redrawn/temari-kamatari-source-v1.png",
+  "selected": "redrawn/temari-kamatari-v2.png",
+  "prompt": "Edit the supplied Kamatari weasel sprite atlas to FIX PACKING ONLY. Keep EXACT SAME small white/cream eyepatched weasel, curved steel sickle, dark harness/scarf, navy outlines, flat pixel rendering, EIGHT action poses, four columns by two rows, TRANSPARENT alpha. Redraw the packing with every animal and its entire sickle and tail completely separated from all neighbors. Make each figure MUCH SMALLER relative to its cell: occupy at most SIXTY PERCENT of cell width and SIXTY PERCENT of cell height, at least 20 percent empty margin on EACH side. Clearly visible WIDE blank transparent gutters on all vertical column boundaries and horizontal row boundary. No element crosses a cell boundary, especially the extended sickle in first row second cell and the neighboring tail. All eight figures the same true body scale, feet on same row baseline. Row1 ready and 3 right-facing run/lunge poses; row2 four distinct sickle-slash poses. No text, labels, grids, ground plane or background. Preserve the complete sickle and eyepatch in every pose. Output a generous landscape sheet."
+}

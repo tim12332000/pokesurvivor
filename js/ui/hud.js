@@ -275,6 +275,7 @@ G.HUD = (() => {
     const tentenState = pl.dex === 30009 ? G.NarutoTenten?.stateFor(pl) : null;
     const tentenPose = pl.dex === 30009 ? G.NarutoTenten?.activeFor(pl) : null;
     const tentenGuard = pl.dex === 30009 ? G.NarutoTenten?.guardFor?.(pl) : null;
+    const temariState = pl.dex === 30011 ? G.NarutoTemari?.stateFor(pl) : null;
 
     for (let i = 0; i < n; i++) {
       const g = groups[i] || [];
@@ -395,6 +396,27 @@ G.HUD = (() => {
         ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
         ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#eee8d4';
         ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
+      }
+      if (G.NarutoTemari?.supports(m.digiMode)) {
+        const state = temariState;
+        const q = G.Quantity?.bonus(pl) || 0;
+        const mastery = pl.moves.find(move => move.digiMode === 'temari-mastery');
+        const rank = mastery?.lvl || 0, recuts = state?.R ?? (rank ? 1 + rank + q : 1);
+        const count = base => G.Quantity?.count(pl, base) ?? base;
+        const label = m.digiMode === 'temari-mastery' ? '每刃 ' + recuts + ' 斬' :
+          m.digiMode === 'temari-wind' ? [45,75,105,135,180][Math.max(0,Math.min(4,m.lvl-1))] + '° ' + (state?.N ?? count(3)) + '×' + recuts :
+          m.digiMode === 'temari-great-scythe' ? '風浪 ' + (state?.W ?? count(1)) + '×' + recuts :
+          m.digiMode === 'temari-typhoon' ? '迴旋 ' + count(1) + '×' + ([3,4,5,6,8][Math.max(0,Math.min(4,m.lvl-1))] + (rank ? rank + q : 0)) :
+          '常駐 ' + (state?.K ?? count(1)) + '×' + ([4,4,5,5,6][Math.max(0,Math.min(4,m.lvl-1))] + (rank ? rank + q : 0));
+        ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
+        ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#cceee1';
+        ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
+      }
+      if (m.digiMode === 'temari-reflect') {
+        const reflection=G.NarutoTemariReflect?.stateFor(pl),wall=reflection?.wall;
+        const label='擋1→反打'+(wall?.copies??G.Quantity?.count(pl,1)??1)+'發';
+        ctx.fillStyle='rgba(10,16,28,.88)';ctx.fillRect(x+3,y+S-26,S-6,12);
+        ctx.font=F(800,8);ctx.textAlign='center';ctx.fillStyle='#cceee1';ctx.fillText(label,x+S/2,y+S-17,S-8);
       }
       if (G.NarutoTenten?.supports(m.digiMode)) {
         const state = tentenState, pose = tentenPose;

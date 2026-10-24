@@ -19,7 +19,7 @@
   function hit(owner, target, directDamage, color = '#fff', moveId = null) {
     const fraction = rate(owner);
     if (secondary || !fraction || !target || !owner || owner.dead || owner.hp <= 0 ||
-        (!G.Game.everyone().includes(owner) && !G.SelfClones?.isActor(owner)) || !Number.isFinite(directDamage) || directDamage <= 0) return 0;
+        (!G.Game.everyone().includes(owner) && !G.SelfClones?.isActor(owner) && !G.NarutoTemariReflect?.isDamageOwner(owner)) || !Number.isFinite(directDamage) || directDamage <= 0) return 0;
     const amount = directDamage * fraction;
     let dealt = 0;
     secondary++;

@@ -489,7 +489,7 @@
           break;
         case 'dash':       // embestida en línea recta
           c.wind = 0.75 * f; c.len = 330; c.dur = 0.32;
-          G.Hazards.add({ kind: 'beam', x: this.x, y: this.y, angle: ang, len: c.len + this.r, w: this.r * 2 + 16,
+          G.Hazards.add({ kind: 'beam', ranged:false, x: this.x, y: this.y, angle: ang, len: c.len + this.r, w: this.r * 2 + 16,
                           delay: c.wind + c.dur, dmg: this.dmg * 1.2, type, color: col });
           this.anim.play('Charge', { speed: 1.3 });
           break;
@@ -503,7 +503,7 @@
           const n = ai.fury ? 6 : 4;
           for (let i = 0; i < n; i++) {
             const a = i ? Math.random() * 6.2832 : 0, d = i ? G.U.rand(40, 120) : 0;
-            G.Hazards.add({ kind: 'zone', x: pl.x + Math.cos(a) * d, y: pl.y + Math.sin(a) * d * 0.8, r: 50,
+            G.Hazards.add({ kind: 'zone', ranged:true, sourceX:this.x, sourceY:this.y, x: pl.x + Math.cos(a) * d, y: pl.y + Math.sin(a) * d * 0.8, r: 50,
                             delay: 1.05 + i * 0.12, dmg: this.shotDmg() * 1.15, type, color: col });
           }
           c.wind = 0.5; this.anim.play('Shoot');
@@ -590,7 +590,7 @@
         case 'zoner': {
           const n = G.U.randInt(1, this.def.zones || 3);
           for (let i = 0; i < n; i++) {
-            G.Hazards.add({ kind: 'zone', x: pl.x + (i ? G.U.rand(-70, 70) : 0), y: pl.y + (i ? G.U.rand(-55, 55) : 0), r: 44,
+            G.Hazards.add({ kind: 'zone', ranged:true, sourceX:this.x, sourceY:this.y, x: pl.x + (i ? G.U.rand(-70, 70) : 0), y: pl.y + (i ? G.U.rand(-55, 55) : 0), r: 44,
                             delay: 1.2, dmg: this.shotDmg() * 0.95, type: this.atkType, color: col });
           }
           this.anim.play('Shoot');
@@ -706,7 +706,7 @@
       G.Sprites.drawShadow(ctx, this.dex, this.x, this.y, this.scale);
       // Los que flotan ya van en el aire en su sprite: sólo se mecen un poco.
       // (Y los que saltan, en arco.)
-      const lift = (this.flying && !this.boss ? 1 + Math.sin(this.bob) * 1.5 : 0) + (this.jumpLift || 0) + (G.NarutoLee?.liftFor(this) || 0);
+      const lift = (this.flying && !this.boss ? 1 + Math.sin(this.bob) * 1.5 : 0) + (this.jumpLift || 0) + (G.NarutoLee?.liftFor(this) || 0) + (G.NarutoTemari?.liftFor(this) || 0);
       this.anim.draw(ctx, this.x, this.y - lift, { flash: this.flash > 0, alpha });
       ctx.restore();
 
@@ -861,7 +861,7 @@
 
     function separate(dt) {
       for (const e of list) {
-        if (e.dead || G.NarutoLee?.bound?.(e)) continue;
+        if (e.dead || G.NarutoLee?.bound?.(e) || G.NarutoTemari?.held?.(e)) continue;
         const cx = Math.floor(e.x / CELL), cy = Math.floor(e.y / CELL);
         let px = 0, py = 0, n = 0;
         for (let j = -1; j <= 1; j++) {
@@ -947,7 +947,7 @@
           if (G.Coop.isHost) G.Coop.enemyGone(e, false);
           continue;
         }
-        if (e.boss || e.shiny || G.Rift.inArena) continue;
+        if (e.boss || e.shiny || G.Rift.inArena || G.NarutoTemari?.held?.(e)) continue;
         // Rezagados: los que se quedan atrás mientras corres y llevan un rato
         // FUERA DE LA VISTA (de todos) vuelven a salir por delante de ti. Así
         // no se puede huir sin más, y nunca desaparece uno que estés viendo.

@@ -19,8 +19,10 @@ G.Hazards = (() => {
     const o = Object.assign({ t: 0, hit: false, end: 0.3 }, h);
     list.push(o);
     if (!fromNet && G.Coop.isHost) {
+      G.TemariCoop?.trackShot(o);
       G.Coop.broadcast(['hz', { kind: o.kind, x: Math.round(o.x), y: Math.round(o.y), r: o.r, angle: o.angle, len: o.len, w: o.w,
-                                delay: o.delay, dmg: Math.round(o.dmg), type: o.type, color: o.color, pct: o.pct, pure: o.pure, vis: o.vis }]);
+                                delay: o.delay, dmg: Math.round(o.dmg), type: o.type, color: o.color, pct: o.pct, pure: o.pure, vis: o.vis,
+                                ranged:o.ranged,sourceX:o.sourceX,sourceY:o.sourceY,coopShotId:o.coopShotId }]);
     }
     return o;
   }

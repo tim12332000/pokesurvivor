@@ -8,14 +8,14 @@
     CastContinuityLab.install(G, { controls: false });
     AnimationRuntime.install(G);
     KyuubiForm.install(G);
-    const loading=new Map(),heroes=new Set([30001,30002,30006,30007,30009,30010]);
-    const ready=dex=>+dex===30010?!!G.PainArt?.loaded:!heroes.has(+dex)||(AnimationAssets.heroReady(+dex)&&G.Naruto.records.get(+dex).ready&&(+dex!==30001||!!KyuubiForm.image));
+    const loading=new Map(),heroes=new Set([30001,30002,30006,30007,30009,30010,30011]);
+    const ready=dex=>+dex===30011?!!G.TemariArt?.loaded:+dex===30010?!!G.PainArt?.loaded:!heroes.has(+dex)||(AnimationAssets.heroReady(+dex)&&G.Naruto.records.get(+dex).ready&&(+dex!==30001||!!KyuubiForm.image));
     function ensure(dex) {
       dex=+dex;
       if(ready(dex))return Promise.resolve();
       if(loading.has(dex))return loading.get(dex);
-      if(dex===30010){
-        const promise=G.PainArt.ready.then(()=>{G.Naruto.records.get(dex).ready=true;}).finally(()=>loading.delete(dex));
+      if(dex===30010||dex===30011){
+        const promise=(dex===30011?G.TemariArt:G.PainArt).ready.then(()=>{G.Naruto.records.get(dex).ready=true;}).finally(()=>loading.delete(dex));
         loading.set(dex,promise);return promise;
       }
       const promise=Promise.all([

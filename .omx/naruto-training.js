@@ -3,6 +3,20 @@
   const sandShieldId='naruto-sand-shield', sandGuardId='naruto-sand-guard', basicId='naruto-gaara';
   const gaaraPassives=new Set([sandShieldId,sandGuardId,'naruto-sand-armor']);
   const painMove=move=>move.id==='naruto-pain'||move.id.startsWith('naruto-pain-');
+  const temariPassives=new Set(['naruto-temari','naruto-temari-three-stars','naruto-temari-blade-dance','naruto-temari-reflect']);
+  function migrateTemariPassives(player) {
+    if(player.mon?.dex!==30011)return;
+    for(const move of player.moves)if(temariPassives.has(move.id)){
+      move.passive=true;
+      if(player.bind)delete player.bind[move.id];
+    }
+    if(!player.slots.some(group=>group.some(move=>temariPassives.has(move.id))))return;
+    const selected=player.slots[player.active];
+    for(const group of player.slots)for(let i=group.length-1;i>=0;i--)if(temariPassives.has(group[i].id))group.splice(i,1);
+    player.slots=player.slots.filter(group=>group.length);
+    const index=player.slots.indexOf(selected);
+    player.active=index>=0?index:0;
+  }
   function migratePainPassives(player) {
     if(player.mon?.dex!==30010)return;
     for(const move of player.moves)if(painMove(move)){
@@ -64,14 +78,16 @@
   }
   G.NarutoSkillCatalog.migrateGaaraPassives=migrateGaaraPassives;
   const arrange=G.Player.prototype.arrange;
-  G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);migratePainPassives(this);return arrange.apply(this,args);};
+  G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);migratePainPassives(this);migrateTemariPassives(this);return arrange.apply(this,args);};
   const addMove=G.Player.prototype.addMove;
   G.Player.prototype.addMove=function(id,...args){
-    if((this.mon?.dex===30001&&id==='naruto-shadow-clones')||this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery','naruto-tenten-bounce','naruto-tenten-guard'].includes(id)||this.mon?.dex===30010&&painMove({id})){
+    if((this.mon?.dex===30001&&id==='naruto-shadow-clones')||this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery','naruto-tenten-bounce','naruto-tenten-guard'].includes(id)||this.mon?.dex===30010&&painMove({id})||this.mon?.dex===30011&&temariPassives.has(id)){
       if(this.hasMove(id))return false;
       this.moves.push(G.Moves.instance(id,1));
       this.arrange();
       if(id==='naruto-tenten-guard')G.NarutoTenten?.ensureTalisman(this);
+      if(id==='naruto-temari-blade-dance')G.NarutoTemari?.syncPets(this);
+      if(id==='naruto-temari-reflect')G.NarutoTemariReflect?.sync(this);
       return true;
     }
     if(id===basicId&&this.mon?.dex===30007){
@@ -95,8 +111,11 @@
   const poolFor=G.Moves.poolFor;
   G.Moves.poolFor=mon=>{
     const player=G.Game.player;
-    if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateGaaraPassives(player);migratePainPassives(player);}
+    if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateGaaraPassives(player);migratePainPassives(player);migrateTemariPassives(player);}
     const ids=poolFor(mon);
+    // startRun may ask for a second starting attack before all wrappers expose
+    // the new player; Temari has no legal second attack at level one.
+    if(startingRun&&mon.dex===30011)return ids.filter(id=>!G.Moves.BY_ID[id].learnLevel);
     if(!mon.naruto||mon!==player?.mon||(G.Game.state==='ui'&&!startingRun))return ids;
     const milestones=milestonesFor(mon.dex);
     return ids.filter(id=>!milestones.some(m=>m.id===id&&player.level<m.level));
@@ -131,6 +150,7 @@
     G.NarutoSharingan?.migrate(player);
     migrateGaaraPassives(player);
     migratePainPassives(player);
+    migrateTemariPassives(player);
     if(!player.mon?.naruto)return offer(player,n);
     const retired=['naruto-kunai','naruto-shuriken'];
     return offer(player,n,candidates=>{

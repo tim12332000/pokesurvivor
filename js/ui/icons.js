@@ -16,6 +16,24 @@ G.Icons = (() => {
                  '..kmwmmmnk..', '.kmwmsmmmnk.', '.kmmsssmmnk.', '.kmmmsmmmnk.', '..kmmmmmnk..', '...kkkkkk...'];
 
   const UI = {
+    temariFan: { pal: { w:'#eee9d5', p:'#875681', s:'#b2c2bf' }, rows: [
+      '..kkkkkkk...', '.kwwpwwwpk..', 'kwwwwwwwwwk.', 'kwwpwwwpwwk.', 'kwwwwwwwwwk.', '.kwwpwwwpk..',
+      '..kwwwwwk...', '...kwwwk....', '....kwk.....', '....ksk.....', '....ksk.....', '.....k......'] },
+    temariMastery: { pal: { w:'#eee9d5', p:'#875681', s:'#a4e5d7' }, rows: [
+      '...p...p....', '..ppp.ppp...', '...p...p....', '.....p......', '....ppp.....', '.....p......',
+      '..sssssss...', '.s.......s..', 's...kwk...s.', '....ksk.....', '....ksk.....', '.....k......'] },
+    temariScythe: { pal: { w:'#effcf8', s:'#83d2bb', p:'#875681' }, rows: [
+      '...ssssss...', '..swwwwwws..', '.swwssssws..', 'swws....s...', 'sws.........', 'sws...ss....',
+      'swwssssws...', '.swwwwwws...', '..ssssss....', '....kpk.....', '....kpk.....', '.....k......'] },
+    temariSummon: { pal: { w:'#eee9d5', s:'#9cbbb0', p:'#875681' }, rows: [
+      '.kk......kk.', 'kwwk....kwwk', '.kwwkkkkwwk.', '..kwwwwwwk..', '..kwkwwkwk..', '...kwwwwk...',
+      '..kssppssk..', '.ksswwwwssk.', 'kwswkwwkwswk', '.kk.kwwk.kk.', '....kssk....', '.....kk.....'] },
+    temariTyphoon: { pal: { w:'#effcf8', s:'#83d2bb', p:'#875681' }, rows: [
+      '...ssssss...', '..swssssws..', '.swss..ssws.', '..ssssssws..', '...swssws...', '....swws....',
+      '....swws....', '...swsws....', '..sswwss....', '...swws.....', '....ss......', '..pppppppp..'] },
+    temariReflect: { pal: { w:'#effcf8', s:'#83d2bb', p:'#875681' }, rows: [
+      '....ssss....', '..sswwwwss..', '.swwsssswws.', '.sws....sws.', 'sws..pp..sws', 'sw...pp...ws',
+      'sw...pp...ws', 'sws..pp..sws', '.sws....sws.', '.swwsssswws.', '..sswwwwss..', '....ssss....'] },
     // Signature ninja skills: distinct silhouettes on the shared 12-pixel UI grid.
     shadowClones: { pal: { w:'#eef7ff', b:'#58cfff', o:'#ffad47' }, rows: [
       '..kk...kk...', '.kwok.kwbk..', '.kook.kbbk..', '..kk...kk...', '.kook.kbbk..', 'kooookbbbbk.',
