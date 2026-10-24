@@ -4,6 +4,8 @@
 
 ## 最新修訂
 
+效能修正：同次施放的風浪共用每幀原始搜尋候選，已命中的目標先略過，實際接觸時仍逐次檢查位置、角度與遮擋。Q13／精通5／30小怪＋1王的相同5秒壓測，更新p95由168.7ms降至9.8ms，命中69,216次、傷害3,176,986完全相同；沒有削減數量、連擊或傷害。30秒／60小怪＋1王，原生更新p95約5.2ms，另加3分身約20.6ms；這是CPU更新、不含繪圖，不能視為手機FPS保證。工具為tools/profile_temari_runtime.py，正式版temari-20261024-2。
+
 最新操作與行為覆蓋下方早期紀錄：普攻改為整片風浪，五階角度45／75／105／135／180度，保留數量×連切；命中普通小怪時獨立吹起22高度、停步0.30秒，同一輪連切不延長，不覆寫原生跳躍。返風壁為Lv.15常駐被動、無開盾冷卻與施法扣血，範圍內遠程攻擊持續反彈。鐮多利在附近75–145範圍自行走走停停，走遠會回到附近，不固定貼身。單體／散射風刃程式已移除，沿用完整風浪判定與程序renderer；滿圈使用依弧長細分的曲線，避免固定低邊數多邊形。
 
 本輪驗證全部通過：`temari-windwave/report.json`含五階扇角、滿級八方向及真實渲染唯讀；`report-wind-lift.json`含桌機／手機浮空停步、原生AI／影子／跳躍、主客機雙向權威、暫停清理與颱風兩次浮空後1.79秒完整2π；`report-permanent-pets.json`含遊走／休息與成長10項；`temari-reflect/report.json`及841封包完整反射連線、66封包內圈光束回歸；`temari-procedural-vfx/report-final-passives.json`含24案例／96時點、常駐10秒與遊走、無風效貼圖及渲染唯讀；`coop-report.json`最新完整1450封包通過。`report-windwave-final-regression.json`驗證傷害帳務與Q20四角色27,040次真實命中，繪製開關不改結果。實作主要修改naruto-temari.js、naruto-temari-reflect.js、temari-coop.js、temari-cyclone-vfx.js、naruto-skills.js、naruto-training.js、naruto.js、enemy.js、hud.js與temari-art.js；無新增套件。打包與來源bytes／cache hash一致，見`temari-windwave/build-verification.json`。

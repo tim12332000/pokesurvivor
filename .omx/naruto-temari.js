@@ -153,6 +153,16 @@
     const b=w.cast,d=Math.hypot(e.x-w.x,e.y-w.y),r=e.r||0;
     return d<=w.reach+r&&Math.abs(angleDelta(Math.atan2(e.y-w.y,e.x-w.x),w.aim))<=b.arc/2+Math.asin(Math.min(1,r/Math.max(1,d)));
   }
+  function waveCandidates(b) {
+    const count=G.EnemyMgr.all().length;
+    if(b.waveQueryAge!==b.age||b.waveEnemyCount!==count) {
+      b.waveQueryAge=b.age;b.waveEnemyCount=count;
+      // Quantity copies share an origin. Cache only the raw broad phase;
+      // each real front still checks live positions, life and line of sight.
+      b.waveCandidates=[...new Set(G.EnemyMgr.queryCircle(b.x,b.y,b.range+80))];
+    }
+    return b.waveCandidates;
+  }
   function advanceWave(w,dt) {
     const b=w.cast;w.age+=dt;
     w.reach=Math.min(b.range,b.speed*w.age);
@@ -166,14 +176,15 @@
       if(f.done)continue;
       const previous=f.reach;f.reach=Math.min(b.range,Math.max(0,w.age-f.started)*b.speed);
       const reach=w.reach;w.reach=f.reach;
-      if(!b.ghost||b.kind==='basic')for(const e of circleTargets(w.x,w.y,f.reach))if(!f.hits.has(e)&&
-        Math.hypot(e.x-w.x,e.y-w.y)+(e.r||0)>=previous-EPS&&inWave(w,e)) {
+      if(!b.ghost||b.kind==='basic')for(const e of waveCandidates(b))if(!f.hits.has(e)&&alive(e)&&!e.friendly&&
+        Math.hypot(e.x-w.x,e.y-w.y)+(e.r||0)>=previous-EPS&&inWave(w,e)&&clearPath(w.x,w.y,e.x,e.y)) {
         f.hits.add(e);const ordinary=!e.boss&&!e.elite&&!e.legend&&!e.judge;
         const knock=b.kind==='heavy'&&ordinary&&!w.knocked.has(e)?65:0;w.knocked.add(e);
         hit(b,e,Math.cos(w.aim),Math.sin(w.aim),knock);
         if(b.kind==='basic')claimLift(b.owner,e,b);
       }
-      for(const p of props(w.x,w.y,f.reach))if(!f.props.has(p)&&
+      if(b.wavePropAge!==b.age){b.wavePropAge=b.age;b.waveProps=props(b.x,b.y,b.range);}
+      for(const p of b.waveProps)if(!f.props.has(p)&&!p.dead&&p.hp>0&&
         Math.hypot(p.x-w.x,p.y-w.y)+(p.r||0)>=previous-EPS&&inWave(w,p)&&clearPath(w.x,w.y,p.x,p.y,1,p)) {
         f.props.add(p);propHit(b,p);
       }
