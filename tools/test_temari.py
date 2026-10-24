@@ -129,7 +129,7 @@ GROWTH = r"""() => {
 
 RANKS = r"""() => {
  const A=Acceptance,p=A.p(),T=G.NarutoTemari,out=[];A.learn();
- for(const [id,damage,cd] of [['naruto-temari',[10,12,14.4,18,22.5],1.6],['naruto-temari-great-scythe',[70,84,100.8,126,157.5],5]]){
+ for(const [id,damage,cd] of [['naruto-temari',[8,9.6,11.52,14.4,18],1.6],['naruto-temari-great-scythe',[56,67.2,80.64,100.8,126],5]]){
    A.rank(id,1);for(let rank=1;rank<=5;rank++){
      if(rank>1){const c=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+id);A.assert(c&&c.apply(p)!==false,'native upgrade card missing '+id+' '+rank)}
      A.reset();A.mastery(0);const m=p.moves.find(m=>m.id===id);A.assert(m.lvl===rank,'native upgrade rank '+id);A.near(m.dmg,damage[rank-1],'full per-cut damage '+id);A.near(m.cd,cd,'base cooldown '+id);
@@ -141,6 +141,12 @@ RANKS = r"""() => {
  for(let L=1;L<=5;L++){A.reset();A.mastery(L);const m=p.moves.find(m=>m.id==='naruto-temari'),s=T.snapshot(p,m);
    A.near(s.speed,m.speed*[1.15,1.25,1.4,1.6,1.85][L-1],'mastery speed '+L);A.near(s.range,m.range+[40,70,110,160,220][L-1],'mastery reach '+L);
    A.assert(s.R===1+L,'mastery cuts '+L);out.push({L,speed:s.speed,range:s.range,R:s.R});}
+ for(const [id,expected] of [['naruto-temari-blade-dance',[25.6,31.2,37.6,45.6,55.2]],['naruto-temari-typhoon',[24,28.8,35.2,43.2,52.8]]]){
+   for(let rank=1;rank<=5;rank++){A.reset();A.mastery(0);const m=A.rank(id,rank),s=T.snapshot(p,m);
+     A.near(m.dmg,expected[rank-1],'balanced rank '+id+' '+rank);A.near(s.damage,expected[rank-1]*p.atk,'balanced snapshot '+id+' '+rank);
+     const fallback={...m};delete fallback.dmg;A.near(T.snapshot(p,fallback).damage,s.damage,'balanced fallback '+id+' '+rank);
+     out.push({id,rank,damage:m.dmg});}
+ }
  // Giant only enlarges the actor. It must leave the snapshotted wind reach intact.
  A.reset();A.mastery(5);const move=p.moves.find(m=>m.id==='naruto-temari'),range=T.snapshot(p,move).range;
  const giant=G.LevelUp.offer(p,100).find(c=>c.key==='stat:giant');A.assert(giant,'native giant card missing');giant.apply(p);
@@ -214,7 +220,7 @@ ACCOUNTING = r"""() => {
  const A=Acceptance,p=A.p(),out=[];A.learn();
  for(const boss of [false,true])for(const crit of [0,1]){A.reset();A.mastery(0);A.rank('naruto-temari',1);p.percentHealthDamage=.01;p.lifestealRate=.00001;p.critChance=crit;p.hp=p.maxHp/2;
    const e=A.spawn(100,0,boss?'boss':null),hits=A.watch(e),hp=p.hp,credited=p.dmgDealt;p.target=e;A.castNative('naruto-temari');A.finish();
-   A.assert(hits.length>0,'accounting has no physical hits');const raw=10*p.atk*G.Types.mult('flying',e.types)*G.Weather.mult('flying')*(crit?1.5:1),bonus=e.maxHp*.01*(boss?.1:1);
+   A.assert(hits.length>0,'accounting has no physical hits');const raw=8*p.atk*G.Types.mult('flying',e.types)*G.Weather.mult('flying')*(crit?1.5:1),bonus=e.maxHp*.01*(boss?.1:1);
    A.assert(hits.every(h=>Math.abs(h.raw-raw)<1e-5&&h.damage===Math.round(raw+bonus)),'crit/type/weather/percent actual HP event '+JSON.stringify(hits));
    A.near(p.dmgDealt-credited,(raw+bonus)*hits.length,'damage credit once per real hit');A.near(p.hp-hp,(raw+bonus)*hits.length*.00001,'lifesteal once per primary hit');
    out.push({boss,crit,hits:hits.length,damage:e.maxHp-e.hp,healed:p.hp-hp});}

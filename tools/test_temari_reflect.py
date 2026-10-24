@@ -25,7 +25,7 @@ PROGRESSION = r"""() => {
    A.assert(!!c===(level===15),'reflection Lv15 gate');out.push({level,eligible:!!c})}
  const max=p.maxMoves;p.maxMoves=p.slots.length;A.rfLearn();p.maxMoves=max;A.assert(G.NarutoTemariReflect.activeFor(p),'learning with full active slots failed');for(let rank=1;rank<=5;rank++){A.rfReset(0,rank);const w=G.NarutoTemariReflect.activeFor(p);
    A.near(w.radius,[85,95,110,125,140][rank-1],'wall radius');A.assert(w.permanent&&w.duration===0,'wall is not permanent');A.assert(p.moves.find(m=>m.id===A.rf).passive&&!p.slots.some(g=>g.some(m=>m.id===A.rf)),'passive consumed active slot');
-   A.near(w.multiplier,[1,1.2,1.4,1.7,2][rank-1],'return multiplier');out.push({rank,radius:w.radius,duration:w.duration,multiplier:w.multiplier})}
+   A.near(w.multiplier,[0.8,0.96,1.12,1.36,1.6][rank-1],'return multiplier');out.push({rank,radius:w.radius,duration:w.duration,multiplier:w.multiplier})}
  return out;
 }"""
 

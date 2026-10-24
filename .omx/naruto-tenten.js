@@ -4,6 +4,7 @@
   const C = G.Combat, TAU = Math.PI * 2, states = new Map(), weapons = [], blasts = [], impacts = [];
   const modes = new Set(['tenten-kunai','tenten-fuma','tenten-mastery','tenten-bounce','tenten-guard','tenten-tags','tenten-twin']);
   const tagGrid = new Map(), CELL = 64;
+  const twinLimit = 300;
   const twinTools=[
     {kind:'shuriken',scale:1.1,palette:'silver'}, {kind:'kunai',scale:.85,palette:'blue'},
     {kind:'axe',scale:1.5,palette:'bronze'}, {kind:'senbon',scale:.7,palette:'silver'},
@@ -279,6 +280,12 @@
   function cast(owner,move) {
     if(!canCast(owner,move)) return false;
     const m=G.Quantity?.snapshot(owner,move)||{...move};
+    if(m.digiMode==='tenten-twin') {
+      const requested=Math.max(1,Math.floor(m.count||1));
+      m.count=Math.min(twinLimit,requested);
+      m.tentenQuantityDamageMultiplier=requested/m.count;
+      m.dmg*=m.tentenQuantityDamageMultiplier;
+    }
     m.tentenRangeBonusAtCast=rangeBonus(owner,move);
     const list=targets(owner,m), s=state(owner);
     const count=Math.max(1,Math.floor(m.count||1)), mode=m.digiMode;
@@ -786,6 +793,6 @@
     const pose=activeFor(owner);return pose?.mode==='tenten-twin'?twinScroll(owner,pose,side):null;
   }
   G.NarutoTenten={supports,canCast,cast,clear,update,stage,bounceCount,stateFor,guardFor,talismanFor,ensureTalisman,speedMultiplier,
-    activeFor,scrollFor,
+    activeFor,scrollFor,twinLimit,
     get weapons(){return weapons;},get blasts(){return blasts;},get impacts(){return impacts;}};
 })();

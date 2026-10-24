@@ -75,7 +75,7 @@ RANKS = r"""() => {
  for(const rank of [1,2,3,4,5])for(const L of [0,1,5]){
    A.petReset();A.rank('naruto-temari-blade-dance',rank);A.mastery(L);p.quantityBonus=p.quantityPicks=5;p.cdMul=.92;
    const e=A.spawn(100,0,'boss');e.r=300;const hits=A.watch(e);G.EnemyMgr.rebuildGrid();T.syncPets(p);A.advance(.001);
-   const actors=A.pets().slice(),C=[4,4,5,5,6][rank-1]+(L?L+5:0),raw=[32,39,47,57,69][rank-1]*p.atk;
+   const actors=A.pets().slice(),C=[4,4,5,5,6][rank-1]+(L?L+5:0),raw=[25.6,31.2,37.6,45.6,55.2][rank-1]*p.atk;
    A.assert(actors.length===3,'rank/mastery changed count');
    A.assert(actors.every(a=>a.cast.C===C&&Math.abs(a.cast.damage-raw)<1e-8),'rank/mastery snapshot '+JSON.stringify({rank,L,C,raw,actors:actors.map(a=>({C:a.cast.C,damage:a.cast.damage,phase:a.phase}))}));
    A.assert(actors.every(a=>Math.abs(a.cooldown-9.2)<1e-6),'cooldown cards did not scale pet cycles');

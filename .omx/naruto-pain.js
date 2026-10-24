@@ -38,13 +38,7 @@
   }
   const rank=m=>Math.max(0,Math.min(4,(m?.lvl||1)-1));
   function clearPath(ax,ay,bx,by,target=null) {
-    const n=Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/4));
-    for(let i=0;i<=n;i++) {
-      const x=ax+(bx-ax)*i/n,y=ay+(by-ay)*i/n;
-      if(G.World.isWall(x,y))return false;
-      const b=G.World.projectileBlock(x,y,1);if(b&&b!==target)return false;
-    }
-    return true;
+    return G.World.projectilePathClear(ax,ay,bx,by,target);
   }
   function nearby(a,r) {
     return [...new Set(G.EnemyMgr.queryCircle(a.x,a.y,r))].filter(e=>alive(e)&&dist(a,e)<=r&&clearPath(a.x,a.y,e.x,e.y)).sort((a1,b)=>dist(a,a1)-dist(a,b));
@@ -167,7 +161,9 @@
     if(f.cooldownStarted)return;
     const actual=f.owner.moves.find(v=>v.id===f.m.id);
     if(actual){actual.t=Math.max(.05,(f.m.cd||1)*(f.owner.cdMul||1));actual.castAt=performance.now();}
-    f.cooldownStarted=true;f.owner.cast?.(actual||f.m);
+    f.cooldownStarted=true;
+    // Support bodies keep fighting during rescue without animating fallen Tendo.
+    if(alive(f.owner))f.owner.cast?.(actual||f.m);
   }
   function cancelRequest(f) {
     if(f.cooldownStarted)return;
@@ -547,7 +543,10 @@
   const enemyUpdate=G.Enemy.prototype.update;
   G.Enemy.prototype.update=function(dt,player) {
     let target=player,distance=alive(player)?dist(this,player):Infinity;
-    if(family&&family.world===G.World&&familyActive(family.owner)&&!this.dead&&!this.remote&&this.behavior!=='thief')for(const b of family.bodies)if(ready(b)&&dist(this,b)<distance&&clearPath(this.x,this.y,b.x,b.y)){target=b;distance=dist(this,b);}
+    if(family&&family.world===G.World&&familyActive(family.owner)&&!this.dead&&!this.remote&&this.behavior!=='thief') {
+      const candidates=family.bodies.filter(ready).map(b=>({body:b,distance:dist(this,b)})).filter(b=>b.distance<distance).sort((a,b)=>a.distance-b.distance);
+      for(const {body:b} of candidates)if(clearPath(this.x,this.y,b.x,b.y)){target=b;break;}
+    }
     const x=this.x,y=this.y,result=enemyUpdate.call(this,dt,target),f=family?.actions.find(f=>f.kind==='soul'&&f.phase==='grasp'&&f.target===this);
     if(f?.kind==='soul'&&f.phase==='grasp'&&f.target===this&&alive(f.body)&&alive(this)&&G.Game.state==='playing') {
       // Own displacement correction leaves the native slow and jump timers intact.

@@ -26,7 +26,7 @@ SETUP = r"""() => {
 GROWTH = r"""() => {
  const A=Acceptance,p=A.p(),T=G.NarutoTemari,out=[];
  for(let rank=1;rank<=5;rank++)for(const Q of [0,5,13,20])for(const L of [0,1,5]){
-   const {e,hits,f}=A.heavyCast(Q,L,rank),power=[70,84,100.8,126,157.5][rank-1];
+   const {e,hits,f}=A.heavyCast(Q,L,rank),power=[56,67.2,80.64,100.8,126][rank-1];
    A.assert(f.kind==='heavy'&&f.count===1&&f.W===1&&f.R===1&&f.potentialHits===1,'heavy regained repeated fronts/cuts');
    A.near(f.arc,Math.min(180,110+10*(rank-1)+2*Q)*Math.PI/180,'fan angle');
    A.near(f.range,[300,330,360,390,420][rank-1]+6*Q+(L?[40,70,110,160,220][L-1]:0),'range growth');

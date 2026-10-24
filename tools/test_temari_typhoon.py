@@ -40,7 +40,7 @@ PROGRESSION = r"""() => {
  A.tyLearn();A.rank(A.ty,1);
  for(let rank=1;rank<=5;rank++){
    if(rank>1){const c=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+A.ty);A.assert(c&&c.apply(p)!==false,'rank card '+rank)}
-   const m=p.moves.find(m=>m.id===A.ty);A.near(m.dmg,[30,36,44,54,66][rank-1],'rank damage');A.near(m.cd,8,'rank cooldown');
+   const m=p.moves.find(m=>m.id===A.ty);A.near(m.dmg,[24,28.8,35.2,43.2,52.8][rank-1],'rank damage');A.near(m.cd,8,'rank cooldown');
    A.assert(m.lvl===rank&&m.digiMode==='temari-typhoon'&&!m.passive,'rank/mode/slot');
    A.reset();A.mastery(0);p.target=A.spawn(150,0,'boss');A.castNative(A.ty);const f=G.NarutoTemari.stateFor(p).latest;
    A.near(f.radius,[240,270,300,330,360][rank-1],'rank circle');A.assert(f.C===[3,4,5,6,8][rank-1],'rank cuts');

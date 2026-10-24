@@ -156,8 +156,10 @@ SCALING = r"""() => {
      }
      for(const picks of [0,4,20]){
        A.reset();p.quantityBonus=p.quantityPicks=picks;const target=A.spawn(120,0);p.target=target;A.castNative(id);
-       const pose=T.activeFor(p),snapshot=G.Quantity.snapshot(p,m);A.assert(pose&&pose.count===snapshot.count,'quantity not applied once '+id+' '+picks);
-       A.assert(pose.count===Math.floor(m.count*Math.pow(1.25,picks)),'wrong multiplicative quantity '+id+' '+pose.count);
+       const pose=T.activeFor(p),snapshot=G.Quantity.snapshot(p,m),limit=id.endsWith('twin')?300:Infinity;
+       A.assert(pose&&pose.count===Math.min(limit,snapshot.count),'quantity not applied once '+id+' '+picks);
+       A.assert(pose.count===Math.min(limit,Math.floor(m.count*Math.pow(1.25,picks))),'wrong multiplicative quantity '+id+' '+pose.count);
+       A.near(pose.m.dmg*pose.count,m.dmg*snapshot.count,'quantity preserves total base damage');
        out.push({id,tier,picks,count:pose.count});
      }
    }

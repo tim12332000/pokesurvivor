@@ -340,6 +340,52 @@ G.World = (() => {
     return null;
   }
 
+  // Cache native terrain/prop lookup within a tile, keeping each exact sample.
+  // An explicit options object uses projectileBlock as the sole blocker source,
+  // matching wind paths; legacy callers retain their isWall-first contract.
+  function projectilePathClear(ax, ay, bx, by, target = null, options = null) {
+    const { radius = 1, spacing = 4, includeStart = true } = options || {};
+    const n = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / spacing));
+    const world = G.World;
+    const native = world.isWall === isWall && world.projectileBlock === projectileBlock;
+    let lastX, lastY, wall = false;
+    const props = [];
+    for (let i = includeStart ? 0 : 1; i <= n; i++) {
+      const x = ax + (bx - ax) * i / n, y = ay + (by - ay) * i / n;
+      if (!native) {
+        if (!options && world.isWall(x, y)) return false;
+        if (world.projectileBlock) {
+          const p = world.projectileBlock(x, y, radius);
+          if (p && p !== target) return false;
+        } else if (world.isWall?.(x, y)) return false;
+        continue;
+      }
+      const tx = tileOf(x), ty = tileOf(y);
+      if (tx !== lastX || ty !== lastY) {
+        lastX = tx; lastY = ty;
+        wall = terrainAt(tx, ty) === WALL;
+        if (wall && (!options || target !== 'wall')) return false;
+        props.length = 0;
+        if (!wall) {
+          for (let b = -1; b <= 1; b++) for (let a = -1; a <= 1; a++) {
+            const p = propAtTile(tx + a, ty + b);
+            if (p && p.solid) props.push(p);
+          }
+        }
+      }
+      if (wall) continue;
+      // Preserve projectileBlock's first matching prop, including target props
+      // in front of a different overlapping blocker.
+      for (const p of props) {
+        if (G.U.dist2(x, y, p.x, p.y) < (radius + p.r) ** 2) {
+          if (p !== target) return false;
+          break;
+        }
+      }
+    }
+    return true;
+  }
+
   // ---------------- daño a objetos ----------------
 
   function damageProp(p, amount, color = '#fff') {
@@ -604,7 +650,7 @@ G.World = (() => {
 
   return {
     TS, CW, reset, setBiome, biomeName, liquidKind, liquidEffect, walkable,
-    kindAt, isWall, isLiquid, isFree, collide, projectileBlock, propsInCircle, nearestBreakable,
+    kindAt, isWall, isLiquid, isFree, collide, projectileBlock, projectilePathClear, propsInCircle, nearestBreakable,
     damageProp, breakAt, specialsNear, update,
     breakProp(p) { if (!broken.has(p.tx + ',' + p.ty)) destroyProp(p); },
     /** Arena de la grieta: { tx, ty, r } (en tiles) o null. */

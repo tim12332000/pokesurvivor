@@ -21,6 +21,7 @@
     return s;
   }
   function clearPath(ax,ay,bx,by,r=1,target=null) {
+    if(G.World.projectilePathClear)return G.World.projectilePathClear(ax,ay,bx,by,target,{radius:r,spacing:5,includeStart:false});
     const n=Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/5));
     for(let i=1;i<=n;i++) {
       const x=ax+(bx-ax)*i/n,y=ay+(by-ay)*i/n;
@@ -43,11 +44,11 @@
       pushDistance:[120,145,170,195,220][i]+18*p.L+4*p.Q,pushDuration:.35,speed:720*p.speed};
   }
   function rangeFor(owner,m) {if(m.digiMode==='temari-great-scythe')return heavyFor(owner,m).range;if(m.digiMode==='temari-typhoon')return [240,270,300,330,360][rank(m)-1];return (m.range||[240,250,270,290,310][rank(m)-1])+mastery(owner).reach;}
-  function targets(owner,m) {
+  function targets(owner,m,candidates=null) {
     const r=rangeFor(owner,m);
     const summonPriority=m.digiMode==='temari-blade-dance'&&owner===G.Game.player;
     const strong=e=>!!(e.boss||e.legend||e.judge||e.elite);
-    const enemies=[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,r))].filter(e=>alive(e)&&!e.friendly&&
+    const enemies=(candidates||[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,r))]).filter(e=>alive(e)&&!e.friendly&&
       Math.hypot(e.x-owner.x,e.y-owner.y)<=r+(e.r||0)&&clearPath(owner.x,owner.y,e.x,e.y))
       .sort((a,b)=>(summonPriority?Number(strong(b))-Number(strong(a)):(a===owner.target?-1:0)-(b===owner.target?-1:0))||
         Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
@@ -69,7 +70,7 @@
     const basic=modeslot==='temari-wind',heavy=modeslot==='temari-great-scythe',typhoon=modeslot==='temari-typhoon';
     const T=Math.floor(scale),P=C;
     const s=state(owner),empowered=basic&&p.L>0&&(s.basicRounds+1)%3===0;
-    const fallback=basic?[10,12,14.4,18,22.5][i]:heavy?[70,84,100.8,126,157.5][i]:typhoon?[30,36,44,54,66][i]:[32,39,47,57,69][i];
+    const fallback=basic?[8,9.6,11.52,14.4,18][i]:heavy?[56,67.2,80.64,100.8,126][i]:typhoon?[24,28.8,35.2,43.2,52.8][i]:[25.6,31.2,37.6,45.6,55.2][i];
     const h=heavy?heavyFor(owner,m):null;
     return {id:m.id,mode:modeslot,kind:basic?'basic':heavy?'heavy':typhoon?'typhoon':'summon',m,Q:p.Q,L:p.L,N,R:heavy?1:p.R,W,K,C,T,P,
       count:basic?N:heavy?1:typhoon?T:K,potentialHits:basic?N*p.R:heavy?1:typhoon?T*P:K*C,
@@ -157,9 +158,17 @@
     emitted(b);
   }
   const angleDelta=(a,b)=>Math.atan2(Math.sin(a-b),Math.cos(a-b));
-  function inWave(w,e) {
-    const b=w.cast,d=Math.hypot(e.x-w.x,e.y-w.y),r=e.r||0;
-    return d<=w.reach+r&&Math.abs(angleDelta(Math.atan2(e.y-w.y,e.x-w.x),w.aim))<=b.arc/2+Math.asin(Math.min(1,r/Math.max(1,d)));
+  function inWave(w,e,previous) {
+    const b=w.cast,r=e.r||0;
+    if(b.geometryAge!==b.age){b.geometryAge=b.age;b.geometry=new WeakMap();}
+    let g=b.geometry.get(e);
+    if(!g||g.x!==e.x||g.y!==e.y||g.r!==r||g.ox!==w.x||g.oy!==w.y||g.aim!==w.aim||g.arc!==b.arc) {
+      g={x:e.x,y:e.y,r,ox:w.x,oy:w.y,aim:w.aim,arc:b.arc,d:Math.hypot(e.x-w.x,e.y-w.y)};
+      b.geometry.set(e,g);
+    }
+    if(g.d+r<previous-EPS||g.d>w.reach+r)return false;
+    if(g.angle===undefined)g.angle=Math.abs(angleDelta(Math.atan2(e.y-w.y,e.x-w.x),w.aim))<=b.arc/2+Math.asin(Math.min(1,r/Math.max(1,g.d)));
+    return g.angle;
   }
   function waveCandidates(b) {
     const count=G.EnemyMgr.all().length;
@@ -185,7 +194,7 @@
       const previous=f.reach;f.reach=Math.min(b.range,Math.max(0,w.age-f.started)*b.speed);
       const reach=w.reach;w.reach=f.reach;
       if(!b.ghost||b.kind==='basic'||b.kind==='heavy')for(const e of waveCandidates(b))if(!f.hits.has(e)&&alive(e)&&!e.friendly&&
-        Math.hypot(e.x-w.x,e.y-w.y)+(e.r||0)>=previous-EPS&&inWave(w,e)&&clearPath(w.x,w.y,e.x,e.y)) {
+        inWave(w,e,previous)&&clearPath(w.x,w.y,e.x,e.y)) {
         f.hits.add(e);
         hit(b,e,Math.cos(w.aim),Math.sin(w.aim));
         if(b.kind==='basic')claimLift(b.owner,e,b);
@@ -193,7 +202,7 @@
       }
       if(b.wavePropAge!==b.age){b.wavePropAge=b.age;b.waveProps=props(b.x,b.y,b.range);}
       for(const p of b.waveProps)if(!f.props.has(p)&&!p.dead&&p.hp>0&&
-        Math.hypot(p.x-w.x,p.y-w.y)+(p.r||0)>=previous-EPS&&inWave(w,p)&&clearPath(w.x,w.y,p.x,p.y,1,p)) {
+        inWave(w,p,previous)&&clearPath(w.x,w.y,p.x,p.y,1,p)) {
         f.props.add(p);propHit(b,p);
       }
       w.reach=reach;if(f.reach>=b.range-EPS)f.done=true;
@@ -257,7 +266,9 @@
     const owned=summons.filter(a=>a.owner===owner&&a.permanent&&!a.remotePet);
     let changed=false;
     for(const a of owned)if(a.index>=count){a.dead=true;summons.splice(summons.indexOf(a),1);changed=true;}
-    for(let i=0;i<count;i++)if(!owned.some(a=>!a.dead&&a.index===i)) {
+    const indices=new Set(owned.filter(a=>!a.dead).map(a=>a.index));
+    for(let i=0;i<count;i++)if(!indices.has(i)) {
+      indices.add(i);
       const b={...snapshot(owner,m),owner,world:G.World,ghost:false,serial:++sequence};
       const a={owner,world:G.World,cast:b,permanent:true,petId:'pet-'+(++petSequence),index:i,
         x:owner.x,y:owner.y,age:0,phase:'wander',roamTarget:null,roamSerial:0,restUntil:0,cuts:0,slash:0,nextCut:Infinity,cooldown:0,
@@ -294,7 +305,21 @@
     s.latest=b;s.counts[b.mode]=b.K;s.castCounts[b.mode]=(s.castCounts[b.mode]||0)+1;
     G.NarutoTemari.onPetAttack?.(owner,a,{...b,owner:undefined,world:undefined,m:{...b.m}});
   }
-  function advanceSummon(a,dt) {
+  function petTargets(owner,m,queries) {
+    const r=rangeFor(owner,m),enemies=G.EnemyMgr.all();
+    let q=queries?.get(owner);
+    // queryCircle already filters live positions. Guard its full input so a
+    // hit callback that moves/replaces an enemy cannot hide a later target.
+    if(!q||q.x!==owner.x||q.y!==owner.y||q.r!==r||q.inputs.length!==enemies.length||
+      q.inputs.some((s,i)=>s.e!==enemies[i]||s.x!==s.e.x||s.y!==s.e.y||s.r!==s.e.r||s.dead!==s.e.dead)) {
+      q={x:owner.x,y:owner.y,r,inputs:enemies.map(e=>({e,x:e.x,y:e.y,r:e.r,dead:e.dead})),
+        candidates:[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,r))]};
+      queries?.set(owner,q);
+    }
+    // Range, life, priority and line of sight remain live for each pet.
+    return targets(owner,m,q.candidates);
+  }
+  function advanceSummon(a,dt,queries) {
     if(a.remotePet)return;
     const m=petMove(a.owner);if(!m){a.dead=true;return;}
     a.age+=dt;a.cooldown=Math.max(0,a.cooldown-dt);a.moving=false;
@@ -318,7 +343,7 @@
         }
       }
       if(a.phase==='wander'&&!a.owner.frozen&&a.cooldown<=EPS) {
-        const list=targets(a.owner,m);
+        const list=petTargets(a.owner,m,queries);
         if(list.length)beginPetAttack(a,m,list[a.index%list.length]);
       }
     } else if(a.phase==='move') {
@@ -595,11 +620,12 @@
       if(b.emitted===b.count&&b.age>Math.max(.41,b.release+releaseSpan)&&
         !blades.some(a=>a.cast===b)&&!waves.some(a=>a.cast===b)&&!summons.some(a=>a.cast===b)&&!storms.some(a=>a.cast===b))casts.splice(i,1);
     }
+    const petQueries=new Map();
     for(const [list,advance] of [[waves,advanceWave],[summons,advanceSummon],[storms,advanceStorm]])for(let i=list.length-1;i>=0;i--) {
       const a=list[i];if(!legal(a.cast)){list.splice(i,1);continue;}
       // A new actor only receives time after its individual release in this frame.
       const born=a.cast.release+(a.cast.kind==='typhoon'?0:a.cast.kind==='basic'?.12:.16)*a.index/a.cast.count;
-      const elapsed=a.permanent?dt:Math.min(dt,Math.max(0,a.cast.age-born-a.age));if(elapsed>0)advance(a,elapsed);
+      const elapsed=a.permanent?dt:Math.min(dt,Math.max(0,a.cast.age-born-a.age));if(elapsed>0)advance(a,elapsed,petQueries);
       // Cast age continues after release scheduling has completed.
       if(a.dead)list.splice(i,1);
     }

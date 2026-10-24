@@ -34,7 +34,9 @@ CHECK = r"""() => {
        const drawStart=performance.now();G.Combat.drawGroundFields(ctx);G.Combat.drawAirFields(ctx);drawSamples.push(performance.now()-drawStart);
      }
      totalHits=G.EnemyMgr.all().filter(e=>e.hp<100000).length;
-     A.assert(pose.emitted===Math.floor(40*Math.pow(1.25,picks)),'performance workload dropped projectiles');
+     const requested=Math.floor(40*Math.pow(1.25,picks));
+     A.assert(pose.emitted===Math.min(300,requested),'performance workload quantity cap');
+     A.near(pose.m.dmg*pose.count,twin.dmg*requested,'overflow total damage');
      const sum=a=>a.reduce((s,n)=>s+n,0),p95=a=>[...a].sort((a,b)=>a-b)[Math.floor(a.length*.95)];
      out.push({picks,emitted:pose.emitted,peak,damagedTargets:totalHits,castMs,simulationMs:sum(samples),simulationP95:p95(samples),drawMs:sum(drawSamples),drawP95:p95(drawSamples),counts,timings});
    } finally {for(const [obj,key,original] of wrapped)obj[key]=original;A.reset();}
@@ -50,7 +52,7 @@ def main():
         page = browser.new_page(viewport={'width': 1200, 'height': 900}, service_workers='block')
         errors = []
         page.on('pageerror', lambda e: errors.append(str(e)))
-        page.goto('http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW')
+        page.goto(os.environ.get('TENTEN_URL', 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&layout=wide'))
         page.wait_for_function("window.PS_REDRAWN_READY && G.AnimationLab && document.getElementById('boot').classList.contains('hidden')")
         if page.locator('#tap-start').is_visible():
             page.locator('#tap-start').click()

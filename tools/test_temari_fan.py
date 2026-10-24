@@ -122,13 +122,13 @@ GROWTH = r"""() => {
    const N=Math.floor(3*1.25**Q),R=L?1+L+Q:1;A.finish(5);
    A.assert(f.count===N&&f.emitted===N,'quantity changed/capped fan '+Q+' '+L);
    A.assert(f.R===R&&f.cuts===N*R&&hits.length===N*R,'wave count/front mastery changed '+Q+' '+L+' '+hits.length+'/'+N*R);
-   A.assert(hits.every(h=>Math.abs(h.raw-22.5*p.atk*G.Types.mult('flying',e.types)*G.Weather.mult('flying'))<1e-6),'rank 5 damage changed');
+   A.assert(hits.every(h=>Math.abs(h.raw-18*p.atk*G.Types.mult('flying',e.types)*G.Weather.mult('flying'))<1e-6),'rank 5 damage changed');
    out.push({Q,L,N,R,hits:hits.length});
  }
  for(let rank=1;rank<=5;rank++){
    A.fanReset(0,0,rank);const e=A.fanEnemy(150,0),hits=A.watch(e),f=A.fanCast(e);A.finish(3);
    A.assert(hits.length===3,'rank altered whole-fan wave count '+rank+' '+hits.length);
-   A.near(f.damage,[10,12,14.4,18,22.5][rank-1]*p.atk,'rank damage '+rank);
+   A.near(f.damage,[8,9.6,11.52,14.4,18][rank-1]*p.atk,'rank damage '+rank);
    out.push({rank,damage:f.damage,range:f.range});
  }
  return out;

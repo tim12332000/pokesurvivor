@@ -132,8 +132,9 @@
       if(this.dex===30010){
         const actor=G.Game.player?.anim===this?G.Game.player:(G.SelfClones?.actors()||[]).find(a=>a.anim===this);
         const pose=actor?G.NarutoPain?.activeFor(actor):null;
-        const casting=pose&&['gravity','planet'].includes(pose.kind);
-        const state=this.cur==='Faint'?'death':this.cur==='Hurt'?'hurt':casting?'special':this.cur==='Walk'?'move':['Attack','Shoot','Charge'].includes(this.cur)?'strike':'idle';
+        const dead=actor?.dead||this.cur==='Faint';
+        const casting=!dead&&pose&&['gravity','planet'].includes(pose.kind);
+        const state=dead?'death':this.cur==='Hurt'?'hurt':casting?'special':this.cur==='Walk'?'move':['Attack','Shoot','Charge'].includes(this.cur)?'strike':'idle';
         const fps=G.PainArt?.metadata?.bodies.tendo.animations[state]?.fps||2;
         const time=casting?pose.age:this.frame/fps;
         if(ui)G.PainArt?.draw(ctx,{path:'tendo',x,y,height:Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75),state:'idle',time,facing:this.dir>=5?-1:1,alpha:opts.alpha??1});

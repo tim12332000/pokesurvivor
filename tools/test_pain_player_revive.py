@@ -71,7 +71,7 @@ LIVE_START = r"""() => {
  const n=A.naraka(),asura=P.actorsFor(p).find(b=>b.path==='asura');
  const enemy=A.spawn(asura.x+100,asura.y);enemy.dmg=0;enemy.spd=0;enemy.behavior='chase';
  for(const b of P.actorsFor(p))b.cooldown=0;A.ready('missiles');
- A.lethal();A.resume();window.RescueLive={started:performance.now(),hp:enemy.hp,enemy,expected:10*p.cdMul+.8,naraka:n};
+ A.lethal();A.resume();window.RescueLive={started:performance.now(),hp:enemy.hp,enemy,expected:10*p.cdMul+.8,naraka:n,x:p.x,y:p.y};
  return {expected:RescueLive.expected,cdMul:p.cdMul};
 }"""
 
@@ -99,6 +99,13 @@ def main():
                   const A=Acceptance,p=A.p(),P=G.NarutoPain;
                   A.assert(p.dead&&G.Game.state==='playing'&&P.actorsFor(p).length===5,'real RAF ended run at native 1.3s death timer');
                   A.assert(RescueLive.enemy.hp<RescueLive.hp,'helpers stopped fighting while Tendo dead');
+                  A.assert(p.x===RescueLive.x&&p.y===RescueLive.y,'downed Tendo moved before repair');
+                  A.assert(p.anim.cur==='Faint'&&p.anim.hold&&p.anim.done&&p.anim.frame===3,'support cast replaced held death animation '+p.anim.cur);
+                  const draws=[],draw=G.PainArt.draw;
+                  G.PainArt.draw=function(ctx,options){draws.push(options);return draw.apply(this,arguments)};
+                  try{p.draw(document.createElement('canvas').getContext('2d'))}finally{G.PainArt.draw=draw}
+                  const tendo=draws.find(d=>d.path==='tendo');
+                  A.assert(tendo?.state==='death'&&G.PainArt.sample('tendo',tendo.state,tendo.time).index===3,'downed Tendo did not draw final lying frame');
                   const n=A.naraka(),hp=n.hp;
                   G.Hazards.add({kind:'zone',x:n.x,y:n.y,r:12,delay:.001,dmg:1,type:'normal',pure:true,color:'#f00'});
                   G.Hazards.update(.02);G.Hazards.clear();

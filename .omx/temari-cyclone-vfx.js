@@ -64,13 +64,17 @@
   function drawAir(ctx,{storms=[],orbits=[],pushes=[],waves=[],summons=[],states=[]}={}) {
     for(const group of fieldGroups(waves,'range',24)) {
       const a=group[0];local(ctx,a,()=>{
-      const b=a.cast||{},fronts=[];
-      for(const wave of group)for(const front of wave.fronts||[])if(!front.done&&front.reach>2)fronts.push({wave,front});
-      fronts.sort((a,b)=>b.front.reach-a.front.reach);
-      // A shared presentation budget covers coincident quantity copies and recuts.
-      const selected=[];
-      for(const f of fronts)if(selected.every(p=>Math.abs(p.front.reach-f.front.reach)>Math.max(34,(b.range||240)*.2))) {
-        selected.push(f);if(selected.length===3)break;
+      const b=a.cast||{},selected=[],spacing=Math.max(34,(b.range||240)*.2);
+      // Match stable reach sorting without allocating and sorting every front.
+      for(let i=0;i<3;i++) {
+        let bestWave=null,bestFront=null;
+        for(const wave of group)for(const front of wave.fronts||[]) {
+          if(front.done||!(front.reach>2)||bestFront&&front.reach<=bestFront.reach)continue;
+          if(!selected.every(p=>Math.abs(p.front.reach-front.reach)>spacing))continue;
+          bestWave=wave;bestFront=front;
+        }
+        if(!bestFront)break;
+        selected.push({wave:bestWave,front:bestFront});
       }
       for(let i=0;i<selected.length;i++) {
         const {wave,front}=selected[i],r=front.reach,arc=wave.cast?.arc||1.2;

@@ -420,7 +420,7 @@ G.HUD = (() => {
       }
       if (G.NarutoTenten?.supports(m.digiMode)) {
         const state = tentenState, pose = tentenPose;
-        const count = m.digiMode === 'tenten-guard' ? 0 : pose?.m?.id === m.id ? pose.count : G.Quantity.count(pl, m.count || 1);
+        const count = m.digiMode === 'tenten-guard' ? 0 : pose?.m?.id === m.id ? pose.count : Math.min(m.digiMode === 'tenten-twin' ? G.NarutoTenten.twinLimit : Infinity, G.Quantity.count(pl, m.count || 1));
         let label = '忍具 ' + count;
         if (m.digiMode === 'tenten-guard') {
           const guard = tentenGuard;

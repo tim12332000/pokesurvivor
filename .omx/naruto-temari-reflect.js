@@ -27,7 +27,7 @@
     if (!m) { if (previous) clear(owner); return null; }
     const s = state(owner), i = rank(m) - 1, Q = quantity(owner);
     const packet = { id: ID, mode: MODE, permanent: true, duration: 0,
-      radius: [85, 95, 110, 125, 140][i], multiplier: [1, 1.2, 1.4, 1.7, 2][i],
+      radius: [85, 95, 110, 125, 140][i], multiplier: [0.8, 0.96, 1.12, 1.36, 1.6][i],
       copies: Math.floor(1.25 ** Q), atk: owner.atk ?? 1, lvl: i + 1, Q,
       stats: { critChance: owner.critChance || 0, percentHealthDamage: owner.percentHealthDamage || 0,
         lifestealRate: owner.lifestealRate || 0, damageSplashPicks: owner.damageSplashPicks || 0,
