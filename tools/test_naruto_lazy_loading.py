@@ -29,8 +29,9 @@ def session(browser, errors, mobile=False):
     cdp.send('Network.enable')
     cdp.send('Network.setCacheDisabled', {'cacheDisabled': True})
     cdp.on('Network.loadingFinished', lambda event: finished.append(event['encodedDataLength']))
-    page.goto(URL)
-    page.wait_for_function('window.G?.NarutoAssets && document.querySelector("#boot").classList.contains("hidden")')
+    target=URL+('&' if '?' in URL else '?')+'layout=wide' if not mobile and 'layout=' not in URL else URL
+    page.goto(target)
+    page.wait_for_function('window.G?.NarutoAssets && document.querySelector("#boot").classList.contains("hidden")', polling=20)
     return context, page, requests, finished
 
 
@@ -63,7 +64,7 @@ def main():
             enter_menu(page, 30009)
             page.wait_for_function('G.Naruto.availableDexes.every(d=>G.Naruto.records.get(d).previewImage?.naturalWidth>0)')
             portraits = page.evaluate('G.Naruto.availableDexes.map(d=>({dex:d,source:G.Naruto.records.get(d).previewImage.src}))')
-            assert len(portraits) == 5 and all('/naruto/portraits/' in p['source'] for p in portraits)
+            assert len(portraits) == page.evaluate('G.Naruto.availableDexes.length') and all('/naruto/portraits/' in p['source'] for p in portraits)
             start(page, 30009)
             page.evaluate('G.Game.togglePause()')
             sources = page.evaluate('[...new Set(AnimationAssets.keys.map(k=>AnimationAssets.get(k)).filter(a=>a.image).map(a=>a.source))]')
@@ -87,10 +88,13 @@ def main():
 
             context, page, requests, _ = session(browser, report['errors'], mobile=True)
             enter_menu(page, 30009)
-            page.wait_for_function('G.Naruto.availableDexes.every(d=>G.Naruto.records.get(d).previewImage?.naturalWidth>0)')
+            for dex in page.evaluate('G.Naruto.availableDexes'):
+                page.locator(f'[data-quick-naruto="{dex}"]').scroll_into_view_if_needed()
+                page.wait_for_function('(dex)=>G.Naruto.records.get(dex).previewImage?.naturalWidth>0', arg=dex, polling=20)
+                page.wait_for_timeout(60)
             page.wait_for_timeout(100)
             pixels = page.evaluate('''()=>[...document.querySelectorAll('#naruto-quick-pick canvas')].map(c=>{const d=c.getContext('2d').getImageData(0,0,c.width,c.height).data;let n=0,edge=0;for(let y=0;y<c.height;y++)for(let x=0;x<c.width;x++)if(d[(y*c.width+x)*4+3]){n++;if(!x||!y||x===c.width-1||y===c.height-1)edge++;}return {pixels:n,edge};})''')
-            assert len(pixels) == 5 and all(p['pixels'] > 100 and p['edge'] == 0 for p in pixels), pixels
+            assert len(pixels) == page.evaluate('G.Naruto.availableDexes.length') and all(p['pixels'] > 100 and p['edge'] == 0 for p in pixels), pixels
             page.screenshot(path=str(OUT / f'{LABEL}-mobile-menu.png'), full_page=True)
             report['checks']['mobilePortraits'] = pixels
             context.close()

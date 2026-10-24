@@ -13,6 +13,24 @@
     ['Gatomon', '迪路獸', '小光', ['fairy', 'fighting'], 'karate-chop', '貓貓拳', 'Cat Punch', ['astuto', 'leal'], 5, 246, 286]
   ];
   const records = new Map();
+  // Registration stays synchronous; only a visible draw or explicit preload fetches a sheet.
+  const lazyImage = (record, source) => {
+    let pending = null, retryAt = 0;
+    Object.defineProperty(record, 'loaded', {
+      enumerable: true,
+      get() {
+        if (pending && (record.ready || Date.now() < retryAt)) return pending;
+        retryAt = Infinity;
+        pending = new Promise(resolve => {
+          record.image.onload = () => { record.ready = true; resolve(true); };
+          record.image.onerror = () => { retryAt = Date.now() + 3000; resolve(false); };
+          record.image.src = source;
+        });
+        return pending;
+      }
+    });
+    return record;
+  };
   const dictionary = { Digimon: '數碼寶貝', 'Digimon Misterioso': '數碼世界 · 主角團',
     'Los iniciales de todas las regiones, y dos amigos más.': '各地區初始夥伴，以及數碼寶貝主角團。' };
   definitions.forEach(([name, chinese, partner, types, template, attack, english, traits, rarity, width, height], i) => {
@@ -36,11 +54,7 @@
         ? { ...geometry, n: 4, d: [7, 7, 7, 7] } : { ...geometry }])) };
     const image = new Image();
     const record = { ...mon, chinese, partner, attack, english, pixel, image, ready: false };
-    record.loaded = new Promise(resolve => {
-      image.onload = () => { record.ready = true; resolve(true); };
-      image.onerror = () => resolve(false);
-    });
-    image.src = `.omx/digimon/pixel/${name.toLowerCase()}.png`;
+    lazyImage(record, `.omx/digimon/pixel/${name.toLowerCase()}.png`);
     records.set(dex, record);
   });
   G.I18n.add(dictionary, 'zh-TW');
@@ -57,7 +71,7 @@
     draw(ctx, x, y, opts = {}) {
       const record = records.get(this.dex);
       if (!record) return super.draw(ctx, x, y, opts);
-      if (!record.ready) return;
+      if (!record.ready) { void record.loaded; return; }
       const meta = G.Sprites.animMeta(this.dex, 'Idle');
       const k = G.Sprites.PX * this.scale;
       const attacking = ['Attack', 'Shoot', 'Charge'].includes(this.cur);
@@ -194,5 +208,5 @@
   document.querySelector('#scr-menu .logo .t2').textContent = '數碼寶貝 × 寶可夢 · 本地版';
   document.querySelector('#scr-menu [data-go="gacha"] small').textContent = '9 大世代 + 數碼寶貝';
   document.title = 'PokéSurvivor × 數碼寶貝 · 本地版';
-  G.Digimon = { enabled, records, choose, openPicker };
+  G.Digimon = { enabled, records, choose, openPicker, lazyImage };
 })();

@@ -31,11 +31,7 @@
     const image = new Image();
     const record = { ...mon, mon, chinese, baseDex, stage, pixel, image,
       partner: stage === 4 ? '太一與阿和' : parent.partner, attack, ready: false };
-    record.loaded = new Promise(resolve => {
-      image.onload = () => { record.ready = true; resolve(true); };
-      image.onerror = () => resolve(false);
-    });
-    image.src = `.omx/digimon/pixel/${slug}.png`;
+    api.lazyImage(record, `.omx/digimon/pixel/${slug}.png`);
     records.set(dex, record);
     dictionary[name] = chinese;
   }

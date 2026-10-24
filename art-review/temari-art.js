@@ -17,6 +17,7 @@
       if(!response.ok)throw Error('手鞠動畫資料載入失敗');
       metadata=await response.json();
       await Promise.all(Object.entries(metadata.sheets).map(async([key,sheet])=>{
+        if(images[key]&&flashes[key])return;
         const image=new Image();image.src=new URL(sheet.source,base).href;await image.decode();images[key]=image;
         const flash=document.createElement('canvas');flash.width=image.width;flash.height=image.height;
         const ctx=flash.getContext('2d');ctx.drawImage(image,0,0);ctx.globalCompositeOperation='source-in';

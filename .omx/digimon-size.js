@@ -5,8 +5,8 @@
   const previewHeights = [56, 64, 76, 88, 96];
   const previews = new WeakSet();
   const isInitial = record => record.dex === record.baseDex;
-  for (const record of records.values()) record.loaded.then(loaded => {
-    if (!loaded || record.pixel.frame_rects) return;
+  function prepareAnchors(record) {
+    if (!record.image.naturalWidth || record.pixel.frame_rects || record.footAnchors) return;
     // Read the source alpha without changing or rewriting the sprite artwork.
     const source = document.createElement('canvas');
     source.width = record.image.naturalWidth; source.height = record.image.naturalHeight;
@@ -22,7 +22,11 @@
       }
       return pixel.anchor[1];
     });
-  });
+  }
+  for (const record of records.values()) {
+    record.image.addEventListener('load', () => prepareAnchors(record));
+    if (record.image.complete) prepareAnchors(record);
+  }
   const sizeOf = dex => {
     const record = records.get(dex);
     return record && !isInitial(record) ? worldScales[record.stage] : 1;

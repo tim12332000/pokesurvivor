@@ -39,6 +39,7 @@ for hero in ('naruto', 'sasuke', 'rock-lee', 'gaara', 'tenten'):
     assert source.startswith('.omx/naruto/portraits/') and Path(source).suffix == '.png'
     assert (ROOT / source).resolve().is_relative_to((ROOT / '.omx/naruto/portraits').resolve())
     review_runtime.append(source)
+review_runtime.extend(['.omx/naruto/portraits/pain.png', '.omx/naruto/portraits/temari.png'])
 assert sources == {
     'redrawn/naruto-common-v1.png', 'redrawn/naruto-skills-v2.png',
     'redrawn/sasuke-common-v1.png', 'redrawn/sasuke-skills-v2.png',

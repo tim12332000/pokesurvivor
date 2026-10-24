@@ -3,7 +3,7 @@
   'use strict';
   const base = new URL('./', document.currentScript.src);
   const images = {}, flashes = {};
-  let metadata;
+  let metadata, pending;
   const aliases = { deva: 'tendo', tendō: 'tendo', ashura: 'asura', animalPath: 'animal', humanPath: 'human', hungry: 'preta', hell: 'naraka' };
   function keyFor(actor, options) {
     const key = options.path || actor.path || actor.kind || 'tendo';
@@ -47,21 +47,29 @@
     ctx.restore();
     return true;
   }
-  const api = { loaded: false, draw, portrait, sample, get metadata() { return metadata; }, get images() { return images; } };
-  api.ready = (async () => {
-    const response = await fetch(new URL('pain-frames.json', base));
-    if (!response.ok) throw Error('沛恩六道動畫資料載入失敗');
-    metadata = await response.json();
-    await Promise.all(Object.entries(metadata.bodies).map(async ([path, body]) => {
-      const source = new Image(); source.src = new URL(body.source, base).href;
-      await source.decode(); images[path] = source;
-      const white = document.createElement('canvas'); white.width = source.width; white.height = source.height;
-      const ctx = white.getContext('2d'); ctx.drawImage(source, 0, 0); ctx.globalCompositeOperation = 'source-in';
-      ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, white.width, white.height); flashes[path] = white;
-    }));
-    api.loaded = true;
-    return api;
-  })();
+  function load() {
+    if (api.loaded) return Promise.resolve(api);
+    if (pending) return pending;
+    pending = (async () => {
+      if (!metadata) {
+        const response = await fetch(new URL('pain-frames.json', base));
+        if (!response.ok) throw Error('沛恩六道動畫資料載入失敗');
+        metadata = await response.json();
+      }
+      await Promise.all(Object.entries(metadata.bodies).map(async ([path, body]) => {
+        if (images[path]) return;
+        const source = new Image(); source.src = new URL(body.source, base).href;
+        await source.decode(); images[path] = source;
+        const white = document.createElement('canvas'); white.width = source.width; white.height = source.height;
+        const ctx = white.getContext('2d'); ctx.drawImage(source, 0, 0); ctx.globalCompositeOperation = 'source-in';
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, white.width, white.height); flashes[path] = white;
+      }));
+      api.loaded = true;
+      return api;
+    })().catch(error => { pending = null; throw error; });
+    return pending;
+  }
+  const api = { loaded: false, load, draw, portrait, sample, get ready() { return load(); }, get metadata() { return metadata; }, get images() { return images; } };
   window.PainArt = api;
   if (window.G) window.G.PainArt = api;
 })();

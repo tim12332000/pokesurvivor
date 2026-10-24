@@ -18,6 +18,8 @@ def url(hero):
     query = [(k, v) for k, v in parse_qsl(parts.query) if k != 'hero']
     if hero is not None:
         query.append(('hero', hero))
+    if not any(key == 'layout' for key, _ in query):
+        query.append(('layout', 'wide'))
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
 
 
@@ -34,7 +36,7 @@ def main():
         browser = pw.chromium.launch(executable_path=loading.CHROME, headless=True)
         for hero, dex, prefix in [('tenten',30009,'tenten-'), ('naruto',30001,'naruto-'),
                                   ('sasuke',30002,'sasuke-'), ('lee',30006,'lee-'),
-                                  ('gaara',30007,'gaara-'), ('30009',30009,'tenten-'),
+                                  ('gaara',30007,'gaara-'), ('pain',30010,'pain-'), ('temari',30011,'temari-'), ('30009',30009,'tenten-'),
                                   ('天天',30009,'tenten-'), (' SASUKE ',30002,'sasuke-')]:
             loading.URL = url(hero)
             context, page, requests, _ = loading.session(browser, report['errors'])

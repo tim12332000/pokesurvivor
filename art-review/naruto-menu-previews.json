@@ -1,0 +1,44 @@
+{
+  "temari": {
+    "source": "art-review/redrawn/temari-common-v1.png",
+    "rect": [
+      106,
+      18,
+      145,
+      239
+    ],
+    "sourceSha256": "672ee3a97d1faca7e7783862083768e2fbf9088e2ebf7cde83bddfd3c1dfbb14",
+    "preview": ".omx/naruto/portraits/temari.png",
+    "size": [
+      96,
+      112
+    ],
+    "anchor": [
+      48,
+      110
+    ],
+    "bytes": 16334,
+    "sha256": "aa6123e5ae9b2b5faf8491746324c5c95ef7cadcb2d6253e65791f6d5e385a4d"
+  },
+  "pain": {
+    "source": "art-review/redrawn/pain-tendo-v1.png",
+    "rect": [
+      74,
+      28,
+      159,
+      290
+    ],
+    "sourceSha256": "510a31a4e2c5360ba4e8f764c563567b1bcd92f10df63682fddc0e93e3941efa",
+    "preview": ".omx/naruto/portraits/pain.png",
+    "size": [
+      96,
+      112
+    ],
+    "anchor": [
+      48,
+      110
+    ],
+    "bytes": 13555,
+    "sha256": "dc1b9db90a93abfd90270c215ba1c87ba4e7ab3440abd81f56a42317f98b08b0"
+  }
+}

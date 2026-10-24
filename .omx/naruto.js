@@ -25,7 +25,8 @@
     const starter={dex,start,traits:['valiente','leal']};
     G.STARTERS.push(starter);G.STARTER_BY[dex]=starter;
     // Temari has her own on-demand atlas; no legacy pixel sheet is required.
-    const pixel=slug==='temari'?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug],image=new Image();
+    const basePixel=slug==='temari'?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug];
+    const pixel=['pain','temari'].includes(slug)?{...basePixel,preview:{source:'.omx/naruto/portraits/'+slug+'.png',w:96,h:112,ax:48,ay:110}}:basePixel,image=new Image();
     const geometry={w:32,h:36,ax:16,ay:36,n:1,r:1,d:[24]};
     G.SPRITE_META[dex]={s:1,sh:false,a:Object.fromEntries(G.Sprites.ANIMS.map(anim=>{
       const action=pixel.animations?.[anim];
@@ -96,6 +97,19 @@
       if(!record)return super.draw(ctx,x,y,opts);
       const pixel=record.pixel;
       const ui=previews.has(ctx.canvas);
+      if(ui&&pixel.preview){
+        if(!record.previewImage){
+          if(Date.now()<(record.previewRetryAt||0))return;
+          record.previewImage=new Image();
+          record.previewImage.onerror=()=>{record.previewImage=null;record.previewRetryAt=Date.now()+1000;};
+          record.previewImage.src=pixel.preview.source;
+        }
+        const image=record.previewImage,frame=pixel.preview;
+        if(!image.complete||!image.naturalWidth)return;
+        const target=Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75),k=Math.min(target/frame.h,ctx.canvas.width*.88/frame.w);
+        ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=opts.alpha??1;
+        ctx.drawImage(image,-Math.round(frame.ax*k),-Math.round(frame.ay*k),Math.round(frame.w*k),Math.round(frame.h*k));ctx.restore();return;
+      }
       if(this.dex===30011){
         if(!record.ready){void record.loaded;return;}
         const actor=G.Game.player?.anim===this?G.Game.player:[...(G.SelfClones?.actors()||[]),...(G.Coop?.puppets?.()||[]),...(G.TemariCoop?.remoteActors?.()||[])].find(a=>a.anim===this);
@@ -128,19 +142,6 @@
           G.PainArt?.draw(ctx,{path:'tendo',x,y,height,state,time,facing:this.dir>=5?-1:1,alpha:opts.alpha??1});
         }
         return;
-      }
-      if(ui&&pixel.preview){
-        if(!record.previewImage){
-          if(Date.now()<(record.previewRetryAt||0))return;
-          record.previewImage=new Image();
-          record.previewImage.onerror=()=>{record.previewImage=null;record.previewRetryAt=Date.now()+1000;};
-          record.previewImage.src=pixel.preview.source;
-        }
-        const image=record.previewImage,frame=pixel.preview;
-        if(!image.complete||!image.naturalWidth)return;
-        const target=Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75),k=Math.min(target/frame.h,ctx.canvas.width*.88/frame.w);
-        ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=opts.alpha??1;
-        ctx.drawImage(image,-Math.round(frame.ax*k),-Math.round(frame.ay*k),Math.round(frame.w*k),Math.round(frame.h*k));ctx.restore();return;
       }
       if(!record.ready){void record.loaded;return;}
       const pose=G.NarutoChidori?.poseFor(this)||frameFor(record,this.cur,this.dir,this.frame);
@@ -179,6 +180,7 @@
     if(!available(dex))return false;
     const save=G.DB.save;save.partner=save.starter=dex;save.partnerShiny=false;
     G.DB.grant(dex,'starter');G.DB.commit(true);hideOverlays();G.Flow.goMenu();
+    void G.NarutoAssets?.download?.(dex);
   };
   const openPicker=()=>{
     hideOverlays();G.UI.show('scr-menu');G.UI.chrome(!!G.DB.save.partner);
@@ -246,7 +248,9 @@
     for(const button of quickPick.querySelectorAll('[data-quick-naruto]')){
       const on=+button.dataset.quickNaruto===selected;
       button.classList.toggle('on',on);button.setAttribute('aria-pressed',String(on));
-      button.querySelector('.naruto-selection').textContent=on?'✓ 已選擇':'點選使用';
+      const dex=+button.dataset.quickNaruto,loaded=!!G.NarutoAssets?.ready(dex),pending=!!G.NarutoAssets?.loading(dex);
+      button.dataset.assetState=loaded?'ready':pending?'loading':'idle';
+      button.querySelector('.naruto-selection').textContent=on?(loaded?'✓ 已下載':pending?'下載中…':'下載素材'):'點選使用';
     }
   };
   const menuOpen=G.MenuUI.open;
@@ -256,7 +260,7 @@
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').hidden=!G.Digimon.enabled;
-  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位忍者：鳴人、佐助、小李、我愛羅、天天、沛恩六道。`;
+  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位忍者：鳴人、佐助、小李、我愛羅、天天、沛恩六道、手鞠。`;
   document.getElementById('naruto-close').onclick=()=>{hideOverlays();G.Flow.goMenu();};
   const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='火影忍者';nav.translate=false;nav.onclick=openPicker;
   document.getElementById('btn-settings').before(nav);
@@ -325,5 +329,5 @@
   }
   const startRun=G.Game.startRun;
   G.Game.startRun=function(...args){restoreAvailablePartner();return startRun.apply(this,args);};
-  G.Naruto={version,records,availableDexes,choose,openPicker,frameFor,isPreview:canvas=>previews.has(canvas)};
+  G.Naruto={version,records,availableDexes,choose,openPicker,frameFor,refreshSelection:syncQuickPick,isPreview:canvas=>previews.has(canvas)};
 })();
