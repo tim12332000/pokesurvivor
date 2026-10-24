@@ -861,7 +861,7 @@
 
     function separate(dt) {
       for (const e of list) {
-        if (e.dead || G.NarutoLee?.bound?.(e) || G.NarutoTemari?.held?.(e)) continue;
+        if (e.dead || G.NarutoLee?.bound?.(e) || G.NarutoTemari?.held?.(e) || G.NarutoTemari?.pushed?.(e)) continue;
         const cx = Math.floor(e.x / CELL), cy = Math.floor(e.y / CELL);
         let px = 0, py = 0, n = 0;
         for (let j = -1; j <= 1; j++) {
@@ -947,7 +947,7 @@
           if (G.Coop.isHost) G.Coop.enemyGone(e, false);
           continue;
         }
-        if (e.boss || e.shiny || G.Rift.inArena || G.NarutoTemari?.held?.(e)) continue;
+        if (e.boss || e.shiny || G.Rift.inArena || G.NarutoTemari?.held?.(e) || G.NarutoTemari?.pushed?.(e)) continue;
         // Rezagados: los que se quedan atrás mientras corres y llevan un rato
         // FUERA DE LA VISTA (de todos) vuelven a salir por delante de ti. Así
         // no se puede huir sin más, y nunca desaparece uno que estés viendo.

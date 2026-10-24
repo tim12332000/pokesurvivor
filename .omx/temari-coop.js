@@ -3,7 +3,7 @@
   if (G.TemariCoop || !G.Coop || !G.NarutoTemari) return;
   const net = G.Coop, combat = G.NarutoTemari;
   const petSeen = new Map();
-  const orbitClaims = new Map(), liftClaims = new Map(), reflections = new Set(), pendingHazards = new Map();
+  const orbitClaims = new Map(), liftClaims = new Map(), pushClaims = new Map(), pushSeen = new Map(), reflections = new Set(), pendingHazards = new Map();
   const reflectionSeen = new Map(), localWalls = new Map();
   let reflectedDamageSerial = 0, reflectionBound = false, wallSerial = 0;
   const casts = new Map(), actors = new Map(), seen = new Map(), removed = new Set(), retired = new Set();
@@ -22,7 +22,8 @@
     for (const actor of actors.values()) { combat.clear?.(actor); G.NarutoTemariReflect?.clear(actor); }
     for (const claim of orbitClaims.values()) combat.releaseNetworkOrbit?.(claim.enemy, claim.packet.castId);
     for (const claim of liftClaims.values()) combat.releaseNetworkLift?.(claim.enemy, claim.packet.castId);
-    orbitClaims.clear(); liftClaims.clear(); reflections.clear(); pendingHazards.clear();
+    for (const claim of pushClaims.values()) combat.releaseNetworkPush?.(claim.enemy, claim.packet.castId);
+    orbitClaims.clear(); liftClaims.clear(); pushClaims.clear(); pushSeen.clear(); reflections.clear(); pendingHazards.clear();
     reflectionSeen.clear(); localWalls.clear();
     casts.clear(); actors.clear(); seen.clear(); petSeen.clear(); removed.clear(); retired.clear();
     clock = 0;
@@ -38,6 +39,7 @@
   function clearOwner(uid) {
     for (const [id, claim] of orbitClaims) if (claim.uid === uid) retireClaim(id, claim);
     for (const [id, claim] of liftClaims) if (claim.uid === uid) retireLift(id, claim);
+    for (const [id, claim] of pushClaims) if (claim.uid === uid) retirePush(id, claim);
     const parent = net.mate(uid)?.pl;
     if (parent) { combat.clear?.(parent); G.NarutoTemariReflect?.clear(parent); }
     for (const [key, actor] of actors) if (key.startsWith(uid + ':')) { combat.clear?.(actor); G.NarutoTemariReflect?.clear(actor); actors.delete(key); }
@@ -46,6 +48,11 @@
   function retireLift(id, claim) {
     combat.releaseNetworkLift?.(claim.enemy, claim.packet.castId);
     liftClaims.delete(id);
+    if (net.active && net.isHost) net.temariEvent(['te', stamp(), claim.uid, claim.actor, id, claim.packet]);
+  }
+  function retirePush(id, claim) {
+    combat.releaseNetworkPush?.(claim.enemy, claim.packet.castId);
+    pushClaims.delete(id);
     if (net.active && net.isHost) net.temariEvent(['te', stamp(), claim.uid, claim.actor, id, claim.packet]);
   }
   function actorRemoved(actor) {
@@ -173,6 +180,28 @@
       const uid = event[2], actor = event[3], id = event[4], packet = event[5];
       const enemy = G.EnemyMgr.get(id);
       if (!enemy || !packet || !finite(packet.castId)) return;
+      if (packet.kind === 'push') {
+        const key = uid + ':' + actor + ':' + id, previous = pushSeen.get(key);
+        if (previous && (previous.castId > packet.castId || (previous.castId === packet.castId && previous.released))) return;
+        if (event[0] === 'te') {
+          pushSeen.set(key, {castId:packet.castId, released:true});
+          const claim = pushClaims.get(id);
+          if (claim && claim.uid === uid && claim.actor === actor && claim.packet.castId === packet.castId) {
+            combat.releaseNetworkPush?.(enemy, packet.castId); pushClaims.delete(id);
+          }
+          return;
+        }
+        if (previous?.castId === packet.castId) return;
+        if (!['x','y','dx','dy','distance','duration','age'].every(k => finite(packet[k])) ||
+            packet.duration <= 0 || packet.distance < 0 || packet.age < 0 || packet.age >= packet.duration) return;
+        const owner = findActor(uid, actor) || remoteOwner(uid, {actor, x:packet.x, y:packet.y, aim:0});
+        if (!owner) return;
+        if (combat.applyNetworkPush?.(owner, enemy, {...packet, authoritative:false})) {
+          pushSeen.set(key, {castId:packet.castId, released:false});
+          pushClaims.set(id, {uid, actor, owner, enemy, packet, at:clock});
+        }
+        return;
+      }
       if (packet.kind === 'lift') {
         if (event[0] === 'te') {
           const claim = liftClaims.get(id);
@@ -216,6 +245,7 @@
       retired.add(key);
       const owner = actors.get(key);
       if (owner) { combat.clear(owner); G.NarutoTemariReflect?.clear(owner); actors.delete(key); }
+      for (const [enemyId, claim] of pushClaims) if (claim.uid === uid && claim.actor === id) retirePush(enemyId, claim);
       for (const [castKey, cast] of casts) if (cast.uid === uid && cast.packet.actor === id) casts.delete(castKey);
       if (net.isHost) net.temariEvent(['tx', stamp(), uid, id], uid);
     } else if (event[0] === 'td') {
@@ -322,6 +352,27 @@
     if (!claim || claim.owner !== owner || claim.packet.castId !== packet.castId) return;
     liftClaims.delete(enemy.id);
     if (net.active && net.isHost) net.temariEvent(['te', stamp(), claim.uid, claim.actor, enemy.id, claim.packet]);
+  };
+  const previousPushPolicy = combat.mayPush, previousPush = combat.onPush, previousPushRelease = combat.onPushRelease;
+  combat.mayPush = (owner, enemy, cast) => {
+    if (previousPushPolicy?.(owner, enemy, cast) === false) return false;
+    return !net.active || (net.isHost && !enemy.remote);
+  };
+  combat.onPush = (owner, enemy, packet, cast) => {
+    previousPush?.(owner, enemy, packet, cast);
+    if (!net.active || !net.isHost) return;
+    const identity = ownerIdentity(owner);
+    if (!identity) return;
+    const claim = {...identity, owner, enemy, packet:{...packet, kind:'push'}, at:clock};
+    pushClaims.set(enemy.id, claim);
+    net.temariEvent(['to', stamp(), identity.uid, identity.actor, enemy.id, claim.packet]);
+  };
+  combat.onPushRelease = (owner, enemy, packet, cast) => {
+    previousPushRelease?.(owner, enemy, packet, cast);
+    const claim = pushClaims.get(enemy.id);
+    if (!claim || claim.owner !== owner || claim.packet.castId !== packet.castId) return;
+    pushClaims.delete(enemy.id);
+    if (net.active && net.isHost) net.temariEvent(['te', stamp(), claim.uid, claim.actor, enemy.id, {...packet, kind:'push'}]);
   };
   function findActor(uid, actor) {
     if (uid === G.Net.uid) return actor === 'player' ? net.local : G.SelfClones?.actors?.().find(a => actorId(a) === actor);
@@ -467,7 +518,18 @@
       // orphaned claim; a live lease must finish its entire circular sweep.
       if (claim.enemy.dead || (!live && clock - claim.at > claim.packet.duration + .5)) retireClaim(id, claim);
     }
-    for (const [id, claim] of liftClaims) if (claim.enemy.dead || clock - claim.at > claim.packet.duration + .5) retireLift(id, claim);
+    for (const [id, claim] of liftClaims) {
+      const lift = combat.liftForState?.(claim.enemy);
+      const live = lift && lift.owner === findActor(claim.uid, claim.actor) &&
+        (lift.cast.castId ?? lift.cast.serial) === claim.packet.castId;
+      if (claim.enemy.dead || (!live && clock - claim.at > claim.packet.duration + .5)) retireLift(id, claim);
+    }
+    for (const [id, claim] of pushClaims) {
+      const push = combat.pushFor?.(claim.enemy);
+      const live = push && push.owner === findActor(claim.uid, claim.actor) &&
+        (push.cast.castId ?? push.cast.serial) === claim.packet.castId;
+      if (claim.enemy.dead || (!live && clock - claim.at > claim.packet.duration + .5)) retirePush(id, claim);
+    }
     interceptRemote();
     const held = [];
     for (const shot of G.Projectiles.all()) if (shot.temariPending) {
@@ -507,5 +569,5 @@
   };
   G.TemariCoop = { begin, clear, clearOwner, actorRemoved, stamp, trackShot, acceptShot, ownsMove, receive,
     hostFrame, remoteActors: () => [...actors.values()],
-    inspect: () => ({ session, scene, casts: casts.size, actors: actors.size, seen: seen.size, removed: removed.size, orbits:orbitClaims.size, lifts:liftClaims.size, reflections:reflections.size, pendingHazards:pendingHazards.size, petActors:petSeen.size }) };
+    inspect: () => ({ session, scene, casts: casts.size, actors: actors.size, seen: seen.size, removed: removed.size, orbits:orbitClaims.size, lifts:liftClaims.size, pushes:pushClaims.size, reflections:reflections.size, pendingHazards:pendingHazards.size, petActors:petSeen.size }) };
 })();

@@ -2,7 +2,7 @@
 (() => {
   if (G.NarutoTemari) return;
   const combat=G.Combat, TAU=Math.PI*2, EPS=1e-8;
-  const states=new Map(), casts=[], blades=[], waves=[], summons=[], storms=[], orbits=new Map(), lifts=new Map();
+  const states=new Map(), casts=[], blades=[], waves=[], summons=[], storms=[], orbits=new Map(), lifts=new Map(), pushes=new Map();
   const modes=new Set(['temari-wind','temari-mastery','temari-great-scythe','temari-blade-dance','temari-typhoon']);
   let sequence=0, petSequence=0, petPacketSequence=0;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
@@ -36,7 +36,13 @@
       reach:L?[40,70,110,160,220][L-1]:0,power:L?[1.15,1.2,1.25,1.3,1.35][L-1]:1,
       budget:L?Math.floor([1,1,2,2,3][L-1]*1.25**Q):0};
   }
-  function rangeFor(owner,m) {if(m.digiMode==='temari-typhoon')return [240,270,300,330,360][rank(m)-1];return (m.range||[240,250,270,290,310][rank(m)-1])+mastery(owner).reach;}
+  function heavyFor(owner,m) {
+    const i=rank(m)-1,p=mastery(owner);
+    return {range:[300,330,360,390,420][i]+6*p.Q+p.reach,
+      arc:Math.min(180,110+10*i+2*p.Q)*Math.PI/180,
+      pushDistance:[120,145,170,195,220][i]+18*p.L+4*p.Q,pushDuration:.35,speed:720*p.speed};
+  }
+  function rangeFor(owner,m) {if(m.digiMode==='temari-great-scythe')return heavyFor(owner,m).range;if(m.digiMode==='temari-typhoon')return [240,270,300,330,360][rank(m)-1];return (m.range||[240,250,270,290,310][rank(m)-1])+mastery(owner).reach;}
   function targets(owner,m) {
     const r=rangeFor(owner,m);
     const summonPriority=m.digiMode==='temari-blade-dance'&&owner===G.Game.player;
@@ -58,17 +64,19 @@
   }
   function snapshot(owner,move) {
     const m={...move},modeslot=m.digiMode,i=rank(m)-1,p=mastery(owner),scale=1.25**p.Q;
-    const N=Math.floor(3*scale),W=Math.floor(scale),K=Math.floor(scale);
+    const N=Math.floor(3*scale),W=1,K=Math.floor(scale);
     const C=(modeslot==='temari-typhoon'?[3,4,5,6,8]:[4,4,5,5,6])[i]+(p.L?p.L+p.Q:0);
     const basic=modeslot==='temari-wind',heavy=modeslot==='temari-great-scythe',typhoon=modeslot==='temari-typhoon';
     const T=Math.floor(scale),P=C;
     const s=state(owner),empowered=basic&&p.L>0&&(s.basicRounds+1)%3===0;
     const fallback=basic?[10,12,14.4,18,22.5][i]:heavy?[70,84,100.8,126,157.5][i]:typhoon?[30,36,44,54,66][i]:[32,39,47,57,69][i];
-    return {id:m.id,mode:modeslot,kind:basic?'basic':heavy?'heavy':typhoon?'typhoon':'summon',m,Q:p.Q,L:p.L,N,R:p.R,W,K,C,T,P,
-      count:basic?N:heavy?W:typhoon?T:K,potentialHits:basic?N*p.R:heavy?W*p.R:typhoon?T*P:K*C,
+    const h=heavy?heavyFor(owner,m):null;
+    return {id:m.id,mode:modeslot,kind:basic?'basic':heavy?'heavy':typhoon?'typhoon':'summon',m,Q:p.Q,L:p.L,N,R:heavy?1:p.R,W,K,C,T,P,
+      count:basic?N:heavy?1:typhoon?T:K,potentialHits:basic?N*p.R:heavy?1:typhoon?T*P:K*C,
       damage:(Number.isFinite(m.dmg)?m.dmg:fallback)*(owner.atk??1)*(empowered?p.power:1),
-      critChance:owner.critChance||0,range:rangeFor(owner,m),speed:(m.speed||(basic?420:heavy?440:500))*p.speed,
-      arc:basic?[45,75,105,135,180][i]*Math.PI/180:m.arc||100*Math.PI/180,radius:basic?(m.contactRadius||30):heavy?(m.radius||160):typhoon?[240,270,300,330,360][i]:(m.radius||65),
+      critChance:owner.critChance||0,range:rangeFor(owner,m),speed:h?.speed??(m.speed||(basic?420:500))*p.speed,
+      arc:h?.arc??(basic?[45,75,105,135,180][i]*Math.PI/180:m.arc||100*Math.PI/180),radius:basic?(m.contactRadius||30):heavy?(m.radius||160):typhoon?[240,270,300,330,360][i]:(m.radius||65),
+      pushDistance:h?.pushDistance??0,pushDuration:h?.pushDuration??0,
       empowered,budget:empowered?p.budget:0,atk:owner.atk??1,emitted:0,cuts:0,hits:0,props:0};
   }
   function start(owner,snap,ghost=false) {
@@ -127,7 +135,7 @@
   }
   function props(x,y,r) {return G.World.propsInCircle?.(x,y,r)||[];}
   function emit(b,i) {
-    const target=b.targets[i%b.targets.length],spread=b.kind==='basic'?0:((i%5)/4-.5)*.14;
+    const target=b.targets[i%b.targets.length],spread=b.kind==='basic'||b.kind==='heavy'?0:((i%5)/4-.5)*.14;
     const aim=b.aim+spread;
     const base={cast:b,owner:b.owner,world:b.world,index:i,x:b.x,y:b.y,sx:b.x,sy:b.y,aim,
       dx:Math.cos(aim),dy:Math.sin(aim),age:0,travel:0,phase:'travel',cuts:0,dead:false};
@@ -176,12 +184,12 @@
       if(f.done)continue;
       const previous=f.reach;f.reach=Math.min(b.range,Math.max(0,w.age-f.started)*b.speed);
       const reach=w.reach;w.reach=f.reach;
-      if(!b.ghost||b.kind==='basic')for(const e of waveCandidates(b))if(!f.hits.has(e)&&alive(e)&&!e.friendly&&
+      if(!b.ghost||b.kind==='basic'||b.kind==='heavy')for(const e of waveCandidates(b))if(!f.hits.has(e)&&alive(e)&&!e.friendly&&
         Math.hypot(e.x-w.x,e.y-w.y)+(e.r||0)>=previous-EPS&&inWave(w,e)&&clearPath(w.x,w.y,e.x,e.y)) {
-        f.hits.add(e);const ordinary=!e.boss&&!e.elite&&!e.legend&&!e.judge;
-        const knock=b.kind==='heavy'&&ordinary&&!w.knocked.has(e)?65:0;w.knocked.add(e);
-        hit(b,e,Math.cos(w.aim),Math.sin(w.aim),knock);
+        f.hits.add(e);
+        hit(b,e,Math.cos(w.aim),Math.sin(w.aim));
         if(b.kind==='basic')claimLift(b.owner,e,b);
+        else claimPush(b.owner,e,b);
       }
       if(b.wavePropAge!==b.age){b.wavePropAge=b.age;b.waveProps=props(b.x,b.y,b.range);}
       for(const p of b.waveProps)if(!f.props.has(p)&&!p.dead&&p.hp>0&&
@@ -337,7 +345,7 @@
     return true;
   }
   function claimLift(owner,e,b,packet=null,remote=false) {
-    if(!alive(e)||e.boss||e.elite||e.legend||e.judge)return false;
+    if(!alive(e)||e.boss||e.elite||e.legend||e.judge||pushes.has(e))return false;
     if(!remote) {
       if(b.mode!=='temari-wind'||b.lifted.has(e))return false;
       b.lifted.add(e);
@@ -377,6 +385,71 @@
     }
   }
   const strong=e=>!!(e.boss||e.elite||e.legend||e.judge);
+  const externallyHeld=e=>!!(G.NarutoLee?.bound?.(e)||G.NarutoGaara?.rooted?.(e));
+  function pushPacket(p,reason) {
+    return {castId:p.cast.castId??p.cast.serial,x:p.x,y:p.y,dx:p.dx,dy:p.dy,distance:p.distance,
+      age:p.age,duration:p.duration,travelled:p.travelled,reason};
+  }
+  function releasePush(e,reason='complete',silent=false) {
+    const p=pushes.get(e);if(!p)return false;pushes.delete(e);
+    if(!silent&&!p.remote)G.NarutoTemari.onPushRelease?.(p.owner,e,pushPacket(p,reason),p.cast);
+    return true;
+  }
+  function claimPush(owner,e,b,packet=null,remote=false) {
+    if(!alive(e)||strong(e)||externallyHeld(e)||pushes.has(e))return false;
+    if(!remote) {
+      const authority=G.NarutoTemari.mayPush?.(owner,e,b);
+      if(b.ghost?authority!==true:authority===false)return false;
+    }
+    const angle=Math.atan2(e.y-b.y,e.x-b.x),p={enemy:e,owner,cast:b,world:G.World,
+      x:packet?.x??e.x,y:packet?.y??e.y,dx:packet?.dx??Math.cos(angle),dy:packet?.dy??Math.sin(angle),
+      distance:packet?.distance??b.pushDistance,duration:.35,age:packet?.age??0,travelled:packet?.travelled??0,
+      remote,authoritative:packet?.authoritative!==false};
+    // Escape takes priority over our own lifts and circular carry. External
+    // character controllers retain their movement lease.
+    releaseLift(e,'push');releaseOrbit(e,'push');pushes.set(e,p);
+    if(p.authoritative)e.kx=e.ky=0;
+    if(!remote)G.NarutoTemari.onPush?.(owner,e,pushPacket(p),b);
+    return true;
+  }
+  function applyNetworkPush(owner,e,packet) {
+    if(!owner||!e||!packet||packet.castId==null||
+      ![packet.x,packet.y,packet.dx,packet.dy,packet.distance,packet.age??0,packet.travelled??0].every(Number.isFinite)||
+      packet.distance<0||(packet.age??0)<0||(packet.age??0)>=.35||
+      Math.abs(Math.hypot(packet.dx,packet.dy)-1)>.01||
+      (packet.travelled??0)<0||(packet.travelled??0)>packet.distance)return false;
+    const current=pushes.get(e);
+    if(current)return (current.cast.castId??current.cast.serial)===packet.castId;
+    const b={owner,world:G.World,ghost:true,kind:'heavy',mode:'temari-great-scythe',castId:packet.castId,serial:packet.castId};
+    return claimPush(owner,e,b,packet,true);
+  }
+  function releaseNetworkPush(e,castId) {
+    const p=pushes.get(e);return !!p&&(castId==null||(p.cast.castId??p.cast.serial)===castId)&&releasePush(e,'network',true);
+  }
+  function pushed(e) {
+    const p=pushes.get(e);return !!p&&p.world===G.World&&alive(e)&&alive(p.owner)&&p.age<p.duration-EPS;
+  }
+  function advancePushes(dt) {
+    for(const [e,p] of pushes) {
+      if(p.world!==G.World||!alive(e)||!alive(p.owner)||(!p.remote&&!legal(p.cast))||externallyHeld(e)) {
+        releasePush(e,'invalid');continue;
+      }
+      p.age=Math.min(p.duration,p.age+dt);
+      const t=p.age/p.duration,target=p.distance*(1-(1-t)**3),distance=Math.max(0,target-p.travelled);
+      if(p.authoritative) {
+        const steps=Math.max(1,Math.ceil(distance/4));let blocked=false;
+        if(steps>2048){releasePush(e,'step-limit');continue;}
+        for(let i=0;i<steps;i++) {
+          const amount=distance/steps,x=e.x+p.dx*amount,y=e.y+p.dy*amount;
+          if((G.World.isFree&&!G.World.isFree(x,y,e.r||8,true))||G.World.isWall?.(x,y)) {blocked=true;break;}
+          e.x=x;e.y=y;p.travelled+=amount;
+        }
+        e.kx=e.ky=0;
+        if(blocked){releasePush(e,'blocked');continue;}
+      } else p.travelled=target;
+      if(p.age>=p.duration-EPS)releasePush(e);
+    }
+  }
   function orbitPacket(o,reason) {
     return {castId:o.cast.castId??o.cast.serial,x:o.x,y:o.y,radius:o.radius,startAngle:o.startAngle,
       angle:o.angle,age:o.age,duration:o.duration,reason};
@@ -387,7 +460,7 @@
     return true;
   }
   function claimOrbit(owner,e,b,packet=null,remote=false) {
-    if(orbits.has(e)||!alive(e)||strong(e))return null;
+    if(orbits.has(e)||pushes.has(e)||!alive(e)||strong(e))return null;
     const x=packet?.x??b.x,y=packet?.y??b.y;
     const o={enemy:e,owner,cast:b,world:G.World,x,y,radius:packet?.radius??Math.hypot(e.x-x,e.y-y),
       startAngle:packet?.startAngle??Math.atan2(e.y-y,e.x-x),age:packet?.age??0,duration:1.2,
@@ -449,7 +522,7 @@
       };
       for(const e of b.stormCandidates)if(alive(e)&&!a.contacts.has(e)&&crossed(e)) {
         const contact={started:a.age,cuts:0};a.contacts.set(e,contact);
-        if(!strong(e)&&!orbits.has(e)) {
+        if(!strong(e)&&!orbits.has(e)&&!pushes.has(e)) {
           const authority=G.NarutoTemari.mayControl?.(b.owner,e,b);
           if(b.ghost?authority===true:authority!==false)claimOrbit(b.owner,e,b);
           else if(!b.ghost)G.NarutoTemari.requestOrbit?.(b.owner,e,{castId:b.castId??b.serial,x:a.x,y:a.y,
@@ -493,6 +566,7 @@
     }
   }
   function clear(owner) {
+    for(const [e,p] of pushes)if(!owner||p.owner===owner)releasePush(e,'clear');
     for(const [e,lift] of lifts)if(!owner||lift.owner===owner)releaseLift(e,'clear');
     for(const [e,o] of orbits)if(!owner||o.owner===owner)releaseOrbit(e,'clear');
     for(const [actor,s] of states)if((!owner||actor===owner)&&!s.remotePets&&s.hasPetRoster)G.NarutoTemari.onPets?.(actor,{serial:++petPacketSequence,pets:[]});
@@ -502,10 +576,11 @@
   function update(dt) {
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
     for(const owner of [G.Game.player,...(G.SelfClones?.actors?.()||[])])if(valid(owner))syncPets(owner);
+    advancePushes(dt);
     advanceLifts(dt);
     advanceOrbits(dt);
     for(const [owner,s] of states) {
-      const remote=alive(owner)&&(s.remotePets||casts.some(b=>b.owner===owner&&b.ghost)||[...lifts.values()].some(lift=>lift.owner===owner&&lift.cast.ghost));
+      const remote=alive(owner)&&(s.remotePets||casts.some(b=>b.owner===owner&&b.ghost)||[...lifts.values()].some(lift=>lift.owner===owner&&lift.cast.ghost)||[...pushes.values()].some(p=>p.owner===owner&&p.cast.ghost));
       if(s.world!==G.World||(!valid(owner)&&!remote)){clear(owner);continue;}
       // Freeze prevents new actions; already released winds and summons keep time.
       s.clock+=dt;
@@ -535,7 +610,7 @@
   function stateFor(owner) {
     const s=states.get(owner);if(!s||!valid(owner)||s.world!==G.World)return null;
     const p=mastery(owner),q=s.latest;
-    return {owner,pose:s.pose,latest:q,Q:p.Q,L:p.L,N:Math.floor(3*1.25**p.Q),R:p.R,W:Math.floor(1.25**p.Q),K:Math.floor(1.25**p.Q),C:petMove(owner)?snapshot(owner,petMove(owner)).C:q?.C||0,
+    return {owner,pose:s.pose,latest:q,Q:p.Q,L:p.L,N:Math.floor(3*1.25**p.Q),R:p.R,W:1,K:Math.floor(1.25**p.Q),C:petMove(owner)?snapshot(owner,petMove(owner)).C:q?.C||0,
       petPhases:summons.filter(a=>a.owner===owner&&a.permanent&&!a.dead).reduce((out,a)=>(out[a.phase]=(out[a.phase]||0)+1,out),{}),
       T:Math.floor(1.25**p.Q),P:[3,4,5,6,8][rank(owner.moves?.find(m=>m.digiMode==='temari-typhoon'))-1]+(p.L?p.L+p.Q:0),
       basicRounds:s.basicRounds,basicCooldown:s.basicCooldown,cooldowns:{...s.cooldowns},totalEmitted:s.totalEmitted,
@@ -544,7 +619,7 @@
       orbits:[...orbits.values()].filter(o=>o.owner===owner).length,summons:summons.filter(a=>a.owner===owner).length,storms:storms.filter(a=>a.owner===owner).length,pendingCuts:[...waves,...summons,...storms].filter(a=>a.owner===owner).reduce((n,a)=>n+(a.cast.kind==='typhoon'?[...a.contacts.values()].reduce((v,c)=>v+a.cast.C-c.cuts,0):(a.cast.kind==='summon'?(['wander','follow','return'].includes(a.phase)?a.cuts:a.cast.C):a.cast.R)-a.cuts),0)};
   }
   function air(ctx) {
-    G.TemariCycloneVFX?.drawAir(ctx,{storms,orbits:[...orbits.values()],blades,waves,summons,states:[...states.values()]});
+    G.TemariCycloneVFX?.drawAir(ctx,{storms,orbits:[...orbits.values()],pushes:[...pushes.values()],blades,waves,summons,states:[...states.values()]});
   }
   function ground(ctx) {
     G.TemariCycloneVFX?.drawGround(ctx,{storms,orbits:[...orbits.values()],summons});
@@ -563,9 +638,10 @@
   };
   const oldEnemyUpdate=G.Enemy?.prototype.update;
   if(oldEnemyUpdate)G.Enemy.prototype.update=function(...args) {
-    const lease=orbits.get(this),lift=lifts.get(this),x=this.x,y=this.y;
+    const lease=orbits.get(this),lift=lifts.get(this),push=pushes.get(this),x=this.x,y=this.y;
     const result=oldEnemyUpdate.apply(this,args);
-    if(((lease?.authoritative&&orbits.get(this)===lease)||(lift?.authoritative&&lifts.get(this)===lift&&held(this)))&&alive(this)) {this.x=x;this.y=y;this.kx=this.ky=0;}
+    if(((lease?.authoritative&&orbits.get(this)===lease)||(lift?.authoritative&&lifts.get(this)===lift&&held(this))||
+      (push?.authoritative&&pushes.get(this)===push&&!externallyHeld(this)))&&alive(this)) {this.x=x;this.y=y;this.kx=this.ky=0;}
     return result;
   };
   const oldTick=combat.tick,oldUpdate=combat.updateFields,oldClear=combat.clearFields,oldAir=combat.drawAirFields,oldGround=combat.drawGroundFields;
@@ -592,7 +668,8 @@
   combat.clearFields=function(owner){const result=oldClear.call(this,owner);clear(owner);return result;};
   combat.drawAirFields=function(ctx){oldAir.call(this,ctx);air(ctx);};
   combat.drawGroundFields=function(ctx){oldGround.call(this,ctx);ground(ctx);};
-  G.NarutoTemari={supports,canCast,cast,clear,update,activeFor,stateFor,snapshot,ghost,mastery,rangeFor,
+  G.NarutoTemari={supports,canCast,cast,clear,update,activeFor,stateFor,snapshot,ghost,mastery,rangeFor,heavyFor,
+    pushed,pushFor:e=>pushes.get(e)||null,pushForState:e=>pushes.get(e)||null,applyNetworkPush,releaseNetworkPush,mayPush:null,onPush:null,onPushRelease:null,
     syncPets,petSnapshots,applyNetworkPets,onPets:null,onPetAttack:null,
     held,liftFor,liftForState:e=>lifts.get(e)||null,applyNetworkLift,releaseNetworkLift,mayLift:null,onLift:null,onLiftRelease:null,
     onCast:null,onIntercept:null,mayIntercept:null,mayControl:null,onCapture:null,onRelease:null,requestOrbit:null,applyNetworkOrbit,releaseNetworkOrbit,

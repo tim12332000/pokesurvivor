@@ -515,15 +515,16 @@
     ['naruto-temari-three-stars',[30011],{
       name:'三星扇精通',mode:'temari-mastery',icon:'temariMastery',type:'flying',passive:true,learnLevel:3,cd:0,dmg:0,
       masterySpeed:1.15,masteryReach:40,empowerMultiplier:1.15,deflectBase:1,
-      ups:[1,2,3,4].map(i=>({t:`總斬擊 ${i+2}＋數量・速度 ×${[1.15,1.25,1.4,1.6,1.85][i]}・射程 +${[40,70,110,160,220][i]}`,
+      ups:[1,2,3,4].map(i=>({t:`普攻總斬擊 ${i+2}＋數量・大鐮鼬推距 +${18*(i+1)}・速度 ×${[1.15,1.25,1.4,1.6,1.85][i]}・射程 +${[40,70,110,160,220][i]}`,
         m:{masterySpeed:[1.15,1.25,1.4,1.6,1.85][i],masteryReach:[40,70,110,160,220][i],empowerMultiplier:[1.15,1.2,1.25,1.3,1.35][i],deflectBase:[1,1,2,2,3][i]}})),
-      desc:'常駐被動，不占主動槽。每刃／每波總斬擊次數＝1＋精通等級＋數量卡。風刃與風浪速度 ×1.15／1.25／1.4／1.6／1.85、射程 +40／70／110／160／220。每第三輪普攻傷害 ×1.15／1.20／1.25／1.30／1.35；前方短暫掃開實體飛行彈，額度 floor([1,1,2,2,3]×1.25^數量卡)。招式機制與數值為本作改編。',source_url:temariSource
+      desc:'常駐被動，不占主動槽。普攻每波總斬擊＝1＋精通等級＋數量卡；大鐮鼬仍只重擊一次，精通改加推距18／36／54／72／90。風浪速度×1.15／1.25／1.4／1.6／1.85、射程+40／70／110／160／220。每第三輪普攻傷害×1.15／1.20／1.25／1.30／1.35；前方短暫掃開實體飛彈，額度floor([1,1,2,2,3]×1.25^數量卡)。本作改編。',source_url:temariSource
     }],
     ['naruto-temari-great-scythe',[30011],{
       name:'風遁・大鐮鼬之術',mode:'temari-great-scythe',icon:'temariScythe',type:'flying',learnLevel:6,cd:5,dmg:70,
-      count:1,range:300,speed:360,radius:160,width:90,arc:Math.PI*110/180,knock:65,
-      ups:temariDamageUps([70,84,100.8,126,157.5]),
-      desc:'主動招式，冷卻 5 秒。每輪 floor(1.25^數量卡) 道風浪，對實際接觸的前方敵人造成群傷，每波每斬 70／84／100.8／126／157.5。精通使每波獨立再斬；牆會阻擋，敵人可離開範圍。每波首次擊退普通敵人 65，特殊敵人免疫。切招保留已施放風浪。',source_url:temariSource
+      count:1,range:300,speed:720,radius:160,width:90,arc:Math.PI*110/180,knock:0,
+      ups:temariDamageUps([70,84,100.8,126,157.5],[300,330,360,390,420]).map((up,i)=>({...up,
+        t:up.t+`・扇角${[120,130,140,150][i]}°・推距${[145,170,195,220][i]}`})),
+      desc:'主動解圍技，冷卻5秒。一次強力揮扇，每敵只受一次重擊70／84／100.8／126／157.5，並在0.35秒內將普通怪群推遠。升階增加傷害、範圍與推距；數量卡擴大扇角／射程，精通強化速度／射程／推距。此招不連切、不因數量重複傷害；遇牆停止，特殊敵人只受傷不搬動。本作改編。',source_url:temariSource
     }],
     ['naruto-temari-blade-dance',[30011],{
       name:'通靈・斬斬舞',mode:'temari-blade-dance',icon:'temariSummon',type:'flying',passive:true,learnLevel:9,cd:10,dmg:32,

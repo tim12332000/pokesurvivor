@@ -103,7 +103,7 @@ GROWTH = r"""() => {
  for(const id of ['naruto-temari','naruto-temari-great-scythe'])for(const L of [0,1,5])for(const Q of [0,5,10,20]){
    A.reset();A.rank(id,5);A.mastery(L);p.quantityBonus=p.quantityPicks=Q;
    const target=A.spawn(100,0,'boss'),hits=A.watch(target);p.target=target;A.castNative(id);
-   const s=T.stateFor(p),f=s.latest,N=Math.floor(3*1.25**Q),R=L?1+L+Q:1,W=Math.floor(1.25**Q),K=W,C=6+(L?L+Q:0);
+   const s=T.stateFor(p),f=s.latest,N=Math.floor(3*1.25**Q),R=id==='naruto-temari-great-scythe'?1:L?1+L+Q:1,W=1,K=Math.floor(1.25**Q),C=6+(L?L+Q:0);
    A.assert(f,'missing observable cast snapshot '+id);
    for(const [key,expected] of Object.entries({Q,L,R}))A.assert(f[key]===expected,'snapshot '+key+' '+id+' '+JSON.stringify(f));
    const expected=id==='naruto-temari'?N:id.endsWith('great-scythe')?W:K;
@@ -180,7 +180,7 @@ AOE = r"""() => {
  out.knock=[];
  for(const special of [null,'boss','elite','legend','judge']){A.reset();A.mastery(5);const e=A.spawn(120,0,special),hits=A.watch(e);p.target=e;
    A.castNative('naruto-temari-great-scythe');A.finish();const knocks=hits.filter(h=>h.knock>0).length;
-   A.assert(knocks===(special?0:1),'heavy knock first-only / special immunity '+special+' '+knocks);out.knock.push({special,hits:hits.length,knocks})}
+   A.assert(knocks===0,'heavy escape push must not add native velocity knockback '+special+' '+knocks);A.assert(hits.length===1,'heavy must damage once '+special);out.knock.push({special,hits:hits.length,knocks})}
  // A target which leaves before later cuts must not receive retroactive hits.
  A.reset();A.mastery(5);const escape=A.spawn(120,0,'boss'),hits=A.watch(escape);p.target=escape;A.castNative('naruto-temari-great-scythe');
  for(let i=0;i<100&&!hits.length;i++)A.advance();A.assert(hits.length,'escape fixture never contacted');escape.x=-1000;G.EnemyMgr.rebuildGrid();const before=hits.length;A.finish();A.assert(hits.length===before,'escaped target received delayed damage');out.escape=before;

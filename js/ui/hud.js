@@ -403,9 +403,9 @@ G.HUD = (() => {
         const mastery = pl.moves.find(move => move.digiMode === 'temari-mastery');
         const rank = mastery?.lvl || 0, recuts = state?.R ?? (rank ? 1 + rank + q : 1);
         const count = base => G.Quantity?.count(pl, base) ?? base;
-        const label = m.digiMode === 'temari-mastery' ? '每刃 ' + recuts + ' 斬' :
+        const label = m.digiMode === 'temari-mastery' ? '普攻 ' + recuts + ' 斬' :
           m.digiMode === 'temari-wind' ? [45,75,105,135,180][Math.max(0,Math.min(4,m.lvl-1))] + '° ' + (state?.N ?? count(3)) + '×' + recuts :
-          m.digiMode === 'temari-great-scythe' ? '風浪 ' + (state?.W ?? count(1)) + '×' + recuts :
+          m.digiMode === 'temari-great-scythe' ? '推退 ' + (G.NarutoTemari.heavyFor?.(pl,m)?.pushDistance??[120,145,170,195,220][Math.max(0,Math.min(4,m.lvl-1))]) :
           m.digiMode === 'temari-typhoon' ? '迴旋 ' + count(1) + '×' + ([3,4,5,6,8][Math.max(0,Math.min(4,m.lvl-1))] + (rank ? rank + q : 0)) :
           '常駐 ' + (state?.K ?? count(1)) + '×' + ([4,4,5,5,6][Math.max(0,Math.min(4,m.lvl-1))] + (rank ? rank + q : 0));
         ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);

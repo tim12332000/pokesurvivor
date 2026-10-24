@@ -61,7 +61,7 @@
       ctx.ellipse(a.x,a.y,15,4,0,0,TAU);ctx.fill();ctx.restore();
     }
   }
-  function drawAir(ctx,{storms=[],orbits=[],waves=[],summons=[],states=[]}={}) {
+  function drawAir(ctx,{storms=[],orbits=[],pushes=[],waves=[],summons=[],states=[]}={}) {
     for(const group of fieldGroups(waves,'range',24)) {
       const a=group[0];local(ctx,a,()=>{
       const b=a.cast||{},fronts=[];
@@ -75,9 +75,18 @@
       for(let i=0;i<selected.length;i++) {
         const {wave,front}=selected[i],r=front.reach,arc=wave.cast?.arc||1.2;
         const fade=clamp(((wave.cast?.range||240)-r)/35)*clamp(r/18);
-        edge(ctx,r,(wave.aim||0)+arc/2,arc,Math.min(5,r*.035),fade*(i? .24:.92),i?CYAN:WHITE);
+        const heavy=wave.cast?.kind==='heavy';
+        edge(ctx,r,(wave.aim||0)+arc/2,arc,Math.min(heavy?6:5,r*.035),fade*(i? .24:.92),i?CYAN:WHITE);
+        if(heavy)edge(ctx,r*.96,(wave.aim||0)+arc*.45,arc*.9,1.2,fade*.22,CYAN);
       }
       });
+    }
+    let pushedCount=0;
+    for(const p of pushes) {
+      const e=p.enemy,t=(p.age||0)/(p.duration||.35);
+      if(!visible(e,65)||t>=1||pushedCount++>=32)continue;
+      local(ctx,e,()=>{ctx.rotate(Math.atan2(p.dy,p.dx));ctx.translate(-10,-9);
+        streak(ctx,20+Math.min(18,(p.travelled||0)*.12),1.6,Math.sin(t*Math.PI)*.45);});
     }
     for(const a of sample(summons,110,40)) {
       const fade=a.phase==='fade'?clamp(1-(a.age-a.fadeAt)/.22):1;
