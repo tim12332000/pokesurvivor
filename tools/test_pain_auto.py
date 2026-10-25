@@ -94,8 +94,8 @@ DECISIONS = r"""() => {
  out.noEnemies=true;
  A.reset();A.ready('gravity','planet');const near=A.spawn(70,0);A.spawn(180,0);A.spawn(190,18);A.spawn(190,-18);A.advance();
  const gravity=A.actions().find(f=>f.kind==='gravity');
- A.assert(gravity?.immediate&&gravity.target===near,'close enemy must trigger emergency Tendo push');
- A.assert(!A.actions().some(f=>f.kind==='planet'),'Tendo cast planet alongside emergency gravity');out.emergency=true;
+ A.assert(gravity&&!gravity.immediate&&gravity.phase==='pull'&&gravity.target===near,'close enemy must start the pull/push combo');
+ A.assert(!A.actions().some(f=>f.kind==='planet'),'Tendo cast planet alongside gravity combo');out.comboPriority=true;
  A.reset();A.ready('planet');A.spawn(160,0);A.advance();A.assert(!A.actions().some(f=>f.kind==='planet'),'planet wasted on isolated normal enemy');
  A.spawn(180,10,true);A.advance();A.assert(A.actions().some(f=>f.kind==='planet'),'special enemy did not qualify planet');out.planetSpecial=true;
  A.reset();A.ready('missiles');A.spawn(100,0);A.advance();const move=p.moves.find(m=>m.id==='naruto-pain-missiles'),cooldown=move.t;

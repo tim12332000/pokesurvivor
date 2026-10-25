@@ -11,8 +11,8 @@
     ctx.globalAlpha = .32;
     ctx.strokeStyle = '#b9a9c6';
     ctx.lineWidth = 1;
-    // Keep the pull reach distinct from the smaller push hit area.
-    const rings = f.phase === 'pull' ? [radius, Math.min(240, f.m?.range || 240)] : [radius];
+    // The outer ring marks pull reach; the inner ring marks the later push hit.
+    const rings = f.phase === 'pull' ? [radius, f.m?.triggerRadius || 600] : [radius];
     for (const reach of rings) {
       ctx.globalAlpha = reach === radius ? .32 : .22;
       for (let i = 0; i < 12; i++) {
@@ -29,7 +29,7 @@
     if (f.phase !== 'pull' || !f.owner) return;
     const age = Math.max(0, f.age || 0);
     const progress = clamp(age / .35);
-    const reach = Math.min(240, f.m?.range || 240);
+    const reach = f.m?.triggerRadius || 600;
     const pulls = f.pulls || (f.target ? [{ target: f.target, distance: 0 }] : []);
     // Every pulled enemy gets a short inward trail, with a fixed three-dash
     // budget per target. No particles or target state are created while drawing.

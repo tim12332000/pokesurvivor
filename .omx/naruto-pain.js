@@ -193,8 +193,8 @@
     if(!targets.length)return false;
     f.body=b;f.target=targets[0];f.phase='prepare';f.hit=new Set();f.emitted=0;
     if(k==='gravity') {
-      f.target=targets.find(e=>dist(f.owner,e)<=(f.m.triggerRadius||600))||targets.find(special)||targets[0];
-      f.immediate=targets.some(e=>dist(f.owner,e)<=(f.m.triggerRadius||600));f.phase=f.immediate?'push':'pull';
+      f.target=targets.find(special)||targets[0];
+      f.immediate=false;f.phase='pull';
       f.pulls=targets.map(target=>({target,distance:0}));
     }
     if(k==='missiles') {
@@ -336,7 +336,7 @@
         const pullTime=Math.min(dt,.35-(f.age-dt));
         for(const entry of f.pulls) {
           const e=entry.target;
-          if(!alive(e)||!grounded(e)||dist(f.owner,e)>Math.min(240,f.m.range||240)||!clearPath(f.owner.x,f.owner.y,e.x,e.y))continue;
+          if(!alive(e)||!grounded(e)||dist(f.owner,e)>(f.m.triggerRadius||600)||!clearPath(f.owner.x,f.owner.y,e.x,e.y))continue;
           const d=dist(f.owner,e),pull=Math.min(Math.max(0,d-90),110-entry.distance,110/.35*pullTime*(special(e)?.25:1));
           toward(e,f.owner,pull);entry.distance+=pull;
         }
@@ -344,7 +344,8 @@
       }
       if(f.immediate||f.age>=.35) {
         f.x=f.owner.x;f.y=f.owner.y;
-        for(const e of nearby(f,f.m.radius||300)){hit(f,e);if(grounded(e)){const d=dist(f,e)||1;move(e,(e.x-f.x)/d*80*(special(e)?.25:1),(e.y-f.y)/d*80*(special(e)?.25:1));}}
+        // Pull steps can leave an exact boundary target a few floating-point units outside.
+        for(const e of nearby(f,(f.m.radius||300)+1e-7)){hit(f,e);if(grounded(e)){const d=dist(f,e)||1;move(e,(e.x-f.x)/d*80*(special(e)?.25:1),(e.y-f.y)/d*80*(special(e)?.25:1));}}
         G.EnemyMgr.rebuildGrid();effects.push({...f,kind:'push',age:0,life:.3});finish(f);
       }
     } else if(k==='missiles') {
@@ -761,7 +762,7 @@
   function automatic(dt,owner) {
     const moves=(owner.moves||[]).filter(m=>['gravity','missiles','summon','soul','planet'].includes(kind(m)));
     for(const m of moves)m.t=Math.max(0,(m.t||0)-dt);
-    // Resolve urgent repulsion first; otherwise reserve Tendo for a worthwhile planet.
+    // Start the pull/push combo when ready; otherwise allow a worthwhile planet.
     const gravity=moves.find(m=>kind(m)==='gravity'),planet=moves.find(m=>kind(m)==='planet');
     if(gravity&&nearby(owner,gravity.triggerRadius||600).length&&canCast(owner,gravity))cast(owner,gravity);
     else if(planet&&canCast(owner,planet))cast(owner,planet);
