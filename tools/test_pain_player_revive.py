@@ -16,7 +16,7 @@ SETUP = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain;
  A.reviveFresh=()=>{A.reset();G.Hazards.clear();p.invuln=0;
    p.regenFlat=p.lifestealRate=0; p.item=null;
-   const repair=p.moves.find(m=>m.id==='naruto-pain-repair');if(repair)repair.level=1;
+   const repair=p.moves.find(m=>m.id==='naruto-pain-repair');if(repair)repair.lvl=1;
  };
  A.lethal=()=>{p.invuln=0;p.hurt(p.maxHp+1,null,true);A.assert(p.dead&&p.hp===0,'native lethal damage did not kill Tendo');};
  A.naraka=()=>P.actorsFor(p).find(b=>b.path==='naraka');
@@ -27,24 +27,27 @@ SETUP = r"""() => {
 CHECK = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain,out={};
  A.reviveFresh();A.lethal();A.assert(P.canRevivePlayer(p),'formed living Naraka cannot rescue');
- A.advance(.01);let s=A.rescue();A.assert(s.waiting&&s.remaining>10.7&&s.remaining<=10.8,'base rescue must wait ten seconds plus .8 '+JSON.stringify(s));
+ A.advance(.01);let s=A.rescue();A.assert(s.waiting&&s.remaining>8.7&&s.remaining<=8.8,'base rescue must wait eight seconds plus .8 '+JSON.stringify(s));
  const remaining=s.remaining;G.Combat.updateFields(2);A.assert(A.rescue().remaining===remaining,'paused repair progressed');
- A.finish(9.8);A.assert(p.dead&&A.rescue().status==='waiting','base repair started early');
+ A.finish(7.8);A.assert(p.dead&&A.rescue().status==='waiting','base repair started early');
  A.finish(.3);A.assert(p.dead&&A.rescue().status==='repair','Naraka repair animation missing');
- A.finish(.8);A.assert(!p.dead&&Math.abs(p.hp-p.maxHp*.5)<1e-6,'native rescue must restore half HP');
- A.assert(A.rescue().protection>1.8,'rescue protection shorter than two seconds');
+ for(let i=0;p.dead&&i<90;i++)A.advance();A.assert(!p.dead&&Math.abs(p.hp-p.maxHp)<1e-6,'native rescue must restore full HP');
+ A.assert(A.rescue().protection>2.98&&p.invuln>=3,'rescue protection shorter than three seconds');
  const hp=p.hp;p.invuln=0;p.hurt(p.maxHp+1,null,true);A.assert(p.hp===hp&&!p.dead,'protection depends on normal invuln');
  G.Hazards.add({kind:'zone',x:p.x,y:p.y,r:60,delay:.001,dmg:10000,type:'normal',pure:true,color:'#f00'});
  A.resume();G.Hazards.update(.1);A.pause();A.assert(p.hp===hp&&!p.dead,'native ground zone bypassed rescue protection');G.Hazards.clear();
- A.finish(2.1);A.lethal();A.finish(10.9);A.assert(!p.dead&&p.hp===hp,'second Tendo death cannot be rescued');out.repeat=true;
+ A.finish(2.99);p.invuln=0;p.hurt(10000,null,true);A.assert(p.hp===hp&&!p.dead,'independent protection expired before 2.99 seconds');
+ G.Hazards.add({kind:'zone',x:p.x,y:p.y,r:60,delay:.001,dmg:10000,type:'normal',pure:true,color:'#f00'});
+ A.resume();G.Hazards.update(.1);A.pause();G.Hazards.clear();A.assert(p.hp===hp&&!p.dead,'late protected hazard bypassed rescue protection');
+ A.finish(.03);A.lethal();A.finish(8.9);A.assert(!p.dead&&p.hp===hp,'second Tendo death cannot be rescued');out.repeat=true;
 
  A.reviveFresh();const original=p.moves;p.moves=original.filter(m=>m.id==='naruto-pain');p.level=1;
- A.lethal();A.advance();A.assert(P.canRevivePlayer(p)&&A.rescue().remaining>10.7,'Lv1 lacks intrinsic player rescue');
- A.finish(10.9);A.assert(!p.dead&&p.hp===p.maxHp*.5,'unlearned repair cannot rescue player');p.moves=original;out.intrinsic=true;
+ A.lethal();A.advance();A.assert(P.canRevivePlayer(p)&&A.rescue().remaining>8.7,'Lv1 lacks intrinsic player rescue');
+ A.finish(8.9);A.assert(!p.dead&&p.hp===p.maxHp,'unlearned repair cannot rescue player');p.moves=original;out.intrinsic=true;
 
  A.reviveFresh();A.lethal();A.finish(4);p.revive(.25);const external=p.hp;A.advance();
  A.assert(!A.rescue().waiting,'external native revive left pending repair');A.finish(12);
- A.assert(p.hp===external,'cancelled rescue healed externally revived Tendo again');out.external=true;
+ A.assert(p.hp===external&&external===p.maxHp*.25,'cancelled rescue changed external quarter-health revive');out.external=true;
 
  A.reviveFresh();A.lethal();const free=G.World.isFree;G.World.isFree=()=>false;
  try{A.finish(12);A.assert(p.dead&&A.rescue().waiting&&A.rescue().status==='unsafe','unsafe resurrection was not deferred '+JSON.stringify(A.rescue()));}
@@ -64,6 +67,41 @@ CHECK = r"""() => {
  A.reviveFresh();return out;
 }"""
 
+TIERS = r"""() => {
+ const A=Acceptance,p=A.p(),P=G.NarutoPain,moves=p.moves,out={tiers:[]};
+ const asura=()=>P.actorsFor(p).find(b=>b.path==='asura');
+ function tier(rank,cd){
+   p.moves=moves;A.reviveFresh();p.moves=moves.filter(m=>m.id!=='naruto-pain-repair').concat(G.Moves.instance('naruto-pain-repair',rank));p.cdMul=cd;
+ }
+ function waitForAnimation(period,player){
+   A.finish(period-.1);A.assert(player?p.dead:asura().dead,'revived before repair preparation finished');
+   A.assert(player?A.rescue().status==='waiting':P.stateFor(p).repair===null,'repair animation began before tier wait');
+   let tail=0;while((player?A.rescue().status!=='repair':!P.stateFor(p).repair)&&tail++<20)A.advance();
+   A.assert(tail<=12,'repair tier did not start at expected wait');
+   A.finish(.79);A.assert(player?p.dead:asura().dead,'repair skipped fixed .8 second animation');
+   for(let i=0;(player?p.dead:asura().dead)&&i<5;i++)A.advance();
+   A.assert(player?!p.dead:!asura().dead,'repair animation did not finish');
+ }
+ try{
+   for(const [rank,wait] of [[1,8],[2,7],[3,6],[4,5],[5,4]])for(const cd of [1,.5]){
+     tier(rank,cd);A.lethal();waitForAnimation(wait*cd,true);
+     A.assert(p.hp===p.maxHp&&A.rescue().protection>2.98&&p.invuln>=3,'tier rescue must grant full health and three seconds protection');
+     A.assert(P.speedMultiplier(p)===2,'tier rescue lost five second speed');const ownerMax=p.maxHp;
+     tier(rank,cd);const b=asura();b.hurt(b.maxHp+1,null,true);A.assert(b.dead,'native support death fixture failed');waitForAnimation(wait*cd,false);
+     A.assert(b.hp===b.maxHp&&b.maxHp===p.maxHp*2,'tier repair did not fully restore double-health support');
+     out.tiers.push({rank,cd,wait:wait*cd,animation:.8,ownerMax,supportMax:b.maxHp});
+   }
+   tier(5,1);const b=asura();b.hurt(b.maxHp+1,null,true);A.lethal();A.advance();
+   A.assert(!P.stateFor(p).repair&&A.rescue().waiting,'support repair took priority over downed Tendo');
+   for(let i=0;p.dead&&i<500;i++)A.advance();A.assert(!p.dead&&p.hp===p.maxHp&&b.dead,'priority rescue also revived a different body');
+   p.hp-=20;const hp=p.hp;A.finish(.5);A.assert(p.hp===hp&&!A.rescue().waiting,'completed rescue repeated healing or restarted cooldown');
+   A.finish(4.4);A.assert(!b.dead&&b.hp===b.maxHp&&p.hp===hp,'support repair failed to resume after Tendo priority');out.priority=true;
+   p.moves=moves;A.reviveFresh();p.moves=moves.filter(m=>m.id!=='naruto-pain-repair');const natural=asura();natural.hurt(natural.maxHp+1,null,true);
+   A.finish(15.8);A.assert(natural.dead,'natural support revive became shorter than sixteen seconds');A.finish(.3);A.assert(!natural.dead&&natural.hp===natural.maxHp,'natural sixteen second revive changed');out.naturalSixteenSeconds=true;
+   return out;
+ }finally{p.moves=moves;p.cdMul=1;A.reviveFresh()}
+}"""
+
 SPEED = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain,out={};
  A.reviveFresh();const originalSpeed=p.spd,originalMul=p.spdMul,originalSlow=p.slowT;
@@ -73,7 +111,7 @@ SPEED = r"""() => {
  A.assert(card,'native movement speed card missing');card.apply(p);
  const normal=p.spd;A.assert(Math.abs(normal-originalSpeed*1.07)<1e-8,'native speed card changed unexpectedly');
  A.lethal();A.assert(P.speedMultiplier(p)===1,'dead player has revive speed');
- A.finish(10.9);A.assert(!p.dead&&P.speedMultiplier(p)===2&&Math.abs(p.spd-normal*2)<1e-8,'Naraka rescue did not double effective card speed');
+ A.finish(8.9);A.assert(!p.dead&&P.speedMultiplier(p)===2&&Math.abs(p.spd-normal*2)<1e-8,'Naraka rescue did not double effective card speed');
  out.naraka={normal,revived:p.spd};
  p.slowT=10;A.assert(Math.abs(p.spd-normal)<1e-8,'revive speed bypassed native half-speed slow');p.slowT=0;
  G.Combat.updateFields(10);A.assert(P.speedMultiplier(p)===2,'pause consumed revive speed');
@@ -103,7 +141,7 @@ LIVE_START = r"""() => {
  const n=A.naraka(),asura=P.actorsFor(p).find(b=>b.path==='asura');
  const enemy=A.spawn(asura.x+100,asura.y);enemy.dmg=0;enemy.spd=0;enemy.behavior='chase';
  for(const b of P.actorsFor(p))b.cooldown=0;A.ready('missiles');
- A.lethal();A.resume();window.RescueLive={started:performance.now(),hp:enemy.hp,enemy,expected:10*p.cdMul+.8,naraka:n,x:p.x,y:p.y};
+ A.lethal();A.resume();window.RescueLive={started:performance.now(),hp:enemy.hp,enemy,expected:8*p.cdMul+.8,naraka:n,x:p.x,y:p.y};
  return {expected:RescueLive.expected,cdMul:p.cdMul};
 }"""
 
@@ -125,6 +163,7 @@ def main():
                 result = report['viewports'][label] = {}
                 print(label, 'deterministic', flush=True)
                 result['checks'] = page.evaluate(CHECK)
+                result['tiers'] = page.evaluate(TIERS)
                 result['speed'] = page.evaluate(SPEED)
                 result['liveSetup'] = page.evaluate(LIVE_START)
                 outer.wait_for_timeout(1800)
@@ -154,7 +193,7 @@ def main():
                 outer.screenshot(path=str(OUT / f'{label}-waiting.png'))
                 page.wait_for_function('!G.Game.player.dead', timeout=12000)
                 result['nativeRescue'] = page.evaluate(r"""() => {const A=Acceptance,p=A.p();A.pause();
-                  A.assert(G.Game.state==='paused'&&p.hp===p.maxHp*.5,'real RAF rescue failed native half health');
+                  A.assert(G.Game.state==='paused'&&p.hp===p.maxHp,'real RAF rescue failed native full health');
                   A.assert(G.NarutoPain.speedMultiplier(p)===2,'real RAF rescue did not grant doubled movement speed');
                   A.assert((performance.now()-RescueLive.started)/1000>=RescueLive.expected-.1,'real RAF rescue skipped cooldown/animation');
                   return {elapsed:(performance.now()-RescueLive.started)/1000,hp:p.hp,maximum:p.maxHp,state:A.rescue()};

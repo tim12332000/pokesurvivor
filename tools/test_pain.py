@@ -242,11 +242,11 @@ PASSIVES = r"""() => {
    A.finish(15.9);A.assert(b.dead,'auto body revival too early');A.finish(.2);
    A.assert(!b.dead&&b.hp===b.maxHp&&b.deathSerial===serial,'16 second auto revival missing');out.revives.push('auto16');
    p.moves=original;A.reset();A.finish(12);b=A.actors().find(b=>b.path==='asura');b.hurt(b.maxHp+1,null,true);
-   A.finish(9.9);A.assert(b.dead&&!P.stateFor(p).repair,'Naraka precharged or skipped initial ten second wait');A.finish(.2);
+   A.finish(7.9);A.assert(b.dead&&!P.stateFor(p).repair,'Naraka precharged or skipped initial eight second wait');A.finish(.2);
    A.assert(P.stateFor(p).repair?.target===b,'learned Naraka did not schedule repair after wait');A.finish(.9);
    A.assert(!b.dead&&P.stateFor(p).revives===1,'repair did not revive exactly once');A.finish(.5);A.assert(P.stateFor(p).revives===1,'duplicate repair revival');out.revives.push('repair');
    A.reset();b=A.actors().find(b=>b.path==='asura');const naraka=A.actors().find(b=>b.path==='naraka');
-   b.hurt(b.maxHp+1,null,true);A.finish(10.1);A.assert(P.stateFor(p).repair,'cancel fixture missing repair animation');
+   b.hurt(b.maxHp+1,null,true);A.finish(8.1);A.assert(P.stateFor(p).repair,'cancel fixture missing repair animation');
    const remaining=b.reviveRemaining;naraka.hurt(naraka.maxHp+1,null,true);A.finish(1);
    A.assert(b.dead&&naraka.dead&&!P.stateFor(p).repair,'dead Naraka finished repair');A.assert(b.reviveRemaining<remaining&&b.reviveRemaining>remaining-1.1,'cancel reset auto revive progress');out.revives.push('cancel-naraka');
    A.reset();b=A.actors().find(b=>b.path==='preta');b.hurt(10,null,true);const before=b.hp,capacity=b.maxHp,ownerMax=p.maxHp;

@@ -37,7 +37,7 @@
   function playerReviveState(owner=G.Game.player) {
     if(!currentFamily(owner))return {waiting:false,status:'idle',remaining:0,protection:0};
     const r=family.playerRevive,waiting=canRevivePlayer(owner);
-    return {waiting,status:waiting?(r?.status||'waiting'):family.playerProtection>0?'protected':'idle',remaining:waiting?Math.max(0,(r?.period??10*(owner.cdMul||1))-(r?.wait||0)) + Math.max(0,.8-(r?.age||0)):0,protection:family.playerProtection||0};
+    return {waiting,status:waiting?(r?.status||'waiting'):family.playerProtection>0?'protected':'idle',remaining:waiting?Math.max(0,(r?.period??8*(owner.cdMul||1))-(r?.wait||0)) + Math.max(0,.8-(r?.age||0)):0,protection:family.playerProtection||0};
   }
   const root=a=>a?.sourceOwner||a;
   const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
@@ -315,7 +315,7 @@
       // A formed Naraka has this fundamental ability even before its upgrade card.
       s.repair=null;s.repairWait=0;s.repairCooldown=0;
       if(!canRevivePlayer(s.owner)){s.playerRevive=null;return;}
-      if(!s.playerRevive)s.playerRevive={wait:0,age:0,period:[10,9.5,9,8.5,8][rank(m)]*(s.owner.cdMul||1),status:'waiting',retry:0};
+      if(!s.playerRevive)s.playerRevive={wait:0,age:0,period:[8,7,6,5,4][rank(m)]*(s.owner.cdMul||1),status:'waiting',retry:0};
       const r=s.playerRevive;if(!ready(naraka))return;
       r.retry=Math.max(0,r.retry-dt);
       if(r.wait<r.period){r.wait=Math.min(r.period,r.wait+dt);if(r.wait+1e-8<r.period)return;r.status='repair';r.x=naraka.x;r.y=naraka.y;naraka.pose='special';naraka.poseAge=0;return;}
@@ -329,7 +329,7 @@
         if(safePoint(owner,owner,x,y,enemies)){point={x,y};break;}
       }
       if(!point)return;
-      owner.x=point.x;owner.y=point.y;owner.revive(.5);s.playerProtection=2;s.playerRevive=null;
+      owner.x=point.x;owner.y=point.y;owner.revive(1);owner.invuln=Math.max(owner.invuln,3);s.playerProtection=3;s.playerRevive=null;
       visualEffect(frame(owner,m||{id:'naruto-pain-repair',dmg:0},{support:true}),'repair-complete',.45,{x:owner.x,y:owner.y,target:owner});
       return;
     }
@@ -342,7 +342,7 @@
     const target=['asura','animal','human','preta'].map(body).find(b=>b.dead);
     if(!m||!ready(naraka)||!target){s.repairWait=0;s.repairCooldown=0;return;}
     if(!s.repair) {
-      const period=[10,9.5,9,8.5,8][rank(m)]*(s.owner.cdMul||1);
+      const period=[8,7,6,5,4][rank(m)]*(s.owner.cdMul||1);
       s.repairWait+=dt;s.repairCooldown=Math.max(0,period-s.repairWait);
       if(s.repairWait+1e-8>=period){s.repair={target,serial:target.deathSerial,age:0,x:naraka.x,y:naraka.y};s.repairWait=0;naraka.pose='special';naraka.poseAge=0;}
     }
