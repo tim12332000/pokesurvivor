@@ -81,10 +81,10 @@ CHECK = r"""() => {
  A.assert(!P.actionsFor(p).some(a=>a.kind==='soul'),'Human approached a target inside ground warning');
  A.assert(p.moves.find(m=>m.id==='naruto-pain-soul').t<=0,'unsafe soul target consumed cooldown');
  A.reset();G.Hazards.clear();walker=body('human');walker.x=0;walker.y=0;victim=A.spawn(140,0);A.ready('soul');A.advance();
- A.assert(P.actionsFor(p).some(a=>a.kind==='soul'&&a.phase==='approach'),'soul approach cancellation fixture absent');
+ A.assert(P.actionsFor(p).some(a=>a.kind==='soul'&&a.phase==='grasp')&&Math.hypot(walker.x-victim.x,walker.y-victim.y)<=36,'soul teleport cancellation fixture absent');
  G.Hazards.add({kind:'zone',x:victim.x,y:victim.y,r:30,delay:3,dmg:80,color:'#f00'});A.advance();
  A.assert(!P.actionsFor(p).some(a=>a.kind==='soul'),'Human continued into newly warned destination');
- A.assert(victim.hp===100000&&p.moves.find(m=>m.id==='naruto-pain-soul').t<1,'unsafe approach dealt damage or burned full cooldown');out.soulWarning=true;
+ A.assert(victim.hp===100000&&p.moves.find(m=>m.id==='naruto-pain-soul').t>4,'unsafe grasp dealt damage or reset its started cooldown');out.soulWarning=true;
 
  A.reset();G.Hazards.clear();const original=p.moves;p.moves=original.filter(m=>m.id!=='naruto-pain-repair');
  const dead=body('asura');dead.hurt(dead.maxHp+1,null,true);const serial=dead.deathSerial;

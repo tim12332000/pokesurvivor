@@ -45,6 +45,8 @@ html = html.replace(main, '<script defer src="art-review/cast-continuity.js"></s
 html = html.replace('window.PS_SANDBOX_KEY="ps.sandbox.digimon.v1";', 'window.PS_SANDBOX_KEY=new URLSearchParams(location.search).get("painBeta")==="1"?"ps.sandbox.pain-beta.v1":"ps.sandbox.digimon.v1";')
 html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src="art-review/pain-art.js"></script>\n<script defer src="art-review/temari-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
 html = html.replace('<script defer src=".omx/naruto-tenten.js"></script>', '<script defer src=".omx/naruto-tenten.js"></script>\n<script defer src=".omx/naruto-pain.js"></script>\n<script defer src=".omx/temari-cyclone-vfx.js"></script>\n<script defer src=".omx/naruto-temari.js"></script>\n<script defer src=".omx/naruto-temari-reflect.js"></script>', 1)
+pain_vfx = ''.join(f'<script defer src="js/systems/pain-vfx/{skill}.js"></script>\n' for skill in ['basic', 'gravity', 'missiles', 'summon', 'soul', 'absorb', 'repair', 'planet'])
+html = html.replace('<script defer src=".omx/naruto-pain.js"></script>', pain_vfx + '<script defer src=".omx/naruto-pain.js"></script>', 1)
 html = html.replace('<script defer src="js/systems/self-clone.js"></script>', '<script defer src="js/systems/self-clone.js"></script>\n<script defer src=".omx/temari-coop.js"></script>', 1)
 html = html.replace('<script defer src=".omx/naruto-sharingan-icons.js"></script>', '<script defer src=".omx/naruto-sharingan-icons.js"></script>\n<script defer src=".omx/naruto-pain-ui.js"></script>', 1)
 html = html.replace(main, '<script defer src=".omx/pain-beta.js"></script>\n' + main, 1)

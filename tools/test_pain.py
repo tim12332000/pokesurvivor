@@ -101,7 +101,7 @@ QUANTITY = r"""() => {
      if(tier>1){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+id);A.assert(card&&card.apply(p)!==false,'upgrade '+id+' '+tier)}
      for(const picks of [0,4,20]){
        A.reset();p.quantityBonus=p.quantityPicks=picks;p.target=A.spawn(180,0);A.castNative(id);A.advance();
-       const base=(id==='naruto-pain'?[2,2,3,3,4]:[3,3,4,4,5])[tier-1],cap=id==='naruto-pain'?40:30;
+       const base=[5,5,6,7,8][tier-1],cap=id==='naruto-pain'?40:30;
        const expected=Math.min(cap,Math.floor(base*Math.pow(1.25,picks))),actual=P.snapshot(p).count;
        A.assert(actual===expected,'quantity applied incorrectly '+id+' tier'+tier+' picks'+picks+' '+actual+' expected'+expected);
        A.assert(P.shots.filter(s=>s.kind===(id==='naruto-pain'?'rod':'missile')).length<=cap,'live entity cap exceeded');

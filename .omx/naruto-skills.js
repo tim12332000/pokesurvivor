@@ -192,8 +192,8 @@
   }));
   profiles.push([30010,'pain','黑棒連射','Six Paths of Pain','01_1321',{
     mode:'pain-basic',passive:true,icon:'painRod',type:'psychic',cd:1.2,dmg:10,
-    count:2,range:280,speed:440,size:4,ups:painUps([2,2,3,3,4]),
-    desc:'常駐普攻，不占主動槽。天道連射黑棒，碰敵或牆即止。基礎 2／2／3／3／4 根，每根傷害倍率 1／1.2／1.4／1.7／2。數量卡 ×1.25 累乘取整，最多 40 根。五道生命為本體 60%（人間／餓鬼 80%），低血撤回，安全脫戰後恢復至半血。出生／復歸整備 1.5 秒；倒下 16 秒後尋找安全位置復歸。天道倒下時，已現身且存活的地獄道可用閻王救回；兩道都倒下則結束。'
+    count:5,range:280,speed:440,size:4,ups:painUps([5,5,6,7,8]),
+    desc:'常駐普攻，不占主動槽。天道連射黑棒，碰敵或牆即止。基礎 5／5／6／7／8 根，每根傷害倍率 1／1.2／1.4／1.7／2。數量卡 ×1.25 累乘取整，最多 40 根。五道生命為本體 60%（人間／餓鬼 80%），低血撤回，安全脫戰後恢復至半血。出生／復歸整備 1.5 秒；倒下 16 秒後尋找安全位置復歸。天道倒下時，已現身且存活的地獄道可用閻王救回；兩道都倒下則結束。'
   }]);
   const temariSource='https://naruto-official.com/it/anime/naruto1/list/01_267';
   const temariDamageUps=(values,ranges=null)=>values.slice(1).map((damage,i)=>({
@@ -475,19 +475,19 @@
   extra.push(
     ['naruto-pain-gravity',[30010],{
       name:'萬象天引・神羅天征',mode:'pain-gravity',icon:'painGravity',type:'psychic',learnLevel:3,passive:true,
-      cd:5,dmg:70,range:240,radius:150,ups:painUps(),
-      desc:'學會後天道自動施放，不用選招。80 內有敵人時優先斥開；否則牽引 240 內目標最多 110，0.35 秒後以天道目前位置造成半徑 150 的單次群傷。普通敵人推退 80，特殊敵人位移僅 25%；牆會阻擋，施術沒有無敵。',source_url:painSource
+      cd:3,dmg:70,range:240,radius:150,ups:painUps(),
+      desc:'學會後天道自動施放，基礎冷卻 3 秒。80 內有敵人時優先斥開；否則牽引 240 內目標最多 110，0.35 秒後以天道目前位置造成半徑 150 的單次群傷。普通敵人推退 80，特殊敵人位移僅 25%；牆會阻擋，施術沒有無敵。',source_url:painSource
     }],
     ['naruto-pain-missiles',[30010],{
       name:'修羅道・飛彈齊射',mode:'pain-missiles',icon:'painMissile',type:'steel',learnLevel:6,passive:true,
-      cd:4,dmg:22,count:3,range:320,radius:48,speed:400,ups:painUps([3,3,4,4,5]),
-      desc:'學會後修羅道自動展開機械臂，分散發射追蹤飛彈，不用選招。碰敵或牆後爆炸，基礎 3／3／4／4／5 枚，爆炸半徑 48，每枚各命中一次。數量卡 ×1.25，最多 30 枚；修羅道倒下不能起手，已離架飛彈可飛完。',source_url:painSource
+      cd:4,dmg:22,count:5,range:320,radius:48,speed:400,ups:painUps([5,5,6,7,8]),
+      desc:'修羅道展開機械臂，飛彈先升空 0.22 秒，再尋敵追蹤俯衝；目標倒下時改鎖範圍內敵人。碰敵或牆後爆炸，基礎 5／5／6／7／8 枚，爆炸半徑 48，每枚各命中一次。數量卡 ×1.25，最多 30 枚；修羅道倒下不能起手，已離架飛彈可飛完。',source_url:painSource
     }],
     ['naruto-pain-absorb',[30010],{
       name:'餓鬼道・封術吸印',mode:'pain-absorb',icon:'painAbsorb',type:'psychic',learnLevel:6,
       passive:true,cd:0,dmg:0,absorbCooldown:2.5,
       ups:[2.3,2.1,1.9,1.7].map(value=>({t:`吸收恢復週期 ${value} 秒`,m:{absorbCooldown:value}})),
-      desc:'學會即自動守衛，不占主動槽。餓鬼道只吸收實際碰到雙掌的可吸收忍術彈，一次一顆；恢復 2.5／2.3／2.1／1.9／1.7 秒，受冷卻卡影響。物理忍具、雷射、地面技不吸收，沒有額外無敵或回血。',source_url:'https://naruto-official.com/en/anime/naruto2/list/01_609'
+      desc:'學會即自動守衛，不占主動槽。餓鬼道一次吸收雙掌半徑 36 內全部合格忍術彈，牆會阻擋；恢復 2.5／2.3／2.1／1.9／1.7 秒，受冷卻卡影響。物理忍具、雷射、地面技不吸收，沒有額外無敵或回血。',source_url:'https://naruto-official.com/en/anime/naruto2/list/01_609'
     }],
     ['naruto-pain-summon',[30010],{
       name:'畜生道・通靈衝陣',mode:'pain-summon',icon:'painSummon',type:'ground',learnLevel:9,passive:true,
@@ -497,7 +497,7 @@
     ['naruto-pain-soul',[30010],{
       name:'人間道・魂魄牽引',mode:'pain-soul',icon:'painSoul',type:'psychic',learnLevel:12,passive:true,
       cd:5,dmg:140,range:180,fieldDuration:.6,ups:painUps(),
-      desc:'學會後人間道自動接近目標，抓取 0.6 秒後單次傷害。普通敵人減速 70%，特殊敵人 20%；越距、隔牆或人間道倒下即取消。追擊未抓到不耗冷卻，不瞬移、不即死。技能演出為本作改編。',source_url:painSource
+      desc:'學會後人間道瞬移至 180 內目標身邊的安全落點，抓取 0.6 秒後單次傷害，抓住才開始冷卻。普通敵人減速 70%，特殊敵人 20%；越距、隔牆或人間道倒下即取消。無安全落點不施放，不穿牆、不即死。技能演出為本作改編。',source_url:painSource
     }],
     ['naruto-pain-repair',[30010],{
       name:'地獄道・閻王修復',mode:'pain-repair',icon:'painRepair',type:'psychic',learnLevel:12,
@@ -507,8 +507,8 @@
     }],
     ['naruto-pain-planet',[30010],{
       name:'天道・地爆天星',mode:'pain-planet',icon:'painPlanet',type:'psychic',learnLevel:15,passive:true,
-      cd:12,dmg:120,pulseDamage:15,range:320,radius:160,fieldDuration:1.5,ups:painUps(),
-      desc:'學會後遇到三名以上聚集敵人或特殊強敵時自動生成黑核。半徑 160，1.5 秒內每 0.5 秒傷害一次共三次，再崩落一次。第一階合計基傷 165；特殊敵人牽引僅 25%，不硬定身。最多一顆，施放後家族引斥技至少恢復 5 秒；不用選招。',source_url:painSource
+      cd:12,dmg:120,pulseDamage:15,range:320,radius:320,impactRadius:480,fieldDuration:1.5,ups:painUps(),
+      desc:'黑核吸起岩石凝成月球，再整顆下墜砸地。牽引半徑 320，1.5 秒內每 0.5 秒傷害一次共三次；撞地震波在 0.6 秒內向外擴散至半徑 480，波前到達時各命中一次。第一階全中基傷 165。特殊敵人牽引僅 25%，不硬定身。最多一顆，施放後家族引斥技至少恢復 5 秒。',source_url:painSource
     }]
   );
   extra.push(

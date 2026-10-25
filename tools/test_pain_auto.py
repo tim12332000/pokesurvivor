@@ -66,12 +66,15 @@ CONCURRENT = r"""() => {
  const A=Acceptance,p=A.p(),out={};A.reset();
  const es=[A.spawn(70,0),A.spawn(85,18),A.spawn(85,-18),A.spawn(-500,400)],hits=es.map(e=>A.watch([e]));
  for(const b of G.NarutoPain.actors()){b.x=0;b.y=0}
- A.ready('gravity','missiles','summon','soul','planet');A.advance();
+ // Give the instant grasp its own target outside Tendo's repulsion.
+ const soulTarget=A.spawn(260,0),soulHits=A.watch([soulTarget]);
+ G.NarutoPain.actors().find(b=>b.path==='human').x=300;
+ A.ready('gravity','missiles','summon','soul');A.advance();
  const simultaneous=A.actions().map(f=>f.kind);
  A.assert(['gravity','missiles','summon','soul'].every(k=>simultaneous.includes(k)),'independent bodies must act concurrently '+simultaneous);
  A.assert(!simultaneous.includes('planet'),'Tendo cannot cast two abilities together');
  A.finish(4.5);
- for(const k of ['gravity','missiles','summon','soul'])A.assert(hits.slice(0,3).flat().some(h=>h.id==='naruto-pain-'+k),'automatic skill caused no native damage '+k);
+ for(const k of ['gravity','missiles','summon','soul'])A.assert([...hits.slice(0,3).flat(),...soulHits].some(h=>h.id==='naruto-pain-'+k),'automatic skill caused no native damage '+k);
  for(const k of ['gravity','missiles','summon'])A.assert(hits.slice(0,3).every(h=>h.some(v=>v.id==='naruto-pain-'+k)),'automatic AOE missed group '+k);
  A.assert(!hits[3].length,'automatic abilities damaged far control');
  A.assert(hits.flat().every(h=>h.owned&&h.damage>0),'damage must keep actual player ownership');
@@ -91,7 +94,8 @@ DECISIONS = r"""() => {
  out.noEnemies=true;
  A.reset();A.ready('gravity','planet');const near=A.spawn(70,0);A.spawn(180,0);A.spawn(190,18);A.spawn(190,-18);A.advance();
  const gravity=A.actions().find(f=>f.kind==='gravity');
- A.assert(gravity?.immediate&&gravity.target===near,'close enemy must trigger emergency Tendo push');out.emergency=true;
+ A.assert(gravity?.immediate&&gravity.target===near,'close enemy must trigger emergency Tendo push');
+ A.assert(!A.actions().some(f=>f.kind==='planet'),'Tendo cast planet alongside emergency gravity');out.emergency=true;
  A.reset();A.ready('planet');A.spawn(160,0);A.advance();A.assert(!A.actions().some(f=>f.kind==='planet'),'planet wasted on isolated normal enemy');
  A.spawn(180,10,true);A.advance();A.assert(A.actions().some(f=>f.kind==='planet'),'special enemy did not qualify planet');out.planetSpecial=true;
  A.reset();A.ready('missiles');A.spawn(100,0);A.advance();const move=p.moves.find(m=>m.id==='naruto-pain-missiles'),cooldown=move.t;
