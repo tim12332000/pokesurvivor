@@ -9,7 +9,7 @@
   const accelerate=t=>{t=Math.max(0,Math.min(1,t));return t*t;};
   const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:2,animal:2,human:2,preta:2,naraka:2}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
   const ready=b=>alive(b)&&b.formed&&b.protectionRemaining<=0;
-  const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0;
+  const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0, lifestealSource=null;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
   const controlled=a=>a===G.Game.player||!!G.SelfClones?.isActor(a);
   const valid=a=>alive(a)&&controlled(a)&&a.mon?.dex===30010;
@@ -143,8 +143,12 @@
     if(!frameActive(f)||f.world!==G.World||!alive(e)||!clearPath(origin.x,origin.y,e.x,e.y))return;
     const type=f.m.type||'dark',mult=fixedDamage?1:G.Types.mult(type,e.types),crit=!fixedDamage&&Math.random()<(f.owner.critChance||0);
     const damage=fixedDamage?base:base*f.attack*mult*G.Weather.mult(type)*(crit?1.5:1);
-    e.hurt(damage,'#c6addd',e.x-origin.x,e.y-origin.y,0,crit?'crit':G.Types.label(mult),f.owner,f.m.id);
-    if(alive(f.owner))f.owner.onDealt?.(damage);f.owner.dmgDealt=(f.owner.dmgDealt||0)+damage;
+    const previousSource=lifestealSource;lifestealSource={owner:f.owner,body:f.body};
+    try{
+      // Percentage-health bonuses use the same source context and native onDealt hook.
+      e.hurt(damage,'#c6addd',e.x-origin.x,e.y-origin.y,0,crit?'crit':G.Types.label(mult),f.owner,f.m.id);
+      f.owner.onDealt?.(damage);f.owner.dmgDealt=(f.owner.dmgDealt||0)+damage;
+    }finally{lifestealSource=previousSource;}
     if(singleTarget)G.DamageSplash?.hit(f.owner,e,damage,'#c6addd',f.m.id);
   }
   function frame(owner,m,extra={}) {return {owner,world:G.World,m:snapshotMove(owner,m),attack:owner.atk,age:0,x:owner.x,y:owner.y,...extra};}
@@ -284,7 +288,7 @@
       b.target=ready(b)&&!b.retreating&&!threatened?nearby(b,34).find(e=>dist(b,e)<=34):null;
       if(b.target&&b.cooldown<=0) {
         b.aim=Math.atan2(b.target.y-b.y,b.target.x-b.x);
-        const f=frame(owner,{id:'naruto-pain',type:'dark',dmg:4},{x:b.x,y:b.y,support:true});hit(f,b.target,4,b,true);b.cooldown=1.8;b.pose='strike';b.poseAge=0;
+        const f=frame(owner,{id:'naruto-pain',type:'dark',dmg:4},{x:b.x,y:b.y,support:true,body:b});hit(f,b.target,4,b,true);b.cooldown=1.8;b.pose='strike';b.poseAge=0;
       }
       if(Math.hypot(b.x-tx,b.y-ty)>.01&&!b.pose){b.pose='move';b.aim=Math.atan2(b.y-ty,b.x-tx);}
     }
@@ -838,7 +842,13 @@
   };
   G.Player.prototype.hurt=function(...args){if(currentFamily(this)&&family.playerProtection>0)return;return originalHurt.apply(this,args);};
   G.Player.prototype.heal=function(...args){if(currentFamily(this)&&this.dead)return;return originalHeal.apply(this,args);};
-  G.Player.prototype.onDealt=function(...args){if(currentFamily(this)&&this.dead)return;return originalOnDealt.apply(this,args);};
+  G.Player.prototype.onDealt=function(damage,...args){
+    const b=lifestealSource?.owner===this&&lifestealSource.body,rate=this.lifestealRate;
+    if(currentFamily(this)&&b&&family.bodies.includes(b)&&b.world===G.World&&b.formed&&alive(b)&&Number.isFinite(damage)&&damage>0&&Number.isFinite(rate)&&rate>0)
+      b.heal(damage*rate);
+    if(currentFamily(this)&&this.dead)return;
+    return originalOnDealt.call(this,damage,...args);
+  };
   G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,gravityPoseFor,stateFor,snapshot,canRevivePlayer,playerReviveState,speedMultiplier,visualHeights,visualHeight,survivalConfig,planetVisual,
     actors:()=>family?.bodies.filter(ready)||[],actorsFor:owner=>root(owner)===family?.owner?family.bodies:[],
     drawables:cam=>family?.bodies.filter(a=>a.formed&&cam.sees(a.x,a.y,Math.max(100,visualHeight(a.path,a.sourceOwner)+12)))||[],
