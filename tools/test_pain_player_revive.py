@@ -102,6 +102,61 @@ TIERS = r"""() => {
  }finally{p.moves=moves;p.cdMul=1;A.reviveFresh()}
 }"""
 
+GIANT = r"""() => {
+ const A=Acceptance,p=A.p(),P=G.NarutoPain,W=G.World,out={};
+ const saved={r:p.r,bodyH:p.bodyH,maxHp:p.maxHp,hp:p.hp,spdMul:p.spdMul,cdMul:p.cdMul,giantPicks:p.giantPicks,scale:p.anim.scale};
+ const free=W.isFree,path=W.projectilePathClear,nativeRevive=p.revive;let revives=0;
+ p.revive=function(...args){revives++;return nativeRevive.apply(this,args)};
+ function fresh(){W.isFree=free;W.projectilePathClear=path;G.Hazards.clear();A.reviveFresh();p.cdMul=1;revives=0;}
+ function restoredOnce(label){
+   A.assert(!p.dead&&p.hp===p.maxHp&&A.rescue().protection>2.98&&p.invuln>=3,label+' failed full-health protected rescue');
+   A.assert(revives===1,label+' invoked native revival more than once');
+   A.assert(P.speedMultiplier(p)===2,label+' lost revival speed');
+   const hp=p.hp;p.invuln=0;p.hurt(100000,null,true);A.assert(!p.dead&&p.hp===hp,label+' lacked independent protection');
+ }
+ function untilAlive(limit){for(let i=0;p.dead&&i<Math.ceil(limit*100);i++)A.advance();}
+ try{
+   fresh();const giant=G.LevelUp.STATS.find(card=>card.id==='giant');A.assert(giant,'native giant card absent');
+   for(let i=0;i<9;i++)giant.apply(p);p.cdMul=1;
+   A.assert(Math.abs(p.anim.scale/saved.scale-Math.pow(1.25,9))<1e-8,'nine native giant cards did not produce screenshot size');
+   out.size={scale:p.anim.scale,radius:p.r,picks:p.giantPicks};
+   // The five real bodies form a dense group around the enlarged downed actor.
+   for(const b of P.actorsFor(p)){b.x=p.x;b.y=p.y;b.cooldown=999;}
+   A.lethal();untilAlive(9.1);restoredOnce('giant clustered family');
+   out.clustered={hp:p.hp,maxHp:p.maxHp,position:{x:p.x,y:p.y},rescue:A.rescue()};
+   A.finish(.4);A.assert(revives===1,'completed giant rescue repeated');
+
+   fresh();const clones=Array.from({length:8},()=>G.SelfClones.summon(p));
+   A.assert(clones.every(Boolean)&&G.SelfClones.actors().length===8,'eight native card clones were not summoned');
+   let cloneRevives=0;for(const clone of clones){const revive=clone.revive;clone.revive=function(...args){cloneRevives++;return revive.apply(this,args)}}
+   A.lethal();A.assert(G.SelfClones.actors().length===0,'native clones remained active while source owner was dead');
+   untilAlive(9.1);restoredOnce('eight card clones');
+   A.assert(cloneRevives===0,'Naraka rescue incorrectly revived card clones individually');
+   out.clones={summoned:clones.length,activeWhileOwnerDead:0,individualRevives:cloneRevives};
+
+   fresh();G.Hazards.add({kind:'zone',x:p.x,y:p.y,r:4000,delay:999,dmg:10000,type:'normal',pure:true,color:'#f00'});
+   for(let i=0;i<12;i++){const a=i*Math.PI/6,e=A.spawn(p.x+Math.cos(a)*180,p.y+Math.sin(a)*180);e.r=250;}
+   G.EnemyMgr.rebuildGrid();A.lethal();A.finish(8.9);
+   A.assert(p.dead&&A.rescue().status==='unsafe','persistent hazard/crowd skipped initial safe search');
+   untilAlive(1.3);restoredOnce('persistent hazard and crowd fallback');
+   A.assert(G.Hazards.all.length>0&&G.EnemyMgr.all().length===12,'fallback fixture cleared native hazards or enemies');
+   out.persistentDanger={rescue:A.rescue(),hazards:G.Hazards.all.length,enemies:G.EnemyMgr.all().length};
+
+   fresh();A.lethal();W.projectilePathClear=()=>false;A.finish(8.9);
+   A.assert(p.dead&&A.rescue().status==='unsafe','blocked dead-origin path skipped safe search');
+   untilAlive(1.3);restoredOnce('blocked dead-origin line of sight');out.blockedOrigin=true;
+
+   fresh();A.lethal();W.isFree=()=>false;A.finish(12);
+   A.assert(p.dead&&A.rescue().waiting&&A.rescue().status==='unsafe'&&revives===0,'fallback revived inside blocked terrain');
+   W.isFree=free;untilAlive(.3);restoredOnce('terrain becomes free');out.terrainNeverBypassed=true;
+   return out;
+ }finally{
+   W.isFree=free;W.projectilePathClear=path;p.revive=nativeRevive;
+   Object.assign(p,{r:saved.r,bodyH:saved.bodyH,maxHp:saved.maxHp,hp:saved.hp,spdMul:saved.spdMul,cdMul:saved.cdMul,giantPicks:saved.giantPicks});
+   p.anim.scale=saved.scale;A.reviveFresh();
+ }
+}"""
+
 SPEED = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain,out={};
  A.reviveFresh();const originalSpeed=p.spd,originalMul=p.spdMul,originalSlow=p.slowT;
@@ -164,6 +219,7 @@ def main():
                 print(label, 'deterministic', flush=True)
                 result['checks'] = page.evaluate(CHECK)
                 result['tiers'] = page.evaluate(TIERS)
+                result['giant'] = page.evaluate(GIANT)
                 result['speed'] = page.evaluate(SPEED)
                 result['liveSetup'] = page.evaluate(LIVE_START)
                 outer.wait_for_timeout(1800)

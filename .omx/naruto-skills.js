@@ -503,7 +503,7 @@
       name:'地獄道・閻王修復',mode:'pain-repair',icon:'painRepair',type:'psychic',learnLevel:12,
       passive:true,cd:0,dmg:0,repairCooldown:8,
       ups:[7,6,5,4].map(value=>({t:`修復等待週期 ${value} 秒`,m:{repairCooldown:value}})),
-      desc:'學會即常駐，不占主動槽。五具支援道最大生命皆為天道的 2 倍，隨本體生命成長同步。有其他支援道倒下才等待 8／7／6／5／4 秒，再以 0.8 秒閻王演出修復一位，冷卻卡有效。天道倒下時優先救天道，滿血復活並保護 3 秒，復活後 5 秒跑速翻倍；尚未學此招也能以第一階週期救天道。不能修復自己，不重複復歸、不刷新其他道生命或冷卻。危險位置延後復活，地獄道倒下則救援失敗。',source_url:painSource
+      desc:'學會即常駐，不占主動槽。五具支援道最大生命皆為天道的 2 倍，隨本體生命成長同步。有其他支援道倒下才等待 8／7／6／5／4 秒，再以 0.8 秒閻王演出修復一位，冷卻卡有效。天道倒下時優先救天道，滿血復活並保護 3 秒，復活後 5 秒跑速翻倍；尚未學此招也能以第一階週期救天道。不能修復自己，不重複復歸、不刷新其他道生命或冷卻。優先尋找安全落點，受阻 1 秒後以復活保護在可站立地面復歸；地獄道倒下則救援失敗。',source_url:painSource
     }],
     ['naruto-pain-planet',[30010],{
       name:'天道・地爆天星',mode:'pain-planet',icon:'painPlanet',type:'psychic',learnLevel:15,passive:true,

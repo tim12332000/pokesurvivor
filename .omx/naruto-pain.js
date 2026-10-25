@@ -105,6 +105,27 @@
       !enemies.some(e=>alive(e)&&Math.hypot(e.x-x,e.y-y)<a.r+(e.r||8)+36)&&
       ![owner,...(G.SelfClones?.actors()||[]),...(family?.bodies||[])].some(b=>b!==a&&alive(b)&&b.formed!==false&&Math.hypot(b.x-x,b.y-y)<a.r+(b.r||10)+16);
   }
+  function playerRescuePoint(owner,naraka,age) {
+    const reach=Math.min(512,Math.max(144,owner.r*3+64)),enemies=G.EnemyMgr.all();
+    if(safePoint(owner,owner,owner.x,owner.y,enemies))return {x:owner.x,y:owner.y};
+    for(let ring=1;ring<=16;ring++)for(let i=0;i<24;i++) {
+      const angle=i*TAU/24,radius=reach*ring/16,x=owner.x+Math.cos(angle)*radius,y=owner.y+Math.sin(angle)*radius;
+      if(safePoint(owner,owner,x,y,enemies))return {x,y};
+    }
+    // Revival is a teleport. After one extra second, the granted protection
+    // permits crowd/telegraph overlap, but never a landing inside solid terrain.
+    // Do not require a projectile path from a corpse trapped inside a prop.
+    if(age<1.8)return null;
+    const fallbackReach=Math.min(1024,Math.max(640,owner.r*4));
+    for(const origin of [owner,naraka]) {
+      if(G.World.isFree(origin.x,origin.y,owner.r,true))return {x:origin.x,y:origin.y};
+      for(let ring=1;ring<=24;ring++)for(let i=0;i<32;i++) {
+        const angle=i*TAU/32,radius=fallbackReach*ring/24,x=origin.x+Math.cos(angle)*radius,y=origin.y+Math.sin(angle)*radius;
+        if(G.World.isFree(x,y,owner.r,true))return {x,y};
+      }
+    }
+    return null;
+  }
   function place(a,owner,index=0) {
     const enemies=[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,280))];
     for(let ring=0;ring<8;ring++)for(let i=0;i<16;i++) {
@@ -322,12 +343,7 @@
       r.age+=dt;
       if(r.age<.8)return;
       r.status='unsafe';if(r.retry>0)return;r.retry=.25;
-      const owner=s.owner,enemies=[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,300))];
-      let point=safePoint(owner,owner,owner.x,owner.y,enemies)?{x:owner.x,y:owner.y}:null;
-      for(let ring=0;ring<8&&!point;ring++)for(let i=0;i<16;i++) {
-        const angle=i*TAU/16,radius=32+ring*16,x=owner.x+Math.cos(angle)*radius,y=owner.y+Math.sin(angle)*radius;
-        if(safePoint(owner,owner,x,y,enemies)){point={x,y};break;}
-      }
+      const owner=s.owner,point=playerRescuePoint(owner,naraka,r.age);
       if(!point)return;
       owner.x=point.x;owner.y=point.y;owner.revive(1);owner.invuln=Math.max(owner.invuln,3);s.playerProtection=3;s.playerRevive=null;
       visualEffect(frame(owner,m||{id:'naruto-pain-repair',dmg:0},{support:true}),'repair-complete',.45,{x:owner.x,y:owner.y,target:owner});
