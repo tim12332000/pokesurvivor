@@ -475,8 +475,8 @@
   extra.push(
     ['naruto-pain-gravity',[30010],{
       name:'萬象天引・神羅天征',mode:'pain-gravity',icon:'painGravity',type:'psychic',learnLevel:3,passive:true,
-      cd:3,dmg:70,range:600,triggerRadius:600,pullRadius:100,radius:300,pushRadius:600,pushDuration:.24,ups:painUps(),
-      desc:'學會後天道自動施放，基礎冷卻 3 秒。600 內有可見有效敵人時，萬象天引先在 0.35 秒內將普通地面敵人平順拉到距天道 100，再對 300 內全部有效敵人造成單次群傷。受擊普通地面敵人在 0.24 秒內由慢至快彈到距釋放位置 600，無人數上限；特殊敵人僅承受原拉取與彈開距離的 25%。近身也先拉後推；飛行或浮空敵人不受位移，牆會阻擋，施術沒有無敵。',source_url:painSource
+      cd:3,dmg:70,range:400,triggerRadius:400,pullRadius:100,radius:300,pushRadius:380,pushDuration:.24,ups:painUps(),
+      desc:'學會後天道自動施放，基礎冷卻 3 秒。400 內有可見有效敵人時，萬象天引先在 0.35 秒內由慢至快將普通地面敵人拉到距天道 100，再對 300 內全部有效敵人造成單次群傷。受擊普通地面敵人在 0.24 秒內由慢至快彈到距釋放位置 380，無人數上限；特殊敵人僅承受原拉取與彈開距離的 25%。近身也先拉後推；飛行或浮空敵人不受位移，牆會阻擋，施術沒有無敵。',source_url:painSource
     }],
     ['naruto-pain-missiles',[30010],{
       name:'修羅道・飛彈齊射',mode:'pain-missiles',icon:'painMissile',type:'steel',learnLevel:6,passive:true,

@@ -8,7 +8,7 @@
     const tension = Math.sin(progress * Math.PI);
     ctx.save();ctx.translate(f.owner.x, f.owner.y);
     ctx.strokeStyle = '#b9a9c6';ctx.lineWidth = 1;
-    const rings = f.phase === 'pull' ? [radius, f.m?.triggerRadius || 600] : [radius];
+    const rings = f.phase === 'pull' ? [radius, f.m?.triggerRadius || 400] : [radius];
     for (const reach of rings) {
       ctx.globalAlpha = (reach === radius ? .25 : .16) * (.65 + .35 * tension);
       for (let i = 0; i < 12; i++) {
@@ -26,7 +26,7 @@
   }
   function action(ctx, f) {
     if (f.phase !== 'pull' || !f.owner) return;
-    const progress = clamp((f.age || 0) / .35),reach = f.m?.triggerRadius || 600;
+    const progress = clamp((f.age || 0) / .35),reach = f.m?.triggerRadius || 400;
     const gather = f.m?.pullRadius ?? 100,pulls = f.pulls || [];
     for (let i = 0; i < pulls.length; i++) {
       const e = pulls[i].target;
@@ -36,7 +36,7 @@
       inwardTrail(ctx, f.owner, dx, dy, distance, progress, i);
     }
     // Pressure collects at the palm, disappearing on the native release frame.
-    const tension = Math.sin(progress * Math.PI),facing = Math.cos(f.owner.aim || 0) < 0 ? -1 : 1;
+    const tension = progress*progress,facing = Math.cos(f.owner.aim || 0) < 0 ? -1 : 1;
     const height = G.NarutoPain?.visualHeight('tendo', f.owner) || 80;
     ctx.save();ctx.translate(f.owner.x + facing * 15, f.owner.y - height * .48);
     ctx.globalAlpha = .55 * tension;ctx.strokeStyle = '#cdb8df';ctx.lineWidth = 1.5;
@@ -47,10 +47,10 @@
     const height = G.NarutoPain?.visualHeight('tendo', owner) || 80;
     ctx.save();ctx.translate(owner.x, owner.y - height * .35);ctx.rotate(Math.atan2(dy, dx));ctx.lineCap = 'round';
     for (let i = 0; i < 2; i++) {
-      const travel = (progress * 1.65 + i * .5 + (seed % 5) * .07) % 1;
-      const fade = Math.pow(Math.sin(travel * Math.PI), 2) * Math.sin(progress * Math.PI);
+      const travel = (progress*progress * 1.65 + i * .5 + (seed % 5) * .07) % 1;
+      const fade = Math.pow(Math.sin(travel * Math.PI), 2) * Math.min(1,progress/.12) * (.3+.7*progress);
       const x = 24 + (distance + 20) * (1 - travel),bend = (i ? -1 : 1) * (5 + (seed % 3) * 3);
-      const y = bend * Math.sin(travel * Math.PI),length = 19 + 14 * Math.sin(travel * Math.PI);
+      const y = bend * Math.sin(travel * Math.PI),length = 15 + 32*progress + 8 * Math.sin(travel * Math.PI);
       ctx.globalAlpha = .72 * fade;ctx.strokeStyle = '#d9ccdf';ctx.lineWidth = 1.5;
       ctx.beginPath();ctx.moveTo(x + length, y + bend * .3);
       ctx.quadraticCurveTo(x + length * .45, y - bend * .2, x, y);ctx.stroke();
@@ -63,7 +63,7 @@
     if (t >= 1) return;
     const duration=e.m?.pushDuration??.24,speed=clamp(age/duration),release=speed*speed;
     const fade=1-clamp((age-duration)/Math.max(.001,(e.life||.4)-duration));
-    const gather=e.m?.pullRadius??100,reach=e.m?.pushRadius??600,front=gather+(reach-gather)*release;
+    const gather=e.m?.pullRadius??100,reach=e.m?.pushRadius??380,front=gather+(reach-gather)*release;
     ctx.save();ctx.translate(e.x, e.y);
     // Flash the entire real hit radius now; moving arcs below are aftermath.
     ctx.globalAlpha = .72 * Math.exp(-age / .075);ctx.strokeStyle = '#e6dfe9';ctx.lineWidth = 1 + 3 * (1 - release);

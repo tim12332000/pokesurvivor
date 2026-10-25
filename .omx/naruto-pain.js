@@ -6,6 +6,7 @@
   const visualHeights=Object.freeze({tendo:80,asura:84,animal:70,human:82,preta:74,naraka:78});
   const visualHeight=(path,owner)=>visualHeights[path]*(owner?.anim?.scale||1);
   const smoothStep=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
+  const accelerate=t=>{t=Math.max(0,Math.min(1,t));return t*t;};
   const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:2,animal:2,human:2,preta:2,naraka:2}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
   const ready=b=>alive(b)&&b.formed&&b.protectionRemaining<=0;
   const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0;
@@ -154,7 +155,7 @@
     if(!selected(owner,m)||(m.t||0)>0||s.queue.some(q=>q.owner===owner&&lane(q)===lane({owner,kind:k}))||s.actions.some(f=>f.owner===owner&&lane(f)===lane({owner,kind:k})))return false;
     if(['gravity','planet'].includes(k)&&s.sharedRecovery>0)return false;
     const b=required[k]&&body(required[k]);if(b&&(!ready(b)||(k==='soul'&&b.retreating)||hazardous(b.x,b.y,b.r)))return false;
-    const targets=nearby(b||owner,k==='gravity'?(m.triggerRadius||600):m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,owner));
+    const targets=nearby(b||owner,k==='gravity'?(m.triggerRadius||400):m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,owner));
     return k==='planet'?!!planetTarget(targets,m.radius||640):targets.length>0;
   }
   function basic(owner,m) {
@@ -190,7 +191,7 @@
   function start(f) {
     const k=f.kind,b=required[k]&&body(required[k]);
     if(!frameActive(f)||!selected(f.owner,f.m)||(b&&(!ready(b)||(k==='soul'&&b.retreating)||hazardous(b.x,b.y,b.r)))||(['gravity','planet'].includes(k)&&family.sharedRecovery>0))return false;
-    const targets=nearby(b||f.owner,k==='gravity'?(f.m.triggerRadius||600):f.m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,f.owner));
+    const targets=nearby(b||f.owner,k==='gravity'?(f.m.triggerRadius||400):f.m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,f.owner));
     if(!targets.length)return false;
     f.body=b;f.target=targets[0];f.phase='prepare';f.hit=new Set();f.emitted=0;
     if(k==='gravity') {
@@ -334,10 +335,10 @@
     f.age+=dt;const k=f.kind;
     if(k==='gravity') {
       if(!f.immediate&&f.age-dt<.35) {
-        const previous=smoothStep((f.age-dt)/.35),progress=smoothStep(f.age/.35),step=progress-previous;
+        const previous=accelerate((f.age-dt)/.35),progress=accelerate(f.age/.35),step=progress-previous;
         for(const entry of f.pulls) {
           const e=entry.target;
-          if(!alive(e)||!grounded(e)||dist(f.owner,e)>(f.m.triggerRadius||600)||!clearPath(f.owner.x,f.owner.y,e.x,e.y))continue;
+          if(!alive(e)||!grounded(e)||dist(f.owner,e)>(f.m.triggerRadius||400)||!clearPath(f.owner.x,f.owner.y,e.x,e.y))continue;
           const remaining=Math.max(0,dist(f.owner,e)-(f.m.pullRadius??100));
           const pull=special(e)?Math.min(remaining,Math.max(0,entry.pullDistance*.25-entry.distance),entry.pullDistance*.25*step):remaining*Math.min(1,step/Math.max(1e-9,1-previous));
           const x=e.x,y=e.y;toward(e,f.owner,pull);entry.distance+=Math.hypot(e.x-x,e.y-y);
@@ -350,7 +351,7 @@
         for(const e of nearby(f,(f.m.radius||300)+1e-7)){
           hit(f,e);
           if(alive(e)&&grounded(e)){
-            const d=dist(f,e),goalRadius=d+Math.max(0,(f.m.pushRadius??600)-d)*(special(e)?.25:1);
+            const d=dist(f,e),goalRadius=d+Math.max(0,(f.m.pushRadius??380)-d)*(special(e)?.25:1);
             pushes.push({target:e,goalRadius,dirX:d>1e-8?(e.x-f.x)/d:Math.cos(f.owner.aim||0),dirY:d>1e-8?(e.y-f.y)/d:Math.sin(f.owner.aim||0)});
           }
         }
@@ -541,7 +542,7 @@
       if(f.visualOnly&&!frameActive(f)){effects.splice(i,1);continue;}
       if(f.kind==='push'){
         if(!frameActive(f)||f.world!==G.World||!selected(f.owner,f.m)){effects.splice(i,1);continue;}
-        const time=Math.max(0,Math.min(1,f.age/(f.m.pushDuration??.24))),progress=time*time,previous=f.pushProgress||0;
+        const progress=accelerate(f.age/(f.m.pushDuration??.24)),previous=f.pushProgress||0;
         if(progress>previous){
           const fraction=Math.min(1,(progress-previous)/Math.max(1e-9,1-previous));
           for(const entry of f.pushes||[]){
@@ -796,7 +797,7 @@
     for(const m of moves)m.t=Math.max(0,(m.t||0)-dt);
     // Start the pull/push combo when ready; otherwise allow a worthwhile planet.
     const gravity=moves.find(m=>kind(m)==='gravity'),planet=moves.find(m=>kind(m)==='planet');
-    if(gravity&&nearby(owner,gravity.triggerRadius||600).length&&canCast(owner,gravity))cast(owner,gravity);
+    if(gravity&&nearby(owner,gravity.triggerRadius||400).length&&canCast(owner,gravity))cast(owner,gravity);
     else if(planet&&canCast(owner,planet))cast(owner,planet);
     else if(gravity&&canCast(owner,gravity))cast(owner,gravity);
     for(const m of moves)if(required[kind(m)]&&canCast(owner,m))cast(owner,m);
