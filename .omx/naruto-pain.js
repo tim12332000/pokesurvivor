@@ -345,10 +345,17 @@
         G.EnemyMgr.rebuildGrid();
       }
       if(f.immediate||f.age>=.35) {
-        f.x=f.owner.x;f.y=f.owner.y;
+        f.x=f.owner.x;f.y=f.owner.y;const pushes=[];
         // Pull steps can leave an exact boundary target a few floating-point units outside.
-        for(const e of nearby(f,(f.m.radius||300)+1e-7)){hit(f,e);if(grounded(e)){const d=dist(f,e)||1;move(e,(e.x-f.x)/d*80*(special(e)?.25:1),(e.y-f.y)/d*80*(special(e)?.25:1));}}
-        G.EnemyMgr.rebuildGrid();effects.push({...f,kind:'push',age:0,life:.3});finish(f);
+        for(const e of nearby(f,(f.m.radius||300)+1e-7)){
+          hit(f,e);
+          if(alive(e)&&grounded(e)){
+            const d=dist(f,e),goalRadius=d+Math.max(0,(f.m.pushRadius??600)-d)*(special(e)?.25:1);
+            pushes.push({target:e,goalRadius,dirX:d>1e-8?(e.x-f.x)/d:Math.cos(f.owner.aim||0),dirY:d>1e-8?(e.y-f.y)/d:Math.sin(f.owner.aim||0)});
+          }
+        }
+        // This new effect is updated later in the same tick; start its motion clock at zero then.
+        effects.push({...f,kind:'push',age:-dt,life:.4,pushProgress:0,pushes});finish(f);
       }
     } else if(k==='missiles') {
       while(f.emitted<f.count&&f.age>=.12+f.emitted*f.interval) {
@@ -532,6 +539,19 @@
     for(let i=effects.length-1;i>=0;i--) {
       const f=effects[i];f.age=Math.min(f.life,f.age+dt);
       if(f.visualOnly&&!frameActive(f)){effects.splice(i,1);continue;}
+      if(f.kind==='push'){
+        if(!frameActive(f)||f.world!==G.World||!selected(f.owner,f.m)){effects.splice(i,1);continue;}
+        const time=Math.max(0,Math.min(1,f.age/(f.m.pushDuration??.24))),progress=time*time,previous=f.pushProgress||0;
+        if(progress>previous){
+          const fraction=Math.min(1,(progress-previous)/Math.max(1e-9,1-previous));
+          for(const entry of f.pushes||[]){
+            const e=entry.target;if(!alive(e)||!grounded(e))continue;
+            const d=dist(f,e),travel=Math.max(0,entry.goalRadius-d)*fraction;
+            move(e,(d>1e-8?(e.x-f.x)/d:entry.dirX)*travel,(d>1e-8?(e.y-f.y)/d:entry.dirY)*travel);
+          }
+          G.EnemyMgr.rebuildGrid();f.pushProgress=progress;
+        }
+      }
       if(f.kind==='collapse') {
         if(!frameActive(f)||f.world!==G.World||!selected(f.owner,f.m)){effects.splice(i,1);continue;}
         const radius=(f.m.impactRadius||960)*f.age/f.life;
@@ -621,7 +641,7 @@
     if(!pull&&!push)return null;
     const facing=Math.cos(owner.aim||0)<0?-1:1;
     if(pull){const progress=Math.min(1,pull.age/.35),tension=Math.sin(Math.PI*progress);return {phase:'pull',age:pull.age,state:'special',time:0,offsetX:-facing*2*tension,offsetY:1.5*tension};}
-    const release=Math.min(1,push.age/.3),settle=smoothStep(release);
+    const release=Math.max(0,Math.min(1,push.age/push.life)),settle=smoothStep(release);
     return {phase:'push',age:push.age,state:release<.8?'special':'idle',time:release<.8?.125:0,offsetX:facing*3*(1-settle),offsetY:-1.5*Math.sin(Math.PI*release)};
   }
   function stateFor(owner) {

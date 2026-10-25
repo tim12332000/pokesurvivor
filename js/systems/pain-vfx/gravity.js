@@ -2,7 +2,6 @@
 (() => {
   const TAU = Math.PI * 2;
   const clamp = n => Math.max(0, Math.min(1, n));
-  const easeOut = n => 1 - Math.pow(1 - clamp(n), 3);
   function ground(ctx, f) {
     if (!f.owner) return;
     const radius = f.m?.radius || 300, progress = clamp((f.age || 0) / .35);
@@ -62,27 +61,29 @@
   function effect(ctx, e) {
     const radius = e.m?.radius || 300,age = e.age || 0,t = clamp(age / (e.life || .3));
     if (t >= 1) return;
-    const fade = Math.pow(1 - t, 2),release = easeOut(age / .12);
+    const duration=e.m?.pushDuration??.24,speed=clamp(age/duration),release=speed*speed;
+    const fade=1-clamp((age-duration)/Math.max(.001,(e.life||.4)-duration));
+    const gather=e.m?.pullRadius??100,reach=e.m?.pushRadius??600,front=gather+(reach-gather)*release;
     ctx.save();ctx.translate(e.x, e.y);
     // Flash the entire real hit radius now; moving arcs below are aftermath.
     ctx.globalAlpha = .72 * Math.exp(-age / .075);ctx.strokeStyle = '#e6dfe9';ctx.lineWidth = 1 + 3 * (1 - release);
     ctx.beginPath();ctx.arc(0, 0, radius, 0, TAU);ctx.stroke();
-    ctx.globalAlpha = .23 * fade;ctx.lineWidth = 1.5;
+    ctx.globalAlpha = .19 * fade * (.3+.7*speed);ctx.lineWidth = 1.5;
     for (let i = 0; i < 8; i++) {
       const a = i * TAU / 8 + .1;
-      ctx.beginPath();ctx.arc(0, 0, radius * (.2 + .8 * release), a, a + .34);ctx.stroke();
+      ctx.beginPath();ctx.arc(0, 0, front, a, a + .24);ctx.stroke();
     }
     for (let i = 0; i < 16; i++) {
-      const a = i * TAU / 16 + .035 * (i % 3),head = 72 + (i % 4) * 15 + release * (55 + (i % 3) * 8);
-      const tail = head - (18 + (i % 3) * 7) * (1 - t),side = (i % 2 ? -1 : 1) * 3;
-      ctx.globalAlpha = fade * (i % 2 ? .35 : .6);ctx.strokeStyle = i % 2 ? '#b9b0a8' : '#ded4e1';ctx.lineWidth = i % 3 === 0 ? 2.5 : 1.5;
+      const a = i * TAU / 16 + .035 * (i % 3),head = front*(.94+(i%3)*.03);
+      const tail = Math.max(0,head-(18+(64+(i%3)*12)*speed)),side = (i % 2 ? -1 : 1) * 3;
+      ctx.globalAlpha = fade * (.25+.75*speed) * (i % 2 ? .35 : .6);ctx.strokeStyle = i % 2 ? '#b9b0a8' : '#ded4e1';ctx.lineWidth = i % 3 === 0 ? 2.5 : 1.5;
       ctx.beginPath();ctx.moveTo(Math.cos(a) * tail, Math.sin(a) * tail);
       ctx.quadraticCurveTo(Math.cos(a) * (tail + head) / 2 - Math.sin(a) * side,
         Math.sin(a) * (tail + head) / 2 + Math.cos(a) * side, Math.cos(a) * head, Math.sin(a) * head);ctx.stroke();
       if (i % 2 === 0) {
-        const dust = 95 + release * (50 + i % 3 * 8);
+        const dust = gather+(reach-gather)*release*(.85+(i%3)*.05);
         ctx.globalAlpha = .38 * fade;ctx.fillStyle = '#a69a86';
-        ctx.fillRect(Math.round(Math.cos(a) * dust), Math.round(Math.sin(a) * dust - Math.sin(t * Math.PI) * 6), 3, 2);
+        ctx.fillRect(Math.round(Math.cos(a) * dust), Math.round(Math.sin(a) * dust - Math.sin(speed * Math.PI) * 6), 3, 2);
       }
     }
     ctx.restore();

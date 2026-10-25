@@ -65,6 +65,8 @@ HUD = r"""() => {
 CONCURRENT = r"""() => {
  const A=Acceptance,p=A.p(),out={};A.reset();
  const es=[A.spawn(70,0),A.spawn(85,18),A.spawn(85,-18),A.spawn(-500,400)],hits=es.map(e=>A.watch([e]));
+ // Keep this native airborne cluster in range while measuring independent AOE lanes.
+ es.slice(0,3).forEach(e=>e.flying=true);
  for(const b of G.NarutoPain.actors()){b.x=0;b.y=0}
  // An airborne target stays in grasp range during the expanded repulsion.
  const soulTarget=A.spawn(260,0),soulHits=A.watch([soulTarget]);soulTarget.flying=true;
