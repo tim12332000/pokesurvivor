@@ -481,7 +481,7 @@
     ['naruto-pain-missiles',[30010],{
       name:'修羅道・飛彈齊射',mode:'pain-missiles',icon:'painMissile',type:'steel',learnLevel:6,passive:true,
       cd:4,dmg:22,count:5,range:320,radius:48,speed:400,ups:painUps([5,5,6,7,8]),
-      desc:'修羅道展開機械臂，飛彈先升空 0.22 秒，再沿平滑弧線轉向、追蹤俯衝；目標倒下時平滑改鎖範圍內敵人。碰敵或牆後爆炸，基礎 5／5／6／7／8 枚，爆炸半徑 48，每枚各命中一次。數量卡 ×1.25，最多 30 枚；修羅道倒下不能起手，已離架飛彈可飛完。',source_url:painSource
+      desc:'修羅道展開機械臂，飛彈先升空 0.22 秒，每發朝不同方向水平散開繞行 0.65 秒，再各自尋敵、沿弧線俯衝。目標倒下時平滑改鎖範圍內敵人。碰敵或牆後爆炸，基礎 5／5／6／7／8 枚，爆炸半徑 48，每枚各命中一次。數量卡 ×1.25，最多 30 枚；修羅道倒下不能起手，已離架飛彈可飛完。',source_url:painSource
     }],
     ['naruto-pain-absorb',[30010],{
       name:'餓鬼道・封術吸印',mode:'pain-absorb',icon:'painAbsorb',type:'psychic',learnLevel:6,

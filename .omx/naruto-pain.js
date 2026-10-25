@@ -350,8 +350,8 @@
       while(f.emitted<f.count&&f.age>=.12+f.emitted*f.interval) {
         const target=f.targets[f.emitted%f.targets.length],angle=Math.atan2(target.y-f.body.y,target.x-f.body.x);
         if(shots.filter(p=>p.kind==='missile').length<30) {
-          shots.push({...f,kind:'missile',phase:'rise',lift:0,launchOffset:48,visualAngle:-Math.PI/2,trail:[],trailTime:0,
-            x:f.body.x,y:f.body.y,angle,speed:f.m.speed||400,r:5,range:f.m.range||320,distance:0,target,age:0});
+          shots.push({...f,kind:'missile',phase:'rise',lift:0,launchOffset:48,visualAngle:-Math.PI/2,trail:[],trailTime:0,orbitDirection:TAU*f.emitted/f.count,
+            x:f.body.x,y:f.body.y,angle,speed:f.m.speed||400,r:5,range:f.m.range||320,distance:0,target:null,age:0});
           visualEffect(f,'missile-launch',.15,{x:f.body.x,y:f.body.y,angle:-Math.PI/2});
         }f.emitted++;
       }
@@ -438,8 +438,19 @@
         if(p.phase==='rise') {
           p.lift=90*Math.min(1,p.age/.22);
           if(p.age<.22){missileVisual(p,previousScreen,dt);continue;}
-          p.phase='seek';flightDt=Math.max(0,dt-Math.max(0,.22-previousAge));
-          p.target=alive(p.target)&&dist(p,p.target)<=p.range&&clearPath(p.x,p.y,p.target.x,p.target.y)?p.target:nearby(p,p.range)[0];
+          p.phase='orbit';flightDt=Math.max(0,dt-Math.max(0,.22-previousAge));
+          p.orbitX=p.x;p.orbitY=p.y;p.orbitAge=0;
+        }
+        if(p.phase==='orbit') {
+          const duration=.65,radius=64,step=Math.min(flightDt,duration-p.orbitAge);
+          p.orbitAge+=step;
+          const angle=TAU*Math.min(1,p.orbitAge/duration);
+          const direction=Math.atan2(Math.sin(p.orbitDirection),Math.cos(p.orbitDirection));
+          const turn=direction*Math.sin(angle/2)**2,dx=radius*(1-Math.cos(angle)),dy=-radius*Math.sin(angle);
+          p.x=p.orbitX+dx*Math.cos(turn)-dy*Math.sin(turn);p.y=p.orbitY+.35*(dx*Math.sin(turn)+dy*Math.cos(turn));p.lift=90;
+          if(p.orbitAge<duration-1e-9){missileVisual(p,previousScreen,dt);continue;}
+          p.x=p.orbitX;p.y=p.orbitY;p.lift=90;p.phase='seek';flightDt=Math.max(0,flightDt-step);
+          const targets=nearby(p,p.range);p.target=targets[p.emitted%targets.length];
           if(p.target)p.angle=Math.atan2(p.target.y-p.y,p.target.x-p.x);
           p.seekAge=0;p.diveDistance=Math.max(1,p.target?dist(p,p.target):p.range);p.diveDuration=Math.max(.25,p.diveDistance/p.speed);
           missileLiftStart=90;

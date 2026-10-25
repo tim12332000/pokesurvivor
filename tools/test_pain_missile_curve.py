@@ -50,13 +50,19 @@ TRAJECTORY = r"""() => {
  A.assert(seek.length>10&&Math.max(...seek.map(v=>v.lift))>90,'arc lacks natural apex after launch');
  A.assert(seek.at(-1).lift<20,'arc did not descend before impact');
  A.assert(e.hp<100000,'curved missile failed to damage actual target');
- A.assert(seek[0].distance<2,'launch-to-seek position discontinuity');
+ A.assert(seek[0].distance<2,'orbit-to-seek position discontinuity');
+ const orbit=samples.filter(v=>v.phase==='orbit');
+ A.assert(orbit.length>=60&&orbit.every(v=>v.lift===90),'horizontal orbit missing or altitude changed');
+ const width=Math.max(...orbit.map(v=>v.x))-Math.min(...orbit.map(v=>v.x));
+ const depth=Math.max(...orbit.map(v=>v.y))-Math.min(...orbit.map(v=>v.y));
+ A.assert(width>120&&depth>40&&width/depth>2.5,'first missile did not make a horizontal ellipse');
+ A.assert(seek[0].age>=.87-1e-6,'missile sought before rise and orbit completed');
  return {samples,maxTurn,maxAlignmentError,damage:100000-e.hp};
 }"""
 
 RETARGET = r"""() => {
  const A=Acceptance,P=G.NarutoPain,{e,shot:s}=A.curveCast();
- while(s.phase==='rise')A.advance();A.finish(.06);
+ while(s.phase!=='seek')A.advance();A.finish(.06);
  e.x=160;e.y=130;G.EnemyMgr.rebuildGrid();
  let previous=s.angle,maxTurn=0;
  for(let i=0;i<8;i++){A.advance();const d=Math.abs(Math.atan2(Math.sin(s.angle-previous),Math.cos(s.angle-previous)));
@@ -68,7 +74,7 @@ RETARGET = r"""() => {
  A.assert(Math.abs(Math.atan2(Math.sin(s.angle-angle),Math.cos(s.angle-angle)))<=.038001,'retarget snapped heading');
  const retargetHeightDelta=s.lift-height;
  A.finish(2);
- const dodge=A.curveCast();while(dodge.shot.phase==='rise')A.advance();
+ const dodge=A.curveCast();while(dodge.shot.phase!=='seek')A.advance();
  dodge.e.x=310;G.EnemyMgr.rebuildGrid();let extendedMaxTurn=0,checkedEnd=false;
  previous=dodge.shot.visualAngle;
  for(let i=0;i<90&&P.shots.includes(dodge.shot);i++){
@@ -80,6 +86,43 @@ RETARGET = r"""() => {
  A.assert(checkedEnd,'dodging target did not extend pursuit past nominal descent');
  A.assert(extendedMaxTurn<.3,'extended pursuit snapped pitch at end of descent '+extendedMaxTurn);
  return {maxTurn,retargetHeightDelta,extendedMaxTurn,checkedEnd};
+}"""
+
+ORBIT_SELECTION = r"""() => {
+ const A=Acceptance,p=A.p(),P=G.NarutoPain;
+ const {e,shot:s}=A.curveCast();while(s.phase==='rise')A.advance();A.finish(.2);
+ A.assert(s.phase==='orbit'&&!s.target&&e.hp===100000,'orbit locked target or hit early');
+ e.dead=true;e.hp=0;G.EnemyMgr.rebuildGrid();const next=A.spawn(210,60);
+ while(s.phase==='orbit'){
+  A.assert(!s.target&&next.hp===100000&&s.lift===90,'orbit selected or damaged replacement early');A.advance();
+ }
+ A.assert(s.target===next,'orbit end did not choose current living enemy');A.finish(1.5);
+ A.assert(next.hp<100000,'fresh orbit-end target never hit');
+ const spread=[];
+ for(const picks of [0,20]){
+  A.curveReset();p.quantityBonus=p.quantityPicks=picks;A.spawn(240,0);A.ready('missiles');A.advance();
+  const count=A.actions().find(f=>f.kind==='missiles').count,paths=new Map(),previous=new Map();
+  let alignmentError=0;
+  for(let i=0;i<240&&paths.size<count;i++){
+   for(const shot of P.shots){
+    const point={x:shot.x,y:shot.y-shot.lift-shot.launchOffset};
+    A.assert([point.x,point.y,shot.visualAngle].every(Number.isFinite),'spread trajectory became non-finite');
+    const last=previous.get(shot);if(last){const dx=point.x-last.x,dy=point.y-last.y;
+     if(Math.hypot(dx,dy)>1e-7)alignmentError=Math.max(alignmentError,Math.abs(Math.atan2(Math.sin(shot.visualAngle-Math.atan2(dy,dx)),Math.cos(shot.visualAngle-Math.atan2(dy,dx)))));}
+    previous.set(shot,point);
+    if(shot.phase==='orbit'){
+     A.assert(!shot.target&&shot.lift===90,'spread lost fixed altitude or locked early');
+     if(shot.orbitAge>=.32&&!paths.has(shot.emitted))paths.set(shot.emitted,{direction:shot.orbitDirection,x:shot.x-shot.orbitX,y:shot.y-shot.orbitY});
+    }
+   }A.advance(.01);
+  }
+  const points=[...paths.values()];
+  A.assert(points.length===count&&new Set(points.map(v=>v.direction)).size===count,'volley reused missile directions '+count);
+  A.assert(points.some(v=>v.x < -80)&&points.some(v=>v.x>80)&&points.some(v=>v.y < -30)&&points.some(v=>v.y>30),'volley did not spread in different directions');
+  A.assert(alignmentError<.02,'spread sprite diverged from actual travel '+alignmentError);
+  spread.push({picks,count,alignmentError,paths:points});
+ }
+ A.curveReset();return {freshTarget:true,spread};
 }"""
 
 COUNTS_SPLASH = r"""() => {
@@ -96,7 +139,7 @@ COUNTS_SPLASH = r"""() => {
   }
  }
  const {e}=A.curveCast();A.finish(.4);const inside=A.spawn(240,25),outside=A.spawn(320,0);
- A.finish(2);A.assert(e.hp<100000&&inside.hp<100000,'native missile explosion lost nearby victims '+JSON.stringify({target:e.hp,inside:inside.hp}));
+ A.finish(2.7);A.assert(e.hp<100000&&inside.hp<100000,'native missile explosion lost nearby victims '+JSON.stringify({target:e.hp,inside:inside.hp}));
  A.assert(outside.hp===100000,'48-radius missile explosion hit distant control');
  return {counts:out,splashDamage:100000-inside.hp,outsideDamage:100000-outside.hp};
 }"""
@@ -109,7 +152,7 @@ LIFECYCLE = r"""() => {
    A.assert(before===JSON.stringify(A.curveSample(s)),'paused trajectory advanced');}
   if(reason==='wall'){const W=G.World,block=W.projectileBlock,wall=W.isWall;
    W.projectileBlock=x=>x>=80&&x<=120?{destructible:false}:false;W.isWall=x=>x>=80&&x<=120;
-   try{A.finish(2);A.assert(e.hp===100000,'missile crossed solid wall');}finally{W.projectileBlock=block;W.isWall=wall;}}
+   try{A.finish(2.7);A.assert(e.hp===100000,'missile crossed solid wall');}finally{W.projectileBlock=block;W.isWall=wall;}}
   if(reason==='owner-death'){P.actorsFor(p).find(b=>b.path==='naraka').hurt(1e9,null,true);p.invuln=0;p.hurt(1e9,null,true);A.advance();p.dead=false;}
   if(reason==='world'){const world=G.World;G.World={...world};try{A.advance();}finally{G.World=world;}}
   if(reason==='clear')G.Combat.clearFields();
@@ -146,17 +189,17 @@ def main():
             enter(frame)
             frame.evaluate(SETUP)
             result = report['viewports'][label] = {}
-            for name, check in [('trajectory', TRAJECTORY), ('retarget', RETARGET), ('lifecycle', LIFECYCLE), ('countsSplash', COUNTS_SPLASH)]:
+            for name, check in [('trajectory', TRAJECTORY), ('orbitSelection', ORBIT_SELECTION), ('retarget', RETARGET), ('lifecycle', LIFECYCLE), ('countsSplash', COUNTS_SPLASH)]:
                 result[name] = frame.evaluate(check)
                 print(label, name, 'PASS', flush=True)
             frame.evaluate(CAPTURE_SETUP)
             images = []
-            for index in range(30):
+            for index in range(60):
                 raw = base64.b64decode(frame.evaluate(CAPTURE).split(',', 1)[1])
                 images.append(Image.open(io.BytesIO(raw)).convert('RGB'))
                 frame.evaluate('Acceptance.finish(.04)')
             images[0].save(OUT / f'{label}-flight.gif', save_all=True, append_images=images[1:], duration=40, loop=0, disposal=2)
-            selected = [images[i] for i in [0, 4, 8, 12, 16, 20]]
+            selected = [images[i] for i in [2, 8, 14, 20, 25, 34]]
             strip = Image.new('RGB', (640 * 3, 400 * 2))
             for i, image in enumerate(selected):
                 strip.paste(image, ((i % 3) * 640, (i // 3) * 400))

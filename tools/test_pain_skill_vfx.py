@@ -52,24 +52,27 @@ MISSILES = r"""() => {
  const x=shot.x,y=shot.y,lift=shot.lift;A.finish(.06);
  A.assert(shot.x===x&&shot.y===y&&shot.lift>lift&&e.hp===100000,'rising missile moved on ground or hit early');
  const age=shot.age;G.Combat.updateFields(.3);A.assert(shot.age===age,'pause advanced missile');
+ while(shot.phase==='rise')A.advance();A.assert(shot.phase==='orbit'&&shot.lift===90&&!shot.target&&e.hp===100000,'missile did not enter unlocked horizontal orbit');
  e.dead=true;e.hp=0;G.EnemyMgr.rebuildGrid();const replacement=A.spawn(180,35);A.finish(.3);
- A.assert(shot.phase==='seek'&&shot.target===replacement&&shot.distance>0&&shot.lift>0,'missile did not follow airborne arc toward replacement after rise');
+ A.assert(shot.phase==='orbit'&&!shot.target&&replacement.hp===100000,'orbit selected or hit replacement before completion');
+ while(shot.phase==='orbit')A.advance();A.finish(.03);
+ A.assert(shot.phase==='seek'&&shot.target===replacement&&shot.distance>0&&shot.lift>0,'missile did not seek fresh replacement after orbit');
  A.finish(1.2);A.assert(replacement.hp<100000,'descending missile caused no actual damage');
  p.moves=moves.slice();A.reset();p.moves=p.moves.filter(m=>m.id==='naruto-pain-missiles');
- const asura=P.actors().find(b=>b.path==='asura');asura.x=asura.y=0;A.spawn(180,0);A.ready('missiles');A.advance();A.finish(.4);
+ const asura=P.actors().find(b=>b.path==='asura');asura.x=asura.y=0;A.spawn(180,0);A.ready('missiles');A.advance();A.finish(1.05);
  const missile=P.shots.find(s=>s.kind==='missile'&&s.phase==='seek');A.assert(missile,'seeking fixture absent');
  const original=missile.target;original.dead=true;original.hp=0;G.EnemyMgr.rebuildGrid();const next=A.spawn(200,10);A.advance();
  A.assert(missile.target===next,'in-flight missile did not reacquire');
  G.Combat.clearFields();A.assert(!P.shots.length&&!P.effects.length,'scene cleanup retained new shots/effects');
- p.moves=moves.slice();A.reset();return {riseBeforeSeek:true,noEarlyHit:true,pause:true,reacquireAtRise:true,reacquireInFlight:true,cleanup:true};
+ p.moves=moves.slice();A.reset();return {riseBeforeOrbit:true,orbitBeforeSeek:true,noEarlyHit:true,pause:true,reacquireAfterOrbit:true,reacquireInFlight:true,cleanup:true};
 }"""
 
 
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     report = {'url': URL, 'errors': [], 'failedRequests': [], 'viewports': {}}
-    durations = {'basic': 1, 'gravity': 1, 'missiles': 1.6, 'summon': 1, 'soul': .9, 'absorb': .65, 'repair': 1.4, 'planet': 2.2}
-    captures = {'basic': .1, 'gravity': .16, 'missiles': .28, 'summon': .4, 'soul': .3, 'absorb': .1, 'repair': .45, 'planet': 1.3}
+    durations = {'basic': 1, 'gravity': 1, 'missiles': 2.4, 'summon': 1, 'soul': .9, 'absorb': .65, 'repair': 1.4, 'planet': 2.2}
+    captures = {'basic': .1, 'gravity': .16, 'missiles': .55, 'summon': .4, 'soul': .3, 'absorb': .1, 'repair': .45, 'planet': 1.3}
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=CHROME, headless=True)
         for label, viewport in [('desktop', {'width': 1200, 'height': 900}), ('mobile', {'width': 390, 'height': 844})]:
