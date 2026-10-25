@@ -31,36 +31,42 @@ CHECK = r"""() => {
    A.assert(mon.hp===120,'normal Pain base HP fixture changed');
    A.assert(typeof P.syncDurability==='function'&&typeof P.damageReductionBonus==='function'&&typeof P.durabilityState==='function','durability APIs missing');
    out.levels=[];
-   for(const [level,hp,reduction] of [[1,200,.16],[15,368,.30],[21,440,.36],[25,488,.36]]){
+   for(const [level,hp,reduction] of [[1,200,.16],[15,284,.30],[21,320,.36],[25,344,.36],[34,398,.36],[35,400,.36],[203,400,.36]]){
      const p=fresh(level);close(p.maxHp,hp,'level maximum HP '+level);close(p.hp,hp,'new level capacity did not heal added capacity only '+level);
      close(p.reduction,reduction,'effective innate reduction '+level);close(p.dmgReduce,.16,'innate armor mutated card armor');
      const rows=G.RunAttributes.rows(p);A.assert(rows.some(r=>r.id==='painHealthGrowth')===(level>1),'growth HUD row level '+level);if(level>1)A.assert(rows.find(r=>r.id==='painDefenseGrowth').text.includes(Math.round(p.reduction*100)+'%'),'growth HUD effective armor');out.levels.push({level,maxHp:p.maxHp,reduction:p.reduction,state:P.durabilityState(p),rows});
    }
    let p=fresh(1,150);const one=p.gainXp(p.xpNext);
-   A.assert(one===1&&p.level===2,'native XP did not gain exactly one level');close(p.maxHp,212,'single native XP level max HP');close(p.hp,162,'single XP level fully healed missing health');
+   A.assert(one===1&&p.level===2,'native XP did not gain exactly one level');close(p.maxHp,206,'single native XP level max HP');close(p.hp,156,'single XP level fully healed missing health');
    const once=p.hp;p.gainXp(0);P.syncDurability(p);close(p.hp,once,'zero XP or repeat sync granted another heal');
    out.singleXp={level:p.level,maxHp:p.maxHp,hp:p.hp};
+   p=fresh(34,150);p.gainXp(p.xpNext);close(p.level,35,'native cap-crossing level');close(p.maxHp,400,'health growth must stop exactly at 200');close(p.hp,350,'last growth step must add only two HP');
+   const capHp=p.hp;p.gainXp(p.xpNext);close(p.maxHp,400,'post-cap XP increased maximum health');close(p.hp,capHp,'post-cap XP healed missing health');
+   close(p.painHealthBonus,200,'tracked growth cap');close(P.damageReductionBonus(p),.2,'reduction growth cap');
+   stat('maxHealthPercent').apply(p);close(p.maxHp,440,'growth cap blocked health card');stat('giant').apply(p);close(p.maxHp,550,'growth cap blocked giant card');
+   const cappedCardHp=p.hp;p.gainXp(p.xpNext);close(p.maxHp,550,'post-card capped XP changed capacity');close(p.hp,cappedCardHp,'post-card capped XP healed');
+   out.growthCap={level:p.level,maxHp:p.maxHp,hp:p.hp,trackedBonus:p.painHealthBonus};
    p=fresh(1,150);const xp=Array.from({length:14},(_,i)=>G.Player.xpFor(i+1)).reduce((a,b)=>a+b,0),levels=p.gainXp(xp);
-   A.assert(levels===14&&p.level===15,'native multi-level XP did not reach level 15');close(p.maxHp,368,'multi-level XP max HP');close(p.hp,318,'multi-level XP did not preserve missing health');
+   A.assert(levels===14&&p.level===15,'native multi-level XP did not reach level 15');close(p.maxHp,284,'multi-level XP max HP');close(p.hp,234,'multi-level XP did not preserve missing health');
    out.multiXp={levels,xp,maxHp:p.maxHp,hp:p.hp,missing:p.maxHp-p.hp};
-   p=fresh(1,150);p.level=15;p.update(0);close(p.maxHp,368,'native update did not synchronize practice-style level assignment');close(p.hp,318,'update sync healed beyond added capacity');
+   p=fresh(1,150);p.level=15;p.update(0);close(p.maxHp,284,'native update did not synchronize practice-style level assignment');close(p.hp,234,'update sync healed beyond added capacity');
    const before={maxHp:p.maxHp,hp:p.hp},world=G.World;
    for(let i=0;i<5;i++){P.syncDurability(p);G.Combat.clearFields();A.durabilityStep(.01)}
    G.World={...world};try{A.durabilityStep(.01);P.syncDurability(p)}finally{G.World=world}
    close(p.maxHp,before.maxHp,'clear/world cycles farmed capacity');close(p.hp,before.hp,'clear/world cycles farmed healing');out.noFarming={maxHp:p.maxHp,hp:p.hp};
    G.Combat.clearFields();A.durabilityStep(.01);A.durabilityStep(1.6);const bodies=P.actorsFor(p);A.assert(bodies.length===5,'five support capacity fixtures missing');
-   for(const b of bodies){close(b.maxHp,736,'support did not inherit twice grown Tendo maximum');close(P.damageReductionBonus(b),0,'support inherited its own Tendo armor');const hp=b.hp;b.hurt(100,null,false);close(hp-b.hp,84,'support inherited Tendo innate armor '+b.path)}
-   out.supports=bodies.map(b=>({path:b.path,maxHp:b.maxHp,damageTaken:736-b.hp,innateArmor:P.damageReductionBonus(b)}));
-   p=fresh(15,150);const missing=p.maxHp-p.hp;stat('maxHealthPercent').apply(p);close(p.maxHp,404.8,'native health growth card max HP');
+   for(const b of bodies){close(b.maxHp,568,'support did not inherit twice grown Tendo maximum');close(P.damageReductionBonus(b),0,'support inherited its own Tendo armor');const hp=b.hp;b.hurt(100,null,false);close(hp-b.hp,84,'support inherited Tendo innate armor '+b.path)}
+   out.supports=bodies.map(b=>({path:b.path,maxHp:b.maxHp,damageTaken:568-b.hp,innateArmor:P.damageReductionBonus(b)}));
+   p=fresh(15,150);const missing=p.maxHp-p.hp;stat('maxHealthPercent').apply(p);close(p.maxHp,312.4,'native health growth card max HP');
    const grown=p.maxHp;P.syncDurability(p);close(p.maxHp,grown,'growth card caused innate bonus duplication');
-   stat('giant').apply(p);close(p.maxHp,506,'native giant health multiplier');close(p.maxHp-p.hp,missing,'health cards did not preserve missing HP');
-   p.gainXp(p.xpNext);close(p.level,16,'post-card native XP level');close(p.maxHp,518,'new level multiplied its flat HP bonus through prior cards');close(p.maxHp-p.hp,missing,'post-card XP healed existing missing HP');
+   stat('giant').apply(p);close(p.maxHp,390.5,'native giant health multiplier');close(p.maxHp-p.hp,missing,'health cards did not preserve missing HP');
+   p.gainXp(p.xpNext);close(p.level,16,'post-card native XP level');close(p.maxHp,396.5,'new level multiplied its flat HP bonus through prior cards');close(p.maxHp-p.hp,missing,'post-card XP healed existing missing HP');
    out.cards={level:p.level,maxHp:p.maxHp,hp:p.hp,missing,trackedBonus:p.painHealthBonus};
    p=fresh(15);stat('def').apply(p);stat('def').apply(p);close(p.dmgReduce,.28,'native defense card state changed');close(p.reduction,.42,'native defense cards did not stack with innate armor');
    p.buffs.def.n=2;p.buffs.def.amount=.1;close(p.reduction,.62,'temporary defense did not stack');p.dmgReduce=.7;close(p.reduction,.8,'global 80 percent armor cap changed');out.armorCap=p.reduction;
    p=fresh(15);p.invuln=0;p.hurt(p.maxHp+1,null,true);A.assert(p.dead&&p.hp===0,'native lethal fixture failed');
-   p.level=16;P.syncDurability(p);close(p.maxHp,380,'dead owner capacity did not grow');A.assert(p.dead&&p.hp===0,'direct sync resurrected dead Tendo');
-   p.xpNext=G.Player.xpFor(16);p.gainXp(p.xpNext);close(p.maxHp,392,'dead native XP capacity did not grow');A.assert(p.dead&&p.hp===0,'native XP resurrected dead Tendo');out.deadGrowth={level:p.level,maxHp:p.maxHp,hp:p.hp,dead:p.dead};
+   p.level=16;P.syncDurability(p);close(p.maxHp,290,'dead owner capacity did not grow');A.assert(p.dead&&p.hp===0,'direct sync resurrected dead Tendo');
+   p.xpNext=G.Player.xpFor(16);p.gainXp(p.xpNext);close(p.maxHp,296,'dead native XP capacity did not grow');A.assert(p.dead&&p.hp===0,'native XP resurrected dead Tendo');out.deadGrowth={level:p.level,maxHp:p.maxHp,hp:p.hp,dead:p.dead};
    p=fresh(15,150);const other=G.DEX.find(m=>m.dex===30009);p.mon=other;p.dex=other.dex;P.syncDurability(p);
    close(p.maxHp,200,'hero change retained innate health');close(p.hp,150,'hero change altered pre-growth missing HP');close(P.damageReductionBonus(p),0,'hero change retained innate armor');out.heroChange={maxHp:p.maxHp,hp:p.hp,bonus:P.damageReductionBonus(p)};
    const another=new G.Player(mon,{hp:80,dmgReduce:.16});another.level=25;P.syncDurability(another);close(another.maxHp,200,'non-main Pain received innate health');close(P.damageReductionBonus(another),0,'non-main Pain received innate armor');
@@ -76,8 +82,8 @@ CHECK = r"""() => {
      }
    }
    p=fresh(15);const weak=G.Types.mult('dark',p.mon.types)*G.Weather.mult('dark');close(weak,1.6,'native dark weakness fixture changed');
-   const sequence=[];for(let i=0;i<3;i++){sequence.push(nativeHit(p,163.2,'dark'));if(i<2)A.assert(!p.dead&&p.hp>0,'grown Tendo died before third 10-minute weakness hit')}
-   A.assert(p.dead&&p.hp===0,'third native 10-minute weakness hit should still be lethal');out.tenMinuteWeakness={sequence,dead:p.dead};
+   const sequence=[];for(let i=0;i<2;i++){sequence.push(nativeHit(p,163.2,'dark'));if(i<1)A.assert(!p.dead&&p.hp>0,'grown Tendo died before second 10-minute weakness hit')}
+   A.assert(p.dead&&p.hp===0,'second native 10-minute weakness hit should still be lethal');out.tenMinuteWeakness={sequence,dead:p.dead};
    return out;
  }finally{G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();Object.assign(original,saved);original.buffs=savedBuffs;original.anim.scale=savedScale;original.anim._start(original.dead?'Faint':'Idle',false);A.reset()}
 }"""

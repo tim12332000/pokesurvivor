@@ -8,7 +8,7 @@
   const smoothStep=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const accelerate=t=>{t=Math.max(0,Math.min(1,t));return t*t;};
   const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:2,animal:2,human:2,preta:2,naraka:2}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
-  const durabilityConfig=Object.freeze({healthPerLevel:12,reductionPerLevel:.01,maxReduction:.2});
+  const durabilityConfig=Object.freeze({healthPerLevel:6,maxHealth:200,reductionPerLevel:.01,maxReduction:.2});
   const ready=b=>alive(b)&&b.formed&&b.protectionRemaining<=0;
   const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0, lifestealSource=null;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
@@ -20,7 +20,7 @@
   const damageReductionBonus=owner=>Math.min(durabilityConfig.maxReduction,durabilityLevels(owner)*durabilityConfig.reductionPerLevel);
   function syncDurability(owner){
     if(!owner)return;
-    const bonus=durabilityLevels(owner)*durabilityConfig.healthPerLevel,previous=owner.painHealthBonus||0;
+    const bonus=Math.min(durabilityConfig.maxHealth,durabilityLevels(owner)*durabilityConfig.healthPerLevel),previous=owner.painHealthBonus||0;
     if(bonus===previous)return;
     const delta=bonus-previous;owner.maxHp=Math.max(1,owner.maxHp+delta);
     if(alive(owner))owner.hp=Math.max(1,Math.min(owner.maxHp,owner.hp+delta));
