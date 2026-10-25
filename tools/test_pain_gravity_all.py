@@ -15,9 +15,9 @@ CHECK = r"""() => {
  const complete=f=>{for(let i=0;i<40&&A.actions().includes(f);i++)A.advance();A.assert(!A.actions().includes(f),'pull did not complete after .35 seconds')};
  const hitsOnly=h=>h.filter(v=>v.id===m.id);
  try {
-  A.assert(m.range===600&&m.triggerRadius===600&&m.radius===300&&m.cd===3,'gravity configuration');
+  A.assert(m.range===600&&m.triggerRadius===600&&m.pullRadius===100&&m.radius===300&&m.cd===3,'gravity configuration');
   out.boundaries=[];
-  for(const radius of [70,90,299,300,301,410,411,599,600,601]) {
+  for(const radius of [70,90,100,299,300,301,410,411,599,600,601]) {
    A.reset();const e=A.spawn(radius,0),hits=A.watch([e]);A.ready('gravity');A.advance();
    const action=A.actions().find(f=>f.kind==='gravity');
    A.assert(!!action===(radius<=600),'600 trigger boundary '+radius);
@@ -26,20 +26,46 @@ CHECK = r"""() => {
     A.finish(.30);A.assert(!hitsOnly(hits).length&&A.actions().includes(action),'damage before .35 second pull completed '+radius);
     complete(action);
    }
-   const pulled=radius<=600?Math.min(110,Math.max(0,radius-90)):0,afterPull=radius-pulled,n=hitsOnly(hits).length,damaged=radius<=600&&afterPull<=300;
+   const pulled=radius<=600?Math.max(0,radius-100):0,afterPull=radius-pulled,n=hitsOnly(hits).length,damaged=radius<=600&&afterPull<=300;
    A.assert(n===(damaged?1:0),'post-pull 300 damage boundary '+JSON.stringify({radius,x:e.x,hits:n,pulled:action?.pulls[0]?.distance}));
    A.assert(Math.abs(e.x-(afterPull+(damaged?80:0)))<1e-6,'post-pull displacement boundary '+radius);
    A.assert(radius<=600?m.t>2.6:m.t===0,'cooldown boundary '+radius);
    out.boundaries.push({radius,triggered:!!action,pulled,hits:n,x:e.x});
   }
-  A.reset();const crowd=Array.from({length:32},(_,i)=>A.spawn(Math.cos(i*Math.PI/16)*280,Math.sin(i*Math.PI/16)*280)),outside=A.spawn(411,0),hs=A.watch([...crowd,outside]);
+  A.reset();const crowd=Array.from({length:32},(_,i)=>A.spawn(Math.cos(i*Math.PI/16)*580,Math.sin(i*Math.PI/16)*580)),outside=A.spawn(601,0),hs=A.watch([...crowd,outside]);
   complete(start());A.assert(hitsOnly(hs).length===32&&hitsOnly(hs).every(v=>v.owned),'uncapped owned group hit');
-  A.assert(crowd.every(e=>Math.abs(Math.hypot(e.x,e.y)-250)<1e-6)&&Math.abs(outside.x-301)<1e-6,'uncapped group displacement');
+  A.assert(crowd.every(e=>Math.abs(Math.hypot(e.x,e.y)-180)<1e-6)&&outside.x===601,'uncapped group displacement');
   A.finish(.8);A.assert(hitsOnly(hs).length===32,'duplicate gravity damage');out.crowd=32;
   A.reset();const regular=A.spawn(200,0),boss=A.spawn(-200,0,true),fly=A.spawn(0,200),jump=A.spawn(0,-200);fly.flying=true;jump.jumpLift=18;jump.jumpT=.8;
   const airHits=A.watch([regular,boss,fly,jump]);complete(start());
   A.assert(hitsOnly(airHits).length===4,'airborne or boss omitted from damage');
-  A.assert(Math.abs(regular.x-170)<1e-6&&Math.abs(boss.x+192.5)<1e-6&&fly.y===200&&jump.y===-200&&jump.jumpLift===18,'native displacement resistance');out.resistance=true;
+  A.assert(Math.abs(regular.x-180)<1e-6&&Math.abs(boss.x+195)<1e-6&&fly.y===200&&jump.y===-200&&jump.jumpLift===18,'native displacement resistance');out.resistance=true;
+  out.special=[];
+  for(const flag of ['boss','elite','legend','judge']){
+   A.reset();const target=A.spawn(200,0),h=A.watch([target]);target[flag]=true;complete(start());
+   A.assert(Math.abs(target.x-195)<1e-6&&hitsOnly(h).length===1,'quarter initial pull budget or push resistance failed '+flag);out.special.push(flag);
+  }
+  A.reset();const airEdge=A.spawn(300,0),airOutside=A.spawn(301,0);airEdge.flying=airOutside.flying=true;const boundaryHits=A.watch([airEdge,airOutside]);complete(start());
+  A.assert(airEdge.x===300&&airOutside.x===301&&hitsOnly(boundaryHits).length===1,'unpulled airborne damage boundary must remain 300');out.airBoundary=true;
+  A.reset();const farBoss=A.spawn(600,0,true),bossHits=A.watch([farBoss]);complete(start());
+  A.assert(Math.abs(farBoss.x-475)<1e-6&&!hitsOnly(bossHits).length,'resistant outer target was pulled fully or damaged outside 300');out.farBoss={x:farBoss.x,hits:bossHits.length};
+  A.reset();const eased=A.spawn(600,0),easeAction=start(),samples={0:eased.x};
+  for(let i=1;i<=34;i++){A.advance();samples[i]=eased.x}
+  const first=samples[0]-samples[1],middle=samples[17]-samples[18],last=samples[33]-samples[34];
+  A.assert(first>0&&first<middle/3&&last>0&&last<middle/3,'pull must ease in and out instead of moving at constant speed');
+  A.assert(Math.abs(samples[17]+samples[18]-700)<1e-6,'symmetric halfway pull must converge around radius 350');
+  complete(easeAction);A.assert(Math.abs(eased.x-180)<1e-6,'full 500-unit pull failed');out.easing={first,middle,last,samples,totalPull:500};
+  out.frameSteps=[];
+  for(const dt of [.01,1/30,.07]){
+   A.reset();const target=A.spawn(600,0),h=A.watch([target]),action=start();let steps=0;
+   while(A.actions().includes(action)&&steps<40){A.advance(dt);steps++}
+   A.assert(!A.actions().includes(action)&&Math.abs(target.x-180)<1e-6&&hitsOnly(h).length===1,'pull endpoint depends on frame rate '+dt);
+   out.frameSteps.push({dt,steps,x:target.x,hits:h.length});
+  }
+  A.reset();const moving=A.spawn(450,40),movingHits=A.watch([moving]),movingAction=start();moving.spd=60;let nativeUpdates=0;
+  while(A.actions().includes(movingAction)&&nativeUpdates<40){moving.update(.01,p);nativeUpdates++;G.EnemyMgr.rebuildGrid();A.advance()}
+  A.assert(!A.actions().includes(movingAction)&&Math.abs(Math.hypot(moving.x,moving.y)-180)<1e-6&&hitsOnly(movingHits).length===1,'moving native target did not converge to 100 before push');
+  out.moving={nativeUpdates,radius:Math.hypot(moving.x,moving.y),hits:movingHits.length};
   A.reset();const leaving=A.spawn(500,0),valid=A.spawn(-200,0),rangeHits=A.watch([leaving,valid]);const rangeAction=start();leaving.x=650;complete(rangeAction);
   A.assert(leaving.x===650&&rangeAction.pulls.find(v=>v.target===leaving).distance===0&&hitsOnly(rangeHits).length===1,'per-target range revalidation failed');out.targetRange=true;
   A.reset();const blocked=A.spawn(500,0),W=G.World,old=W.projectileBlock;
@@ -62,10 +88,26 @@ CHECK = r"""() => {
    out.cleanup.push(reason);
   }
   A.reset();A.spawn(250,0);const visual=start();
+  const samplePose=()=>{const ctx=document.createElement('canvas').getContext('2d'),draw=G.PainArt.draw,calls=[];
+    G.PainArt.draw=function(ctx,options,...rest){calls.push(options);return draw.call(this,ctx,options,...rest)};
+    try{p.invuln=0;p.draw(ctx)}finally{G.PainArt.draw=draw}
+    return calls.find(c=>c.path==='tendo');};
+  const position={x:p.x,y:p.y},pullPose=P.gravityPoseFor(p),pullDraw=samplePose();
+  A.assert(pullPose.phase==='pull'&&pullDraw.state==='special'&&pullDraw.time===0,'pull must hold the gathering palm pose');
+  A.assert(p.x===position.x&&p.y===position.y,'pose rendering moved actual player');
   const c=document.createElement('canvas'),ctx=c.getContext('2d'),arcs=[],arc=ctx.arc.bind(ctx);ctx.arc=(...args)=>{arcs.push(args[2]);return arc(...args)};
   G.Combat.drawGroundFields(ctx);A.assert(arcs.includes(600)&&arcs.includes(300),'pull visual must mark outer 600 and inner 300');
   complete(visual);const e=P.effects.find(f=>f.kind==='push');A.assert(e,'native push visual missing');arcs.length=0;
-  G.Combat.drawAirFields(ctx);A.assert(arcs.includes(300),'push visual radius differs from actual 300');out.visualRadius=300;
+  const pushPose=P.gravityPoseFor(p),pushDraw=samplePose();
+  A.assert(pushPose.phase==='push'&&pushDraw.state==='special'&&pushDraw.time===.125,'push must hold the release palm pose');
+  const previousCur=p.anim.cur;p.anim.cur='Hurt';
+  try{A.assert(samplePose().state==='hurt','gravity pose suppressed native hurt')}finally{p.anim.cur=previousCur}
+  const portrait=G.UI.spriteCanvas(30010,64,64),poseFor=P.gravityPoseFor;let uiPoseCalls=0;
+  P.gravityPoseFor=function(...args){uiPoseCalls++;return poseFor.apply(this,args)};
+  try{p.anim.draw(portrait.getContext('2d'),32,48)}finally{P.gravityPoseFor=poseFor}
+  A.assert(G.Naruto.isPreview(portrait)&&uiPoseCalls===0,'gravity pose leaked into portrait');
+  A.finish(.4);A.assert(!P.gravityPoseFor(p),'release pose did not finish');out.pose=true;
+  G.PainSkillVFX.gravity.effect(ctx,{...e,age:0});A.assert(arcs.includes(300),'push visual radius differs from actual 300');out.visualRadius=300;
   return out;
  } finally {p.moves=moves;A.reset()}
 }"""

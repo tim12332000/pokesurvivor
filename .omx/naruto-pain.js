@@ -5,6 +5,7 @@
   const required={missiles:'asura',summon:'animal',soul:'human'};
   const visualHeights=Object.freeze({tendo:80,asura:84,animal:70,human:82,preta:74,naraka:78});
   const visualHeight=(path,owner)=>visualHeights[path]*(owner?.anim?.scale||1);
+  const smoothStep=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:2,animal:2,human:2,preta:2,naraka:2}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
   const ready=b=>alive(b)&&b.formed&&b.protectionRemaining<=0;
   const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0;
@@ -195,7 +196,7 @@
     if(k==='gravity') {
       f.target=targets.find(special)||targets[0];
       f.immediate=false;f.phase='pull';
-      f.pulls=targets.map(target=>({target,distance:0}));
+      f.pulls=targets.map(target=>({target,distance:0,pullDistance:Math.max(0,dist(f.owner,target)-(f.m.pullRadius??100))}));
     }
     if(k==='missiles') {
       f.targets=targets;f.baseCount=f.m.quantityBaseCount??[10,10,12,14,16][rank(f.m)];f.count=Math.min(60,G.Quantity?.countAtCast(f.owner,f.m,f.baseCount)??f.baseCount);family.lastCount=f.count;
@@ -333,12 +334,13 @@
     f.age+=dt;const k=f.kind;
     if(k==='gravity') {
       if(!f.immediate&&f.age-dt<.35) {
-        const pullTime=Math.min(dt,.35-(f.age-dt));
+        const previous=smoothStep((f.age-dt)/.35),progress=smoothStep(f.age/.35),step=progress-previous;
         for(const entry of f.pulls) {
           const e=entry.target;
           if(!alive(e)||!grounded(e)||dist(f.owner,e)>(f.m.triggerRadius||600)||!clearPath(f.owner.x,f.owner.y,e.x,e.y))continue;
-          const d=dist(f.owner,e),pull=Math.min(Math.max(0,d-90),110-entry.distance,110/.35*pullTime*(special(e)?.25:1));
-          toward(e,f.owner,pull);entry.distance+=pull;
+          const remaining=Math.max(0,dist(f.owner,e)-(f.m.pullRadius??100));
+          const pull=special(e)?Math.min(remaining,Math.max(0,entry.pullDistance*.25-entry.distance),entry.pullDistance*.25*step):remaining*Math.min(1,step/Math.max(1e-9,1-previous));
+          const x=e.x,y=e.y;toward(e,f.owner,pull);entry.distance+=Math.hypot(e.x-x,e.y-y);
         }
         G.EnemyMgr.rebuildGrid();
       }
@@ -612,6 +614,16 @@
   }
   function actionsFor(owner){return family?.actions.filter(f=>f.owner===owner)||[];}
   function activeFor(owner){return actionsFor(owner).find(f=>!f.body)||null;}
+  function gravityPoseFor(owner) {
+    if(!valid(owner)||!currentFamily(root(owner)))return null;
+    const pull=actionsFor(owner).find(f=>f.kind==='gravity');
+    const push=effects.find(f=>f.kind==='push'&&f.owner===owner&&f.world===G.World);
+    if(!pull&&!push)return null;
+    const facing=Math.cos(owner.aim||0)<0?-1:1;
+    if(pull){const progress=Math.min(1,pull.age/.35),tension=Math.sin(Math.PI*progress);return {phase:'pull',age:pull.age,state:'special',time:0,offsetX:-facing*2*tension,offsetY:1.5*tension};}
+    const release=Math.min(1,push.age/.3),settle=smoothStep(release);
+    return {phase:'push',age:push.age,state:release<.8?'special':'idle',time:release<.8?.125:0,offsetX:facing*3*(1-settle),offsetY:-1.5*Math.sin(Math.PI*release)};
+  }
   function stateFor(owner) {
     const s=family;if(!s||root(owner)!==s.owner||s.world!==G.World)return null;
     return {...s,action:activeFor(owner)||s.actions[0]||null,actors:s.bodies,bodies:s.bodies,shots:shots.filter(p=>p.owner===owner).length,count:s.lastCount,basicCooldown:timers.get(owner)||0};
@@ -806,7 +818,7 @@
   G.Player.prototype.hurt=function(...args){if(currentFamily(this)&&family.playerProtection>0)return;return originalHurt.apply(this,args);};
   G.Player.prototype.heal=function(...args){if(currentFamily(this)&&this.dead)return;return originalHeal.apply(this,args);};
   G.Player.prototype.onDealt=function(...args){if(currentFamily(this)&&this.dead)return;return originalOnDealt.apply(this,args);};
-  G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,stateFor,snapshot,canRevivePlayer,playerReviveState,speedMultiplier,visualHeights,visualHeight,survivalConfig,planetVisual,
+  G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,gravityPoseFor,stateFor,snapshot,canRevivePlayer,playerReviveState,speedMultiplier,visualHeights,visualHeight,survivalConfig,planetVisual,
     actors:()=>family?.bodies.filter(ready)||[],actorsFor:owner=>root(owner)===family?.owner?family.bodies:[],
     drawables:cam=>family?.bodies.filter(a=>a.formed&&cam.sees(a.x,a.y,Math.max(100,visualHeight(a.path,a.sourceOwner)+12)))||[],
     get shots(){return shots;},get effects(){return effects;},absorbable};

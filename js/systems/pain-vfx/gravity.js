@@ -1,118 +1,91 @@
-/* Universal Pull / Almighty Push: presentation only; hit timing lives in NarutoPain. */
+/* Pull gathers smoothly; the full-radius flash marks the instantaneous native hit. */
 (() => {
   const TAU = Math.PI * 2;
   const clamp = n => Math.max(0, Math.min(1, n));
-
+  const easeOut = n => 1 - Math.pow(1 - clamp(n), 3);
   function ground(ctx, f) {
     if (!f.owner) return;
-    const radius = f.m?.radius || 300;
-    ctx.save();
-    ctx.translate(f.owner.x, f.owner.y);
-    ctx.globalAlpha = .32;
-    ctx.strokeStyle = '#b9a9c6';
-    ctx.lineWidth = 1;
-    // The outer ring marks pull reach; the inner ring marks the later push hit.
+    const radius = f.m?.radius || 300, progress = clamp((f.age || 0) / .35);
+    const tension = Math.sin(progress * Math.PI);
+    ctx.save();ctx.translate(f.owner.x, f.owner.y);
+    ctx.strokeStyle = '#b9a9c6';ctx.lineWidth = 1;
     const rings = f.phase === 'pull' ? [radius, f.m?.triggerRadius || 600] : [radius];
     for (const reach of rings) {
-      ctx.globalAlpha = reach === radius ? .32 : .22;
+      ctx.globalAlpha = (reach === radius ? .25 : .16) * (.65 + .35 * tension);
       for (let i = 0; i < 12; i++) {
         const a = i * TAU / 12;
-        ctx.beginPath();
-        ctx.arc(0, 0, reach, a, a + .11);
-        ctx.stroke();
+        ctx.beginPath();ctx.arc(0, 0, reach, a, a + .13);ctx.stroke();
       }
+    }
+    // Small ground arcs mark gathering distance without obscuring targets.
+    ctx.globalAlpha = .12 + .15 * tension;
+    for (let i = 0; i < 4; i++) {
+      const a = i * TAU / 4 + progress * .12;
+      ctx.beginPath();ctx.arc(0, 0, f.m?.pullRadius ?? 100, a, a + .27);ctx.stroke();
     }
     ctx.restore();
   }
-
   function action(ctx, f) {
     if (f.phase !== 'pull' || !f.owner) return;
-    const age = Math.max(0, f.age || 0);
-    const progress = clamp(age / .35);
-    const reach = f.m?.triggerRadius || 600;
-    const pulls = f.pulls || (f.target ? [{ target: f.target, distance: 0 }] : []);
-    // Every pulled enemy gets a short inward trail, with a fixed three-dash
-    // budget per target. No particles or target state are created while drawing.
-    for (const entry of pulls) {
-      const e = entry.target;
-      if (!e || e.dead || !(e.hp > 0) || e.flying || e.jumpLift > 0 || e.jumpT > 0 || entry.distance >= 110) continue;
-      const dx = e.x - f.owner.x, dy = e.y - f.owner.y;
-      const distance = Math.hypot(dx, dy);
-      if (distance <= 90 || distance > reach || !G.World.projectilePathClear(f.owner.x, f.owner.y, e.x, e.y)) continue;
-      trail(ctx, f.owner, dx, dy, distance, progress);
+    const progress = clamp((f.age || 0) / .35),reach = f.m?.triggerRadius || 600;
+    const gather = f.m?.pullRadius ?? 100,pulls = f.pulls || [];
+    for (let i = 0; i < pulls.length; i++) {
+      const e = pulls[i].target;
+      if (!e || e.dead || !(e.hp > 0) || e.flying || e.jumpLift > 0 || e.jumpT > 0) continue;
+      const dx = e.x - f.owner.x,dy = e.y - f.owner.y,distance = Math.hypot(dx, dy);
+      if (distance <= gather || distance > reach || !G.World.projectilePathClear(f.owner.x, f.owner.y, e.x, e.y)) continue;
+      inwardTrail(ctx, f.owner, dx, dy, distance, progress, i);
     }
+    // Pressure collects at the palm, disappearing on the native release frame.
+    const tension = Math.sin(progress * Math.PI),facing = Math.cos(f.owner.aim || 0) < 0 ? -1 : 1;
+    const height = G.NarutoPain?.visualHeight('tendo', f.owner) || 80;
+    ctx.save();ctx.translate(f.owner.x + facing * 15, f.owner.y - height * .48);
+    ctx.globalAlpha = .55 * tension;ctx.strokeStyle = '#cdb8df';ctx.lineWidth = 1.5;
+    ctx.beginPath();ctx.arc(0, 0, 10 - 3 * progress, -.8, 2.5);ctx.stroke();
+    ctx.globalAlpha = .22 * tension;ctx.fillStyle = '#ded1e7';ctx.fillRect(-2, -2, 4, 4);ctx.restore();
   }
-
-  function trail(ctx, owner, dx, dy, distance, progress) {
-    ctx.save();
-    ctx.translate(owner.x, owner.y - 15);
-    ctx.rotate(Math.atan2(dy, dx));
-    ctx.lineWidth = 2;
-    // Short moving dashes converge on the caster; there is deliberately no tether beam.
-    for (let i = 0; i < 3; i++) {
-      const travel = (i / 3 + progress * 1.65) % 1;
-      const x = distance * (1 - travel);
-      const side = ((i % 3) - 1) * (9 + x * .055);
-      const strong = i % 3 === 0;
-      ctx.globalAlpha = Math.max(.4, (.25 + .48 * Math.sin(travel * Math.PI)) * (1 - progress * .25));
-      ctx.beginPath();
-      ctx.moveTo(Math.round(x + 12), Math.round(side * 1.12));
-      ctx.lineTo(Math.round(x + 5), Math.round(side));
-      ctx.lineTo(Math.round(x), Math.round(side * .85));
-      if (strong) {
-        const tipY = Math.round(side * .85);
-        ctx.moveTo(Math.round(x + 4), tipY - 3);
-        ctx.lineTo(Math.round(x), tipY);
-        ctx.lineTo(Math.round(x + 4), tipY + 3);
-        ctx.strokeStyle = '#34323b';
-        ctx.lineWidth = 3;
-        ctx.stroke();
-      }
-      ctx.strokeStyle = strong ? '#e0d9e2' : '#b7b1bf';
-      ctx.lineWidth = strong ? 1.5 : 2;
-      ctx.stroke();
+  function inwardTrail(ctx, owner, dx, dy, distance, progress, seed) {
+    const height = G.NarutoPain?.visualHeight('tendo', owner) || 80;
+    ctx.save();ctx.translate(owner.x, owner.y - height * .35);ctx.rotate(Math.atan2(dy, dx));ctx.lineCap = 'round';
+    for (let i = 0; i < 2; i++) {
+      const travel = (progress * 1.65 + i * .5 + (seed % 5) * .07) % 1;
+      const fade = Math.pow(Math.sin(travel * Math.PI), 2) * Math.sin(progress * Math.PI);
+      const x = 24 + (distance + 20) * (1 - travel),bend = (i ? -1 : 1) * (5 + (seed % 3) * 3);
+      const y = bend * Math.sin(travel * Math.PI),length = 19 + 14 * Math.sin(travel * Math.PI);
+      ctx.globalAlpha = .72 * fade;ctx.strokeStyle = '#d9ccdf';ctx.lineWidth = 1.5;
+      ctx.beginPath();ctx.moveTo(x + length, y + bend * .3);
+      ctx.quadraticCurveTo(x + length * .45, y - bend * .2, x, y);ctx.stroke();
+      ctx.globalAlpha = .22 * fade;ctx.strokeStyle = '#a699b6';ctx.lineWidth = 3;ctx.stroke();
     }
-    ctx.globalAlpha = .5;
-    ctx.strokeStyle = '#c5b2d4';
-    ctx.beginPath();
-    ctx.arc(7, 0, 10 - progress * 4, -.9, .9);
-    ctx.stroke();
     ctx.restore();
   }
-
   function effect(ctx, e) {
-    const radius = e.m?.radius || 300;
-    const t = clamp((e.age || 0) / (e.life || .3));
+    const radius = e.m?.radius || 300,age = e.age || 0,t = clamp(age / (e.life || .3));
     if (t >= 1) return;
-    const fade = 1 - t;
-    ctx.save();
-    ctx.translate(e.x, e.y);
-    // Damage already hit the whole radius at age zero. Keep this rim at the hit radius;
-    // expanding debris is an aftermath, never a delayed travelling damage front.
-    ctx.globalAlpha = .68 * fade;
-    ctx.strokeStyle = '#e2dce6';
-    ctx.lineWidth = 1 + 3 * fade;
-    ctx.beginPath();
-    ctx.arc(0, 0, radius, 0, TAU);
-    ctx.stroke();
+    const fade = Math.pow(1 - t, 2),release = easeOut(age / .12);
+    ctx.save();ctx.translate(e.x, e.y);
+    // Flash the entire real hit radius now; moving arcs below are aftermath.
+    ctx.globalAlpha = .72 * Math.exp(-age / .075);ctx.strokeStyle = '#e6dfe9';ctx.lineWidth = 1 + 3 * (1 - release);
+    ctx.beginPath();ctx.arc(0, 0, radius, 0, TAU);ctx.stroke();
+    ctx.globalAlpha = .23 * fade;ctx.lineWidth = 1.5;
+    for (let i = 0; i < 8; i++) {
+      const a = i * TAU / 8 + .1;
+      ctx.beginPath();ctx.arc(0, 0, radius * (.2 + .8 * release), a, a + .34);ctx.stroke();
+    }
     for (let i = 0; i < 16; i++) {
-      const a = i * TAU / 16 + .06 * (i % 3);
-      const d = 32 + (i % 4) * 23 + t * (15 + (i % 3) * 8);
-      ctx.globalAlpha = fade * (i % 2 ? .43 : .62);
-      ctx.strokeStyle = i % 2 ? '#b4aaa0' : '#d6d0dc';
-      ctx.lineWidth = i % 3 === 0 ? 3 : 2;
-      ctx.beginPath();
-      ctx.moveTo(Math.round(Math.cos(a) * d), Math.round(Math.sin(a) * d));
-      ctx.lineTo(Math.round(Math.cos(a) * Math.min(radius, d + 12)), Math.round(Math.sin(a) * Math.min(radius, d + 12)));
-      ctx.stroke();
+      const a = i * TAU / 16 + .035 * (i % 3),head = 72 + (i % 4) * 15 + release * (55 + (i % 3) * 8);
+      const tail = head - (18 + (i % 3) * 7) * (1 - t),side = (i % 2 ? -1 : 1) * 3;
+      ctx.globalAlpha = fade * (i % 2 ? .35 : .6);ctx.strokeStyle = i % 2 ? '#b9b0a8' : '#ded4e1';ctx.lineWidth = i % 3 === 0 ? 2.5 : 1.5;
+      ctx.beginPath();ctx.moveTo(Math.cos(a) * tail, Math.sin(a) * tail);
+      ctx.quadraticCurveTo(Math.cos(a) * (tail + head) / 2 - Math.sin(a) * side,
+        Math.sin(a) * (tail + head) / 2 + Math.cos(a) * side, Math.cos(a) * head, Math.sin(a) * head);ctx.stroke();
       if (i % 2 === 0) {
-        const dust = 108 + t * 29;
-        ctx.fillStyle = '#978d7b';
-        ctx.fillRect(Math.round(Math.cos(a) * dust), Math.round(Math.sin(a) * dust - Math.sin(t * Math.PI) * 5), 3, 3);
+        const dust = 95 + release * (50 + i % 3 * 8);
+        ctx.globalAlpha = .38 * fade;ctx.fillStyle = '#a69a86';
+        ctx.fillRect(Math.round(Math.cos(a) * dust), Math.round(Math.sin(a) * dust - Math.sin(t * Math.PI) * 6), 3, 2);
       }
     }
     ctx.restore();
   }
-
   (G.PainSkillVFX ||= {}).gravity = { action, effect, ground };
 })();
