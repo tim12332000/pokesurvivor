@@ -144,7 +144,12 @@
     };
     const setActive = G.Player.prototype.setActive;
     G.Player.prototype.setActive = function() {
+      const previous = this.active;
       const result = setActive.apply(this, arguments);
+      if (this.dex === 30002 && this.active !== previous) {
+        entry(this.anim).cast = null;
+        this.comboT = 0; this.attackFace = 0;
+      }
       const cast = states.get(this.anim)?.cast;
       if (cast && !this.activeGroup().some(m => m.id === cast.id)) entry(this.anim).cast = null;
       return result;
@@ -161,8 +166,13 @@
       if(rasengan?.owner?.anim===anim)return {...base,state:'skill',id:'naruto-naruto',phase:rasengan.phase,key:'naruto-rasengan',frame:rasengan.phase==='charge'?(rasengan.phaseAge/Math.max(.01,rasengan.m.charge)<.4?0:1):rasengan.phase==='dash'?2:3,mirror:Math.cos(rasengan.aim)<0};
       const chidori = G.NarutoChidori?.activeFor?.(pl) || G.NarutoChidori?.active;
       if (chidori?.owner?.anim === anim) {
-        const progress = 1 - chidori.wait / Math.max(.001, chidori.move.charge || .09);
-        return { ...base, state: 'skill', id: 'naruto-sasuke', phase: chidori.phase, key: 'sasuke-chidori', frame: chidori.phase === 'charge' ? Math.min(1, Math.max(0, Math.floor(progress * 2))) : chidori.phase === 'return' ? 3 : 2, mirror: Math.cos(pl.aim) < 0 };
+        if (chidori.phase === 'charge') {
+          const elapsed = Math.max(0, chidori.move.charge - chidori.wait);
+          // Four authored foot poses per 40 world units, measured after collision.
+          const moving = chidori.chargeMoving;
+          return { ...base, state: 'skill', id: 'naruto-sasuke', phase: 'charge', key: moving ? 'sasuke-chidori-charge-walk' : 'sasuke-chidori-charge', frame: moving ? Math.floor(chidori.chargeDistance / 10) % 4 : Math.floor(elapsed * 12) % 4, mirror: Math.cos(pl.aim) < 0 };
+        }
+        return { ...base, state: 'skill', id: 'naruto-sasuke', phase: chidori.phase, key: 'sasuke-chidori', frame: chidori.phase === 'return' ? 3 : 2, mirror: Math.cos(pl.aim) < 0 };
       }
       const fire = G.NarutoFireball?.activeFor?.(pl) || G.NarutoFireball?.active;
       if (fire?.owner?.anim === anim) return { ...base, state: 'skill', id: 'naruto-fireball', phase: fire.phase, key: 'sasuke-fireball', frame: fire.phase === 'seal' ? Math.min(1, Math.floor(fire.t / .24 * 2)) : fire.phase === 'recovery' ? 3 : 2, mirror: Math.cos(fire.aim) < 0 };

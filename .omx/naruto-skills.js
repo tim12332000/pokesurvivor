@@ -126,7 +126,7 @@
       ups: clones.counts.slice(1).map(count=>({t:`分身基礎數量 → ${count} 隻；每隻完整傷害`,m:{}}))
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
-      mode: 'chidori-chain', icon:'chidori', type: 'electric', cd: 1.05, dmg: 44, charge: .09,
+      mode: 'chidori-chain', icon:'chidori', type: 'electric', cd: 1.05, dmg: 44, charge: .5,
       minCooldown: G.NarutoChidori.config.minCooldown,
       range: 170, radius: 170, width: 34, knock: 50,
       vis: { proj: 'bolt', melee: 'claw', pal: 'naruto-blue' },

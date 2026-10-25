@@ -91,7 +91,7 @@ G.Player = class Player {
     const s = this.baseSpd * this.spdMul * (1 + this.buffs.spd.n * this.buffs.spd.amount) * (this.slowT > 0 ? 0.5 : 1);
     const w = G.Weather.speedFor(this.mon.types);
     const slow = this.inLiquid ? G.World.liquidEffect(this.mon.types).slow || 1 : 1;
-    return s * slow * w * (G.NarutoTenten?.speedMultiplier(this) ?? 1) * (G.NarutoPain?.speedMultiplier(this) ?? 1);
+    return s * slow * w * (G.NarutoChidori?.activeFor(this)?.phase === 'charge' ? .6 : 1) * (G.NarutoTenten?.speedMultiplier(this) ?? 1) * (G.NarutoPain?.speedMultiplier(this) ?? 1);
   }
   get reduction() { return Math.min(0.8, this.dmgReduce + this.buffs.def.n * this.buffs.def.amount + (G.NarutoPain?.damageReductionBonus(this) ?? 0)); }
   get regen() { return this.regenFlat + this.buffs.regen.n * this.buffs.regen.amount; }

@@ -1,7 +1,7 @@
 /* Level-based Chidori pursuit is this edition's gameplay adaptation. */
 (() => {
   if (G.NarutoChidori) return;
-  const config = Object.freeze({ counts: Object.freeze([5,10,15,20,25]), minCooldown: .5, followupRangeMultiplier: 3, endInvulnerability: .3, flashDuration: .09,
+  const config = Object.freeze({ counts: Object.freeze([5,7,10,13,15]), minCooldown: .5, followupRange: 340, endInvulnerability: .3, flashDuration: .09,
     speed: 1000, speedStep: .15, maxSpeedMultiplier: 3, damageStep: .05,
     retargetDelay: .045, retargetDelayDecay: .85, minRetargetDelay: .012, screenPadding: 48, returnDuration: .12, step: 4 });
   const limitOf = (move,owner=G.Game.player) => {
@@ -34,15 +34,16 @@
   }
   const targetAlive = e => e && !e.dead && e.hp > 0 && G.EnemyMgr.all().includes(e);
   const inViewport = (e,camera) => Math.abs(e.x-camera.x)<=G.Camera.w/2+config.screenPadding && Math.abs(e.y-camera.y)<=G.Camera.h/2+config.screenPadding;
-  const rangeFor = c => c.move.range * (c.hitCount ? config.followupRangeMultiplier : 1);
+  const rangeFor = c => c.hitCount ? config.followupRange : c.move.range;
+  const rangeOrigin = c => c.hitCount ? c.origin : (c.dashOrigin || c.owner);
   function next(c) {
     const pl = c.owner;
-    const candidates=G.EnemyMgr.all().filter(e => targetAlive(e) && inViewport(e,c.camera) && e!==c.lastTarget && (!pl.sourceOwner || Math.hypot(e.x-pl.sourceOwner.x,e.y-pl.sourceOwner.y)<=(G.SelfClones?.leash?.soft??Infinity)) && Math.hypot(e.x-pl.x,e.y-pl.y) <= rangeFor(c))
+    const candidates=G.EnemyMgr.all().filter(e => targetAlive(e) && inViewport(e,c.camera) && e!==c.lastTarget && (!pl.sourceOwner || Math.hypot(e.x-pl.sourceOwner.x,e.y-pl.sourceOwner.y)<=(G.SelfClones?.leash?.soft??Infinity)) && Math.hypot(e.x-rangeOrigin(c).x,e.y-rangeOrigin(c).y) <= rangeFor(c))
       .sort((a,b) => Math.hypot(a.x-pl.x,a.y-pl.y)-Math.hypot(b.x-pl.x,b.y-pl.y));
     return pl!==G.Game.player&&!c.hitCount&&candidates.includes(pl.target)?pl.target:candidates[0];
   }
   const lockedTargetValid = c => targetAlive(c.target) && inViewport(c.target,c.camera) &&
-    Math.hypot(c.target.x-(c.dashOrigin?.x??c.owner.x),c.target.y-(c.dashOrigin?.y??c.owner.y)) <= (c.legRange||rangeFor(c));
+    Math.hypot(c.target.x-rangeOrigin(c).x,c.target.y-rangeOrigin(c).y) <= rangeFor(c);
   function aimAt(c, target, initial=false) {
     if (!target || c.dashes >= c.limit) { end(c); return; }
     c.target=target;c.dashOrigin=null;c.legRange=rangeFor(c);
@@ -54,7 +55,8 @@
   }
   function begin(c) {
     if (!lockedTargetValid(c)) { aimAt(c,next(c)); return; }
-    c.legRange=rangeFor(c);c.dashOrigin={x:c.owner.x,y:c.owner.y};
+    if (!c.dashes) c.origin={x:c.owner.x,y:c.owner.y};
+    c.legRange=c.hitCount ? config.followupRange*2 : rangeFor(c);c.dashOrigin={x:c.owner.x,y:c.owner.y};
     c.speed=config.speed*Math.min(config.maxSpeedMultiplier,1+c.hitCount*config.speedStep);
     c.dashes++;c.travel=0;c.phase='dash';
     flashes.set(c.owner,{owner:c.owner,world:c.world,dashes:c.dashes,age:0,
@@ -125,7 +127,7 @@
   function cast(pl,m) {
     if(!canCast(pl,m))return false;
     const c={owner:pl,world:G.World,move:{...m,digiVis:{...m.digiVis}},limit:limitOf(m,pl),attack:pl.atk,hitCount:0,lastTarget:null,dashes:0,trail:0,
-      origin:{x:pl.x,y:pl.y},camera:{x:G.Camera.x,y:G.Camera.y},
+      origin:{x:pl.x,y:pl.y},camera:{x:G.Camera.x,y:G.Camera.y},chargeDistance:0,chargeMoving:false,
       speed:config.speed,retargetDelay:config.retargetDelay,phase:'charge',wait:Math.max(0,m.charge||0)};
     const first=next(c);if(!first)return false;
     aimAt(c,first,true);
@@ -150,6 +152,13 @@
     const c=activeFor(this);
     if(c&&!valid(c))clear(this);
     if(!activeFor(this))return playerUpdate.call(this,dt);
+    if(c.phase==='charge'){
+      const x=this.x,y=this.y,result=playerUpdate.call(this,dt);
+      const distance=Math.hypot(this.x-x,this.y-y);
+      c.chargeMoving=distance>.001;
+      c.chargeDistance+=distance;
+      return result;
+    }
     const frozen=this.frozen,x=this.x,y=this.y;this.frozen=true;this.svx=this.svy=0;
     // Dash movement owns position, including passage through solid scenery.
     try{return playerUpdate.call(this,dt);}finally{this.x=x;this.y=y;this.frozen=frozen;}
@@ -166,6 +175,9 @@
     const chain=activeFor(G.Game.player);
     if(chain&&!valid(chain))clear(G.Game.player);
     const result=follow.apply(this,args);
+    if(valid(chain)&&chain.phase==='charge'){
+      chain.camera={x:G.Camera.x,y:G.Camera.y};return result;
+    }
     if(valid(chain))holdCamera(chain);
     return result;
   };

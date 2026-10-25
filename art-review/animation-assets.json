@@ -7702,5 +7702,141 @@
     "mirrorDirections": [
       "left"
     ]
+  },
+  "sasuke-chidori-charge": {
+    "source": "redrawn/sasuke-chidori-charge-v3.png",
+    "bodyHeight": 390,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          543,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          1086,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          1629,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 390
+      }
+    ]
+  },
+  "sasuke-chidori-charge-walk": {
+    "source": "redrawn/sasuke-chidori-walk-v1.png",
+    "bodyHeight": 390,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          543,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          1086,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          1629,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 390
+      }
+    ]
   }
 }

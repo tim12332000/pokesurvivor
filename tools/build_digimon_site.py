@@ -43,6 +43,7 @@ review_runtime.extend(['.omx/naruto/portraits/pain.png', '.omx/naruto/portraits/
 assert sources == {
     'redrawn/naruto-common-v1.png', 'redrawn/naruto-skills-v2.png',
     'redrawn/sasuke-common-v1.png', 'redrawn/sasuke-skills-v2.png',
+    'redrawn/sasuke-chidori-charge-v3.png', 'redrawn/sasuke-chidori-walk-v1.png',
     'redrawn/one-tail-v2.png',
     'redrawn/lee-common-v1.png', 'redrawn/lee-skills-v1.png',
     'redrawn/lee-gates-common-v1.png', 'redrawn/lee-gates-skills-v1.png',
