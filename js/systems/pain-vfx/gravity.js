@@ -11,30 +11,46 @@
     ctx.globalAlpha = .32;
     ctx.strokeStyle = '#b9a9c6';
     ctx.lineWidth = 1;
-    // Sparse perimeter ticks expose the real radial hit area without a filled disc.
-    for (let i = 0; i < 12; i++) {
-      const a = i * TAU / 12;
-      ctx.beginPath();
-      ctx.arc(0, 0, radius, a, a + .11);
-      ctx.stroke();
+    // Keep the pull reach distinct from the smaller push hit area.
+    const rings = f.phase === 'pull' ? [radius, Math.min(240, f.m?.range || 240)] : [radius];
+    for (const reach of rings) {
+      ctx.globalAlpha = reach === radius ? .32 : .22;
+      for (let i = 0; i < 12; i++) {
+        const a = i * TAU / 12;
+        ctx.beginPath();
+        ctx.arc(0, 0, reach, a, a + .11);
+        ctx.stroke();
+      }
     }
     ctx.restore();
   }
 
   function action(ctx, f) {
-    if (f.phase !== 'pull' || !f.owner || !f.target) return;
+    if (f.phase !== 'pull' || !f.owner) return;
     const age = Math.max(0, f.age || 0);
-    const dx = f.target.x - f.owner.x, dy = f.target.y - f.owner.y;
-    const distance = Math.min(240, Math.hypot(dx, dy));
-    if (distance < 4) return;
     const progress = clamp(age / .35);
+    const reach = Math.min(240, f.m?.range || 240);
+    const pulls = f.pulls || (f.target ? [{ target: f.target, distance: 0 }] : []);
+    // Every pulled enemy gets a short inward trail, with a fixed three-dash
+    // budget per target. No particles or target state are created while drawing.
+    for (const entry of pulls) {
+      const e = entry.target;
+      if (!e || e.dead || !(e.hp > 0) || e.flying || e.jumpLift > 0 || e.jumpT > 0 || entry.distance >= 110) continue;
+      const dx = e.x - f.owner.x, dy = e.y - f.owner.y;
+      const distance = Math.hypot(dx, dy);
+      if (distance <= 90 || distance > reach || !G.World.projectilePathClear(f.owner.x, f.owner.y, e.x, e.y)) continue;
+      trail(ctx, f.owner, dx, dy, distance, progress);
+    }
+  }
+
+  function trail(ctx, owner, dx, dy, distance, progress) {
     ctx.save();
-    ctx.translate(f.owner.x, f.owner.y - 15);
+    ctx.translate(owner.x, owner.y - 15);
     ctx.rotate(Math.atan2(dy, dx));
     ctx.lineWidth = 2;
     // Short moving dashes converge on the caster; there is deliberately no tether beam.
-    for (let i = 0; i < 9; i++) {
-      const travel = (i / 9 + progress * 1.65) % 1;
+    for (let i = 0; i < 3; i++) {
+      const travel = (i / 3 + progress * 1.65) % 1;
       const x = distance * (1 - travel);
       const side = ((i % 3) - 1) * (9 + x * .055);
       const strong = i % 3 === 0;

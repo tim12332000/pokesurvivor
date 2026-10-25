@@ -193,7 +193,8 @@
     f.body=b;f.target=targets[0];f.phase='prepare';f.hit=new Set();f.emitted=0;
     if(k==='gravity') {
       f.target=targets.find(e=>dist(f.owner,e)<=80)||targets.find(special)||targets[0];
-      f.immediate=targets.some(e=>dist(f.owner,e)<=80);f.phase=f.immediate?'push':'pull';f.pulled=0;
+      f.immediate=targets.some(e=>dist(f.owner,e)<=80);f.phase=f.immediate?'push':'pull';
+      f.pulls=targets.map(target=>({target,distance:0}));
     }
     if(k==='missiles') {
       f.targets=targets;f.baseCount=f.m.quantityBaseCount??[5,5,6,7,8][rank(f.m)];f.count=Math.min(30,G.Quantity?.countAtCast(f.owner,f.m,f.baseCount)??f.baseCount);family.lastCount=f.count;
@@ -330,10 +331,15 @@
     if(!frameActive(f)||!selected(f.owner,f.m)||(f.body&&(!ready(f.body)||(f.kind==='soul'&&f.body.retreating)))){cancelRequest(f);finish(f);return;}
     f.age+=dt;const k=f.kind;
     if(k==='gravity') {
-      if(!f.immediate&&f.age-dt<.35&&alive(f.target)&&grounded(f.target)&&clearPath(f.owner.x,f.owner.y,f.target.x,f.target.y)) {
+      if(!f.immediate&&f.age-dt<.35) {
         const pullTime=Math.min(dt,.35-(f.age-dt));
-        const d=dist(f.owner,f.target),pull=Math.min(Math.max(0,d-90),110-f.pulled,110/.35*pullTime*(special(f.target)?.25:1));
-        toward(f.target,f.owner,pull);f.pulled+=pull;G.EnemyMgr.rebuildGrid();
+        for(const entry of f.pulls) {
+          const e=entry.target;
+          if(!alive(e)||!grounded(e)||dist(f.owner,e)>Math.min(240,f.m.range||240)||!clearPath(f.owner.x,f.owner.y,e.x,e.y))continue;
+          const d=dist(f.owner,e),pull=Math.min(Math.max(0,d-90),110-entry.distance,110/.35*pullTime*(special(e)?.25:1));
+          toward(e,f.owner,pull);entry.distance+=pull;
+        }
+        G.EnemyMgr.rebuildGrid();
       }
       if(f.immediate||f.age>=.35) {
         f.x=f.owner.x;f.y=f.owner.y;
