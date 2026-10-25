@@ -7,7 +7,7 @@ from test_rock_lee import SETUP
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'.omx/state/lee-gates-health'
-URL='http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&test=lee-gates-health'
+URL='http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&layout=wide&test=lee-gates-health'
 
 HELPERS=r"""() => {
  const A=Acceptance,p=A.p();A.leeArena();p.level=6;p.xp=0;p.xpNext=G.Player.xpFor(6);p.maxHp=260;p.hp=260;
@@ -44,7 +44,8 @@ MIXED=r"""() => {
  const A=Acceptance,p=A.p(),N=A.healthNear,g=G.NarutoGates;p.hp=100;
  A.healthCard('new:naruto-gates');N(p.maxHp,266);N(p.hp,106);
  A.healthCard('stat:maxHealthPercent');N(p.maxHp,292.6);N(p.hp,132.6);
- A.healthCard('stat:hp');N(p.maxHp,312.6);N(p.hp,152.6);
+ // Flat health grants still compose with Gates; the old Vigor selection card is retired.
+ p.addMaxHp(20);N(p.maxHp,312.6);N(p.hp,152.6);
  A.healthCard('up:naruto-gates');N(p.maxHp,318.6);N(p.hp,158.6);
  A.nextHealthLevel();N(p.maxHp,320.6);N(p.hp,160.6);
  A.healthCard('stat:maxHealthPercent');N(p.maxHp,352.66);N(p.hp,192.66);
@@ -52,7 +53,7 @@ MIXED=r"""() => {
  const move=p.moves.find(m=>m.id==='naruto-gates');p.hp=100;move.lvl=4;G.Combat.updateFields(0);
  N(p.maxHp,366.66);N(p.hp,107);p.level=8;G.Combat.updateFields(0);N(p.maxHp,370.66);N(p.hp,111);
  for(let n=0;n<10000;n++)g.syncMaxHealth(p);N(p.maxHp,370.66);N(p.hp,111);
- return {max:p.maxHp,hp:p.hp,level:p.level,skill:move.lvl,gateBonus:g.maxHealthBonus(p),flatCards:1,growthCards:p.statsTaken.maxHealthPercent};
+ return {max:p.maxHp,hp:p.hp,level:p.level,skill:move.lvl,gateBonus:g.maxHealthBonus(p),flatGrants:1,growthCards:p.statsTaken.maxHealthPercent};
 }"""
 
 def main():
@@ -79,7 +80,7 @@ def main():
                   const A=Acceptance,p=A.p();A.leeArena();p.maxHp=260;p.hp=130;p.level=30;p.xp=0;p.xpNext=G.Player.xpFor(30);
                   G.NarutoGates.syncMaxHealth(p);p.gainXp((p.xpNext+.0001)/p.xpMul);A.assert(p.maxHp===260&&p.hp===130&&G.NarutoGates.maxHealthBonus(p)===0,'Gates capacity leaked to Sasuke');
                   let card;for(let n=0;n<150&&!card;n++)card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:maxHealthPercent');A.assert(card,'shared health growth missing');card.apply(p);
-                  A.assert(Math.abs(p.maxHp-262.6)<1e-8&&Math.abs(p.hp-132.6)<1e-8,'shared growth changed on non-Lee');return {max:p.maxHp,hp:p.hp};
+                  A.assert(Math.abs(p.maxHp-286)<1e-8&&Math.abs(p.hp-156)<1e-8,'shared growth changed on non-Lee');return {max:p.maxHp,hp:p.hp};
                 }""")
                 ctx.close()
             browser.close()

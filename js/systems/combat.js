@@ -666,6 +666,7 @@ G.Combat = (() => {
         if (p.slow) e.applySlow(p.slow);
 
         if (!p.orb) {
+          if(G.NinjaToolBounce?.redirectProjectile(p,e))break;
           if (p.pierce > 0) { p.pierce--; }
           else if(p.fumaReturn) { p.fumaSpent=true;if(!p.back)p.boom=p.t;break; }
           else {

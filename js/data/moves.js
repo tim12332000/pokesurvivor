@@ -541,9 +541,11 @@
   function evoInfo(m, statsTaken) {
     const e = EVO[m.id];
     if (!e || m.evolved || m.lvl < m.def.maxLvl || !EVO_MODS[m.kind]) return null;
-    const [name, needs] = e;
-    return { name, needs, needName: NEED_NAME[needs], text: EVO_MODS[m.kind].t,
-             ready: !!(statsTaken && statsTaken[needs]) };
+    const [name, legacyNeed] = e;
+    const needs=({hp:'maxHealthPercent',rgn:'lifesteal'})[legacyNeed]||legacyNeed;
+    const needName=({maxHealthPercent:'生命成長',lifesteal:'吸血'})[needs]||NEED_NAME[needs];
+    return { name, needs, needName, text: EVO_MODS[m.kind].t,
+             ready: !!(statsTaken && (statsTaken[needs]||statsTaken[legacyNeed])) };
   }
 
   /** Evoluciona una instancia (cambia nombre y potencia; sigue siendo del mismo tipo). */

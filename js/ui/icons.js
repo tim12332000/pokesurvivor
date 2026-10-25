@@ -177,6 +177,8 @@ G.Icons = (() => {
     cards: { pal: { a: '#ffd23f', b: '#4fb4ff', w: '#e6f4ff' }, rows: [
       '............', '.kkkkkk.....', '.kaaaaakkkk.', '.kaaaakbbbbk', '.kaaaakbwwbk', '.kaaaakbwwbk',
       '.kaaaakbbbbk', '.kaaaakbwwbk', '.kkkkkkbwwbk', '......kbbbbk', '......kkkkkk', '............'] },
+    rationPill: { pal: { b: '#9c613a', d: '#5d3528', w: '#e1b77b', r: '#ba6650' }, rows: [
+      '............', '..kkkk......', '.kwbbdk.....', 'kwbbbbdk....', 'kbbbbbddk...', '.kbbbddk....', '..kkkk..kk..', '.......kwrk.', '..kk..krrrdk', '.kwbk.krrddk', '.kbdk..kddk.', '..kk....kk..'] },
     berry: { pal: { r: '#ff7a9e', s: '#c23a6b', w: '#ffd3e0', g: '#5fe08a', d: '#2f9a52' }, rows: [
       '............', '.....kkk....', '....kgggk...', '..kkkgdkkk..', '.krrrkkrrrk.', 'krwwrrrrrrsk',
       'krwrrrrrrrsk', 'krrrrrrrrrsk', 'krrrrrrrrssk', '.krrrrrrssk.', '..kkssssskk.', '....kkkkk...'] },

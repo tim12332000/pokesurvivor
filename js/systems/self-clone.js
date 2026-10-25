@@ -122,6 +122,7 @@
     actor.level = owner.level; actor.cdMul = owner.cdMul; actor.critChance = owner.critChance;
     actor.quantityPicks = owner.quantityPicks; actor.quantityBonus = owner.quantityBonus;
     actor.giantPicks = owner.giantPicks; actor.damageSplashPicks = owner.damageSplashPicks;
+    actor.ninjaToolBouncePicks = owner.ninjaToolBouncePicks || 0;
     actor.percentHealthDamage = (owner.percentHealthDamage || 0) * ratio;
     actor.lifestealRate = owner.lifestealRate || 0; actor.frozen = owner.frozen;
     const moves = owner.moves;

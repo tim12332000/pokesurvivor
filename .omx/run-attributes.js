@@ -3,7 +3,7 @@
   const percent = value => Math.round(value * 1000) / 10;
   const labels = {
     hp: n => `生命 +${20*n}`,
-    giant: n => `巨人 ×${n}（體積/生命 ×${Math.round((G.Giant?.size ?? 1.25)**n*100)/100}）`,
+    giant: n => `倍化之術 ×${n}（體積/生命 ×${Math.round((G.Giant?.size ?? 1.25)**n*100)/100}）`,
     selfClone: (n, pl) => `分身 ${G.SelfClones?.actors().filter(a=>a.sourceOwner===pl).length||0} 隻（已召喚 ${n} 次）`,
     maxHealthPercent: n => `生命成長 +${Math.round((G.MaxHealthPercent?.perPick ?? .1)*100)}% ×${n}`,
     atk: n => `攻擊 +${percent(1.1**n-1)}%`,
@@ -13,6 +13,7 @@
     rgn: n => `回血 +${Math.round(.9*n*10)/10}/秒`,
     mag: n => `拾取 +${percent(1.3**n-1)}%`,
     xp: n => `經驗 +${percent(1.12**n-1)}%`,
+    ninjaToolBounce: n => `忍具連彈 +${n} 次`,
     quantity: (n, pl) => pl.quantityPicks != null ? `數量 ×${Math.round((G.Quantity?.multiplier(pl)||1)*100)/100}` : `數量 +${pl.quantityBonus||0}`,
     damageSplash: (n, pl) => `傷害擴散 ${Math.round((G.DamageSplash?.rate(pl)||0)*100)}%`,
     lifesteal: (n, pl) => `吸血 ${percent(pl.lifestealRate||0)}%`,

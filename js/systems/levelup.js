@@ -7,8 +7,6 @@
 G.LevelUp = (() => {
 
   const STATS = [
-    { id: 'hp',   icon: 'heart', title: 'Vigor',        desc: '+20 de vida máxima (y la recupera).',
-      apply: pl => pl.addMaxHp(20) },
     { id: 'atk',  icon: 'fist', title: 'Potencia',     desc: '+10% de daño con todos los movimientos.',
       apply: pl => pl.atkMul *= 1.10, max: 40 },
     { id: 'spd',  icon: 'boot', title: 'Carrera',      desc: '+7% de velocidad de movimiento.',
@@ -17,13 +15,11 @@ G.LevelUp = (() => {
       apply: pl => pl.cdMul *= 0.92, max: 10 },
     { id: 'def',  icon: 'shield', title: 'Coraza',       desc: '+6% de reducción de daño recibido.',
       apply: pl => pl.dmgReduce = Math.min(0.7, pl.dmgReduce + 0.06), max: 12 },
-    { id: 'rgn',  icon: 'sprout', title: 'Síntesis',     desc: '+0.9 de vida regenerada por segundo.',
-      apply: pl => pl.regenFlat += 0.9 },
     { id: 'mag',  icon: 'magnet', title: 'Imán',         desc: '+30% de radio de recogida de experiencia.',
       apply: pl => pl.magnet *= 1.30, max: 6 },
     { id: 'xp',   icon: 'book', title: 'Aprendizaje',  desc: '+12% de experiencia ganada.',
       apply: pl => pl.xpMul *= 1.12, max: 8 },
-    { id: 'heal', icon: 'berry', title: 'Baya Zidra',   desc: 'Recupera el 45% de tu vida ahora mismo.',
+    { id: 'heal', icon: 'rationPill', title: '軍糧丸',   desc: 'Recupera el 45% de tu vida ahora mismo.',
       apply: pl => pl.heal(pl.maxHp * 0.45) }
   ];
 
@@ -89,7 +85,7 @@ G.LevelUp = (() => {
     // acumulaban sin fin (velocidad, recarga y experiencia por las nubes) y el
     // juego acababa colgándose. Las que piden una evolución salen siempre.
     const room = s => !s.max || (pl.statsTaken[s.id] || 0) < s.max;
-    const pickStats = STATS.filter(s => room(s) || waiting[s.id]);
+    const pickStats = STATS.filter(s => (!s.eligible || s.eligible(pl)) && (room(s) || waiting[s.id]));
     for (const s of pickStats) {
       const evoFor = waiting[s.id];
       out.push({

@@ -29,10 +29,11 @@
   }
   const rangeBonus = (owner,m) => m.tentenRangeBonusAtCast ?? mastery(owner).range;
   const rangeFor = (owner,m) => (m.range||300)+rangeBonus(owner,m);
-  function bounceCount(owner) {
+  function nativeBounceCount(owner) {
     const skill=owner?.moves?.find(m=>m.id==='naruto-tenten-bounce');
     return skill ? Math.max(1,Math.floor(skill.lvl||1))+(G.Quantity?.bonus(owner)||0) : 0;
   }
+  const bounceCount=owner=>nativeBounceCount(owner)+(G.NinjaToolBounce?.count(owner)||0);
   function clearPath(ax,ay,bx,by,r=1,targetProp=null) {
     const n = Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/6));
     for(let i=1;i<=n;i++) {
@@ -260,7 +261,7 @@
       speed,range,travel:0,damage:m.dmg*owner.atk*b.power,r:(m.size|| (mode==='tenten-fuma'?7:3))*(appearance?.scale||1),mode,volley:b,appearance,
       hits:new Set(),phits:new Set(),pierce:Math.max(0,m.pierce||0)+(mode==='tenten-kunai'?master.pierce:0),side,
       bounceRange:160+rangeBonus(owner,m),
-      seed:i,back:false,spent:false,bounces:b.bounces,bounced:0,visited:new Set(),chainTarget:null,chaining:false,
+      seed:i,back:false,spent:false,bounces:b.bounces,cardBounces:b.cardBounces,cardOnly:b.nativeBounces===0,cardLeg:false,bounced:0,visited:new Set(),chainTarget:null,chaining:false,
       trail:i<24?[]:null};
     if(mode==='tenten-twin'&&!clearPath(owner.x,owner.y,o.x,o.y,w.r))w.dead=true;
     if(mode==='tenten-fuma') {
@@ -292,7 +293,8 @@
     const b={owner,world:G.World,m,mode,kind:mode,age:0,duration:mode==='tenten-twin'?1.05:.3,
       aim:Math.atan2(list[0].y-owner.y,list[0].x-owner.x),targets:list,count,emitted:0,phase:'release',started:s.clock};
     b.power=mode!=='tenten-kunai'&&s.chargeUntil>s.clock ? 1.3 : 1;
-    b.bounces=bounceCount(owner);
+    b.cardBounces=G.NinjaToolBounce?.eligibleMove(m.id)?G.NinjaToolBounce.count(owner):0;
+    b.nativeBounces=nativeBounceCount(owner);b.bounces=b.nativeBounces+b.cardBounces;
     if(b.power>1){s.chargeUntil=0;s.release={started:s.clock,aim:b.aim,mode,id:m.id};if(owner===G.Game.player)G.Audio?.sfx('shot',{kind:'buff',type:'steel'});}
     if(mode!=='tenten-kunai'||!s.pose||s.pose.mode==='tenten-kunai')s.pose=b; s.lastCount=count;s.counts[mode]=count;s.castCounts[mode]=(s.castCounts[mode]||0)+1;
     // Four simultaneous sub-batches span .6 seconds even with thousands of tools.
@@ -323,8 +325,11 @@
   function redirect(w,spend=true) {
     if(spend&&w.bounces<=0)return false;
     const range=spend?w.bounceRange:Math.max(0,w.range-w.travel);
+    const nativeAllowed=spend?w.bounces-w.cardBounces>0:!w.cardLeg;
+    const cardAllowed=spend?w.cardBounces>0:w.cardLeg;
+    const nativeTarget=e=>(w.mode==='tenten-twin'&&e.boss)||(!e.boss&&!e.elite&&!e.legend&&!e.judge);
     const list=[...new Set(G.EnemyMgr.queryCircle(w.x,w.y,range))].filter(e=>alive(e)&&
-      ((w.mode==='tenten-twin'&&e.boss)||(!e.boss&&!e.elite&&!e.legend&&!e.judge))&&
+      ((nativeAllowed&&nativeTarget(e))||(cardAllowed&&!w.visited.has(e)))&&
       Math.hypot(e.x-w.x,e.y-w.y)<=range);
     // Reach new enemies first; remaining hops may revisit a surviving target.
     list.sort((a,b)=>Number(w.visited.has(a))-Number(w.visited.has(b)) ||
@@ -332,7 +337,11 @@
     // Only test farther candidates when the nearer ones are actually blocked.
     const target=list.find(e=>clearPath(w.x,w.y,e.x,e.y,w.r));
     if(!target)return false;
-    if(spend){w.bounces--;w.bounced++;w.travel=0;w.range=w.bounceRange;w.bounceAt={x:w.x,y:w.y};w.bounceFlash=.16;}
+    if(spend){
+      w.cardLeg=cardAllowed&&!w.visited.has(target)&&(!nativeAllowed||!nativeTarget(target));
+      if(w.cardLeg)w.cardBounces--;
+      w.bounces--;w.bounced++;w.travel=0;w.range=w.bounceRange;w.bounceAt={x:w.x,y:w.y};w.bounceFlash=.16;
+    }
     // Only reopen the selected victim, once per paid hop, with a repeat interval.
     w.repeatDelay=w.visited.has(target) ? .08 : 0;
     w.hits.delete(target.id??target);
@@ -389,7 +398,10 @@
       if(w.bounces>0||w.chaining) {
         w.x=sx+(x-sx)*t;w.y=sy+(y-sy)*t;triggerTags(w,sx,sy,w.x,w.y);
         if(redirect(w))return;
-        if(w.chaining){finishChain(w);return;}
+        if(w.chaining){
+          if(w.cardOnly&&w.mode!=='tenten-fuma'&&w.pierce>0){w.chaining=false;w.chainTarget=null;}
+          else{finishChain(w);return;}
+        }
       }
       if(w.pierce>0)w.pierce--;
       else if(w.mode==='tenten-fuma')w.spent=true;

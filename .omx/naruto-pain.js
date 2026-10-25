@@ -158,6 +158,7 @@
   function basic(owner,m) {
     const target=nearby(owner,m.range||280)[0];if(!target)return false;
     const f=frame(owner,m),base=m.quantityBaseCount??[5,5,6,7,8][rank(m)],count=Math.min(40,G.Quantity?.countAtCast(owner,f.m,base)??base);
+    f.toolBounceCount=G.NinjaToolBounce?.count(owner)||0;
     family.lastCount=count;
     const aim=Math.atan2(target.y-owner.y,target.x-owner.x);
     batches.push({...f,kind:'rod',angle:aim,count,emitted:0,interval:Math.min(.08,.32/Math.max(1,count-1)),range:m.range||280});
@@ -384,7 +385,8 @@
       f.age+=dt;
       while(f.emitted<f.count&&f.age+1e-9>=f.emitted*f.interval) {
         if(shots.filter(p=>p.kind==='rod').length<40) {
-          shots.push({...f,kind:'rod',x:f.owner.x,y:f.owner.y,angle:f.angle+(f.emitted-(f.count-1)/2)*.025,speed:440,distance:0,r:3,age:0});
+          shots.push({...f,kind:'rod',x:f.owner.x,y:f.owner.y,angle:f.angle+(f.emitted-(f.count-1)/2)*.025,speed:440,distance:0,r:3,age:0,
+            toolBounce:G.NinjaToolBounce?.create(f.owner,f.m.id,f.toolBounceCount)});
           visualEffect(f,'rod-launch',.12,{x:f.owner.x,y:f.owner.y,angle:f.angle});
         }
         f.emitted++;
@@ -394,6 +396,7 @@
     for(let i=shots.length-1;i>=0;i--) {
       const p=shots[i];if(!frameActive(p)||p.world!==G.World){shots.splice(i,1);continue;}
       const previousAge=p.age;p.age+=dt;let flightDt=dt;
+      if(p.kind==='rod')G.NinjaToolBounce?.aimRod(p);
       if(p.kind==='missile') {
         if(p.phase==='rise') {
           p.lift=90*Math.min(1,p.age/.22);
@@ -420,8 +423,11 @@
         } else {
           p.x=x;p.y=y;p.distance+=travel/n;
           if(p.kind==='missile')p.lift=Math.max(0,p.diveLift*(1-(p.distance-p.diveStart)/p.diveDistance));
-          const e=candidates.find(e=>alive(e)&&(p.kind!=='missile'||p.lift<=18)&&dist(p,e)<=p.r+(e.r||8));
-          if(e){if(p.kind==='rod')hit(p,e,p.m.dmg,p,true);gone=true;}
+          const e=candidates.find(e=>alive(e)&&!p.toolBounce?.seen.has(e)&&(p.kind!=='missile'||p.lift<=18)&&dist(p,e)<=p.r+(e.r||8));
+          if(e){if(p.kind==='rod'){
+            hit(p,e,p.m.dmg,p,true);const angle=p.angle;
+            if(G.NinjaToolBounce?.redirectRod(p,e)){visualEffect(p,'rod-hit',.18,{x:e.x,y:e.y,angle});break;}
+          }gone=true;}
         }
       }
       if(p.distance>=p.range-1e-8)gone=true;

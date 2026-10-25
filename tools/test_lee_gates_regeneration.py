@@ -7,7 +7,7 @@ from test_rock_lee import SETUP
 
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'.omx/state/lee-gates-regeneration'
-URL='http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&test=lee-gates-regeneration'
+URL='http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&layout=wide&test=lee-gates-regeneration'
 
 STAGES=r"""() => {
  const A=Acceptance,p=A.p(),out={stages:[]},near=(a,b)=>Math.abs(a-b)<1e-7;
@@ -34,12 +34,12 @@ STAGES=r"""() => {
  p.level=29;p.xp=0;p.xpNext=G.Player.xpFor(29);p.gainXp((p.xpNext+.001)/p.xpMul);
  A.assert(p.level===30&&p.maxHp===1150&&near(p.regen,(4+1150*.05)*1.8),'player level did not update capacity/regeneration bonus immediately');
  p.regenFlat=0;p.hp=100;A.regenUpdate(1);A.assert(near(p.hp,203.5),'N5 LV30 should regenerate 9% of the new maximum HP per second');out.level30Innate=103.5;
- p.regenFlat=4;let hpCard;for(let n=0;n<150&&!hpCard;n++)hpCard=G.LevelUp.offer(p,100).find(c=>c.key==='stat:hp');
+ p.regenFlat=4;let hpCard;for(let n=0;n<150&&!hpCard;n++)hpCard=G.LevelUp.offer(p,100).find(c=>c.key==='stat:maxHealthPercent');
  A.assert(hpCard,'max HP stat card missing');p.hp=100;hpCard.apply(p);
- A.assert(p.maxHp===1170&&p.hp===120,'maximum HP card was incorrectly healing-multiplied');
- const afterHp=(4+1170*.05)*1.8;A.assert(near(p.regen,afterHp),'max HP card did not change innate regeneration immediately');
- A.regenUpdate(1);A.assert(near(p.hp,120+afterHp),'max HP scaling did not use actual new maximum');out.maxHpCard={maxHp:p.maxHp,perSecond:afterHp};
- p.addBuff('regen',2,100,1);p.hp=100;const buffed=(6+1170*.05)*1.8;A.regenUpdate(1);
+ A.assert(p.maxHp===1265&&p.hp===215,'maximum HP card was incorrectly healing-multiplied');
+ const afterHp=(4+1265*.05)*1.8;A.assert(near(p.regen,afterHp),'max HP card did not change innate regeneration immediately');
+ A.regenUpdate(1);A.assert(near(p.hp,215+afterHp),'max HP scaling did not use actual new maximum');out.maxHpCard={maxHp:p.maxHp,perSecond:afterHp};
+ p.addBuff('regen',2,100,1);p.hp=100;const buffed=(6+1265*.05)*1.8;A.regenUpdate(1);
  A.assert(near(p.hp-100,buffed)&&p.buffs.regen.n===1,'existing regeneration buff did not compose once');p.buffs.regen.n=0;out.buffPerSecond=buffed;
  p.hp=p.maxHp-1;A.regenUpdate(1);A.assert(p.hp===p.maxHp,'innate regeneration exceeded maximum HP');out.cap=true;
  G.Combat.clearFields(p);p.hp=100;A.regenUpdate(1);A.assert(near(p.hp-100,afterHp),'clearFields disabled learned regeneration');out.clearSafe=true;

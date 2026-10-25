@@ -25,6 +25,8 @@ G.Projectiles = (() => {
       orb: false, rehit: 0.34, hitLog: null, phits: null
     }, o);
     if (p.friendly && !p.orb && !p.phits) p.phits = new Set();
+    if(p.friendly&&!p.orb&&!p.ghost&&!p.digiBomb&&!p.fireballAOE)
+      p.toolBounce=G.NinjaToolBounce?.create(p.owner,p.mid);
     list.push(p);
     return p;
   }
@@ -42,6 +44,7 @@ G.Projectiles = (() => {
   function update(dt, player, enemies) {
     for (let i = list.length - 1; i >= 0; i--) {
       const p = list[i];
+      if(p.toolBounce&&p.toolBounce.world!==G.World){list.splice(i,1);continue;}
       p.t += dt;
       if(p.fireballAOE&&(!p.owner||(p.owner!==player&&!G.SelfClones?.isActor(p.owner))||p.owner.dead||p.owner.hp<=0)){list.splice(i,1);continue;}
       if(p.fumaReturn&&(!p.owner||(p.owner!==player&&!G.SelfClones?.isActor(p.owner))||p.owner.dead||p.owner.hp<=0||(p.fumaLearned&&!p.owner.hasMove('naruto-fuma-shuriken')))) { list.splice(i,1);continue; }
@@ -96,7 +99,8 @@ G.Projectiles = (() => {
       }
 
       // Teledirigido: curva la velocidad hacia el enemigo más cercano.
-      if (p.homing > 0 && p.friendly) {
+      G.NinjaToolBounce?.aimProjectile(p);
+      if (p.homing > 0 && p.friendly && !p.ninjaToolTarget) {
         const tg = nearest(enemies, p.x, p.y, 340);
         if (tg) {
           const [dx, dy] = G.U.norm(tg.x - p.x, tg.cy() - p.y);
