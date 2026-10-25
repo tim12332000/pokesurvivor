@@ -2,10 +2,10 @@
 (() => {
   const TAU = Math.PI * 2;
   const clamp = n => Math.max(0, Math.min(1, n));
-  const radius = 150;
 
   function ground(ctx, f) {
     if (!f.owner) return;
+    const radius = f.m?.radius || 300;
     ctx.save();
     ctx.translate(f.owner.x, f.owner.y);
     ctx.globalAlpha = .32;
@@ -81,12 +81,13 @@
   }
 
   function effect(ctx, e) {
+    const radius = e.m?.radius || 300;
     const t = clamp((e.age || 0) / (e.life || .3));
     if (t >= 1) return;
     const fade = 1 - t;
     ctx.save();
     ctx.translate(e.x, e.y);
-    // Damage already hit the whole radius at age zero. Keep this rim at 150;
+    // Damage already hit the whole radius at age zero. Keep this rim at the hit radius;
     // expanding debris is an aftermath, never a delayed travelling damage front.
     ctx.globalAlpha = .68 * fade;
     ctx.strokeStyle = '#e2dce6';

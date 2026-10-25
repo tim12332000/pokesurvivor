@@ -66,8 +66,8 @@ CONCURRENT = r"""() => {
  const A=Acceptance,p=A.p(),out={};A.reset();
  const es=[A.spawn(70,0),A.spawn(85,18),A.spawn(85,-18),A.spawn(-500,400)],hits=es.map(e=>A.watch([e]));
  for(const b of G.NarutoPain.actors()){b.x=0;b.y=0}
- // Give the instant grasp its own target outside Tendo's repulsion.
- const soulTarget=A.spawn(260,0),soulHits=A.watch([soulTarget]);
+ // An airborne target stays in grasp range during the expanded repulsion.
+ const soulTarget=A.spawn(260,0),soulHits=A.watch([soulTarget]);soulTarget.flying=true;
  G.NarutoPain.actors().find(b=>b.path==='human').x=300;
  A.ready('gravity','missiles','summon','soul');A.advance();
  const simultaneous=A.actions().map(f=>f.kind);

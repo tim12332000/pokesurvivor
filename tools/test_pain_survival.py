@@ -9,28 +9,29 @@ OUT = Path(__file__).resolve().parents[1] / '.omx/state/pain-survival'
 NARAKA_HP = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain,out={};
  const saved={maxHp:p.maxHp,hp:p.hp,moves:p.moves};
- const body=()=>P.actorsFor(p).find(b=>b.path==='naraka');
+ const bodies=()=>P.actorsFor(p);
+ const snapshot=()=>bodies().map(b=>({path:b.path,maxHp:b.maxHp,hp:b.hp,dead:b.dead}));
  try{
-   p.maxHp=p.hp=200;A.reset();let n=body();
-   A.assert(n.maxHp===300&&n.hp===300,'Naraka must spawn at 1.5 times owner maximum HP');
-   const others=P.actorsFor(p).filter(b=>b.path!=='naraka');
-   A.assert(others.every(b=>b.maxHp===200*(['human','preta'].includes(b.path)?.8:.6)),'Naraka HP change affected other bodies');
-   n.hurt(60,null,true);A.assert(n.hp===240,'native Naraka damage fixture failed');
+   p.maxHp=p.hp=200;A.reset();const bs=bodies();
+   A.assert(bs.length===5&&new Set(bs.map(b=>b.path)).size===5,'all five support paths must exist');
+   A.assert(bs.every(b=>b.maxHp===400&&b.hp===400),'every support must spawn at twice owner maximum HP');
+   out.spawn=snapshot();
+   bs.forEach(b=>b.hurt(60,null,true));A.assert(bs.every(b=>b.hp===340),'native support damage fixture failed');
    p.addMaxHp(20);A.advance();
-   A.assert(p.maxHp===220&&n.maxHp===330&&n.hp===270,'native max HP growth failed to preserve Naraka missing health');
-   out.growth={owner:p.maxHp,maxHp:n.maxHp,hp:n.hp,missing:n.maxHp-n.hp};
-   A.finish(.25);A.assert(n.hp===270,'repeated capacity sync duplicated max HP healing');
-   p.maxHp=100;A.advance();A.assert(n.maxHp===150&&n.hp===90,'Naraka shrink failed to preserve missing health');
-   p.maxHp=20;A.advance();A.assert(n.maxHp===30&&n.hp===1,'Naraka shrink did not clamp a living body to one HP');
-   out.shrink={owner:p.maxHp,maxHp:n.maxHp,hp:n.hp};
+   A.assert(p.maxHp===220&&bs.every(b=>b.maxHp===440&&b.hp===380),'native max HP growth failed to preserve support missing health');
+   out.growth={owner:p.maxHp,actors:snapshot()};
+   A.finish(.25);A.assert(bs.every(b=>b.hp===380),'repeated capacity sync duplicated max HP healing');
+   p.maxHp=100;A.advance();A.assert(bs.every(b=>b.maxHp===200&&b.hp===140),'support shrink failed to preserve missing health');
+   p.maxHp=20;A.advance();A.assert(bs.every(b=>b.maxHp===40&&b.hp===1),'support shrink did not clamp a living body to one HP');
+   out.shrink={owner:p.maxHp,actors:snapshot()};
    p.moves=p.moves.filter(m=>m.id!=='naruto-pain-repair');
    A.finish(.5); // Let native damage invulnerability expire before the lethal hit.
-   n.hurt(n.maxHp+1,null,true);A.assert(n.dead,'native Naraka death fixture failed');
+   bs.forEach(b=>b.hurt(b.maxHp+1,null,true));A.assert(bs.every(b=>b.dead),'native support death fixture failed');
    p.maxHp=p.hp=240;A.advance();
-   A.assert(n.dead&&n.maxHp===360,'dead Naraka capacity did not track current owner maximum HP');
+   A.assert(bs.every(b=>b.dead&&b.maxHp===480),'dead support capacity did not track current owner maximum HP');
    A.finish(16.4);
-   A.assert(!n.dead&&n.maxHp===360&&n.hp===360,'Naraka must revive full at the current 1.5 ratio');
-   out.revive={owner:p.maxHp,maxHp:n.maxHp,hp:n.hp,dead:n.dead};
+   A.assert(bs.every(b=>!b.dead&&b.maxHp===480&&b.hp===480),'every support must revive full at the current double HP ratio');
+   out.revive={owner:p.maxHp,actors:snapshot()};
    return out;
  }finally{p.maxHp=saved.maxHp;p.hp=saved.hp;p.moves=saved.moves;A.reset()}
 }"""
@@ -49,7 +50,7 @@ CHECK = r"""() => {
  let bs=fresh();A.assert(bs.length===5,'initial family must keep five records');
  const initial=bs.map(b=>({path:b.path,hp:b.hp,maxHp:b.maxHp,formed:b.formed,protection:b.protectionRemaining}));
  A.assert(bs.every(b=>b.formed&&b.protectionRemaining>1.4),'initial safe spawn protection missing');
- A.assert(bs.every(b=>b.maxHp===p.maxHp*(b.path==='naraka'?1.5:['human','preta'].includes(b.path)?.8:.6)),'role-specific capacity mismatch');
+ A.assert(bs.every(b=>b.maxHp===p.maxHp*2),'all support capacities must be twice Tendo maximum HP');
  A.spawn(145,0);A.ready('missiles','summon','soul');
  bs.forEach(b=>{zone(b,1000);b.hurt(1000,null,true)});step(.15);
  A.assert(bs.every(b=>b.hp===b.maxHp&&!b.dead&&b.protectionRemaining>1.2),'spawn wiped or hazard erased protection');

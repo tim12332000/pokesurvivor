@@ -64,6 +64,38 @@ CHECK = r"""() => {
  A.reviveFresh();return out;
 }"""
 
+SPEED = r"""() => {
+ const A=Acceptance,p=A.p(),P=G.NarutoPain,out={};
+ A.reviveFresh();const originalSpeed=p.spd,originalMul=p.spdMul,originalSlow=p.slowT;
+ const beforeCards={...p.statsTaken};
+ A.assert(P.speedMultiplier(p)===1,'fresh Pain inherited revive speed');
+ const card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:spd');
+ A.assert(card,'native movement speed card missing');card.apply(p);
+ const normal=p.spd;A.assert(Math.abs(normal-originalSpeed*1.07)<1e-8,'native speed card changed unexpectedly');
+ A.lethal();A.assert(P.speedMultiplier(p)===1,'dead player has revive speed');
+ A.finish(10.9);A.assert(!p.dead&&P.speedMultiplier(p)===2&&Math.abs(p.spd-normal*2)<1e-8,'Naraka rescue did not double effective card speed');
+ out.naraka={normal,revived:p.spd};
+ p.slowT=10;A.assert(Math.abs(p.spd-normal)<1e-8,'revive speed bypassed native half-speed slow');p.slowT=0;
+ G.Combat.updateFields(10);A.assert(P.speedMultiplier(p)===2,'pause consumed revive speed');
+ p.frozen=true;try{A.advance(10);A.assert(P.speedMultiplier(p)===2,'frozen time consumed revive speed')}finally{p.frozen=false}
+ A.finish(5);A.assert(P.speedMultiplier(p)===1&&Math.abs(p.spd-normal)<1e-8,'revive speed did not expire');
+ A.lethal();p.revive(.5);A.assert(P.speedMultiplier(p)===2,'native external revive did not start speed');
+ A.finish(4.9);A.assert(P.speedMultiplier(p)===2,'revive speed ended before five simulation seconds');
+ p.revive(.5);A.assert(Math.abs(p.spd-normal*2)<1e-8,'live revive stacked speed');
+ A.finish(.11);A.assert(P.speedMultiplier(p)===1,'live revive refreshed five-second timer');
+ A.lethal();p.revive(.5);A.finish(.2);A.lethal();
+ A.assert(P.speedMultiplier(p)===1,'second death retained active revive speed');
+ p.revive(.5);A.assert(P.speedMultiplier(p)===2,'second native revive did not renew speed');
+ A.finish(4.9);A.assert(P.speedMultiplier(p)===2,'second revive inherited old expiry');
+ A.finish(.11);A.assert(P.speedMultiplier(p)===1,'second revive speed did not expire');
+ A.lethal();p.revive(.5);const world=G.World;G.World={...world};
+ try{A.assert(P.speedMultiplier(p)===1,'world replacement retained revive speed')}finally{G.World=world}
+ G.Combat.clearFields();A.assert(P.speedMultiplier(p)===1,'field clear retained revive speed');
+ p.spdMul=originalMul;p.slowT=originalSlow;p.statsTaken=beforeCards;A.reviveFresh();
+ A.assert(P.speedMultiplier(p)===1,'new family retained revive speed');
+ return {...out,pause:true,frozen:true,fiveSeconds:true,slow:true,repeat:true,noStack:true,cleanup:true};
+}"""
+
 LIVE_START = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain;A.reviveFresh();
  for(let i=0;i<10;i++){const c=G.LevelUp.offer(p,100).find(c=>c.key==='stat:cd');A.assert(c,'cooldown card absent '+i);c.apply(p)}
@@ -93,6 +125,7 @@ def main():
                 result = report['viewports'][label] = {}
                 print(label, 'deterministic', flush=True)
                 result['checks'] = page.evaluate(CHECK)
+                result['speed'] = page.evaluate(SPEED)
                 result['liveSetup'] = page.evaluate(LIVE_START)
                 outer.wait_for_timeout(1800)
                 result['pastNativeDeathTimer'] = page.evaluate(r"""() => {
@@ -122,6 +155,7 @@ def main():
                 page.wait_for_function('!G.Game.player.dead', timeout=12000)
                 result['nativeRescue'] = page.evaluate(r"""() => {const A=Acceptance,p=A.p();A.pause();
                   A.assert(G.Game.state==='paused'&&p.hp===p.maxHp*.5,'real RAF rescue failed native half health');
+                  A.assert(G.NarutoPain.speedMultiplier(p)===2,'real RAF rescue did not grant doubled movement speed');
                   A.assert((performance.now()-RescueLive.started)/1000>=RescueLive.expected-.1,'real RAF rescue skipped cooldown/animation');
                   return {elapsed:(performance.now()-RescueLive.started)/1000,hp:p.hp,maximum:p.maxHp,state:A.rescue()};
                 }""")
@@ -143,7 +177,9 @@ def main():
                 page.evaluate(HARNESS)
                 result['nonPainStart'] = page.evaluate(r"""() => {const A=Acceptance;A.arena();const p=A.p();
                   A.assert(p.dex===1,'non-Pain starter fixture wrong');A.resume();p.invuln=0;p.hurt(p.maxHp+1,null,true);
-                  A.assert(p.dead&&!G.NarutoPain.canRevivePlayer(p),'non-Pain inherited player rescue');return {dex:p.dex,dead:p.dead};}""")
+                  A.assert(p.dead&&!G.NarutoPain.canRevivePlayer(p),'non-Pain inherited player rescue');
+                  p.revive(.5);A.assert(G.NarutoPain.speedMultiplier(p)===1,'non-Pain native revive inherited doubled speed');
+                  p.invuln=0;p.hurt(p.maxHp+1,null,true);return {dex:p.dex,dead:p.dead};}""")
                 page.wait_for_function('G.Game.state==="over"', timeout=6000)
                 result['nonPainEnd'] = page.evaluate('G.Game.state')
                 context.close()

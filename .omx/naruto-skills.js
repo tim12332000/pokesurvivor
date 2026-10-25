@@ -193,7 +193,7 @@
   profiles.push([30010,'pain','黑棒連射','Six Paths of Pain','01_1321',{
     mode:'pain-basic',passive:true,icon:'painRod',type:'psychic',cd:1.2,dmg:10,
     count:5,range:280,speed:440,size:4,ups:painUps([5,5,6,7,8]),
-    desc:'常駐普攻，不占主動槽。黑棒從天而降，空中預判移動並修正落點，觸地前短暫鎖定，落地時單體命中；快速轉向或瞬移仍可躲開，牆會阻擋。忍具連彈在命中後接續彈向附近敵人。基礎 5／5／6／7／8 根，每根傷害倍率 1／1.2／1.4／1.7／2。數量卡 ×1.25 累乘取整，最多 40 根。修羅／畜生生命為本體 60%，人間／餓鬼 80%，地獄 150%；低血撤回，安全脫戰後恢復至半血。出生／復歸整備 1.5 秒；倒下 16 秒後尋找安全位置復歸。天道倒下時，已現身且存活的地獄道可用閻王救回；兩道都倒下則結束。'
+    desc:'常駐普攻，不占主動槽。黑棒從天而降，空中預判移動並修正落點，觸地前短暫鎖定，落地時單體命中；快速轉向或瞬移仍可躲開，牆會阻擋。忍具連彈在命中後接續彈向附近敵人。基礎 5／5／6／7／8 根，每根傷害倍率 1／1.2／1.4／1.7／2。數量卡 ×1.25 累乘取整，最多 40 根。五具支援道生命皆為天道的 2 倍；低血撤回，安全脫戰後恢復至半血。出生／復歸整備 1.5 秒；倒下 16 秒後尋找安全位置復歸。天道倒下時，已現身且存活的地獄道可用閻王救回；兩道都倒下則結束。'
   }]);
   const temariSource='https://naruto-official.com/it/anime/naruto1/list/01_267';
   const temariDamageUps=(values,ranges=null)=>values.slice(1).map((damage,i)=>({
@@ -475,8 +475,8 @@
   extra.push(
     ['naruto-pain-gravity',[30010],{
       name:'萬象天引・神羅天征',mode:'pain-gravity',icon:'painGravity',type:'psychic',learnLevel:3,passive:true,
-      cd:3,dmg:70,range:240,radius:150,ups:painUps(),
-      desc:'學會後天道自動施放，基礎冷卻 3 秒。80 內有敵人時優先斥開；否則同時牽引施放時 240 內全部有效敵人，無人數上限，每隻最多拉近 110。0.35 秒後以天道目前位置造成半徑 150 的單次群傷。普通敵人推退 80，特殊敵人位移僅 25%；飛行或浮空敵人不受位移，牆會阻擋，施術沒有無敵。',source_url:painSource
+      cd:3,dmg:70,range:600,triggerRadius:600,radius:300,ups:painUps(),
+      desc:'學會後天道自動施放，基礎冷卻 3 秒。600 內有可見有效敵人就直接發動神羅天征，以天道目前位置對 300 內全部有效敵人造成單次群傷並斥開，無人數上限；301～600 的敵人會觸發施術，但不受傷或推開。普通敵人推退 80，特殊敵人位移僅 25%；飛行或浮空敵人不受位移，牆會阻擋，施術沒有無敵。',source_url:painSource
     }],
     ['naruto-pain-missiles',[30010],{
       name:'修羅道・飛彈齊射',mode:'pain-missiles',icon:'painMissile',type:'steel',learnLevel:6,passive:true,
@@ -503,12 +503,12 @@
       name:'地獄道・閻王修復',mode:'pain-repair',icon:'painRepair',type:'psychic',learnLevel:12,
       passive:true,cd:0,dmg:0,repairCooldown:10,
       ups:[9.5,9,8.5,8].map(value=>({t:`修復等待週期 ${value} 秒`,m:{repairCooldown:value}})),
-      desc:'學會即常駐，不占主動槽。地獄道最大生命為天道的 150%，隨本體生命成長同步。有其他支援道倒下才等待 10／9.5／9／8.5／8 秒，再以 0.8 秒閻王演出修復一位，冷卻卡有效。天道倒下時優先救天道，半血復活並保護 2 秒；尚未學此招也能以第一階週期救天道。不能修復自己，不重複復歸、不刷新其他道生命或冷卻。危險位置延後復活，地獄道倒下則救援失敗。',source_url:painSource
+      desc:'學會即常駐，不占主動槽。五具支援道最大生命皆為天道的 2 倍，隨本體生命成長同步。有其他支援道倒下才等待 10／9.5／9／8.5／8 秒，再以 0.8 秒閻王演出修復一位，冷卻卡有效。天道倒下時優先救天道，半血復活並保護 2 秒，復活後 5 秒跑速翻倍；尚未學此招也能以第一階週期救天道。不能修復自己，不重複復歸、不刷新其他道生命或冷卻。危險位置延後復活，地獄道倒下則救援失敗。',source_url:painSource
     }],
     ['naruto-pain-planet',[30010],{
       name:'天道・地爆天星',mode:'pain-planet',icon:'painPlanet',type:'psychic',learnLevel:15,passive:true,
-      cd:18,dmg:240,pulseDamage:30,range:640,radius:640,impactRadius:960,visualScale:1.5,fieldDuration:1.5,ups:painUps(),
-      desc:'黑核吸起岩石凝成月球，再整顆下墜砸地，月球與碎岩演出放大 1.5 倍。牽引半徑 640，1.5 秒內每 0.5 秒傷害一次共三次；撞地震波在 0.6 秒內向外擴散至半徑 960，波前到達時各命中一次。第一階全中基傷 330，基礎冷卻 18 秒。特殊敵人牽引僅 25%，不硬定身。最多一顆，施放後家族引斥技至少恢復 5 秒。',source_url:painSource
+      cd:18,dmg:240,pulseDamage:30,normalImpactHealthRatio:.3,range:640,radius:640,impactRadius:960,visualScale:1.5,fieldDuration:1.5,ups:painUps(),
+      desc:'黑核吸起岩石凝成月球，再整顆下墜砸地。牽引半徑 640，1.5 秒內每 0.5 秒傷害一次共三次，前置傷害另算；撞地震波在 0.6 秒內向外擴散至半徑 960，各命中一次。小怪落地傷害固定為最大生命 30%＋施放時攻擊力，不受暴擊、屬性或天氣倍率影響；首領維持原傷害，第一階全中基傷 330。基礎冷卻 18 秒。特殊敵人牽引僅 25%，不硬定身。最多一顆，施放後家族引斥技至少恢復 5 秒。',source_url:painSource
     }]
   );
   extra.push(

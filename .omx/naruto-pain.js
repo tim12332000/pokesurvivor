@@ -5,13 +5,14 @@
   const required={missiles:'asura',summon:'animal',soul:'human'};
   const visualHeights=Object.freeze({tendo:80,asura:84,animal:70,human:82,preta:74,naraka:78});
   const visualHeight=(path,owner)=>visualHeights[path]*(owner?.anim?.scale||1);
-  const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:.6,animal:.6,human:.8,preta:.8,naraka:1.5}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
+  const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:2,animal:2,human:2,preta:2,naraka:2}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
   const ready=b=>alive(b)&&b.formed&&b.protectionRemaining<=0;
   const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
   const controlled=a=>a===G.Game.player||!!G.SelfClones?.isActor(a);
   const valid=a=>alive(a)&&controlled(a)&&a.mon?.dex===30010;
   const currentFamily=owner=>!!family&&family.owner===owner&&owner===G.Game.player&&owner.mon?.dex===30010&&family.world===G.World;
+  const speedMultiplier=owner=>currentFamily(owner)&&alive(owner)&&family.playerSpeedRemaining>0?2:1;
   function canRevivePlayer(owner=G.Game.player) {
     return currentFamily(owner)&&G.Game.state!=='ui'&&G.Game.state!=='over'&&owner.dead&&family.bodies.some(b=>b.path==='naraka'&&alive(b)&&b.formed);
   }
@@ -127,7 +128,7 @@
     const main=root(owner);if(!familyActive(main)||main!==G.Game.player)return null;
     if(family&&(family.owner!==main||family.world!==G.World))clear();
     if(!family) {
-      family={owner:main,world:G.World,bodies:[],clock:0,decision:0,queue:[],actions:[],castCounts:{},absorbCooldown:0,repairCooldown:0,repairWait:0,repair:null,playerRevive:null,playerProtection:0,sharedRecovery:0,intercepted:0,revives:0,lastCount:0};
+      family={owner:main,world:G.World,bodies:[],clock:0,decision:0,queue:[],actions:[],castCounts:{},absorbCooldown:0,repairCooldown:0,repairWait:0,repair:null,playerRevive:null,playerProtection:0,playerSpeedRemaining:0,sharedRecovery:0,intercepted:0,revives:0,lastCount:0};
       for(const [i,path]of paths.entries()){const b=new Body(main,path,i);family.bodies.push(b);if(place(b,main,i))reform(b);}
     }
     return family;
@@ -136,10 +137,10 @@
   function snapshotMove(owner,m) {
     const snap=G.Quantity?.snapshot(owner,m)||{...m};return {...snap,dmg:m.dmg??({basic:10,gravity:70,missiles:22,summon:90,soul:140,planet:240}[kind(m)]||4)};
   }
-  function hit(f,e,base=f.m.dmg,origin=f,singleTarget=false) {
+  function hit(f,e,base=f.m.dmg,origin=f,singleTarget=false,fixedDamage=false) {
     if(!frameActive(f)||f.world!==G.World||!alive(e)||!clearPath(origin.x,origin.y,e.x,e.y))return;
-    const type=f.m.type||'dark',mult=G.Types.mult(type,e.types),crit=Math.random()<(f.owner.critChance||0);
-    const damage=base*f.attack*mult*G.Weather.mult(type)*(crit?1.5:1);
+    const type=f.m.type||'dark',mult=fixedDamage?1:G.Types.mult(type,e.types),crit=!fixedDamage&&Math.random()<(f.owner.critChance||0);
+    const damage=fixedDamage?base:base*f.attack*mult*G.Weather.mult(type)*(crit?1.5:1);
     e.hurt(damage,'#c6addd',e.x-origin.x,e.y-origin.y,0,crit?'crit':G.Types.label(mult),f.owner,f.m.id);
     if(alive(f.owner))f.owner.onDealt?.(damage);f.owner.dmgDealt=(f.owner.dmgDealt||0)+damage;
     if(singleTarget)G.DamageSplash?.hit(f.owner,e,damage,'#c6addd',f.m.id);
@@ -152,7 +153,7 @@
     if(!selected(owner,m)||(m.t||0)>0||s.queue.some(q=>q.owner===owner&&lane(q)===lane({owner,kind:k}))||s.actions.some(f=>f.owner===owner&&lane(f)===lane({owner,kind:k})))return false;
     if(['gravity','planet'].includes(k)&&s.sharedRecovery>0)return false;
     const b=required[k]&&body(required[k]);if(b&&(!ready(b)||(k==='soul'&&b.retreating)||hazardous(b.x,b.y,b.r)))return false;
-    const targets=nearby(b||owner,k==='gravity'?Math.min(240,m.range||240):m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,owner));
+    const targets=nearby(b||owner,k==='gravity'?(m.triggerRadius||600):m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,owner));
     return k==='planet'?!!planetTarget(targets,m.radius||640):targets.length>0;
   }
   function basic(owner,m) {
@@ -188,12 +189,12 @@
   function start(f) {
     const k=f.kind,b=required[k]&&body(required[k]);
     if(!frameActive(f)||!selected(f.owner,f.m)||(b&&(!ready(b)||(k==='soul'&&b.retreating)||hazardous(b.x,b.y,b.r)))||(['gravity','planet'].includes(k)&&family.sharedRecovery>0))return false;
-    const targets=nearby(b||f.owner,k==='gravity'?Math.min(240,f.m.range||240):f.m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,f.owner));
+    const targets=nearby(b||f.owner,k==='gravity'?(f.m.triggerRadius||600):f.m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,f.owner));
     if(!targets.length)return false;
     f.body=b;f.target=targets[0];f.phase='prepare';f.hit=new Set();f.emitted=0;
     if(k==='gravity') {
-      f.target=targets.find(e=>dist(f.owner,e)<=80)||targets.find(special)||targets[0];
-      f.immediate=targets.some(e=>dist(f.owner,e)<=80);f.phase=f.immediate?'push':'pull';
+      f.target=targets.find(e=>dist(f.owner,e)<=(f.m.triggerRadius||600))||targets.find(special)||targets[0];
+      f.immediate=targets.some(e=>dist(f.owner,e)<=(f.m.triggerRadius||600));f.phase=f.immediate?'push':'pull';
       f.pulls=targets.map(target=>({target,distance:0}));
     }
     if(k==='missiles') {
@@ -343,7 +344,7 @@
       }
       if(f.immediate||f.age>=.35) {
         f.x=f.owner.x;f.y=f.owner.y;
-        for(const e of nearby(f,150)){hit(f,e);if(grounded(e)){const d=dist(f,e)||1;move(e,(e.x-f.x)/d*80*(special(e)?.25:1),(e.y-f.y)/d*80*(special(e)?.25:1));}}
+        for(const e of nearby(f,f.m.radius||300)){hit(f,e);if(grounded(e)){const d=dist(f,e)||1;move(e,(e.x-f.x)/d*80*(special(e)?.25:1),(e.y-f.y)/d*80*(special(e)?.25:1));}}
         G.EnemyMgr.rebuildGrid();effects.push({...f,kind:'push',age:0,life:.3});finish(f);
       }
     } else if(k==='missiles') {
@@ -516,6 +517,7 @@
     if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
     const s=ensure();if(!s||s.owner.frozen)return;
     s.clock+=dt;s.sharedRecovery=Math.max(0,s.sharedRecovery-dt);s.playerProtection=Math.max(0,s.playerProtection-dt);
+    s.playerSpeedRemaining=s.owner.dead?0:Math.max(0,s.playerSpeedRemaining-dt);
     if(s.owner.dead)automatic(dt,s.owner);
     updateBodies(dt);updatePassives(dt);for(const f of [...s.actions])updateAction(dt,f);
     for(let i=s.queue.length-1;i>=0;i--)if(s.queue[i].expires<s.clock||!frameActive(s.queue[i])||!selected(s.queue[i].owner,s.queue[i].m)){cancelRequest(s.queue[i]);s.queue.splice(i,1);}
@@ -530,7 +532,11 @@
       if(f.kind==='collapse') {
         if(!frameActive(f)||f.world!==G.World||!selected(f.owner,f.m)){effects.splice(i,1);continue;}
         const radius=(f.m.impactRadius||960)*f.age/f.life;
-        for(const e of nearby(f,radius))if(!f.hit.has(e)){hit(f,e);f.hit.add(e);}
+        for(const e of nearby(f,radius))if(!f.hit.has(e)){
+          const fixedDamage=!(e.boss||e.legend||e.judge);
+          const damage=fixedDamage?e.maxHp*(f.m.normalImpactHealthRatio??.3)+f.attack:f.m.dmg;
+          hit(f,e,damage,f,false,fixedDamage);f.hit.add(e);
+        }
       }
       if(f.age>=f.life)effects.splice(i,1);
     }
@@ -730,7 +736,7 @@
       const name={push:'gravity',explosion:'missiles',soul:'soul','soul-blink':'soul','rod-hit':'basic','rod-launch':'basic','missile-launch':'missiles','summon-hit':'summon','summon-end':'summon',absorb:'absorb','repair-complete':'repair'}[e.kind];
       if(name&&drawSkill(name,'effect',ctx,e))continue;
       if(e.visualOnly)continue;
-      ctx.globalAlpha=1-e.age/e.life;ctx.strokeStyle=e.kind==='explosion'?'#e9ab7c':'#b8a1ce';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.x,e.y,(e.kind==='push'?150:48)*e.age/e.life,0,TAU);ctx.stroke();
+      ctx.globalAlpha=1-e.age/e.life;ctx.strokeStyle=e.kind==='explosion'?'#e9ab7c':'#b8a1ce';ctx.lineWidth=3;ctx.beginPath();ctx.arc(e.x,e.y,e.kind==='push'?(e.m?.radius||300):48*e.age/e.life,0,TAU);ctx.stroke();
     }
     const owner=family.owner;
     if(alive(owner)){
@@ -746,7 +752,7 @@
     for(const f of family.actions) {
       if(f.kind==='planet'){planetGround(ctx,f);drawSkill('planet','ground',ctx,f);continue;}
       if(drawSkill(f.kind,'ground',ctx,f))continue;
-      if(f.kind==='gravity'){ctx.beginPath();ctx.arc(f.owner.x,f.owner.y,150,0,TAU);ctx.stroke();}
+      if(f.kind==='gravity'){ctx.beginPath();ctx.arc(f.owner.x,f.owner.y,f.m.radius||300,0,TAU);ctx.stroke();}
     }
     for(const f of effects)if(f.kind==='collapse'){planetGround(ctx,f);drawSkill('planet','ground',ctx,f);}
     drawSkill('repair','ground',ctx,family);
@@ -757,7 +763,7 @@
     for(const m of moves)m.t=Math.max(0,(m.t||0)-dt);
     // Resolve urgent repulsion first; otherwise reserve Tendo for a worthwhile planet.
     const gravity=moves.find(m=>kind(m)==='gravity'),planet=moves.find(m=>kind(m)==='planet');
-    if(gravity&&nearby(owner,80).length&&canCast(owner,gravity))cast(owner,gravity);
+    if(gravity&&nearby(owner,gravity.triggerRadius||600).length&&canCast(owner,gravity))cast(owner,gravity);
     else if(planet&&canCast(owner,planet))cast(owner,planet);
     else if(gravity&&canCast(owner,gravity))cast(owner,gravity);
     for(const m of moves)if(required[kind(m)]&&canCast(owner,m))cast(owner,m);
@@ -790,10 +796,16 @@
     return result;
   };
   const originalHurt=G.Player.prototype.hurt,originalHeal=G.Player.prototype.heal,originalOnDealt=G.Player.prototype.onDealt;
+  const originalRevive=G.Player.prototype.revive;
+  G.Player.prototype.revive=function(...args){
+    const wasDead=this.dead,result=originalRevive.apply(this,args);
+    if(wasDead&&alive(this)&&currentFamily(this))family.playerSpeedRemaining=5;
+    return result;
+  };
   G.Player.prototype.hurt=function(...args){if(currentFamily(this)&&family.playerProtection>0)return;return originalHurt.apply(this,args);};
   G.Player.prototype.heal=function(...args){if(currentFamily(this)&&this.dead)return;return originalHeal.apply(this,args);};
   G.Player.prototype.onDealt=function(...args){if(currentFamily(this)&&this.dead)return;return originalOnDealt.apply(this,args);};
-  G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,stateFor,snapshot,canRevivePlayer,playerReviveState,visualHeights,visualHeight,survivalConfig,planetVisual,
+  G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,stateFor,snapshot,canRevivePlayer,playerReviveState,speedMultiplier,visualHeights,visualHeight,survivalConfig,planetVisual,
     actors:()=>family?.bodies.filter(ready)||[],actorsFor:owner=>root(owner)===family?.owner?family.bodies:[],
     drawables:cam=>family?.bodies.filter(a=>a.formed&&cam.sees(a.x,a.y,Math.max(100,visualHeight(a.path,a.sourceOwner)+12)))||[],
     get shots(){return shots;},get effects(){return effects;},absorbable};
