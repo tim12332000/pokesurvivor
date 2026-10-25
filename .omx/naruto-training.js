@@ -116,6 +116,10 @@
     // startRun may ask for a second starting attack before all wrappers expose
     // the new player; Temari has no legal second attack at level one.
     if(startingRun&&mon.dex===30011)return ids.filter(id=>!G.Moves.BY_ID[id].learnLevel);
+    if(startingRun&&mon.dex===30002){
+      const milestones=milestonesFor(mon.dex);
+      return ids.filter(id=>!milestones.some(m=>m.id===id&&m.level>1));
+    }
     if(!mon.naruto||mon!==player?.mon||(G.Game.state==='ui'&&!startingRun))return ids;
     const milestones=milestonesFor(mon.dex);
     return ids.filter(id=>!milestones.some(m=>m.id===id&&player.level<m.level));

@@ -130,7 +130,7 @@
       minCooldown: G.NarutoChidori.config.minCooldown,
       range: 170, radius: 170, width: 34, knock: 50,
       vis: { proj: 'bolt', melee: 'claw', pal: 'naruto-blue' },
-      desc:`基礎連續突進 ${G.NarutoChidori.config.counts.join('／')} 次，數量卡每張使追擊次數 ×1.25，累乘後取整；不能連續攻擊同一目標。第二擊起每擊傷害再 ×1.05，速度逐擊加快、最高 ×3；施放時固定鏡頭，僅追擊畫面附近目標，結束返回原位。飛行可穿牆且無敵，返回後無敵 0.3 秒，結印與轉向仍可受傷；再次施放間隔至少 ${G.NarutoChidori.config.minCooldown} 秒。`,
+      desc:`基礎連續突進 ${G.NarutoChidori.config.counts.join('／')} 次，數量卡每張使追擊次數 ×1.25，累乘後取整；不能連續攻擊同一目標。第二擊起每擊傷害再 ×1.05，速度逐擊加快、最高 ×3；施放時固定鏡頭，僅追擊畫面附近目標，結束返回原位。突進可穿牆；突進、連擊間轉向與返回期間無敵，返回後無敵 0.3 秒，起手結印仍可受傷；再次施放間隔至少 ${G.NarutoChidori.config.minCooldown} 秒。`,
       ups: G.NarutoChidori.config.counts.slice(1).map((count,index)=>({
         t: `基礎追擊次數 → ${count} 次；${['傷害 +20%','冷卻 -10%','攻擊範圍 +12%','傷害 +25%'][index]}`,
         m: [{dmg:1.2},{cd:.9},{radius:1.12,width:1.12,life:1.12,range:170*1.12},{dmg:1.25}][index]
@@ -247,7 +247,7 @@
       source_url:'https://naruto-official.com/en/news/01_1296'
     }],
     ['naruto-fireball', [30002, 30008], {
-      icon:'greatFireball', name: '火遁・豪火球之術', mode: 'shot', type: 'fire', cd: 2.3, dmg: 49,
+      icon:'greatFireball', name: '火遁・豪火球之術', mode: 'shot', type: 'fire', cd: 2.3, dmg: 49, learnLevel:3,
       speed: 300, life: 1.4, size: 52, range: 420, burn: .12,
       fireballAOE:true, fireballTick:.2,
       fireballGrowth: {startRatio:.2,endRatio:1.4,distance:300},
@@ -275,7 +275,7 @@
       desc:'常駐被動，不占主動槽。可見敵人靠近 80 距離時自動開卷，0.12 秒後掃開周圍普通敵人並攔截普通敵彈，再獲得 1.5 秒疾退加速。五階半徑 100／110／120／130／140，擊退 70／80／90／100／110，加速 +15／20／25／30／35%。護身陣基礎冷卻 8 秒，冷卻縮減有效、最低 3 秒。另外常駐一枚護身符，移動接觸後擋下一發來襲飛行彈，包含 Boss 飛行彈，獨立固定冷卻 3 秒。護符五階索敵 180／200／220／240／260，移速為角色有效移速加 240；不擋光束、地面、環繞或明確不可攔截攻擊，不穿牆。兩者均不造成傷害，護身陣不擊退首領與精英；數量卡不增加護符。招名與機制為本作改編。',source_url:tentenSource
     }],
     ['naruto-sharingan', [30002], {
-      name:'寫輪眼・進化', mode:'sharingan-evolution', passive:true, type:'psychic', cd:0, dmg:0,
+      name:'寫輪眼・進化', mode:'sharingan-evolution', passive:true, type:'psychic', cd:0, dmg:0, learnLevel:5,
       range:320,
       vis:{pal:'naruto-red'},
       desc:'常駐被動，學會即生效、不占主動槽。五階效果累加：閃避 +5%、拾取範圍 +20%；閃避反擊手裏劍、反擊傷害 +35%；遠程彈道 +1；牽引後留下本局永久黑炎，每秒傷害最大生命 2%（首領 0.5%）；減傷 30% 並自動範圍斬擊。數量加成增加反擊彈數。',
@@ -411,7 +411,7 @@
       source_url:'https://naruto-official.com/en/news/01_1316'
     }],
     ['naruto-kusanagi', [30002], {
-      icon:'kusanagi', name:'草薙劍・環繞', mode:'kusanagi-orbit', type:'steel', learnLevel:1,
+      icon:'kusanagi', name:'草薙劍・環繞', mode:'kusanagi-orbit', type:'steel', learnLevel:2,
       cd:1,dmg:28,radius:58,count:1,knock:8,
       desc:'選用並施放後，飛行劍持續環繞攻擊，切招即消失。同一敵人每 0.35 秒最多命中一次；數量卡每張使劍數 ×1.25，累乘取整後，三勾玉再額外加一把劍。',
       ups:[{t:'環繞劍 +1 把',m:{count:1}},
@@ -421,7 +421,7 @@
       source_url:'https://naruto-official.com/en/news/01_1710'
     }],
     ['naruto-fuma-shuriken', [30002], {
-      icon:'fumaShuriken', name:'風魔手裏劍', mode:'shot', type:'steel', learnLevel:9,
+      icon:'fumaShuriken', name:'風魔手裏劍', mode:'shot', type:'steel', learnLevel:6,
       cd:1.6,dmg:34,speed:460,life:4,range:552,size:32,count:1,pierce:3,arc:.24,charge:.2,knock:24,
       fumaReturn:true,boom:.65,fumaCurve:130,
       vis:{proj:'naruto-fuma-shuriken',pal:'naruto-fuma-steel',projScale:.9},

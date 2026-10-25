@@ -145,9 +145,9 @@
     const dir=G.Sprites.dirFromAngle(c.owner.aim),direction=['down','right','right','right','up','left','left','left'][dir];
     return {...frame,direction,mirror:source.mirror.includes(direction),action:true};
   }
-  // Flight immunity never overwrites independent timers, including lava's reset.
+  // Pursuit immunity includes retarget gaps without overwriting independent timers.
   const hurt=G.Player.prototype.hurt, playerUpdate=G.Player.prototype.update;
-  G.Player.prototype.hurt=function(...args){const c=activeFor(this);if(valid(c)&&['dash','return'].includes(c.phase))return;return hurt.apply(this,args);};
+  G.Player.prototype.hurt=function(...args){const c=activeFor(this);if(valid(c)&&['dash','retarget','return'].includes(c.phase))return;return hurt.apply(this,args);};
   G.Player.prototype.update=function(dt){
     const c=activeFor(this);
     if(c&&!valid(c))clear(this);

@@ -78,7 +78,7 @@
     hurt(amount, type = null, pure = false, context = null) {
       if (!isActor(this) || this.invuln > 0 || this.frozen || !(amount > 0)) return;
       const chidori = G.NarutoChidori?.activeFor?.(this);
-      if (G.NarutoLee?.isInvulnerable(this) || ['dash', 'return'].includes(chidori?.phase)) return;
+      if (G.NarutoLee?.isInvulnerable(this) || ['dash', 'retarget', 'return'].includes(chidori?.phase)) return;
       const armor = cloak(this);
       if (armor) amount *= Math.max(.5, Math.min(1, armor.m.damageTakenMul ?? .75));
       if (this.mon.dex === 30007 && G.NarutoGaara?.hurtClone) {
