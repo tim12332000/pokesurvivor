@@ -11,21 +11,21 @@ OUT = Path(__file__).resolve().parents[1] / '.omx/state/pain-planet-vfx'
 SETUP = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain;A.reset();
  p.moves=p.moves.filter(m=>m.id==='naruto-pain-planet');
- const es=[A.spawn(0,0,true),A.spawn(280,0),A.spawn(-250,80),A.spawn(0,300),A.spawn(0,550)];
+ const es=[A.spawn(0,0,true),A.spawn(280,0),A.spawn(-250,80),A.spawn(0,300),A.spawn(0,961)];
  es.forEach(e=>e.flying=true);window.planetEnemies=es;window.planetHits=es.map(e=>A.watch([e]));
  A.ready('planet');A.advance();
 }"""
 CAPTURE = r"""() => {
  const P=G.NarutoPain,p=Acceptance.p(),f=P.actionsFor(p).find(f=>f.kind==='planet')||P.effects.find(f=>f.kind==='collapse');
  Acceptance.assert(f,'missing phase object');
- const canvas=document.createElement('canvas');canvas.width=canvas.height=800;
- const ctx=canvas.getContext('2d');ctx.fillStyle='#253c28';ctx.fillRect(0,0,800,800);ctx.translate(400,460);
+ const canvas=document.createElement('canvas');canvas.width=canvas.height=1000;
+ const ctx=canvas.getContext('2d');ctx.fillStyle='#253c28';ctx.fillRect(0,0,1000,1000);ctx.scale(.48,.48);ctx.translate(1042,1042);
  ctx.imageSmoothingEnabled=false;const before={alpha:ctx.globalAlpha,fill:ctx.fillStyle,transform:ctx.getTransform().toString()};
  const times=[];for(let i=0;i<20;i++){const start=performance.now();G.Combat.drawGroundFields(ctx);G.Combat.drawAirFields(ctx);times.push(performance.now()-start)}
  Acceptance.assert(ctx.globalAlpha===before.alpha&&ctx.fillStyle===before.fill&&ctx.getTransform().toString()===before.transform,'VFX leaked canvas state');
  const first=canvas.toDataURL();G.Combat.updateFields(.5);
- const age=f.age;const next=document.createElement('canvas');next.width=next.height=800;
- const n=next.getContext('2d');n.fillStyle='#253c28';n.fillRect(0,0,800,800);n.translate(400,460);
+ const age=f.age;const next=document.createElement('canvas');next.width=next.height=1000;
+ const n=next.getContext('2d');n.fillStyle='#253c28';n.fillRect(0,0,1000,1000);n.scale(.48,.48);n.translate(1042,1042);
  for(let i=0;i<20;i++){G.Combat.drawGroundFields(n);G.Combat.drawAirFields(n)}
  Acceptance.assert(f.age===age&&first===next.toDataURL(),'pause/render changed animation');
  times.sort((a,b)=>a-b);
@@ -34,7 +34,7 @@ CAPTURE = r"""() => {
 LIFECYCLE = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain,world=G.World,out=[];
  for(const phase of ['gather','wave'])for(const reason of ['clear','world','death','owner-down','unlearn']) {
-  A.reset();A.spawn(0,0,true);const far=A.spawn(460,0);far.flying=true;A.ready('planet');A.advance();A.finish(phase==='gather'?.4:1.55);
+  A.reset();A.spawn(0,0,true);const far=A.spawn(900,0);far.flying=true;A.ready('planet');A.advance();A.finish(phase==='gather'?.4:1.55);
   if(reason==='clear')G.Combat.clearFields();
   if(reason==='world')G.World={...world};
   if(reason==='death'){P.actorsFor(p).find(b=>b.path==='naraka').hurt(100000,null,true);p.dead=true;p.hp=0}
@@ -48,7 +48,7 @@ LIFECYCLE = r"""() => {
 }"""
 SHOCKWAVE = r"""() => {
  const A=Acceptance,p=A.p(),P=G.NarutoPain;A.reset();
- const center=A.spawn(0,0,true),distances=[60,160,340,460,480,481];
+ const center=A.spawn(0,0,true),distances=[120,320,680,920,960,961];
  const es=distances.map(d=>A.spawn(d,0));[center,...es].forEach(e=>e.flying=true);
  const hits=es.map(e=>A.watch([e]));A.ready('planet');A.advance();A.finish(1.5);
  const wave=P.effects.find(f=>f.kind==='collapse'),age=wave.age;
@@ -70,15 +70,41 @@ SHOCKWAVE = r"""() => {
  A.assert(JSON.stringify(counts)===JSON.stringify([4,4,1,1,1,0]),'shockwave duplicate or outside hit '+counts);
  A.finish(.8);A.assert(hits.every((h,i)=>h.length===counts[i]),'expired wave repeated damage');
  // An occluder inserted after landing must also stop the final wave's native hit.
- A.reset();A.spawn(0,0,true).flying=true;const blocked=A.spawn(340,0);blocked.flying=true;
+ A.reset();A.spawn(0,0,true).flying=true;const blocked=A.spawn(680,0);blocked.flying=true;
  A.ready('planet');A.advance();A.finish(1.5);const wall=G.World.isWall;
- G.World.isWall=(x,y)=>x>=200&&x<=220&&Math.abs(y)<10;
+ G.World.isWall=(x,y)=>x>=400&&x<=420&&Math.abs(y)<10;
  try{A.finish(.7);A.assert(blocked.hp===100000,'shockwave damaged through solid wall')}
  finally{G.World.isWall=wall}
- A.reset();A.spawn(0,0,true).flying=true;const edge=A.spawn(480,0);edge.flying=true;
+ A.reset();A.spawn(0,0,true).flying=true;const edge=A.spawn(960,0);edge.flying=true;
  const edgeHits=A.watch([edge]);A.ready('planet');A.advance();A.finish(1.5);A.advance(1);
  A.assert(edgeHits.length===1&&!P.effects.some(f=>f.kind==='collapse'),'large update skipped wave edge or retained wave');
  return {distances,counts,samples,wall:true,largeStep:true};
+}"""
+
+
+BALANCE = r"""() => {
+ const A=Acceptance,p=A.p(),P=G.NarutoPain,moves=p.moves,stats={baseAtk:p.baseAtk,atkMul:p.atkMul,buff:p.buffs.atk.n},out=[];
+ try {
+  p.baseAtk=1;p.atkMul=1;p.buffs.atk.n=0;
+  for(let tier=1;tier<=5;tier++)for(const multiplier of [1,.5]) {
+   p.moves=[G.Moves.instance('naruto-pain-planet',tier)];A.reset();p.cdMul=multiplier;
+   const m=p.moves[0],ratio=[1,1.2,1.4,1.7,2][tier-1];
+   A.assert(m.cd===18&&m.range===640&&m.radius===640&&m.impactRadius===960&&m.visualScale===1.5,'planet base configuration tier '+tier);
+   A.assert(Math.abs(m.dmg-240*ratio)<1e-8,'planet doubled damage tier '+tier);
+   const es=[A.spawn(0,0,true),A.spawn(200,0),A.spawn(-200,0),A.spawn(0,640),A.spawn(0,641),A.spawn(0,960),A.spawn(0,961)];
+   es.forEach(e=>e.flying=true);const hs=es.map(e=>A.watch([e]));
+   A.ready('planet');A.advance();
+   A.assert(Math.abs(m.t-18*multiplier)<1e-8,'planet cooldown card scaling');
+   A.finish(2.2);
+   const counts=hs.map(h=>h.length),expected=[4,4,4,4,1,1,0];
+   A.assert(JSON.stringify(counts)===JSON.stringify(expected),'planet 640/641 and 960/961 boundaries '+counts);
+   const total=Math.round(m.dmg*.125)*3+Math.round(m.dmg);
+   A.assert(hs.slice(0,4).every(h=>h.reduce((n,v)=>n+v.damage,0)===total),'planet doubled native four-phase total tier '+tier+' '+JSON.stringify({total,hits:hs.slice(0,4),weather:G.Weather.mult(m.type)}));
+   A.assert(total===Math.round(330*ratio),'planet base330 tier scale '+tier);
+   out.push({tier,cdMultiplier:multiplier,damage:total,counts});
+  }
+ } finally {p.moves=moves;p.baseAtk=stats.baseAtk;p.atkMul=stats.atkMul;p.buffs.atk.n=stats.buff;A.reset()}
+ return out;
 }"""
 
 
@@ -96,7 +122,7 @@ def main():
             frame.evaluate(SETUP)
             phases = report['viewports'][label] = {}
             previous = 0
-            for name, seconds in [('rise', .08), ('gather', .4), ('seal', 1.1), ('fall', 1.3), ('contact', 1.49), ('impact', 1.51), ('release', 1.9)]:
+            for name, seconds in [('rise', .08), ('gather', .4), ('seal', 1.1), ('fall', 1.3), ('contact', 1.49), ('impact', 1.51), ('release', 1.9), ('wave-edge', 2.08)]:
                 frame.evaluate('(dt)=>Acceptance.finish(dt)', seconds - previous)
                 previous = seconds
                 result = frame.evaluate(CAPTURE)
@@ -108,7 +134,10 @@ def main():
                     assert counts[0] <= 2 and counts[1] <= 2, 'impact damage before moon contact'
             assert phases['rise']['visual']['shell'] == 0
             assert phases['gather']['visual']['shell'] < phases['seal']['visual']['shell']
-            assert phases['seal']['visual']['shell'] > 90
+            assert abs(phases['seal']['visual']['shell'] - 320 * .29 * 1.5) < 1e-8
+            assert phases['seal']['visual']['radius'] == 640
+            assert phases['seal']['visual']['artRadius'] == 480
+            assert phases['seal']['visual']['scale'] == 1.5
             assert phases['fall']['visual']['phase'] == 'fall'
             assert phases['seal']['visual']['height'] > phases['fall']['visual']['height'] > phases['contact']['visual']['height']
             assert phases['contact']['visual']['height'] >= phases['contact']['visual']['shell']
@@ -121,6 +150,7 @@ def main():
             frame.evaluate('Acceptance.finish(.6);Acceptance.assert(!G.NarutoPain.effects.some(f=>f.kind==="collapse"),"release visual leaked")')
             phases['lifecycle'] = frame.evaluate(LIFECYCLE)
             phases['shockwave'] = frame.evaluate(SHOCKWAVE)
+            phases['balance'] = frame.evaluate(BALANCE)
             if label == 'desktop':
                 frame.evaluate(SETUP)
                 frames = frame.evaluate(r"""() => {
@@ -128,7 +158,7 @@ def main():
                  const ctx=canvas.getContext('2d'),frames=[];
                  for(let i=0;i<66;i++) {
                   ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='#253c28';ctx.fillRect(0,0,600,700);
-                  ctx.scale(.55,.55);ctx.translate(545,650);ctx.imageSmoothingEnabled=false;
+                  ctx.scale(.28,.28);ctx.translate(1071,1250);ctx.imageSmoothingEnabled=false;
                   G.Combat.drawGroundFields(ctx);G.Game.player.draw(ctx);
                   G.Combat.drawAirFields(ctx);frames.push(canvas.toDataURL());Acceptance.advance(1/30);
                  }
@@ -136,6 +166,12 @@ def main():
                 }""")
                 images = [Image.open(io.BytesIO(base64.b64decode(data.split(',', 1)[1]))).convert('RGB') for data in frames]
                 images[0].save(OUT / 'moon-impact-preview.gif', save_all=True, append_images=images[1:], duration=33, loop=0, disposal=2)
+                frame.evaluate(SETUP)
+                actual_frames = []
+                for _ in range(23):
+                    actual_frames.append(Image.open(io.BytesIO(page.screenshot())).convert('RGB'))
+                    frame.evaluate('Acceptance.finish(.1)')
+                actual_frames[0].save(OUT / 'moon-impact-game.gif', save_all=True, append_images=actual_frames[1:], duration=100, loop=0, disposal=2)
             print(label, 'visual phases, native damage, pause and lifecycle passed', flush=True)
             page.close()
         browser.close()

@@ -18,7 +18,7 @@ SETUP = r"""() => {
  A.curveCast=(x=240,y=0)=>{A.curveReset();const e=A.spawn(x,y);A.ready('missiles');
   for(let i=0;i<30&&!P.shots.some(s=>s.kind==='missile');i++)A.advance();
   const shot=P.shots.find(s=>s.kind==='missile');A.assert(shot,'native missile emission missing');return {e,shot};};
- A.curveSample=s=>({age:s.age,x:s.x,y:s.y,lift:s.lift,offset:s.launchOffset||0,
+ A.curveSample=s=>({age:s.age,x:s.x,y:s.y,lift:s.lift,cruiseHeight:s.cruiseHeight,orbitRadius:s.orbitRadius,orbitDuration:s.orbitDuration,offset:s.launchOffset||0,
   visualAngle:s.visualAngle,angle:s.angle,distance:s.distance,phase:s.phase,
   trail:s.trail?JSON.parse(JSON.stringify(s.trail)):[]});
 }"""
@@ -47,15 +47,15 @@ TRAJECTORY = r"""() => {
  A.assert(maxTurn<.3,'missile screen pitch changed abruptly '+maxTurn);
  A.assert(maxAlignmentError<.02,'missile sprite diverged from actual projected motion '+maxAlignmentError);
  const seek=samples.filter(v=>v.phase==='seek');
- A.assert(seek.length>10&&Math.max(...seek.map(v=>v.lift))>90,'arc lacks natural apex after launch');
+ A.assert(seek.length>10&&Math.max(...seek.map(v=>v.lift))>s.cruiseHeight,'arc lacks natural apex after launch');
  A.assert(seek.at(-1).lift<20,'arc did not descend before impact');
  A.assert(e.hp<100000,'curved missile failed to damage actual target');
  A.assert(seek[0].distance<2,'orbit-to-seek position discontinuity');
  const orbit=samples.filter(v=>v.phase==='orbit');
- A.assert(orbit.length>=60&&orbit.every(v=>v.lift===90),'horizontal orbit missing or altitude changed');
+ A.assert(orbit.length>=60&&orbit.every(v=>v.lift===v.cruiseHeight),'horizontal orbit missing or altitude changed');
  const width=Math.max(...orbit.map(v=>v.x))-Math.min(...orbit.map(v=>v.x));
  const depth=Math.max(...orbit.map(v=>v.y))-Math.min(...orbit.map(v=>v.y));
- A.assert(width>120&&depth>40&&width/depth>2.5,'first missile did not make a horizontal ellipse');
+ A.assert(width>s.orbitRadius*1.8&&depth>s.orbitRadius*.5&&width/depth>2.5,'first missile did not make a horizontal ellipse');
  A.assert(seek[0].age>=.87-1e-6,'missile sought before rise and orbit completed');
  return {samples,maxTurn,maxAlignmentError,damage:100000-e.hp};
 }"""
@@ -94,7 +94,7 @@ ORBIT_SELECTION = r"""() => {
  A.assert(s.phase==='orbit'&&!s.target&&e.hp===100000,'orbit locked target or hit early');
  e.dead=true;e.hp=0;G.EnemyMgr.rebuildGrid();const next=A.spawn(210,60);
  while(s.phase==='orbit'){
-  A.assert(!s.target&&next.hp===100000&&s.lift===90,'orbit selected or damaged replacement early');A.advance();
+  A.assert(!s.target&&next.hp===100000&&s.lift===s.cruiseHeight,'orbit selected or damaged replacement early');A.advance();
  }
  A.assert(s.target===next,'orbit end did not choose current living enemy');A.finish(1.5);
  A.assert(next.hp<100000,'fresh orbit-end target never hit');
@@ -102,27 +102,58 @@ ORBIT_SELECTION = r"""() => {
  for(const picks of [0,20]){
   A.curveReset();p.quantityBonus=p.quantityPicks=picks;A.spawn(240,0);A.ready('missiles');A.advance();
   const count=A.actions().find(f=>f.kind==='missiles').count,paths=new Map(),previous=new Map();
+  A.assert(count===(picks===0?10:60),'doubled native volley or quantity ceiling changed '+count);
   let alignmentError=0;
   for(let i=0;i<240&&paths.size<count;i++){
    for(const shot of P.shots){
-    const point={x:shot.x,y:shot.y-shot.lift-shot.launchOffset};
+    const point={x:shot.x,y:shot.y-shot.lift-shot.launchOffset,radius:shot.orbitRadius};
     A.assert([point.x,point.y,shot.visualAngle].every(Number.isFinite),'spread trajectory became non-finite');
-    const last=previous.get(shot);if(last){const dx=point.x-last.x,dy=point.y-last.y;
+    const last=previous.get(shot);if(last){A.assert(last.radius===point.radius,'per-shot orbit radius changed during flight');const dx=point.x-last.x,dy=point.y-last.y;
      if(Math.hypot(dx,dy)>1e-7)alignmentError=Math.max(alignmentError,Math.abs(Math.atan2(Math.sin(shot.visualAngle-Math.atan2(dy,dx)),Math.cos(shot.visualAngle-Math.atan2(dy,dx)))));}
     previous.set(shot,point);
     if(shot.phase==='orbit'){
-     A.assert(!shot.target&&shot.lift===90,'spread lost fixed altitude or locked early');
-     if(shot.orbitAge>=.32&&!paths.has(shot.emitted))paths.set(shot.emitted,{direction:shot.orbitDirection,x:shot.x-shot.orbitX,y:shot.y-shot.orbitY});
+     A.assert(!shot.target&&shot.lift===shot.cruiseHeight,'spread lost fixed altitude or locked early');
+     if(shot.orbitAge>=shot.orbitDuration*.5&&!paths.has(shot.emitted))paths.set(shot.emitted,{direction:shot.orbitDirection,height:shot.cruiseHeight,radius:shot.orbitRadius,x:shot.x-shot.orbitX,y:shot.y-shot.orbitY});
     }
    }A.advance(.01);
   }
   const points=[...paths.values()];
   A.assert(points.length===count&&new Set(points.map(v=>v.direction)).size===count,'volley reused missile directions '+count);
+  A.assert(points.every(v=>v.height>=48&&v.height<=132)&&new Set(points.map(v=>v.height)).size===count,'volley lost bounded unique per-shot altitudes');
+  A.assert(points.every(v=>v.radius>=40&&v.radius<=88)&&new Set(points.map(v=>v.radius)).size===count,'volley reused orbit radii or exceeded radius bounds');
   A.assert(points.some(v=>v.x < -80)&&points.some(v=>v.x>80)&&points.some(v=>v.y < -30)&&points.some(v=>v.y>30),'volley did not spread in different directions');
   A.assert(alignmentError<.02,'spread sprite diverged from actual travel '+alignmentError);
   spread.push({picks,count,alignmentError,paths:points});
  }
  A.curveReset();return {freshTarget:true,spread};
+}"""
+
+ALTITUDE = r"""() => {
+ const A=Acceptance,p=A.p(),P=G.NarutoPain,volleys=[];
+ A.curveReset();A.spawn(240,0);
+ for(let cast=0;cast<2;cast++){
+  const before=P.snapshot(p).castCounts.missiles||0,heights=new Map(),enteredSeek=new Set();
+  A.ready('missiles');A.advance();p.moves.find(m=>m.id==='naruto-pain-missiles').t=999;
+  A.assert(P.snapshot(p).castCounts.missiles===before+1,'altitude fixture did not use native cast');
+  for(let i=0;i<300;i++){
+   for(const s of P.shots.filter(s=>s.kind==='missile')){
+    const height=s.cruiseHeight;
+    A.assert(Number.isFinite(height)&&height>=48&&height<=132,'per-shot altitude outside visible variation band');
+    if(heights.has(s.emitted))A.assert(heights.get(s.emitted)===height,'cruise altitude changed during flight');
+    heights.set(s.emitted,height);
+    if(s.phase==='rise')A.assert(Math.abs(s.lift-height*Math.min(1,s.age/.22))<1e-6,'rise did not interpolate to own altitude');
+    if(s.phase==='orbit')A.assert(s.lift===height,'horizontal orbit developed altitude jitter');
+    if(s.phase==='seek'&&!enteredSeek.has(s.emitted)){
+     A.assert(Math.abs(s.lift-height)<6,'orbit-to-seek altitude jumped');enteredSeek.add(s.emitted);
+    }
+   }A.advance();
+  }
+  const values=[...heights.entries()].sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
+  A.assert(values.length===10&&new Set(values).size===10,'native ten-shot volley did not use ten different heights');
+  A.assert(enteredSeek.size===10,'altitude fixture missed seek transition');volleys.push(values);A.finish(3);
+ }
+ A.assert(volleys[0].every((height,i)=>height!==volleys[1][i]),'subsequent native volley repeated same altitude pattern');
+ A.curveReset();return {volleys,bounded:true,fixedOrbitHeight:true,continuousSeek:true};
 }"""
 
 COUNTS_SPLASH = r"""() => {
@@ -132,14 +163,14 @@ COUNTS_SPLASH = r"""() => {
    A.assert(card&&card.apply(p)!==false,'native missile upgrade absent '+level);}
   for(const picks of [0,4,20]){
    A.curveReset();p.quantityBonus=p.quantityPicks=picks;A.spawn(240,0);A.ready('missiles');A.advance();
-   const action=A.actions().find(f=>f.kind==='missiles'),expected=Math.min(30,Math.floor([5,5,6,7,8][level-1]*Math.pow(1.25,picks)));
+   const action=A.actions().find(f=>f.kind==='missiles'),expected=Math.min(60,Math.floor([10,10,12,14,16][level-1]*Math.pow(1.25,picks)));
    A.assert(action?.count===expected,'curve changed native missile count '+level+'/'+picks);
-   A.finish(.7);A.assert(P.shots.filter(s=>s.kind==='missile').length<=30,'curve exceeded live missile cap');
+   A.finish(.7);A.assert(P.shots.filter(s=>s.kind==='missile').length<=60,'curve exceeded live missile cap');
    out.push({level,picks,count:action.count});
   }
  }
  const {e}=A.curveCast();A.finish(.4);const inside=A.spawn(240,25),outside=A.spawn(320,0);
- A.finish(2.7);A.assert(e.hp<100000&&inside.hp<100000,'native missile explosion lost nearby victims '+JSON.stringify({target:e.hp,inside:inside.hp}));
+ A.finish(3.5);A.assert(e.hp<100000&&inside.hp<100000,'native missile explosion lost nearby victims '+JSON.stringify({target:e.hp,inside:inside.hp}));
  A.assert(outside.hp===100000,'48-radius missile explosion hit distant control');
  return {counts:out,splashDamage:100000-inside.hp,outsideDamage:100000-outside.hp};
 }"""
@@ -161,17 +192,75 @@ LIFECYCLE = r"""() => {
  }A.curveReset();return out;
 }"""
 
-CAPTURE_SETUP = r"""() => {
+CAPTURE_SETUP = r"""(level=1) => {
+ const m=curveMoves.find(m=>m.id==='naruto-pain-missiles');m.lvl=level;m.count=[10,10,12,14,16][level-1];
  const {e}=Acceptance.curveCast();window.curveEnemy=e;
 }"""
+
+ALTITUDE_TIER5 = r"""() => {
+ const A=Acceptance,P=G.NarutoPain,heights=new Map(),radii=new Map();
+ for(let i=0;i<90;i++){
+  for(const shot of P.shots.filter(s=>s.kind==='missile')){
+   const height=shot.cruiseHeight;
+   A.assert(height>=48&&height<=132,'tier-five altitude exceeded bounds');
+   if(heights.has(shot.emitted))A.assert(heights.get(shot.emitted)===height,'tier-five altitude drifted');
+   heights.set(shot.emitted,height);
+   A.assert(shot.orbitRadius>=40&&shot.orbitRadius<=88,'tier-five radius exceeded bounds');
+   if(radii.has(shot.emitted))A.assert(radii.get(shot.emitted)===shot.orbitRadius,'tier-five radius changed during flight');
+   radii.set(shot.emitted,shot.orbitRadius);
+   if(shot.phase==='orbit')A.assert(shot.lift===height,'tier-five orbit changed altitude');
+  }A.advance();
+ }
+ const values=[...heights.values()].sort((a,b)=>a-b);
+ A.assert(values.length===16&&new Set(values).size===16,'tier-five volley reused missile heights');
+ const minGap=Math.min(...values.slice(1).map((height,i)=>height-values[i]));
+ A.assert(minGap>=5-1e-9,'tier-five height separation too subtle '+minGap);
+ A.assert(radii.size===16&&new Set(radii.values()).size===16,'tier-five volley reused orbit radii');
+ return {count:values.length,heights:values,minGap,radii:[...radii.values()]};
+}"""
+
+STAGGER = r"""() => {
+ const A=Acceptance,p=A.p(),P=G.NarutoPain,out=[];
+ for(const picks of [0,20]){
+  A.curveReset();p.quantityBonus=p.quantityPicks=picks;A.spawn(240,0);A.ready('missiles');A.advance();
+  const count=A.actions().find(a=>a.kind==='missiles').count,times=new Map(),durations=new Map();
+  A.assert(count===(picks===0?16:60),'stagger fixture did not use native volley');
+  let mixedPhases=false;
+  for(let i=0;i<300;i++){
+   const missiles=P.shots.filter(s=>s.kind==='missile');
+   if(missiles.some(s=>s.phase==='orbit')&&missiles.some(s=>s.phase==='seek'))mixedPhases=true;
+   for(const shot of missiles){
+    const duration=shot.orbitDuration;
+    A.assert(duration>=.65&&duration<=1.55,'stagger orbit duration exceeded limits');
+    if(durations.has(shot.emitted))A.assert(durations.get(shot.emitted)===duration,'per-shot duration changed in flight');
+    durations.set(shot.emitted,duration);
+    if(shot.phase==='orbit')A.assert(!shot.target&&shot.orbitAge<duration,'shot sought target before own orbit ended');
+    if(shot.phase==='seek'&&!times.has(shot.emitted)){
+     A.assert(shot.age>=.22+duration-1e-7,'shot departed before its own orbit duration');
+     A.assert(shot.target&&!shot.target.dead,'independent departure did not acquire living target');
+     times.set(shot.emitted,i*.01);
+    }
+   }A.advance();
+  }
+  const ordered=[...times.entries()].sort((a,b)=>a[0]-b[0]).map(v=>v[1]);
+  A.assert(times.size===count&&durations.size===count,'stagger lost missiles before seek '+times.size+'/'+count);
+  const gaps=ordered.slice(1).map((time,i)=>time-ordered[i]),span=ordered.at(-1)-ordered[0];
+  A.assert(gaps.every(gap=>gap>0),'multiple missiles departed on same simulation step');
+  if(picks===0)A.assert(Math.min(...gaps)>=.07-1e-7,'native sixteen-shot departures were insufficiently staggered');
+  A.assert(span>=1.1&&mixedPhases,'volley did not visibly stagger orbit and independent seeking');
+  out.push({count,departures:ordered,minGap:Math.min(...gaps),span,mixedPhases});
+ }A.curveReset();return out;
+}"""
+
 CAPTURE = r"""() => {
  const c=document.createElement('canvas');c.width=640;c.height=400;
  const ctx=c.getContext('2d');ctx.fillStyle='#253c28';ctx.fillRect(0,0,c.width,c.height);
- ctx.translate(160,270);ctx.imageSmoothingEnabled=false;
+ ctx.translate(200,270);ctx.imageSmoothingEnabled=false;
  G.Combat.drawGroundFields(ctx);curveEnemy.draw(ctx);Acceptance.p().draw(ctx);
  for(const b of G.NarutoPain.actors())b.draw(ctx);G.Combat.drawAirFields(ctx);
  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle='white';ctx.font='16px monospace';
- const s=G.NarutoPain.shots.find(s=>s.kind==='missile');ctx.fillText(s?'flight '+s.age.toFixed(2)+'s':'impact',16,24);
+ const s=G.NarutoPain.shots.find(s=>s.kind==='missile'),m=Acceptance.p().moves[0];
+ ctx.fillText('Lv.'+m.lvl+' / '+m.count+' missiles / '+(s?'flight '+s.age.toFixed(2)+'s':'impact'),16,24);
  return c.toDataURL();
 }"""
 
@@ -189,21 +278,35 @@ def main():
             enter(frame)
             frame.evaluate(SETUP)
             result = report['viewports'][label] = {}
-            for name, check in [('trajectory', TRAJECTORY), ('orbitSelection', ORBIT_SELECTION), ('retarget', RETARGET), ('lifecycle', LIFECYCLE), ('countsSplash', COUNTS_SPLASH)]:
+            for name, check in [('trajectory', TRAJECTORY), ('orbitSelection', ORBIT_SELECTION), ('altitude', ALTITUDE), ('retarget', RETARGET), ('lifecycle', LIFECYCLE), ('countsSplash', COUNTS_SPLASH)]:
                 result[name] = frame.evaluate(check)
                 print(label, name, 'PASS', flush=True)
-            frame.evaluate(CAPTURE_SETUP)
+            frame.evaluate(CAPTURE_SETUP, 5)
+            result['altitudeTier5'] = frame.evaluate(ALTITUDE_TIER5)
+            print(label, 'altitudeTier5', 'PASS', flush=True)
+            result['stagger'] = frame.evaluate(STAGGER)
+            print(label, 'stagger', 'PASS', flush=True)
+            frame.evaluate(CAPTURE_SETUP, 1)
             images = []
-            for index in range(60):
+            for index in range(85):
                 raw = base64.b64decode(frame.evaluate(CAPTURE).split(',', 1)[1])
                 images.append(Image.open(io.BytesIO(raw)).convert('RGB'))
                 frame.evaluate('Acceptance.finish(.04)')
             images[0].save(OUT / f'{label}-flight.gif', save_all=True, append_images=images[1:], duration=40, loop=0, disposal=2)
-            selected = [images[i] for i in [2, 8, 14, 20, 25, 34]]
+            selected = [images[i] for i in [8, 16, 24, 32, 42, 60]]
             strip = Image.new('RGB', (640 * 3, 400 * 2))
             for i, image in enumerate(selected):
                 strip.paste(image, ((i % 3) * 640, (i // 3) * 400))
             strip.save(OUT / f'{label}-trajectory.png')
+            images[36].save(OUT / f'{label}-preview.png')
+            frame.evaluate(CAPTURE_SETUP, 5)
+            max_images = []
+            for index in range(85):
+                raw = base64.b64decode(frame.evaluate(CAPTURE).split(',', 1)[1])
+                max_images.append(Image.open(io.BytesIO(raw)).convert('RGB'))
+                frame.evaluate('Acceptance.finish(.04)')
+            max_images[0].save(OUT / f'{label}-tier5-flight.gif', save_all=True, append_images=max_images[1:], duration=40, loop=0, disposal=2)
+            max_images[36].save(OUT / f'{label}-tier5-preview.png')
             page.close()
         browser.close()
     assert not report['errors'], report['errors']

@@ -86,10 +86,10 @@ CHECK = r"""(scenario) => {
   }
   if(scenario==='planet') {
    only('naruto-pain-planet');const seed=A.spawn(0,0,true);
-   const es=[seed,A.spawn(280,0),A.spawn(-250,80),A.spawn(0,300),A.spawn(0,550)];
+   const es=[seed,A.spawn(280,0),A.spawn(-250,80),A.spawn(0,300),A.spawn(0,961)];
    es.forEach(e=>e.flying=true);const hits=es.map(e=>A.watch([e]));
    A.ready('planet');A.advance();const f=A.actions().find(f=>f.kind==='planet');
-   A.assert(f?.m.radius===320,'planet radius config');
+   A.assert(f?.m.radius===640,'planet radius config');
    A.finish(.75);
    function render(radius) {
     const old=f.m.radius;f.m.radius=radius;
@@ -99,13 +99,13 @@ CHECK = r"""(scenario) => {
     try{G.Combat.drawGroundFields(ctx);G.Combat.drawAirFields(ctx);return {png:canvas.toDataURL(),arcs}}
     finally{f.m.radius=old}
    }
-   const reference=render(160),updated=render(320);
-   A.assert(updated.arcs.includes(320)&&P.planetVisual(f).shell>45,'planet range/aggregated shell too small');
+   const reference=render(320),updated=render(640);
+   A.assert(updated.arcs.includes(640)&&P.planetVisual(f).shell>45,'planet range/aggregated shell too small');
    A.finish(.76);
-   const collapse=P.effects.find(e=>e.kind==='collapse');A.assert(collapse?.m.impactRadius===480,'impact radius lost');
+   const collapse=P.effects.find(e=>e.kind==='collapse');A.assert(collapse?.m.impactRadius===960,'impact radius lost');
    A.finish(.1);const arcs=[],canvas=document.createElement('canvas'),ctx=canvas.getContext('2d'),arc=ctx.arc.bind(ctx);
    ctx.arc=(...args)=>{arcs.push(args[2]);return arc(...args)};G.Combat.drawAirFields(ctx);
-   A.assert(arcs.some(r=>Math.abs(r-480*collapse.age/collapse.life)<1e-8),'shockwave visual radius');
+   A.assert(arcs.some(r=>Math.abs(r-960*collapse.age/collapse.life)<1e-8),'shockwave visual radius');
    A.finish(.6);
    A.assert(hits.slice(0,4).every(h=>h.filter(v=>v.id==='naruto-pain-planet').length===4),'planet missed enlarged-area four phases');
    A.assert(es[4].hp===100000,'planet damaged beyond shockwave radius');
@@ -114,9 +114,11 @@ CHECK = r"""(scenario) => {
   }
   if(scenario==='planet-pull') {
    only('naruto-pain-planet');A.spawn(0,0,true);
-   const inside=A.spawn(280,0),outside=A.spawn(350,0);A.ready('planet');A.advance();A.finish(.25);
-   A.assert(inside.x<260&&outside.x===350,'enlarged planet pull boundary');
-   return {insidePull:280-inside.x,outsidePull:350-outside.x};
+   const inside=A.spawn(640,0),outside=A.spawn(641,0),resistant=A.spawn(-640,0,true),airborne=A.spawn(0,600);airborne.flying=true;A.ready('planet');A.advance();A.finish(.25);
+   A.assert(inside.x<640&&outside.x===641,'enlarged planet pull boundary');
+   A.assert(Math.abs((640+resistant.x)/(640-inside.x)-.25)<1e-8,'special-enemy pull resistance changed');
+   A.assert(airborne.y===600,'airborne enemy was displaced');
+   return {insidePull:640-inside.x,outsidePull:641-outside.x,resistedPull:640+resistant.x,airborneY:airborne.y};
   }
   if(scenario==='quantity') {
    out.tiers=[];
@@ -126,7 +128,7 @@ CHECK = r"""(scenario) => {
     for(const picks of [0,4,20]) {
      A.reset();p.quantityPicks=p.quantityBonus=picks;only(id);const m=p.moves[0];
      if(id.endsWith('missiles')){const b=P.actors().find(b=>b.path==='asura');b.x=b.y=0;A.ready('missiles')}
-     A.spawn(180,0);A.advance();const expected=Math.min(id==='naruto-pain'?40:30,Math.floor([5,5,6,7,8][tier-1]*Math.pow(1.25,picks)));
+     A.spawn(180,0);A.advance();const expected=Math.min(id==='naruto-pain'?40:60,Math.floor((id==='naruto-pain'?[5,5,6,7,8]:[10,10,12,14,16])[tier-1]*Math.pow(1.25,picks)));
      A.assert(P.snapshot(p).count===expected,'native cast quantity '+id+' tier '+tier+' picks '+picks+' got '+P.snapshot(p).count);
      out.tiers.push({id,tier,picks,count:expected});
     }

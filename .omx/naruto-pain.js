@@ -5,7 +5,7 @@
   const required={missiles:'asura',summon:'animal',soul:'human'};
   const visualHeights=Object.freeze({tendo:80,asura:84,animal:70,human:82,preta:74,naraka:78});
   const visualHeight=(path,owner)=>visualHeights[path]*(owner?.anim?.scale||1);
-  const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:.6,animal:.6,human:.8,preta:.8,naraka:.6}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
+  const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:.6,animal:.6,human:.8,preta:.8,naraka:1.5}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
   const ready=b=>alive(b)&&b.formed&&b.protectionRemaining<=0;
   const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
@@ -40,7 +40,7 @@
     if(effects.length<160)effects.push({...f,...extra,kind,age:0,life,visualOnly:true});
   }
   function finish(f){const i=family.actions.indexOf(f);if(i>=0)family.actions.splice(i,1);}
-  function planetTarget(targets,radius=320) {
+  function planetTarget(targets,radius=640) {
     return targets.find(special)||targets.find(e=>targets.filter(t=>!special(t)&&dist(e,t)<=radius&&clearPath(e.x,e.y,t.x,t.y)).length>=3);
   }
   const rank=m=>Math.max(0,Math.min(4,(m?.lvl||1)-1));
@@ -134,7 +134,7 @@
   }
   function body(path){return family?.bodies.find(b=>b.path===path);}
   function snapshotMove(owner,m) {
-    const snap=G.Quantity?.snapshot(owner,m)||{...m};return {...snap,dmg:m.dmg??({basic:10,gravity:70,missiles:22,summon:90,soul:140,planet:120}[kind(m)]||4)};
+    const snap=G.Quantity?.snapshot(owner,m)||{...m};return {...snap,dmg:m.dmg??({basic:10,gravity:70,missiles:22,summon:90,soul:140,planet:240}[kind(m)]||4)};
   }
   function hit(f,e,base=f.m.dmg,origin=f,singleTarget=false) {
     if(!frameActive(f)||f.world!==G.World||!alive(e)||!clearPath(origin.x,origin.y,e.x,e.y))return;
@@ -152,8 +152,8 @@
     if(!selected(owner,m)||(m.t||0)>0||s.queue.some(q=>q.owner===owner&&lane(q)===lane({owner,kind:k}))||s.actions.some(f=>f.owner===owner&&lane(f)===lane({owner,kind:k})))return false;
     if(['gravity','planet'].includes(k)&&s.sharedRecovery>0)return false;
     const b=required[k]&&body(required[k]);if(b&&(!ready(b)||(k==='soul'&&b.retreating)||hazardous(b.x,b.y,b.r)))return false;
-    const targets=nearby(b||owner,k==='gravity'?Math.min(240,m.range||240):m.range||({missiles:320,summon:300,soul:180,planet:320}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,owner));
-    return k==='planet'?!!planetTarget(targets,m.radius||320):targets.length>0;
+    const targets=nearby(b||owner,k==='gravity'?Math.min(240,m.range||240):m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,owner));
+    return k==='planet'?!!planetTarget(targets,m.radius||640):targets.length>0;
   }
   function basic(owner,m) {
     const targets=nearby(owner,m.range||280);if(!targets.length)return false;
@@ -188,7 +188,7 @@
   function start(f) {
     const k=f.kind,b=required[k]&&body(required[k]);
     if(!frameActive(f)||!selected(f.owner,f.m)||(b&&(!ready(b)||(k==='soul'&&b.retreating)||hazardous(b.x,b.y,b.r)))||(['gravity','planet'].includes(k)&&family.sharedRecovery>0))return false;
-    const targets=nearby(b||f.owner,k==='gravity'?Math.min(240,f.m.range||240):f.m.range||({missiles:320,summon:300,soul:180,planet:320}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,f.owner));
+    const targets=nearby(b||f.owner,k==='gravity'?Math.min(240,f.m.range||240):f.m.range||({missiles:320,summon:300,soul:180,planet:640}[k])).filter(e=>k!=='soul'||!!soulLanding(b,e,f.owner));
     if(!targets.length)return false;
     f.body=b;f.target=targets[0];f.phase='prepare';f.hit=new Set();f.emitted=0;
     if(k==='gravity') {
@@ -197,7 +197,7 @@
       f.pulls=targets.map(target=>({target,distance:0}));
     }
     if(k==='missiles') {
-      f.targets=targets;f.baseCount=f.m.quantityBaseCount??[5,5,6,7,8][rank(f.m)];f.count=Math.min(30,G.Quantity?.countAtCast(f.owner,f.m,f.baseCount)??f.baseCount);family.lastCount=f.count;
+      f.targets=targets;f.baseCount=f.m.quantityBaseCount??[10,10,12,14,16][rank(f.m)];f.count=Math.min(60,G.Quantity?.countAtCast(f.owner,f.m,f.baseCount)??f.baseCount);family.lastCount=f.count;
       f.interval=Math.min(.08,.32/Math.max(1,f.count-1));f.body.pose='special';f.body.poseAge=0;
     }
     if(k==='summon'){f.angle=Math.atan2(f.target.y-b.y,f.target.x-b.x);f.x=b.x;f.y=b.y;f.distance=0;b.pose='special';b.poseAge=0;}
@@ -208,7 +208,7 @@
       f.phase='grasp';f.grasp=0;b.pose='special';b.poseAge=0;
     }
     if(k==='planet') {
-      f.target=planetTarget(targets,f.m.radius||320);if(!f.target)return false;
+      f.target=planetTarget(targets,f.m.radius||640);if(!f.target)return false;
       f.x=f.target.x;f.y=f.target.y;f.ticks=0;
       family.sharedRecovery=Math.max(family.sharedRecovery,5);
       for(const a of [family.owner,...(G.SelfClones?.actors()||[])])for(const m of a.moves||[])if(kind(m)==='gravity')m.t=Math.max(m.t||0,5);
@@ -349,8 +349,14 @@
     } else if(k==='missiles') {
       while(f.emitted<f.count&&f.age>=.12+f.emitted*f.interval) {
         const target=f.targets[f.emitted%f.targets.length],angle=Math.atan2(target.y-f.body.y,target.x-f.body.x);
-        if(shots.filter(p=>p.kind==='missile').length<30) {
-          shots.push({...f,kind:'missile',phase:'rise',lift:0,launchOffset:48,visualAngle:-Math.PI/2,trail:[],trailTime:0,orbitDirection:TAU*f.emitted/f.count,
+        if(shots.filter(p=>p.kind==='missile').length<60) {
+          const rank=f.emitted%2?f.count-1-Math.floor(f.emitted/2):Math.floor(f.emitted/2),volley=family.castCounts.missiles||0;
+          const heightSlot=(rank+volley*7)%f.count,radiusSlot=(Math.floor(f.count/2)+rank+volley*5)%f.count;
+          shots.push({...f,kind:'missile',phase:'rise',lift:0,
+            cruiseHeight:90+(heightSlot-(f.count-1)/2)*Math.min(5,84/Math.max(1,f.count-1)),
+            orbitRadius:f.count>1?40+48*radiusSlot/(f.count-1):64,
+            orbitDuration:.65+.9*f.emitted/Math.max(1,f.count-1),
+            launchOffset:48,visualAngle:-Math.PI/2,trail:[],trailTime:0,orbitDirection:TAU*f.emitted/f.count,
             x:f.body.x,y:f.body.y,angle,speed:f.m.speed||400,r:5,range:f.m.range||320,distance:0,target:null,age:0});
           visualEffect(f,'missile-launch',.15,{x:f.body.x,y:f.body.y,angle:-Math.PI/2});
         }f.emitted++;
@@ -373,10 +379,10 @@
       f.grasp+=dt;
       if(f.grasp>=.6){hit(f,e,f.m.dmg,b,true);effects.push({...f,kind:'soul',x:e.x,y:e.y,age:0,life:.35});finish(f);}
     } else if(k==='planet') {
-      const radius=f.m.radius||320,enemies=nearby(f,radius);
+      const radius=f.m.radius||640,enemies=nearby(f,radius);
       for(const e of enemies)if(grounded(e))toward(e,f,100*Math.min(dt,Math.max(0,1.5-(f.age-dt)))*(special(e)?.25:1));
       G.EnemyMgr.rebuildGrid();
-      while(f.ticks<3&&f.age+1e-9>=(f.ticks+1)*.5){for(const e of nearby(f,radius))hit(f,e,15*(f.m.dmg/120));f.ticks++;}
+      while(f.ticks<3&&f.age+1e-9>=(f.ticks+1)*.5){for(const e of nearby(f,radius))hit(f,e,f.m.dmg*.125);f.ticks++;}
       if(f.age>=1.5){effects.push({...f,kind:'collapse',age:0,life:.6,hit:new Set()});finish(f);}
     }
   }
@@ -386,9 +392,9 @@
     effects.push({...p,kind:'explosion',age:0,life:.25});
   }
   function missileFlight(p,age) {
-    const u=Math.min(1,age/p.diveDuration),u2=u*u,u3=u2*u;
+    const u=Math.min(1,age/p.diveDuration),u2=u*u,u3=u2*u,height=p.cruiseHeight??90;
     return {distance:p.diveDistance*(2*u2-u3)+Math.max(0,age-p.diveDuration)*p.diveDistance/p.diveDuration,
-      lift:Math.max(0,90*(2*u3-3*u2+1)+(90/.22*p.diveDuration)*(u3-2*u2+u)),
+      lift:Math.max(0,height*(2*u3-3*u2+1)+(height/.22*p.diveDuration)*(u3-2*u2+u)),
       offset:48-36*(3*u2-2*u3)};
   }
   function missileVisual(p,previous,dt) {
@@ -398,6 +404,23 @@
     p.trailTime+=dt;
     if(p.trailTime>=.025){p.trailTime%=.025;p.trail.push(point);}
     while(p.trail.length>8||p.trail[0]?.age<p.age-.18)p.trail.shift();
+  }
+  function aimFallingRod(p,dt) {
+    const previousAge=Math.max(0,p.age-dt),trackingDt=Math.min(dt,Math.max(0,.28-previousAge));
+    if(p.trackingStopped||trackingDt<=0)return;
+    const e=p.target;
+    if(!alive(e)||Math.hypot(e.x-p.castX,e.y-p.castY)>p.range||!clearPath(p.castX,p.castY,e.x,e.y)){p.trackingStopped=true;return;}
+    const dx=e.x-p.targetX,dy=e.y-p.targetY,sampleX=p.targetX+dx*trackingDt/dt,sampleY=p.targetY+dy*trackingDt/dt;
+    p.targetX=e.x;p.targetY=e.y;
+    const moved=Math.hypot(dx,dy);
+    if(moved>Math.max(12,600*dt)){p.trackingStopped=true;return;}
+    const impactAge=p.age+Math.max(0,Math.ceil((p.fallDuration-p.age-1e-9)/dt))*dt;
+    const lead=Math.min(Math.max(0,impactAge-Math.min(p.age,.28))/dt,moved>0?72/moved:0);
+    let x=sampleX+dx*lead,y=sampleY+dy*lead;
+    if(Math.hypot(x-p.castX,y-p.castY)>p.range||G.World.isWall(x,y)||G.World.projectileBlock(x,y,p.r)||!clearPath(p.castX,p.castY,x,y)){x=e.x;y=e.y;}
+    const distance=Math.hypot(x-p.x,y-p.y),step=Math.min(1,360*trackingDt/(distance||1));
+    x=p.x+(x-p.x)*step;y=p.y+(y-p.y)*step;
+    if(!G.World.isWall(x,y)&&!G.World.projectileBlock(x,y,p.r)&&clearPath(p.castX,p.castY,x,y)){p.x=x;p.y=y;}
   }
   function updateShots(dt) {
     for(let i=batches.length-1;i>=0;i--) {
@@ -409,7 +432,7 @@
         const target=targets[f.emitted%targets.length];
         if(target&&shots.filter(p=>p.kind==='rod').length<40) {
           shots.push({...f,kind:'rod',phase:'fall',x:target.x,y:target.y,castX:f.x,castY:f.y,angle:Math.PI/2,speed:440,distance:0,r:3,
-            age:f.age-f.emitted*f.interval-dt,lift:180,fallDuration:.36,
+            age:f.age-f.emitted*f.interval-dt,lift:180,fallDuration:.36,target,targetX:target.x,targetY:target.y,
             toolBounce:G.NinjaToolBounce?.create(f.owner,f.m.id,f.toolBounceCount)});
           visualEffect(f,'rod-launch',.12,{x:target.x,y:target.y,angle:Math.PI/2,phase:'fall',lift:180});
         }
@@ -422,6 +445,7 @@
       const previousAge=p.age,previousScreen=p.kind==='missile'?{x:p.x,y:p.y-p.launchOffset-p.lift}:null;
       p.age+=dt;let flightDt=dt,missileTravel=null,missileLiftStart=p.lift;
       if(p.kind==='rod'&&p.phase==='fall') {
+        aimFallingRod(p,dt);
         const t=Math.min(1,p.age/p.fallDuration);p.lift=180*(1-t*t);
         if(t<1)continue;
         const prop=G.World.projectileBlock(p.x,p.y,p.r);
@@ -436,24 +460,24 @@
       if(p.kind==='rod')G.NinjaToolBounce?.aimRod(p);
       if(p.kind==='missile') {
         if(p.phase==='rise') {
-          p.lift=90*Math.min(1,p.age/.22);
+          p.lift=(p.cruiseHeight??90)*Math.min(1,p.age/.22);
           if(p.age<.22){missileVisual(p,previousScreen,dt);continue;}
           p.phase='orbit';flightDt=Math.max(0,dt-Math.max(0,.22-previousAge));
           p.orbitX=p.x;p.orbitY=p.y;p.orbitAge=0;
         }
         if(p.phase==='orbit') {
-          const duration=.65,radius=64,step=Math.min(flightDt,duration-p.orbitAge);
+          const duration=p.orbitDuration??.65,radius=p.orbitRadius??64,step=Math.min(flightDt,duration-p.orbitAge);
           p.orbitAge+=step;
           const angle=TAU*Math.min(1,p.orbitAge/duration);
           const direction=Math.atan2(Math.sin(p.orbitDirection),Math.cos(p.orbitDirection));
           const turn=direction*Math.sin(angle/2)**2,dx=radius*(1-Math.cos(angle)),dy=-radius*Math.sin(angle);
-          p.x=p.orbitX+dx*Math.cos(turn)-dy*Math.sin(turn);p.y=p.orbitY+.35*(dx*Math.sin(turn)+dy*Math.cos(turn));p.lift=90;
+          p.x=p.orbitX+dx*Math.cos(turn)-dy*Math.sin(turn);p.y=p.orbitY+.35*(dx*Math.sin(turn)+dy*Math.cos(turn));p.lift=p.cruiseHeight??90;
           if(p.orbitAge<duration-1e-9){missileVisual(p,previousScreen,dt);continue;}
-          p.x=p.orbitX;p.y=p.orbitY;p.lift=90;p.phase='seek';flightDt=Math.max(0,flightDt-step);
+          p.x=p.orbitX;p.y=p.orbitY;p.lift=p.cruiseHeight??90;p.phase='seek';flightDt=Math.max(0,flightDt-step);
           const targets=nearby(p,p.range);p.target=targets[p.emitted%targets.length];
           if(p.target)p.angle=Math.atan2(p.target.y-p.y,p.target.x-p.x);
           p.seekAge=0;p.diveDistance=Math.max(1,p.target?dist(p,p.target):p.range);p.diveDuration=Math.max(.25,p.diveDistance/p.speed);
-          missileLiftStart=90;
+          missileLiftStart=p.cruiseHeight??90;
         } else if(p.target&&!alive(p.target)) {
           p.target=nearby(p,p.range-p.distance)[0];
         }
@@ -505,7 +529,7 @@
       if(f.visualOnly&&!frameActive(f)){effects.splice(i,1);continue;}
       if(f.kind==='collapse') {
         if(!frameActive(f)||f.world!==G.World||!selected(f.owner,f.m)){effects.splice(i,1);continue;}
-        const radius=(f.m.impactRadius||480)*f.age/f.life;
+        const radius=(f.m.impactRadius||960)*f.age/f.life;
         for(const e of nearby(f,radius))if(!f.hit.has(e)){hit(f,e);f.hit.add(e);}
       }
       if(f.age>=f.life)effects.splice(i,1);
@@ -595,17 +619,17 @@
   }
   // Visual phases use simulation age, so pause and scene cleanup also freeze/remove them.
   function planetVisual(f) {
-    const radius=f.m.radius||320,release=f.kind==='collapse'?Math.min(1,f.age/f.life):0;
+    const radius=f.m.radius||640,scale=f.m.visualScale??1.5,artRadius=320*scale,release=f.kind==='collapse'?Math.min(1,f.age/f.life):0;
     const age=f.kind==='collapse'?1.5:f.age,gather=Math.max(0,Math.min(1,(age-.18)/.87));
-    const shell=radius*.29*gather,fall=Math.max(0,Math.min(1,(age-1.15)/.35));
-    const height=f.kind==='collapse'?shell*(1-release):24+196*Math.min(1,age/.28)-(220-shell)*fall*fall;
-    return {radius,release,gather,height,waveRadius:(f.m.impactRadius||480)*release,
-      shell:radius*.29*gather*(1-release*.5),
+    const shell=artRadius*.29*gather,fall=Math.max(0,Math.min(1,(age-1.15)/.35));
+    const height=f.kind==='collapse'?shell*(1-release):scale*(24+196*Math.min(1,age/.28))-(220*scale-shell)*fall*fall;
+    return {radius,artRadius,scale,release,gather,height,waveRadius:(f.m.impactRadius||960)*release,
+      shell:shell*(1-release*.5),
       phase:f.kind==='collapse'?'impact':age<.28?'rise':age<1.05?'gather':age<1.15?'seal':'fall'};
   }
-  function planetRock(ctx,x,y,size,angle,tone=0) {
+  function planetRock(ctx,x,y,size,angle,tone=0,scale=1) {
     ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.rotate(angle);
-    ctx.fillStyle=['#817967','#a0967e','#686354'][tone%3];ctx.strokeStyle='#38382f';ctx.lineWidth=2;
+    ctx.fillStyle=['#817967','#a0967e','#686354'][tone%3];ctx.strokeStyle='#38382f';ctx.lineWidth=2*scale;
     ctx.beginPath();ctx.moveTo(-size,-size*.35);ctx.lineTo(-size*.45,-size*.8);
     ctx.lineTo(size*.55,-size*.65);ctx.lineTo(size,size*.15);ctx.lineTo(size*.35,size*.75);
     ctx.lineTo(-size*.7,size*.6);ctx.closePath();ctx.fill();ctx.stroke();
@@ -614,63 +638,63 @@
   function planetGround(ctx,f) {
     const v=planetVisual(f),r=v.radius;
     ctx.save();ctx.translate(f.x,f.y);ctx.globalAlpha*=1-v.release;
-    ctx.fillStyle='#23251f';ctx.globalAlpha*=.18;ctx.beginPath();ctx.ellipse(0,0,32+v.shell*.8,12+v.shell*.3,0,0,TAU);ctx.fill();
-    ctx.globalAlpha/=.18;ctx.strokeStyle='#686252';ctx.lineWidth=2;
+    ctx.fillStyle='#23251f';ctx.globalAlpha*=.18;ctx.beginPath();ctx.ellipse(0,0,32*v.scale+v.shell*.8,12*v.scale+v.shell*.3,0,0,TAU);ctx.fill();
+    ctx.globalAlpha/=.18;ctx.strokeStyle='#686252';ctx.lineWidth=2*v.scale;
     for(let i=0;i<12;i++) {
-      const a=i*TAU/12+.13,len=r*(.32+(i%3)*.17)*Math.min(1,f.age/.3);
-      ctx.beginPath();ctx.moveTo(Math.cos(a)*24,Math.sin(a)*24);
+      const a=i*TAU/12+.13,len=v.artRadius*(.32+(i%3)*.17)*Math.min(1,f.age/.3);
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*24*v.scale,Math.sin(a)*24*v.scale);
       ctx.lineTo(Math.cos(a+.08)*len*.6,Math.sin(a+.08)*len*.6);
       ctx.lineTo(Math.cos(a)*len,Math.sin(a)*len);ctx.stroke();
     }
     ctx.strokeStyle='#aaa18a';ctx.globalAlpha*=.36;ctx.lineWidth=1;
     ctx.beginPath();ctx.arc(0,0,r,0,TAU);ctx.stroke();
     if(!v.release&&v.phase!=='fall')for(let i=0;i<12;i++) {
-      const t=(f.age*1.25+i/12)%1,a=i*2.39996,d=r*(1-t);
+      const t=(f.age*1.25+i/12)%1,a=i*2.39996,d=v.artRadius*(1-t);
       ctx.beginPath();ctx.moveTo(Math.cos(a)*d,Math.sin(a)*d);
-      ctx.lineTo(Math.cos(a+.025)*(d+18),Math.sin(a+.025)*(d+18));ctx.stroke();
+      ctx.lineTo(Math.cos(a+.025)*(d+18*v.scale),Math.sin(a+.025)*(d+18*v.scale));ctx.stroke();
     }
     ctx.restore();
   }
   function planetAir(ctx,f) {
-    const v=planetVisual(f),r=v.radius;
+    const v=planetVisual(f),r=v.artRadius;
     ctx.save();ctx.translate(f.x,f.y);ctx.globalAlpha*=1-v.release;
     if(f.kind==='collapse') {
       // The moon has contacted the ground; the visible front delivers one hit per enemy.
       for(let i=0;i<24;i++) {
         const a=i*2.39996,d=v.shell*(.35+(i%5)*.14)+v.release*r*.35;
-        planetRock(ctx,Math.cos(a)*d,-v.height+Math.sin(a)*d*.7+v.release*v.release*80,8+(i%4)*3,a+v.release*2,i);
+        planetRock(ctx,Math.cos(a)*d,-v.height+Math.sin(a)*d*.7+v.release*v.release*80*v.scale,(8+(i%4)*3)*v.scale,a+v.release*2,i,v.scale);
       }
-      ctx.strokeStyle='#e2d3aa';ctx.lineWidth=8;ctx.globalAlpha*=.8;
+      ctx.strokeStyle='#e2d3aa';ctx.lineWidth=8*v.scale;ctx.globalAlpha*=.8;
       ctx.beginPath();ctx.arc(0,0,v.waveRadius,0,TAU);ctx.stroke();
-      ctx.strokeStyle='#9a8b6e';ctx.lineWidth=14;ctx.globalAlpha*=.5;
-      ctx.beginPath();ctx.arc(0,0,Math.max(0,v.waveRadius-16),0,TAU);ctx.stroke();ctx.restore();return;
+      ctx.strokeStyle='#9a8b6e';ctx.lineWidth=14*v.scale;ctx.globalAlpha*=.5;
+      ctx.beginPath();ctx.arc(0,0,Math.max(0,v.waveRadius-16*v.scale),0,TAU);ctx.stroke();ctx.restore();return;
     }
     // Independent fragments rise from all directions; they do not orbit flat around the core.
     if(f.age>.12&&f.age<1.05)for(let i=0;i<24;i++) {
       const t=(f.age*.9+i/24)%1,a=i*2.39996,d=r*(.45+(i%4)*.15)*(1-t);
       const x=Math.cos(a)*d,y=Math.sin(a)*d-v.height*t;
-      ctx.strokeStyle='#a39b85';ctx.globalAlpha*=.32;ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*14,y+18);ctx.stroke();ctx.globalAlpha/=.32;
-      planetRock(ctx,x,y,5+(i%4)*2+t*4,a+t,i);
+      ctx.strokeStyle='#a39b85';ctx.globalAlpha*=.32;ctx.lineWidth=v.scale;
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*14*v.scale,y+18*v.scale);ctx.stroke();ctx.globalAlpha/=.32;
+      planetRock(ctx,x,y,(5+(i%4)*2+t*4)*v.scale,a+t,i,v.scale);
     }
     if(v.phase==='fall') {
-      ctx.strokeStyle='#c5b896';ctx.lineWidth=2;ctx.globalAlpha*=.55;
+      ctx.strokeStyle='#c5b896';ctx.lineWidth=2*v.scale;ctx.globalAlpha*=.55;
       for(let i=0;i<7;i++) {
         const x=(i-3)*v.shell*.26,y=-v.height-v.shell*.65;
-        ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y-28-(i%3)*10);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x,y-(28+(i%3)*10)*v.scale);ctx.stroke();
       }
       ctx.globalAlpha/=.55;
     }
     ctx.translate(0,-v.height);
-    ctx.fillStyle='#101018';ctx.beginPath();ctx.arc(0,0,10+5*v.gather,0,TAU);ctx.fill();
+    ctx.fillStyle='#101018';ctx.beginPath();ctx.arc(0,0,(10+5*v.gather)*v.scale,0,TAU);ctx.fill();
     if(v.shell>5) {
       ctx.save();ctx.beginPath();
       for(let i=0;i<24;i++){const a=i*TAU/24,rr=v.shell*(i%3===0?.97:1),x=Math.round(Math.cos(a)*rr),y=Math.round(Math.sin(a)*rr);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)}
-      ctx.closePath();ctx.fillStyle='#655f50';ctx.fill();ctx.strokeStyle='#302f29';ctx.lineWidth=3;ctx.stroke();ctx.clip();
+      ctx.closePath();ctx.fillStyle='#655f50';ctx.fill();ctx.strokeStyle='#302f29';ctx.lineWidth=3*v.scale;ctx.stroke();ctx.clip();
       // Offset lithic plates give the moon volume while the lower rim stays dark.
       for(let i=0;i<38;i++) {
         const a=i*2.39996,d=Math.sqrt(i/38)*v.shell;
-        planetRock(ctx,Math.cos(a)*d,Math.sin(a)*d,v.shell*(.19+(i%3)*.035),a,i);
+        planetRock(ctx,Math.cos(a)*d,Math.sin(a)*d,v.shell*(.19+(i%3)*.035),a,i,v.scale);
       }
       ctx.fillStyle='#292a26';ctx.globalAlpha*=.28;
       ctx.beginPath();ctx.ellipse(v.shell*.4,v.shell*.65,v.shell*.9,v.shell*.45,-.4,0,TAU);ctx.fill();ctx.restore();

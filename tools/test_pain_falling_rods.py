@@ -1,4 +1,4 @@
-"""Falling black receivers: timed ground impacts, distribution and lifecycle."""
+"""Falling black receivers: stationary impacts, dash escape and lifecycle."""
 import base64
 import json
 from pathlib import Path
@@ -17,7 +17,7 @@ CHECK = r"""() => {
  A.finish(.22);A.assert(e.hp<hp&&P.shots.length===0,'impact failed to cause a single real hit');
  const after=e.hp;A.finish(.4);A.assert(e.hp===after,'planted rod dealt damage repeatedly');out.timedSingleImpact=true;out.pause=true;
  fresh();e=A.spawn(180,0);A.advance();e.x=230;G.EnemyMgr.rebuildGrid();A.finish(.5);
- A.assert(e.hp===100000,'fixed landing point followed dodging enemy');out.dodge=true;
+ A.assert(e.hp===100000,'falling rod followed a teleport dodge');out.dodge=true;
  fresh();e=A.spawn(180,0);const dead=e;A.advance();e.dead=true;e.hp=0;G.EnemyMgr.rebuildGrid();A.finish(.5);
  A.assert(dead.hp===0&&!P.shots.length,'dead target was hit or leaked');out.deadTarget=true;
  fresh(5);const inside=[A.spawn(-180,0),A.spawn(0,180),A.spawn(180,0)],outside=A.spawn(281,0),hits=A.watchBounce([...inside,outside]);

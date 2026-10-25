@@ -52,7 +52,7 @@ MISSILES = r"""() => {
  const x=shot.x,y=shot.y,lift=shot.lift;A.finish(.06);
  A.assert(shot.x===x&&shot.y===y&&shot.lift>lift&&e.hp===100000,'rising missile moved on ground or hit early');
  const age=shot.age;G.Combat.updateFields(.3);A.assert(shot.age===age,'pause advanced missile');
- while(shot.phase==='rise')A.advance();A.assert(shot.phase==='orbit'&&shot.lift===90&&!shot.target&&e.hp===100000,'missile did not enter unlocked horizontal orbit');
+ while(shot.phase==='rise')A.advance();A.assert(shot.phase==='orbit'&&shot.lift===shot.cruiseHeight&&shot.cruiseHeight>=48&&shot.cruiseHeight<=132&&!shot.target&&e.hp===100000,'missile did not enter unlocked horizontal orbit');
  e.dead=true;e.hp=0;G.EnemyMgr.rebuildGrid();const replacement=A.spawn(180,35);A.finish(.3);
  A.assert(shot.phase==='orbit'&&!shot.target&&replacement.hp===100000,'orbit selected or hit replacement before completion');
  while(shot.phase==='orbit')A.advance();A.finish(.03);
@@ -71,7 +71,7 @@ MISSILES = r"""() => {
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     report = {'url': URL, 'errors': [], 'failedRequests': [], 'viewports': {}}
-    durations = {'basic': 1, 'gravity': 1, 'missiles': 2.4, 'summon': 1, 'soul': .9, 'absorb': .65, 'repair': 1.4, 'planet': 2.2}
+    durations = {'basic': 1, 'gravity': 1, 'missiles': 3.4, 'summon': 1, 'soul': .9, 'absorb': .65, 'repair': 1.4, 'planet': 2.2}
     captures = {'basic': .1, 'gravity': .16, 'missiles': .55, 'summon': .4, 'soul': .3, 'absorb': .1, 'repair': .45, 'planet': 1.3}
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=CHROME, headless=True)

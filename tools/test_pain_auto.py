@@ -114,7 +114,7 @@ BODIES = r"""() => {
  p.quantityBonus=p.quantityPicks=20;const clone=G.LevelUp.offer(p,100).find(c=>c.key==='stat:selfClone');A.assert(clone,'clone card missing');clone.apply(p);clone.apply(p);A.advance();
  A.assert(G.SelfClones.actors().length===2,'clone fixture missing');A.assert(P.actors().length===5&&P.actors().every(b=>bodies.includes(b)),'quantity or clones duplicated six paths');
  A.ready('missiles');A.spawn(100,0);A.advance();
- A.assert(A.actions().find(f=>f.kind==='missiles')?.count===30,'quantity multiplier must saturate missile count at30');
+ A.assert(A.actions().find(f=>f.kind==='missiles')?.count===60,'quantity multiplier must saturate missile count at60');
  A.assert(P.stateFor(p).actions.filter(f=>f.kind==='missiles').length===1,'clones scheduled duplicate Asura actions');
  G.SelfClones.clear();out.unique=true;
  A.reset();const asura=P.actors().find(b=>b.path==='asura');asura.hurt(asura.maxHp+1,null,true);
