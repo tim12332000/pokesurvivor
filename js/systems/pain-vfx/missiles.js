@@ -9,19 +9,18 @@
   function shot(ctx,p){
     if(p.kind!=='missile')return false;
     const age=Math.max(0,p.age||0),lift=Math.max(0,p.lift||0),rising=p.phase==='rise';
-    const trail=Math.min(38,(rising?lift:(p.distance||0))*.6),pulse=1+Math.sin(age*61)*.15;
-    const aim=p.angle||0;
-    // Rise is vertical in screen space; seeking pitches slightly down as altitude is spent.
-    const angle=rising?-Math.PI/2:Math.atan2(Math.sin(aim)+.3*clamp(lift/90),Math.cos(aim));
-    const launchOffset=rising?48:12+36*clamp(lift/90);
-    ctx.save();ctx.translate(p.x,p.y-launchOffset-lift);ctx.rotate(angle);
-    // A short current-heading wake avoids inventing a historical flight path.
-    for(let i=3;i>=1;i--){
-      const d=trail*i/3;if(d<5)continue;
-      ctx.globalAlpha=.22*(1-i/5);ctx.fillStyle='#b5aaa0';
-      ctx.beginPath();ctx.arc(-11-d,Math.sin(age*17+i)*2,2+i,0,TAU);ctx.fill();
+    const pulse=1+Math.sin(age*61)*.15;
+    const angle=Number.isFinite(p.visualAngle)?p.visualAngle:(rising?-Math.PI/2:(p.angle||0));
+    const launchOffset=p.launchOffset??(rising?48:12+36*clamp(lift/90));
+    ctx.save();
+    // History is already projected into screen-world coordinates by the flight simulation.
+    const trail=p.trail||[],start=Math.max(0,trail.length-8),count=trail.length-start;
+    for(let i=start;i<trail.length;i++){
+      const freshness=(i-start+1)/(count+1),point=trail[i];
+      ctx.globalAlpha=.18*freshness;ctx.fillStyle='#b5aaa0';
+      ctx.beginPath();ctx.arc(point.x,point.y,2+3*(1-freshness),0,TAU);ctx.fill();
     }
-    ctx.globalAlpha=1;
+    ctx.globalAlpha=1;ctx.translate(p.x,p.y-launchOffset-lift);ctx.rotate(angle);
     polygon(ctx,[[-9,-2],[-9,2],[-22*pulse,0]],'#cb6c35');
     polygon(ctx,[[-9,-1],[-9,1],[-17*pulse,0]],'#ffe0a0');
     polygon(ctx,[[-8,-3],[-4,-7],[0,-7],[0,-2]],'#68727d','#202732');

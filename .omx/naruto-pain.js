@@ -350,7 +350,8 @@
       while(f.emitted<f.count&&f.age>=.12+f.emitted*f.interval) {
         const target=f.targets[f.emitted%f.targets.length],angle=Math.atan2(target.y-f.body.y,target.x-f.body.x);
         if(shots.filter(p=>p.kind==='missile').length<30) {
-          shots.push({...f,kind:'missile',phase:'rise',lift:0,x:f.body.x,y:f.body.y,angle,speed:f.m.speed||400,r:5,range:f.m.range||320,distance:0,target,age:0});
+          shots.push({...f,kind:'missile',phase:'rise',lift:0,launchOffset:48,visualAngle:-Math.PI/2,trail:[],trailTime:0,
+            x:f.body.x,y:f.body.y,angle,speed:f.m.speed||400,r:5,range:f.m.range||320,distance:0,target,age:0});
           visualEffect(f,'missile-launch',.15,{x:f.body.x,y:f.body.y,angle:-Math.PI/2});
         }f.emitted++;
       }
@@ -384,6 +385,20 @@
     for(const prop of G.World.propsInCircle?.(p.x,p.y,48)||[])if(prop.destructible&&prop.hp>0&&clearPath(p.x,p.y,prop.x,prop.y,prop))G.World.damageProp(prop,p.m.dmg*p.attack,'#d9ad8d');
     effects.push({...p,kind:'explosion',age:0,life:.25});
   }
+  function missileFlight(p,age) {
+    const u=Math.min(1,age/p.diveDuration),u2=u*u,u3=u2*u;
+    return {distance:p.diveDistance*(2*u2-u3)+Math.max(0,age-p.diveDuration)*p.diveDistance/p.diveDuration,
+      lift:Math.max(0,90*(2*u3-3*u2+1)+(90/.22*p.diveDuration)*(u3-2*u2+u)),
+      offset:48-36*(3*u2-2*u3)};
+  }
+  function missileVisual(p,previous,dt) {
+    const point={x:p.x,y:p.y-p.launchOffset-p.lift,age:p.age};
+    const dx=point.x-previous.x,dy=point.y-previous.y;
+    if(Math.hypot(dx,dy)>1e-6)p.visualAngle=Math.atan2(dy,dx);
+    p.trailTime+=dt;
+    if(p.trailTime>=.025){p.trailTime%=.025;p.trail.push(point);}
+    while(p.trail.length>8||p.trail[0]?.age<p.age-.18)p.trail.shift();
+  }
   function updateShots(dt) {
     for(let i=batches.length-1;i>=0;i--) {
       const f=batches[i];if(!valid(f.owner)||f.world!==G.World){batches.splice(i,1);continue;}
@@ -404,7 +419,8 @@
     }
     for(let i=shots.length-1;i>=0;i--) {
       const p=shots[i];if(!frameActive(p)||p.world!==G.World){shots.splice(i,1);continue;}
-      const previousAge=p.age;p.age+=dt;let flightDt=dt;
+      const previousAge=p.age,previousScreen=p.kind==='missile'?{x:p.x,y:p.y-p.launchOffset-p.lift}:null;
+      p.age+=dt;let flightDt=dt,missileTravel=null,missileLiftStart=p.lift;
       if(p.kind==='rod'&&p.phase==='fall') {
         const t=Math.min(1,p.age/p.fallDuration);p.lift=180*(1-t*t);
         if(t<1)continue;
@@ -421,20 +437,24 @@
       if(p.kind==='missile') {
         if(p.phase==='rise') {
           p.lift=90*Math.min(1,p.age/.22);
-          if(p.age<.22)continue;
+          if(p.age<.22){missileVisual(p,previousScreen,dt);continue;}
           p.phase='seek';flightDt=Math.max(0,dt-Math.max(0,.22-previousAge));
           p.target=alive(p.target)&&dist(p,p.target)<=p.range&&clearPath(p.x,p.y,p.target.x,p.target.y)?p.target:nearby(p,p.range)[0];
           if(p.target)p.angle=Math.atan2(p.target.y-p.y,p.target.x-p.x);
-          p.diveStart=p.distance;p.diveLift=p.lift;p.diveDistance=Math.max(1,p.target?dist(p,p.target):p.range);
+          p.seekAge=0;p.diveDistance=Math.max(1,p.target?dist(p,p.target):p.range);p.diveDuration=Math.max(.25,p.diveDistance/p.speed);
+          missileLiftStart=90;
         } else if(p.target&&!alive(p.target)) {
           p.target=nearby(p,p.range-p.distance)[0];
-          p.diveStart=p.distance;p.diveLift=p.lift;p.diveDistance=Math.max(1,p.target?dist(p,p.target):p.range-p.distance);
         }
+        const before=missileFlight(p,p.seekAge);p.seekAge+=flightDt;
+        const after=missileFlight(p,p.seekAge);missileTravel=after.distance-before.distance;
+        p.launchOffset=after.offset;p.lift=after.lift;
       }
       if(p.kind==='missile'&&alive(p.target)) {
         const desired=Math.atan2(p.target.y-p.y,p.target.x-p.x),delta=Math.atan2(Math.sin(desired-p.angle),Math.cos(desired-p.angle));p.angle+=Math.max(-3.8*flightDt,Math.min(3.8*flightDt,delta));
       }
-      const travel=Math.min(p.speed*flightDt,p.range-p.distance),n=Math.max(1,Math.ceil(travel/2));let gone=false;
+      const travel=Math.min(missileTravel??p.speed*flightDt,p.range-p.distance),n=Math.max(1,Math.ceil(travel/2));let gone=false;
+      const missileLiftEnd=p.lift;
       const candidates=[...new Set(G.EnemyMgr.queryCircle(p.x,p.y,travel+60))];
       for(let j=0;j<n&&!gone;j++) {
         const x=p.x+Math.cos(p.angle)*travel/n,y=p.y+Math.sin(p.angle)*travel/n;
@@ -443,7 +463,7 @@
           if(prop?.destructible&&p.kind==='rod')G.World.damageProp(prop,p.m.dmg*p.attack,'#c6addd');gone=true;
         } else {
           p.x=x;p.y=y;p.distance+=travel/n;
-          if(p.kind==='missile')p.lift=Math.max(0,p.diveLift*(1-(p.distance-p.diveStart)/p.diveDistance));
+          if(p.kind==='missile')p.lift=missileLiftStart+(missileLiftEnd-missileLiftStart)*(j+1)/n;
           const e=candidates.find(e=>alive(e)&&!p.toolBounce?.seen.has(e)&&(p.kind!=='missile'||p.lift<=18)&&dist(p,e)<=p.r+(e.r||8));
           if(e){if(p.kind==='rod'){
             hit(p,e,p.m.dmg,p,true);const angle=p.angle;
@@ -451,6 +471,7 @@
           }gone=true;}
         }
       }
+      if(p.kind==='missile')missileVisual(p,previousScreen,dt);
       if(p.distance>=p.range-1e-8)gone=true;
       if(gone){if(p.kind==='missile')explode(p);else visualEffect(p,'rod-hit',.18);shots.splice(i,1);}
     }

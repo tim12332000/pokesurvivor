@@ -53,7 +53,7 @@ MISSILES = r"""() => {
  A.assert(shot.x===x&&shot.y===y&&shot.lift>lift&&e.hp===100000,'rising missile moved on ground or hit early');
  const age=shot.age;G.Combat.updateFields(.3);A.assert(shot.age===age,'pause advanced missile');
  e.dead=true;e.hp=0;G.EnemyMgr.rebuildGrid();const replacement=A.spawn(180,35);A.finish(.3);
- A.assert(shot.phase==='seek'&&shot.target===replacement&&shot.lift<90,'missile did not seek/dive after rise');
+ A.assert(shot.phase==='seek'&&shot.target===replacement&&shot.distance>0&&shot.lift>0,'missile did not follow airborne arc toward replacement after rise');
  A.finish(1.2);A.assert(replacement.hp<100000,'descending missile caused no actual damage');
  p.moves=moves.slice();A.reset();p.moves=p.moves.filter(m=>m.id==='naruto-pain-missiles');
  const asura=P.actors().find(b=>b.path==='asura');asura.x=asura.y=0;A.spawn(180,0);A.ready('missiles');A.advance();A.finish(.4);
