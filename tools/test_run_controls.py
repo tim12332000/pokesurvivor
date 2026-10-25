@@ -69,7 +69,7 @@ def main():
                 result = {'speedMeasurements': []}
                 report['viewports'][label] = result
                 assert page.evaluate('G.Game.playbackSpeed===1 && !G.Game.autoPickUpgrades')
-                for speed in (1,2,3,4,5):
+                for speed in (1,2,3):
                     if speed>1:
                         click_control(page,mobile,'speed')
                     page.wait_for_function('(speed)=>G.Game.playbackSpeed===speed',arg=speed)
@@ -126,7 +126,7 @@ def main():
                 page.wait_for_function('G.Game.playbackSpeed===2')
                 result['labels']=page.evaluate('[...new Set(controlTexts)]')
                 assert any('自動選卡' in text for text in result['labels']),result['labels']
-                assert all(any('x'+str(n) in text or '×'+str(n) in text for text in result['labels']) for n in (1,2,3,4,5)),result['labels']
+                assert all(any('x'+str(n) in text or '×'+str(n) in text for text in result['labels']) for n in (1,2,3)),result['labels']
                 page.evaluate('G.Game.startRun()')
                 assert page.evaluate('G.Game.playbackSpeed===1 && !G.Game.autoPickUpgrades')
                 result['newRunReset']=True

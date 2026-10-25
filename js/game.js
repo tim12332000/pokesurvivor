@@ -955,7 +955,7 @@ G.Game = (() => {
     debugSpeed(k) { if (k > 1) tampered = true; speedK = k; },
     cyclePlaybackSpeed() {
       if (state !== 'playing' || !pl || pl.dead || G.Coop.active) return;
-      speedK = speedK >= 5 ? 1 : speedK + 1;
+      speedK = speedK >= 3 ? 1 : speedK + 1;
       if (speedK > 1) tampered = true;
     },
     toggleAutoPickUpgrades() {
