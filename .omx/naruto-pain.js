@@ -156,12 +156,11 @@
     return k==='planet'?!!planetTarget(targets,m.radius||320):targets.length>0;
   }
   function basic(owner,m) {
-    const target=nearby(owner,m.range||280)[0];if(!target)return false;
+    const targets=nearby(owner,m.range||280);if(!targets.length)return false;
     const f=frame(owner,m),base=m.quantityBaseCount??[5,5,6,7,8][rank(m)],count=Math.min(40,G.Quantity?.countAtCast(owner,f.m,base)??base);
     f.toolBounceCount=G.NinjaToolBounce?.count(owner)||0;
     family.lastCount=count;
-    const aim=Math.atan2(target.y-owner.y,target.x-owner.x);
-    batches.push({...f,kind:'rod',angle:aim,count,emitted:0,interval:Math.min(.08,.32/Math.max(1,count-1)),range:m.range||280});
+    batches.push({...f,kind:'rod',targets,count,emitted:0,interval:Math.min(.08,.32/Math.max(1,count-1)),range:m.range||280});
     family.castCounts.basic=(family.castCounts.basic||0)+1;owner.cast?.(m);return true;
   }
   function cast(owner,m) {
@@ -384,10 +383,14 @@
       const f=batches[i];if(!valid(f.owner)||f.world!==G.World){batches.splice(i,1);continue;}
       f.age+=dt;
       while(f.emitted<f.count&&f.age+1e-9>=f.emitted*f.interval) {
-        if(shots.filter(p=>p.kind==='rod').length<40) {
-          shots.push({...f,kind:'rod',x:f.owner.x,y:f.owner.y,angle:f.angle+(f.emitted-(f.count-1)/2)*.025,speed:440,distance:0,r:3,age:0,
+        let targets=f.targets.filter(e=>alive(e)&&dist(f,e)<=f.range&&clearPath(f.x,f.y,e.x,e.y));
+        if(!targets.length)targets=nearby(f,f.range);
+        const target=targets[f.emitted%targets.length];
+        if(target&&shots.filter(p=>p.kind==='rod').length<40) {
+          shots.push({...f,kind:'rod',phase:'fall',x:target.x,y:target.y,castX:f.x,castY:f.y,angle:Math.PI/2,speed:440,distance:0,r:3,
+            age:f.age-f.emitted*f.interval-dt,lift:180,fallDuration:.36,
             toolBounce:G.NinjaToolBounce?.create(f.owner,f.m.id,f.toolBounceCount)});
-          visualEffect(f,'rod-launch',.12,{x:f.owner.x,y:f.owner.y,angle:f.angle});
+          visualEffect(f,'rod-launch',.12,{x:target.x,y:target.y,angle:Math.PI/2,phase:'fall',lift:180});
         }
         f.emitted++;
       }
@@ -396,6 +399,18 @@
     for(let i=shots.length-1;i>=0;i--) {
       const p=shots[i];if(!frameActive(p)||p.world!==G.World){shots.splice(i,1);continue;}
       const previousAge=p.age;p.age+=dt;let flightDt=dt;
+      if(p.kind==='rod'&&p.phase==='fall') {
+        const t=Math.min(1,p.age/p.fallDuration);p.lift=180*(1-t*t);
+        if(t<1)continue;
+        const prop=G.World.projectileBlock(p.x,p.y,p.r);
+        const blocked=G.World.isWall(p.x,p.y)||prop||!clearPath(p.castX,p.castY,p.x,p.y);
+        if(blocked&&prop?.destructible)G.World.damageProp(prop,p.m.dmg*p.attack,'#c6addd');
+        const e=!blocked&&G.EnemyMgr.queryCircle(p.x,p.y,60).find(e=>alive(e)&&dist(p,e)<=p.r+(e.r||8));
+        if(e)hit(p,e,p.m.dmg,p,true);
+        visualEffect(p,'rod-hit',.22,{phase:'fall'});
+        if(e&&G.NinjaToolBounce?.redirectRod(p,e)){p.phase='bounce';p.age=0;continue;}
+        shots.splice(i,1);continue;
+      }
       if(p.kind==='rod')G.NinjaToolBounce?.aimRod(p);
       if(p.kind==='missile') {
         if(p.phase==='rise') {
@@ -665,6 +680,7 @@
   }
   function ground(ctx) {
     if(!family)return;ctx.save();ctx.strokeStyle='#9f85bb';ctx.lineWidth=1;ctx.globalAlpha=.45;
+    for(const p of shots)if(p.kind==='rod'&&p.phase==='fall')drawSkill('basic','ground',ctx,p);
     for(const f of family.actions) {
       if(f.kind==='planet'){planetGround(ctx,f);drawSkill('planet','ground',ctx,f);continue;}
       if(drawSkill(f.kind,'ground',ctx,f))continue;
