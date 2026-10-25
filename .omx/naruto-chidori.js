@@ -1,7 +1,7 @@
 /* Level-based Chidori pursuit is this edition's gameplay adaptation. */
 (() => {
   if (G.NarutoChidori) return;
-  const config = Object.freeze({ counts: Object.freeze([5,7,10,13,15]), minCooldown: .5, followupRange: 340, endInvulnerability: .3, flashDuration: .09,
+  const config = Object.freeze({ counts: Object.freeze([5,10,15,18,22]), minCooldown: .5, followupRange: 340, endInvulnerability: .3, flashDuration: .09,
     speed: 1000, speedStep: .15, maxSpeedMultiplier: 3, damageStep: .05,
     retargetDelay: .045, retargetDelayDecay: .85, minRetargetDelay: .012, screenPadding: 48, returnDuration: .12, step: 4 });
   const limitOf = (move,owner=G.Game.player) => {
