@@ -93,7 +93,7 @@ G.Player = class Player {
     const slow = this.inLiquid ? G.World.liquidEffect(this.mon.types).slow || 1 : 1;
     return s * slow * w * (G.NarutoTenten?.speedMultiplier(this) ?? 1) * (G.NarutoPain?.speedMultiplier(this) ?? 1);
   }
-  get reduction() { return Math.min(0.8, this.dmgReduce + this.buffs.def.n * this.buffs.def.amount); }
+  get reduction() { return Math.min(0.8, this.dmgReduce + this.buffs.def.n * this.buffs.def.amount + (G.NarutoPain?.damageReductionBonus(this) ?? 0)); }
   get regen() { return this.regenFlat + this.buffs.regen.n * this.buffs.regen.amount; }
 
   // ---------------- movimientos ----------------

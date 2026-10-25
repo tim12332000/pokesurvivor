@@ -9,7 +9,7 @@
     atk: n => `攻擊 +${percent(1.1**n-1)}%`,
     spd: n => `移速 +${percent(1.07**n-1)}%`,
     cd: n => `冷卻 −${percent(1-.92**n)}%`,
-    def: (n, pl) => `減傷 ${percent(pl.dmgReduce)}%`,
+    def: (n, pl) => `減傷 ${percent(pl.reduction)}%`,
     rgn: n => `回血 +${Math.round(.9*n*10)/10}/秒`,
     mag: n => `拾取 +${percent(1.3**n-1)}%`,
     xp: n => `經驗 +${percent(1.12**n-1)}%`,
@@ -19,9 +19,14 @@
     lifesteal: (n, pl) => `吸血 ${percent(pl.lifestealRate||0)}%`,
     percentHealthDamage: (n, pl) => `生命剝奪 ${percent(pl.percentHealthDamage||0)}%`
   };
-  const rows = pl => Object.entries(labels)
-    .filter(([id]) => (pl.statsTaken?.[id]||0)>0)
-    .map(([id, label]) => ({id, text:label(pl.statsTaken[id], pl)}));
+  const rows = pl => {
+    const items=Object.entries(labels).filter(([id])=>(pl.statsTaken?.[id]||0)>0)
+      .map(([id,label])=>({id,text:label(pl.statsTaken[id],pl)}));
+    const growth=G.NarutoPain?.durabilityState(pl);
+    if(growth?.healthBonus>0)items.unshift({id:'painHealthGrowth',text:`天道生命成長 +${growth.healthBonus}`},
+      {id:'painDefenseGrowth',text:`實際減傷 ${percent(pl.reduction)}%`});
+    return items;
+  };
   const draw = G.HUD.draw;
   G.HUD.draw = function(ctx, w, h, pl, st) {
     draw.call(this, ctx, w, h, pl, st);

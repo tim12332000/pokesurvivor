@@ -8,6 +8,7 @@
   const smoothStep=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const accelerate=t=>{t=Math.max(0,Math.min(1,t));return t*t;};
   const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:2,animal:2,human:2,preta:2,naraka:2}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
+  const durabilityConfig=Object.freeze({healthPerLevel:12,reductionPerLevel:.01,maxReduction:.2});
   const ready=b=>alive(b)&&b.formed&&b.protectionRemaining<=0;
   const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0, lifestealSource=null;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
@@ -15,6 +16,19 @@
   const valid=a=>alive(a)&&controlled(a)&&a.mon?.dex===30010;
   const currentFamily=owner=>!!family&&family.owner===owner&&owner===G.Game.player&&owner.mon?.dex===30010&&family.world===G.World;
   const speedMultiplier=owner=>currentFamily(owner)&&alive(owner)&&family.playerSpeedRemaining>0?2:1;
+  const durabilityLevels=owner=>owner===G.Game.player&&owner?.mon?.dex===30010?Math.max(0,(Number.isFinite(owner.level)?Math.floor(owner.level):1)-1):0;
+  const damageReductionBonus=owner=>Math.min(durabilityConfig.maxReduction,durabilityLevels(owner)*durabilityConfig.reductionPerLevel);
+  function syncDurability(owner){
+    if(!owner)return;
+    const bonus=durabilityLevels(owner)*durabilityConfig.healthPerLevel,previous=owner.painHealthBonus||0;
+    if(bonus===previous)return;
+    const delta=bonus-previous;owner.maxHp=Math.max(1,owner.maxHp+delta);
+    if(alive(owner))owner.hp=Math.max(1,Math.min(owner.maxHp,owner.hp+delta));
+    owner.painHealthBonus=bonus;
+  }
+  function durabilityState(owner=G.Game.player){
+    return owner===G.Game.player&&owner?.mon?.dex===30010?{healthBonus:owner.painHealthBonus||0,reductionBonus:damageReductionBonus(owner)}:null;
+  }
   function canRevivePlayer(owner=G.Game.player) {
     return currentFamily(owner)&&G.Game.state!=='ui'&&G.Game.state!=='over'&&owner.dead&&family.bodies.some(b=>b.path==='naraka'&&alive(b)&&b.formed);
   }
@@ -127,7 +141,7 @@
     }
   }
   function ensure(owner=G.Game.player) {
-    const main=root(owner);if(!familyActive(main)||main!==G.Game.player)return null;
+    const main=root(owner);syncDurability(main);if(!familyActive(main)||main!==G.Game.player)return null;
     if(family&&(family.owner!==main||family.world!==G.World))clear();
     if(!family) {
       family={owner:main,world:G.World,bodies:[],clock:0,decision:0,queue:[],actions:[],castCounts:{},absorbCooldown:0,repairCooldown:0,repairWait:0,repair:null,playerRevive:null,playerProtection:0,playerSpeedRemaining:0,sharedRecovery:0,intercepted:0,revives:0,lastCount:0};
@@ -834,6 +848,9 @@
     return result;
   };
   const originalHurt=G.Player.prototype.hurt,originalHeal=G.Player.prototype.heal,originalOnDealt=G.Player.prototype.onDealt;
+  const originalGainXp=G.Player.prototype.gainXp,originalPlayerUpdate=G.Player.prototype.update;
+  G.Player.prototype.gainXp=function(...args){const result=originalGainXp.apply(this,args);syncDurability(this);return result;};
+  G.Player.prototype.update=function(dt,...args){syncDurability(this);return originalPlayerUpdate.call(this,dt,...args);};
   const originalRevive=G.Player.prototype.revive;
   G.Player.prototype.revive=function(...args){
     const wasDead=this.dead,result=originalRevive.apply(this,args);
@@ -849,7 +866,7 @@
     if(currentFamily(this)&&this.dead)return;
     return originalOnDealt.call(this,damage,...args);
   };
-  G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,gravityPoseFor,stateFor,snapshot,canRevivePlayer,playerReviveState,speedMultiplier,visualHeights,visualHeight,survivalConfig,planetVisual,
+  G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,gravityPoseFor,stateFor,snapshot,canRevivePlayer,playerReviveState,speedMultiplier,damageReductionBonus,syncDurability,durabilityState,durabilityConfig,visualHeights,visualHeight,survivalConfig,planetVisual,
     actors:()=>family?.bodies.filter(ready)||[],actorsFor:owner=>root(owner)===family?.owner?family.bodies:[],
     drawables:cam=>family?.bodies.filter(a=>a.formed&&cam.sees(a.x,a.y,Math.max(100,visualHeight(a.path,a.sourceOwner)+12)))||[],
     get shots(){return shots;},get effects(){return effects;},absorbable};
