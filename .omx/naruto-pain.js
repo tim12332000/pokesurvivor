@@ -489,7 +489,7 @@
   function resolve(dt,owner) {
     const s=ensure(owner);if(!s||owner!==s.owner||s.owner.frozen||G.Game.state!=='playing')return;
     const preta=body('preta'),m=learned(s.owner,'absorb'),all=G.Projectiles.all(),others=[owner,...(G.SelfClones?.actors()||[])].filter(alive);
-    const absorbReady=m&&ready(preta)&&s.absorbCooldown<=0&&dist(preta,owner)<=110;
+    const absorbReady=m&&ready(preta)&&s.absorbCooldown<=0&&dist(preta,owner)<=300;
     let absorbed=0;const absorbedPoints=[];
     for(let i=all.length-1;i>=0;i--) {
       const p=all[i];if(p.friendly!==false)continue;

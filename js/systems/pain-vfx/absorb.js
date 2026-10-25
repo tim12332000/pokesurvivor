@@ -9,7 +9,7 @@
     const learned = owner?.moves?.some(m => (m.id || m.digiMode) === 'naruto-pain-absorb');
     if (!learned || !b || b.dead || b.hp <= 0 || !b.formed ||
         b.protectionRemaining > 0 || !(s.absorbCooldown <= 0) ||
-        Math.hypot(b.x - owner.x, b.y - owner.y) > 110) return;
+        Math.hypot(b.x - owner.x, b.y - owner.y) > 300) return;
     const facing = Math.cos(b.aim || 0) < 0 ? -1 : 1;
     const pulse = .8 + .2 * Math.sin((s.clock || 0) * 3);
     ctx.save();

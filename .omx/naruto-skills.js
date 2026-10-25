@@ -487,7 +487,7 @@
       name:'餓鬼道・封術吸印',mode:'pain-absorb',icon:'painAbsorb',type:'psychic',learnLevel:6,
       passive:true,cd:0,dmg:0,absorbCooldown:2.5,
       ups:[2.3,2.1,1.9,1.7].map(value=>({t:`吸收恢復週期 ${value} 秒`,m:{absorbCooldown:value}})),
-      desc:'學會即自動守衛，不占主動槽。餓鬼道一次吸收雙掌半徑 36 內全部合格忍術彈，牆會阻擋；恢復 2.5／2.3／2.1／1.9／1.7 秒，受冷卻卡影響。物理忍具、雷射、地面技不吸收，沒有額外無敵或回血。',source_url:'https://naruto-official.com/en/anime/naruto2/list/01_609'
+      desc:'學會即自動守衛，不占主動槽。餓鬼道在天道 300 內時，一次吸收雙掌半徑 36 內全部合格忍術彈，牆會阻擋；恢復 2.5／2.3／2.1／1.9／1.7 秒，受冷卻卡影響。物理忍具、雷射、地面技不吸收，沒有額外無敵或回血。',source_url:'https://naruto-official.com/en/anime/naruto2/list/01_609'
     }],
     ['naruto-pain-summon',[30010],{
       name:'畜生道・通靈衝陣',mode:'pain-summon',icon:'painSummon',type:'ground',learnLevel:9,passive:true,
