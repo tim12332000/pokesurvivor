@@ -17,7 +17,9 @@ CHECK = r"""() => {
   const axis=G.Input.axis,spd=p.spdMul;
   function setup(multiplier){
     Acceptance.arena();p.spdMul=spd*multiplier;
+    const normalSpeed=p.spd;
     Acceptance.enemy(0,85);assert(G.NarutoChidori.cast(p,move),'cast');
+    assert(Math.abs(p.spd/normalSpeed-.8)<1e-6,'charge speed must be 80%');
   }
   function walk(dt,input=[0,1]){
     G.Input.axis=()=>input;Acceptance.resume();
