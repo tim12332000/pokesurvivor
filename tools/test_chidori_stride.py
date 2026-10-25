@@ -42,8 +42,8 @@ CHECK = r"""() => {
     setup(1);const parts=[];
     for(let i=0;i<4;i++)parts.push(walk(.05));
     assert(Math.abs(parts[3].distance-normal.distance)<1e-6&&parts[3].pose.frame===normal.pose.frame,'frame partition invariant');
-    assert(move.charge===.5,'charge timing changed');
-    Acceptance.step(.49);assert(G.NarutoChidori.active.phase==='charge','early dash');
+    assert(move.charge===.3,'charge timing changed');
+    Acceptance.step(.29);assert(G.NarutoChidori.active.phase==='charge','early dash');
     Acceptance.step(.011);assert(G.NarutoChidori.active.phase==='dash','late dash');
     setup(1);walk(.15);
     return {normal,slow,equal,blocked,partitioned:parts[3],chargeSeconds:move.charge};
@@ -72,7 +72,7 @@ def main():
         assert not errors,errors
         (OUT/'stride-report.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
         browser.close()
-    print('PASS: stride follows distance, scales with speed, stops at rest/walls; charge remains 0.5s')
+    print('PASS: stride follows distance, scales with speed, stops at rest/walls; charge is 0.3s')
 
 
 if __name__ == '__main__':
