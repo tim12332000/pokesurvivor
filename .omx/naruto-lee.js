@@ -6,11 +6,15 @@
   const reverseDurations = { windup: .28, lift: .48, combo: 1.65, descent: .32, slam: .24, recovery: .28 };
   const basics = new WeakMap(), claims = new WeakMap();
   const bandageExtend = .10;
-  const bindLimitOf=(move,owner=G.Game.player)=>Math.min(12,G.Quantity?.countAtCast(owner,move,3)??3);
+  const bindLimitOf=(move,owner=G.Game.player)=>{
+    const base=move.digiMode==='lee-reverse-lotus'?5:3;
+    return Math.min(12,G.Quantity?.countAtCast(owner,move,base)??base);
+  };
   const chains = new Map(), summaries = new Map(), releasingTargets = new WeakSet();
   const activeFor = owner => chains.get(owner) || null;
   const controlled = owner => owner === G.Game.player || !!G.SelfClones?.isControlled(owner);
-  const targetChain = enemy => [...chains.values()].filter(f => valid(f) && f.target === enemy && f.kind === 'lee-reverse-lotus' &&
+  const member = (f, enemy) => f.target===enemy || f.boundTargets.includes(enemy) || f.pendingVictims?.has(enemy);
+  const targetChain = enemy => [...chains.values()].filter(f => valid(f) && member(f,enemy) && f.kind === 'lee-reverse-lotus' &&
       ['lift', 'combo', 'descent', 'slam'].includes(f.phase))
     .sort((a, b) => Number(!!b.primaryHit) - Number(!!a.primaryHit) || Number(!!b.pendingDeath) - Number(!!a.pendingDeath))[0];
   const alive = actor => actor && !actor.dead && actor.hp > 0;
@@ -39,7 +43,7 @@
   const bound = enemy => {
     const f=claimFor(enemy);
     return !!f&&f.pullable&&pullableTarget(enemy)&&
-      (f.phase==='approach'?f.bandageStage==='pull':enemy===f.target?f.phase==='windup':['windup','lift','suspend','combo','descent'].includes(f.phase));
+      (f.phase==='approach'?f.bandageStage==='pull':enemy===f.target&&f.kind!=='lee-reverse-lotus'?f.phase==='windup':['windup','lift','suspend','combo','descent'].includes(f.phase));
   };
   function targetFor(owner, move) {
     const range = move.range || 145;
@@ -108,25 +112,86 @@
   function removeLift(f) {
     if (f) { f.targetLift = 0; f.visualLift = 0; }
   }
-  const hitLiftFor = enemy => Math.max(0, ...[...chains.values()].filter(f => valid(f) && f.target === enemy).map(f => f.targetLift));
+  const hitLiftFor = enemy => Math.max(0, ...[...chains.values()].filter(f => valid(f) &&
+    (f.target===enemy || f.kind==='lee-reverse-lotus'&&member(f,enemy))).map(f => f.targetLift));
   const liftFor = enemy => alive(enemy) ? hitLiftFor(enemy) : 0;
   function resetCamera(f) {
     if (f.cameraRaised && f.owner === G.Game.player && f.world === G.World && G.Camera) G.Camera.y = f.owner.y;
+    if (f.cameraShifted && f.owner === G.Game.player && f.world === G.World && G.Camera) G.Camera.x = f.owner.x;
     f.cameraRaised = false;
+    f.cameraShifted = false;
   }
   function syncLift(f) {
     if (!['lift', 'suspend', 'combo', 'descent'].includes(f.phase) || elite(f.target)) { removeLift(f); return; }
     const reverse = f.kind === 'lee-reverse-lotus', base = reverse ? 60 : 40;
+    const descent = Math.max(0, Math.min(1, f.phaseAge / f.durations.descent));
+    // A short held apex leads into an accelerating plunge, within the existing phase.
+    const fall = reverse ? Math.min(1, Math.max(0, (descent - .18) / .78)) ** 2 : descent;
     f.visualLift = f.phase === 'lift' ? Math.sin(Math.min(1, f.phaseAge / f.durations.lift) * Math.PI / 2) * base :
-      f.phase === 'descent' ? f.peakLift * Math.max(0, 1 - f.phaseAge / f.durations.descent) :
+      f.phase === 'descent' ? f.peakLift * Math.max(0, 1 - fall) :
       f.phase === 'combo' ? base + f.ticks * 8 : base;
     f.targetLift = f.visualLift;
     // Follow only the excess height, keeping high-quantity kicks below the HUD.
     const camera = G.Camera;
     if (f.owner === G.Game.player && reverse && camera?.h > 0 && Number.isFinite(camera.y)) {
-      const ceiling = f.owner.y - f.visualLift - 140 + camera.h / 2;
+      const actorPose = presentationFor(f.owner);
+      const group=(f.boundTargets.length?f.boundTargets:[f.target]).filter(alive).map(enemy=>{
+        const pose=victimPresentationFor(enemy);
+        return {x:enemy.x+(pose?.offsetX||0),y:enemy.y-f.targetLift+(pose?.offsetY||0)-60};
+      });
+      const highest = Math.min(f.owner.y - f.visualLift + (actorPose?.offsetY || 0) - 80,...group.map(point=>point.y));
+      const ceiling = highest - 60 + camera.h / 2;
       if (camera.y > ceiling) { camera.y = ceiling; f.cameraRaised = true; }
+      if (actorPose && camera.w > 0) {
+        const xs=[f.owner.x+actorPose.offsetX,...group.map(point=>point.x)];
+        const low=Math.max(...xs)+72-camera.w/2,high=Math.min(...xs)-72+camera.w/2;
+        const x=Math.max(low,Math.min(high,camera.x));
+        if(x!==camera.x){camera.x=x;f.cameraShifted=true;}
+      }
     }
+  }
+  // Screen-space pursuit paths; world positions and all contact checks stay native.
+  const airPositions = [[-48,18],[48,-18],[-30,-42],[44,32],[0,-58],[0,48]];
+  const victimPositions = [[-180,-45],[185,-150],[-195,-85],[180,-200],[0,-160],[155,-80]];
+  function airPath(f, points, pursuit = false) {
+    const index = Math.max(0, f.ticks - 1), from = f.ticks ? points[index % points.length] : [0,0];
+    if (f.ticks >= f.comboHits) return from;
+    const start = f.ticks ? f.comboDeadlines[f.ticks - 1] : 0, end = f.comboDeadlines[f.ticks];
+    const progress = (f.phaseAge - start) / Math.max(.001, end - start);
+    // The victim flies first; Lee crosses the arena afterwards and arrives for contact.
+    const t = Math.max(0, Math.min(1, (progress - (pursuit ? .34 : .08)) / (pursuit ? .64 : .62)));
+    const ease = t * t * (3 - 2 * t), to = points[f.ticks % points.length];
+    return [from[0] + (to[0] - from[0]) * ease, from[1] + (to[1] - from[1]) * ease];
+  }
+  function victimPose(f) {
+    if (!valid(f) || f.kind !== 'lee-reverse-lotus' || elite(f.target) || !['combo','descent'].includes(f.phase)) return null;
+    const point = f.phase === 'combo' ? airPath(f, victimPositions) : victimPositions[Math.max(0, f.ticks - 1) % victimPositions.length];
+    const settle = f.phase === 'descent' ? 1 - Math.min(1, f.phaseAge / (f.durations.descent * .8)) : 1;
+    return { offsetX: point[0] * settle, offsetY: point[1] * settle };
+  }
+  function victimPresentationFor(enemy) {
+    if(!alive(enemy))return null;
+    const f=targetChain(enemy);if(!f||elite(f.target))return null;
+    const pose=victimPose(f);
+    if(!pose&&f.phase!=='lift')return null;
+    const spread=f.phase==='lift'?Math.min(1,f.phaseAge/f.durations.lift):
+      f.phase==='descent'?1-Math.min(1,f.phaseAge/(f.durations.descent*.8)):1;
+    return {offsetX:(pose?.offsetX||0)+(enemy.x-f.target.x)*.75*spread,
+      offsetY:(pose?.offsetY||0)+(enemy.y-f.target.y)*.65*spread};
+  }
+  function presentationFor(owner) {
+    const f = activeFor(owner);
+    if (!valid(f) || f.kind !== 'lee-reverse-lotus' || elite(f.target) ||
+        !['combo', 'descent'].includes(f.phase)) return null;
+    const point = f.phase === 'combo' ? airPath(f, airPositions, true) : [0,-52];
+    const victim = f.phase === 'combo' ? airPath(f, victimPositions, true) : [victimPose(f).offsetX, victimPose(f).offsetY];
+    const settle = f.phase === 'descent' ? 1 - Math.min(1, f.phaseAge / f.durations.descent) : 1;
+    const mirror = point[0] > 0;
+    let rotation = Math.atan2(-point[1], -point[0]) - (mirror ? Math.PI : 0);
+    if (rotation < -Math.PI) rotation += Math.PI * 2;
+    return { offsetX: (f.target.x - owner.x + victim[0] + point[0]) * settle,
+      offsetY: (f.target.y - owner.y + victim[1] + point[1] + 18) * settle,
+      mirror, rotation: rotation * settle };
   }
   function clear(owner) {
     for (const [actor, f] of chains) if (!owner || actor === owner) {
@@ -136,12 +201,11 @@
     }
     for (const actor of summaries.keys()) if (!owner || actor === owner) summaries.delete(actor);
   }
-  const pendingDefeat = enemy => [...chains.values()].some(f => f.pendingDeath && valid(f) && f.target === enemy && !enemy.dead);
+  const pendingDefeat = enemy => [...chains.values()].some(f => valid(f) && f.pendingVictims?.has(enemy) && !enemy.dead);
   function releasePending(f) {
-    if (!f.pendingDeath || f.releasing) return;
+    if (!f.pendingVictims.size || f.releasing) return;
     f.releasing = true;
-    const target = f.target;
-    if (!target.dead) {
+    for (const target of f.pendingVictims.keys()) if (!target.dead) {
       target.hp = 0;
       if ((f.owner === G.Game.player || f.owner.sourceOwner === G.Game.player) && f.world === G.World) {
         releasingTargets.add(target);
@@ -149,14 +213,17 @@
       }
       else { G.EnemyMgr.discard(target); target.dead = true; target.fade = 0; }
     }
+    f.pendingVictims.clear();
     f.pendingDeath = false;
+    f.releasing = false;
   }
   const enemyDie = G.Enemy.prototype.die;
   G.Enemy.prototype.die = function(...args) {
     const f = targetChain(this);
-    if (!releasingTargets.has(this) && valid(f) && f.kind === 'lee-reverse-lotus' && f.target === this && !this.remote &&
+    if (!releasingTargets.has(this) && valid(f) && f.kind === 'lee-reverse-lotus' && !this.remote &&
         !f.releasing && !this.dead && this.hp <= 0 && ['lift', 'combo', 'descent', 'slam'].includes(f.phase)) {
-      if (!f.pendingDeath) { f.pendingDeath = true; f.anchorX = this.x; f.anchorY = this.y; }
+      if (!f.pendingVictims.has(this)) f.pendingVictims.set(this,{x:this.x,y:this.y});
+      if (f.target===this&&!f.pendingDeath) { f.pendingDeath = true; f.anchorX = this.x; f.anchorY = this.y; }
       this.hp = 1; this.kx = this.ky = 0; this.touchCd = Math.max(.1, this.touchCd || 0);
       return;
     }
@@ -164,11 +231,15 @@
   };
   const enemyHurt = G.Enemy.prototype.hurt;
   G.Enemy.prototype.hurt = function(amount, ...args) {
-    const f = [...chains.values()].find(f => valid(f) && f.primaryHit && f.target === this), primary = valid(f) && f.kind === 'lee-reverse-lotus' && f.primaryHit && f.target === this && !this.dead;
+    const f = [...chains.values()].find(f => valid(f) && f.hitTarget===this);
+    const comboHit = valid(f) && f.kind==='lee-reverse-lotus' && !this.dead;
     const result = enemyHurt.call(this, amount, ...args);
     // Later percent-health wrappers pass the complete incoming hit through here.
     // Match the native displayed integer, retaining shield and critical semantics.
-    if (primary && Number.isFinite(amount)) { f.totalDamage += Math.max(1, Math.round(amount)); f.totalHits++; }
+    if (comboHit && Number.isFinite(amount)) {
+      f.totalDamage += Math.max(1, Math.round(amount));
+      if(f.target===this)f.totalHits++;
+    }
     return result;
   };
   function canCast(owner, move) {
@@ -190,7 +261,8 @@
       comboHits, comboDeadlines, peakLift: reverse ? 60 + comboHits * 8 : 40,
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
       pullable: pullableTarget(target),bandageStage:'extend',bindLimit:bindLimitOf(snapshot,owner),boundTargets:[],bindings:[],
-      visualLift: 0, targetLift: 0, ticks: 0, totalDamage: 0, totalHits: 0, pendingDeath: false };
+      visualLift: 0, targetLift: 0, ticks: 0, totalDamage: 0, totalHits: 0, pendingDeath: false,
+      strikes: [], pendingVictims: new Map() };
     chains.set(owner, chain); summaries.delete(owner);
     reserveGroup(chain);
     owner.svx = owner.svy = 0;
@@ -203,11 +275,18 @@
     const damage = move.dmg * ratio * f.attack * mult * G.Weather.mult(move.type) *
       (crit ? 1.5 : 1) * (G.NarutoSupport?.precisionMultiplier(owner, enemy) || 1);
     f.primaryHit = enemy === f.target;
+    f.hitTarget = enemy;
     try { enemy.hurt(damage, '#f2ddab', enemy.x - owner.x, enemy.y - owner.y, 0, crit ? 'crit' : G.Types.label(mult), owner, move.id); }
-    finally { f.primaryHit = false; }
+    finally { f.primaryHit = false; f.hitTarget = null; }
     owner.onDealt(damage); owner.dmgDealt += damage;
     if (singleTarget) G.DamageSplash?.hit(owner, enemy, damage, '#f2ddab', move.id);
-    G.FX.burst(enemy.x, enemy.y - (enemy.jumpLift || 0) - hitLiftFor(enemy), '#f2ddab', 5, 40);
+    const pose=victimPresentationFor(enemy);
+    if(f.kind==='lee-reverse-lotus'&&f.boundTargets.length>1)enemy.flash=Math.min(enemy.flash,.03);
+    G.FX.burst(enemy.x+(pose?.offsetX||0), enemy.y+(pose?.offsetY||0) - (enemy.jumpLift || 0) - hitLiftFor(enemy), '#f2ddab', 5, 40);
+  }
+  function hitGroup(f, ratio, splash = true) {
+    const targets=f.kind==='lee-reverse-lotus'?new Set([f.target,...f.boundTargets]):[f.target];
+    for(const enemy of targets)hit(f,enemy,ratio,splash);
   }
   function enter(f, phase) {
     f.phase = phase; f.phaseAge = 0;
@@ -221,7 +300,10 @@
       f.comboDeadlines = f.comboDeadlines.map(time => time * scale);
     }
     syncLift(f);
-    if (phase === 'lift') hit(f, f.target, f.kind === 'lee-lotus' ? .2 : .1);
+    if (phase === 'lift') {
+      if(f.kind==='lee-reverse-lotus')hitGroup(f,.1);
+      else hit(f,f.target,.2);
+    }
     if (phase === 'slam') {
       f.clothRelease=(f.boundTargets.length?f.boundTargets:[f.target]).filter(alive)
         .map((e,i)=>({x:e.x,y:e.y-(e.bodyH||24)*.3,r:e.r||10,seed:i*79}));
@@ -229,9 +311,11 @@
       resetCamera(f);
       removeLift(f);
       hit(f, f.target, f.kind === 'lee-lotus' ? .8 : .3, false);
+      const group=f.kind==='lee-reverse-lotus'?new Set(pulled):new Set();
+      for(const enemy of group)if(enemy!==f.target)hit(f,enemy,.3,false);
       const radius = f.move.radius || 60;
       for (const enemy of new Set([...pulled,...G.EnemyMgr.queryCircle(f.target.x, f.target.y, radius)])) {
-        if (enemy !== f.target && Math.hypot(enemy.x - f.target.x, enemy.y - f.target.y) <= radius + (enemy.r || 0)) hit(f, enemy, .35, false);
+        if (enemy !== f.target && !group.has(enemy) && Math.hypot(enemy.x - f.target.x, enemy.y - f.target.y) <= radius + (enemy.r || 0)) hit(f, enemy, .35, false);
       }
       if (f.kind === 'lee-reverse-lotus') {
         // The outside rim marks the actual damage radius from the landing frame.
@@ -294,7 +378,9 @@
     for (const f of [...chains.values()]) updateChain(f, dt);
   }
   function updateChain(f, dt) {
-    if (f.pendingDeath && valid(f)) { f.target.x = f.anchorX; f.target.y = f.anchorY; f.target.kx = f.target.ky = 0; }
+    if (valid(f)) for(const [enemy,anchor] of f.pendingVictims){
+      enemy.x=anchor.x;enemy.y=anchor.y;enemy.kx=enemy.ky=0;
+    }
     if (!valid(f) || (!alive(f.target) && !launchedLotus(f)) || !clearPath(f.owner.x, f.owner.y, f.target.x, f.target.y)) { clear(f.owner); return; }
     if (G.Game.state !== 'playing') return;
     if(f.pullable&&!pullableTarget(f.target)){
@@ -318,7 +404,15 @@
       if (f.phase === 'combo') {
         // A defeated bound target stays hittable until the landing resolves it.
         while (f.ticks < f.comboHits && f.phaseAge + 1e-9 >= f.comboDeadlines[f.ticks]) {
-          f.ticks++; syncLift(f); hit(f, f.target, .12 * 1.1 ** f.ticks);
+          f.ticks++; syncLift(f); hitGroup(f,.12 * 1.1 ** f.ticks);
+          const pose = presentationFor(f.owner);
+          const victim = victimPose(f);
+          f.strikes.push({ age: f.age, x: f.owner.x + (pose?.offsetX || 0), y: f.owner.y - f.visualLift + (pose?.offsetY || 0),
+            tx: f.target.x + (victim?.offsetX || 0), ty: f.target.y + (victim?.offsetY || 0) - f.targetLift - (f.target.bodyH || 24) * .5,
+            frame: 1 + f.ticks % 2, mirror: pose?.mirror ?? Math.cos(f.owner.aim) < 0,
+            rotation: pose?.rotation || 0,
+            key: G.NarutoGates?.stage(f.owner) ? 'lee-opened-reverse' : 'lee-reverse' });
+          if (f.strikes.length > 6) f.strikes.shift();
         }
       }
       if (f.phaseAge + 1e-9 >= f.durations[f.phase]) {
@@ -404,12 +498,13 @@
     const items=[];
     for(let index=0;index<targets.length;index++){
       const e=targets[index];if(!f.clothSeeds.has(e))f.clothSeeds.set(e,index*79+(e.id|0));
-      const seed=f.clothSeeds.get(e),lift=(e.jumpLift||0)+hitLiftFor(e);
-      const body=Math.max(16,e.bodyH||24),rx=Math.max(6,e.r||10)*.95,cy=e.y-lift-body*.32;
-      const dx=e.x-hand.x,dy=cy-hand.y,distance=Math.max(1,Math.hypot(dx,dy)),nx=-dy/distance,ny=dx/distance;
-      const entryAngle=hand.x<e.x?Math.PI:0,wrapGrow=f.pullable?clothClamp((time-.075)/.085):0;
-      const tx=f.pullable?e.x+Math.cos(entryAngle)*rx*.94:e.x-dx/distance*rx*.76;
-      const ty=f.pullable?e.y-lift-body*.49:cy-dy/distance*rx*.3;
+      const seed=f.clothSeeds.get(e),lift=(e.jumpLift||0)+hitLiftFor(e),pose=victimPresentationFor(e);
+      const ex=e.x+(pose?.offsetX||0),ey=e.y+(pose?.offsetY||0);
+      const body=Math.max(16,e.bodyH||24),rx=Math.max(6,e.r||10)*.95,cy=ey-lift-body*.32;
+      const dx=ex-hand.x,dy=cy-hand.y,distance=Math.max(1,Math.hypot(dx,dy)),nx=-dy/distance,ny=dx/distance;
+      const entryAngle=hand.x<ex?Math.PI:0,wrapGrow=f.pullable?clothClamp((time-.075)/.085):0;
+      const tx=f.pullable?ex+Math.cos(entryAngle)*rx*.94:ex-dx/distance*rx*.76;
+      const ty=f.pullable?ey-lift-body*.49:cy-dy/distance*rx*.3;
       const head=progress<.5?.15*(progress/.5)**2:.15+.85*(progress-.5)/.5;
       const spine=[],width=Math.max(4.2,2.8/scale),bridgeAlpha=['approach','windup'].includes(f.phase)?1:f.phase==='lift'?1-clothClamp(f.phaseAge/.10):0;
       for(let i=0;i<=18;i++){
@@ -424,8 +519,8 @@
         let chunk=[],lastFront=null;
         for(let i=0;i<=36;i++){
           const u=i/36,angle=entryAngle+turns*Math.PI*2*u+Math.sin(Math.PI*u)*Math.sin(time*2+seed)*.12;
-          const point=[e.x+Math.cos(angle)*rx*(.94+.06*Math.sin(u*8)),
-            e.y-lift-body*.49+body*.32*u*grow+Math.sin(angle)*rx*.19];
+          const point=[ex+Math.cos(angle)*rx*(.94+.06*Math.sin(u*8)),
+            ey-lift-body*.49+body*.32*u*grow+Math.sin(angle)*rx*.19];
           if(i===36)wrapEnd=point;
           const isFront=Math.sin(angle)>=0;
           if(lastFront!==null&&isFront!==lastFront){
@@ -460,10 +555,85 @@
     return result;
   };
   const previousAir=C.drawAirFields;
+  function drawReverseAir(ctx, f) {
+    if (f.kind !== 'lee-reverse-lotus') return;
+    ctx.save();
+    const lift = G.LIFT || 0, scale = f.owner.anim.scale || 1;
+    const actorPose = presentationFor(f.owner), lastStrike = f.strikes.at(-1);
+    if (f.phase === 'combo' && actorPose && lastStrike) {
+      const x=f.owner.x+actorPose.offsetX,y=f.owner.y-f.visualLift+actorPose.offsetY-lift;
+      const dx=x-lastStrike.x,dy=y-(lastStrike.y-lift),distance=Math.hypot(dx,dy);
+      if (distance>18) {
+        const ux=dx/distance,uy=dy/distance,length=Math.min(76,distance);
+        ctx.globalAlpha=.5;ctx.strokeStyle='#b8db9c';ctx.lineWidth=2;
+        for(let i=-1;i<=1;i++){
+          const sx=x-uy*i*7,sy=y-28+ux*i*7;
+          ctx.beginPath();ctx.moveTo(sx-ux*length,sy-uy*length);ctx.lineTo(sx-ux*12,sy-uy*12);ctx.stroke();
+        }
+      }
+    }
+    for (const strike of f.strikes) {
+      const age = f.age - strike.age;
+      if (age < 0 || age > .18) continue;
+      const fade = 1 - age / .18;
+      window.AnimationAssets?.draw(ctx, strike.key, strike.frame, strike.x, strike.y - lift,
+        { scale, mirror: strike.mirror, rotation: strike.rotation, alpha: fade * .3 });
+      // Small contact stars and tapered streaks follow real hit events only.
+      const x = strike.tx, y = strike.ty - lift;
+      const angle = strike.rotation + (strike.mirror ? Math.PI : 0);
+      const dx = Math.cos(angle), dy = Math.sin(angle), nx = -dy, ny = dx;
+      ctx.globalAlpha = fade;
+      ctx.fillStyle = '#fff5cd';
+      ctx.beginPath();ctx.moveTo(x - 13, y);ctx.lineTo(x - 3, y - 3);
+      ctx.lineTo(x, y - 13);ctx.lineTo(x + 3, y - 3);ctx.lineTo(x + 13, y);
+      ctx.lineTo(x + 3, y + 3);ctx.lineTo(x, y + 10);ctx.lineTo(x - 3, y + 3);ctx.closePath();ctx.fill();
+      ctx.strokeStyle = '#b5e783';ctx.lineWidth = 2;
+      for (let i = 0; i < 3; i++) {
+        const sx = x + nx * (i - 1) * 8, sy = y + ny * (i - 1) * 8;
+        ctx.beginPath();ctx.moveTo(sx - dx * (24 + age * 90), sy - dy * (24 + age * 90));
+        ctx.lineTo(sx - dx * 6, sy - dy * 6);ctx.stroke();
+      }
+    }
+    if (['lift', 'combo', 'descent'].includes(f.phase)) {
+      const plunge = f.phase === 'descent', progress = plunge ? f.phaseAge / f.durations.descent : 0;
+      const power = plunge ? Math.max(0, (progress - .18) / .82) : .28;
+      const victim = victimPose(f);
+      const x = f.target.x + (victim?.offsetX || 0), y = f.target.y + (victim?.offsetY || 0) - lift - f.targetLift - 22;
+      ctx.globalAlpha = .25 + power * .45;ctx.strokeStyle = plunge ? '#fff4ce' : '#a9d887';ctx.lineWidth = 2;
+      for (let i = 0; i < 7; i++) {
+        const sx = x + (i - 3) * 12, length = 9 + power * 37 + (i % 3) * 5;
+        ctx.beginPath();ctx.moveTo(sx, y - length - 8);ctx.lineTo(sx, y - 8);ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+  const previousGround = C.drawGroundFields;
+  C.drawGroundFields = function(ctx) {
+    previousGround.call(this, ctx);
+    for (const f of chains.values()) {
+      if (!valid(f) || f.kind !== 'lee-reverse-lotus' || !['slam', 'recovery'].includes(f.phase)) continue;
+      const age = f.phase === 'slam' ? f.phaseAge : f.durations.slam + f.phaseAge;
+      const p = Math.min(1, age / (f.durations.slam + f.durations.recovery));
+      const radius = f.move.radius || 100, x = f.target.x, y = f.target.y;
+      ctx.save();ctx.globalAlpha = (1 - p) * .8;ctx.lineWidth = 2;ctx.strokeStyle = '#18291e';
+      for (let i = 0; i < 9; i++) {
+        const angle = i * Math.PI * 2 / 9, length = radius * (.45 + (i % 3) * .12);
+        ctx.beginPath();ctx.moveTo(x + Math.cos(angle) * 9, y + Math.sin(angle) * 9);
+        ctx.lineTo(x + Math.cos(angle + .13) * length * .55, y + Math.sin(angle + .13) * length * .55);
+        ctx.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length);ctx.stroke();
+        const r = radius * Math.min(1, .25 + p * 1.8);
+        ctx.fillStyle = i % 2 ? '#b8a57a' : '#dfcda1';
+        ctx.fillRect(Math.round(x + Math.cos(angle) * r), Math.round(y + Math.sin(angle) * r - Math.sin(p * Math.PI) * 15), 4, 3);
+      }
+      ctx.strokeStyle = '#e3d5a6';ctx.globalAlpha *= .65;
+      ctx.beginPath();ctx.arc(x, y, radius * Math.min(1, .2 + p * 2.8), 0, Math.PI * 2);ctx.stroke();ctx.restore();
+    }
+  };
   C.drawAirFields=function(ctx){
     previousAir.call(this,ctx);
     for(const f of chains.values()){
       if(!valid(f))continue;
+      drawReverseAir(ctx, f);
       if(['approach','windup','lift','suspend','combo','descent'].includes(f.phase)){
         for(const cloth of clothVisuals(f))paintCloth(ctx,cloth.bridge,cloth.bridgeAlpha);
       }else if(f.phase==='slam'&&f.phaseAge<.12){
@@ -525,6 +695,6 @@
     const text = `${summary.totalHits} 連擊｜總傷害 ${summary.totalDamage.toLocaleString('zh-TW')}`;
     ctx.strokeText(text, w / 2, y, w - 24); ctx.fillText(text, w / 2, y, w - 24); ctx.restore();
   };
-  G.NarutoLee = { bindLimitOf, bound, supports, canCast, cast, clear, update, liftFor, hitLiftFor, isInvulnerable, pendingDefeat,
+  G.NarutoLee = { bindLimitOf, bound, supports, canCast, cast, clear, update, liftFor, hitLiftFor, isInvulnerable, pendingDefeat, presentationFor, victimPresentationFor,
     get comboSummary() { return comboSummary(); }, activeFor, get active() { return activeFor(G.Game.player); } };
 })();

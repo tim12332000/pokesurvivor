@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>小李・裏蓮華演出預覽</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#101923;color:#eef5ef;font:16px/1.5 system-ui,sans-serif}main{max-width:920px;margin:auto;padding:24px}h1{font-size:25px;margin:0 0 6px}p{color:#b8cbbb;margin:0 0 18px}.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin:16px 0}button,select{font:inherit;color:inherit;background:#263c32;border:1px solid #5c826a;border-radius:8px;padding:8px 12px}button{cursor:pointer}button:disabled{opacity:.5;cursor:wait}label{display:flex;align-items:center;gap:7px}canvas{display:block;width:100%;height:auto;background:#19372b;border:1px solid #45634c;border-radius:12px;image-rendering:pixelated}#status{color:#d5e9a8;min-height:24px;margin:12px 0}small{color:#a6bcaf}iframe{position:fixed;left:-1400px;top:0;width:1200px;height:900px;border:0;pointer-events:none}@media(max-width:500px){main{padding:14px}h1{font-size:22px}}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>小李・裏蓮華</h1>
+    <p>五名敵人一起挑空，隨連踢橫跨場地，最後重摔落地。可重播或放慢觀看。</p>
+    <div class="controls">
+      <button id="replay" disabled>載入中…</button>
+      <label>速度 <select id="speed"><option value="1">正常</option><option value="0.5">半速</option><option value="0.25">四分之一速</option></select></label>
+      <label>技能 <select id="level"><option value="1">Lv.1 · 5 連踢</option><option value="2">Lv.2 · 7 連踢</option><option value="3">Lv.3 · 9 連踢</option><option value="4">Lv.4 · 11 連踢</option><option value="5">Lv.5 · 13 連踢</option></select></label>
+      <label><input type="checkbox" id="gates">八門形態</label>
+      <label><input type="checkbox" id="sound">播放音效</label>
+    </div>
+    <canvas id="preview" width="760" height="600" aria-label="裏蓮華實際遊戲演出"></canvas>
+    <div id="status" role="status">正在載入角色與遊戲…</div>
+    <small>五名目標承受完整連擊，另一名敵人只承受落地震擊；最右側敵人在範圍外。預設靜音，勾選後僅播放音效。</small>
+  </main>
+  <iframe id="game-source" title="預覽用遊戲" data-src="../../.omx/digimon.html?lang=zh-TW&amp;hero=lee&amp;layout=wide"></iframe>
+  <script src="preview.js"></script>
+</body>
+</html>

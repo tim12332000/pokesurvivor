@@ -136,9 +136,11 @@
       this.flash = 0.09;
       // Muy eficaz: número amarillo y grande. Poco eficaz: gris. Crítico: naranja y grande.
       const lift = G.NarutoLee?.hitLiftFor(this) || 0;
-      G.FX.dmgText(this.x, this.y - this.bodyH - 4 - lift, d, eff === 'crit' ? '#ff9a3c' : eff === 'super' ? '#ffe14d' : eff === 'weak' ? '#a3abb8' : color,
+      const pose = G.NarutoLee?.victimPresentationFor?.(this);
+      const x = this.x + (pose?.offsetX || 0), y = this.y + (pose?.offsetY || 0);
+      G.FX.dmgText(x, y - this.bodyH - 4 - lift, d, eff === 'crit' ? '#ff9a3c' : eff === 'super' ? '#ffe14d' : eff === 'weak' ? '#a3abb8' : color,
                    this.boss || eff === 'super' || eff === 'crit');
-      G.FX.spark(this.x, this.y - this.bodyH * 0.5 - lift, color, dirX, dirY, 3);
+      G.FX.spark(x, y - this.bodyH * 0.5 - lift, color, dirX, dirY, 3);
       if (!this.anim.busy() && this.phase !== 'dash') this.anim.play('Hurt');
       G.Audio.sfx('hit');
     }
@@ -707,7 +709,8 @@
       // Los que flotan ya van en el aire en su sprite: sólo se mecen un poco.
       // (Y los que saltan, en arco.)
       const lift = (this.flying && !this.boss ? 1 + Math.sin(this.bob) * 1.5 : 0) + (this.jumpLift || 0) + (G.NarutoLee?.liftFor(this) || 0) + (G.NarutoTemari?.liftFor(this) || 0);
-      this.anim.draw(ctx, this.x, this.y - lift, { flash: this.flash > 0, alpha });
+      const pose = G.NarutoLee?.victimPresentationFor?.(this);
+      this.anim.draw(ctx, this.x + (pose?.offsetX || 0), this.y + (pose?.offsetY || 0) - lift, { flash: this.flash > 0, alpha });
       ctx.restore();
 
       if (this.dead) return;
@@ -737,11 +740,12 @@
 
       if (this.boss || this.hp < this.maxHp) {
         const w = this.boss ? 90 : Math.max(22, this.r * 2);
-        const y = this.y - this.bodyH - 10;
+        const x = this.x + (pose?.offsetX || 0);
+        const y = this.y + (pose?.offsetY || 0) - this.bodyH - 10 - (pose ? lift : 0);
         ctx.fillStyle = 'rgba(0,0,0,.6)';
-        ctx.fillRect(this.x - w / 2, y, w, 3.4);
+        ctx.fillRect(x - w / 2, y, w, 3.4);
         ctx.fillStyle = this.boss ? '#ffcb3d' : '#ff5f6d';
-        ctx.fillRect(this.x - w / 2, y, w * Math.max(0, this.hp / this.maxHp), 3.4);
+        ctx.fillRect(x - w / 2, y, w * Math.max(0, this.hp / this.maxHp), 3.4);
       }
     }
   }

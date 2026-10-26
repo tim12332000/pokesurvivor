@@ -186,7 +186,8 @@
             aim:pl.aim, mirror:Math.cos(pl.aim)<0, visualLift:lee.visualLift||0};
         }
         const frame=['approach','windup'].includes(lee.phase)?0:lee.phase==='lift'?(lee.phaseAge<lee.durations.lift*.5?1:2):lee.phase==='combo'?1+lee.ticks%2:['suspend','descent'].includes(lee.phase)?2:3;
-        return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:reverse?'lee-reverse':'lee-lotus',frame,mirror:Math.cos(pl.aim)<0,visualLift:lee.visualLift||0};
+        return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:reverse?'lee-reverse':'lee-lotus',frame,mirror:Math.cos(pl.aim)<0,visualLift:lee.visualLift||0,
+          ...(G.NarutoLee.presentationFor?.(pl) || {})};
       }
       const gaara=G.NarutoGaara?.active?.(pl);
       if(gaara?.owner?.anim===anim){
@@ -289,8 +290,10 @@
       if (!frame?.hand) return null;
       const k = 64 * (pl.anim.scale || 1) / asset.bodyHeight;
       const side = !!pose.mirror !== !!frame.mirror ? -1 : 1;
-      return {x:pl.x + (frame.hand[0]-frame.anchor[0]) * k * side,
-              y:pl.y + (frame.hand[1]-frame.anchor[1]) * k - (pose.visualLift||0)};
+      const x=(frame.hand[0]-frame.anchor[0])*k*side,y=(frame.hand[1]-frame.anchor[1])*k;
+      const angle=pose.rotation||0;
+      return {x:pl.x+(pose.offsetX||0)+x*Math.cos(angle)-y*Math.sin(angle),
+              y:pl.y+(pose.offsetY||0)+x*Math.sin(angle)+y*Math.cos(angle)-(pose.visualLift||0)};
     }
     function adapter(ctx, pose, anim, x, y, opts) {
       if (pose.state !== 'skill' || opts.flash) return;
@@ -318,7 +321,7 @@
       if (!supported(this) || !enabled() || G.Naruto?.isPreview(ctx.canvas)) { counters.source++; return draw.apply(this, arguments); }
       const pose = stateFor(this);
       if (!assets.get(pose.key)?.image) { counters.source++; return draw.apply(this, arguments); }
-      const rendered = assets.draw(ctx, pose.key, pose.frame, x, y-(pose.visualLift||0), { scale: this.scale || 1, alpha: opts.alpha ?? 1, flash: !!opts.flash, mirror: pose.mirror, rotation: pose.rotation });
+      const rendered = assets.draw(ctx, pose.key, pose.frame, x+(pose.offsetX||0), y+(pose.offsetY||0)-(pose.visualLift||0), { scale: this.scale || 1, alpha: opts.alpha ?? 1, flash: !!opts.flash, mirror: pose.mirror, rotation: pose.rotation });
       if (rendered === false) throw new Error('Animation frame unavailable: ' + pose.key + ':' + pose.frame);
       counters.candidate++; counters.byState[pose.state] = (counters.byState[pose.state] || 0) + 1;
       if (pose.id) counters.bySkill[pose.id] = (counters.bySkill[pose.id] || 0) + 1;
