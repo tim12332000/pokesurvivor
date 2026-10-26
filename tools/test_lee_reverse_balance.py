@@ -9,13 +9,14 @@ OUT = Path(__file__).resolve().parents[1] / '.omx/state/lee-reverse-balance'
 
 CHECK = r"""() => {
  const A=Acceptance,p=A.p(),L=G.NarutoLee,near=(a,b)=>Math.abs(a-b)<1e-7;
- const damage=[420,504,504,504,630],frontDamage=[110,132,132,132,165];
+ const damage=[420,504,504,504,630],frontDamage=[220,264,264,264,330];
  const levels=damage.map((d,i)=>{
    const m=G.Moves.instance('naruto-reverse-lotus',i+1),front=G.Moves.instance('naruto-lotus',i+1);
    A.assert(near(m.dmg,d)&&m.cd===10,'reverse damage or cooldown mismatch at level '+(i+1));
-   A.assert(near(front.dmg,frontDamage[i])&&front.cd===5,'reverse balance leaked into Front Lotus');
+   A.assert(near(front.dmg,frontDamage[i])&&front.cd===10,'Front Lotus doubled balance mismatch');
+   A.assert(front.desc.includes('冷卻 10 秒'),'Front Lotus description is stale');
    A.assert(m.desc.includes('冷卻 10 秒')&&m.desc.includes('10 名')&&m.desc.includes('24 名'),'reverse description is stale');
-   return {level:i+1,damage:m.dmg,cooldown:m.cd};
+   return {level:i+1,damage:m.dmg,cooldown:m.cd,frontDamage:front.dmg,frontCooldown:front.cd};
  });
  const quantities=[];
  for(const [picks,reverse,front]of [[0,10,3],[2,15,4],[20,24,12]]){
@@ -24,18 +25,18 @@ CHECK = r"""() => {
    A.assert(r===reverse&&f===front,'quantity scaling or cap mismatch at picks '+picks);
    quantities.push({picks,reverse:r,front:f});
  }
- p.quantityPicks=p.quantityBonus=0;p.level=12;p.addMove('naruto-reverse-lotus');
+ p.quantityPicks=p.quantityBonus=0;p.level=12;p.addMove('naruto-reverse-lotus');p.addMove('naruto-lotus');
  const cooldowns=[];
- for(const cdMul of [1,.5]){
-   A.leeArena();p.cdMul=cdMul;const m=A.select('naruto-reverse-lotus');
+ for(const id of ['naruto-reverse-lotus','naruto-lotus'])for(const cdMul of [1,.5]){
+   A.leeArena();p.cdMul=cdMul;const m=A.select(id);
    Object.assign(m,G.Moves.instance(m.id));const e=A.spawn(35,0),hits=[];p.target=e;
    const hurt=e.hurt;e.hurt=function(...args){hits.push(args[0]);return hurt.apply(this,args)};
    A.actualCast(m.id);const f=L.active,expected=10*cdMul;
    A.assert(near(m.t,expected),'native cooldown does not use new base or cooldown reduction');
    for(let n=0;n<200&&!hits.length;n++)A.advance(.005);
-   const first=420*.1*f.attack*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
+   const first=(id==='naruto-lotus'?220*.2:420*.1)*f.attack*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
    A.assert(hits.length===1&&near(hits[0],first),'native launch hit did not double');
-   cooldowns.push({multiplier:cdMul,cooldown:expected,launchDamage:hits[0]});L.clear(p);
+   cooldowns.push({id,multiplier:cdMul,cooldown:expected,launchDamage:hits[0]});L.clear(p);
  }
  A.leeArena();p.cdMul=1;
  const move=A.select('naruto-reverse-lotus');Object.assign(move,G.Moves.instance(move.id));

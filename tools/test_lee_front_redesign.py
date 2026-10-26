@@ -18,7 +18,7 @@ CHECK = r"""() => {
    if(weak)e.hp=1;
    const ledger=[];for(const enemy of [e,...side,outside]){const hurt=enemy.hurt;enemy.hurt=function(...args){ledger.push({enemy,amount:args[0],phase:L.active?.phase});return hurt.apply(this,args)}}
    p.target=e;A.actualCast(m.id);const f=L.active,poses=new Set(),frames=new Set(),phases=new Set();let maxRotation=0,air=0,maxLift=0;
-   A.assert(m.cd===5&&L.bindLimitOf(m,p)===3,'Front Lotus balance changed');
+   A.assert(m.cd===10&&L.bindLimitOf(m,p)===3,'Front Lotus cooldown or pull count mismatch');
    for(let n=0;n<1500&&L.active;n++){
      G.Camera.follow(p.x,p.y,.005);A.advance(.005);G.FX.update(.005);if(!L.active)break;
      phases.add(f.phase);A.assert(!L.isInvulnerable(p),'Front Lotus gained reverse immunity');

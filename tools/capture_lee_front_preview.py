@@ -16,7 +16,7 @@ PHASES = {'windup': '踢前蓄勢', 'lift': '踢擊挑空', 'suspend': '背後�
 
 def check_completion(result):
     assert result['completion'], result
-    assert result['skill']['cooldown'] == 5, result['skill']
+    assert result['skill']['cooldown'] == 10, result['skill']
     completion = result['completion']
     assert len(completion['group']) == 3, completion
     assert completion['group'][0]['hits'] == 2, completion

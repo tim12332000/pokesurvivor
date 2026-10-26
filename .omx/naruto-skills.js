@@ -318,15 +318,15 @@
       source_url:'https://naruto-official.com/en/news/01_1668'
     }],
     ['naruto-lotus', [30006], {
-      icon:'frontLotus', name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:5, dmg:110,
+      icon:'frontLotus', name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:10, dmg:220,
       range:145, radius:60,
       ups:[
         {t:'傷害 +20%',m:{dmg:1.2}},
-        {t:'基礎冷卻維持 5 秒，可用冷卻縮減卡縮短',m:{}},
+        {t:'基礎冷卻維持 10 秒，可用冷卻縮減卡縮短',m:{}},
         {t:'攻擊範圍與持續時間 +12%',m:{radius:1.12,width:1.12,life:1.12,range:162.4}},
         {t:'傷害 +25%',m:{dmg:1.25}}
       ],
-      vis:{pal:'grass'}, desc:'基礎冷卻 5 秒，冷卻縮減卡有效。繃帶同時拉近 3 名一般地面敵人，數量卡使綁定數 ×1.25，取整後最多 12 名。主目標踢起後從背後抱緊，倒栽旋轉墜地並放手重摔；其餘只吃落地震擊。主目標致命傷延至落地結算。冷卻自動近身普攻，連段中不插普攻；首領不被拉動、不浮空，由小李接近。',
+      vis:{pal:'grass'}, desc:'基礎冷卻 10 秒，冷卻縮減卡有效。繃帶同時拉近 3 名一般地面敵人，數量卡使綁定數 ×1.25，取整後最多 12 名。主目標踢起後從背後抱緊，倒栽旋轉墜地並放手重摔；其餘只吃落地震擊。主目標致命傷延至落地結算。冷卻自動近身普攻，連段中不插普攻；首領不被拉動、不浮空，由小李接近。',
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
