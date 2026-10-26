@@ -116,11 +116,32 @@
     (f.target===enemy || f.kind==='lee-reverse-lotus'&&member(f,enemy))).map(f => f.targetLift));
   const liftFor = enemy => alive(enemy) ? hitLiftFor(enemy) : 0;
   function resetCamera(f) {
-    if (f.cameraRaised && f.owner === G.Game.player && f.world === G.World && G.Camera) G.Camera.y = f.owner.y;
-    if (f.cameraShifted && f.owner === G.Game.player && f.world === G.World && G.Camera) G.Camera.x = f.owner.x;
-    f.cameraRaised = false;
-    f.cameraShifted = false;
+    if(f.cameraLock&&f.owner===G.Game.player&&f.world===G.World){
+      G.Camera.shake=G.Camera._sx=G.Camera._sy=0;
+    }
+    f.cameraLock=null;
   }
+  function lockCamera(f) {
+    const camera=G.Camera;
+    if(f.owner!==G.Game.player||f.kind!=='lee-reverse-lotus'||!camera?.w||!camera.h)return;
+    f.cameraLock={x:camera.x,y:camera.y};
+    const group=f.boundTargets.length?f.boundTargets:[f.target];
+    const spreadX=Math.max(...group.map(e=>Math.abs(e.x-f.target.x)*1.75));
+    const spreadY=Math.max(...group.map(e=>Math.abs(e.y-f.owner.y)));
+    // Fit actor travel into the fixed view once; never zoom or chase individual kicks.
+    f.horizontalScale=Math.min(1,Math.max(16,camera.w/2-Math.abs(f.target.x-camera.x)-48)/(Math.max(243,195+spreadX)+70));
+    f.verticalScale=Math.min(1,Math.max(16,camera.h/2-Math.abs(f.owner.y-camera.y)-spreadY-100)/(f.peakLift+240));
+    camera.shake=camera._sx=camera._sy=0;
+  }
+  const followCamera=G.Camera.follow;
+  G.Camera.follow=function(...args){
+    const f=activeFor(G.Game.player);
+    if(valid(f)&&f.cameraLock){
+      this.x=f.cameraLock.x;this.y=f.cameraLock.y;this.shake=this._sx=this._sy=0;
+      return;
+    }
+    return followCamera.apply(this,args);
+  };
   function syncLift(f) {
     if (!['lift', 'suspend', 'combo', 'descent'].includes(f.phase) || elite(f.target)) { removeLift(f); return; }
     const reverse = f.kind === 'lee-reverse-lotus', base = reverse ? 60 : 40;
@@ -130,25 +151,8 @@
     f.visualLift = f.phase === 'lift' ? Math.sin(Math.min(1, f.phaseAge / f.durations.lift) * Math.PI / 2) * base :
       f.phase === 'descent' ? f.peakLift * Math.max(0, 1 - fall) :
       f.phase === 'combo' ? base + f.ticks * 8 : base;
+    if(reverse)f.visualLift*=f.verticalScale||1;
     f.targetLift = f.visualLift;
-    // Follow only the excess height, keeping high-quantity kicks below the HUD.
-    const camera = G.Camera;
-    if (f.owner === G.Game.player && reverse && camera?.h > 0 && Number.isFinite(camera.y)) {
-      const actorPose = presentationFor(f.owner);
-      const group=(f.boundTargets.length?f.boundTargets:[f.target]).filter(alive).map(enemy=>{
-        const pose=victimPresentationFor(enemy);
-        return {x:enemy.x+(pose?.offsetX||0),y:enemy.y-f.targetLift+(pose?.offsetY||0)-60};
-      });
-      const highest = Math.min(f.owner.y - f.visualLift + (actorPose?.offsetY || 0) - 80,...group.map(point=>point.y));
-      const ceiling = highest - 60 + camera.h / 2;
-      if (camera.y > ceiling) { camera.y = ceiling; f.cameraRaised = true; }
-      if (actorPose && camera.w > 0) {
-        const xs=[f.owner.x+actorPose.offsetX,...group.map(point=>point.x)];
-        const low=Math.max(...xs)+72-camera.w/2,high=Math.min(...xs)-72+camera.w/2;
-        const x=Math.max(low,Math.min(high,camera.x));
-        if(x!==camera.x){camera.x=x;f.cameraShifted=true;}
-      }
-    }
   }
   // Screen-space pursuit paths; world positions and all contact checks stay native.
   const airPositions = [[-48,18],[48,-18],[-30,-42],[44,32],[0,-58],[0,48]];
@@ -167,7 +171,7 @@
     if (!valid(f) || f.kind !== 'lee-reverse-lotus' || elite(f.target) || !['combo','descent'].includes(f.phase)) return null;
     const point = f.phase === 'combo' ? airPath(f, victimPositions) : victimPositions[Math.max(0, f.ticks - 1) % victimPositions.length];
     const settle = f.phase === 'descent' ? 1 - Math.min(1, f.phaseAge / (f.durations.descent * .8)) : 1;
-    return { offsetX: point[0] * settle, offsetY: point[1] * settle };
+    return { offsetX: point[0] * settle * (f.horizontalScale||1), offsetY: point[1] * settle * (f.verticalScale||1) };
   }
   function victimPresentationFor(enemy) {
     if(!alive(enemy))return null;
@@ -176,21 +180,22 @@
     if(!pose&&f.phase!=='lift')return null;
     const spread=f.phase==='lift'?Math.min(1,f.phaseAge/f.durations.lift):
       f.phase==='descent'?1-Math.min(1,f.phaseAge/(f.durations.descent*.8)):1;
-    return {offsetX:(pose?.offsetX||0)+(enemy.x-f.target.x)*.75*spread,
-      offsetY:(pose?.offsetY||0)+(enemy.y-f.target.y)*.65*spread};
+    return {offsetX:(pose?.offsetX||0)+(enemy.x-f.target.x)*.75*spread*(f.horizontalScale||1),
+      offsetY:(pose?.offsetY||0)+(enemy.y-f.target.y)*.65*spread*(f.verticalScale||1)};
   }
   function presentationFor(owner) {
     const f = activeFor(owner);
     if (!valid(f) || f.kind !== 'lee-reverse-lotus' || elite(f.target) ||
         !['combo', 'descent'].includes(f.phase)) return null;
     const point = f.phase === 'combo' ? airPath(f, airPositions, true) : [0,-52];
-    const victim = f.phase === 'combo' ? airPath(f, victimPositions, true) : [victimPose(f).offsetX, victimPose(f).offsetY];
+    const path = f.phase === 'combo' ? airPath(f, victimPositions, true) : null;
+    const victim = path ? [path[0]*(f.horizontalScale||1),path[1]*(f.verticalScale||1)] : [victimPose(f).offsetX,victimPose(f).offsetY];
     const settle = f.phase === 'descent' ? 1 - Math.min(1, f.phaseAge / f.durations.descent) : 1;
     const mirror = point[0] > 0;
     let rotation = Math.atan2(-point[1], -point[0]) - (mirror ? Math.PI : 0);
     if (rotation < -Math.PI) rotation += Math.PI * 2;
     return { offsetX: (f.target.x - owner.x + victim[0] + point[0]) * settle,
-      offsetY: (f.target.y - owner.y + victim[1] + point[1] + 18) * settle,
+      offsetY: (f.target.y - owner.y + victim[1] + (point[1] + 18)*(f.verticalScale||1)) * settle,
       mirror, rotation: rotation * settle };
   }
   function clear(owner) {
@@ -299,6 +304,7 @@
       f.durations.combo *= scale;
       f.comboDeadlines = f.comboDeadlines.map(time => time * scale);
     }
+    if(phase==='lift')lockCamera(f);
     syncLift(f);
     if (phase === 'lift') {
       if(f.kind==='lee-reverse-lotus')hitGroup(f,.1);
@@ -308,7 +314,6 @@
       f.clothRelease=(f.boundTargets.length?f.boundTargets:[f.target]).filter(alive)
         .map((e,i)=>({x:e.x,y:e.y-(e.bodyH||24)*.3,r:e.r||10,seed:i*79}));
       const pulled=f.boundTargets.slice();releaseBindings(f);
-      resetCamera(f);
       removeLift(f);
       hit(f, f.target, f.kind === 'lee-lotus' ? .8 : .3, false);
       const group=f.kind==='lee-reverse-lotus'?new Set(pulled):new Set();
@@ -322,7 +327,6 @@
         G.FX.ring(f.target.x, f.target.y, radius, radius, '#ffe0a3', .42, 4);
         G.FX.ring(f.target.x, f.target.y, 5, radius, '#f6a65e', .36, 6);
         G.FX.burst(f.target.x, f.target.y, '#ddc99a', 16, radius * .65);
-        if (f.owner === G.Game.player) G.Camera.kick(.18);
         releasePending(f);
       } else {
         G.FX.ring(f.target.x, f.target.y, radius, radius, '#f2d5a0', .32, 3);

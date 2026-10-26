@@ -28,8 +28,15 @@ CHECK = r"""() => {
    p.target=e;p.aim=0;A.actualCast(m.id);const f=L.active;
    const seen=new Set(),offsets=new Set(),heights=[],angles=new Set(),victimXs=[];let draws=0,maxSeparation=0;
    for(let n=0;n<1500&&L.active;n++){
+     G.Camera.follow(p.x,p.y,.005);
      A.resume();try{G.Combat.updateFields(.005);p.anim.update(.005);G.FX.update(.005)}finally{A.pause()}
      if(!L.active)break;seen.add(f.phase);
+     if(['lift','combo','descent','slam','recovery'].includes(f.phase)){
+       A.assert(f.cameraLock,'airborne action did not lock the camera');
+       A.assert(G.Camera.x===f.cameraLock.x&&G.Camera.y===f.cameraLock.y,'airborne action moved the camera');
+       G.Camera.kick(.3);G.Camera.follow(p.x+100,p.y-100,.005);
+       A.assert(G.Camera.x===f.cameraLock.x&&G.Camera.y===f.cameraLock.y&&G.Camera.shake===0&&G.Camera._sx===0&&G.Camera._sy===0,'airborne follow or shake escaped camera lock');
+     }
      A.assert(f.strikes.length<=6,'unbounded strike trails');
      if(f.phase==='combo'){
        const pose=G.AnimationLab.stateFor(p.anim);offsets.add(Math.round(pose.offsetX||0));
@@ -59,12 +66,12 @@ CHECK = r"""() => {
    A.assert(!L.liftFor(e)&&!L.isInvulnerable(p),'completed action retained lift/immunity');
    A.assert(boss||offsets.size>=2,'air pursuit never alternated sides');
    if(!boss){
-     A.assert(Math.max(...heights)-Math.min(...heights)>70,'pursuit stayed at one elevation');
+     A.assert(Math.max(...heights)-Math.min(...heights)>70*(f.verticalScale||1),'pursuit stayed at one elevation');
      A.assert(angles.size>=4,'kick direction did not follow aerial pursuit');
-     A.assert(Math.max(...victimXs)-Math.min(...victimXs)>350,'victim stayed in a small local area');
+     A.assert(Math.max(...victimXs)-Math.min(...victimXs)>350*(f.horizontalScale||1),'victim stayed in a small local area');
      const positions=[...offsets];
-     A.assert(Math.max(...positions)-Math.min(...positions)>400,'Lee did not cross the arena');
-     A.assert(maxSeparation>100,'pursuer never separated from the knocked-back target');
+     A.assert(Math.max(...positions)-Math.min(...positions)>400*(f.horizontalScale||1),'Lee did not cross the arena');
+     A.assert(maxSeparation>100*(f.horizontalScale||1),'pursuer never separated from the knocked-back target');
    }
    A.assert(!L.presentationFor(p),'completed action retained presentation offset');
    A.assert(!L.victimPresentationFor(e),'completed action retained victim offset');
@@ -97,6 +104,8 @@ CHECK = r"""() => {
  p.target=capMain;A.select('naruto-reverse-lotus');A.actualCast('naruto-reverse-lotus');
  A.assert(L.active.boundTargets.length===12,'actual crowded cast did not respect the twelve-member cap');
  L.clear(p);A.assert([capMain,...capEnemies].every(e=>!L.bound(e)&&!L.liftFor(e)),'capped group retained claims after cancel');
+ const camera={x:G.Camera.x,y:G.Camera.y};G.Camera.follow(camera.x+80,camera.y+80,.1);
+ A.assert(G.Camera.x>camera.x&&G.Camera.y>camera.y,'normal camera follow did not resume after cancel');
  return results;
 }"""
 
