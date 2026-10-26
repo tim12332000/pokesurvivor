@@ -85,6 +85,21 @@ def sequence(source, indices, mirrors=()):
             'safeFrames': list(range(len(frames))), 'frames': frames}
 
 
+def lee_lotus_hold():
+    """Authored grip/inverted hold poses; never scale each crouched crop to standing."""
+    source, image = atlas('lee-front-lotus-hold-v1.png', 2)
+    # Hair-band widths: new 112px, existing Lotus 84px at a 248px body scale.
+    source['bodyHeight'] = 330.67
+    points = ((403, 220), (769, 251), (1177, 257), (1674, 206),
+              (403, 653), (768, 681), (1175, 687), (1674, 639))
+    for frame, point in zip(source['frames'], points):
+        frame['grip'] = [point[0] - frame['rect'][0], point[1] - frame['rect'][1]]
+        frame['hand'] = list(frame['grip'])
+    assets = {'lee-lotus-hold': sequence(source, range(4)),
+              'lee-opened-lotus-hold': sequence(source, range(4, 8))}
+    return source, image, assets
+
+
 def lee_neck_to_feet(image, frame):
     """Raised hair adds height after opening the gates, not a smaller body."""
     x, y, w, h = frame['rect']
@@ -281,6 +296,10 @@ def main():
         assets[hero + '-bandage'] = sequence(bandage, indices)
     # The atlas has one common body scale; the alternate head adds height.
     sources['lee-bandage']['bodyHeight'] = assets['lee-bandage']['bodyHeight']
+    hold, hold_image, hold_assets = lee_lotus_hold()
+    sources['lee-front-lotus-hold'] = hold
+    images['lee-front-lotus-hold'] = hold_image
+    assets.update(hold_assets)
     assets['gaara-throw'] = sequence(sources['gaara-common'], range(28, 32))
     assets['tenten-throw'] = sequence(sources['tenten-common'], range(28, 32))
     assets['tenten-twin-release'] = sequence(release, range(4))

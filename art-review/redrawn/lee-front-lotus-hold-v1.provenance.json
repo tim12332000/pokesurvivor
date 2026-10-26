@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-27",
+  "tool": "OpenAI image_gen built-in",
+  "model": "tool-default",
+  "source_file": "C:\\Users\\Tim\\.codex\\generated_images\\01a177b1-78a4-7d32-9f43-9171103971eb\\exec-016d3571-bbac-47b6-a1e6-a3ca9d64fc25.png",
+  "output": {
+    "path": "art-review/redrawn/lee-front-lotus-hold-v1.png",
+    "sha256": "c4f7c5bf47fe26bf31e32b926de8c265ddef7677aaea042bc702685a409cc167",
+    "size": [
+      1774,
+      887
+    ],
+    "mode": "RGBA",
+    "pixels_modified": false
+  },
+  "references": [
+    {
+      "path": "art-review/redrawn/lee-skills-v1.png",
+      "sha256": "90b8501c0e5c6ac3403260448ab23a90f76704085a0c4fa6fa373feecba6993b"
+    },
+    {
+      "path": "art-review/redrawn/lee-gates-skills-v1.png",
+      "sha256": "961f4e9a0680970e709444a269f37a7bf6814feba1cfe0b4d075a16b33d40e17"
+    }
+  ],
+  "prompt_brief": "Create a transparent 4-column by 2-row additional Front Lotus sprite atlas matching the existing chibi Rock Lee art: thick dark crisp outlines, green jumpsuit, red belt, orange leg warmers, navy sandals, white wraps. Top row normal skin; bottom row identical poses with red Eight Gates skin. Four poses: airborne reach to encircle an interchangeable opponent; tight clasp/bear-hug around empty opponent space; authored inverted head-down piledriver hold; release/recoil ready to land. No opponent, text, grid, aura, effects or background. Consistent body scale, full characters, generous cell spacing. Do not substitute a punch or standing pose for the grapple.",
+  "registration": {
+    "generator": "tools/build_redrawn_atlases.py:lee_lotus_hold",
+    "keys": [
+      "lee-lotus-hold",
+      "lee-opened-lotus-hold"
+    ],
+    "bodyHeight": 330.67,
+    "scale_reference": "New normal hair-band width 112px vs existing lee-lotus 84px at bodyHeight 248; shared scale across all eight poses.",
+    "grip_points_absolute": [
+      [
+        403,
+        220
+      ],
+      [
+        769,
+        251
+      ],
+      [
+        1177,
+        257
+      ],
+      [
+        1674,
+        206
+      ],
+      [
+        403,
+        653
+      ],
+      [
+        768,
+        681
+      ],
+      [
+        1175,
+        687
+      ],
+      [
+        1674,
+        639
+      ]
+    ],
+    "direction": "Side-facing right; left may mirror. Inverted pose is authored artwork."
+  },
+  "prompt": "Create a production transparent sprite atlas for the SAME chibi Rock Lee character as the two supplied existing game atlases. This is additional authored animation artwork for the Front Lotus grappling/piledriver, NOT an illustration. Match exactly the compact body proportions, thick dark pixel-like outlines, crisp cel colors, black bowl haircut, thick eyebrows, green jumpsuit, red belt, white forearm wraps, orange leg warmers and navy sandals. SINGLE IMAGE, rigid 4 columns x 2 rows, eight isolated full-body sprites in equally sized cells with generous transparent margins and identical character body scale. No text, no grid lines, no background, no opponent drawn, no effects, no aura, no extra bandage ribbons. Top row normal fair skin, bottom row the SAME four poses with red flushed skin matching second reference Eight Gates character; costume unchanged. Four columns from left to right: 1. side-facing-right airborne grappling entry: both bent arms extend forward to encircle a small opponent not drawn, hands reaching together around empty space in front of chest, knees softly bent. 2. side-facing-right tight rear bear-hug GRIP: both forearms visibly clasp together across an EMPTY rounded space in front of the torso (the game's interchangeable enemy will be composited there), elbows tight, both knees tucked, torso leaning forward; this is a grappling pose, NOT a punch and NOT a generic crouch. 3. authored INVERTED piledriver hold: head down and legs up, chin tucked, both arms still locked around an EMPTY small torso-sized space in front of chest; knees folded, silhouette clearly depicts protecting own head while driving the opponent head first; do not draw the opponent. 4. side-facing-right release/recoil: open both arms forward, torso leaning away from impact, one leg tucked ready to land, the other extended below, ready to spring clear. All eight sprites fully inside their cells, evenly spaced, no touching or duplicates. Preserve actual transparent alpha. Output high-resolution crisp sprite-sheet artwork at a 2:1 landscape aspect if possible, consistent 4x2 cells. Avoid soft gradient shading, motion blur, realistic anatomy, glossy lighting. This complements the existing four Front Lotus kick and landing frames; only render these new grappling poses."
+}

@@ -710,7 +710,12 @@
       // (Y los que saltan, en arco.)
       const lift = (this.flying && !this.boss ? 1 + Math.sin(this.bob) * 1.5 : 0) + (this.jumpLift || 0) + (G.NarutoLee?.liftFor(this) || 0) + (G.NarutoTemari?.liftFor(this) || 0);
       const pose = G.NarutoLee?.victimPresentationFor?.(this);
-      this.anim.draw(ctx, this.x + (pose?.offsetX || 0), this.y + (pose?.offsetY || 0) - lift, { flash: this.flash > 0, alpha });
+      const drawX=this.x+(pose?.offsetX||0),drawY=this.y+(pose?.offsetY||0)-lift;
+      if(pose?.rotation){
+        const pivot=pose.pivotY||this.bodyH*.45;
+        ctx.save();ctx.translate(drawX,drawY-pivot);ctx.rotate(pose.rotation);
+        this.anim.draw(ctx,0,pivot,{flash:this.flash>0,alpha});ctx.restore();
+      }else this.anim.draw(ctx,drawX,drawY,{flash:this.flash>0,alpha});
       ctx.restore();
 
       if (this.dead) return;
