@@ -62,7 +62,10 @@
   const offer=G.LevelUp.offer;
   G.LevelUp.offer=(owner,...args)=>offer(owner,...args).map(card=>{
     if(card.key==='new:'+moveId)return {...card,icon:key(1)};
-    if(card.key==='up:'+moveId)return {...card,icon:key((owner.moves.find(move=>move.id===moveId)?.lvl||1)+1)};
+    if(card.key==='up:'+moveId){
+      const next=G.Moves.instance(moveId,(owner.moves.find(move=>move.id===moveId)?.lvl||1)+1);
+      return {...card,icon:key(next.lvl),title:next.name};
+    }
     return card;
   });
   G.SharinganIcons={key,forMove};
