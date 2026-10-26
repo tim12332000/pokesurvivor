@@ -17,11 +17,12 @@ CHECK = r"""() => {
    const e=A.spawn(35,0,boss),side=[A.spawn(35,m.radius*.65),A.spawn(35,-m.radius*.65),A.spawn(35+m.radius*.65,0)],outside=A.spawn(35+m.radius+70,0);
    if(weak)e.hp=1;
    const ledger=[];for(const enemy of [e,...side,outside]){const hurt=enemy.hurt;enemy.hurt=function(...args){ledger.push({enemy,amount:args[0],phase:L.active?.phase});return hurt.apply(this,args)}}
-   p.target=e;A.actualCast(m.id);const f=L.active,poses=new Set(),frames=new Set(),phases=new Set();let maxRotation=0,air=0;
+   p.target=e;A.actualCast(m.id);const f=L.active,poses=new Set(),frames=new Set(),phases=new Set();let maxRotation=0,air=0,maxLift=0;
    A.assert(m.cd===5&&L.bindLimitOf(m,p)===3,'Front Lotus balance changed');
    for(let n=0;n<1500&&L.active;n++){
      G.Camera.follow(p.x,p.y,.005);A.advance(.005);G.FX.update(.005);if(!L.active)break;
      phases.add(f.phase);A.assert(!L.isInvulnerable(p),'Front Lotus gained reverse immunity');
+     maxLift=Math.max(maxLift,f.visualLift);
      const pose=G.AnimationLab.stateFor(p.anim);poses.add(pose.key);
      if(['suspend','descent'].includes(f.phase)&&!boss){
        A.assert(pose.key===(gates?'lee-opened-lotus-hold':'lee-lotus-hold'),'authored grip atlas missing');frames.add(pose.frame);
@@ -43,9 +44,12 @@ CHECK = r"""() => {
    A.assert(side.every(s=>ledger.filter(h=>h.enemy===s).length===1)&&!ledger.some(h=>h.enemy===outside),'landing AOE coverage changed');
    A.assert(!L.liftFor(e)&&!L.victimPresentationFor(e),'victim retained a piledriver pose');
    A.assert(f.age>=1.97&&f.age<2.7,'Front Lotus timing out of range');
-   if(!boss)A.assert(frames.has(0)&&frames.has(1)&&frames.has(2)&&maxRotation>3,'grip-to-inverted pose sequence incomplete');
+   if(!boss){
+     A.assert(frames.has(0)&&frames.has(1)&&frames.has(2)&&maxRotation>3,'grip-to-inverted pose sequence incomplete');
+     A.assert(f.peakLift===240&&maxLift>140,'Front Lotus did not reach the higher apex');
+   }
    if(weak)A.assert(e.dead&&!L.pendingDefeat(e),'weak victim not released at landing');
-   out.push({level,gates,boss,weak,time:f.age,hits:own.length,poses:[...poses],frames:[...frames],maxRotation,air});
+   out.push({level,gates,boss,weak,time:f.age,hits:own.length,poses:[...poses],frames:[...frames],maxRotation,maxLift,air});
  }
  A.leeArena();const e=A.spawn(35,0);e.hp=1;p.target=e;A.select('naruto-lotus');A.actualCast('naruto-lotus');A.advance(.9);L.clear(p);
  A.assert(!L.active&&!L.bound(e)&&!L.pendingDefeat(e)&&!L.liftFor(e),'cancel left a front hold behind');

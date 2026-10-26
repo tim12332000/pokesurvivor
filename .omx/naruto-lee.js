@@ -4,6 +4,7 @@
   const C = G.Combat, modes = new Set(['lee-lotus', 'lee-reverse-lotus']);
   const durations = { windup: .24, lift: .40, suspend: .55, descent: .36, slam: .20, recovery: .22 };
   const reverseDurations = { windup: .28, lift: .48, combo: 1.65, descent: .32, slam: .24, recovery: .28 };
+  const frontLift = 240;
   const basics = new WeakMap(), claims = new WeakMap();
   const bandageExtend = .10;
   const bindLimitOf=(move,owner=G.Game.player)=>{
@@ -149,7 +150,7 @@
   };
   function syncLift(f) {
     if (!['lift', 'suspend', 'combo', 'descent'].includes(f.phase) || elite(f.target)) { removeLift(f); return; }
-    const reverse = f.kind === 'lee-reverse-lotus', base = reverse ? 60 : 84;
+    const reverse = f.kind === 'lee-reverse-lotus', base = reverse ? 60 : frontLift;
     const descent = Math.max(0, Math.min(1, f.phaseAge / f.durations.descent));
     // A short held apex leads into an accelerating plunge, within the existing phase.
     const fall = reverse ? Math.min(1, Math.max(0, (descent - .18) / .78)) ** 2 : descent ** 1.65;
@@ -292,7 +293,7 @@
     const comboDeadlines = reverse ? Array.from({ length: comboHits }, (_, i) => (elapsed += firstInterval * .9 ** i)) : [];
     const chain = { owner, world: G.World, target, kind: move.digiMode, move: snapshot,
       durations: reverse ? { ...reverseDurations, combo: comboDuration } : durations,
-      comboHits, comboDeadlines, peakLift: reverse ? 60 + comboHits * 8 : 84,
+      comboHits, comboDeadlines, peakLift: reverse ? 60 + comboHits * 8 : frontLift,
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
       pullable: pullableTarget(target),bandageStage:'extend',bindLimit:bindLimitOf(snapshot,owner),boundTargets:[],bindings:[],
       visualLift: 0, targetLift: 0, ticks: 0, totalDamage: 0, totalHits: 0, pendingDeath: false,
