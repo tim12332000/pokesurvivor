@@ -52,6 +52,7 @@ assert sources == {
     'redrawn/tenten-twin-release-v1.png',
     'redrawn/lee-bandage-v1.png',
     'redrawn/lee-front-lotus-hold-v1.png',
+    'redrawn/lee-whirlwind-air-v1.png',
 }, 'Unexpected reviewed hero atlas inventory'
 pain = json.loads((ROOT / 'art-review/pain-frames.json').read_text('utf-8'))
 assert set(pain['bodies']) == {'tendo','asura','animal','human','preta','naraka','rhino','king'}, 'Six distinct Pain bodies and both summons are required'

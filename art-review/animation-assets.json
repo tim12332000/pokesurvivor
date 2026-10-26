@@ -8038,5 +8038,325 @@
         "bodyHeight": 330.67
       }
     ]
+  },
+  "lee-whirlwind-air": {
+    "source": "redrawn/lee-whirlwind-air-v1.png",
+    "bodyHeight": 263.12,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "frames": [
+      {
+        "rect": [
+          37,
+          90,
+          253,
+          250
+        ],
+        "anchor": [
+          122.0,
+          246
+        ],
+        "atlasIndex": 0,
+        "foot": [
+          216,
+          235
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          379,
+          46,
+          184,
+          308
+        ],
+        "anchor": [
+          74.0,
+          304
+        ],
+        "atlasIndex": 1,
+        "foot": [
+          148,
+          220
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          581,
+          81,
+          365,
+          235
+        ],
+        "anchor": [
+          182.0,
+          231
+        ],
+        "atlasIndex": 2,
+        "foot": [
+          336,
+          215
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          1019,
+          82,
+          196,
+          260
+        ],
+        "anchor": [
+          87.0,
+          256
+        ],
+        "atlasIndex": 3,
+        "foot": [
+          106,
+          236
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          49,
+          388,
+          276,
+          245
+        ],
+        "anchor": [
+          111.5,
+          241
+        ],
+        "atlasIndex": 4,
+        "foot": [
+          261,
+          114
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          358,
+          374,
+          288,
+          249
+        ],
+        "anchor": [
+          98.0,
+          246
+        ],
+        "atlasIndex": 5,
+        "foot": [
+          267,
+          138
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          673,
+          426,
+          252,
+          205
+        ],
+        "anchor": [
+          127.0,
+          202
+        ],
+        "atlasIndex": 6,
+        "foot": [
+          218,
+          187
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          989,
+          401,
+          229,
+          232
+        ],
+        "anchor": [
+          113.5,
+          228
+        ],
+        "atlasIndex": 7,
+        "foot": [
+          192,
+          215
+        ],
+        "bodyHeight": 263.12
+      }
+    ]
+  },
+  "lee-opened-whirlwind-air": {
+    "source": "redrawn/lee-whirlwind-air-v1.png",
+    "bodyHeight": 263.12,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "frames": [
+      {
+        "rect": [
+          37,
+          676,
+          253,
+          251
+        ],
+        "anchor": [
+          121.5,
+          247
+        ],
+        "atlasIndex": 8,
+        "foot": [
+          216,
+          234
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          380,
+          633,
+          184,
+          306
+        ],
+        "anchor": [
+          74.0,
+          302
+        ],
+        "atlasIndex": 9,
+        "foot": [
+          147,
+          220
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          579,
+          663,
+          370,
+          238
+        ],
+        "anchor": [
+          184.5,
+          234
+        ],
+        "atlasIndex": 10,
+        "foot": [
+          341,
+          216
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          1019,
+          670,
+          197,
+          258
+        ],
+        "anchor": [
+          86.0,
+          254
+        ],
+        "atlasIndex": 11,
+        "foot": [
+          105,
+          233
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          55,
+          954,
+          265,
+          259
+        ],
+        "anchor": [
+          109.5,
+          255
+        ],
+        "atlasIndex": 12,
+        "foot": [
+          254,
+          113
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          358,
+          951,
+          293,
+          251
+        ],
+        "anchor": [
+          100.5,
+          247
+        ],
+        "atlasIndex": 13,
+        "foot": [
+          272,
+          137
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          670,
+          1000,
+          256,
+          208
+        ],
+        "anchor": [
+          129.0,
+          204
+        ],
+        "atlasIndex": 14,
+        "foot": [
+          221,
+          187
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          988,
+          972,
+          235,
+          237
+        ],
+        "anchor": [
+          114.0,
+          233
+        ],
+        "atlasIndex": 15,
+        "foot": [
+          193,
+          215
+        ],
+        "bodyHeight": 263.12
+      }
+    ]
   }
 }

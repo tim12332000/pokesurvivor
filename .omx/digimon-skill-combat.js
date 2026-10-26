@@ -91,8 +91,8 @@
     const onBeam = p => { const px = p.x - x, py = p.y - y, along = px * ca + py * sa; return along >= -p.r && along <= len + p.r && Math.abs(-px * sa + py * ca) <= width / 2 + p.r; };
     propHits(pl, m, mx, my, len / 2 + width, m.dmg * pl.atk * ratio, onBeam);
   }
-  function sweep(pl, m, x, y, aim, radius, arc, ratio = 1, hand = 0) {
-    G.FX.slash(x, y - G.LIFT * .5, aim, radius, arc, color(m), vis(m));
+  function sweep(pl, m, x, y, aim, radius, arc, ratio = 1, hand = 0, quiet = false) {
+    if(!quiet)G.FX.slash(x, y - G.LIFT * .5, aim, radius, arc, color(m), vis(m));
     if(m.narutoSkill&&vis(m).melee==='naruto-lion') {
       const ca=Math.cos(aim),sa=Math.sin(aim),side=hand||1;
       G.FX.sp('naruto-lion',vis(m).pal,x+ca*27-sa*side*12,y-G.LIFT+sa*27+ca*side*12,
@@ -100,10 +100,80 @@
     }
     for (const e of targets(x, y, radius)) {
       const a = Math.atan2(e.y - y, e.x - x);
-      if (Math.abs(((a - aim + Math.PI * 3) % TAU) - Math.PI) <= arc / 2)
+      if (Math.abs(((a - aim + Math.PI * 3) % TAU) - Math.PI) <= arc / 2 &&
+          (!quiet || whirlwindPath(x,y,e.x,e.y)))
         hit(pl, m, e, m.dmg * pl.atk * ratio, e.x - x, e.y - y);
     }
     propHits(pl, m, x, y, radius, m.dmg * pl.atk * ratio, p => Math.abs(((Math.atan2(p.y - y, p.x - x) - aim + Math.PI * 3) % TAU) - Math.PI) <= arc / 2);
+  }
+  function whirlwindPath(ax,ay,bx,by){
+    const n=Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/4));
+    for(let i=1;i<=n;i++){
+      const x=ax+(bx-ax)*i/n,y=ay+(by-ay)*i/n;
+      if(G.World.isWall(x,y)||G.World.projectileBlock(x,y,1))return false;
+    }
+    return true;
+  }
+  const whirlwindValid=f=>valid(f)&&f.owner.activeGroup().some(move=>move.id==='naruto-lee');
+  function whirlwindFor(owner){
+    for(let i=fields.length-1;i>=0;i--){const f=fields[i];if(f.kind==='lee-whirlwind'&&f.owner===owner&&whirlwindValid(f))return f;}
+    return null;
+  }
+  function startWhirlwind(owner,m){
+    if(whirlwindFor(owner)||G.NarutoLee?.activeFor(owner))return false;
+    const life=Math.min(.72,Math.max(.016,Math.max(m.minCooldown||.05,m.cd*owner.cdMul)*.8));
+    const count=Math.max(1,m.count|0),target=owner.target;
+    const distance=target?Math.hypot(target.x-owner.x,target.y-owner.y):0;
+    const travel=Math.min(20,Math.max(0,distance-(owner.r||12)-(target?.r||10)-4));
+    const key=G.NarutoGates?.stage(owner)?'lee-opened-whirlwind-air':'lee-whirlwind-air';
+    const asset=window.AnimationAssets?.get(key),contact=asset?.frames[5];
+    const footHeight=contact?.foot?(contact.anchor[1]-contact.foot[1])*64*(owner.anim.scale||1)/asset.bodyHeight:28;
+    const contactLift=Math.max(6,Math.min(32,(target?.bodyH||24)*.9+4-footHeight));
+    field(owner,m,'lee-whirlwind',{life,aim:owner.aim||0,phase:'step',frame:0,visualLift:0,
+      travel,contactLift,travelled:0,nextHit:0,lastHit:-1,hitTimes:Array.from({length:count},(_,i)=>(.38+(count>1?.08*i/(count-1):0))*life/.72),
+      camera:{x:G.Camera.x,y:G.Camera.y},startX:owner.x,startY:owner.y});
+    return true;
+  }
+  function updateWhirlwind(f,dt){
+    if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
+    const end=Math.min(f.life,f.t+dt),stepEnd=f.life*.08/.72;
+    const goal=f.travel*Math.min(1,end/stepEnd);let budget=Math.max(0,goal-f.travelled);
+    const steps=Math.ceil(budget/4)+2;
+    for(let i=0;i<steps&&budget>.001;i++){
+      const step=Math.min(4,budget),x=f.owner.x+Math.cos(f.aim)*step,y=f.owner.y+Math.sin(f.aim)*step;
+      if(!G.World.isFree(x,y,f.owner.r||12,true)||!whirlwindPath(f.owner.x,f.owner.y,x,y))break;
+      f.owner.x=x;f.owner.y=y;f.travelled+=step;budget-=step;
+    }
+    if(!f.takeoff&&end>=stepEnd){f.takeoff=true;G.FX.burst(f.owner.x,f.owner.y,'#b7b98b',4,20);}
+    while(f.nextHit<f.hitTimes.length&&f.hitTimes[f.nextHit]<=end+1e-9){
+      f.t=f.hitTimes[f.nextHit];f.phase='strike';f.frame=5;f.visualLift=f.contactLift;f.lastHit=f.t;
+      sweep(f.owner,f.m,f.owner.x,f.owner.y,f.aim,f.m.radius,f.m.arc||3.9,
+        1/Math.max(1,(f.m.quantityBaseCount??f.m.count)|0),0,true);
+      f.nextHit++;
+    }
+    f.t=end;const age=f.t/f.life*.72;
+    f.phase=age<.08?'step':age<.20?'rise':age<.30?'spread':age<.38?'turn':age<.46?'strike':age<.60?'descend':'recovery';
+    f.frame=age<.08?0:age<.20?1:age<.30?2:age<.34?3:age<.38?4:age<.60?5:age<.66?6:7;
+    const turn=Math.max(0,Math.min(1,(age-.30)/.08)),ease=turn*turn*(3-2*turn);
+    f.visualLift=age<.08||age>=.60?0:age<.20?32*Math.sin((age-.08)/.12*Math.PI/2):age<.30?32:
+      age<.38?32+(f.contactLift-32)*ease:age<.46?f.contactLift:f.contactLift*(1-((age-.46)/.14)**1.5);
+    if(!f.landed&&age>=.60){f.landed=true;G.FX.burst(f.owner.x,f.owner.y,'#b7b98b',3,16);}
+    f.x=f.owner.x;f.y=f.owner.y;
+  }
+  function drawWhirlwind(ctx,f){
+    const age=f.t/f.life*.72;
+    if(age<.34||age>.60)return;
+    const fade=age<.46?1:Math.max(0,(.60-age)/.14),r=f.m.radius;
+    const key=G.NarutoGates?.stage(f.owner)?'lee-opened-whirlwind-air':'lee-whirlwind-air';
+    const asset=window.AnimationAssets?.get(key),frame=asset?.frames[f.frame];
+    const footY=frame?.foot?(frame.foot[1]-frame.anchor[1])*64*(f.owner.anim.scale||1)/asset.bodyHeight:-26;
+    ctx.save();ctx.globalAlpha=.65*fade;ctx.lineWidth=2;
+    for(let i=0;i<3;i++){
+      ctx.strokeStyle=i===0?'#e2f2bd':'#7abf80';ctx.beginPath();
+      const start=f.aim-(f.m.arc||3.9)/2,end=f.aim+(f.m.arc||3.9)/2;
+      ctx.arc(f.owner.x,f.owner.y-f.visualLift+footY,r-i*4,start,end);ctx.stroke();
+    }
+    ctx.restore();
   }
   function field(pl, m, kind, o = {}) { fields.push(Object.assign({ kind, owner: pl, world: G.World, m: cloneMove(m), x: pl.x, y: pl.y, t: 0, col: color(m), v: vis(m) }, o)); cap(); }
   const rasenganFor = owner => fields.find(f => f.kind === 'rasengan' && f.owner === owner && valid(f));
@@ -237,6 +307,7 @@
     if(m.digiMode==='shadow-clones')return !!G.NarutoClones?.beginCast(pl,m);
     const handler=techniqueFor(m.digiMode);
     if(m.narutoSkill&&m.dmg>0&&!G.NarutoSupport?.supports(m.digiMode))m.dmg*=G.NarutoSupport?.takeAttackBonus(pl)||1;
+    if(m.id==='naruto-lee')return startWhirlwind(pl,m);
     if(m.id==='naruto-naruto') {
       if(rasenganFor(pl))return false;
       field(pl,m,'rasengan',{phase:'charge',phaseAge:0,aim:pl.aim,hits:new Set()});
@@ -249,7 +320,12 @@
   }
   function customUpdate(dt) {
     for (let i = fields.length - 1; i >= 0; i--) {
-      const f = fields[i]; if (!valid(f)) { fields.splice(i, 1); continue; } f.t += dt;
+      const f = fields[i]; if (!valid(f)) { fields.splice(i, 1); continue; }
+      if(f.kind==='lee-whirlwind'){
+        if(!whirlwindValid(f)){fields.splice(i,1);continue;}
+        updateWhirlwind(f,dt);if(f.t>=f.life)fields.splice(i,1);continue;
+      }
+      f.t += dt;
       if(f.kind==='rasengan'){if(!updateRasengan(f,dt))fields.splice(i,1);continue;}
       if (f.kind === 'charge' && f.t >= f.life) { emit(f.owner, f.m, f.aim); fields.splice(i, 1); continue; }
       if (f.kind === 'combo' && f.t >= f.delay) { sweep(f.owner, f.m, f.x, f.y, f.aim, f.m.radius, f.m.arc || 2, 1 / Math.max(1, (f.m.quantityBaseCount??f.m.count) | 0),Math.round(f.delay/(f.m.burstInterval||.12))%2?1:-1); fields.splice(i, 1); continue; }
@@ -274,6 +350,7 @@
       if(m.passive||G.NarutoGaara?.maintains(pl,m))continue;
       if(m.digiMode==='kusanagi-orbit'&&G.NarutoKusanagi?.active(pl))continue;
       m.t-=dt;if(m.t>0)continue;
+      if(m.id==='naruto-lee'&&(whirlwindFor(pl)||G.NarutoLee?.activeFor(pl))){m.t=.05;continue;}
       const target=pl.target,handler=techniqueFor(m.digiMode);
       if(handler?.canCast&&!handler.canCast(pl,m)){m.t=.15;continue;}
       if(m.digiMode==='shadow-clones'&&!G.NarutoClones?.canCast(pl,m)){m.t=.15;continue;}
@@ -346,5 +423,7 @@
   G.VFX.SHAPES['digi-gaia'] = { w: 15, h: 15, frames: 3, gen(P,f) { P.fill((x,y) => { const d=Math.hypot(x-7,y-7); return d<2?'w':d<4?'l':d<6?(f%2?'m':'d'):null; }); for(let i=0;i<4;i++){const a=i*Math.PI/2+f*.16;P.line(7+Math.cos(a)*3,7+Math.sin(a)*3,7+Math.cos(a)*6,7+Math.sin(a)*6,'m');} P.outline(); } };
   const priorForMove = G.VFX.forMove;
   G.VFX.forMove = m => { const v = priorForMove(m); return m && m.digimonSkill ? Object.assign(v, m.digiVis || {}) : v; };
-  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, fireFrom, rasenganFor, update: customUpdate, clear, get activeEffects() { return fields; } });
+  const drawAirWhirlwind=C.drawAirFields;
+  C.drawAirFields=function(ctx){drawAirWhirlwind.call(this,ctx);for(const f of fields)if(f.kind==='lee-whirlwind'&&whirlwindValid(f))drawWhirlwind(ctx,f);};
+  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, fireFrom, rasenganFor, whirlwindFor, update: customUpdate, clear, get activeEffects() { return fields; } });
 })();

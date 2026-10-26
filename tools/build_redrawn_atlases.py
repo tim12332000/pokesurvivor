@@ -100,6 +100,22 @@ def lee_lotus_hold():
     return source, image, assets
 
 
+def lee_whirlwind_air():
+    """Eight authored aerial-kick poses per form, sharing a fixed body scale."""
+    source, image = atlas('lee-whirlwind-air-v1.png', 4)
+    # Hair-band widths: new 87px, existing Whirlwind 82px at 248px body scale.
+    source['bodyHeight'] = 263.12
+    feet = ((253, 325), (527, 266), (917, 296), (1125, 318),
+            (310, 502), (625, 512), (891, 613), (1181, 616),
+            (253, 910), (527, 853), (920, 879), (1124, 903),
+            (309, 1067), (630, 1088), (891, 1187), (1181, 1187))
+    for frame, point in zip(source['frames'], feet):
+        frame['foot'] = [point[0] - frame['rect'][0], point[1] - frame['rect'][1]]
+    assets = {'lee-whirlwind-air': sequence(source, range(8)),
+              'lee-opened-whirlwind-air': sequence(source, range(8, 16))}
+    return source, image, assets
+
+
 def lee_neck_to_feet(image, frame):
     """Raised hair adds height after opening the gates, not a smaller body."""
     x, y, w, h = frame['rect']
@@ -300,6 +316,10 @@ def main():
     sources['lee-front-lotus-hold'] = hold
     images['lee-front-lotus-hold'] = hold_image
     assets.update(hold_assets)
+    whirlwind, whirlwind_image, whirlwind_assets = lee_whirlwind_air()
+    sources['lee-whirlwind-air'] = whirlwind
+    images['lee-whirlwind-air'] = whirlwind_image
+    assets.update(whirlwind_assets)
     assets['gaara-throw'] = sequence(sources['gaara-common'], range(28, 32))
     assets['tenten-throw'] = sequence(sources['tenten-common'], range(28, 32))
     assets['tenten-twin-release'] = sequence(release, range(4))

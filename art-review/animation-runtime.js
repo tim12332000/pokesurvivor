@@ -176,6 +176,9 @@
       }
       const fire = G.NarutoFireball?.activeFor?.(pl) || G.NarutoFireball?.active;
       if (fire?.owner?.anim === anim) return { ...base, state: 'skill', id: 'naruto-fireball', phase: fire.phase, key: 'sasuke-fireball', frame: fire.phase === 'seal' ? Math.min(1, Math.floor(fire.t / .24 * 2)) : fire.phase === 'recovery' ? 3 : 2, mirror: Math.cos(fire.aim) < 0 };
+      const whirlwind=G.DigimonSkills?.whirlwindFor?.(pl);
+      if(whirlwind?.owner?.anim===anim)return {...base,state:'skill',id:'naruto-lee',phase:whirlwind.phase,
+        key:'lee-whirlwind-air',frame:whirlwind.frame,visualLift:whirlwind.visualLift,mirror:Math.cos(whirlwind.aim)<0};
       const lee=G.NarutoLee?.activeFor?.(pl)||G.NarutoLee?.active;
       if(lee?.owner?.anim===anim){
         const reverse=lee.kind==='lee-reverse-lotus';
@@ -242,7 +245,7 @@
         if (cast.id === 'naruto-nine-tails-cloak') return { ...action, key: 'naruto-cloak', frame: Math.min(3, Math.floor(cast.age / cast.duration * 4)) };
         if (cast.id === 'naruto-kusanagi') return { ...action, key: 'sasuke-sword', frame: Math.min(3, Math.floor(cast.age / cast.duration * 4)) };
         if (cast.id === 'naruto-sharingan') return { ...action, key: 'sasuke-fireball', frame: cast.age < .4 ? 0 : 3 };
-        if (cast.id === 'naruto-lee') return {...action,key:'lee-whirlwind',frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
+        if (cast.id === 'naruto-lee') return pl ? base : {...action,key:'lee-whirlwind',frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
         if (cast.id === 'naruto-gates') return {...action,key:'lee-gates',frame:Math.min(3,Math.floor(cast.age/cast.duration*4))};
         if (['naruto-gaara','naruto-sand-coffin','naruto-sand-shield','naruto-sand-tsunami'].includes(cast.id)) {
           const key={'naruto-gaara':'gaara-sand-burst','naruto-sand-coffin':'gaara-coffin','naruto-sand-shield':'gaara-shield','naruto-sand-tsunami':'gaara-tsunami'}[cast.id];

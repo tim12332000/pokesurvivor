@@ -158,7 +158,7 @@
       mode: 'melee', type: 'fighting', cd: 2, icon:'leafWhirlwind', dmg: 37,
       range: 72.5, radius: 62, arc: 3.9, knock: 95,
       vis: { melee: 'claw', proj: 'wind', pal: 'grass' },
-      desc:'旋身大角度橫掃，踢開近身與側面敵人。'
+      desc:'短步前衝後起跳旋踢，橫掃前方與兩側敵人並擊退；起跳不提供無敵。'
     }],
     [30007, 'gaara', '砂時雨', 'Sand Shower (game adaptation)', '01_1695', {
       mode: 'gaara-sand-burst', icon:'sandShower', passive: true, type: 'ground', cd: 1.2, dmg: 28,

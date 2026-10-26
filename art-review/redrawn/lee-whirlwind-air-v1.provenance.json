@@ -1,0 +1,128 @@
+{
+  "date": "2026-10-27",
+  "tool": "OpenAI image_gen built-in",
+  "model": "tool-default",
+  "source_file": "C:\\Users\\Tim\\.codex\\generated_images\\01a177b1-78a4-7d32-9f43-9171103971eb\\exec-501b37fc-4b04-4708-92f9-a1e7215be0dc.png",
+  "output": {
+    "path": "art-review/redrawn/lee-whirlwind-air-v1.png",
+    "sha256": "08d483726790d6065803423bec1e707d8fe1cbdc46a0cc9c9d8eddd5a2e8263d",
+    "size": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "pixels_modified_after_generation": false
+  },
+  "initial_generation": {
+    "source_file": "C:\\Users\\Tim\\.codex\\generated_images\\01a177b1-78a4-7d32-9f43-9171103971eb\\exec-d9dfc547-7a33-4779-8c91-847e96d5736f.png",
+    "sha256": "442e033e2e9583b69bb31d54f8af7e19989f1cf1a6ff9d5316bacb5d22830f99",
+    "accepted": false,
+    "reason": "Straddle poses had an extra horizontal arm."
+  },
+  "corrective_edit": {
+    "source_file": "C:\\Users\\Tim\\.codex\\generated_images\\01a177b1-78a4-7d32-9f43-9171103971eb\\exec-98eb8c8f-dd8e-45f4-8f73-0428ab5c3211.png",
+    "sha256": "0724a72700415bf1d4a031a7fd0ce2f1ba9f4b0557049fa60c33f40663509a12",
+    "prompt_brief": "Remove the extra horizontal third arm from both normal and Eight Gates straddle poses; preserve all other authored poses, costume, body proportions, layout and transparent background."
+  },
+  "references": [
+    {
+      "path": "art-review/redrawn/lee-skills-v1.png",
+      "sha256": "90b8501c0e5c6ac3403260448ab23a90f76704085a0c4fa6fa373feecba6993b"
+    },
+    {
+      "path": "art-review/redrawn/lee-gates-skills-v1.png",
+      "sha256": "961f4e9a0680970e709444a269f37a7bf6814feba1cfe0b4d075a16b33d40e17"
+    }
+  ],
+  "generation_prompt_brief": "Create an additional transparent 4-column by 4-row atlas matching the existing chibi Rock Lee art. First eight frames normal skin, last eight Eight Gates red skin. Eight authored poses per form: step, push-off, airborne straddle, coil, back three-quarter kick, extended side contact kick, landing and guard. Keep thick crisp dark outlines, green jumpsuit, red belt, orange leg warmers, white wraps and navy sandals. One consistent body scale; no opponent, text, grid, background or extra limbs.",
+  "registration": {
+    "generator": "tools/build_redrawn_atlases.py:lee_whirlwind_air",
+    "keys": [
+      "lee-whirlwind-air",
+      "lee-opened-whirlwind-air"
+    ],
+    "bodyHeight": 263.12,
+    "scale_reference": "Final hair-band width87px vs existing lee-whirlwind82px at bodyHeight248; all16 frames share this scale, without enlarging crouched/airborne poses.",
+    "facing": "Authored right/side poses plus genuine back-facing coil and backkick; renderer may mirror for left.",
+    "foot_points_absolute": [
+      [
+        253,
+        325
+      ],
+      [
+        527,
+        266
+      ],
+      [
+        917,
+        296
+      ],
+      [
+        1125,
+        318
+      ],
+      [
+        310,
+        502
+      ],
+      [
+        625,
+        512
+      ],
+      [
+        891,
+        613
+      ],
+      [
+        1181,
+        616
+      ],
+      [
+        253,
+        910
+      ],
+      [
+        527,
+        853
+      ],
+      [
+        920,
+        879
+      ],
+      [
+        1124,
+        903
+      ],
+      [
+        309,
+        1067
+      ],
+      [
+        630,
+        1088
+      ],
+      [
+        891,
+        1187
+      ],
+      [
+        1181,
+        1187
+      ]
+    ],
+    "foot_note": "Foot points follow the active boot/contact sole, especially kick frames4/5 in each form."
+  },
+  "previous_selected_output": {
+    "source_file": "C:\\Users\\Tim\\.codex\\generated_images\\01a177b1-78a4-7d32-9f43-9171103971eb\\exec-98eb8c8f-dd8e-45f4-8f73-0428ab5c3211.png",
+    "sha256": "0724a72700415bf1d4a031a7fd0ce2f1ba9f4b0557049fa60c33f40663509a12",
+    "superseded_reason": "Visual review required wider airborne knees/feet and genuine back-facing coil/backkick poses."
+  },
+  "refinement_edit": {
+    "source_file": "C:\\Users\\Tim\\.codex\\generated_images\\01a177b1-78a4-7d32-9f43-9171103971eb\\exec-501b37fc-4b04-4708-92f9-a1e7215be0dc.png",
+    "sha256": "08d483726790d6065803423bec1e707d8fe1cbdc46a0cc9c9d8eddd5a2e8263d",
+    "prompt_brief": "Preserve the4x4 layout, dimensions, head scale and side contact kick. Make straddle poses indices2/10 much wider through the thighs with bent knees. Make coil poses3/11 genuinely back-facing. Make back-kick poses4/12 show the back with no eyes, face, chest or front belt. Keep two arms and all other art/style/transparency."
+  },
+  "generation_prompt_full": "Production 16-frame transparent sprite atlas extending these exact existing chibi Rock Lee game sprites, for the young Lee airborne Leaf Whirlwind / Konoha Senpu. Match existing compact head/body proportions, thick dark crisp outlines and cel/pixel-like shading, black bowl haircut with white glints, thick eyebrows, green jumpsuit, red waist belt, white forearm wraps, orange legwarmers and navy blue open-toe sandals. A rigid FOUR COLUMNS by FOUR ROWS layout, sixteen full-body sprites, equal cells, ample fully transparent gutters, consistent body scale. NO opponent, text, grid, background, dust, wind, speedlines, aura, motionblur, shadow or effects. FIRST EIGHT sprites (rows1-2) normal fair-skinned Lee. LAST EIGHT sprites (rows3-4) reproduce the EXACT same eight poses and proportions with the red flushed skin and pale eyes of the second Gates reference, costume unchanged. Read each eight-frame animation left to right across two rows: pose1 right-facing forward leaning step, weight over front leg, rear arm back, preparing to leap. pose2 right-facing push-off, toes leaving ground, knees drawing up, torso upright. pose3 distinctive airborne straddle preparation facing viewer, both knees spread wide to the sides and bent, hips low, one wrapped hand upright near forehead and other arm extended sideways; clearly midair with no planted foot, resembling the classic Konoha Senpu preparatory silhouette. pose4 airborne three-quarter side coiled turn, hips winding and one knee folded. pose5 true BACK-VIEW airborne spinning kick, back and red belt visible, head turned over shoulder, kicking leg extending to right, other leg bent; not a front pose mirrored. pose6 RIGHT-facing side airborne contact: kicking leg extended fully horizontally to right, heel and sole clearly visible, torso balanced with arms, other leg folded under hips. pose7 landing: one foot plants and knees bend to absorb weight, body leaning forward. pose8 returns to right-facing guarded stance, both feet grounded, arms ready. All sixteen original authored poses; do not substitute rotated standing images for air poses. Keep both feet and all hands inside cells. Crisp silhouettes readable when body height is rendered about64px. Preserve transparent alpha. Square sprite sheet, no captions.",
+  "anatomy_correction_prompt_full": "Fix anatomy in this transparent 4x4 sprite sheet, preserve all other sprites and layout exactly. In row1 column3 (normal skin airborne wide-knee straddle pose) and row3 column3 (same red-skinned pose), Lee currently has THREE arms. He must have exactly TWO: keep the arm extended horizontally toward the LEFT side of the image and keep the raised forearm/vertical hand beside the RIGHT side of his forehead. REMOVE the extra arm/forearm/hand sticking horizontally to the RIGHT of the image beneath the raised hand, and reconstruct only the tiny green torso edge there. Do not add limbs. Preserve both legs, both kept arms, face, hair, costume and poses. All other fourteen sprites unchanged. Keep full transparent alpha, dimensions, spacing, sharp outlines and pixel/cel style. Do not draw a background or effects.",
+  "refinement_prompt_full": "Refine six specific cells of this transparent 4-column x4-row 16-sprite Rock Lee game atlas. Preserve the sheet dimensions, cell positions, common head size, costume, pixel-like crisp cel style, transparency, and all other TEN sprites exactly. Change ONLY these six cells: row1col3 and row3col3 (normal/Gates air straddle): make the THIGHS SPREAD VERY WIDE ALMOST HORIZONTALLY like the classic Konoha Senpu horse stance in midair. Knees near left and right sides, bent lower legs point down/outward, feet visibly far apart rather than tucked together beneath crotch. Keep the compact chibi body and same large head size. Keep exactly TWO arms: left arm extends left, right forearm is upright beside forehead. No extra limbs. Change row1col4 and row3col4 (normal/Gates coiled turn): show Lee's TRUE BACK facing the viewer while airborne, head back/hair visible, green back and plain rear red belt visible, knees coiled preparing spinning kick. Absolutely NO face/eyes/front chest/front belt buckle visible in these back views. Change row2col1 and row4col1 (normal/Gates turning kick): show the same TRUE BACK-VIEW airborne kick, with the rear of his green torso visible, one leg extending to right and the other folded, arms balanced. No face, no eyes, no front belt buckle; do not make a front pose mirrored. Red skin for Gates arms/feet must match its row. Keep every other original pose unchanged, especially the horizontal side contact kick in column2 of rows2/4. All sprites fully inside cells with transparent gutters. No background/text/effects."
+}

@@ -141,6 +141,8 @@
   }
   const followCamera=G.Camera.follow;
   G.Camera.follow=function(...args){
+    const whirlwind=G.DigimonSkills?.whirlwindFor?.(G.Game.player);
+    if(whirlwind){this.x=whirlwind.camera.x;this.y=whirlwind.camera.y;this.shake=this._sx=this._sy=0;return;}
     const f=activeFor(G.Game.player);
     if(valid(f)&&f.cameraLock){
       this.x=f.cameraLock.x;this.y=f.cameraLock.y;this.shake=this._sx=this._sy=0;
@@ -278,7 +280,7 @@
     return result;
   };
   function canCast(owner, move) {
-    return supports(move?.digiMode) && !activeFor(owner) && owner?.dex === 30006 && valid({ owner, world: G.World }) && !!targetFor(owner, move);
+    return supports(move?.digiMode) && !activeFor(owner) && !G.DigimonSkills?.whirlwindFor?.(owner) && owner?.dex === 30006 && valid({ owner, world: G.World }) && !!targetFor(owner, move);
   }
   function cast(owner, move) {
     if (!canCast(owner, move)) return false;
