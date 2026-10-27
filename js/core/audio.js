@@ -12,7 +12,7 @@
 G.Audio = (() => {
   const KEY = 'ps.audio';
   let ctx = null, master, outNode, musicBus, sfxBus, reverb, wet;
-  let settings = { music: 0.55, sfx: 0.7, muted: false };
+  let settings = { music: 0.15, sfx: 0.7, muted: false };
   try { Object.assign(settings, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { /* nada */ }
   let noiseBuf = null;
 
