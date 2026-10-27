@@ -157,7 +157,7 @@
     function baseStateFor(anim) {
       sync();
       const state = entry(anim), pl = actor(anim), name = hero(anim), dir = direction(anim);
-      const base = { state: 'idle', phase: 'loop', direction: dir, key: name + '-idle', frame: row(dir) * 4 + Math.floor(state.age * 5) % 4, age: state.age, treatment: 'candidate', mirror: false, rotation: 0 };
+      const base = { state: 'idle', phase: 'loop', direction: dir, key: name + '-idle', frame: row(dir) * 4 + (name === 'lee' ? 0 : Math.floor(state.age * 5) % 4), age: state.age, treatment: 'candidate', mirror: false, rotation: 0 };
       if (state.deathAge !== null || pl?.dead || pl?.hp <= 0 || anim.cur === 'Faint') {
         const age = state.deathAge ?? 0;
         return { ...base, state: 'death', phase: age >= .8 ? 'hold' : 'collapse', key: name + '-death', frame: Math.min(3, Math.floor(age * 5)), mirror: dir === 'left', age };
