@@ -31,7 +31,8 @@ CHECK = r"""() => {
      G.Camera.follow(p.x,p.y,.005);
      A.resume();try{G.Combat.updateFields(.005);p.anim.update(.005);G.FX.update(.005)}finally{A.pause()}
      if(!L.active)break;seen.add(f.phase);
-     if(['lift','combo','descent','slam','recovery'].includes(f.phase)){
+     if(boss)A.assert(!f.cameraLock,'ground boss incorrectly locked airborne camera');
+     if(!boss&&['lift','combo','descent','slam','recovery'].includes(f.phase)){
        A.assert(f.cameraLock,'airborne action did not lock the camera');
        A.assert(G.Camera.x===f.cameraLock.x&&G.Camera.y===f.cameraLock.y,'airborne action moved the camera');
        G.Camera.kick(.3);G.Camera.follow(p.x+100,p.y-100,.005);
@@ -75,7 +76,7 @@ CHECK = r"""() => {
    }
    A.assert(!L.presentationFor(p),'completed action retained presentation offset');
    A.assert(!L.victimPresentationFor(e),'completed action retained victim offset');
-   A.assert(G.Camera.x===p.x&&G.Camera.y===p.y,'completed action retained cinematic camera');
+   if(!boss)A.assert(G.Camera.x===p.x&&G.Camera.y===p.y,'completed action retained cinematic camera');
    results.push({level,quantity,boss,age:f.age,hits:hits.length,phases:[...seen],horizontalPositions:offsets.size,
      verticalTravel:Math.max(...heights)-Math.min(...heights),directions:angles.size,maxSeparation,draws});
  }

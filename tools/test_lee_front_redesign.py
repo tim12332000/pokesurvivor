@@ -32,7 +32,8 @@ CHECK = r"""() => {
        if(weak)A.assert(!e.dead&&L.pendingDefeat(e),'weak victim vanished before piledriver');
      }
      A.assert(side.every(s=>!ledger.some(h=>h.enemy===s&&h.phase!=='slam')),'splash hit before landing');
-     if(!['approach','windup'].includes(f.phase))A.assert(f.cameraLock&&G.Camera.x===f.cameraLock.x&&G.Camera.y===f.cameraLock.y,'Front Lotus camera moved');
+     if(boss)A.assert(!f.cameraLock,'ground boss incorrectly locked airborne camera');
+     else if(!['approach','windup'].includes(f.phase))A.assert(f.cameraLock&&G.Camera.x===f.cameraLock.x&&G.Camera.y===f.cameraLock.y,'Front Lotus camera moved');
      const canvas=document.createElement('canvas');canvas.width=480;canvas.height=400;const ctx=canvas.getContext('2d');ctx.translate(220,260);
      G.Combat.drawGroundFields(ctx);[e,...side,outside].forEach(e=>e.draw(ctx));p.draw(ctx);G.Combat.drawAirFields(ctx);G.FX.draw(ctx);
      A.assert(ctx.globalAlpha===1&&ctx.getTransform().a===1,'piledriver drawing leaked transform');

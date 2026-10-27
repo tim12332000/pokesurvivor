@@ -5,6 +5,9 @@
   const config=Object.freeze({maxHits:12,rushSpeed:900,rushDuration:.2,guardDuration:.06,minimumCooldown:.5});
   const controlled=owner=>G.SelfClones?.isControlled(owner)??owner===G.Game.player;
   const alive=actor=>actor&&!actor.dead&&actor.hp>0;
+  const boss=actor=>!!(actor.boss||actor.legend||actor.judge);
+  const hitRange=(move,target)=>move.radius+(target.r||0);
+  const contactRange=(owner,move,target)=>Math.max(move.radius*.65,(owner.r||12)+(target.r||10)+8);
   const learned=owner=>owner?.mon?.dex===30006&&owner.moves?.find(move=>move.id===id);
   const heavy=owner=>G.NarutoLee?.activeFor(owner)||G.DigimonSkills?.whirlwindFor(owner);
   const moving=owner=>owner===G.Game.player&&Math.hypot(...G.Input.axis())>.2;
@@ -21,8 +24,8 @@
   function targetFor(owner,move){
     const range=moving(owner)?move.radius:move.range;
     const targets=[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,range))]
-      .filter(enemy=>alive(enemy)&&Math.hypot(enemy.x-owner.x,enemy.y-owner.y)<=range&&path(owner.x,owner.y,enemy.x,enemy.y));
-    targets.sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
+      .filter(enemy=>alive(enemy)&&Math.hypot(enemy.x-owner.x,enemy.y-owner.y)<=range+(boss(enemy)?enemy.r||0:0)&&path(owner.x,owner.y,enemy.x,enemy.y));
+    targets.sort((a,b)=>Number(boss(b))-Number(boss(a))||Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
     return targets[0];
   }
   function migrate(owner){
@@ -52,7 +55,7 @@
     const active={owner,move:snapshot,target,phase:'rush',age:0,attackAge:0,hitIndex:0,
       hits:Math.min(config.maxHits,Math.max(1,snapshot.count|0)),aim:Math.atan2(target.y-owner.y,target.x-owner.x),
       duration:Math.min(.42,Math.max(.16,move.t*.65)),camera:{x:G.Camera.x,y:G.Camera.y}};
-    if(moving(owner)||Math.hypot(target.x-owner.x,target.y-owner.y)<=move.radius*.65)beginAttack(active);
+    if(moving(owner)||Math.hypot(target.x-owner.x,target.y-owner.y)<=contactRange(owner,move,target))beginAttack(active);
     return active;
   }
   function advance(active,dt){
@@ -63,16 +66,16 @@
       active.target=target;
     }
     if(!path(owner.x,owner.y,target.x,target.y))return false;
-    if(active.phase==='attack'&&moving(owner)&&Math.hypot(target.x-owner.x,target.y-owner.y)>move.radius)return false;
+    if(active.phase==='attack'&&moving(owner)&&Math.hypot(target.x-owner.x,target.y-owner.y)>hitRange(move,target))return false;
     active.aim=Math.atan2(target.y-owner.y,target.x-owner.x);
     if(owner.anim)owner.anim.dir=G.Sprites.dirFromAngle(active.aim);
     if(active.phase==='rush'){
       const distance=Math.hypot(target.x-owner.x,target.y-owner.y);
       if(moving(owner)){
-        if(distance>move.radius)return false;
+        if(distance>hitRange(move,target))return false;
         beginAttack(active);
       }else{
-        let budget=Math.min(config.rushSpeed*dt,Math.max(0,distance-move.radius*.65));
+        let budget=Math.min(config.rushSpeed*dt,Math.max(0,distance-contactRange(owner,move,target)));
         const steps=Math.ceil(budget/4)+1;
         for(let i=0;i<steps&&budget>.001;i++){
           const step=Math.min(4,budget),x=owner.x+Math.cos(active.aim)*step,y=owner.y+Math.sin(active.aim)*step;
@@ -80,12 +83,23 @@
           owner.x=x;owner.y=y;budget-=step;
         }
         owner.invuln=Math.max(owner.invuln||0,config.guardDuration);
-        if(Math.hypot(target.x-owner.x,target.y-owner.y)<=move.radius*.65+.01)beginAttack(active);
+        if(Math.hypot(target.x-owner.x,target.y-owner.y)<=contactRange(owner,move,target)+.01)beginAttack(active);
         else if(active.age>=config.rushDuration)return false;
       }
     }
     if(!alive(owner))return false;
     if(active.phase==='attack'){
+      if(boss(target)&&!moving(owner)){
+        let budget=Math.min(config.rushSpeed*dt,Math.max(0,Math.hypot(target.x-owner.x,target.y-owner.y)-contactRange(owner,move,target)));
+        const steps=Math.ceil(budget/4)+1;
+        for(let i=0;i<steps&&budget>.001;i++){
+          const distance=Math.hypot(target.x-owner.x,target.y-owner.y);if(distance<.001)break;
+          const step=Math.min(4,budget),x=owner.x+(target.x-owner.x)/distance*step,y=owner.y+(target.y-owner.y)/distance*step;
+          if(!G.World.isFree(x,y,owner.r||12,true)||!path(owner.x,owner.y,x,y))return false;
+          owner.x=x;owner.y=y;budget-=step;
+        }
+        if(Math.hypot(target.x-owner.x,target.y-owner.y)>hitRange(move,target))return active.age<active.duration+.6;
+      }
       active.attackAge=Math.min(active.duration,active.attackAge+dt);
       while(active.hitIndex<active.hits&&active.attackAge+1e-9>=active.duration*(active.hitIndex+.5)/active.hits){
         const last=active.hitIndex===active.hits-1;

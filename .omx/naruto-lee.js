@@ -22,12 +22,20 @@
   const alive = actor => actor && !actor.dead && actor.hp > 0;
   const valid = f => f && controlled(f.owner) && f.world === G.World && alive(f.owner);
   const elite = e => !!(e.boss || e.elite || e.legend || e.judge);
+  const boss = e => !!(e.boss || e.legend || e.judge);
+  const targetRank=e=>boss(e)?0:1;
   const pullableTarget=e=>!elite(e)&&!e.remote&&!e.jump&&!e.flying&&!(e.jumpLift>0);
   const supports = mode => modes.has(mode);
   const launchedLotus = f => supports(f.kind) && ['lift', 'suspend', 'combo', 'descent', 'slam', 'recovery'].includes(f.phase);
   const isInvulnerable = owner => { const f = activeFor(owner); return !!valid(f) && f.kind === 'lee-reverse-lotus' &&
     ['lift', 'combo', 'descent'].includes(f.phase); };
   const reach = f => (f.owner.r || 12) + (f.target.r || 10) + 12;
+  const chaseRange=f=>elite(f.target)?600:(f.move.range||145);
+  function retreating(owner,target){
+    if(owner!==G.Game.player||!elite(target))return false;
+    const [x,y]=G.Input.axis(),dx=target.x-owner.x,dy=target.y-owner.y,length=Math.hypot(dx,dy);
+    return length>.001&&(x*dx+y*dy)/length<-.35;
+  }
   function clearPath(ax, ay, bx, by) {
     const steps = Math.max(1, Math.ceil(Math.hypot(bx - ax, by - ay) / 4));
     for (let i = 1; i <= steps; i++) {
@@ -49,10 +57,11 @@
   };
   function targetFor(owner, move) {
     const range = move.range || 145;
-    const candidates = [...new Set(G.EnemyMgr.queryCircle(owner.x, owner.y, range))]
-      .filter(e => alive(e) && (!claimFor(e)||claimFor(e).owner===owner) && Math.hypot(e.x - owner.x, e.y - owner.y) <= range && clearPath(owner.x, owner.y, e.x, e.y));
-    candidates.sort((a, b) => Math.hypot(a.x - owner.x, a.y - owner.y) - Math.hypot(b.x - owner.x, b.y - owner.y));
-    return candidates.includes(owner.target) ? owner.target : candidates[0];
+    const candidates = [...new Set(G.EnemyMgr.queryCircle(owner.x, owner.y, Math.max(range,260)))]
+      .filter(e => alive(e) && (!claimFor(e)||claimFor(e).owner===owner) &&
+        Math.hypot(e.x-owner.x,e.y-owner.y)<=(elite(e)?Math.max(range,260)+(e.r||0):range)&&clearPath(owner.x,owner.y,e.x,e.y));
+    candidates.sort((a,b)=>targetRank(a)-targetRank(b)||Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
+    return candidates.includes(owner.target)&&targetRank(owner.target)===targetRank(candidates[0])?owner.target:candidates[0];
   }
   function releaseBinding(f,enemy) {
     if(claims.get(enemy)===f)claims.delete(enemy);
@@ -125,7 +134,7 @@
   }
   function lockCamera(f) {
     const camera=G.Camera;
-    if(f.owner!==G.Game.player||!supports(f.kind)||!camera?.w||!camera.h)return;
+    if(f.owner!==G.Game.player||!supports(f.kind)||elite(f.target)||!camera?.w||!camera.h)return;
     f.cameraLock={x:camera.x,y:camera.y};
     const group=f.boundTargets.length?f.boundTargets:[f.target];
     const spreadX=Math.max(...group.map(e=>Math.abs(e.x-f.target.x)*1.75));
@@ -144,7 +153,7 @@
     const whirlwind=G.DigimonSkills?.whirlwindFor?.(G.Game.player);
     if(whirlwind){this.x=whirlwind.camera.x;this.y=whirlwind.camera.y;this.shake=this._sx=this._sy=0;return;}
     const pursuit=G.NarutoPursuit?.activeFor(G.Game.player);
-    if(pursuit){this.x=pursuit.camera.x;this.y=pursuit.camera.y;this.shake=this._sx=this._sy=0;return;}
+    if(pursuit&&!elite(pursuit.target)){this.x=pursuit.camera.x;this.y=pursuit.camera.y;this.shake=this._sx=this._sy=0;return;}
     const f=activeFor(G.Game.player);
     if(valid(f)&&f.cameraLock){
       this.x=f.cameraLock.x;this.y=f.cameraLock.y;this.shake=this._sx=this._sy=0;
@@ -234,6 +243,9 @@
   }
   function clear(owner) {
     for (const [actor, f] of chains) if (!owner || actor === owner) {
+      if(elite(f.target)&&!f.primaryHits&&alive(actor)&&f.world===G.World){
+        const move=actor.moves.find(m=>m.id===f.move.id);if(move)move.t=Math.min(move.t,.5);
+      }
       releasePending(f); resetCamera(f); removeLift(f);
       releaseBindings(f);
       chains.delete(actor);
@@ -282,7 +294,8 @@
     return result;
   };
   function canCast(owner, move) {
-    return supports(move?.digiMode) && !activeFor(owner) && !G.DigimonSkills?.whirlwindFor?.(owner) && owner?.dex === 30006 && valid({ owner, world: G.World }) && !!targetFor(owner, move);
+    if(!supports(move?.digiMode)||activeFor(owner)||G.DigimonSkills?.whirlwindFor?.(owner)||owner?.dex!==30006||!valid({owner,world:G.World}))return false;
+    const target=targetFor(owner,move);return !!target&&!retreating(owner,target);
   }
   function cast(owner, move) {
     if (!canCast(owner, move)) return false;
@@ -301,7 +314,7 @@
       phase: 'approach', phaseAge: 0, age: 0, travel: 0, attack: owner.atk,
       pullable: pullableTarget(target),bandageStage:'extend',bindLimit:bindLimitOf(snapshot,owner),boundTargets:[],bindings:[],
       visualLift: 0, targetLift: 0, ticks: 0, totalDamage: 0, totalHits: 0, pendingDeath: false,
-      strikes: [], pendingVictims: new Map() };
+      strikes: [], pendingVictims: new Map(), primaryHits: 0 };
     chains.set(owner, chain); summaries.delete(owner);
     reserveGroup(chain);
     owner.svx = owner.svy = 0;
@@ -309,6 +322,7 @@
   }
   function hit(f, enemy, ratio, singleTarget = true) {
     if (!valid(f) || !alive(enemy) || !clearPath(f.owner.x, f.owner.y, enemy.x, enemy.y)) return;
+    if(enemy===f.target&&elite(enemy)&&Math.hypot(enemy.x-f.owner.x,enemy.y-f.owner.y)>reach(f)+24)return;
     const owner = f.owner, move = f.move, mult = G.Types.mult(move.type, enemy.types);
     const crit = owner.critChance > 0 && Math.random() < owner.critChance;
     const damage = move.dmg * ratio * f.attack * mult * G.Weather.mult(move.type) *
@@ -317,6 +331,7 @@
     f.hitTarget = enemy;
     try { enemy.hurt(damage, '#f2ddab', enemy.x - owner.x, enemy.y - owner.y, 0, crit ? 'crit' : G.Types.label(mult), owner, move.id); }
     finally { f.primaryHit = false; f.hitTarget = null; }
+    if(enemy===f.target)f.primaryHits++;
     owner.onDealt(damage); owner.dmgDealt += damage;
     if (singleTarget) G.DamageSplash?.hit(owner, enemy, damage, '#f2ddab', move.id);
     const pose=victimPresentationFor(enemy);
@@ -391,7 +406,7 @@
   }
   function approach(f, dt) {
     const owner = f.owner, target = f.target;
-    let budget = Math.min(480 * dt, (f.move.range || 145) - f.travel);
+    let budget = Math.min((elite(target)?1000:480)*dt,chaseRange(f)-f.travel);
     // Rounding at contact can leave a subpixel gap whose step changes neither
     // the position nor budget. Tolerate that gap and bound collision sampling.
     const maxSteps = Math.ceil(budget / 4) + 1;
@@ -406,7 +421,22 @@
       if (owner.anim) owner.anim.dir = G.Sprites.dirFromAngle(owner.aim);
     }
     if (Math.hypot(target.x - owner.x, target.y - owner.y) <= reach(f) + .001) enter(f, 'windup');
-    return f.phase !== 'approach' || f.travel < (f.move.range || 145) - .001;
+    return f.phase !== 'approach' || f.travel < chaseRange(f) - .001;
+  }
+  function followBoss(f,dt){
+    const owner=f.owner,target=f.target;
+    if(retreating(owner,target))return false;
+    let budget=Math.min(1000*dt,Math.max(0,Math.hypot(target.x-owner.x,target.y-owner.y)-reach(f)+4));
+    const steps=Math.ceil(budget/4)+1;
+    for(let i=0;i<steps&&budget>.001;i++){
+      const dx=target.x-owner.x,dy=target.y-owner.y,length=Math.hypot(dx,dy);if(length<.001)break;
+      const step=Math.min(4,budget),x=owner.x+dx/length*step,y=owner.y+dy/length*step;
+      if(!G.World.isFree(x,y,owner.r||12,true)||!clearPath(owner.x,owner.y,x,y))return false;
+      owner.x=x;owner.y=y;budget-=step;
+      owner.aim=owner.moveAngle=Math.atan2(dy,dx);owner.attackFace=.15;
+      if(owner.anim)owner.anim.dir=G.Sprites.dirFromAngle(owner.aim);
+    }
+    return true;
   }
   function update(dt) {
     for (const [owner, summary] of summaries) {
@@ -421,6 +451,7 @@
     }
     if (!valid(f) || (!alive(f.target) && !launchedLotus(f)) || !clearPath(f.owner.x, f.owner.y, f.target.x, f.target.y)) { clear(f.owner); return; }
     if (G.Game.state !== 'playing') return;
+    if(retreating(f.owner,f.target)){clear(f.owner);return;}
     if(f.pullable&&!pullableTarget(f.target)){
       releaseBindings(f);
       f.pullable=false;
@@ -438,7 +469,8 @@
         if (!(f.pullable?pull(f,step):approach(f, step)) || f.age > .6) { clear(f.owner); return; }
         continue;
       }
-      if ((!alive(f.target) && !launchedLotus(f)) || Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24) { clear(f.owner); return; }
+      if(elite(f.target)&&f.phase!=='recovery'&&!followBoss(f,step)){clear(f.owner);return;}
+      if ((!alive(f.target) && !launchedLotus(f)) || (!elite(f.target)&&Math.hypot(f.target.x - f.owner.x, f.target.y - f.owner.y) > reach(f) + 24)) { clear(f.owner); return; }
       if (f.phase === 'combo') {
         // A defeated bound target stays hittable until the landing resolves it.
         while (f.ticks < f.comboHits && f.phaseAge + 1e-9 >= f.comboDeadlines[f.ticks]) {
