@@ -9,7 +9,7 @@
   const bandageExtend = .10;
   const bindLimitOf=(move,owner=G.Game.player)=>{
     const reverse=move.digiMode==='lee-reverse-lotus',base=reverse?10:3;
-    return Math.min(reverse?24:12,G.Quantity?.countAtCast(owner,move,base)??base);
+    return Math.min(reverse?40:12,G.Quantity?.countAtCast(owner,move,base)??base);
   };
   const chains = new Map(), summaries = new Map(), releasingTargets = new WeakSet();
   const activeFor = owner => chains.get(owner) || null;

@@ -15,11 +15,11 @@ CHECK = r"""() => {
    A.assert(near(m.dmg,d)&&m.cd===10,'reverse damage or cooldown mismatch at level '+(i+1));
    A.assert(near(front.dmg,frontDamage[i])&&front.cd===10,'Front Lotus doubled balance mismatch');
    A.assert(front.desc.includes('冷卻 10 秒'),'Front Lotus description is stale');
-   A.assert(m.desc.includes('冷卻 10 秒')&&m.desc.includes('10 名')&&m.desc.includes('24 名'),'reverse description is stale');
+   A.assert(m.desc.includes('冷卻 10 秒')&&m.desc.includes('10 名')&&m.desc.includes('40 名'),'reverse description is stale');
    return {level:i+1,damage:m.dmg,cooldown:m.cd,frontDamage:front.dmg,frontCooldown:front.cd};
  });
  const quantities=[];
- for(const [picks,reverse,front]of [[0,10,3],[2,15,4],[20,24,12]]){
+ for(const [picks,reverse,front]of [[0,10,3],[2,15,4],[6,38,11],[7,40,12],[20,40,12]]){
    p.quantityPicks=p.quantityBonus=picks;
    const r=L.bindLimitOf(G.Moves.instance('naruto-reverse-lotus'),p),f=L.bindLimitOf(G.Moves.instance('naruto-lotus'),p);
    A.assert(r===reverse&&f===front,'quantity scaling or cap mismatch at picks '+picks);

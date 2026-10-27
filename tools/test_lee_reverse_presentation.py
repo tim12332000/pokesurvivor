@@ -84,7 +84,7 @@ CHECK = r"""() => {
  L.clear(p);A.assert(!L.active&&!L.liftFor(e)&&!L.isInvulnerable(p),'cancel retained presentation');
  A.assert(L.bindLimitOf(G.Moves.instance('naruto-reverse-lotus'),p)===10,'reverse base group not ten');
  A.assert(L.bindLimitOf(G.Moves.instance('naruto-lotus'),p)===3,'normal Lotus group changed');
- p.quantityPicks=20;A.assert(L.bindLimitOf(G.Moves.instance('naruto-reverse-lotus'),p)===24,'group cap changed');
+ p.quantityPicks=20;A.assert(L.bindLimitOf(G.Moves.instance('naruto-reverse-lotus'),p)===40,'group cap changed');
  p.quantityPicks=p.quantityBonus=0;A.leeArena();const weak=[A.spawn(35,0),A.spawn(65,20),A.spawn(65,-20),A.spawn(25,65),A.spawn(25,-65)];
  weak.forEach(e=>{e.hp=1;e.xp=7});p.target=weak[0];A.select('naruto-reverse-lotus');A.actualCast('naruto-reverse-lotus');const weakFrame=L.active,before=p.kills;
  let airborne=false;for(let n=0;n<1500&&L.active;n++){
@@ -101,9 +101,9 @@ CHECK = r"""() => {
  weak.forEach(e=>A.assert(!L.pendingDefeat(e)&&!L.liftFor(e),'group death retained lift'));
  A.leeArena();p.target=A.spawn(35,0);const cancelled=A.spawn(50,40);cancelled.hp=1;A.select('naruto-reverse-lotus');A.actualCast('naruto-reverse-lotus');A.advance(1.2);L.clear(p);
  A.assert(!L.pendingDefeat(cancelled)&&!L.bound(cancelled)&&!L.liftFor(cancelled),'cancel left a group victim held');
- A.leeArena();p.quantityPicks=5;p.quantityBonus=5;const capMain=A.spawn(35,0),capEnemies=Array.from({length:27},(_,i)=>A.spawn(60+Math.cos(i*Math.PI*2/27)*70,Math.sin(i*Math.PI*2/27)*70));
+ A.leeArena();p.quantityPicks=7;p.quantityBonus=7;const capMain=A.spawn(35,0),capEnemies=Array.from({length:47},(_,i)=>A.spawn(60+Math.cos(i*Math.PI*2/47)*70,Math.sin(i*Math.PI*2/47)*70));
  p.target=capMain;const capMove=A.select('naruto-reverse-lotus');Object.assign(capMove,G.Moves.instance(capMove.id,5));A.actualCast('naruto-reverse-lotus');
- A.assert(L.active.boundTargets.length===24,'actual crowded cast did not reach the twenty-four-member cap: '+L.active.boundTargets.length);
+ A.assert(L.active.boundTargets.length===40,'actual crowded cast did not reach the forty-member cap: '+L.active.boundTargets.length);
  L.clear(p);A.assert([capMain,...capEnemies].every(e=>!L.bound(e)&&!L.liftFor(e)),'capped group retained claims after cancel');
  const camera={x:G.Camera.x,y:G.Camera.y};G.Camera.follow(camera.x+80,camera.y+80,.1);
  A.assert(G.Camera.x>camera.x&&G.Camera.y>camera.y,'normal camera follow did not resume after cancel');
