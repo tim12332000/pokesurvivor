@@ -62,6 +62,12 @@ G.Icons = (() => {
     leafWhirlwind: { pal: { w:'#eef7ff', s:'#8495b6', g:'#7bce72' }, rows: [
       '..gggggg....', '.g......gg..', 'g.........g.', 'g...kkkk....', '....kggk....', '....kggk....',
       '...kkggkk...', '..kwwggggk..', '.kwwgggggsk.', '.ksssssssk..', '..kkkkkkk.g.', '....gggggg..'] },
+    leePursuit: { pal: { k:'#141c32', s:'#9cbbc8', w:'#f1f6e9', b:'#42c6ff',
+      g:'#16966c', t:'#ffd0a0' }, rows: [
+      '................', '...bbbb.........', '.bbwwbb.........', '.........kkkk...',
+      '.......kkttttk..', '......ktttttttk.', '...kkkttktktktk.', '..kggwttttttttk.',
+      'bbkggwwwwwwwwk..', '.bkggwwswwswk...', '...kggwwwwwk....', '....kggwwwk.....',
+      '.bbbbkkkkk......', 'bbwwbb..........', '................', '................'] },
     frontLotus: { pal: { w:'#eef7ff', p:'#b893ef' }, rows: [
       '.....p......', '..p.kpk.p...', '.kpkpppkpk..', '.kpppppppk..', '..kpppppk...', '...kkkkk....',
       '....kwwk....', '...kwwk.....', '..kwwk......', '.kwwk.......', 'kwwk........', '.kk.........'] },

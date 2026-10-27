@@ -318,7 +318,7 @@
       source_url:'https://naruto-official.com/en/news/01_1668'
     }],
     ['naruto-lee-pursuit', [30006], {
-      icon:'fist',name:'疾速追身',mode:'lee-pursuit',passive:true,type:'fighting',learnLevel:2,
+      icon:'leePursuit',name:'疾速追身',mode:'lee-pursuit',passive:true,type:'fighting',learnLevel:2,
       cd:1.4,minCooldown:.5,dmg:18,count:3,range:180,radius:85,arc:2.8,vis:{pal:'grass',melee:'impact'},
       ups:[
         {t:'每擊傷害 22・冷卻 1.3 秒・追身 195・範圍 90',m:{dmg:11/9,cd:13/14,range:195,radius:18/17}},
