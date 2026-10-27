@@ -1,5 +1,5 @@
 /* ============ audio.js — sintetizador, secuenciador y efectos de sonido ============
- * Todo el sonido se genera en el momento con Web Audio: no hay ficheros.
+ * Web Audio synthesis for SFX and original themes; optional recorded music.
  *
  *   G.Audio.music('village')   cambia de tema con fundido (ver data/music.js)
  *   G.Audio.sfx('coin')        efecto de sonido (con límite de repetición)
@@ -62,6 +62,7 @@ G.Audio = (() => {
     // 'suspended' o 'interrupted' (iPhone al volver de otra app): se reanuda.
     if (ctx.state !== 'running') ctx.resume().catch(() => {});
     if (wanted && !current) startSong(wanted);
+    if (current?.media?.paused) current.media.play().catch(() => {});
   }
   // En móvil, tocar la pantalla (pointerdown) no cuenta como gesto para el
   // sonido: sí levantar el dedo (pointerup / touchend). Se escuchan todos.
@@ -302,6 +303,19 @@ G.Audio = (() => {
 
   function startSong(name) {
     if (!ctx || !G.MUSIC[name]) return;
+    if (G.MUSIC[name].file) {
+      const media = new Audio(G.MUSIC[name].file);
+      media.loop = true;
+      const bus = ctx.createGain();
+      bus.gain.setValueAtTime(0.0001, ctx.currentTime);
+      bus.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.8);
+      bus.connect(musicBus);
+      const source = ctx.createMediaElementSource(media);
+      source.connect(bus);
+      current = { name, media, bus, source };
+      media.play().catch(() => {});
+      return;
+    }
     const song = compiled[name] || (compiled[name] = compile(G.MUSIC[name]));
     const bus = ctx.createGain();
     bus.gain.setValueAtTime(0.0001, ctx.currentTime);
@@ -312,11 +326,14 @@ G.Audio = (() => {
 
   function stopCurrent() {
     if (!current) return;
-    const b = current.bus;
+    const stopped = current, b = stopped.bus;
     b.gain.cancelScheduledValues(ctx.currentTime);
     b.gain.setValueAtTime(b.gain.value, ctx.currentTime);
     b.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 0.7);
-    setTimeout(() => b.disconnect(), 900);
+    setTimeout(() => {
+      if (stopped.media) { stopped.media.pause(); stopped.source.disconnect(); }
+      b.disconnect();
+    }, 900);
     current = null;
   }
 
@@ -325,13 +342,17 @@ G.Audio = (() => {
     if (wanted === name) return;
     wanted = name;
     if (!ctx) return;                    // arrancará al primer clic
+    if (current?.media && G.MUSIC[name]?.file === G.MUSIC[current.name]?.file) {
+      current.name = name;
+      return;
+    }
     stopCurrent();
     if (name) startSong(name);
   }
 
   // Planificador: programa con 150 ms de antelación.
   setInterval(() => {
-    if (!ctx || !current || ctx.state !== 'running') return;
+    if (!ctx || !current || current.media || ctx.state !== 'running') return;
     const c = current, sd = 60 / c.song.bpm / 4;
     while (c.next < ctx.currentTime + 0.15) {
       const i = c.step % c.song.steps;
