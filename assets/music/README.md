@@ -1,7 +1,7 @@
 # Battle music
 
-`strong-and-strike.m4a` — **Strong and Strike**, MUSASHI PROJECT,
-from *NARUTO ORIGINAL SOUNDTRACK* (127 seconds, AAC/M4A).
+`strong-and-strike.mp3` — **Strong and Strike**, MUSASHI PROJECT,
+from *NARUTO ORIGINAL SOUNDTRACK* (127 seconds, 96 kbps MP3, 44.1 kHz stereo).
 
 Source: https://www.youtube.com/watch?v=scWSTDsj3IM
 

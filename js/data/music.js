@@ -153,5 +153,5 @@ G.BIOME_MUSIC = ['forest', 'cave', 'volcano'];
 
 // One continuous battle recording across biome and boss transitions.
 for (const name of [...G.BIOME_MUSIC, 'boss', 'rift', 'judgment']) {
-  G.MUSIC[name].file = 'assets/music/strong-and-strike.m4a';
+  G.MUSIC[name].file = 'assets/music/strong-and-strike.mp3';
 }

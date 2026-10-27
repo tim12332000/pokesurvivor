@@ -313,7 +313,14 @@ G.Audio = (() => {
       const source = ctx.createMediaElementSource(media);
       source.connect(bus);
       current = { name, media, bus, source };
-      media.play().catch(() => {});
+      media.addEventListener('error', () => {
+        console.warn('[Audio] Recording failed to load', media.src, media.error?.code);
+      });
+      media.play().catch(error => {
+        if (error.name !== 'NotAllowedError' && error.name !== 'AbortError') {
+          console.warn('[Audio] Recording failed to play', error);
+        }
+      });
       return;
     }
     const song = compiled[name] || (compiled[name] = compile(G.MUSIC[name]));
