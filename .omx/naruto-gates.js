@@ -6,11 +6,11 @@
     stageNames: Object.freeze(['開門', '休門', '生門', '傷門', '杜門']),
     atkMultipliers: Object.freeze([1.3, 1.35, 1.4, 1.45, 1.5]),
     trails: Object.freeze([
-      { scale: 1.04, count: 3, life: .16, interval: .075, opacity: .24 },
-      { scale: 1.12, count: 4, life: .20, interval: .065, opacity: .28 },
-      { scale: 1.22, count: 5, life: .24, interval: .055, opacity: .32 },
-      { scale: 1.34, count: 6, life: .28, interval: .045, opacity: .36 },
-      { scale: 1.48, count: 7, life: .32, interval: .035, opacity: .40 }
+      { scale: 1.10, count: 6, life: .55, interval: .09, opacity: .48, color: '#349dff' },
+      { scale: 1.18, count: 7, life: .64, interval: .09, opacity: .52, color: '#349dff' },
+      { scale: 1.28, count: 8, life: .70, interval: .085, opacity: .56, color: '#349dff' },
+      { scale: 1.38, count: 9, life: .78, interval: .085, opacity: .60, color: '#349dff' },
+      { scale: 1.50, count: 10, life: .86, interval: .08, opacity: .66, color: '#ff315b' }
     ].map(style => Object.freeze(style)))
   });
   const states = new Map();
@@ -109,9 +109,9 @@
     // Freeze the actual pose now; later turns and attacks must not redraw history.
     owner.anim.draw(tint, 96, 160, { flash: true });
     tint.globalCompositeOperation = 'source-in';
-    tint.fillStyle = '#ff2248'; tint.fillRect(0, 0, 192, 192);
+    tint.fillStyle = style.color; tint.fillRect(0, 0, 192, 192);
     return { x: owner.x, y: owner.y, image, ttl: style.life, life: style.life,
-      scale: style.scale, opacity: style.opacity };
+      scale: style.scale, opacity: style.opacity, color: style.color };
   }
   function update(dt) {
     const owners = [G.Game.player, ...(G.SelfClones?.actors() || [])].filter(Boolean);
@@ -125,6 +125,7 @@
         states.set(owner, { owner, world: G.World, age: 0, sampleT: 0, images: [], lastX: owner.x, lastY: owner.y });
       }
       const state = states.get(owner);
+      if(state.level!==level){state.images=[];state.sampleT=0;state.level=level;state.lastX=owner.x;state.lastY=owner.y;}
       if (G.Game.state !== 'playing' || !(dt > 0) || !Number.isFinite(dt)) continue;
       state.age += dt; state.sampleT -= dt;
       state.images = state.images.filter(ghost => (ghost.ttl -= dt) > 0);
@@ -140,7 +141,7 @@
   function draw(ctx, ground) {
     for (const state of states.values()) {
       const owner = state.owner, level = stage(owner);
-      if (!level || state.world !== G.World) continue;
+      if (!level || state.world !== G.World || state.level !== level) continue;
       const phase = state.age, x = owner.x, y = owner.y;
       ctx.save();
       if (ground) {
@@ -148,7 +149,7 @@
         ctx.imageSmoothingEnabled = false;
         for (const ghost of state.images) {
           ctx.save();
-          ctx.globalAlpha = alpha * ghost.opacity * ghost.ttl / ghost.life;
+          ctx.globalAlpha = alpha * ghost.opacity * Math.sqrt(ghost.ttl / ghost.life);
           ctx.translate(Math.round(ghost.x), Math.round(ghost.y));
           ctx.scale(ghost.scale, ghost.scale);
           ctx.drawImage(ghost.image, -96, -160);
@@ -174,8 +175,8 @@
   C.clearFields = function(owner) { const result = clearFields.call(this, owner); clear(owner); return result; };
   C.drawGroundFields = function(ctx) { ground.call(this, ctx); draw(ctx, true); };
   C.drawAirFields = function(ctx) { air.call(this, ctx); draw(ctx, false); };
-  const afterimagesFor = owner => (states.get(owner)?.world === G.World && stage(owner) ? states.get(owner).images : [])
-    .map(({ x, y, ttl, life, scale }) => ({ x, y, ttl, life, scale }));
+  const afterimagesFor = owner => (states.get(owner)?.world === G.World && stage(owner) && states.get(owner).level === stage(owner) ? states.get(owner).images : [])
+    .map(({ x, y, ttl, life, scale, color, opacity }) => ({ x, y, ttl, life, scale, color, opacity }));
   G.NarutoGates = { config, stage, level: stage, bonusPercent, healingMultiplier, inheritedRegen, maxHealthBonus, syncMaxHealth, afterimagesFor,
     active: owner => stage(owner) > 0,
     redSkin: owner => stage(owner) > 0, redForm: owner => stage(owner) >= 3,
