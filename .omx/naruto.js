@@ -1,7 +1,7 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
-  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011]);
+  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011,30012]);
   const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
   const version='火影 beta 0.01';
   const roster = [
@@ -15,7 +15,8 @@
     ['itachi','Itachi Uchiha','宇智波鼬','曉',['psychic','fire'],5,110,117],
     ['tenten','Tenten','天天','第三班',['steel'],3,150,144],
     ['pain','Pain — Six Paths','沛恩六道','曉',['psychic'],5,120,108],
-    ['temari','Temari','手鞠','砂隱村',['flying'],3,125,118]
+    ['temari','Temari','手鞠','砂隱村',['flying'],3,125,118],
+    ['kimimaro','Kimimaro','君麻呂','音隱村',['fighting','steel'],4,160,122]
   ];
   const records = new Map(), dictionary = {Naruto:'火影忍者'};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
@@ -25,20 +26,21 @@
     const starter={dex,start,traits:['valiente','leal']};
     G.STARTERS.push(starter);G.STARTER_BY[dex]=starter;
     // Temari has her own on-demand atlas; no legacy pixel sheet is required.
-    const basePixel=slug==='temari'?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug];
-    const pixel=['pain','temari'].includes(slug)?{...basePixel,preview:{source:'.omx/naruto/portraits/'+slug+'.png',w:96,h:112,ax:48,ay:110}}:basePixel,image=new Image();
+    const basePixel=['temari','kimimaro'].includes(slug)?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug];
+    const pixel=['pain','temari','kimimaro'].includes(slug)?{...basePixel,preview:{source:'.omx/naruto/portraits/'+slug+'.png'+(slug==='kimimaro'?'?v=full-body-1':''),w:96,h:112,ax:48,ay:110}}:basePixel,image=new Image();
     const geometry={w:32,h:36,ax:16,ay:36,n:1,r:1,d:[24]};
     G.SPRITE_META[dex]={s:1,sh:false,a:Object.fromEntries(G.Sprites.ANIMS.map(anim=>{
       const action=pixel.animations?.[anim];
-      const count=slug==='temari'?4:anim==='Walk'?4:action?Math.max(...Object.values(action.frames).map(frames=>frames.length)):1;
-      const duration=slug==='temari'?(anim==='Idle'?12:anim==='Faint'?9:6):anim==='Walk'?8:action?(action.duration||7):24;
+      const authored=['temari','kimimaro'].includes(slug);
+      const count=slug==='kimimaro'?({Idle:2,Walk:3,Hurt:2,Faint:2}[anim]||4):authored?4:anim==='Walk'?4:action?Math.max(...Object.values(action.frames).map(frames=>frames.length)):1;
+      const duration=slug==='kimimaro'?({Idle:12,Walk:7,Hurt:6,Faint:9}[anim]||6):authored?(anim==='Idle'?12:anim==='Faint'?9:6):anim==='Walk'?8:action?(action.duration||7):24;
       return [anim,{...geometry,n:count,d:action?.durations||Array(count).fill(duration)}];
     }))};
     const record={...mon,chinese,team,slug,pixel,image,ready:false,attack:''};
     let loading;
     Object.defineProperty(record,'loaded',{get(){
       if(record.ready)return Promise.resolve(true);
-      if(slug==='pain'||slug==='temari')return (slug==='pain'?G.PainArt:G.TemariArt).ready.then(()=>{record.ready=true;return true;});
+      if(['pain','temari','kimimaro'].includes(slug))return (slug==='pain'?G.PainArt:slug==='temari'?G.TemariArt:G.KimimaroArt).ready.then(()=>{record.ready=true;return true;});
       if(loading)return loading;
       loading=new Promise(resolve=>{
       image.onload=()=>{
@@ -109,6 +111,18 @@
         const target=Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75),k=Math.min(target/frame.h,ctx.canvas.width*.88/frame.w);
         ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=opts.alpha??1;
         ctx.drawImage(image,-Math.round(frame.ax*k),-Math.round(frame.ay*k),Math.round(frame.w*k),Math.round(frame.h*k));ctx.restore();return;
+      }
+      if(this.dex===30012){
+        if(!record.ready){void record.loaded;return;}
+        const actor=G.Game.player?.anim===this?G.Game.player:[...(G.SelfClones?.actors?.()||[]),...(G.Coop?.puppets?.()||[])].find(a=>a.anim===this);
+        const pose=actor?G.NarutoKimimaro?.activeFor?.(actor):null;
+        const dead=actor?.dead||this.cur==='Faint',hurt=actor?.flash>0||this.cur==='Hurt';
+        const state=dead?'death':hurt?'hurt':pose?.kind||pose?.state||(this.cur==='Walk'?'move':'idle');
+        const time=dead?(this.frame*9+this.t)/60:hurt?(this.cur==='Hurt'?(this.frame*6+this.t)/60:Math.max(0,.14-(actor?.flash||0))):pose?.age??(this.frame*(this.cur==='Idle'?12:this.cur==='Walk'?7:6)+this.t)/60;
+        G.KimimaroArt.draw(ctx,actor||{},{x,y,height:64*this.scale,state,time,dir:this.dir,
+          facing:pose?.aim!=null?(Math.cos(pose.aim)<0?-1:1):this.dir>=5?-1:1,
+          form:G.NarutoKimimaro?.formFor?.(actor)||'normal',flash:!dead&&opts.flash,alpha:opts.alpha??1});
+        return;
       }
       if(this.dex===30011){
         if(!record.ready){void record.loaded;return;}
@@ -328,7 +342,7 @@
   `;document.head.append(style);
   if(!G.Digimon.enabled){
     document.querySelector('#scr-menu .logo .t2').textContent='寶可夢 × 火影忍者';
-    document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代與 5 位火影忍者';
+    document.querySelector('#scr-menu [data-go="gacha"] small').textContent=`9 大世代與 ${availableDexes.length} 位火影忍者`;
   }
   const startRun=G.Game.startRun;
   G.Game.startRun=function(...args){restoreAvailablePartner();return startRun.apply(this,args);};

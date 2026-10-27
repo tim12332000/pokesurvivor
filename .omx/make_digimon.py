@@ -51,6 +51,8 @@ html = html.replace('<script defer src=".omx/quantity.js"></script>', '<script d
 html = html.replace('<script defer src="js/systems/self-clone.js"></script>', '<script defer src="js/systems/self-clone.js"></script>\n<script defer src=".omx/temari-coop.js"></script>', 1)
 html = html.replace('<script defer src=".omx/naruto-sharingan-icons.js"></script>', '<script defer src=".omx/naruto-sharingan-icons.js"></script>\n<script defer src=".omx/naruto-pain-ui.js"></script>', 1)
 html = html.replace(main, '<script defer src=".omx/pain-beta.js"></script>\n' + main, 1)
+html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src="art-review/kimimaro-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
+html = html.replace('<script defer src="art-review/cast-continuity.js"></script>', '<script defer src=".omx/naruto-kimimaro.js"></script>\n<script defer src="art-review/cast-continuity.js"></script>', 1)
 # Local previews need the same cache separation as deployed builds. A version
 # on the page URL alone does not invalidate its independently cached scripts.
 def version_asset(match):

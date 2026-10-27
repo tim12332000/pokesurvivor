@@ -207,6 +207,21 @@
       t:up.t+`・角度${[75,105,135,180][i]}°`,m:{...up.m,arc:[75/45,105/75,135/105,180/135][i]}})),source_url:temariSource,
     desc:'常駐風浪，不占主動槽。角度隨階級擴大45／75／105／135／180度，最高階掃過前方半圈。每輪floor(3×1.25^數量卡)道風浪造成鐮鼬切割，短暫吹起小怪、阻止前進；同輪連切不重置吹起時間，特殊敵人免疫。每次傷害8／9.6／11.52／14.4／18，冷卻1.6秒，射程240／250／270／290／310；牆會阻擋。精通使每波連切1＋精通等級＋數量卡次，每次重新檢查接觸。'
   }]);
+  const kimimaroSource='https://naruto-official.com/en/news/01_2541';
+  const kimimaroRanks=[1,1.2,1.4,1.7,2];
+  const kimimaroUps=(damage,ranges=null,radii=null,widths=null)=>damage.slice(1).map((value,index)=>({
+    t:`基礎傷害 ${value}${ranges?`・射程 ${ranges[index+1]}`:''}${radii?`・範圍 ${radii[index+1]}`:''}`,
+    m:{dmg:value/damage[index],...(ranges?{range:ranges[index+1]}:{}),
+      ...(radii?{radius:radii[index+1]/radii[index]}:{}),
+      ...(widths?{width:widths[index+1]/widths[index],halfWidth:widths[index+1]/2}:{})}
+  }));
+  profiles.push([30012,'kimimaro','柳之舞','Kimimaro — Shikotsumyaku','01_2541',{
+    mode:'kimimaro-willow',icon:'kimimaroWillow',passive:true,type:'fighting',cd:.9,dmg:30,
+    radius:110,range:110,arc:80*Math.PI/180,count:4,baseCount:4,maxCount:8,castDuration:.64,
+    ups:kimimaroUps([30,36,42,51,60],[110,120,130,140,150],[110,120,130,140,150]),
+    desc:'常駐近身普攻，不占主動槽。骨刃四連斬逐漸加速，每擊為整輪基傷的四分之一；數量卡增加連擊，最多八擊。射程110／120／130／140／150，冷卻0.9秒。其他主動施術時暫停補攻。',
+    source_url:kimimaroSource
+  }]);
   const shared = [
     ['naruto-kunai', {
       name: '苦無投擲', mode: 'shot', type: 'steel', cd: .68, dmg: 17,
@@ -562,6 +577,51 @@
       source_url:temariSource
     }]
   );
+  const kimimaroDesigns=[
+    ['camellia','椿之舞',3,'fighting',5,[120,144,168,204,240],{
+      icon:'kimimaroCamellia',radius:220,range:220,width:80,halfWidth:40,count:4,castDuration:.74,
+      ups:kimimaroUps([120,144,168,204,240],[220,240,260,280,300],[220,240,260,280,300],[80,88,96,104,112]),
+      desc:'前方骨劍三連刺，傷害分配25%／25%／50%，可邊移動邊刺。線長220／240／260／280／300、全寬80／88／96／104／112，基礎每刺最多四名；數量卡增加不同目標上限，單人總傷不變。冷卻5秒。'}],
+    ['bullets','十指穿彈',3,'steel',2.4,[45,54,63,76.5,90],{
+      icon:'kimimaroBullets',passive:true,radius:380,range:380,speed:600,count:5,baseCount:5,maxCount:15,size:3,castDuration:.60,
+      ups:kimimaroUps([45,54,63,76.5,90],[380,400,420,440,460],[380,400,420,440,460]),
+      desc:'學會自動施放，不占主動欄。近身沒有敵人時，以五拍指骨射擊中遠距離目標，基礎五枚、每枚為當階整輪基傷的五分之一。數量卡最多十五枚；逐彈分配最近三名目標，離手後直飛，碰敵或牆消失，不穿透。射程380／400／420／440／460，冷卻2.4秒。'}],
+    ['larch','唐松之舞',6,'fighting',6,[96,115.2,134.4,163.2,192],{
+      icon:'kimimaroLarch',passive:true,radius:125,range:125,count:1,castDuration:.70,guardReduction:.20,guardDuration:.70,knock:35,
+      ups:kimimaroUps([96,115.2,134.4,163.2,192],[125,135,145,155,165],[125,135,145,155,165]),
+      desc:'學會自動施放，不占主動欄。敵人接近時展骨兩輪掃擊，各半傷；展骨期間額外減傷20%，與既有近戰減傷乘算。第二輪推退普通怪35，特殊敵人不搬動。半徑125／135／145／155／165，不吃數量，冷卻6秒。'}],
+    ['vine','鐵線花・蔓',6,'fighting',8,[48,57.6,67.2,81.6,96],{
+      icon:'kimimaroVine',passive:true,radius:320,range:320,count:1,castDuration:.70,
+      ups:kimimaroUps([48,57.6,67.2,81.6,96],[320,340,360,380,400],[320,340,360,380,400]),
+      desc:'學會自動施放，不占主動欄。以脊骨鞭將中距離普通地面怪短拉到安全接斬位置；首領等不拉動。射程320／340／360／380／400，不吃數量，冷卻8秒。選中鐵線花・花且兩招就緒時可接骨鑽，各耗自己的冷卻，不用羈絆合組。'}],
+    ['flower','鐵線花・花',9,'fighting',8,[192,230.4,268.8,326.4,384],{
+      icon:'kimimaroFlower',radius:220,range:220,width:84,halfWidth:42,count:1,castDuration:.86,
+      ups:kimimaroUps([192,230.4,268.8,326.4,384],[220,240,260,280,300],[220,240,260,280,300],[84,92,100,108,116]),
+      desc:'前臂骨鑽一次重刺，主目標全傷，線上最多三名次要敵人各半傷。線長220／240／260／280／300、全寬84／92／100／108／116，只在最後突刺短暫定腳。可獨立施放；學過自動的蔓且兩招就緒時可連動，不用羈絆、不加第三筆傷害。不吃數量，冷卻8秒。'}],
+    ['lily','鬼百合',9,'fighting',6,[100,120,140,170,200],{
+      icon:'kimimaroLily',radius:200,range:200,count:1,castDuration:.90,
+      ups:kimimaroUps([100,120,140,170,200],[200,220,240,260,280],[200,220,240,260,280]),
+      desc:'手持骨鞭周身正反兩圈掃掠，各半傷，可正常走位。半徑200／220／240／260／280，無內圈死角、無減傷、吸附或推退；每圈每敵只命中一次。不吃數量，冷卻6秒。普通態可用為本作改編。',
+      source_url:'https://wap.gamersky.com/sygl/Content-712909.html'}],
+    ['bracken','早蕨之舞',12,'ground',12,[300,360,420,510,600],{
+      icon:'kimimaroBracken',radius:320,range:320,count:1,castDuration:1.48,
+      ups:kimimaroUps([300,360,420,510,600],[320,360,400,440,480],[320,360,400,440,480]),
+      desc:'原地按地後可走開，大片亂骨林三波擴張，每名敵人整次最多受傷一次。半徑320／360／400／440／480，骨柱最多72組；首領可受傷但免控，真正跳躍或懸浮小怪避開地面骨。不是持續傷或障礙，不吃數量，冷卻12秒。'}],
+    ['curse','地之咒印',15,'fighting',30,[0,0,0,0,0],{
+      icon:'kimimaroCurse',passive:true,radius:220,range:220,count:1,castDuration:1,fieldDuration:8,
+      damageBonus:.10,speedBonus:.10,
+      ups:kimimaroRanks.slice(1).map((_,index)=>({t:`咒印二期間傷害 +${[12.5,15,17.5,20][index]}%`,m:{damageBonus:[.125,.15,.175,.20][index]}})),
+      desc:'常駐被動，不占主動槽。30秒周期就緒且220內有敵人時，於動作空檔自動轉形1秒，咒印二持續8秒。期間傷害+10／12.5／15／17.5／20%、移速+10%。不付血、不無敵、不重置招式冷卻，30秒周期不吃冷卻卡。'}]
+  ];
+  for(const [key,name,learnLevel,type,cd,damage,fields] of kimimaroDesigns){
+    extra.push([`naruto-kimimaro-${key}`,[30012],{
+      name,mode:`kimimaro-${key}`,learnLevel,type,cd,dmg:damage[0],
+      source_url:kimimaroSource,...fields
+    }]);
+  }
+  Object.assign(kinds,{'kimimaro-willow':'melee','kimimaro-camellia':'melee','kimimaro-bullets':'projectile',
+    'kimimaro-larch':'melee','kimimaro-vine':'melee','kimimaro-flower':'melee','kimimaro-lily':'melee',
+    'kimimaro-bracken':'aura','kimimaro-curse':'buff'});
   Object.assign(kinds,{'temari-wind':'cone','temari-mastery':'buff','temari-great-scythe':'cone','temari-blade-dance':'dash','temari-typhoon':'meteor','temari-reflect':'buff'});
   kinds['lee-pursuit']='melee';
   Object.assign(kinds,{'pain-basic':'projectile','pain-gravity':'aura','pain-missiles':'projectile','pain-summon':'dash','pain-soul':'melee','pain-absorb':'buff','pain-repair':'buff','pain-planet':'meteor'});
@@ -659,7 +719,7 @@
   guide.translate = false;
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   function activationLabel(move) {
-    if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari','naruto-lee-pursuit'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
+    if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari','naruto-lee-pursuit','naruto-kimimaro'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
     if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';
     if (['naruto-kusanagi', 'naruto-sand-prison'].includes(move.id)) return '主動 · 需保持選中';
     if (['naruto-shadow-clones', 'naruto-nine-tails-cloak'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';

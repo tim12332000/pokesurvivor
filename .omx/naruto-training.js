@@ -4,6 +4,20 @@
   const gaaraPassives=new Set([sandShieldId,sandGuardId,'naruto-sand-armor']);
   const painMove=move=>move.id==='naruto-pain'||move.id.startsWith('naruto-pain-');
   const temariPassives=new Set(['naruto-temari','naruto-temari-three-stars','naruto-temari-blade-dance','naruto-temari-reflect']);
+  const kimimaroPassives=new Set(['naruto-kimimaro','naruto-kimimaro-bullets','naruto-kimimaro-larch','naruto-kimimaro-vine','naruto-kimimaro-curse']);
+  function migrateKimimaroPassives(player) {
+    if(player.mon?.dex!==30012)return;
+    for(const move of player.moves)if(kimimaroPassives.has(move.id)){
+      move.passive=true;
+      if(player.bind)delete player.bind[move.id];
+    }
+    if(!player.slots.some(group=>group.some(move=>kimimaroPassives.has(move.id))))return;
+    const selected=player.slots[player.active];
+    for(const group of player.slots)for(let i=group.length-1;i>=0;i--)if(kimimaroPassives.has(group[i].id))group.splice(i,1);
+    player.slots=player.slots.filter(group=>group.length);
+    const retained=player.slots.indexOf(selected);
+    player.active=retained>=0?retained:0;
+  }
   function migrateTemariPassives(player) {
     if(player.mon?.dex!==30011)return;
     for(const move of player.moves)if(temariPassives.has(move.id)){
@@ -77,10 +91,21 @@
     player.active=retained>=0?retained:Math.max(0,Math.min(player.active,player.slots.length-1));
   }
   G.NarutoSkillCatalog.migrateGaaraPassives=migrateGaaraPassives;
+  G.NarutoSkillCatalog.migrateKimimaroPassives=migrateKimimaroPassives;
   const arrange=G.Player.prototype.arrange;
-  G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);migratePainPassives(this);migrateTemariPassives(this);return arrange.apply(this,args);};
+  G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);migratePainPassives(this);migrateTemariPassives(this);migrateKimimaroPassives(this);return arrange.apply(this,args);};
   const addMove=G.Player.prototype.addMove;
   G.Player.prototype.addMove=function(id,...args){
+    if(this.mon?.dex===30012){
+      const def=G.Moves.BY_ID[id];
+      if(def?.learnLevel>Math.max(1,this.level||1))return false;
+      if(kimimaroPassives.has(id)){
+        if(this.hasMove(id)){migrateKimimaroPassives(this);return false;}
+        this.moves.push(G.Moves.instance(id,1));
+        this.arrange();
+        return true;
+      }
+    }
     if((this.mon?.dex===30001&&id==='naruto-shadow-clones')||this.mon?.dex===30009&&['naruto-tenten','naruto-tenten-mastery','naruto-tenten-bounce','naruto-tenten-guard'].includes(id)||this.mon?.dex===30010&&painMove({id})||this.mon?.dex===30011&&temariPassives.has(id)){
       if(this.hasMove(id))return false;
       this.moves.push(G.Moves.instance(id,1));
@@ -111,8 +136,12 @@
   const poolFor=G.Moves.poolFor;
   G.Moves.poolFor=mon=>{
     const player=G.Game.player;
-    if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateGaaraPassives(player);migratePainPassives(player);migrateTemariPassives(player);}
+    if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateGaaraPassives(player);migratePainPassives(player);migrateTemariPassives(player);migrateKimimaroPassives(player);}
     const ids=poolFor(mon);
+    if(mon.dex===30012){
+      const level=startingRun?1:player?.mon===mon?Math.max(1,player.level||1):1;
+      return ids.filter(id=>(G.Moves.BY_ID[id]?.learnLevel||1)<=level);
+    }
     // startRun may ask for a second starting attack before all wrappers expose
     // the new player; Temari has no legal second attack at level one.
     if(startingRun&&mon.dex===30011)return ids.filter(id=>!G.Moves.BY_ID[id].learnLevel);
@@ -155,6 +184,7 @@
     migrateGaaraPassives(player);
     migratePainPassives(player);
     migrateTemariPassives(player);
+    migrateKimimaroPassives(player);
     if(!player.mon?.naruto)return offer(player,n);
     const retired=['naruto-kunai','naruto-shuriken'];
     return offer(player,n,candidates=>{
@@ -164,7 +194,13 @@
         const card=signatureCard(player,milestone);
         if(card)cards.set(card.key,card);
       }
-      return [...cards.values()];
+      const result=[...cards.values()];
+      if(player.mon.dex===30012)result.sort((a,b)=>{
+        if(!a.guaranteed||!b.guaranteed)return Number(!!b.guaranteed)-Number(!!a.guaranteed);
+        const level=card=>G.Moves.BY_ID[card.key.replace(/^new:/,'')]?.learnLevel||0;
+        return level(b)-level(a);
+      });
+      return result;
     });
   };
 })();

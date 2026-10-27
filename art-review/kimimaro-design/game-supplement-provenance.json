@@ -1,0 +1,16 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "prompt": "Use case: stylized-concept. Asset type: SUPPLEMENTARY GAME ANIMATION atlas for our original young KIMIMARO, normal and cursed seal level2, actual front/back locomotion and hurt/death missing poses. References1 NORMAL identity/proportions/styleonly, reference2 CURSED identity/styleonly. Create TRUEALPHAtransparentPNG no background/grid/text/shadow/effects. EXACT4columns4rows16 separated fullbody poses, spacious equalcells andlarge transparentgutters, no neighboringoverlap. SAME approx3-headtall body scale allposes, fine darknavy outline, flat2-tonecel hardclusters. Normal youngKimimaro: verypaleskin greeneyes tworedforeheaddots centersilverhairshoulderlength side locks, lightgrayopenVkimono purplethickropetiedbehind darkcroppedtrousers navysandals. Curse2: samehair/eyes/size, baregraybrowntorso/skin, ivoryBACKspikes, thickSMOOTH GRAYBROWN FLESH TAIL curlingbehindwaist (NOT whitebonewhip), purplewaistrope,darkpants,navysandals. ROW1 NORMAL fourposes:1 FRONTviewcalmidle BOTHfeetgroundarmsready;2 BACKviewcalmidle silverhair backpurplebow;3 FRONTviewrunningstep onelegforwardoppositearmcounter;4 BACKviewrunningstep oppositelegforward, bowstable. ROW2 NORMAL fourposes:1 threequarterRIGHT painrecoil chestdrawnback onehandprotectchest headstillrecognizable;2 threequarterRIGHT recoveringhurt knee bent shouldersforward;3 defeatsinktoone-knee armslower headbowed;4 fullylyingSIDEWAYS motionless defeatbody, headandfeetvisible, naturalshorterheightNOT stretchedupright, no gore. ROW3 CURSE2 fourposes:1 FRONTidle lowready stance withbackspikesseenbehindshoulders graybrowntail;2 BACKidle showbackspikessymmetricandfleshtailbackbow;3 FRONTrunningstep lowshoulders tailbalancesbehind;4 BACKrunningstep tailnaturallyswings. ROW4 CURSE2 fourposes:1 RIGHTpainrecoil, realgraybrownskin backspikes/tailfollowbody;2 RIGHTrecoveringhurt lowcrouch, no whiteningface;3 defeatedkneelingcollapsedarms/headlowered, tailrests;4 fullySIDEWAYSlyingdefeat samecursedform silverhair graybrownbody spikestailrestonground fitowncell. No weapons, blood, enemy, aura, rotationofidle, repeatedstandingpose or largeglow. Thesearephysicalbodyanimationposes, distinguishedsilhouettes. Allfiguresnewlydrawn, sourcecostumeconsistent, bodyheightinfront/back/runconstant, hurtsandlyingnaturallyshorter notscaledtofillcell. Entire16figuresisolatedwithinowncell, ampletransparentpadding, exactly4x4.",
+  "references": [
+    "actors-normal-v1.png",
+    "actors-curse-v2.png"
+  ],
+  "output": "actors-game-supplement-v1.png",
+  "scope": "new gameplay front/back locomotion hurt and defeat poses, normal and cursed",
+  "transparent_background": true,
+  "outputSha256": "e336043209850154828f1b9c01437ee32f2469bbfa7b67753d5c39aa01789965",
+  "referenceHashes": {
+    "actors-normal-v1.png": "814004062dd1cb239527d8275fe4907c3e09cb2b8a2357654eb9d78614d47fcd",
+    "actors-curse-v2.png": "1d49b17122894ce5edc859879441181915bd6daf0d7170226dff981a582c9036"
+  }
+}

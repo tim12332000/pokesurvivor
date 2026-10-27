@@ -1,5 +1,6 @@
 # Publish only the reproducible sandbox, never local agent state or credentials.
 /*
+!/naruto-kimimaro.js
 !/.gitignore
 !/digimon/
 !/naruto/

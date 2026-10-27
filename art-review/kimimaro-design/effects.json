@@ -1,0 +1,179 @@
+{
+  "image": "effects-bones-runtime.png",
+  "width": 640,
+  "height": 480,
+  "frames": {
+    "pillar1": {
+      "rect": [
+        39,
+        17,
+        100,
+        218
+      ],
+      "anchor": [
+        45.0,
+        217
+      ]
+    },
+    "pillar2": {
+      "rect": [
+        192,
+        25,
+        122,
+        210
+      ],
+      "anchor": [
+        53.0,
+        209
+      ]
+    },
+    "pillar3": {
+      "rect": [
+        369,
+        30,
+        96,
+        205
+      ],
+      "anchor": [
+        49.5,
+        204
+      ]
+    },
+    "pillar4": {
+      "rect": [
+        511,
+        20,
+        115,
+        213
+      ],
+      "anchor": [
+        47.0,
+        212
+      ]
+    },
+    "pillar5": {
+      "rect": [
+        37,
+        252,
+        104,
+        122
+      ],
+      "anchor": [
+        53.5,
+        121
+      ]
+    },
+    "pillar6": {
+      "rect": [
+        191,
+        270,
+        114,
+        106
+      ],
+      "anchor": [
+        56.5,
+        105
+      ]
+    },
+    "pillar7": {
+      "rect": [
+        356,
+        279,
+        127,
+        95
+      ],
+      "anchor": [
+        63.0,
+        94
+      ]
+    },
+    "pillar8": {
+      "rect": [
+        526,
+        252,
+        100,
+        124
+      ],
+      "anchor": [
+        49.5,
+        123
+      ]
+    },
+    "drill1": {
+      "rect": [
+        16,
+        389,
+        158,
+        76
+      ],
+      "anchor": [
+        62.0,
+        75
+      ],
+      "origin": [
+        2,
+        42.0
+      ],
+      "tip": [
+        156,
+        42.0
+      ]
+    },
+    "drill2": {
+      "rect": [
+        184,
+        391,
+        198,
+        72
+      ],
+      "anchor": [
+        56.0,
+        71
+      ],
+      "origin": [
+        2,
+        44.0
+      ],
+      "tip": [
+        196,
+        44.0
+      ]
+    },
+    "debris1": {
+      "rect": [
+        399,
+        392,
+        99,
+        77
+      ],
+      "anchor": [
+        37.5,
+        76
+      ]
+    },
+    "debris2": {
+      "rect": [
+        522,
+        398,
+        109,
+        69
+      ],
+      "anchor": [
+        52.5,
+        68
+      ]
+    }
+  },
+  "sha256": "eabf3895eeeb751e424ac3037a8db59bbdd4a80691fad75e52e6ac0d7146902b",
+  "source": "effects-bones-art-v2.png",
+  "sourceSha256": "58dc28682197c1f60d3198fe0bf5376458451ad7f7f89b2bea6baeb38cf9e97f",
+  "budget": {
+    "maxPillars": 36,
+    "maxTransientParticles": 20,
+    "maxTransferBytes": 262144,
+    "maxDecodedBytes": 1835008,
+    "actualTransferBytes": 145972,
+    "actualDecodedBytes": 1228800
+  },
+  "scope": "shared physical-bone VFX atlas, generated original retained, runtime only loads this reduced atlas"
+}

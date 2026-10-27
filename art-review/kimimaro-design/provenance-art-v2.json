@@ -1,0 +1,27 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "scope": "replacement of existing shared VFX atlas, not an additional runtime atlas",
+  "prompt": "Use case: stylized-concept. Asset type: REPLACEMENT BONE VFX sprite atlas with a unified clean NARUTO pixel-game art direction. Reference1 existing Kimimaro character atlas for exactly same darknavy outlines, 2-tone cel shading, chibi game visualscale; reference2 existing effects atlas is an EDITSTYLE TARGET whose brown woody noisy material MUST be replaced. Exactly FOUR COLUMNS THREE ROWS,12isolatedsprites on TRUE ALPHA transparentbackground, large gutters,no overlap, no characters, text, grids or background. This is CLEAN IVORY BONE with cool GRAY-VIOLET SHADOWS and dark BLUE-NAVY OUTLINES, main plane nearlywhite #f2eee1, sideplane mutedlavendergray #8e8a9f, outline #293044. Bone is solid,smooth,hard andminimal, with LARGE readable graphicfacets. NO brown bark orwoodgrain, NO grittystone texture, NO tinyveins, NO sketchmarks or randomcracks, NO rockbases bakedinto bone, NO glowsorenergy. Opaque colorclusters; crisp pixel-game2D look at64-150worldpixel displayheight. COLUMN/ROW order: ROW1 fourLARGE hero pillars: 1 tall thick gentlycurved narrow bone lance tapering towickedpoint withone uneven jointshoulder; 2 asymmetricallyleaningwide spear withsimple broadivoryfrontplane andone coldshadowplane; 3 longrib-like sicklebone withslightlyconcave edge andheavyroot; 4 clean two-pronged forkedbone likeunequalhorns withthelargerprongmuch taller. Allvarysilhouette, nottriangular trafficcones, no woodenbranches. ROW2 fourSHORT bonecolonies: 1 threeshortunequalivoryspikes sharingone smallbase; 2 broadbrokenobliquebone stump withonesharptip; 3 five smallcurvedribthorns ofunequalheight andslant; 4 twocrossed lowbonelances, one tall onehalfheight. Their naturalheight is35-55percentofhero pillarheight, do not enlarge to fillcell. ROW3: col1 compact charged SPIRAL BONE DRILL pointingRIGHT, broadleftforearmattachment andsharp righttip; simple ivoryoverlappingcorkscrewplates. col2 SAME SPIRAL DRILL identity and material elongated forfullyextendedstrike, stayconical corkscrew withreadable spiralflanges, NOT spikybranchsword/serratedsaw. col3 small sixsolid ivorybonedebris chipswithgrayvioletfacet, separated opaque fragments. col4 small clusterofchunkyearthfragments, mutedbrownstones ONLYhere notonbones, no circle. Sprites must have cleanbigshapes notfine highresolution paintedtexture. Allimages newlyoriginal, do not copycommercialspriteart. Samebody/weaponpalette asKimimaro andreadableonbrightforestgreen pixelground. True transparentPNG nohalos,noimagesbordercropping.",
+  "references": [
+    "actors-normal-v1.png",
+    "effects-bones-v1.png"
+  ],
+  "source": "effects-bones-art-v2.png",
+  "runtime": "effects-bones-runtime.png",
+  "constraints": {
+    "width": 640,
+    "height": 480,
+    "maxTransferBytes": 262144,
+    "maxDecodedBytes": 1835008,
+    "maxPillars": 36,
+    "maxSecondaryParticles": 20
+  },
+  "sourceSha256": "58dc28682197c1f60d3198fe0bf5376458451ad7f7f89b2bea6baeb38cf9e97f",
+  "runtimeSha256": "eabf3895eeeb751e424ac3037a8db59bbdd4a80691fad75e52e6ac0d7146902b",
+  "referenceHashes": {
+    "actors-normal-v1.png": "814004062dd1cb239527d8275fe4907c3e09cb2b8a2357654eb9d78614d47fcd",
+    "effects-bones-v1.png": "756530db699c1bbcef09c9b17a469907ec317c53871d0243e74a7b24344257c9"
+  },
+  "stageMetadataSha256": "546d2965cdd1b425cfd74152daf766dd99987168a2fddceba1ff6b3e2ccb369f",
+  "runtimeBytes": 145972
+}

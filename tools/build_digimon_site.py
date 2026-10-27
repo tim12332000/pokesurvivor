@@ -63,6 +63,15 @@ for item in pain['bodies'].values():
     assert (ROOT / path).resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
     review_runtime.append(path.as_posix())
 review_runtime.extend(['art-review/temari-art.js', 'art-review/temari-frames.json'])
+kimimaro = json.loads((ROOT / 'art-review/kimimaro-frames.json').read_text('utf-8'))
+review_runtime.extend(['art-review/kimimaro-art.js', 'art-review/kimimaro-frames.json', '.omx/naruto-kimimaro.js', '.omx/naruto/portraits/kimimaro.png'])
+for sheet in kimimaro['sheets'].values():
+    source = sheet['source']
+    assert source.startswith('redrawn/kimimaro-') and Path(source).suffix == '.png'
+    path = ROOT / 'art-review' / source
+    assert path.resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
+    assert path.is_file(), f'Missing Kimimaro runtime atlas: {source}'
+    review_runtime.append('art-review/' + source)
 for source in ('temari-common-v1.png', 'temari-skills-v1.png', 'temari-kamatari-v2.png', 'temari-spin-v1.png'):
     review_runtime.append('art-review/redrawn/' + source)
 for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-lee-pursuit.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-temari.js', '.omx/naruto-temari-reflect.js', '.omx/temari-cyclone-vfx.js', '.omx/temari-coop.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:

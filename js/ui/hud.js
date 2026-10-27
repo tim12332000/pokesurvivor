@@ -282,7 +282,7 @@ G.HUD = (() => {
       const m = g[0];
       const displayPassive = i >= pl.slots.length && !!m?.passive;
       const fused = g.length > 1;
-      const on = !displayPassive && i === pl.active;
+      const on = !!m && !displayPassive && i === pl.active;
       const slot = controls && controls.slots[i];
       const x = slot ? slot.x : sx + i * (S + GAP);
       const y0 = slot ? slot.y : sy;
@@ -395,6 +395,20 @@ G.HUD = (() => {
           '綁定 ' + (activeChain ? activeChain.boundTargets.length + '/' : '') + count;
         ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
         ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#eee8d4';
+        ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
+      }
+      if (pl.mon?.dex === 30012 && m.id === 'naruto-kimimaro-curse') {
+        const curse = G.NarutoKimimaro?.curseState?.(pl);
+        const label = curse?.transforming ? '變身中' : curse?.active ? '咒印 ' + curse.remaining.toFixed(1) + 's' : curse?.cooldown > 0 ? curse.cooldown.toFixed(1) + 's' : '就緒';
+        ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
+        ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#e7dbf2';
+        ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
+      }
+      if (pl.mon?.dex === 30012 && ['naruto-kimimaro','naruto-kimimaro-bullets'].includes(m.id)) {
+        const base = m.id === 'naruto-kimimaro' ? 4 : 5, cap = m.id === 'naruto-kimimaro' ? 8 : 15;
+        const label = Math.min(cap, G.Quantity?.count(pl, base) ?? base) + (m.id === 'naruto-kimimaro' ? '連' : '枚');
+        ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
+        ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#eee7d8';
         ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
       }
       if (G.NarutoTemari?.supports(m.digiMode)) {

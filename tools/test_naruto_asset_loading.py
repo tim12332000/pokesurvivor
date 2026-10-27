@@ -22,7 +22,7 @@ def hero_asset(url):
     path = urlsplit(url).path
     if '/redrawn/' not in path or not path.endswith('.png'):
         return None
-    for hero in ('pain', 'temari', 'naruto', 'sasuke', 'lee', 'gaara', 'tenten'):
+    for hero in ('pain', 'temari', 'naruto', 'sasuke', 'lee', 'gaara', 'tenten', 'kimimaro'):
         if path.rsplit('/', 1)[-1].startswith(hero + '-'):
             return hero
     if path.endswith('/one-tail-v2.png'):

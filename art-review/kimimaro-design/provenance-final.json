@@ -1,0 +1,63 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "transparent_background": true,
+  "scope": "original key-pose atlases for independent design preview; not game registered atlases",
+  "normal": {
+    "prompt": "Use case: stylized-concept. Asset type: original game-character KEY POSE sprite atlas for standalone animated design review, not a concept poster. Reference image1 is our existing Gaara game sprite STYLE/BODY PROPORTIONS ONLY; image2 is our Kimimaro concept IDENTITY/COSTUME ONLY. Draw ONLY young normal-form KIMIMARO, same approx3-head-tall body as Gaara, very pale skin, green eyes, two red forehead dots, straight center-parted silver white shoulder-length hair with longer side locks, loose lightgray open V-neck elbow sleeve top, purple thick rope bow on BACK, dark cropped trousers, navy open-toe sandals. Genuine sharp hard-edged small pixel-art character, 2-tone shading, thin dark navy outlines, NO painterly smoothing. Transparent PNG true alpha, NO background, no shadows, no grid, no labels, no text. EXACT FOUR COLUMNS FOUR ROWS =16 isolated full-body actors in16 equal squarecells, singleconsistent body scale, ampletransparentmargin no overlaps. ALL baseline side three-quarter facing RIGHT, facealways recognizable. Weapons are LOCAL held bones only, NO longwhip no giant effects, leave room for procedural effects. ROW1: cell1 calm upright idle armsready; cell2 runcontactrightlegforward; cell3 runningpassingpose; cell4 runcontactleftlegforward. ROW2: cell1 lowcrossbodyforearmbone slash preparation; cell2 turning forearmbone slash followthrough towardRIGHT; cell3 retract slim ivorybonesword at rightwaist lowbackhandpreparation; cell4 full forwardslim bonesword thrustRIGHT. ROW3: cell1 rightopenhandaimedRIGHT fingersspread, left hand near chest for fingerbonebullets, armsmustbelong tosamebody; cell2 larchlowbracedguardwithshortivory ribsandshoulderbone spikes emergingfrom torso, nofullarmor; cell3 lefthandbehindshoulder drawing shortbaseofvertebralwhip, winduppose; cell4 leftarmflungRIGHT with shortheldbaseofsegmentedspinewhip,thelongwhip is runtimeVFX notpaintedhere. ROW4: cell1 crouched bone-drill chargingpose rightarm bentnearwaist withsmalllayered ivorysleevegrowing; cell2 strongplantedRIGHT thrust withmedium spiraling ivorydrill attachedtoRIGHTforearm, leftarmcounterbalances; cell3 onehandplantedonground bentknee bracken castingpose; cell4 feetplantedwide turninghips sweepingwhiphandacrossbody, shortsegmentedwhipbaseonly. Everycellnewdistinctpose no duplicatedidle. KeepbodySAMEsize acrossrunning crouching attacks, lowersquatshouldactuallyshorter. Drawnoriginalactions, no tracingcommercialsprites. Standingbody fills~60percentofcellheight; eachfigure has full hair and feet visible, no cropping. Do not include Gaara, gourd, enemies, cursedsealform, lettering, beams, tails, coloredbackgrounds or weaponscrossingcells.",
+    "references": [
+      "../redrawn/gaara-common-v1.png",
+      "concept-five-dances-v1.png"
+    ],
+    "output": "actors-normal-v1.png",
+    "outputSha256": "814004062dd1cb239527d8275fe4907c3e09cb2b8a2357654eb9d78614d47fcd",
+    "referenceHashes": {
+      "../redrawn/gaara-common-v1.png": "1d041bab4c5a06ed9a10f9416c442e78e099cbc2c1cbfbc8593ae413505db6d5",
+      "concept-five-dances-v1.png": "afb7c4cd1108ffec4c7c08c13e2d9abd4156f52e8a6c248e93573247472ab847"
+    }
+  },
+  "curseDraft": {
+    "prompt": "Use case: identity-preserve. Asset type: CURSED SEAL LEVEL TWO counterpart to our original16pose Kimimaro design-preview atlas. Image1 is exact EDIT TARGET, preserve ALL16 poses in same fourcolumns fourrows and SAME body proportions, feet, bodyplacement, scale, weapons, identity and crisp thin outlines. Image2 is our cursedseal concept for identityreference only. Preserve target canvas1240x1268 and everycell layout. Transform EVERY exposed face, neck, hand, foot and torso into gray-brown flesh; remove lightgray top to expose muscular gray-brown chest, keep dark cropped pants, thickpurplewaistrope withbowbehind and navyopen-toed sandals. Keep silverwhitecenterparthair, greeneyeswithblackeye surrounds, tworedforeheaddots. Add ivorybackbone spikes protruding symmetrically behind shoulders, plus a LONG GRAY-BROWN FLESH TAIL withsubtle bonejointdetailing curvinglow BEHIND body ineachpose. Tail must NOT be whitevertebralwhip; handheldvertebralwhip remains distinct ivoryweapon in itsownposes. Tail andbackspikes followeachaction, fitINSIDEeachcell withcleartransparentpadding and do not cross neighboringactors. No horns no wings no glowing auras no monsterhead. Normal torso turns into moreferal low-shouldered stance but SAME silhouettegroundposition andheadsize sofeetanchorswork. For row3larchpose bodyspikesdistinct but not fullbonearmour. Preserve each pose meaning: idle,three runphases,two shortbone slashposes,boneswordprep/thrust,openhandshoot,larchguard,whipdraw/throw,drillgrow/thrust,onehandgroundcast,whipsweep. Keepdrillattachedforearm no duplicateddrill. Every figure must clearly be CURSELEVEL2, no remaining normal pale faces or whiteshirts inlowerrows. Genuine transparent PNG TRUE alpha, no labels,numbers,grid,background,drop shadows,ambient glow. Keep all16 complete fullbodies visible and isolated. Noenemyfigures. Newly original art, no copyingcommercialsprites.",
+    "references": [
+      "actors-normal-v1.png",
+      "concept-transformation-storyboard-v1.png"
+    ],
+    "output": "actors-curse-draft-v1.png",
+    "selection": "rejected: exposed bone tail",
+    "outputSha256": "a786f8073c5d4b4fed9c75c7120368a5499115758899f8e411ed6dc4b4fb7c39",
+    "referenceHashes": {
+      "actors-normal-v1.png": "814004062dd1cb239527d8275fe4907c3e09cb2b8a2357654eb9d78614d47fcd",
+      "concept-transformation-storyboard-v1.png": "881d03fc1e0ea2310ea4a5b3cc05880b3c32d76203a2085de8f0deab4954911a"
+    }
+  },
+  "curse": {
+    "prompt": "EDIT TARGET image1 is our16pose cursedseal Kimimaro atlas. Make ONE targeted correction ONLY: ALL curled tails emerging from LOWER BACK/BEHIND WAIST must become a thick, smooth, continuous, GRAY-BROWN FLESH TAIL matching the bare torso skin. Imagine a long muscular human-skin-colored reptilian tail. Repaint the existing curled tail shape entirely medium graybrown with ONE dark underside shadow. It must have NO visible vertebrae, NO white segments, NO ivoryplates, NO spikes alongtail, NO exposedbones, NO creamcolor. It should be unmistakably soft living flesh and anatomically connected behindwaist. The tail is the loop behindbody/waist presentinALL16cells. KEEP the held flexible WHITE SPINE WHIP in row3third/fourth and row4fourth poses WHITE, because that is a HANDHELD WEAPON not bodytail. KEEP ivorybackspikesandbone swordsanddrill exactlyasbefore. Preserve all16 exact poses, layout, body positions, canvas1240x1268, feet anchors, graybrownexposedbody, greeneyes, silverhair, tworedforeheaddots, darkpants,purplewaistrope, navysandals, outlineandshading. NO otherchanges. Truealpha transparentbackground preserveexistingtransparency. No labels or background. This correction is essential: body tail flesh graybrown, weapon whip ivorywhite, visually distinguish both.",
+    "references": [
+      "actors-curse-draft-v1.png"
+    ],
+    "output": "actors-curse-v1.png",
+    "selection": "superseded for rectangular-tail overlap; retained as edit reference",
+    "outputSha256": "60daa54e22f7ac5985c5b8867ef2d582f067156987c857dd7078a1825655eafd",
+    "referenceHashes": {
+      "actors-curse-draft-v1.png": "a786f8073c5d4b4fed9c75c7120368a5499115758899f8e411ed6dc4b4fb7c39"
+    }
+  },
+  "curseSpacing": {
+    "prompt": "Edit target is this original16-pose cursed Kimimaro atlas. Correct ONLY the ATLAS SPACING: re-layout the same16 complete figures into EXACT4columns4rows in same order on a square transparent canvas. Increase transparent gutters substantially: each actor including ALL tail, backspikes and heldweapons must fit completely inside middle70percentofits OWN cell, leaving at least15percent transparent margin oneveryedge. No weapon, foot, hair or tail may enter any neighboring cell or touch canvas boundaries. Uniformly shrink ALL sixteen actors by SAME factor if needed to makepadding, preserve commonbodyproportions. DO NOT crop off any tail, limb or weapon. Keep each pose and graybrownfleshtail, silverhair, greeneyes, baregraybrowntorso, ivorybackspikes, purplewaistrope, darkpants, navysandals, ivoryweapons. Preserveorder: ROW1 idle/run1/run2/run3. ROW2 twoforearmboneslashes/boneswordprep/boneswordthrust. ROW3 fingerbullets/larchguard/whipdraw/whipthrow. ROW4 drillgrowth/drillthrust/groundplant/whipsweep. Same3-headtallbodyscale allcells, crouchesremainshorter. Handheldweaponwhip remains ivory, bodytail remains smoothgraybrownflesh. Extremelyclearlarge transparent gaps betweenfigures, exactequalgridspacing but NO visiblegrid. Sharphardflatshading thin darkoutlines. Truealpha transparentPNG no shadows, labels, background,text or added figures. This is a technical atlas isolation correction so each cell can be safelyrectangularcropped withoutseeing fragments of anotherfigure.",
+    "references": [
+      "actors-curse-v1.png"
+    ],
+    "output": "actors-curse-v2.png",
+    "selection": "selected; per-pose alpha clipRuns isolate curled-tail contours at rendering",
+    "outputSha256": "1d49b17122894ce5edc859879441181915bd6daf0d7170226dff981a582c9036",
+    "referenceHashes": {
+      "actors-curse-v1.png": "60daa54e22f7ac5985c5b8867ef2d582f067156987c857dd7078a1825655eafd"
+    }
+  },
+  "indexing": {
+    "file": "actors.json",
+    "method": "Original transparent PNG rectangles and connected alpha clipRuns; source artwork remains unchanged.",
+    "script": "build-actors.py",
+    "sha256": "e1d972ba3152c44658c08089de5df70c526f75603cce857f8f89ff62a4caf8d9"
+  },
+  "date": "2026-10-27"
+}

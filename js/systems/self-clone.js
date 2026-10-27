@@ -81,6 +81,10 @@
       if (G.NarutoLee?.isInvulnerable(this) || ['dash', 'retarget', 'return'].includes(chidori?.phase)) return;
       const armor = cloak(this);
       if (armor) amount *= Math.max(.5, Math.min(1, armor.m.damageTakenMul ?? .75));
+      if (this.mon.dex === 30012 && G.NarutoKimimaro?.hurtClone) {
+        return G.NarutoKimimaro.hurtClone(this, amount, type, pure, context,
+          (nextAmount, nextType, nextPure) => this.hurtHp(nextAmount, nextType, nextPure));
+      }
       if (this.mon.dex === 30007 && G.NarutoGaara?.hurtClone) {
         return G.NarutoGaara.hurtClone(this, amount, type, pure, context,
           (amount, type, pure) => this.hurtHp(amount, type, pure));
@@ -259,7 +263,7 @@
           if (!isActor(actor)) continue;
         }
       } else actor.lavaTick = 0;
-      const busy = G.NarutoChidori?.activeFor?.(actor) || G.NarutoLee?.activeFor?.(actor) || G.NarutoFireball?.activeFor?.(actor);
+      const busy = G.NarutoChidori?.activeFor?.(actor) || G.NarutoLee?.activeFor?.(actor) || G.NarutoFireball?.activeFor?.(actor) || G.NarutoKimimaro?.movementLocked?.(actor);
       if (!busy) {
         const previous = actor.target;
         if (previous && assignments.has(previous)) assignments.set(previous, Math.max(0, assignments.get(previous) - 1));
@@ -335,7 +339,7 @@
       }
       for (const actor of live) for (const enemy of G.EnemyMgr.queryCircle(actor.x, actor.y, actor.r + 40)) {
         if (!isActor(actor)) break;
-        if (enemy.dead || enemy.touchCd > 0 || enemy.behavior === 'thief' || G.NarutoLee?.bound?.(enemy) || Math.hypot(enemy.x - actor.x, enemy.y - actor.y) > actor.r + enemy.r) continue;
+        if (enemy.dead || enemy.touchCd > 0 || enemy.behavior === 'thief' || G.NarutoLee?.bound?.(enemy) || G.NarutoKimimaro?.held?.(enemy) || Math.hypot(enemy.x - actor.x, enemy.y - actor.y) > actor.r + enemy.r) continue;
         enemy.touchCd = .55; enemy.strike(actor); actor.hurt(enemy.dmg, enemy.atkType);
       }
     }

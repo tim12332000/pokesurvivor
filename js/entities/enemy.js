@@ -285,7 +285,7 @@
         } else if (le.slow) terrainMul = le.slow < 0.5 ? 0.45 : 0.55;
       }
 
-      if (G.NarutoLee?.bound?.(this)) {
+      if (G.NarutoLee?.bound?.(this) || G.NarutoKimimaro?.held?.(this)) {
         if (this.shieldT > 0 && (this.shieldT -= dt) <= 0) this.shield = 0;
         return;
       }
@@ -870,7 +870,7 @@
 
     function separate(dt) {
       for (const e of list) {
-        if (e.dead || G.NarutoLee?.bound?.(e) || G.NarutoTemari?.held?.(e) || G.NarutoTemari?.pushed?.(e)) continue;
+        if (e.dead || G.NarutoLee?.bound?.(e) || G.NarutoKimimaro?.held?.(e) || G.NarutoTemari?.held?.(e) || G.NarutoTemari?.pushed?.(e)) continue;
         const cx = Math.floor(e.x / CELL), cy = Math.floor(e.y / CELL);
         let px = 0, py = 0, n = 0;
         for (let j = -1; j <= 1; j++) {
