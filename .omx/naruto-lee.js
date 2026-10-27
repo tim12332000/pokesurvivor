@@ -143,6 +143,8 @@
   G.Camera.follow=function(...args){
     const whirlwind=G.DigimonSkills?.whirlwindFor?.(G.Game.player);
     if(whirlwind){this.x=whirlwind.camera.x;this.y=whirlwind.camera.y;this.shake=this._sx=this._sy=0;return;}
+    const pursuit=G.NarutoPursuit?.activeFor(G.Game.player);
+    if(pursuit){this.x=pursuit.camera.x;this.y=pursuit.camera.y;this.shake=this._sx=this._sy=0;return;}
     const f=activeFor(G.Game.player);
     if(valid(f)&&f.cameraLock){
       this.x=f.cameraLock.x;this.y=f.cameraLock.y;this.shake=this._sx=this._sy=0;
@@ -710,7 +712,7 @@
   C.tick = function(dt, owner, now) {
     // Let a ready Lotus start first. Its complete contact sequence owns the body.
     const result = previousTick.call(this, dt, owner, now);
-    if (G.Game.state !== 'playing' || !(dt > 0) || activeFor(owner) || owner?.dex !== 30006 ||
+    if (G.Game.state !== 'playing' || !(dt > 0) || activeFor(owner) || G.NarutoPursuit?.activeFor(owner) || owner?.dex !== 30006 ||
         !valid({ owner, world: G.World }) ||
         !owner.activeGroup().some(move => supports(move.digiMode) && move.t > 0)) return result;
     let basic = basics.get(owner);

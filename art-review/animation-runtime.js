@@ -15,6 +15,7 @@
     'naruto-kunai': 'redrawn throw sequence',
     'naruto-shuriken': 'redrawn throw sequence',
     'naruto-lee': 'redrawn sweeping roundhouse; close-range AOE',
+    'naruto-lee-pursuit': 'native automatic pursuit and flurry using authored running and punch poses',
     'naruto-lotus': 'redrawn step-in, rising kick, airborne drive and landing',
     'naruto-gates': 'learned five-stage passive; dedicated red-skin action set and green aura',
     'naruto-reverse-lotus': 'redrawn committed aerial taijutsu combo and finisher',
@@ -192,6 +193,11 @@
         return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:reverse?'lee-reverse':'lee-lotus',frame,mirror:Math.cos(pl.aim)<0,visualLift:lee.visualLift||0,
           ...(G.NarutoLee.presentationFor?.(pl) || {})};
       }
+      const pursuit=G.NarutoPursuit?.activeFor(pl);
+      if(pursuit?.owner?.anim===anim)return {...base,state:'skill',id:'naruto-lee-pursuit',phase:pursuit.phase,
+        key:pursuit.phase==='rush'?'lee-movement':'lee-attack',
+        frame:pursuit.phase==='rush'?row(direction(anim))*4+Math.floor(pursuit.age*16)%4:Math.min(3,Math.floor(pursuit.attackAge/pursuit.duration*4)),
+        mirror:pursuit.phase==='attack'&&Math.cos(pursuit.aim)<0};
       const gaara=G.NarutoGaara?.active?.(pl);
       if(gaara?.owner?.anim===anim){
         const phase=gaara.phase, id=gaara.move.id;
@@ -235,6 +241,7 @@
         const progress = Math.max(0, Math.min(1, anim.progress()));
         cast = { id: pl.mimickedId || 'naruto-kunai', age: progress * .36, duration: .36, charge: .08, aim: pl.target ? Math.atan2(pl.target.y - pl.y, pl.target.x - pl.x) : 0 };
       }
+      if(cast?.id==='naruto-lee-pursuit'&&pl)cast=null;
       if (cast) {
         const phase = cast.age < cast.charge ? 'windup' : cast.age < cast.charge + .09 ? 'release' : 'recovery';
         const action = { ...base, state: 'skill', phase, id: cast.id, age: cast.age, treatment: 'redrawn', aim: cast.aim, mirror: Math.cos(cast.aim) < 0 };

@@ -65,7 +65,7 @@ for item in pain['bodies'].values():
 review_runtime.extend(['art-review/temari-art.js', 'art-review/temari-frames.json'])
 for source in ('temari-common-v1.png', 'temari-skills-v1.png', 'temari-kamatari-v2.png', 'temari-spin-v1.png'):
     review_runtime.append('art-review/redrawn/' + source)
-for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-temari.js', '.omx/naruto-temari-reflect.js', '.omx/temari-cyclone-vfx.js', '.omx/temari-coop.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:
+for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-lee-pursuit.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-temari.js', '.omx/naruto-temari-reflect.js', '.omx/temari-cyclone-vfx.js', '.omx/temari-coop.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:
     target = OUT / name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / name, target)

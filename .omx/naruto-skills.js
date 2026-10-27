@@ -317,6 +317,18 @@
       vis:{pal:'naruto-blue'}, desc:'標記周圍敵人，強化柔拳與柔步雙獅拳的近身傷害。',
       source_url:'https://naruto-official.com/en/news/01_1668'
     }],
+    ['naruto-lee-pursuit', [30006], {
+      icon:'fist',name:'疾速追身',mode:'lee-pursuit',passive:true,type:'fighting',learnLevel:2,
+      cd:1.4,minCooldown:.5,dmg:18,count:3,range:180,radius:85,arc:2.8,vis:{pal:'grass',melee:'impact'},
+      ups:[
+        {t:'每擊傷害 22・冷卻 1.3 秒・追身 195・範圍 90',m:{dmg:11/9,cd:13/14,range:195,radius:18/17}},
+        {t:'連打 4 次・冷卻 1.2 秒・追身 210・範圍 95',m:{count:1,cd:12/13,range:210,radius:19/18}},
+        {t:'每擊傷害 28・冷卻 1.1 秒・追身 225・範圍 100',m:{dmg:14/11,cd:11/12,range:225,radius:20/19}},
+        {t:'連打 5 次・每擊傷害 34・冷卻 1 秒・追身 240・範圍 110',m:{count:1,dmg:17/14,cd:10/11,range:240,radius:1.1}}
+      ],
+      desc:'常駐普攻，不占主動槽。自動對附近敵人快速連打，末擊擊退；五階每擊傷害18／22／22／28／34，連打3／3／4／4／5次，基礎冷卻1.4／1.3／1.2／1.1／1秒，最低0.5秒。數量卡使連打數×1.25，累乘取整、最多12擊。停住時可短距離追身，追身期間短暫護身；移動輸入不強制追身。蓮華或木葉旋風施放時讓出動作。招名與機制為本作體術改編。',
+      source_url:'https://naruto-official.com/en/news/01_1652'
+    }],
     ['naruto-lotus', [30006], {
       icon:'frontLotus', name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:10, dmg:220,
       range:145, radius:60,
@@ -551,6 +563,7 @@
     }]
   );
   Object.assign(kinds,{'temari-wind':'cone','temari-mastery':'buff','temari-great-scythe':'cone','temari-blade-dance':'dash','temari-typhoon':'meteor','temari-reflect':'buff'});
+  kinds['lee-pursuit']='melee';
   Object.assign(kinds,{'pain-basic':'projectile','pain-gravity':'aura','pain-missiles':'projectile','pain-summon':'dash','pain-soul':'melee','pain-absorb':'buff','pain-repair':'buff','pain-planet':'meteor'});
   kinds['gaara-sand-guard'] = 'buff';
   Object.assign(kinds,{'tenten-kunai':'projectile','tenten-fuma':'projectile','tenten-mastery':'buff','tenten-bounce':'buff','tenten-guard':'buff','tenten-tags':'meteor','tenten-twin':'projectile'});
@@ -646,7 +659,7 @@
   guide.translate = false;
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   function activationLabel(move) {
-    if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
+    if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari','naruto-lee-pursuit'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
     if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';
     if (['naruto-kusanagi', 'naruto-sand-prison'].includes(move.id)) return '主動 · 需保持選中';
     if (['naruto-shadow-clones', 'naruto-nine-tails-cloak'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';

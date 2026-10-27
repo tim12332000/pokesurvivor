@@ -425,5 +425,6 @@
   G.VFX.forMove = m => { const v = priorForMove(m); return m && m.digimonSkill ? Object.assign(v, m.digiVis || {}) : v; };
   const drawAirWhirlwind=C.drawAirFields;
   C.drawAirFields=function(ctx){drawAirWhirlwind.call(this,ctx);for(const f of fields)if(f.kind==='lee-whirlwind'&&whirlwindValid(f))drawWhirlwind(ctx,f);};
-  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, fireFrom, rasenganFor, whirlwindFor, update: customUpdate, clear, get activeEffects() { return fields; } });
+  const meleeStrike=(owner,move,aim=owner.aim,ratio=1)=>sweep(owner,move,owner.x,owner.y,aim,move.radius,move.arc,ratio,0,true);
+  Object.assign(G.DigimonSkills = G.DigimonSkills || {}, { cast, fireFrom, rasenganFor, whirlwindFor, meleeStrike, update: customUpdate, clear, get activeEffects() { return fields; } });
 })();
