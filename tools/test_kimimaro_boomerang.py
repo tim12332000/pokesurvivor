@@ -1,4 +1,4 @@
-"""Native acceptance for Kimimaro's single bone boomerang and launch cooldown."""
+"""Native acceptance for quantity-scaled bone boomerangs and per-bone cooldowns."""
 from __future__ import annotations
 
 import json
@@ -15,6 +15,7 @@ HELPERS = r"""() => {
  function prepare(rank=1){
    p=A.p();if(window.KBoom)KBoom.p=p;
    A.reset();const m=A.fixture(id,rank);p.baseAtk=1;p.atkMul=1;p.buffs.atk.n=0;p.critChance=0;
+   p.quantityPicks=p.quantityBonus=0;A.near(G.Quantity.count(p,1),1,'single-bone fixture quantity');
    A.near(p.atk,1,'controlled throw attack');return m;
  }
  const state=(actor=p)=>K.boomerangState(actor);
@@ -22,6 +23,7 @@ HELPERS = r"""() => {
    const m=prepare(rank);p.cdMul=cdMul;
    const e=A.spawn(distance,0),hits=A.watch(e);p.target=e;A.step(.001,true);
    A.assert(state()?.projectile?.phase==='out','native independent throw did not launch');
+   A.assert(state().count===1&&state().projectiles.length===1,'zero-card fixture did not launch exactly one bone');
    A.assert(!A.action()&&p.slots.length===0,'throw created a body action or active slot');
    return {m,e,hits};
  }
@@ -85,7 +87,7 @@ FIRST_TARGET_AND_DIRECTION = r"""() => {
 CADENCE = r"""() => {
  const A=KBoom,out=[];
  for(const distance of [60,280]){
-   A.start(distance);A.p.quantityPicks=A.p.quantityBonus=10;let waitedInHand=false;
+   A.start(distance);let waitedInHand=false;
    for(let n=0;n<600;n++){
      A.step(.005,true);const state=A.state();
      A.assert(state.launches-state.catches>=0&&state.launches-state.catches<=1,'an owner duplicated a flying throw');
@@ -111,7 +113,7 @@ CADENCE = r"""() => {
 COOLDOWN_MODIFIERS = r"""() => {
  const A=KBoom,out=[];
  for(const [multiplier,expected] of [[.25,.25],[.01,.05]]){
-   A.start(60,1,multiplier);A.p.quantityPicks=A.p.quantityBonus=10;
+   A.start(60,1,multiplier);
    const initial=A.state(),first=initial.log.find(v=>v.kind==='launch');
    A.near(initial.readyAt-first.time,expected,'launch cooldown multiplier/minimum');
    for(let n=0;n<400;n++){
@@ -123,6 +125,88 @@ COOLDOWN_MODIFIERS = r"""() => {
    out.push({multiplier,expected,launches:state.launches,catches:state.catches,log:state.log});
  }
  return out;
+}"""
+
+MULTI_CADENCE = r"""() => {
+ const A=KBoom,p=A.p;A.prepare();p.quantityPicks=p.quantityBonus=4;
+ const near=A.spawn(60,0),far=A.spawn(-560,0),nearHits=A.watch(near),farHits=A.watch(far);p.target=near;
+ A.step(.001,true);let state=A.state();
+ A.assert(state.count===2&&state.projectiles.length===2&&state.lanes.length===2,'four quantity cards did not create two real flights');
+ A.assert(state.lanes[0].projectile.vx>0&&state.lanes[1].projectile.vx<0,'lane indices did not distribute throws across separate targets');
+ const ids=state.projectiles.map(q=>q.castId);A.assert(new Set(ids).size===2,'lanes share the same physical projectile');
+ A.until(()=>A.state().lanes[0].catches===1);
+ state=A.state();A.assert(!state.lanes[0].projectile&&state.lanes[0].cooldown>0,'near lane ignored its own remaining launch cooldown');
+ A.assert(state.lanes[1].projectile&&state.lanes[1].catches===0,'far lane disappeared when the near lane caught');
+ A.until(()=>A.state().lanes[0].launches===2);
+ state=A.state();A.assert(state.lanes[1].launches===1&&state.lanes[1].catches===0,'near lane waited for or reset the far lane');
+ A.until(()=>A.state().lanes[1].launches===2);
+ state=A.state();const longLog=state.lanes[1].log,catchIndex=longLog.findIndex(v=>v.kind==='catch');
+ A.assert(nearHits.length>=2&&farHits.length>=1,'separate flight lanes failed to damage their separate targets');
+ A.assert(longLog[catchIndex+1]?.kind==='launch','late lane catch did not immediately relaunch independently');
+ A.near(longLog[catchIndex+1].time,longLog[catchIndex].time,'late lane inherited another lane cooldown');
+ A.assert(longLog[catchIndex].time-longLog[0].time>1,'far lane fixture did not outlast its cooldown');
+ for(const lane of state.lanes){
+   const launches=lane.log.filter(v=>v.kind==='launch');
+   for(let i=1;i<launches.length;i++)A.assert(launches[i].time-launches[i-1].time>=1-1e-8,'one lane fired before its own cooldown');
+ }
+ return {count:state.count,nearHits:nearHits.length,farHits:farHits.length,
+   lanes:state.lanes.map(v=>({index:v.index,launches:v.launches,catches:v.catches,hits:v.hits,log:v.log}))};
+}"""
+
+QUANTITY_GROW_AND_RETIRE = r"""() => {
+ const A=KBoom,p=A.p;A.prepare();p.quantityPicks=p.quantityBonus=4;
+ const e=A.spawn(200,0),hits=A.watch(e);p.target=e;A.step(.001,true);A.advance(.02,true);
+ const raw=A.K.stateFor(p).boomerang.lanes,saved=raw.map(lane=>({lane,projectile:lane.projectile,castId:lane.projectile.castId,readyAt:lane.readyAt}));
+ p.quantityPicks=p.quantityBonus=8;A.step(.001,true);let state=A.state();
+ A.assert(state.count===5&&state.projectiles.length===5,'new quantity lanes were not immediately ready');
+ for(const item of saved){
+   const lane=A.K.stateFor(p).boomerang.lanes[item.lane.index];
+   A.assert(lane===item.lane&&lane.projectile===item.projectile&&lane.projectile.castId===item.castId,'quantity growth replaced an existing lane or its flight');
+   A.near(lane.readyAt,item.readyAt,'quantity growth reset an existing lane cooldown');
+ }
+ A.assert(state.lanes.slice(2).every(lane=>lane.launches===1&&lane.readyAt>saved[0].readyAt+.015),'new lanes shared an older lane launch clock');
+ A.until(()=>A.state().hits===5);state=A.state();
+ A.assert(hits.length===5&&hits.every(h=>h.owner&&h.id===A.id),'simultaneous bones did not each hit the same enemy once');
+ A.assert(e.maxHp-e.hp===5*102,'same-target quantity damage was split or duplicated');
+ const inFlight=state.projectiles.map(q=>q.castId),beforeLaunches=state.launches;
+ A.assert(inFlight.length===5,'retirement fixture lost a throw before reduction');
+ p.quantityPicks=p.quantityBonus=0;A.step(.001,true);state=A.state();
+ A.assert(state.count===1&&state.projectiles.length===5,'quantity decrease deleted bones that had not reached the hand');
+ A.assert(state.projectiles.every(q=>inFlight.includes(q.castId)),'quantity decrease replaced a returning bone');
+ A.until(()=>A.state().catches===5);state=A.state();
+ A.assert(state.projectiles.length===0&&state.lanes.length===1&&state.launches===beforeLaunches,'surplus bones relaunched instead of retiring after catch');
+ A.until(()=>A.state().lanes[0].launches===2);state=A.state();
+ A.assert(state.count===1&&state.projectiles.length===1&&state.launches===beforeLaunches+1,'reduced count did not retain exactly the original lane');
+ A.assert(A.K.stateFor(p).boomerang.lanes[0]===saved[0].lane,'retirement recreated the remaining lane');
+ return {grownTo:5,sameTargetHits:hits.length,firstVolleyDamage:5*102,retired:4,
+   retainedLane:state.lanes[0].index,totalLaunches:state.launches,totalCatches:state.catches};
+}"""
+
+QUANTITY_CAP = r"""() => {
+ const A=KBoom,p=A.p,defaults=[];
+ for(let rank=1;rank<=5;rank++){
+   A.start(200,rank);A.assert(A.state().count===1&&A.state().projectiles.length===1,'rank alone increased quantity');defaults.push({rank,count:A.state().count});
+ }
+ A.prepare();p.quantityPicks=p.quantityBonus=30;p.target=A.spawn(200,0);A.step(.001,true);
+ const state=A.state();A.assert(G.Quantity.count(p,1)>16,'cap fixture did not exceed sixteen bones');
+ A.assert(state.count===16&&state.lanes.length===16&&state.projectiles.length===16,'quantity cap is not sixteen simultaneous bones');
+ A.assert(new Set(state.projectiles.map(q=>q.castId)).size===16,'quantity cap lanes reused flying projectiles');
+ A.advance(.04,true);A.assert(A.state().projectiles.length===16&&A.state().launches===16,'capped lanes duplicated during flight');
+ return {defaults,requested:G.Quantity.count(p,1),cap:state.count,launched:state.launches};
+}"""
+
+MULTI_CLONE_AND_UNLEARN = r"""() => {
+ const A=KBoom,p=A.p;A.prepare();p.quantityPicks=p.quantityBonus=4;p.target=A.spawn(220,0);
+ const clone=G.SelfClones.summon(p);A.assert(clone,'native quantity clone missing');clone.target=p.target;
+ A.step(.001,true);A.advance(.02,true);
+ let main=A.state(),copy=A.state(clone);
+ A.assert(main.count===2&&copy.count===2&&main.projectiles.length===2&&copy.projectiles.length===2,'native clone did not inherit quantity while keeping independent flights');
+ A.assert(new Set([...main.projectiles,...copy.projectiles].map(q=>q.castId)).size===4,'clone shared projectile identities with parent');
+ G.Combat.clearFields(clone);A.assert(!A.state(clone)&&A.state().projectiles.length===2,'clone cleanup removed parent flight lanes');
+ p.moves=p.moves.filter(m=>m.id!==A.id);p.arrange();A.step(.01);
+ A.assert(!A.state(),'unlearned boomerang retained a public flight state');
+ A.assert(!(A.K.stateFor(p)?.boomerang.lanes||[]).some(lane=>lane.projectile),'unlearning left invisible additional bones in flight');
+ return {cloneCount:2,totalIndependentFlights:4,cloneCleanup:true,allUnlearnedFlightsCleared:true};
 }"""
 
 LATE_CATCH = r"""() => {
@@ -244,7 +328,9 @@ def main():
             try:
                 frame=game.boot(page,label);frame.evaluate(HELPERS)
                 for name,check in [('progression',PROGRESSION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndDirection',FIRST_TARGET_AND_DIRECTION),
-                  ('cadence',CADENCE),('cooldownModifiers',COOLDOWN_MODIFIERS),('lateCatch',LATE_CATCH),('rangeAndObstacles',RANGE_AND_OBSTACLES),('movingCatch',MOVING_CATCH),('bodyAndGuard',BODY_AND_GUARD),('cloneAndLifecycle',CLONE_AND_LIFECYCLE)]:
+                  ('cadence',CADENCE),('cooldownModifiers',COOLDOWN_MODIFIERS),('multiCadence',MULTI_CADENCE),
+                  ('quantityGrowAndRetire',QUANTITY_GROW_AND_RETIRE),('quantityCap',QUANTITY_CAP),('multiCloneAndUnlearn',MULTI_CLONE_AND_UNLEARN),
+                  ('lateCatch',LATE_CATCH),('rangeAndObstacles',RANGE_AND_OBSTACLES),('movingCatch',MOVING_CATCH),('bodyAndGuard',BODY_AND_GUARD),('cloneAndLifecycle',CLONE_AND_LIFECYCLE)]:
                     print(label,name,flush=True)
                     try:result[name]=frame.evaluate(check)
                     except Exception as error:report['failures'].append(label+':'+name+': '+str(error))

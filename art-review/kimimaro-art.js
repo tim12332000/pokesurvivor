@@ -292,9 +292,8 @@
     drawBoneGuards(ctx,p.states,true);
     for(const state of p.states){
       drawAction(ctx,state);
-      const returningBone=state.boomerang?.projectile;
-      if(returningBone){
-        const b=returningBone;
+      for(const lane of state.boomerang?.lanes||[]){
+        const b=lane.projectile;if(!b)continue;
         ctx.save();ctx.strokeStyle=b.phase==='return'?'#c4b3d8':'#e5dbc5';ctx.lineWidth=2;ctx.globalAlpha*=.35;
         ctx.beginPath();b.trail.forEach((point,i)=>i?ctx.lineTo(point.x,point.y-31):ctx.moveTo(point.x,point.y-31));ctx.stroke();ctx.restore();
         ctx.save();ctx.translate(b.x,b.y-31);ctx.rotate(b.age*24);

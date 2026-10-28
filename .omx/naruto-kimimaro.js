@@ -47,7 +47,7 @@
       s = {owner,world:G.World,clock:0,action:null,forest:null,bullets:[],impacts:[],
         readySince:new Map(),selection:signature(owner),exitUntil:0,guardUntil:0,guardMove:null,
         curse:{startAt:-Infinity,readyAt:0},boneGuard:{readyAt:0,wall:null,blocks:0,triggers:0},
-        boomerang:{projectile:null,readyAt:0,launches:0,catches:0,hits:0,pose:null,log:[]},
+        boomerang:{lanes:[],count:1,launches:0,catches:0,hits:0,pose:null,log:[]},
         castCounts:{},castLog:[],emitted:0,totalDamage:0};
       states.set(owner,s);
       installCloneSpeed(owner);
@@ -387,48 +387,69 @@
   }
   function boomerangState(owner=G.Game.player) {
     const s=states.get(owner);if(!validState(s)||!learned(owner,BOOMERANG))return null;
-    const b=s.boomerang;
-    return {...b,cooldown:Math.max(0,b.readyAt-s.clock),hand:boomerangHand(owner,b.projectile?.aim??b.pose?.aim??owner.aim)};
+    const b=s.boomerang,lanes=b.lanes.map(lane=>({...lane,cooldown:Math.max(0,lane.readyAt-s.clock),
+      hand:boomerangHand(owner,lane.projectile?.aim??b.pose?.aim??owner.aim)})),first=lanes[0];
+    return {...b,lanes,projectiles:lanes.map(lane=>lane.projectile).filter(Boolean),
+      projectile:first?.projectile||null,readyAt:first?.readyAt||0,cooldown:first?.cooldown||0,
+      hand:first?.hand||boomerangHand(owner)};
   }
   function boomerangPoseFor(owner) {
     const s=states.get(owner),pose=s?.boomerang.pose;
     return validState(s)&&learned(owner,BOOMERANG)&&pose&&s.clock-pose.time<.12
       ?{kind:'bullets',age:.20,aim:pose.aim}:null;
   }
-  function launchBoomerang(s,time) {
+  function boomerangEvent(g,lane,event) {
+    event.lane=lane.index;g.log.push(event);lane.log.push(event);
+    if(g.log.length>20)g.log.shift();if(lane.log.length>20)lane.log.shift();
+  }
+  function launchBoomerang(s,lane,time) {
     const owner=s.owner,m=learned(owner,BOOMERANG),g=s.boomerang;
-    if(!m||g.projectile||time+EPS<g.readyAt)return false;
-    const target=nearby(owner,finite(m.range,600))[0];if(!target)return false;
+    if(!m||lane.index>=g.count||lane.projectile||time+EPS<lane.readyAt)return false;
+    const targets=nearby(owner,finite(m.range,600));if(!targets.length)return false;
+    const target=targets[lane.index%targets.length];
     const aim=Math.atan2(target.y-owner.y,target.x-owner.x),hand=boomerangHand(owner,aim);
     if(!clearPath(owner.x,owner.y,hand.x,hand.y))return false;
     const speed=finite(m.speed,650),castId=nextCast++;
-    g.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(aim)*speed,vy:Math.sin(aim)*speed,
+    lane.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(aim)*speed,vy:Math.sin(aim)*speed,
       aim,phase:'out',age:0,distance:0,range:finite(m.range,600),move:{...m},attack:owner.atk*damageBonus(owner),
-      kind:'boomerang',baseKind:'boomerang',castId,phaseHits:new Map(),trail:[]};
-    g.readyAt=time+Math.max(.05,m.cd*(owner.cdMul||1));
-    g.launches++;g.pose={time,aim};m.t=Math.max(0,g.readyAt-s.clock);
-    g.log.push({kind:'launch',time,castId,x:hand.x,y:hand.y});if(g.log.length>20)g.log.shift();
+      kind:'boomerang',baseKind:'boomerang',castId,lane:lane.index,phaseHits:new Map(),trail:[]};
+    lane.readyAt=time+Math.max(.05,m.cd*(owner.cdMul||1));
+    lane.launches++;g.launches++;g.pose={time,aim};
+    boomerangEvent(g,lane,{kind:'launch',time,castId,x:hand.x,y:hand.y});
     return true;
+  }
+  function catchBoomerang(s,lane,hand,time) {
+    const g=s.boomerang,b=lane.projectile;lane.catches++;g.catches++;
+    boomerangEvent(g,lane,{kind:'catch',time,castId:b.castId,x:hand.x,y:hand.y});
+    lane.projectile=null;g.pose={time,aim:b.aim};launchBoomerang(s,lane,time);
   }
   function updateBoomerang(s,dt) {
     const g=s.boomerang,m=learned(s.owner,BOOMERANG);
-    if(!m){g.projectile=null;g.pose=null;return;}
+    if(!m){g.lanes=[];g.pose=null;return;}
+    g.count=Math.min(16,Math.max(1,G.Quantity?.count(s.owner,1)||1));
+    while(g.lanes.length<g.count)g.lanes.push({index:g.lanes.length,projectile:null,readyAt:0,launches:0,catches:0,hits:0,log:[]});
+    // Each physical bone has its own launch clock and return state.
+    for(const lane of g.lanes)updateBoomerangLane(s,lane,dt);
+    // A quantity decrease retires surplus bones only after they reach the hand.
+    while(g.lanes.length>g.count&&!g.lanes.at(-1).projectile)g.lanes.pop();
+    m.t=g.lanes.reduce((time,lane)=>lane.index<g.count?Math.min(time,Math.max(0,lane.readyAt-s.clock)):time,Infinity);
+  }
+  function updateBoomerangLane(s,lane,dt) {
+    const g=s.boomerang;
     let left=dt;
     // Both the launch cooldown and the physical catch must finish before firing.
     for(let steps=0;left>EPS&&steps<1024;steps++){
-      if(!g.projectile){
-        const wait=Math.max(0,g.readyAt-(s.clock-left));
+      if(!lane.projectile){
+        const wait=Math.max(0,lane.readyAt-(s.clock-left));
         if(wait>left+EPS)break;
         left-=Math.min(left,wait);
-        if(!launchBoomerang(s,s.clock-left)||left<=EPS)break;
+        if(!launchBoomerang(s,lane,s.clock-left)||left<=EPS)break;
       }
-      const b=g.projectile,hand=boomerangHand(s.owner,b.aim);
+      const b=lane.projectile,hand=boomerangHand(s.owner,b.aim);
       if(b.phase==='return'){
         const distance=Math.hypot(hand.x-b.x,hand.y-b.y);
         if(distance<=8){
-          g.catches++;g.log.push({kind:'catch',time:s.clock-left,castId:b.castId,x:hand.x,y:hand.y});
-          if(g.log.length>20)g.log.shift();g.projectile=null;g.pose={time:s.clock-left,aim:b.aim};
-          launchBoomerang(s,s.clock-left);continue;
+          catchBoomerang(s,lane,hand,s.clock-left);continue;
         }
         const speed=finite(b.move.returnSpeed,900),travel=Math.min(4,speed*left,distance-8);
         b.vx=(hand.x-b.x)/distance*speed;b.vy=(hand.y-b.y)/distance*speed;
@@ -442,18 +463,15 @@
         const victim=!wall&&!prop?G.EnemyMgr.queryCircle(b.x,b.y,48)
           .filter(e=>alive(e)&&!e.friendly&&distance2(e,b)<=((e.r||8)+7)**2)
           .sort((a,c)=>distance2(a,b)-distance2(c,b))[0]:null;
-        if(prop||victim){const damage=hit(s,b,prop||victim,1,0,true);if(victim&&damage>0)g.hits++;}
+        if(prop||victim){const damage=hit(s,b,prop||victim,1,0,true);if(victim&&damage>0){lane.hits++;g.hits++;}}
         if(wall||prop||victim||b.distance>=b.range-EPS)b.phase='return';
       }
       b.trail.push({x:b.x,y:b.y});if(b.trail.length>4)b.trail.shift();
       // An overdue catch can still relaunch at the end of the same frame.
       if(b.phase==='return'&&Math.hypot(hand.x-b.x,hand.y-b.y)<=8+EPS){
-        g.catches++;g.log.push({kind:'catch',time:s.clock-left,castId:b.castId,x:hand.x,y:hand.y});
-        if(g.log.length>20)g.log.shift();g.projectile=null;g.pose={time:s.clock-left,aim:b.aim};
-        launchBoomerang(s,s.clock-left);
+        catchBoomerang(s,lane,hand,s.clock-left);
       }
     }
-    m.t=Math.max(0,g.readyAt-s.clock);
   }
   function boneGuardState(owner=G.Game.player) {
     const s=states.get(owner);
