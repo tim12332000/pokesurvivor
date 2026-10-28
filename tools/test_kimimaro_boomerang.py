@@ -61,29 +61,26 @@ PROGRESSION = r"""() => {
 HIT_AND_RETURN = r"""() => {
  const A=KBoom,p=A.p,out=[];
  for(let rank=1;rank<=5;rank++){
-   const {m,e,hits}=A.start(100,rank);A.until(()=>A.state().lanes.every(lane=>lane.hits===1));
-   let hitState=A.state();const base=[64,76.8,89.6,108.8,128][rank-1];
+   const {m,e,hits}=A.start(100,rank);A.until(()=>hits.length>=rank);
+   const hitState=A.state(),base=[64,76.8,89.6,108.8,128][rank-1];
    const raw=base*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
    A.assert(hits.length===rank&&hitState.projectiles.length===rank,'each ranked bone did not hit once');
-   A.assert(hitState.projectiles.every(q=>q.phase===(rank===1?'return':'out')),'first contact ignored the per-rank piercing budget');
+   A.assert(hitState.projectiles.every(q=>q.phase==='return'),'first contact did not immediately return at every rank');
+   A.assert(hitState.projectiles.every(q=>q.remainingPierce===rank-1),'first outbound hit consumed the return piercing budget');
    for(const hit of hits){
      A.near(hit.raw,raw,'multiple ranked bones split their individual damage');
      A.assert(hit.loss===Math.max(1,Math.round(raw))&&hit.owner&&hit.id===A.id,'native full hit lost damage/owner');
    }
    A.assert(e.maxHp-e.hp===rank*Math.max(1,Math.round(raw)),'rank damage was not full damage per bone');
-   e.dead=true;p.target=null;
-   if(rank>1)A.until(()=>A.state().projectiles.length===rank&&A.state().projectiles.every(q=>q.phase==='return'));
-   hitState=A.state();const projectile=hitState.projectile;
-   const returnTarget=A.spawn((projectile.x+hitState.hand.x)/2,(projectile.y+hitState.hand.y)/2),returnHits=A.watch(returnTarget);
    A.until(()=>A.state().catches===rank);
-   A.assert(returnHits.length===0&&hits.length===rank,'ranked bones dealt another hit during return');
+   A.assert(hits.length===rank&&A.state().hits===rank,'ranked bones hit their original outbound victim again during return');
    const waitedInHand=A.state().projectiles.length===0;
    if(waitedInHand){
      A.assert(A.state().lanes.every(lane=>lane.cooldown>0),'early ranked catches ignored remaining launch cooldown');
      const launches=A.state().launches;A.until(()=>A.state().launches>launches);
    }
    A.assert(A.state().projectiles.length===rank&&A.state().projectiles.every(q=>q.phase==='out'),'ranked bones did not relaunch after hand wait and cooldown');
-   out.push({rank,count:rank,rawPerBone:hits[0].raw,lossPerBone:hits[0].loss,totalLoss:rank*hits[0].loss,hits:hits.length,returnHits:returnHits.length,waitedInHand});
+   out.push({rank,count:rank,rawPerBone:hits[0].raw,lossPerBone:hits[0].loss,totalLoss:rank*hits[0].loss,hits:hits.length,originalVictimReturnHits:0,firstContactReturned:true,waitedInHand});
  }
  return out;
 }"""
@@ -296,53 +293,58 @@ RANK_QUANTITY_STACK = r"""() => {
 PIERCE_LIMITS = r"""() => {
  const A=KBoom,out=[];
  for(let rank=1;rank<=5;rank++){
-   const {m,anchor,hits:anchorHits,b}=A.single(rank),order=[];
-   const targets=[5,10,15,20,25,30].map(index=>A.spawn(b.curve[index].x,b.curve[index].y)),logs=targets.map(A.watch);
+   const {m,anchor,hits:anchorHits,b}=A.single(rank,560),order=[];
+   A.until(()=>anchorHits.length===1);
+   A.assert(b.phase==='return'&&b.remainingPierce===rank-1,'first outbound hit delayed its return or spent return quota');
+   const from={x:b.x,y:b.y},hand=A.state().hand,d=Math.hypot(hand.x-from.x,hand.y-from.y);
+   const targets=Array.from({length:6},(_,i)=>{const t=(60+i*70)/d;return A.spawn(from.x+(hand.x-from.x)*t,from.y+(hand.y-from.y)*t)}),logs=targets.map(A.watch);
    targets.forEach((e,index)=>{const hurt=e.hurt;e.hurt=function(...args){order.push(index);return hurt.apply(this,args)}});
    A.near(b.pierce,rank-1,'launch-time rank piercing snapshot');
-   A.until(()=>A.state().projectile?.phase==='return');
-   A.assert(order.length===rank&&order.every((value,index)=>value===index),'piercing hit order or different-enemy limit rank '+rank+' '+JSON.stringify(order));
-   A.assert(logs.every((log,index)=>log.length===(index<rank?1:0))&&anchorHits.length===0,'piercing repeated a target or exceeded its allowance rank '+rank);
-   const raw=[64,76.8,89.6,108.8,128][rank-1]*1.6;
-   for(const log of logs.slice(0,rank)){A.near(log[0].raw,raw,'piercing divided full per-enemy damage');A.assert(log[0].loss===Math.round(raw)&&log[0].owner&&log[0].id===A.id,'piercing bypassed native hit ownership/damage')}
-   A.assert(b.remainingPierce===0&&b.phaseHits.get(0).size===rank,'allowance did not deplete per distinct enemy');
    A.until(()=>A.state().catches===1);
-   A.assert(order.length===rank&&logs.every((log,index)=>log.length===(index<rank?1:0)),'return through pierced enemies repeated damage');
-   out.push({rank,isolatedCount:m.count,pierce:b.pierce,targetsHit:order,remaining:b.remainingPierce,rawPerTarget:raw});
+   A.assert(order.length===rank-1&&order.every((value,index)=>value===index),'return piercing hit order or extra-victim limit rank '+rank+' '+JSON.stringify(order));
+   A.assert(logs.every((log,index)=>log.length===(index<rank-1?1:0))&&anchorHits.length===1,'return piercing repeated a target or original outbound victim rank '+rank);
+   const raw=[64,76.8,89.6,108.8,128][rank-1]*1.6;
+   for(const log of logs.slice(0,rank-1)){A.near(log[0].raw,raw,'return piercing divided full per-enemy damage');A.assert(log[0].loss===Math.round(raw)&&log[0].owner&&log[0].id===A.id,'return piercing bypassed native hit ownership/damage')}
+   A.assert(b.remainingPierce===0&&b.phaseHits.get(0).size===rank,'return allowance did not deplete per distinct new enemy');
+   A.assert(b.phaseHits.get(0).has(anchor),'outbound and return did not share a victim ledger');
+   out.push({rank,isolatedCount:m.count,returnPierce:b.pierce,outboundHits:anchorHits.length,returnTargets:order,remaining:b.remainingPierce,rawPerTarget:raw,caughtAfterQuota:true});
  }
  return out;
 }"""
 
 PIERCE_OVERLAP_AND_QUANTITY = r"""() => {
- const A=KBoom,p=A.p,{b}=A.single(5),point=b.curve[10],large=A.spawn(point.x,point.y),largeHits=A.watch(large);
+ const A=KBoom,p=A.p,first=A.single(5);A.until(()=>first.hits.length===1);
+ const {b}=first,hand=A.state().hand,large=A.spawn((b.x+hand.x)/2,(b.y+hand.y)/2),largeHits=A.watch(large);
  large.r=60;G.EnemyMgr.rebuildGrid();A.until(()=>largeHits.length===1);A.advance(.06,true);
  const overlap=A.state().projectile;
- A.assert(overlap?.phase==='out'&&Math.hypot(overlap.x-large.x,overlap.y-large.y)<=large.r+7,'overlap fixture did not remain inside one victim');
- A.assert(largeHits.length===1&&overlap.remainingPierce===3,'continued overlap consumed extra hit/piercing charges');
+ A.assert(overlap?.phase==='return'&&Math.hypot(overlap.x-large.x,overlap.y-large.y)<=large.r+7,'return-overlap fixture did not remain inside one victim');
+ A.assert(largeHits.length===1&&first.hits.length===1&&overlap.remainingPierce===3,'continued return overlap consumed extra charges or re-hit the outbound victim');
  const overlapResult={hits:largeHits.length,remaining:overlap.remainingPierce,stillInside:true};
- A.prepare();p.quantityPicks=p.quantityBonus=4;const anchor=A.spawn(400,0),anchorHits=A.watch(anchor);p.target=anchor;A.step(.001,true);
+ A.prepare();p.quantityPicks=p.quantityBonus=4;const anchor=A.spawn(560,0),anchorHits=A.watch(anchor);p.target=anchor;A.step(.001,true);
  let state=A.state();A.assert(state.count===2&&state.projectiles.every(q=>q.pierce===4&&q.remainingPierce===4),'four quantity cards did not add four independent launch piercing charges');
- const shots=[...state.projectiles],groups=shots.map(q=>[5,10,15,20,25,30].map(index=>A.spawn(q.curve[index].x,q.curve[index].y))),logs=groups.map(group=>group.map(A.watch));
- A.until(()=>A.state().projectiles.length===2&&A.state().projectiles.every(q=>q.phase==='return'));
- state=A.state();A.assert(state.hits===10&&state.lanes.every(lane=>lane.hits===5),'quantity piercing did not allow five separate victims per bone');
- shots.forEach((q,lane)=>{
-   A.assert(q.remainingPierce===0&&q.phaseHits.get(0).size===5,'one bone consumed another bone piercing state');
-   A.assert(groups[lane].slice(0,5).every(e=>q.phaseHits.get(0).has(e)),'quantity bones lost their separate victim ledgers');
-   A.assert(logs[lane].every((log,index)=>log.length===(index<5?1:0)),'quantity bone repeated a victim or pierced one too many');
- });
- A.assert(anchorHits.length===0,'quantity piercing exceeded its launch allowance');A.until(()=>A.state().catches===2);
- A.assert(logs.flat().reduce((sum,log)=>sum+log.length,0)===10,'quantity return paths applied extra hits');
- return {overlap:overlapResult,quantityCards:4,count:2,piercePerBone:4,hitsPerBone:5,totalHits:10};
+ const shots=[...state.projectiles];A.until(()=>anchorHits.length===2);
+ A.assert(shots.every(q=>q.phase==='return'&&q.remainingPierce===4),'quantity cards delayed first-contact return');
+ state=A.state();const from={x:(shots[0].x+shots[1].x)/2,y:(shots[0].y+shots[1].y)/2},to=state.hand,d=Math.hypot(to.x-from.x,to.y-from.y);
+ const targets=Array.from({length:6},(_,i)=>{const t=(60+i*70)/d;return A.spawn(from.x+(to.x-from.x)*t,from.y+(to.y-from.y)*t)}),logs=targets.map(A.watch);
+ A.until(()=>A.state().catches===2);state=A.state();
+ A.assert(state.hits===10&&state.lanes.every(lane=>lane.hits===5),'quantity return piercing did not allow four new victims per bone');
+ for(const q of shots){
+   A.assert(q.remainingPierce===0&&q.phaseHits.get(0).size===5,'one bone consumed another bone return-piercing state');
+   A.assert(q.phaseHits.get(0).has(anchor)&&targets.slice(0,4).every(e=>q.phaseHits.get(0).has(e)),'quantity bones lost their separate shared-outbound/return victim ledgers');
+ }
+ A.assert(anchorHits.length===2&&logs.every((log,index)=>log.length===(index<4?2:0)),'same enemy did not receive exactly one hit per distinct bone');
+ return {overlap:overlapResult,quantityCards:4,count:2,returnPiercePerBone:4,outboundHitsPerBone:1,returnHitsPerBone:4,totalHits:10};
 }"""
 
 PIERCE_UNUSED_AND_OBSTACLES = r"""() => {
  const A=KBoom,{b,hits}=A.single(5,200);A.until(()=>hits.length===1);
- A.assert(b.phase==='out'&&b.remainingPierce===3,'unused charges did not continue after the first enemy');
- A.until(()=>A.state().projectile?.phase==='return');
- A.near(b.distance,800,'unused piercing did not reach authored range before returning');
- A.assert(b.remainingPierce===3&&hits.length===1,'unused-range flight repeated the first victim');
+ A.assert(b.phase==='return'&&b.remainingPierce===4&&b.distance<300,'unused return charges delayed first-contact return');
  A.until(()=>A.state().catches===1);A.assert(hits.length===1,'unused-charge return hit its earlier victim');
- const rangeResult={distance:b.distance,unused:b.remainingPierce,hits:hits.length};
+ const firstContact={distance:b.distance,unused:b.remainingPierce,hits:hits.length};
+ const missed=A.single(5,200);missed.anchor.dead=true;A.p.target=null;
+ A.until(()=>missed.b.phase==='return');A.near(missed.b.distance,800,'missed outbound path did not retain its full range');
+ A.assert(missed.b.remainingPierce===4&&missed.hits.length===0,'missed flight consumed return piercing without victims');
+ const rangeResult={distance:missed.b.distance,unused:missed.b.remainingPierce,hits:missed.hits.length};
  const wall=A.single(5);G.World.isWall=(x,y)=>x>=100;A.until(()=>A.state().projectile?.phase==='return');
  A.assert(wall.b.remainingPierce===4&&wall.b.distance<800&&wall.hits.length===0,'wall did not return a bone with unused piercing');
  const blocked=A.single(5);A.advance(.10,true);const q=blocked.b,speed=Math.hypot(q.vx,q.vy);
@@ -350,7 +352,7 @@ PIERCE_UNUSED_AND_OBSTACLES = r"""() => {
  G.World.projectileBlock=(x,y,r)=>Math.hypot(x-prop.x,y-prop.y)<=prop.r+r?prop:false;
  A.until(()=>A.state().projectile?.phase==='return');
  A.assert(blocked.b.remainingPierce===4&&blocked.b.distance<800&&blocked.hits.length===0,'prop did not stop a bone with unused piercing');
- return {range:rangeResult,wallReturnedWith:wall.b.remainingPierce,propReturnedWith:blocked.b.remainingPierce,propLoss:10000-prop.hp};
+ return {firstContactReturned:firstContact,missedRange:rangeResult,wallReturnedWith:wall.b.remainingPierce,propReturnedWith:blocked.b.remainingPierce,propLoss:10000-prop.hp};
 }"""
 
 MULTI_CLONE_AND_UNLEARN = r"""() => {

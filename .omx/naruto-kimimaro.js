@@ -477,6 +477,12 @@
         const speed=finite(b.move.returnSpeed,900),travel=Math.min(4,speed*left,distance-8);
         b.vx=(hand.x-b.x)/distance*speed;b.vy=(hand.y-b.y)/distance*speed;
         b.x+=b.vx*travel/speed;b.y+=b.vy*travel/speed;b.age+=travel/speed;left-=travel/speed;
+        if(b.remainingPierce>0){
+          const victim=G.EnemyMgr.queryCircle(b.x,b.y,48)
+            .filter(e=>alive(e)&&!e.friendly&&!b.phaseHits.get(0)?.has(e)&&distance2(e,b)<=((e.r||8)+7)**2)
+            .sort((a,c)=>distance2(a,b)-distance2(c,b))[0];
+          if(victim&&hit(s,b,victim,1,0,true)>0){lane.hits++;g.hits++;b.remainingPierce--;}
+        }
       }else{
         const speed=finite(b.move.speed,650),point=b.curve[b.curveIndex];
         const dx=point?point.x-b.x:Math.cos(b.aim),dy=point?point.y-b.y:Math.sin(b.aim),segment=Math.hypot(dx,dy);
@@ -490,12 +496,12 @@
         const victim=!wall&&!prop?G.EnemyMgr.queryCircle(b.x,b.y,48)
           .filter(e=>alive(e)&&!e.friendly&&!b.phaseHits.get(0)?.has(e)&&distance2(e,b)<=((e.r||8)+7)**2)
           .sort((a,c)=>distance2(a,b)-distance2(c,b))[0]:null;
-        let exhausted=false;
         if(prop||victim){
           const damage=hit(s,b,prop||victim,1,0,true);
-          if(victim&&damage>0){lane.hits++;g.hits++;if(b.remainingPierce>0)b.remainingPierce--;else exhausted=true;}
+          if(victim&&damage>0){lane.hits++;g.hits++;}
         }
-        if(wall||prop||exhausted||b.distance>=b.range-EPS)b.phase='return';
+        // First contact always starts recovery, regardless of pierce upgrades.
+        if(wall||prop||victim||b.distance>=b.range-EPS)b.phase='return';
       }
       b.trail.push({x:b.x,y:b.y});if(b.trail.length>4)b.trail.shift();
       // An overdue catch can still relaunch at the end of the same frame.
