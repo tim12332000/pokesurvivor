@@ -431,7 +431,8 @@
   function updateBoomerang(s,dt) {
     const g=s.boomerang,m=learned(s.owner,BOOMERANG);
     if(!m){g.lanes=[];g.pose=null;return;}
-    g.count=Math.min(16,Math.max(1,G.Quantity?.count(s.owner,1)||1));
+    const baseCount=Math.max(1,finite(m.count,1));
+    g.count=Math.min(16,Math.max(1,G.Quantity?.count(s.owner,baseCount)||baseCount));
     while(g.lanes.length<g.count)g.lanes.push({index:g.lanes.length,projectile:null,readyAt:0,launches:0,catches:0,hits:0,log:[]});
     // Each physical bone has its own launch clock and return state.
     for(const lane of g.lanes)updateBoomerangLane(s,lane,dt);

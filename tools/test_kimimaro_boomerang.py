@@ -23,7 +23,7 @@ HELPERS = r"""() => {
    const m=prepare(rank);p.cdMul=cdMul;
    const e=A.spawn(distance,0),hits=A.watch(e);p.target=e;A.step(.001,true);
    A.assert(state()?.projectile?.phase==='out','native independent throw did not launch');
-   A.assert(state().count===1&&state().projectiles.length===1,'zero-card fixture did not launch exactly one bone');
+   A.assert(state().count===rank&&state().projectiles.length===rank,'zero-card fixture did not launch one bone per skill rank');
    A.assert(!A.action()&&p.slots.length===0,'throw created a body action or active slot');
    return {m,e,hits};
  }
@@ -44,7 +44,8 @@ PROGRESSION = r"""() => {
    const m=G.Moves.instance(A.id,rank);A.assert(m.passive&&m.cd===1,'throw is not slotless with a one-second base cooldown rank '+rank);
    A.near(m.dmg,[64,76.8,89.6,108.8,128][rank-1],'full-hit base rank '+rank);
    A.near(m.range,[600,650,700,750,800][rank-1],'throw range rank '+rank);
-   ranks.push({rank,damage:m.dmg,range:m.range,cd:m.cd,passive:m.passive});
+   A.near(m.count,rank,'base bone count rank '+rank);
+   ranks.push({rank,damage:m.dmg,range:m.range,count:m.count,cd:m.cd,passive:m.passive});
  }
  A.prepare();A.step(.001,true);A.advance(1,true);
  A.assert(!A.state()?.projectile&&!(A.state()?.launches),'idle throw escaped hand without a target');
@@ -54,20 +55,23 @@ PROGRESSION = r"""() => {
 HIT_AND_RETURN = r"""() => {
  const A=KBoom,p=A.p,out=[];
  for(let rank=1;rank<=5;rank++){
-   const {m,e,hits}=A.start(100,rank);A.until(()=>hits.length>0);
+   const {m,e,hits}=A.start(100,rank);A.until(()=>A.state().lanes.every(lane=>lane.hits===1));
    const hitState=A.state(),projectile=hitState.projectile,base=[64,76.8,89.6,108.8,128][rank-1];
    const raw=base*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
-   A.assert(hits.length===1&&projectile?.phase==='return','first enemy contact did not immediately return');
-   A.near(hits[0].raw,raw,'throw was split into partial damage');
-   A.assert(hits[0].loss===Math.max(1,Math.round(raw))&&hits[0].owner&&hits[0].id===A.id,'native full hit lost damage/owner');
+   A.assert(hits.length===rank&&hitState.projectiles.length===rank&&hitState.projectiles.every(q=>q.phase==='return'),'each first contact did not immediately return');
+   for(const hit of hits){
+     A.near(hit.raw,raw,'multiple ranked bones split their individual damage');
+     A.assert(hit.loss===Math.max(1,Math.round(raw))&&hit.owner&&hit.id===A.id,'native full hit lost damage/owner');
+   }
+   A.assert(e.maxHp-e.hp===rank*Math.max(1,Math.round(raw)),'rank damage was not full damage per bone');
    e.dead=true;p.target=null;
    const returnTarget=A.spawn((projectile.x+hitState.hand.x)/2,(projectile.y+hitState.hand.y)/2),returnHits=A.watch(returnTarget);
-   const catches=hitState.catches;A.until(()=>A.state().catches>catches);
-   A.assert(returnHits.length===0&&hits.length===1,'return path dealt another damage hit');
-   A.assert(!A.state().projectile&&A.state().cooldown>0,'early catch ignored remaining launch cooldown');
+   A.until(()=>A.state().catches===rank);
+   A.assert(returnHits.length===0&&hits.length===rank,'ranked bones dealt another hit during return');
+   A.assert(A.state().projectiles.length===0&&A.state().lanes.every(lane=>lane.cooldown>0),'early ranked catches ignored remaining launch cooldown');
    const launches=A.state().launches;A.until(()=>A.state().launches>launches);
-   A.assert(A.state().projectile?.phase==='out','throw did not relaunch after hand wait and cooldown');
-   out.push({rank,raw:hits[0].raw,loss:hits[0].loss,hits:hits.length,returnHits:returnHits.length,waitedInHand:true});
+   A.assert(A.state().projectiles.length===rank&&A.state().projectiles.every(q=>q.phase==='out'),'ranked bones did not relaunch after hand wait and cooldown');
+   out.push({rank,count:rank,rawPerBone:hits[0].raw,lossPerBone:hits[0].loss,totalLoss:rank*hits[0].loss,hits:hits.length,returnHits:returnHits.length,waitedInHand:true});
  }
  return out;
 }"""
@@ -210,14 +214,61 @@ QUANTITY_GROW_AND_RETIRE = r"""() => {
 QUANTITY_CAP = r"""() => {
  const A=KBoom,p=A.p,defaults=[];
  for(let rank=1;rank<=5;rank++){
-   A.start(200,rank);A.assert(A.state().count===1&&A.state().projectiles.length===1,'rank alone increased quantity');defaults.push({rank,count:A.state().count});
+   A.start(200,rank);A.assert(A.state().count===rank&&A.state().projectiles.length===rank,'rank did not add one base bone per level');defaults.push({rank,count:A.state().count});
  }
- A.prepare();p.quantityPicks=p.quantityBonus=30;p.target=A.spawn(200,0);A.step(.001,true);
- const state=A.state();A.assert(G.Quantity.count(p,1)>16,'cap fixture did not exceed sixteen bones');
+ const m=A.prepare(5);p.quantityPicks=p.quantityBonus=30;p.target=A.spawn(200,0);A.step(.001,true);
+ const state=A.state();A.assert(G.Quantity.count(p,m.count)>16,'rank-five cap fixture did not exceed sixteen bones');
  A.assert(state.count===16&&state.lanes.length===16&&state.projectiles.length===16,'quantity cap is not sixteen simultaneous bones');
  A.assert(new Set(state.projectiles.map(q=>q.castId)).size===16,'quantity cap lanes reused flying projectiles');
  A.advance(.04,true);A.assert(A.state().projectiles.length===16&&A.state().launches===16,'capped lanes duplicated during flight');
- return {defaults,requested:G.Quantity.count(p,1),cap:state.count,launched:state.launches};
+ return {defaults,requested:G.Quantity.count(p,m.count),cap:state.count,launched:state.launches};
+}"""
+
+RANK_LEVEL_UP = r"""() => {
+ const A=KBoom,p=A.p,{m}=A.start(400);A.advance(.02,true);const stages=[{rank:1,count:A.state().count}];
+ const levelUp=G.Moves.levelUp;let nativeCalls=0;
+ G.Moves.levelUp=function(...args){nativeCalls++;return levelUp.apply(this,args)};
+ try{
+   for(let rank=2;rank<=5;rank++){
+     const before=A.K.stateFor(p).boomerang.lanes.map(lane=>({lane,projectile:lane.projectile,readyAt:lane.readyAt,damage:lane.projectile.move.dmg}));
+     const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+A.id);
+     A.assert(card&&/數量\s*\+1/.test(card.desc),'native upgrade card omitted quantity +1 at rank '+rank);
+     A.assert(card.apply(p)!==false,'native upgrade card failed');
+     A.assert(m.lvl===rank&&m.count===rank,'native levelUp failed to add one base bone');
+     A.step(.001,true);const state=A.state(),raw=A.K.stateFor(p).boomerang.lanes;
+     A.assert(state.count===rank&&state.projectiles.length===rank,'new rank bone did not immediately join existing flights');
+     for(const saved of before){
+       const lane=raw[saved.lane.index];
+       A.assert(lane===saved.lane&&lane.projectile===saved.projectile,'rank upgrade recreated a previous lane or flying bone');
+       A.near(lane.readyAt,saved.readyAt,'rank upgrade reset previous lane cooldown');
+       A.near(lane.projectile.move.dmg,saved.damage,'rank upgrade mutated an already launched damage snapshot');
+     }
+     A.assert(state.lanes.at(-1).launches===1&&state.lanes.at(-1).projectile,'newly unlocked rank lane waited on an older cooldown');
+     stages.push({rank,count:state.count,text:card.desc,newLaneReadyAt:state.lanes.at(-1).readyAt});
+   }
+   A.assert(nativeCalls===4,'upgrade cards bypassed the native levelUp path');
+ }finally{G.Moves.levelUp=levelUp}
+ A.assert(!G.Moves.levelUp(m)&&m.count===5,'max-rank upgrade added an unearned sixth base bone');
+ return {nativeCalls,stages};
+}"""
+
+RANK_QUANTITY_STACK = r"""() => {
+ const A=KBoom,p=A.p,m=A.prepare(3);p.quantityPicks=p.quantityBonus=4;p.target=A.spawn(400,0);A.step(.001,true);
+ A.assert(m.count===3&&A.state().count===7&&A.state().projectiles.length===7,'rank-three base count was not multiplied by quantity cards');
+ const stages=[{rank:3,base:m.count,count:A.state().count}];
+ for(const [rank,count] of [[4,9],[5,12]]){
+   const saved=A.K.stateFor(p).boomerang.lanes.map(lane=>({lane,projectile:lane.projectile,readyAt:lane.readyAt}));
+   A.assert(G.Moves.levelUp(m),'native stacked rank upgrade failed');A.step(.001,true);
+   const state=A.state(),raw=A.K.stateFor(p).boomerang.lanes;
+   A.assert(m.lvl===rank&&m.count===rank&&state.count===count&&state.projectiles.length===count,'rank/quantity stacking order was incorrect');
+   for(const item of saved){
+     A.assert(raw[item.lane.index]===item.lane&&raw[item.lane.index].projectile===item.projectile,'stacked rank increase replaced an existing flight');
+     A.near(item.lane.readyAt,item.readyAt,'stacked rank increase reset previous lane cooldown');
+   }
+   A.assert(state.lanes.slice(saved.length).every(lane=>lane.launches===1&&lane.projectile),'additional stacked lanes did not launch immediately');
+   stages.push({rank,base:m.count,count:state.count,added:count-saved.length});
+ }
+ return {quantityCards:4,formula:'floor(base count * 1.25^4)',stages};
 }"""
 
 MULTI_CLONE_AND_UNLEARN = r"""() => {
@@ -274,9 +325,9 @@ RANGE_AND_OBSTACLES = r"""() => {
    A.assert(walked>=m.range-8&&walked<=m.range+8,'sampled curve travel disagrees with range budget');
    const chord=Math.hypot(previous.x-sx,previous.y-sy);
    A.assert(chord<outDistance-5,'range fixture did not distinguish curved travel from endpoint chord');
-   A.until(()=>A.state().catches===1);
-   A.assert(!A.state().projectile&&A.state().launches===1,'targetless catch relaunched into empty space');
-   out.push({rank,range:m.range,traveled:outDistance,sampledTravel:walked,chord,caught:true});
+   A.until(()=>A.state().catches===rank);
+   A.assert(A.state().projectiles.length===0&&A.state().launches===rank,'targetless ranked catches relaunched into empty space');
+   out.push({rank,count:rank,range:m.range,traveled:outDistance,sampledTravel:walked,chord,caught:true});
  }
  A.start(200);G.World.isWall=(x,y)=>x>=100;
  A.until(()=>A.state().projectile?.phase==='return');const wallTurn={...A.state().projectile};
@@ -360,7 +411,8 @@ def main():
                 frame=game.boot(page,label);frame.evaluate(HELPERS)
                 for name,check in [('progression',PROGRESSION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndCurve',FIRST_TARGET_AND_CURVE),
                   ('cadence',CADENCE),('cooldownModifiers',COOLDOWN_MODIFIERS),('multiCadence',MULTI_CADENCE),
-                  ('quantityGrowAndRetire',QUANTITY_GROW_AND_RETIRE),('quantityCap',QUANTITY_CAP),('multiCloneAndUnlearn',MULTI_CLONE_AND_UNLEARN),
+                  ('quantityGrowAndRetire',QUANTITY_GROW_AND_RETIRE),('quantityCap',QUANTITY_CAP),('rankLevelUp',RANK_LEVEL_UP),
+                  ('rankQuantityStack',RANK_QUANTITY_STACK),('multiCloneAndUnlearn',MULTI_CLONE_AND_UNLEARN),
                   ('lateCatch',LATE_CATCH),('rangeAndObstacles',RANGE_AND_OBSTACLES),('movingCatch',MOVING_CATCH),('bodyAndGuard',BODY_AND_GUARD),('cloneAndLifecycle',CLONE_AND_LIFECYCLE)]:
                     print(label,name,flush=True)
                     try:result[name]=frame.evaluate(check)
