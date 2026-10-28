@@ -20,7 +20,7 @@ RANGES = r"""() => {
   ['vine',[320,340,360,380,400],[48,57.6,67.2,81.6,96],8],
   ['flower',[220,240,260,280,300],[192,230.4,268.8,326.4,384],8,[42,46,50,54,58]],
   ['lily',[200,220,240,260,280],[100,120,140,170,200],6],
-  ['bracken',[320,360,400,440,480],[300,360,420,510,600],12]];
+  ['bracken',[400,450,500,550,600],[600,720,840,1020,1200],12]];
  for(const [key,ranges,damage,cd,widths] of rows){
   const id=key==='willow'?'naruto-kimimaro':'naruto-kimimaro-'+key;
   for(let rank=1;rank<=5;rank++){
@@ -31,7 +31,7 @@ RANGES = r"""() => {
    out.ranks.push({key,rank,range:m.range,radius:m.radius,halfWidth:m.halfWidth,dmg:m.dmg,cd:m.cd,passive:!!m.passive});
    // All forty actual native casts put a victim beyond the old rank-one reach.
    const distance=ranges[rank-1]-12,e=A.spawn(distance,0),hits=A.watch(e);p.target=e;
-   A.cast(id);A.advance(1.7);
+   A.cast(id);A.advance(key==='bracken'?2.7:1.7);
    A.assert(hits.length>0,key+' rank '+rank+' extended-range victim missed at '+distance);
    A.assert(hits.every(h=>h.owner&&h.id===id),key+' lost native damage ownership');
    out.casts.push({key,rank,distance,hits:hits.length,loss:e.maxHp-e.hp});
@@ -44,9 +44,9 @@ BOUNDARIES = r"""() => {
  const A=KAcceptance,p=A.p(),out={forests:[],lines:[]};
  for(const rank of [1,5]){
   A.reset();const m=A.fixture('naruto-kimimaro-bracken',rank);
-  const coords=rank===1?[[250,0],[-180,240],[0,-310],[340,0]]:[[450,0],[-282,376],[0,-470],[500,0]];
-  const es=coords.map(([x,y])=>A.spawn(x,y)),logs=es.map(A.watch);p.target=es[0];A.cast(m.id);A.advance(.95);
-  const loss=es.map(e=>e.maxHp-e.hp),expected=A.expected(m);
+  const coords=rank===1?[[350,0],[-240,280],[0,-390],[430,0]]:[[550,0],[-354,472],[0,-590],[630,0]];
+  const es=coords.map(([x,y])=>A.spawn(x,y)),logs=es.map(A.watch);p.target=es[0];A.cast(m.id);A.advance(2.7);
+  const loss=es.map(e=>e.maxHp-e.hp),expected=A.expected(m,1,es[0]);
   A.assert(loss.slice(0,3).every(v=>v===expected),'spread forest damage/range rank '+rank+' '+loss);
   A.assert(logs.slice(0,3).every(v=>v.length===1)&&loss[3]===0,'forest repeats or extends outside radius');
   A.advance(.5);A.assert(es.every((e,i)=>e.maxHp-e.hp===loss[i]),'late forest re-hit');
@@ -60,7 +60,7 @@ BOUNDARIES = r"""() => {
   A.assert(losses[0]>0&&losses[1]>0&&losses[2]===0&&losses[3]===0,'line boundaries '+key+' rank '+rank+' '+losses);
   out.lines.push({key,rank,losses,range:m.range,halfWidth:m.halfWidth});
  }
- A.reset();const m=A.fixture('naruto-kimimaro-bracken'),boss=A.spawn(280,0,'boss'),jumper=A.spawn(0,280),flyer=A.spawn(-280,0);
+ A.reset();const m=A.fixture('naruto-kimimaro-bracken'),boss=A.spawn(50,0,'boss'),jumper=A.spawn(0,50),flyer=A.spawn(-50,0);
  A.assert(boss.flying,'native boss flying fixture missing');flyer.flying=true;p.target=boss;A.cast(m.id);A.advance(.43);
  jumper.startJump(p);jumper.jump.t=.01;jumper.updateJump(0);
  for(let n=0;n<50;n++){jumper.updateJump(.01);A.step(.01)}
@@ -82,7 +82,7 @@ BULLETS = r"""() => {
 
 DENSITY = r"""() => {
  const A=KAcceptance,p=A.p();A.reset();const m=A.fixture('naruto-kimimaro-bracken',5);p.target=A.spawn(200,0);
- A.cast(m.id);A.advance(1.08);A.fields();const single={...G.KimimaroArt.debugLast};
+ A.cast(m.id);A.advance(2.7);A.fields();const single={...G.KimimaroArt.debugLast};
  A.assert(single.forestColumns===72&&single.secondaryParticles<=20,'single forest density/budget '+JSON.stringify(single));
  A.reset();A.fixture(m.id,5);p.target=A.spawn(200,0);const owners=[p,...Array.from({length:3},()=>G.SelfClones.summon(p))];
  A.assert(owners.every(Boolean),'native clones missing');
@@ -92,10 +92,31 @@ DENSITY = r"""() => {
  // automatic targeting is independently exercised by the forty range casts.
  A.resume();try{for(const actor of owners){const move=actor.moves.find(v=>v.id===m.id);move.t=0;
   A.assert(G.DigimonSkills.cast(actor,move),'native owner forest cast failed '+owners.indexOf(actor))}}finally{A.pause()}
- A.advance(1.08);A.fields();const multiple={...G.KimimaroArt.debugLast};
+ A.advance(2.7);A.fields();const multiple={...G.KimimaroArt.debugLast};
  const forests=A.K.renderStates().filter(s=>s.forest).length;
  A.assert(forests===4&&multiple.forestColumns===72&&multiple.secondaryParticles<=20,'global four-owner budget '+JSON.stringify({forests,multiple}));
  return {single,forests,multiple};
+}"""
+
+STAGES = r"""() => {
+ const A=KAcceptance,p=A.p();A.reset();const m=A.fixture('naruto-kimimaro-bracken',5);
+ const victims=Array.from({length:6},(_,i)=>A.spawn((i+.75)*100,0)),logs=victims.map(A.watch);
+ p.target=victims[0];A.cast(m.id);const action=A.action(),counts=[],waves=[.48,.80,1.12,1.44,1.76,2.08];
+ A.assert(action.hitTimes.length===6,'forest must have six stages');
+ let age=0;
+ for(let i=0;i<waves.length;i++){
+   A.advance(waves[i]-.01-age);age=waves[i]-.01;
+   A.assert(logs[i].length===0,'outer enemy hit before wave '+i);
+   A.advance(.02);age+=.02;
+   A.assert(logs.slice(0,i+1).every(h=>h.length===1)&&logs.slice(i+1).every(h=>!h.length),'wrong wave damage boundary '+i);
+   A.fields();counts.push(G.KimimaroArt.debugLast.forestColumns);
+ }
+ A.advance(2.7-age);A.fields();counts.push(G.KimimaroArt.debugLast.forestColumns);
+ A.assert(counts.at(-1)===72&&counts[1]<counts.at(-1),'forest did not grow gradually');
+ A.assert(counts.every((n,i)=>i===0||n>=counts[i-1]),'forest shrank before final growth');
+ A.advance(.51);A.fields();A.assert(!A.action()&&G.KimimaroArt.debugLast.forestColumns===0,'forest did not clear at 3.2 seconds');
+ A.assert(logs.every(h=>h.length===1),'later wave repeated damage');
+ return {waves,columns:counts,hits:logs.map(h=>h.length),cleanup:true};
 }"""
 
 SCENE = r"""({origin}) => {
@@ -104,7 +125,7 @@ SCENE = r"""({origin}) => {
  let count=0;for(let ring=1;ring<=3;ring++)for(let n=0;n<18;n++){
   const angle=n*Math.PI/9+ring*.25,r=ring*115,x=p.x+Math.cos(angle)*r,y=p.y+Math.sin(angle)*r;
   if(G.World.isFree(x,y,12,true)&&!G.World.isWall(x,y)){A.spawn(x,y);count++}}
- A.assert(count>=3,'terrain scene lacks native targets');A.cast(m.id);A.advance(1.08);A.fields();
+ A.assert(count>=3,'terrain scene lacks native targets');A.cast(m.id);A.advance(2.7);A.fields();
  return {nativeTerrain:true,spawned:count,...G.KimimaroArt.debugLast};
 }"""
 
@@ -127,7 +148,7 @@ def main():
                     reset();const p=A.p();p.baseAtk=1;p.atkMul=1;p.buffs.atk.n=0;
                     A.near(p.atk,1,'controlled range fixture attack');
                 }}''')
-                for name,check in [('ranges',RANGES),('boundaries',BOUNDARIES),('bullets',BULLETS),('density',DENSITY)]:
+                for name,check in [('ranges',RANGES),('boundaries',BOUNDARIES),('bullets',BULLETS),('density',DENSITY),('stages',STAGES)]:
                     print(label,name,flush=True)
                     try:result[name]=frame.evaluate(check)
                     except Exception as error:report['failures'].append(f'{label}:{name}: {error}')

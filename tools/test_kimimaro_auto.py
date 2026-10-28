@@ -30,7 +30,7 @@ HELPERS = r"""() => {
 PROGRESSION = r"""() => {
  const A=KAuto,p=A.p,out={gates:[],flags:[],ranks:[]};
  A.assert(p.level===1&&p.moves.length===1&&p.moves[0].id===A.id('willow')&&!p.slots.length,'native fresh starter must only learn Willow');
- const gates={camellia:3,bullets:3,larch:6,vine:6,flower:9,lily:9,bracken:12,curse:15};
+ const gates={camellia:3,bullets:3,boomerang:3,larch:6,vine:6,'bone-guard':6,flower:9,lily:9,bracken:12,curse:15};
  for(const level of [1,2,3,5,6,8,9,11,12,14,15]){
    p.level=level;const pool=G.Moves.poolFor(p.mon),cards=G.LevelUp.offer(p,100);
    for(const [key,gate] of Object.entries(gates)){
@@ -39,21 +39,21 @@ PROGRESSION = r"""() => {
    }out.gates.push({level,pool});
  }
  for(const key of ['willow',...Object.keys(gates)]){
-   const passive=['willow','bullets','larch','vine','curse'].includes(key),def=G.Moves.instance(A.id(key));
+   const passive=true,def=G.Moves.instance(A.id(key));
    A.assert(!!def.passive===passive,'passive flag '+key);out.flags.push({key,passive});
  }
- const stats={willow:[30,.9],camellia:[120,5],bullets:[45,2.4],larch:[96,6],vine:[48,8],flower:[192,8],lily:[100,6],bracken:[300,12]};
+ const stats={willow:[30,.9],camellia:[120,5],bullets:[45,2.4],boomerang:[64,1],larch:[96,6],vine:[48,8],flower:[192,8],lily:[100,6],bracken:[600,12]};
  for(const [key,[damage,cd]] of Object.entries(stats))for(let rank=1;rank<=5;rank++){
    const m=G.Moves.instance(A.id(key),rank);A.near(m.dmg,damage*[1,1.2,1.4,1.7,2][rank-1],'rank damage '+key);A.near(m.cd,cd,'fixed cooldown '+key);out.ranks.push({key,rank,dmg:m.dmg,cd:m.cd});
  }
  // Rebuild exactly the pre-conversion screenshot save: four formerly active skills.
  A.prepare(['willow','bullets','larch','vine','lily'],'lily');p.level=12;p.maxMoves=4;
- const passive=p.moves.filter(m=>['bullets','larch','vine'].some(k=>m.id===A.id(k))),lily=A.move('lily');
- passive.forEach(m=>m.passive=false);const retained=[lily];p.slots=[...passive.map(m=>[m]),retained];p.active=3;
+ const passive=p.moves.filter(m=>['bullets','larch','vine','lily'].some(k=>m.id===A.id(k)));
+ passive.forEach((m,i)=>{m.passive=false;m.lvl=2;m.t=2+i});const before=passive.map(m=>({m,lvl:m.lvl,t:m.t}));p.slots=passive.map(m=>[m]);p.active=3;
  p.bind=Object.fromEntries(p.slots.flatMap((g,i)=>g.map(m=>[m.id,i])));
  const cards=G.LevelUp.offer(p,3);p.arrange();
- A.assert(p.slots.length===1&&p.slots[0]===retained&&p.activeGroup()===retained,'migration lost selected group identity');
- A.assert(retained[0]===lily&&p.bind[lily.id]!==undefined,'retained active binding lost');
+ A.assert(p.slots.length===0&&p.activeGroup().length===0,'migration retained an active Kimimaro group');
+ A.assert(before.every(v=>p.moves.includes(v.m)&&v.m.lvl===v.lvl&&v.m.t===v.t),'migration reset move identity/rank/cooldown');
  A.assert(passive.every(m=>m.passive&&!Object.hasOwn(p.bind,m.id)),'passive binding retained');
  A.assert(p.moves.length===5&&new Set(p.moves.map(m=>m.id)).size===5,'migration duplicated learned techniques');
  const index=cards.findIndex(c=>c.key==='new:'+A.id('bracken'));
@@ -63,7 +63,7 @@ PROGRESSION = r"""() => {
 }"""
 
 PICK = r"""() => {const A=KAuto,p=A.p;
- A.assert(p.hasMove(A.id('bracken'))&&p.slots.length===2,'native pick did not learn Bracken without fusion');
+ A.assert(p.hasMove(A.id('bracken'))&&p.slots.length===0,'native pick did not learn slotless Bracken without fusion');
  A.assert(p.moves.length===6,'native pick learned unrelated skill');return {moves:p.moves.map(m=>m.id),slots:p.slots.map(g=>g.map(m=>m.id))};}"""
 
 AUTO = r"""() => {
@@ -84,7 +84,7 @@ AUTO = r"""() => {
    const count=Math.min(15,Math.floor(5*1.25**q));A.assert(hits.length===count,'auto quantity '+q);
    A.assert(e.maxHp-e.hp===count*A.expected(A.move('bullets'),.2,e),'quantity damage duplicated');out['quantity'+q]={count,hpLoss:e.maxHp-e.hp};
  }
- const guard=A.begin('larch',55);A.advance(.3);const before=p.hp;p.invuln=0;
+ const guard=A.begin('larch',55);A.assert(p.addMove(A.id('willow')),'Larch fixture retains starter Willow');A.move('willow').t=999;A.advance(.3);const before=p.hp;p.invuln=0;
  A.resume();try{p.hurt(20,null,false)}finally{A.pause()}
  const expectedGuard=20*(1-p.reduction)*.75*.8;A.near(before-p.hp,expectedGuard,'unselected learned Larch guard');out.guard={loss:before-p.hp,expected:expectedGuard};
  A.prepare(['willow','camellia'],'camellia');A.move('willow').t=0;const close=A.spawn(50,0),hits=A.watch(close);p.target=close;A.advance(.7,true);
@@ -95,13 +95,13 @@ AUTO = r"""() => {
 COMBO = r"""() => {
  const A=KAuto,p=A.p;A.prepare(['vine','flower'],'flower');const vine=A.move('vine'),flower=A.move('flower');vine.t=flower.t=0;
  const e=A.spawn(155,0),hits=A.watch(e);p.target=e;A.step(.001,true);
- A.assert(A.action()?.kind==='combo'&&!p.slots.some(g=>g.includes(vine)),'passive Vine plus selected Flower did not link');
+ A.assert(A.action()?.kind==='combo'&&!p.slots.length,'passive Vine plus learned Flower did not link');
  A.advance(.53);A.assert(!A.K.stateFor(p).castCounts.flower&&flower.t===0,'Flower cooldown charged early');
  A.advance(.02);A.assert(A.K.stateFor(p).castCounts.flower===1,'Flower did not start at .54');A.assert(Math.abs(flower.t-8)<.011,'independent Flower cooldown');
  A.advance(.9);A.assert(hits.length===2&&e.maxHp-e.hp===A.expected(vine,1,e)+A.expected(flower,1,e),'combo duplicated damage');
  const log=A.K.stateFor(p).castLog;A.assert(Math.abs(log[1].time-log[0].time-.54)<1e-7,'combo start timing');
- A.prepare(['camellia','flower','lily','bracken'],'camellia');for(const m of p.moves)m.t=0;p.target=A.spawn(55,0);A.advance(2,true);
- const counts=A.K.stateFor(p).castCounts;A.assert(counts.camellia===1&&!counts.flower&&!counts.lily&&!counts.bracken,'unselected active skill ghost cast');
+ A.prepare(['camellia','flower','lily','bracken']);for(const m of p.moves)m.t=0;p.target=A.spawn(55,0);A.advance(6,true);
+ const counts=A.K.stateFor(p).castCounts;A.assert(['camellia','flower','lily','bracken'].every(k=>counts[k]>=1),'learned technique did not cast without selection '+JSON.stringify(counts));
  A.prepare(['willow','bullets','larch','vine','camellia'],'camellia');for(const m of p.moves)m.t=0;p.target=A.spawn(55,0);A.advance(3,true);
  const fair=A.K.stateFor(p).castLog;A.assert(fair.some(c=>c.kind==='camellia')&&fair.some(c=>c.kind==='larch')&&fair.some(c=>c.kind==='willow'),'body scheduler starved ready technique');
  for(let i=1;i<fair.length;i++)A.assert(fair[i].time-fair[i-1].time>=.59,'overlapping independent body actions');
@@ -111,10 +111,6 @@ COMBO = r"""() => {
 # The real starter always learns Willow. Keep that defensive baseline while
 # reusing native clone ownership, cooldown, guard and curse regression checks.
 CLONES = native.CLONES.replace(
-    "move.t=999;",
-    "move.t=999;A.assert(p.addMove('naruto-kimimaro'),'clone starter Willow');p.moves.find(m=>m.id==='naruto-kimimaro').t=999;",
-    1,
-).replace(
     "const enemy=A.spawn(clone.x+32,clone.y)",
     "A.assert(!clone.slots.some(g=>g.some(m=>m.passive)),'clone copied passive into active slots');const enemy=A.spawn(clone.x+32,clone.y)",
     1,
@@ -123,8 +119,8 @@ CLONES = native.CLONES.replace(
 
 def hud_controls(page, frame, label, mobile):
     frame.evaluate(r"""() => {
-      const A=KAuto,p=A.p;A.prepare(['willow','bullets','larch','vine','curse','camellia','flower','lily','bracken'],'camellia');
-      A.assert(p.slots.length===4&&p.moves.filter(m=>m.passive).length===5,'fully learned slot counts');
+      const A=KAuto,p=A.p;A.prepare(['willow','bullets','larch','vine','curse','camellia','flower','lily','bracken','bone-guard','boomerang']);
+      A.assert(p.slots.length===0&&p.moves.filter(m=>m.passive).length===11,'fully learned slot counts');
       p.frozen=true;window.KHUDButtons=[];window.KHUDOriginal={add:G.Touch.addButton,clear:G.Touch.clearButtons};
       G.Touch.clearButtons=function(...args){KHUDButtons=[];return KHUDOriginal.clear.apply(this,args)};
       G.Touch.addButton=function(x,y,w,h,cb,...args){KHUDButtons.push({x,y,w,h});return KHUDOriginal.add.call(this,x,y,w,h,cb,...args)};
@@ -133,28 +129,26 @@ def hud_controls(page, frame, label, mobile):
     page.wait_for_timeout(150)
     geometry = frame.evaluate(r"""() => {
       const A=KAuto;let all;
-      if(G.Touch.active)all=G.Touch.controlLayout(innerWidth,innerHeight,9).slots;
-      else{const size=54,gap=9,start=(innerWidth-(9*size+8*gap))/2;all=Array.from({length:9},(_,i)=>({x:start+i*(size+gap),y:innerHeight-size-18,w:size,h:size}));}
-      A.assert(all.length===9&&all.every(b=>b.x>=0&&b.x+b.w<=innerWidth&&b.y>=0&&b.y+b.h<=innerHeight),'standard nine-skill row overflow');
+      if(G.Touch.active)all=G.Touch.controlLayout(innerWidth,innerHeight,11).slots;
+      else{const size=54,gap=9,start=(innerWidth-(11*size+10*gap))/2;all=Array.from({length:11},(_,i)=>({x:start+i*(size+gap),y:innerHeight-size-18,w:size,h:size}));}
+      A.assert(all.length===11&&all.every(b=>b.x>=0&&b.x+b.w<=innerWidth&&b.y>=0&&b.y+b.h<=innerHeight),'standard eleven-skill row overflow');
       A.assert(!KHUDButtons.some(b=>b.w===24&&b.h===24),'unexpected custom automatic badge panel');
-      return {passive:all.slice(4),slots:all.slice(0,4),all,active:G.Game.player.active,touch:G.Touch.active};
+      return {passive:all,slots:[],all,active:G.Game.player.active,touch:G.Touch.active};
     }""")
     offset = {'x': 0, 'y': 0}
     if frame != page.main_frame:
         box = page.locator('iframe').first.bounding_box()
         offset = {'x': box['x'], 'y': box['y']}
     click = page.touchscreen.tap if mobile else page.mouse.click
-    for index, slot in enumerate(geometry['slots']):
-        click(slot['x'] + slot['w']/2 + offset['x'], slot['y'] + slot['h']/2 + offset['y'])
-        frame.wait_for_function('(i)=>G.Game.player.active===i', arg=index)
     before = frame.evaluate('G.Game.player.active')
-    badge = geometry['passive'][0]
-    click(badge['x'] + badge['w']/2 + offset['x'], badge['y'] + badge['h']/2 + offset['y'])
-    assert frame.evaluate('G.Game.player.active') == before, 'passive badge changed selected active'
-    frame.locator('#ach-pop').wait_for(state='hidden', timeout=8000)
-    page.screenshot(path=str(OUT / f'{label}-all-nine-skills-hud.png'))
+    for slot in geometry['passive']:
+        click(slot['x'] + slot['w']/2 + offset['x'], slot['y'] + slot['h']/2 + offset['y'])
+        assert frame.evaluate('G.Game.player.active') == before, 'passive badge changed selected active'
+    # Several learned-skill achievements can queue 2.8-second native toasts.
+    frame.locator('#ach-pop').wait_for(state='hidden', timeout=20000)
+    page.screenshot(path=str(OUT / f'{label}-all-eleven-skills-hud.png'))
     frame.evaluate('G.Touch.addButton=KHUDOriginal.add;G.Touch.clearButtons=KHUDOriginal.clear;KAuto.p.frozen=false;KAuto.pause()')
-    return {'activeCount': 4, 'passiveCount': 5, 'clickedAllActiveSlots': True, 'passiveKeptSelection': True, 'geometry': geometry}
+    return {'activeCount': 0, 'passiveCount': 11, 'clickedAllPassiveSkills': True, 'passiveKeptSelection': True, 'geometry': geometry}
 
 
 def main():
@@ -186,7 +180,7 @@ def main():
                             frame.locator('#scr-levelup').wait_for(state='visible')
                             # Let the native modal transition finish before recording it.
                             page.wait_for_timeout(300)
-                            frame.locator('#ach-pop').wait_for(state='hidden', timeout=8000)
+                            frame.locator('#ach-pop').wait_for(state='hidden', timeout=20000)
                             page.screenshot(path=str(OUT / f'{label}-lv12-bracken-offer.png'))
                             frame.locator('#cards .card').nth(result[name]['index']).click()
                             result['nativePick'] = frame.evaluate(PICK)

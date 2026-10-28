@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   if (G.NarutoKimimaro) return;
-  const DEX = 30012, BASIC = 'naruto-kimimaro', CURSE = BASIC + '-curse';
+  const DEX = 30012, BASIC = 'naruto-kimimaro', CURSE = BASIC + '-curse', BONE_GUARD = BASIC + '-bone-guard', BOOMERANG = BASIC + '-boomerang';
   const C = G.Combat, TAU = Math.PI * 2, EPS = 1e-8;
   const states = new Map(), heldTargets = new Map(), cloneSpeedInstalled = new WeakSet();
   let nextCast = 1;
@@ -14,7 +14,7 @@
     vine: { duration: .70, damage: 48, range: [320,340,360,380,400] },
     flower: { duration: .86, damage: 192, range: [220,240,260,280,300], width: [42,46,50,54,58] },
     lily: { duration: .90, damage: 100, radius: [200,220,240,260,280] },
-    bracken: { duration: 1.48, damage: 300, radius: [320,360,400,440,480] },
+    bracken: { duration: 3.20, damage: 600, radius: [400,450,500,550,600], waves: [.48,.80,1.12,1.44,1.76,2.08] },
     curse: { duration: 1, damage: 0, range: [220,220,220,220,220] }
   };
   const finite = (n, fallback = 0) => Number.isFinite(n) ? n : fallback;
@@ -26,12 +26,12 @@
   const jumping = e => !!(e.jump || (e.jumpLift || 0) > .01);
   const ordinary = e => alive(e) && !special(e) && !e.flying && !jumping(e);
   const modeKind = m => String(m?.digiMode || '').replace(/^kimimaro-/, '');
-  const supports = mode => String(mode || '').startsWith('kimimaro-') && !!specs[String(mode).slice(9)];
+  const supports = mode => mode==='kimimaro-bone-guard'||mode==='kimimaro-boomerang'||String(mode || '').startsWith('kimimaro-') && !!specs[String(mode).slice(9)];
   const distance2 = (a,b) => (a.x-b.x)**2 + (a.y-b.y)**2;
   const group = owner => owner.activeGroup?.() || [];
   const signature = owner => group(owner).map(m => m.id).join('|');
   const learned = (owner,id) => owner.moves?.find(m => m.id === id);
-  const automatic = m => ['willow','bullets','larch','vine','curse'].includes(modeKind(m));
+  const automatic = m => !!specs[modeKind(m)];
   const rangeFor = (m,kind=modeKind(m)) => finite(m?.range, specs[kind]?.range?.[rank(m)-1] || 160);
   const radiusFor = (m,kind=modeKind(m)) => finite(m?.radius, specs[kind]?.radius?.[rank(m)-1] || rangeFor(m,kind));
   const halfWidth = (m,kind=modeKind(m)) => finite(m?.halfWidth, finite(m?.width, (specs[kind]?.width?.[rank(m)-1] || 24)*2)/2);
@@ -46,7 +46,9 @@
     if (!s) {
       s = {owner,world:G.World,clock:0,action:null,forest:null,bullets:[],impacts:[],
         readySince:new Map(),selection:signature(owner),exitUntil:0,guardUntil:0,guardMove:null,
-        curse:{startAt:-Infinity,readyAt:0},castCounts:{},castLog:[],emitted:0,totalDamage:0};
+        curse:{startAt:-Infinity,readyAt:0},boneGuard:{readyAt:0,wall:null,blocks:0,triggers:0},
+        boomerang:{projectile:null,readyAt:0,launches:0,catches:0,hits:0,pose:null,log:[]},
+        castCounts:{},castLog:[],emitted:0,totalDamage:0};
       states.set(owner,s);
       installCloneSpeed(owner);
     }
@@ -138,13 +140,14 @@
   }
   function syncSelection(s) {
     const next=signature(s.owner);
-    if (next!==s.selection) { cancel(s);s.selection=next;s.readySince.clear(); }
+    if (next!==s.selection) {s.selection=next;s.readySince.clear();}
     const f=s.action;
     if (f && !requirementsPresent(s.owner,f.requiredIds)) cancel(s);
     if (s.guardMove && !learned(s.owner,s.guardMove)) {s.guardUntil=0;s.guardMove=null;}
   }
   function canCast(owner,m) {
     if (!validOwner(owner) || owner.frozen || G.Game.state!=='playing' || !supports(m?.digiMode)) return false;
+    if (m.id===BONE_GUARD||m.id===BOOMERANG) return false;
     const s=state(owner),kind=modeKind(m);
     if (s.committingFlower && kind==='flower') return true;
     if (s.action || s.exitUntil>s.clock+EPS || !learned(owner,m.id)) return false;
@@ -157,14 +160,14 @@
       for(const gap of gaps)times.push(times.at(-1)+.48*gap/sum);return times;
     }
     return ({camellia:[.30,.43,.57],bullets:[.16,.23,.30,.37,.44],larch:[.30,.52],vine:[.42],flower:[.58],
-      lily:[.32,.62],bracken:[.48,.68,.90],combo:[.42,1.12],curse:[]})[kind]||[];
+      lily:[.32,.62],bracken:specs.bracken.waves,combo:[.42,1.12],curse:[]})[kind]||[];
   }
   function quantity(owner,m,base,cap) {
     return Math.min(cap,Math.max(base,G.Quantity?.countAtCast(owner,m,base) ?? base));
   }
   function comboAvailable(owner,vine,target) {
     const s=state(owner),flower=learned(owner,BASIC+'-flower');
-    if (!flower || !learned(owner,vine.id) || !movesAreSelected(owner,[flower.id]) || (flower.t||0)>EPS) return false;
+    if (!flower || !learned(owner,vine.id) || (flower.t||0)>EPS) return false;
     const pairSince=Math.min(s.readySince.get(vine)??s.clock,s.readySince.get(flower)??s.clock);
     const older=scheduledMoves(owner).some(m => m!==vine && m!==flower && (m.t||0)<=EPS &&
       (s.readySince.get(m)??s.clock)<pairSince-EPS && scheduledTarget(owner,m));
@@ -196,7 +199,8 @@
     if (combined) {f.flowerSource=learned(owner,BASIC+'-flower');f.requiredIds.push(f.flowerSource.id);}
     if (kind==='curse') {s.curse.startAt=s.clock;s.curse.readyAt=s.clock+30;source.t=30;}
     if (kind==='bracken') {
-      f.forest={owner,world:G.World,x:f.x,y:f.y,age:0,rank:f.rank,radius:radiusFor(m),castId:f.castId,hitTargets:new Set()};
+      f.forest={owner,world:G.World,x:f.x,y:f.y,age:0,rank:f.rank,radius:radiusFor(m),castId:f.castId,
+        waves:f.hitTimes,duration:f.duration,hitTargets:new Set()};
       s.forest=f.forest;
     }
     s.action=f;s.castCounts[kind]=(s.castCounts[kind]||0)+1;s.readySince.delete(source);
@@ -212,7 +216,7 @@
     if (!validState(s) || !alive(e) || !Number.isFinite(share) || share<=0) return 0;
     let seen=f.phaseHits.get(phase);if(!seen){seen=new Set();f.phaseHits.set(phase,seen);}
     if(seen.has(e))return 0;
-    const origin=f.kind==='bracken'?f.forest:f.baseKind==='bullets'?f:f.owner;
+    const origin=f.kind==='bracken'?f.forest:['bullets','boomerang'].includes(f.baseKind)?f:f.owner;
     if(!clearPath(origin.x,origin.y,e.x,e.y,e.destructible?e:null))return 0;
     seen.add(e);
     const base=finite(move.dmg,specs[f.baseKind]?.damage||30)*share*attack;
@@ -220,7 +224,8 @@
       G.World.damageProp(e,base*G.Weather.mult(move.type),'#ece9df');impact(s,f,e,base);return base;
     }
     const mult=G.Types.mult(move.type,e.types),crit=Math.random()<(f.owner.critChance||0);
-    const damage=base*mult*G.Weather.mult(move.type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(f.owner,e)||1);
+    let damage=base*mult*G.Weather.mult(move.type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(f.owner,e)||1);
+    if(f.kind==='bracken')damage=Math.max(damage,Math.ceil(Math.max(0,finite(e.maxHp))*finite(move.minMaxHpFraction,.30)));
     e.hurt(damage,'#eee9dc',e.x-origin.x,e.y-origin.y,0,crit?'crit':G.Types.label(mult),f.owner,move.id);
     f.owner.onDealt(damage);f.owner.dmgDealt+=damage;s.totalDamage+=damage;
     if(single)G.DamageSplash?.hit(f.owner,e,damage,'#eee9dc',move.id);
@@ -342,7 +347,7 @@
     }else if(f.kind==='bullets')emitBullets(s,f,index);
     else if(f.kind==='larch')circle(s,f,radiusFor(f.move),.5,index);
     else if(f.kind==='lily')circle(s,f,radiusFor(f.move),.5,index);
-    else if(f.kind==='bracken')circle(s,f,f.forest.radius*[1/3,2/3,1][index],1,0,true);
+    else if(f.kind==='bracken')circle(s,f,f.forest.radius*(index+1)/f.hitTimes.length,1,0,true);
     else if(f.kind==='vine'||(f.kind==='combo'&&index===0)){
       const target=f.target;
       if(alive(target)&&distance2(target,f.owner)<=rangeFor(f.move,'vine')**2&&clearPath(f.owner.x,f.owner.y,target.x,target.y)){
@@ -377,6 +382,155 @@
     }
     if(left>EPS)updateBullets(s,left);
   }
+  function boomerangHand(owner,aim=owner.aim||0) {
+    return G.KimimaroArt?.muzzleFor?.(owner,aim)||{x:owner.x+Math.cos(aim)*12,y:owner.y+Math.sin(aim)*12,height:31};
+  }
+  function boomerangState(owner=G.Game.player) {
+    const s=states.get(owner);if(!validState(s)||!learned(owner,BOOMERANG))return null;
+    const b=s.boomerang;
+    return {...b,cooldown:Math.max(0,b.readyAt-s.clock),hand:boomerangHand(owner,b.projectile?.aim??b.pose?.aim??owner.aim)};
+  }
+  function boomerangPoseFor(owner) {
+    const s=states.get(owner),pose=s?.boomerang.pose;
+    return validState(s)&&learned(owner,BOOMERANG)&&pose&&s.clock-pose.time<.12
+      ?{kind:'bullets',age:.20,aim:pose.aim}:null;
+  }
+  function launchBoomerang(s,time) {
+    const owner=s.owner,m=learned(owner,BOOMERANG),g=s.boomerang;
+    if(!m||g.projectile||time+EPS<g.readyAt)return false;
+    const target=nearby(owner,finite(m.range,320))[0];if(!target)return false;
+    const aim=Math.atan2(target.y-owner.y,target.x-owner.x),hand=boomerangHand(owner,aim);
+    if(!clearPath(owner.x,owner.y,hand.x,hand.y))return false;
+    const speed=finite(m.speed,650),castId=nextCast++;
+    g.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(aim)*speed,vy:Math.sin(aim)*speed,
+      aim,phase:'out',age:0,distance:0,range:finite(m.range,320),move:{...m},attack:owner.atk*damageBonus(owner),
+      kind:'boomerang',baseKind:'boomerang',castId,phaseHits:new Map(),trail:[]};
+    g.readyAt=time+Math.max(.05,m.cd*(owner.cdMul||1));
+    g.launches++;g.pose={time,aim};m.t=Math.max(0,g.readyAt-s.clock);
+    g.log.push({kind:'launch',time,castId,x:hand.x,y:hand.y});if(g.log.length>20)g.log.shift();
+    return true;
+  }
+  function updateBoomerang(s,dt) {
+    const g=s.boomerang,m=learned(s.owner,BOOMERANG);
+    if(!m){g.projectile=null;g.pose=null;return;}
+    let left=dt;
+    // Both the launch cooldown and the physical catch must finish before firing.
+    for(let steps=0;left>EPS&&steps<1024;steps++){
+      if(!g.projectile){
+        const wait=Math.max(0,g.readyAt-(s.clock-left));
+        if(wait>left+EPS)break;
+        left-=Math.min(left,wait);
+        if(!launchBoomerang(s,s.clock-left)||left<=EPS)break;
+      }
+      const b=g.projectile,hand=boomerangHand(s.owner,b.aim);
+      if(b.phase==='return'){
+        const distance=Math.hypot(hand.x-b.x,hand.y-b.y);
+        if(distance<=8){
+          g.catches++;g.log.push({kind:'catch',time:s.clock-left,castId:b.castId,x:hand.x,y:hand.y});
+          if(g.log.length>20)g.log.shift();g.projectile=null;g.pose={time:s.clock-left,aim:b.aim};
+          launchBoomerang(s,s.clock-left);continue;
+        }
+        const speed=finite(b.move.returnSpeed,900),travel=Math.min(4,speed*left,distance-8);
+        b.vx=(hand.x-b.x)/distance*speed;b.vy=(hand.y-b.y)/distance*speed;
+        b.x+=b.vx*travel/speed;b.y+=b.vy*travel/speed;b.age+=travel/speed;left-=travel/speed;
+      }else{
+        const speed=finite(b.move.speed,650),travel=Math.min(4,speed*left,b.range-b.distance);
+        if(travel<=EPS){b.phase='return';continue;}
+        b.x+=Math.cos(b.aim)*travel;b.y+=Math.sin(b.aim)*travel;
+        b.distance+=travel;b.age+=travel/speed;left-=travel/speed;
+        const wall=G.World.isWall(b.x,b.y),prop=wall?null:G.World.projectileBlock?.(b.x,b.y,7);
+        const victim=!wall&&!prop?G.EnemyMgr.queryCircle(b.x,b.y,48)
+          .filter(e=>alive(e)&&!e.friendly&&distance2(e,b)<=((e.r||8)+7)**2)
+          .sort((a,c)=>distance2(a,b)-distance2(c,b))[0]:null;
+        if(prop||victim){const damage=hit(s,b,prop||victim,1,0,true);if(victim&&damage>0)g.hits++;}
+        if(wall||prop||victim||b.distance>=b.range-EPS)b.phase='return';
+      }
+      b.trail.push({x:b.x,y:b.y});if(b.trail.length>4)b.trail.shift();
+      // An overdue catch can still relaunch at the end of the same frame.
+      if(b.phase==='return'&&Math.hypot(hand.x-b.x,hand.y-b.y)<=8+EPS){
+        g.catches++;g.log.push({kind:'catch',time:s.clock-left,castId:b.castId,x:hand.x,y:hand.y});
+        if(g.log.length>20)g.log.shift();g.projectile=null;g.pose={time:s.clock-left,aim:b.aim};
+        launchBoomerang(s,s.clock-left);
+      }
+    }
+    m.t=Math.max(0,g.readyAt-s.clock);
+  }
+  function boneGuardState(owner=G.Game.player) {
+    const s=states.get(owner);
+    if(!validState(s)||!learned(owner,BONE_GUARD))return null;
+    const g=s.boneGuard,w=g.wall;
+    return {active:!!w&&w.age<w.duration,cooldown:Math.max(0,g.readyAt-s.clock),
+      blocks:g.blocks,triggers:g.triggers,wall:w};
+  }
+  function guardBlockable(p) {
+    return p.friendly===false&&!p.unblockable&&!p.guardUnblockable&&!p.uninterceptable&&
+      !p.hazard&&!p.laser&&!p.beam&&!p.ground&&!p.orb&&
+      [p.x,p.y,p.vx,p.vy].every(Number.isFinite);
+  }
+  // Contact with a finite ground footprint, expanded by the projectile radius.
+  function wallContact(p,w,horizon) {
+    const ax=finite(p.px,p.x)-w.x,ay=finite(p.py,p.y)-w.y,r=Math.max(0,p.r||0);
+    const values=[[ax*w.nx+ay*w.ny,p.vx*w.nx+p.vy*w.ny,6+r],
+      [-ax*w.ny+ay*w.nx,-p.vx*w.ny+p.vy*w.nx,w.halfWidth+r]];
+    let enter=0,exit=horizon;
+    for(const [position,velocity,size] of values){
+      if(Math.abs(velocity)<EPS){if(Math.abs(position)>size)return null;continue;}
+      const first=(-size-position)/velocity,last=(size-position)/velocity;
+      enter=Math.max(enter,Math.min(first,last));exit=Math.min(exit,Math.max(first,last));
+      if(enter>exit)return null;
+    }
+    return enter;
+  }
+  function guardThreat(p,owner,dt) {
+    const ax=finite(p.px,p.x),ay=finite(p.py,p.y),dx=ax-owner.x,dy=ay-owner.y;
+    const speed2=p.vx*p.vx+p.vy*p.vy,r=(owner.r||12)+Math.max(0,p.r||0);
+    const approach=dx*p.vx+dy*p.vy,c=dx*dx+dy*dy-r*r;
+    if(speed2<EPS||approach>=0||c<=0)return null;
+    const disc=approach*approach-speed2*c;if(disc<0)return null;
+    const impact=(-approach-Math.sqrt(disc))/speed2;
+    if(impact>dt+.22||impact>finite(p.life,Infinity)-finite(p.t)+dt)return null;
+    const speed=Math.sqrt(speed2),nx=-p.vx/speed,ny=-p.vy/speed;
+    const distance=Math.min(40,Math.max((owner.r||12)+6,Math.sqrt(dx*dx+dy*dy)-(p.r||0)-4));
+    return {x:owner.x+nx*distance,y:owner.y+ny*distance,nx,ny,halfWidth:42,age:0,duration:.65};
+  }
+  function interceptBones(dt,owner) {
+    if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
+    const actors=[owner,...(G.SelfClones?.actors?.()||[]).filter(a=>a.sourceOwner===owner)];
+    const guards=[];
+    for(const actor of actors){
+      if(!validOwner(actor)||actor.frozen||!learned(actor,BONE_GUARD))continue;
+      const s=state(actor);guards.push(s);
+    }
+    if(!guards.length)return;
+    // Evaluate complete swept motion before native player and clone collisions.
+    for(const p of [...G.Projectiles.all()]){
+      if(!guardBlockable(p))continue;
+      let first=null;
+      for(const s of guards){
+        const g=s.boneGuard;
+        const existing=g.wall&&g.wall.age<g.wall.duration?g.wall:null;
+        // A rear shot must not be erased after crossing the owner first.
+        if(existing&&p.vx*existing.nx+p.vy*existing.ny>=0)continue;
+        const wall=existing||(s.clock+EPS>=g.readyAt?guardThreat(p,s.owner,dt):null);
+        if(!wall)continue;
+        const horizon=existing?Math.min(dt,wall.duration-wall.age):dt+.22;
+        const contact=wallContact(p,wall,horizon);
+        if(contact!==null&&(!first||contact<first.contact))first={s,wall,contact,existing};
+      }
+      if(!first)continue;
+      const {s,wall,contact,existing}=first,g=s.boneGuard;
+      if(!existing){
+        g.wall=wall;wall.born=s.clock;
+        g.readyAt=s.clock+[5,4.5,4,3.5,3][rank(learned(s.owner,BONE_GUARD))-1];
+        g.triggers++;learned(s.owner,BONE_GUARD).t=g.readyAt-s.clock;
+      }
+      if(contact<=dt+EPS){
+        G.Projectiles.remove(p);g.blocks++;
+        wall.flash=.16;wall.impactX=finite(p.px,p.x)+p.vx*contact;
+        wall.impactY=finite(p.py,p.y)+p.vy*contact;
+      }
+    }
+  }
   function update(dt) {
     for(const [owner,s] of states)if(!validState(s)){clear(owner);}
     if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
@@ -384,6 +538,13 @@
       syncSelection(s);
       if(s.owner.frozen)continue;
       s.clock+=dt;
+      updateBoomerang(s,dt);
+      const guard=learned(s.owner,BONE_GUARD),g=s.boneGuard;
+      if(guard){
+        guard.t=Math.max(0,g.readyAt-s.clock);
+        if(g.wall){g.wall.age=s.clock-g.wall.born;g.wall.flash=Math.max(0,(g.wall.flash||0)-dt);
+          if(g.wall.age>=g.wall.duration)g.wall=null;}
+      }else g.wall=null;
       for(const mark of s.impacts)mark.age=Math.max(0,s.clock-mark.time);
       s.impacts=s.impacts.filter(mark=>mark.age<.45);
       const curse=learned(s.owner,CURSE);if(curse)curse.t=Math.max(0,s.curse.readyAt-s.clock);
@@ -391,8 +552,8 @@
     }
   }
   function scheduledMoves(owner) {
-    // Active groups retain their normal selection rules; learned support
-    // techniques join the same body-action queue without consuming a slot.
+    // Every learned Kimimaro technique joins the same fair body-action queue.
+    // Curse and the reactive bone wall keep their independent trigger rules.
     return [...new Set([...group(owner).filter(m=>!m.passive&&!automatic(m)),
       ...(owner.moves||[]).filter(m=>automatic(m)&&modeKind(m)!=='curse')])];
   }
@@ -407,11 +568,11 @@
       return list.find(e=>distance2(owner,e)>melee*melee)||null;
     }
     const flower=learned(owner,BASIC+'-flower');
-    const selectedFlower=flower&&movesAreSelected(owner,[flower.id]);
-    // Reserve Vine briefly for a selected Flower without idling the body:
+    const learnedFlower=!!flower;
+    // Reserve Vine briefly for a learned Flower without idling the body:
     // Willow, threatened Larch and other ready techniques remain eligible.
-    if(selectedFlower&&(flower.t||0)>EPS&&(flower.t||0)<=.54+EPS)return null;
-    const linked=selectedFlower&&(flower.t||0)<=EPS;
+    if(learnedFlower&&(flower.t||0)>EPS&&(flower.t||0)<=.54+EPS)return null;
+    const linked=learnedFlower&&(flower.t||0)<=EPS;
     return list.find(e=>{
       if(ordinary(e))return distance2(owner,e)>melee*melee || linked;
       return linked&&inLine(owner,e,Math.atan2(e.y-owner.y,e.x-owner.x),rangeFor(flower),halfWidth(flower));
@@ -480,6 +641,8 @@
     s.form=formFor(s.owner);return s;
   });}
   const previousTick=C.tick,previousUpdate=C.updateFields,previousClear=C.clearFields;
+  const previousResolve=C.resolve;
+  C.resolve=function(dt,owner,now){interceptBones(dt,owner);return previousResolve.call(this,dt,owner,now);};
   C.tick=tick;
   C.updateFields=function(dt){const result=previousUpdate.call(this,dt);update(dt);return result;};
   C.clearFields=function(owner){const result=previousClear.call(this,owner);clear(owner);return result;};
@@ -521,7 +684,7 @@
   if(speed?.get)Object.defineProperty(G.Player.prototype,'spd',{...speed,get(){
     return speed.get.call(this)*(validOwner(this)?speedMultiplier(this):1);
   }});
-  G.NarutoKimimaro={dex:DEX,supports,handles:supports,canCast,cast,update,clear,activeFor,formFor,curseState,movementLocked,held,
+  G.NarutoKimimaro={dex:DEX,supports,handles:supports,canCast,cast,update,clear,activeFor,formFor,curseState,boneGuardState,boomerangState,boomerangPoseFor,movementLocked,held,
     hurtClone:(owner,amount,type,pure,context,baseHurt)=>baseHurt(incomingAmount(owner,amount,pure),type,pure,context),
     stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return validState(s)?s:null;},renderStates,speedMultiplier,
     get bullets(){return renderStates().flatMap(s=>s.bullets);},get effects(){return renderStates().map(s=>s.action).filter(Boolean);}};

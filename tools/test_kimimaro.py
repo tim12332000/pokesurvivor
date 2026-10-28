@@ -119,7 +119,10 @@ SETUP = r"""() => {
    ctx.translate(330,370);G.Combat.drawGroundFields(ctx);p().draw(ctx);G.Combat.drawAirFields(ctx);
    return {sources,png:c.toDataURL()}}
  function summarize(){const a=action();return a?{kind:a.kind,age:a.age,phase:a.phase,aim:a.aim,castId:a.castId}:null}
- function expected(m,share=1,e={types:['normal']}){return Math.max(1,Math.round(m.dmg*share*p().atk*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type)))}
+ function expected(m,share=1,e={types:['normal']}){
+   const normal=m.dmg*share*p().atk*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
+   return Math.max(1,Math.round(Math.max(normal,Math.ceil((e.maxHp||0)*(m.minMaxHpFraction||0)))));
+ }
  window.KAcceptance={p,K,assert,near,pause,resume,reset,spawn,watch,fixture,cast,step,advance,pose,fields,action,summarize,expected,nativeWorld};pause();
 }"""
 
@@ -127,7 +130,7 @@ PROGRESSION = r"""() => {
  const A=KAcceptance,p=A.p(),out={levels:[],ranks:[],learn:[]};
  A.assert(p.dex===30012&&p.moves.length===1&&p.moves[0].id==='naruto-kimimaro','fresh starter contains unexpected skills');
  A.assert(p.moves[0].passive&&p.slots.length===0,'willow must start without an active slot');
- const gates={camellia:3,bullets:3,larch:6,vine:6,flower:9,lily:9,bracken:12,curse:15};
+ const gates={camellia:3,bullets:3,larch:6,vine:6,'bone-guard':6,flower:9,lily:9,bracken:12,curse:15};
  for(const level of [1,2,3,5,6,8,9,11,12,14,15]){
    p.level=level;const pool=G.Moves.poolFor(p.mon),cards=G.LevelUp.offer(p,100);
    for(const [key,unlock] of Object.entries(gates)){const id='naruto-kimimaro-'+key,eligible=level>=unlock;
@@ -138,7 +141,7 @@ PROGRESSION = r"""() => {
  const stats=[['naruto-kimimaro',[30,36,42,51,60],.9],['camellia',[120,144,168,204,240],5],
   ['bullets',[45,54,63,76.5,90],2.4],['larch',[96,115.2,134.4,163.2,192],6],
   ['vine',[48,57.6,67.2,81.6,96],8],['flower',[192,230.4,268.8,326.4,384],8],
-  ['lily',[100,120,140,170,200],6],['bracken',[300,360,420,510,600],12]];
+  ['lily',[100,120,140,170,200],6],['bracken',[600,720,840,1020,1200],12]];
  for(const [key,damage,cd] of stats){const id=key==='naruto-kimimaro'?key:'naruto-kimimaro-'+key;
    for(let rank=1;rank<=5;rank++){const move=G.Moves.instance(id,rank);A.near(move.dmg,damage[rank-1],'five-rank damage '+id+' '+rank);A.near(move.cd,cd,'fixed CD '+id);out.ranks.push({id,rank,dmg:move.dmg,cd:move.cd})}}
  const mon=p.mon;for(const dex of [30001,30007,30011,20001]){
@@ -148,16 +151,16 @@ PROGRESSION = r"""() => {
    A.reset();p.level=unlock;p.moves=[G.Moves.instance('naruto-kimimaro')];p.slots=[];p.active=0;p.bind={};p.maxMoves=5;p.arrange();
    const id='naruto-kimimaro-'+key,card=G.LevelUp.offer(p,100).find(c=>c.key==='new:'+id);
    A.assert(card&&card.apply(p)!==false,'native learn card '+id);
-   const slotless=['bullets','larch','vine','curse'].includes(key);
-   A.assert(p.hasMove(id)&&p.slots.length===(slotless?0:1),'slot cost '+id);out.learn.push({id,slots:p.slots.length});
+   A.assert(p.hasMove(id)&&p.moves.find(m=>m.id===id).passive&&p.slots.length===0,'slot cost '+id);out.learn.push({id,slots:p.slots.length});
  }
- // Existing full-slot common-tool replacement preserves group object/binding.
+ // Learning a passive leaves an existing full common-tool slot untouched.
  A.reset();p.level=30;p.moves=[G.Moves.instance('naruto-kimimaro')];p.slots=[];p.bind={};p.maxMoves=1;p.arrange();
  A.assert(p.addMove('naruto-kunai'),'replacement fixture common tool');const old=p.moves.find(m=>m.id==='naruto-kunai'),group=p.slots[0];p.bind[old.id]=0;
  const card=G.LevelUp.offer(p,100).find(c=>c.key==='new:naruto-kimimaro-camellia');
- A.assert(card&&card.apply(p)!==false,'full common-tool replacement unavailable');
- A.assert(p.slots[0]===group&&group.includes(old)&&old.id==='naruto-kimimaro-camellia'&&p.bind[old.id]===0,'replacement broke group reference or binding');
- p.maxMoves=5;out.replacement=true;return out;
+ A.assert(card&&card.apply(p)!==false,'slotless learning unavailable with full common-tool slots');
+ A.assert(p.slots[0]===group&&group.includes(old)&&old.id==='naruto-kunai'&&p.bind[old.id]===0,'learning changed common-tool group or binding');
+ A.assert(p.hasMove('naruto-kimimaro-camellia')&&!p.slots.flat().some(m=>m.id==='naruto-kimimaro-camellia'),'learned Camellia consumed a slot');
+ p.maxMoves=5;out.fullSlotLearning=true;return out;
 }"""
 
 COMBAT = r"""() => {
@@ -270,8 +273,11 @@ LIFECYCLE = r"""() => {
  A.reset();A.fixture('naruto-kimimaro-flower');p.target=A.spawn(80,0);A.cast('naruto-kimimaro-flower');A.advance(.20);
  const action=A.action(),age=action.age;G.Combat.updateFields(.5);A.near(action.age,age,'pause advanced body action');out.pause=true;
  A.reset();A.fixture('naruto-kimimaro-bracken');const e=A.spawn(110,0);p.target=e;A.cast('naruto-kimimaro-bracken');A.advance(.20);
- p.level=30;p.addMove('naruto-kimimaro-lily');const slot=p.slots.findIndex(g=>g.some(m=>m.id==='naruto-kimimaro-lily'));p.setActive(slot);
- A.advance(1.4);A.assert(e.hp===e.maxHp,'switch left future bone waves');out.switch=true;
+ p.level=30;p.addMove('naruto-kimimaro-lily');A.advance(.65);
+ A.assert(e.hp<e.maxHp&&A.action()?.kind==='bracken','learning another passive cancelled the existing forest');out.learnDuringCast=true;
+ A.reset();A.fixture('naruto-kimimaro-bracken');const cancelled=A.spawn(110,0);p.target=cancelled;A.cast('naruto-kimimaro-bracken');A.advance(.20);
+ p.moves=p.moves.filter(m=>m.id!=='naruto-kimimaro-bracken');p.arrange();
+ A.advance(1.4);A.assert(cancelled.hp===cancelled.maxHp&&!A.action(),'unlearned skill left future bone waves');out.unlearn=true;
  return out;
 }"""
 
@@ -302,10 +308,10 @@ COMBO = r"""() => {
  const A=KAcceptance,p=A.p(),K=A.K,ids=['naruto-kimimaro-vine','naruto-kimimaro-flower'];
  function prepare(){A.reset();A.fixture(ids[0]);A.assert(p.addMove(ids[1]),'learn linked flower');const vine=p.moves.find(m=>m.id===ids[0]),flower=p.moves.find(m=>m.id===ids[1]);
    A.assert(vine.passive&&!p.slots.some(g=>g.includes(vine)),'Vine must remain slotless');
-   p.setActive(p.slots.findIndex(g=>g.includes(flower)));vine.t=flower.t=0;
+   A.assert(flower.passive&&!p.slots.length,'Flower must remain slotless');vine.t=flower.t=0;
    const e=A.spawn(155,0),hits=A.watch(e);p.target=e;p.aim=0;A.advance(.11);return {vine,flower,e,hits}}
  let f=prepare();A.resume();try{G.Combat.tick(.001,p,0)}finally{A.pause()}
- A.assert(K.activeFor(p)?.kind==='combo','passive Vine and selected Flower did not link');
+ A.assert(K.activeFor(p)?.kind==='combo','learned passive Vine and Flower did not link');
  A.advance(.53);A.assert((K.stateFor(p).castCounts.flower||0)===0&&f.flower.t===0,'flower charged before actual start');
  A.advance(.02);A.assert(K.stateFor(p).castCounts.flower===1,'flower did not start at .54');
  A.near(f.flower.t,8,'independent flower cooldown');A.advance(.90);
@@ -318,9 +324,9 @@ COMBO = r"""() => {
  const log=K.stateFor(p).castLog,starts=log.filter(x=>x.kind==='vine');
  A.assert(starts.length===2,'linked pair did not recur exactly once '+JSON.stringify(log));
  A.assert(Math.abs((starts[1].time-starts[0].time)-8.54)<=.02+1e-8,'independent CD or short-wait interval '+JSON.stringify(starts));
- // Waiting active techniques all get a turn; a zero-CD basic cannot starve them.
+ // Waiting learned techniques all get a turn without a selected or fused group.
  A.reset();A.fixture('naruto-kimimaro-camellia');for(const id of ['naruto-kimimaro-larch','naruto-kimimaro-lily'])A.assert(p.addMove(id),'learn fair fixture');
- const moves=p.moves.filter(m=>!m.passive);p.fuse(moves);p.setActive(0);for(const m of moves)m.t=0;
+ A.assert(!p.slots.length,'fair fixture unexpectedly requires active slots');for(const m of p.moves)m.t=0;
  p.target=A.spawn(45,0);A.advance(3,true);const counts=K.stateFor(p).castCounts;
  for(const key of ['camellia','larch','lily'])A.assert(counts[key]>=1,'group skill starved '+key+' '+JSON.stringify(counts));
  return {firstLog,starts,damage:expected,fairCounts:counts};
@@ -434,10 +440,9 @@ def input_art(page, frame, context, label, mobile):
     frame.evaluate('KAcceptance.reset();KAcceptance.p().hp=1;KAcceptance.resume();KAcceptance.p().hurt(100,null,true);KAcceptance.p().anim.update(.5);KAcceptance.pause()')
     result['poses']['death']=save_pose(f'{label}-death',frame.evaluate('KAcceptance.pose()'))
     assert result['poses']['hurt']['calls'] != result['poses']['death']['calls'], 'hurt and death reuse the same frame'
-    frame.evaluate("KAcceptance.reset();KAcceptance.fixture('naruto-kimimaro-camellia');KAcceptance.p().addMove('naruto-kimimaro-lily');KAcceptance.p().setActive(0);KAcceptance.resume()")
+    frame.evaluate("KAcceptance.reset();KAcceptance.fixture('naruto-kimimaro-camellia');KAcceptance.p().addMove('naruto-kimimaro-lily');KAcceptance.resume()")
     page.keyboard.press('Digit2')
-    frame.wait_for_function('G.Game.player.active===1',polling=20)
-    result['keyboardSwitch']=frame.evaluate('KAcceptance.pause();G.Game.player.activeGroup().map(m=>m.id)')
+    result['keyboardNoSelection']=frame.evaluate("(()=>{KAcceptance.pause();const p=KAcceptance.p();KAcceptance.assert(!p.slots.length&&p.activeGroup().length===0,'keyboard created an active passive slot');return p.moves.map(m=>m.id)})()")
     if mobile:
         frame.evaluate("KAcceptance.reset();KAcceptance.fixture('naruto-kimimaro');KAcceptance.resume()")
         client=context.new_cdp_session(page)
@@ -450,11 +455,10 @@ def input_art(page, frame, context, label, mobile):
         client.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':point['x']+42,'y':point['y']}]})
         result['touch']=frame.evaluate("""()=>{const A=KAcceptance,p=A.p(),x=p.x;A.assert(G.Touch.vector()[0]>0,'touch vector missing');p.update(.08);A.pause();A.assert(p.x>x,'touch did not move');return p.x-x}""")
         client.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]})
-        frame.evaluate("KAcceptance.fixture('naruto-kimimaro-camellia');KAcceptance.p().addMove('naruto-kimimaro-lily');KAcceptance.p().setActive(0);KAcceptance.resume()")
+        frame.evaluate("KAcceptance.fixture('naruto-kimimaro-camellia');KAcceptance.p().addMove('naruto-kimimaro-lily');KAcceptance.resume()")
         slot=frame.evaluate("(()=>{const p=G.Game.player,n=p.slots.length+p.moves.filter(m=>m.passive&&!p.slots.some(g=>g.includes(m))).length;return G.Touch.controlLayout(innerWidth,innerHeight,n).slots[1]})()")
         page.touchscreen.tap(slot['x']+slot['w']/2+offset['x'],slot['y']+slot['h']/2+offset['y'])
-        frame.wait_for_function('G.Game.player.active===1',polling=20)
-        result['touchSwitch']=frame.evaluate('KAcceptance.pause();G.Game.player.activeGroup().map(m=>m.id)')
+        result['touchNoSelection']=frame.evaluate("(()=>{KAcceptance.pause();const p=KAcceptance.p();KAcceptance.assert(!p.slots.length&&p.activeGroup().length===0,'touch selected a passive');return p.moves.map(m=>m.id)})()")
     return result
 
 

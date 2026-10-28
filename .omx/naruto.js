@@ -115,7 +115,7 @@
       if(this.dex===30012){
         if(!record.ready){void record.loaded;return;}
         const actor=G.Game.player?.anim===this?G.Game.player:[...(G.SelfClones?.actors?.()||[]),...(G.Coop?.puppets?.()||[])].find(a=>a.anim===this);
-        const pose=actor?G.NarutoKimimaro?.activeFor?.(actor):null;
+        const pose=actor?(G.NarutoKimimaro?.activeFor?.(actor)||G.NarutoKimimaro?.boomerangPoseFor?.(actor)):null;
         const dead=actor?.dead||this.cur==='Faint',hurt=actor?.flash>0||this.cur==='Hurt';
         const state=dead?'death':hurt?'hurt':pose?.kind||pose?.state||(this.cur==='Walk'?'move':'idle');
         const time=dead?(this.frame*9+this.t)/60:hurt?(this.cur==='Hurt'?(this.frame*6+this.t)/60:Math.max(0,.14-(actor?.flash||0))):pose?.age??(this.frame*(this.cur==='Idle'?12:this.cur==='Walk'?7:6)+this.t)/60;

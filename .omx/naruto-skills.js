@@ -578,6 +578,14 @@
     }]
   );
   const kimimaroDesigns=[
+    ['boomerang','屍骨脈・骨回力鏢',3,'fighting',1,[64,76.8,89.6,108.8,128],{
+      icon:'kimimaroBoomerang',passive:true,radius:320,range:320,count:1,speed:650,returnSpeed:900,castDuration:0,
+      ups:kimimaroUps([64,76.8,89.6,108.8,128],[320,350,380,410,440],[320,350,380,410,440]),
+      desc:'學會後自動投擲，不占主動欄。每人一枚骨回力鏢，以650速度直線射出，首碰敵人造成一次完整傷害後立即以900速度直線朝目前手的位置回收。每次發射起算基礎冷卻1秒，並且要真正接回才能再射；回得早就在手中等冷卻，回得晚則接回即射，冷卻加成沿用原規則。打空達射程或碰牆／物件也回收；回程不再傷害、不繞圈，可邊走位、邊施放其他招式。不吃數量，不複製未回收的鏢。本作改編。'}],
+    ['bone-guard','屍骨脈・白骨壁',6,'ground',5,[0,0,0,0,0],{
+      icon:'kimimaroBoneGuard',passive:true,radius:180,range:180,count:1,castDuration:0,
+      ups:[4.5,4,3.5,3].map((cd,i)=>({t:`自動防禦冷卻 ${cd} 秒`,m:{cd:cd/[5,4.5,4,3.5][i]}})),
+      desc:'常駐防禦被動，不占主動欄、不打斷施術。可攔截敵彈即將命中時，身前約40距離的來襲方向自動長出白骨壁，持續0.65秒，擋下撞上骨壁的敵彈。固定冷卻5／4.5／4／3.5／3秒，不受冷卻卡與數量影響；不擋背向繞過骨壁的彈、近戰、地面攻擊、光束或標記為不可攔截的攻擊。本作改編。'}],
     ['camellia','椿之舞',3,'fighting',5,[120,144,168,204,240],{
       icon:'kimimaroCamellia',radius:220,range:220,width:80,halfWidth:40,count:4,castDuration:.74,
       ups:kimimaroUps([120,144,168,204,240],[220,240,260,280,300],[220,240,260,280,300],[80,88,96,104,112]),
@@ -603,10 +611,10 @@
       ups:kimimaroUps([100,120,140,170,200],[200,220,240,260,280],[200,220,240,260,280]),
       desc:'手持骨鞭周身正反兩圈掃掠，各半傷，可正常走位。半徑200／220／240／260／280，無內圈死角、無減傷、吸附或推退；每圈每敵只命中一次。不吃數量，冷卻6秒。普通態可用為本作改編。',
       source_url:'https://wap.gamersky.com/sygl/Content-712909.html'}],
-    ['bracken','早蕨之舞',12,'ground',12,[300,360,420,510,600],{
-      icon:'kimimaroBracken',radius:320,range:320,count:1,castDuration:1.48,
-      ups:kimimaroUps([300,360,420,510,600],[320,360,400,440,480],[320,360,400,440,480]),
-      desc:'原地按地後可走開，大片亂骨林三波擴張，每名敵人整次最多受傷一次。半徑320／360／400／440／480，骨柱最多72組；首領可受傷但免控，真正跳躍或懸浮小怪避開地面骨。不是持續傷或障礙，不吃數量，冷卻12秒。'}],
+    ['bracken','早蕨之舞',12,'ground',12,[600,720,840,1020,1200],{
+      icon:'kimimaroBracken',radius:400,range:400,count:1,castDuration:3.20,minMaxHpFraction:.30,
+      ups:kimimaroUps([600,720,840,1020,1200],[400,450,500,550,600],[400,450,500,550,600]),
+      desc:'原地按地後可走開，大片亂骨林由近到遠六波擴張，約2.6秒鋪滿、3.2秒退場。基礎傷害600／720／840／1020／1200；每名敵人取正常結算傷害與自身最大生命30%中較高者，整次最多受傷一次，首領同樣適用。護盾仍依原規則吸收。半徑400／450／500／550／600，骨柱最多72組；首領免控，真正跳躍或懸浮小怪避開地面骨。不吃數量，冷卻12秒。'}],
     ['curse','地之咒印',15,'fighting',30,[0,0,0,0,0],{
       icon:'kimimaroCurse',passive:true,radius:220,range:220,count:1,castDuration:1,fieldDuration:8,
       damageBonus:.10,speedBonus:.10,
@@ -616,12 +624,13 @@
   for(const [key,name,learnLevel,type,cd,damage,fields] of kimimaroDesigns){
     extra.push([`naruto-kimimaro-${key}`,[30012],{
       name,mode:`kimimaro-${key}`,learnLevel,type,cd,dmg:damage[0],
-      source_url:kimimaroSource,...fields
+      source_url:kimimaroSource,...fields,passive:true,
+      desc:fields.passive?fields.desc:'學會後自動使用，不需切換、不占主動欄。'+fields.desc
     }]);
   }
   Object.assign(kinds,{'kimimaro-willow':'melee','kimimaro-camellia':'melee','kimimaro-bullets':'projectile',
     'kimimaro-larch':'melee','kimimaro-vine':'melee','kimimaro-flower':'melee','kimimaro-lily':'melee',
-    'kimimaro-bracken':'aura','kimimaro-curse':'buff'});
+    'kimimaro-bracken':'aura','kimimaro-curse':'buff','kimimaro-bone-guard':'buff','kimimaro-boomerang':'projectile'});
   Object.assign(kinds,{'temari-wind':'cone','temari-mastery':'buff','temari-great-scythe':'cone','temari-blade-dance':'dash','temari-typhoon':'meteor','temari-reflect':'buff'});
   kinds['lee-pursuit']='melee';
   Object.assign(kinds,{'pain-basic':'projectile','pain-gravity':'aura','pain-missiles':'projectile','pain-summon':'dash','pain-soul':'melee','pain-absorb':'buff','pain-repair':'buff','pain-planet':'meteor'});

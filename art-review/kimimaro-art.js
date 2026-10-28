@@ -44,12 +44,13 @@
     const key=poseKey(state,time,dir),sheet=metadata.sheets[form],frame=sheet.frames[key]||sheet.frames.idle;
     return {...frame,sheet:form,key,state,direction:direction(dir),source:sheet.source,bodyHeight:sheet.bodyHeight};
   }
-  function whiteFrame(frame) {
-    const key=frame.sheet+'/'+frame.key;
+  function tintedFrame(frame,color='#fff9e9') {
+    const key=frame.sheet+'/'+frame.key+'/'+color;
     if(frameWhites.has(key))return frameWhites.get(key);
     const [x,y,w,h]=frame.rect,canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
     const c=canvas.getContext('2d');c.drawImage(images[frame.sheet],x,y,w,h,0,0,w,h);
-    c.globalCompositeOperation='source-in';c.fillStyle='#fff9e9';c.fillRect(0,0,w,h);
+    c.globalCompositeOperation='source-in';c.fillStyle=color;c.fillRect(0,0,w,h);
+    canvas.dataset.source=images[frame.sheet].src+'#tint='+encodeURIComponent(color);
     frameWhites.set(key,canvas);
     // Flash caches remain bounded even after every skill has been used.
     if(frameWhites.size>8)frameWhites.delete(frameWhites.keys().next().value);
@@ -61,8 +62,9 @@
     const facing=options.facing??(frame.direction==='left'?-1:1);
     ctx.save();ctx.translate(options.x??0,options.y??0);ctx.scale(facing===-1||facing==='left'?-k:k,k);
     ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=options.alpha??1;
-    ctx.drawImage(image,x,y,w,h,-frame.anchor[0],-frame.anchor[1],w,h);
-    if(options.flash){ctx.globalAlpha*=.55;ctx.drawImage(whiteFrame(frame),-frame.anchor[0],-frame.anchor[1]);}
+    if(options.silhouette)ctx.drawImage(tintedFrame(frame,'#08070d'),-frame.anchor[0],-frame.anchor[1]);
+    else ctx.drawImage(image,x,y,w,h,-frame.anchor[0],-frame.anchor[1],w,h);
+    if(options.flash){ctx.globalAlpha*=.55;ctx.drawImage(tintedFrame(frame),-frame.anchor[0],-frame.anchor[1]);}
     ctx.restore();return true;
   }
   function draw(ctx,owner={},options) {
@@ -70,6 +72,19 @@
     if(!api.loaded){void load().catch(()=>{});return false;}
     let state=normalize(options.state||'idle'),time=options.time??0;
     const form=options.form||G.NarutoKimimaro?.formFor?.(owner)||'normal';
+    if(state==='curse'&&time>=0&&time<1){
+      const rise=ease(time/.55),fade=ease(time/.14)*(1-ease((time-.68)/.32));
+      const facing=options.facing??(direction(options.dir)==='left'?-1:1);
+      const back=facing===-1||facing==='left'?1:-1;
+      const shadow=sample('larch',time,options.dir,'curse'),height=options.height??64;
+      // Two bounded silhouette draws share the existing pose and tint cache.
+      for(const [scale,alpha,offset] of [[1.80,.22,15],[1.48,.78,8]]){
+        paint(ctx,shadow,{...options,silhouette:true,flash:false,
+          x:(options.x??0)+back*offset*height/64*rise,
+          y:(options.y??0)-height*.18*rise,
+          height:height*lerp(1,scale,rise),alpha:(options.alpha??1)*alpha*fade});
+      }
+    }
     if(state==='bracken'&&time>=.30){
       state=owner.walking?'move':'idle';time=G.NarutoKimimaro?.stateFor?.(owner)?.clock??time;
     }
@@ -123,19 +138,24 @@
   function columns(forest) {
     if(forests.has(forest))return forests.get(forest);
     const random=rand((Number(forest.castId)||1)*571+Math.round(forest.x*13+forest.y*7)),points=[];
-    const clumps=[[-.47,-.30,.26],[.24,-.52,.25],[.53,.05,.30],[-.25,.49,.31],[.22,.43,.25],[-.60,.18,.24]];
+    const clumps=[[-.47,-.30,.26],[.24,-.52,.25],[.53,.05,.30],[-.25,.49,.31],[.22,.43,.25],[-.60,.18,.24],
+      [.05,.04,.18],[-.24,-.75,.17],[.70,.38,.18]];
     for(let attempt=0;points.length<72&&attempt<3000;attempt++){
       const cluster=clumps[Math.floor(random()*clumps.length)],clustered=random()<.73;
       const a=random()*TAU,r=Math.sqrt(random())*(clustered?cluster[2]:.97);
       const nx=(clustered?cluster[0]:0)+Math.cos(a)*r,ny=(clustered?cluster[1]:0)+Math.sin(a)*r,d=Math.hypot(nx,ny);
       if(d>.97||d<.09||points.some(p=>Math.hypot(p.nx-nx,p.ny-ny)<.048))continue;
-      points.push({nx,ny,wave:Math.min(2,Math.floor(d*3)),seed:random(),lean:(random()-.5)*.58});
+      points.push({nx,ny,wave:Math.min(forest.waves.length-1,Math.floor(d*forest.waves.length)),seed:random(),lean:(random()-.5)*.90});
     }
-    const majors=new Set(points.map((p,i)=>({i,seed:p.seed})).sort((a,b)=>b.seed-a.seed).slice(0,12).map(p=>p.i));
+    const tiers=new Map(points.map((p,i)=>({i,seed:p.seed})).sort((a,b)=>b.seed-a.seed)
+      .map((p,i)=>[p.i,i<6?0:i<18?1:i<36?2:3]));
     const fieldScale=Math.min(1.55,Math.sqrt((forest.radius||320)/180));
-    const result=points.map((p,i)=>({...p,variant:1+(i%4)+(majors.has(i)?0:4),
-      h:(majors.has(i)?100+p.seed*48:25+p.seed*47)*fieldScale,
-      w:(majors.has(i)?14+p.seed*8:10+p.seed*9)*fieldScale}));
+    const result=points.map((p,i)=>{
+      const tier=tiers.get(i),height=[[200,280],[105,180],[55,95],[15,43]][tier];
+      return {...p,variant:1+(i%4)+(tier<2?0:4),
+        h:lerp(...height,random())*fieldScale,
+        w:([20,16,12,8][tier]+random()*7)*fieldScale};
+    });
     forests.set(forest,result);return result;
   }
   function liveStates(states){return (states||G.NarutoKimimaro?.renderStates?.()||[]).filter(s=>s?.owner&&!s.owner.dead&&s.owner.hp>0&&s.world===G.World);}
@@ -149,8 +169,8 @@
     for(const state of forestStates){
       const f=state.forest,R=f.radius||180,age=f.age??state.action?.age??0;
       const points=columns(f);for(let n=0;n<Math.min(points.length,allowance);n++){
-        const p=points[Math.floor(n*points.length/allowance)],start=[.48,.68,.90][p.wave]+(p.seed-.5)*.055;
-        const grow=ease((age-start+.025)/.145)*(1-ease((age-1.19)/.30));
+        const p=points[Math.floor(n*points.length/allowance)],start=f.waves[p.wave]+p.seed*.16;
+        const grow=ease((age-start)/(.24+p.seed*.16))*(1-ease((age-(f.duration-.38))/.38));
         if(grow<=.005)continue;
         selected.push({...p,x:f.x+p.nx*R,y:f.y+p.ny*R,height:p.h*grow,age,start,grow,owner:state.owner,forest:f});
         if(age-start>=0&&age-start<.28&&particles.length<20){
@@ -182,6 +202,7 @@
   function drawGround(ctx,states) {
     if(!api.loaded)return;
     const p=plan(states);
+    drawBoneGuards(ctx,p.states,false);
     for(const col of p.columns){
       const age=col.age-col.start;
       if(age<.50){
@@ -243,11 +264,43 @@
       }whip(ctx,points);
     }
   }
+  function drawBoneGuards(ctx,states,front) {
+    let count=0;
+    for(const state of states){
+      const wall=state.boneGuard?.wall;if(!wall||wall.age>=wall.duration)continue;
+      const rise=ease(wall.age/.10),fade=1-ease((wall.age-.46)/.19),owner=state.owner;
+      for(let i=0;i<5&&count<20;i++,count++){
+        const lane=(i-2)*18,x=wall.x-wall.ny*lane,y=wall.y+wall.nx*lane;
+        if((y>=owner.y)!==front)continue;
+        ctx.save();ctx.globalAlpha*=fade;
+        if(!front){polygon(ctx,[[x-12,y],[x-4,y-5],[x+14,y+1],[x+3,y+6]],'#665335','#394329');}
+        pillar(ctx,{x,y,owner,variant:1+i%4,w:12+i%2*3,
+          height:[65,88,108,82,61][i]*rise,lean:(i-2)*.10});
+        if(wall.flash>0&&i===2){
+          ctx.globalAlpha*=wall.flash/.16;ctx.strokeStyle='#fff8da';ctx.lineWidth=2;
+          const ix=wall.impactX,iy=wall.impactY-(G.LIFT||20);
+          for(let j=0;j<5;j++){const a=j*TAU/5;ctx.beginPath();ctx.moveTo(ix+Math.cos(a)*5,iy+Math.sin(a)*5);
+            ctx.lineTo(ix+Math.cos(a)*15,iy+Math.sin(a)*15);ctx.stroke();}
+        }
+        ctx.restore();
+      }
+    }
+  }
   function drawAir(ctx,states) {
     if(!api.loaded)return;
     const p=plan(states);
+    drawBoneGuards(ctx,p.states,true);
     for(const state of p.states){
       drawAction(ctx,state);
+      const returningBone=state.boomerang?.projectile;
+      if(returningBone){
+        const b=returningBone;
+        ctx.save();ctx.strokeStyle=b.phase==='return'?'#c4b3d8':'#e5dbc5';ctx.lineWidth=2;ctx.globalAlpha*=.35;
+        ctx.beginPath();b.trail.forEach((point,i)=>i?ctx.lineTo(point.x,point.y-31):ctx.moveTo(point.x,point.y-31));ctx.stroke();ctx.restore();
+        ctx.save();ctx.translate(b.x,b.y-31);ctx.rotate(b.age*24);
+        bone(ctx,0,4,-18,-8,6);bone(ctx,0,4,18,-8,6);
+        ctx.fillStyle='#f4efdf';ctx.strokeStyle='#34384b';ctx.beginPath();ctx.ellipse(0,4,4,3,0,0,TAU);ctx.fill();ctx.stroke();ctx.restore();
+      }
       for(const b of state.bullets||[]){
         const aim=b.aim??Math.atan2(b.vy,b.vx),height=lerp(31,18,clamp((b.distance||0)/100));
         ctx.save();ctx.translate(b.x,b.y-height);ctx.rotate(aim);
@@ -262,6 +315,8 @@
   }
   const pal={w:'#f4efdf',s:'#a09bb0',p:'#80628f',g:'#78a58b'};
   const rows={
+    kimimaroBoomerang:['..w......w..','.ww......ww.','.wsw....wsw.','..wsw..wsw..','...wswwsw...','....wwww....','.....ss.....','............','..pp....pp..','.p........p.','..p......p..','...pppppp...'],
+    kimimaroBoneGuard:['..w..w..w...','..w.ww..w...','.ww.ww.ww...','.wwwww.ww...','wwwwwwwww...','wsswwsswww..','sssssssssss.','............','...ppppp....','..p.....p...','............','............'],
     kimimaroWillow:['.........ww.','........ww..','.......ww...','......ws....','.....ws.....','....ws......','...ws.......','..ws........','.pw.........','pp..........','p...........','............'],
     kimimaroCamellia:['..........w.','.........ww.','........ws..','.......ws...','......ws....','.....ws.....','....ws......','...ws.......','..ppp.......','...p........','..p.........','.p..........'],
     kimimaroBullets:['....w.......','......w.....','........w...','..........w.','............','..w.........','..ww........','.pww........','pppp........','.pp.........','............','............'],

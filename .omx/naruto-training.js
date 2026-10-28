@@ -4,7 +4,9 @@
   const gaaraPassives=new Set([sandShieldId,sandGuardId,'naruto-sand-armor']);
   const painMove=move=>move.id==='naruto-pain'||move.id.startsWith('naruto-pain-');
   const temariPassives=new Set(['naruto-temari','naruto-temari-three-stars','naruto-temari-blade-dance','naruto-temari-reflect']);
-  const kimimaroPassives=new Set(['naruto-kimimaro','naruto-kimimaro-bullets','naruto-kimimaro-larch','naruto-kimimaro-vine','naruto-kimimaro-curse']);
+  const kimimaroPassives=new Set(['naruto-kimimaro','naruto-kimimaro-bullets','naruto-kimimaro-larch','naruto-kimimaro-vine',
+    'naruto-kimimaro-curse','naruto-kimimaro-bone-guard','naruto-kimimaro-camellia','naruto-kimimaro-flower',
+    'naruto-kimimaro-lily','naruto-kimimaro-bracken','naruto-kimimaro-boomerang']);
   function migrateKimimaroPassives(player) {
     if(player.mon?.dex!==30012)return;
     for(const move of player.moves)if(kimimaroPassives.has(move.id)){
