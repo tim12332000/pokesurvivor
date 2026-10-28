@@ -297,11 +297,8 @@
         ctx.save();ctx.strokeStyle=b.phase==='return'?'#c4b3d8':'#e5dbc5';ctx.lineWidth=2;ctx.globalAlpha*=.35;
         ctx.beginPath();b.trail.forEach((point,i)=>i?ctx.lineTo(point.x,point.y-31):ctx.moveTo(point.x,point.y-31));ctx.stroke();ctx.restore();
         ctx.save();ctx.translate(b.x,b.y-31);ctx.rotate(b.age*24);
-        ctx.fillStyle='#f4efdf';ctx.strokeStyle='#34384b';ctx.lineWidth=1.2;ctx.beginPath();
-        ctx.moveTo(-21,-3);ctx.bezierCurveTo(-27,-9,-32,-5,-28,0);ctx.bezierCurveTo(-32,5,-27,9,-21,3);
-        ctx.lineTo(21,3);ctx.bezierCurveTo(27,9,32,5,28,0);ctx.bezierCurveTo(32,-5,27,-9,21,-3);
-        ctx.closePath();ctx.fill();ctx.stroke();
-        ctx.strokeStyle='#a7a1b5';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(-19,2);ctx.lineTo(19,2);ctx.stroke();ctx.restore();
+        bone(ctx,0,4,-18,-8,6);bone(ctx,0,4,18,-8,6);
+        ctx.fillStyle='#f4efdf';ctx.strokeStyle='#34384b';ctx.beginPath();ctx.ellipse(0,4,4,3,0,0,TAU);ctx.fill();ctx.stroke();ctx.restore();
       }
       for(const b of state.bullets||[]){
         const aim=b.aim??Math.atan2(b.vy,b.vx),height=lerp(31,18,clamp((b.distance||0)/100));
@@ -317,7 +314,7 @@
   }
   const pal={w:'#f4efdf',s:'#a09bb0',p:'#80628f',g:'#78a58b'};
   const rows={
-    kimimaroBoomerang:['.........ww.','........www.','........ws..','.......ws...','......ws....','.....ws.....','....ws......','...ws.......','..ws........','.www........','.www........','..w.........'],
+    kimimaroBoomerang:['..w......w..','.ww......ww.','.wsw....wsw.','..wsw..wsw..','...wswwsw...','....wwww....','.....ss.....','............','..pp....pp..','.p........p.','..p......p..','...pppppp...'],
     kimimaroBoneGuard:['..w..w..w...','..w.ww..w...','.ww.ww.ww...','.wwwww.ww...','wwwwwwwww...','wsswwsswww..','sssssssssss.','............','...ppppp....','..p.....p...','............','............'],
     kimimaroWillow:['.........ww.','........ww..','.......ww...','......ws....','.....ws.....','....ws......','...ws.......','..ws........','.pw.........','pp..........','p...........','............'],
     kimimaroCamellia:['..........w.','.........ww.','........ws..','.......ws...','......ws....','.....ws.....','....ws......','...ws.......','..ppp.......','...p........','..p.........','.p..........'],
