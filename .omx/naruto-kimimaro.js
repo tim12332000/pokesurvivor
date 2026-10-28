@@ -570,7 +570,7 @@
       const {s,wall,contact,existing}=first,g=s.boneGuard;
       if(!existing){
         g.wall=wall;wall.born=s.clock;
-        g.readyAt=s.clock+[5,4.5,4,3.5,3][rank(learned(s.owner,BONE_GUARD))-1];
+        g.readyAt=s.clock+[2.5,2.25,2,1.75,1.5][rank(learned(s.owner,BONE_GUARD))-1];
         g.triggers++;learned(s.owner,BONE_GUARD).t=g.readyAt-s.clock;
       }
       if(contact<=dt+EPS){

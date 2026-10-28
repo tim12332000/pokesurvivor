@@ -29,7 +29,7 @@ PROGRESSION = r"""() => {
  A.assert(p().addMove(id),'cannot learn bone guard at Lv6');
  A.assert(p().moves.find(m=>m.id===id).passive&&p().slots.length===0,'bone guard consumed active slot');
  const cooldowns=[];for(let rank=1;rank<=5;rank++){
-   const m=G.Moves.instance(id,rank);A.near(m.cd,[5,4.5,4,3.5,3][rank-1],'rank cooldown '+rank);cooldowns.push(m.cd);
+   const m=G.Moves.instance(id,rank);A.near(m.cd,[2.5,2.25,2,1.75,1.5][rank-1],'rank cooldown '+rank);cooldowns.push(m.cd);
  }
  return {learnLevel:6,slotless:true,cooldowns};
 }"""
@@ -101,9 +101,14 @@ FIXED_COOLDOWN = r"""() => {
    B.prepare(rank);p().cdMul=.1;p().quantityPicks=12;
    B.shot(60,0,-600,0);A.step(.1);
    const state=B.state();A.assert(state?.triggers===1&&state.blocks===1,'rank guard did not activate '+rank);
-   const cd=[5,4.5,4,3.5,3][rank-1];
+   const cd=[2.5,2.25,2,1.75,1.5][rank-1];
    A.assert(state.cooldown>=cd-.100001&&state.cooldown<=cd,'guard cooldown changed with cooldown/quantity attributes '+rank);
-   out.push({rank,cooldown:state.cooldown,triggers:state.triggers,blocks:state.blocks});
+   A.advance(state.cooldown-.02);
+   const early=B.shot(60,0,-600,0);A.step(.01);
+   A.assert(B.exists(early)&&B.state().triggers===1,'guard rearmed before its cooldown '+rank);G.Projectiles.remove(early);
+   A.advance(.02);const hp=p().hp,ready=B.shot(60,0,-600,0);A.step(.1);
+   A.assert(!B.exists(ready)&&p().hp===hp&&B.state().triggers===2&&B.state().blocks===2,'guard failed to rearm at halved cooldown '+rank);
+   out.push({rank,cooldown:state.cooldown,triggers:B.state().triggers,blocks:B.state().blocks,rearmed:true});
  }
  p().cdMul=1;p().quantityPicks=0;return out;
 }"""
