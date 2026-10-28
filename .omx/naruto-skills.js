@@ -579,8 +579,8 @@
   );
   const kimimaroDesigns=[
     ['boomerang','屍骨脈・骨回力鏢',3,'fighting',1,[64,76.8,89.6,108.8,128],{
-      icon:'kimimaroBoomerang',passive:true,radius:320,range:320,count:1,speed:650,returnSpeed:900,castDuration:0,
-      ups:kimimaroUps([64,76.8,89.6,108.8,128],[320,350,380,410,440],[320,350,380,410,440]),
+      icon:'kimimaroBoomerang',passive:true,radius:600,range:600,count:1,speed:650,returnSpeed:900,castDuration:0,
+      ups:kimimaroUps([64,76.8,89.6,108.8,128],[600,650,700,750,800],[600,650,700,750,800]),
       desc:'學會後自動投擲，不占主動欄。每人一枚骨回力鏢，以650速度直線射出，首碰敵人造成一次完整傷害後立即以900速度直線朝目前手的位置回收。每次發射起算基礎冷卻1秒，並且要真正接回才能再射；回得早就在手中等冷卻，回得晚則接回即射，冷卻加成沿用原規則。打空達射程或碰牆／物件也回收；回程不再傷害、不繞圈，可邊走位、邊施放其他招式。不吃數量，不複製未回收的鏢。本作改編。'}],
     ['bone-guard','屍骨脈・白骨壁',6,'ground',5,[0,0,0,0,0],{
       icon:'kimimaroBoneGuard',passive:true,radius:180,range:180,count:1,castDuration:0,

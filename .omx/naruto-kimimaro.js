@@ -398,12 +398,12 @@
   function launchBoomerang(s,time) {
     const owner=s.owner,m=learned(owner,BOOMERANG),g=s.boomerang;
     if(!m||g.projectile||time+EPS<g.readyAt)return false;
-    const target=nearby(owner,finite(m.range,320))[0];if(!target)return false;
+    const target=nearby(owner,finite(m.range,600))[0];if(!target)return false;
     const aim=Math.atan2(target.y-owner.y,target.x-owner.x),hand=boomerangHand(owner,aim);
     if(!clearPath(owner.x,owner.y,hand.x,hand.y))return false;
     const speed=finite(m.speed,650),castId=nextCast++;
     g.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(aim)*speed,vy:Math.sin(aim)*speed,
-      aim,phase:'out',age:0,distance:0,range:finite(m.range,320),move:{...m},attack:owner.atk*damageBonus(owner),
+      aim,phase:'out',age:0,distance:0,range:finite(m.range,600),move:{...m},attack:owner.atk*damageBonus(owner),
       kind:'boomerang',baseKind:'boomerang',castId,phaseHits:new Map(),trail:[]};
     g.readyAt=time+Math.max(.05,m.cd*(owner.cdMul||1));
     g.launches++;g.pose={time,aim};m.t=Math.max(0,g.readyAt-s.clock);

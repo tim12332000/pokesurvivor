@@ -41,7 +41,7 @@ PROGRESSION = r"""() => {
  const ranks=[];for(let rank=1;rank<=5;rank++){
    const m=G.Moves.instance(A.id,rank);A.assert(m.passive&&m.cd===1,'throw is not slotless with a one-second base cooldown rank '+rank);
    A.near(m.dmg,[64,76.8,89.6,108.8,128][rank-1],'full-hit base rank '+rank);
-   A.near(m.range,[320,350,380,410,440][rank-1],'throw range rank '+rank);
+   A.near(m.range,[600,650,700,750,800][rank-1],'throw range rank '+rank);
    ranks.push({rank,damage:m.dmg,range:m.range,cd:m.cd,passive:m.passive});
  }
  A.prepare();A.step(.001,true);A.advance(1,true);
@@ -126,7 +126,13 @@ COOLDOWN_MODIFIERS = r"""() => {
 }"""
 
 LATE_CATCH = r"""() => {
- const A=KBoom,p=A.p,{e,hits}=A.start(100);A.until(()=>hits.length>0);e.dead=true;
+ const A=KBoom,p=A.p;
+ A.start(560);A.until(()=>A.state().catches===1);
+ const natural=A.state().log,naturalCatch=natural.findIndex(v=>v.kind==='catch');
+ A.assert(natural[naturalCatch].time-natural[0].time>1,'extended stationary flight did not exceed cooldown');
+ A.assert(natural[naturalCatch+1]?.kind==='launch','long-range catch failed to relaunch');
+ A.near(natural[naturalCatch+1].time,natural[naturalCatch].time,'long-range catch restarted cooldown');
+ const {e,hits}=A.start(100);A.until(()=>hits.length>0);e.dead=true;
  const flight=A.state().projectile.castId;p.x+=1400;const target=A.spawn(p.x+200,p.y);p.target=target;
  let expiredWhileFlying=false,steps=0;
  while(A.state().catches===0&&steps++<300){
@@ -142,7 +148,7 @@ LATE_CATCH = r"""() => {
  A.assert(catchIndex>=0&&log[catchIndex+1]?.kind==='launch','late catch omitted same-update relaunch event');
  A.near(log[catchIndex+1].time,log[catchIndex].time,'late catch added an unnecessary cooldown');
  A.assert(log[catchIndex].time-log[0].time>1,'late-catch fixture did not exceed base cooldown');
- return {steps,expiredWhileFlying,log};
+ return {naturalLongRange:natural,steps,expiredWhileFlying,log};
 }"""
 
 RANGE_AND_OBSTACLES = r"""() => {
