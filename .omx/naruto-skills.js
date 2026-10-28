@@ -616,11 +616,11 @@
       icon:'kimimaroBracken',radius:400,range:400,count:1,castDuration:3.20,minMaxHpFraction:.30,
       ups:kimimaroUps([600,720,840,1020,1200],[400,450,500,550,600],[400,450,500,550,600]),
       desc:'原地按地後可走開，大片亂骨林由近到遠六波擴張，約2.6秒鋪滿、3.2秒退場。基礎傷害600／720／840／1020／1200；每名敵人取正常結算傷害與自身最大生命30%中較高者，整次最多受傷一次，首領同樣適用。護盾仍依原規則吸收。半徑400／450／500／550／600，骨柱最多72組；首領免控，真正跳躍或懸浮小怪避開地面骨。不吃數量，冷卻12秒。'}],
-    ['curse','地之咒印',15,'fighting',30,[0,0,0,0,0],{
-      icon:'kimimaroCurse',passive:true,radius:220,range:220,count:1,castDuration:1,fieldDuration:8,
+    ['curse','地之咒印',15,'fighting',0,[0,0,0,0,0],{
+      icon:'kimimaroCurse',passive:true,radius:220,range:220,count:1,castDuration:1,fieldDuration:0,permanent:true,
       damageBonus:.10,speedBonus:.10,
       ups:kimimaroRanks.slice(1).map((_,index)=>({t:`咒印二期間傷害 +${[12.5,15,17.5,20][index]}%`,m:{damageBonus:[.125,.15,.175,.20][index]}})),
-      desc:'常駐被動，不占主動槽。30秒周期就緒且220內有敵人時，於動作空檔自動轉形1秒，咒印二持續8秒。期間傷害+10／12.5／15／17.5／20%、移速+10%。不付血、不無敵、不重置招式冷卻，30秒周期不吃冷卻卡。'}]
+      desc:'常駐進化被動，不占主動槽。學會後220內有敵人時，於動作空檔自動變身1秒；完成後本局常駐咒印二，不會隨時間退回或反覆變身，進出場地與清除戰鬥特效也不退化。持續傷害+10／12.5／15／17.5／20%、移速+10%，升階即更新傷害加成。不付血、不無敵、不重置其他招式冷卻，加成不重複堆疊。死亡期間不生效，離場與新局仍正常清理。'}]
   ];
   for(const [key,name,learnLevel,type,cd,damage,fields] of kimimaroDesigns){
     extra.push([`naruto-kimimaro-${key}`,[30012],{

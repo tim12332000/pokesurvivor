@@ -399,7 +399,7 @@ G.HUD = (() => {
       }
       if (pl.mon?.dex === 30012 && m.id === 'naruto-kimimaro-curse') {
         const curse = G.NarutoKimimaro?.curseState?.(pl);
-        const label = curse?.transforming ? '變身中' : curse?.active ? '咒印 ' + curse.remaining.toFixed(1) + 's' : curse?.cooldown > 0 ? curse.cooldown.toFixed(1) + 's' : '就緒';
+        const label = curse?.transforming ? '變身中' : curse?.active ? '咒印二・常駐' : '就緒';
         ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
         ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#e7dbf2';
         ctx.fillText(label, x + S / 2, y + S - 17, S - 8);

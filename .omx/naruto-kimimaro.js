@@ -5,6 +5,7 @@
   const DEX = 30012, BASIC = 'naruto-kimimaro', CURSE = BASIC + '-curse', BONE_GUARD = BASIC + '-bone-guard', BOOMERANG = BASIC + '-boomerang';
   const C = G.Combat, TAU = Math.PI * 2, EPS = 1e-8;
   const states = new Map(), heldTargets = new Map(), cloneSpeedInstalled = new WeakSet();
+  let evolutions = new WeakMap();
   let nextCast = 1;
   const specs = {
     willow: { duration: .64, damage: 30, range: [110,120,130,140,150] },
@@ -46,7 +47,7 @@
     if (!s) {
       s = {owner,world:G.World,clock:0,action:null,forest:null,bullets:[],impacts:[],
         readySince:new Map(),selection:signature(owner),exitUntil:0,guardUntil:0,guardMove:null,
-        curse:{startAt:-Infinity,readyAt:0},boneGuard:{readyAt:0,wall:null,blocks:0,triggers:0},
+        curse:{startAt:hasEvolution(owner)?-1:-Infinity,readyAt:0},boneGuard:{readyAt:0,wall:null,blocks:0,triggers:0},
         boomerang:{lanes:[],count:1,launches:0,catches:0,hits:0,pose:null,log:[]},
         castCounts:{},castLog:[],emitted:0,totalDamage:0};
       states.set(owner,s);
@@ -99,13 +100,27 @@
     return list;
   }
   function targetFor(owner,m) { return candidates(owner,m)[0] || null; }
+  function hasEvolution(owner) {
+    const evolution=owner&&evolutions.get(owner);
+    const valid=!!evolution&&!terminal()&&validOwner(owner)&&!!learned(owner,CURSE)&&
+      evolution.world===G.World&&evolution.run===G.Game.st;
+    if(evolution&&!valid)evolutions.delete(owner);
+    return valid;
+  }
+  function resetEvolution(owner) {
+    if(owner)evolutions.delete(owner);else evolutions=new WeakMap();
+    for(const s of states.values())if(!owner||s.owner===owner){
+      s.curse={startAt:-Infinity,readyAt:0};
+      if(s.action?.kind==='curse')cancel(s,false);
+    }
+  }
   function curseState(owner=G.Game.player) {
-    const s=states.get(owner),m=learned(owner,CURSE);
-    if (!m || !validState(s)) return {active:false,transforming:false,remaining:0,cooldown:0,bonus:0};
-    const elapsed=s.clock-s.curse.startAt,active=elapsed>=1-EPS && elapsed<9-EPS;
-    return {active,transforming:elapsed>=0 && elapsed<1-EPS,remaining:active?Math.max(0,9-elapsed):0,
-      cooldown:Math.max(0,s.curse.readyAt-s.clock),bonus:active?[.10,.125,.15,.175,.20][rank(m)-1]:0,
-      startAt:s.curse.startAt,readyAt:s.curse.readyAt};
+    const s=states.get(owner),m=learned(owner,CURSE),evolved=hasEvolution(owner);
+    if (!m || (!validState(s)&&!evolved)) return {active:false,permanent:false,transforming:false,remaining:0,cooldown:0,bonus:0};
+    const started=Number.isFinite(s?.curse.startAt),elapsed=s?s.clock-s.curse.startAt:1,active=evolved||(started&&elapsed>=1-EPS);
+    return {active,permanent:active,transforming:started&&elapsed>=0&&elapsed<1-EPS,remaining:0,
+      cooldown:0,bonus:active?[.10,.125,.15,.175,.20][rank(m)-1]:0,
+      startAt:s?.curse.startAt??-1,readyAt:0};
   }
   const damageBonus = owner => 1+curseState(owner).bonus;
   const speedMultiplier = owner => curseState(owner).active?1.1:1;
@@ -151,7 +166,7 @@
     const s=state(owner),kind=modeKind(m);
     if (s.committingFlower && kind==='flower') return true;
     if (s.action || s.exitUntil>s.clock+EPS || !learned(owner,m.id)) return false;
-    if (kind==='curse') return learned(owner,CURSE) && s.clock+EPS>=s.curse.readyAt && nearby(owner,220).length>0;
+    if (kind==='curse') return learned(owner,CURSE) && !Number.isFinite(s.curse.startAt) && nearby(owner,220).length>0;
     return !!(s.scheduledMove?.id===m.id?s.scheduledTarget:targetFor(owner,m));
   }
   function hitTimes(kind,count=4) {
@@ -197,7 +212,7 @@
       hitIndex:0,hitMarks:[],phaseHits:new Map(),attack:owner.atk*damageBonus(owner),requiredIds:[source.id],
       emitted:0,flowerStarted:false,clockStart:s.clock};
     if (combined) {f.flowerSource=learned(owner,BASIC+'-flower');f.requiredIds.push(f.flowerSource.id);}
-    if (kind==='curse') {s.curse.startAt=s.clock;s.curse.readyAt=s.clock+30;source.t=30;}
+    if (kind==='curse') {s.curse.startAt=s.clock;s.curse.readyAt=0;source.t=0;}
     if (kind==='bracken') {
       f.forest={owner,world:G.World,x:f.x,y:f.y,age:0,rank:f.rank,radius:radiusFor(m),castId:f.castId,
         waves:f.hitTimes,duration:f.duration,hitTargets:new Set()};
@@ -566,7 +581,7 @@
     }
   }
   function update(dt) {
-    for(const [owner,s] of states)if(!validState(s)){clear(owner);}
+    for(const [owner,s] of states)if(!validState(s)){evolutions.delete(owner);clear(owner);}
     if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
     for(const s of states.values()){
       syncSelection(s);
@@ -581,7 +596,12 @@
       }else g.wall=null;
       for(const mark of s.impacts)mark.age=Math.max(0,s.clock-mark.time);
       s.impacts=s.impacts.filter(mark=>mark.age<.45);
-      const curse=learned(s.owner,CURSE);if(curse)curse.t=Math.max(0,s.curse.readyAt-s.clock);
+      const curse=learned(s.owner,CURSE);
+      if(curse){
+        curse.t=0;
+        if(Number.isFinite(s.curse.startAt)&&s.clock-s.curse.startAt>=1-EPS&&!hasEvolution(s.owner))
+          evolutions.set(s.owner,{world:G.World,run:G.Game.st});
+      }
       if(s.action)advanceAction(s,dt);else updateBullets(s,dt);
     }
   }
@@ -639,7 +659,7 @@
     if(s.action||s.exitUntil>s.clock+EPS)return;
     const curse=learned(owner,CURSE);
     if(curse&&canCast(owner,curse)){
-      if(G.DigimonSkills.cast(owner,curse)){owner.cast(curse);curse.t=30;curse.castAt=performance.now();}return;
+      if(G.DigimonSkills.cast(owner,curse)){owner.cast(curse);curse.t=0;curse.castAt=performance.now();}return;
     }
     const ready=selected.filter(m=>(m.t||0)<=EPS&&s.readySince.has(m)).sort((a,b)=>
       s.readySince.get(a)-s.readySince.get(b)||selected.indexOf(a)-selected.indexOf(b));
@@ -667,8 +687,8 @@
     else {for(const s of states.values())cancel(s,false);states.clear();heldTargets.clear();}
   }
   function activeFor(owner=G.Game.player){const s=states.get(owner);return validState(s)?s.action:null;}
-  function formFor(owner=G.Game.player){const s=states.get(owner);if(!validState(s))return 'normal';
-    const elapsed=s.clock-s.curse.startAt;return elapsed>=.75&&elapsed<9?'curse':'normal';}
+  function formFor(owner=G.Game.player){if(hasEvolution(owner))return 'curse';const s=states.get(owner);if(!validState(s))return 'normal';
+    const elapsed=s.clock-s.curse.startAt;return Number.isFinite(s.curse.startAt)&&elapsed>=.75?'curse':'normal';}
   function renderStates(){
     if(terminal()){clear();return [];}
     return [...states.values()].filter(validState).map(s=>{
@@ -718,7 +738,7 @@
   if(speed?.get)Object.defineProperty(G.Player.prototype,'spd',{...speed,get(){
     return speed.get.call(this)*(validOwner(this)?speedMultiplier(this):1);
   }});
-  G.NarutoKimimaro={dex:DEX,supports,handles:supports,canCast,cast,update,clear,activeFor,formFor,curseState,boneGuardState,boomerangState,boomerangPoseFor,movementLocked,held,
+  G.NarutoKimimaro={dex:DEX,supports,handles:supports,canCast,cast,update,clear,resetEvolution,activeFor,formFor,curseState,boneGuardState,boomerangState,boomerangPoseFor,movementLocked,held,
     hurtClone:(owner,amount,type,pure,context,baseHurt)=>baseHurt(incomingAmount(owner,amount,pure),type,pure,context),
     stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return validState(s)?s:null;},renderStates,speedMultiplier,
     get bullets(){return renderStates().flatMap(s=>s.bullets);},get effects(){return renderStates().map(s=>s.action).filter(Boolean);}};

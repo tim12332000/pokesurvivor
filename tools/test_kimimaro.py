@@ -65,6 +65,7 @@ SETUP = r"""() => {
  const nativeWorld={collide:G.World.collide,isWall:G.World.isWall,isFree:G.World.isFree,isLiquid:G.World.isLiquid,
    projectileBlock:G.World.projectileBlock,propsInCircle:G.World.propsInCircle};
  function reset(){
+   K.resetEvolution?.();
    G.Combat.clearFields();G.Projectiles.clear();G.EnemyMgr.clear();G.FX.clear();
    G.SelfClones?.clear();G.NarutoClones?.clear();G.Pickups.clear();
    G.World.collide=()=>{};G.World.isWall=()=>false;G.World.isFree=()=>true;G.World.isLiquid=()=>false;
@@ -294,14 +295,22 @@ CURSE = r"""() => {
  const enhanced=Math.round(flower.dmg*baseAtk*1.2*G.Types.mult(flower.type,enemy.types)*G.Weather.mult(flower.type));
  A.assert(hits[0].loss===enhanced,'curse damage multiplied incorrectly '+hits[0].loss+' != '+enhanced);
  A.near(p.hp,hp,'curse charged HP');
- const state=K.stateFor(p);A.advance(Math.max(0,9.05-state.clock));
- A.assert(!K.curseState(p).active&&K.formFor(p)==='normal','curse did not expire');A.near(p.spd,baseSpeed,'curse speed leaked after expiry');A.near(p.atk,baseAtk,'base attack leaked after curse');
- flower.t=999;A.advance(Math.max(0,29.9-K.stateFor(p).clock),true);
- A.assert(K.stateFor(p).castCounts.curse===1,'curse retriggered before fixed30s cycle');
- A.advance(.2,true);A.assert(K.stateFor(p).castCounts.curse===2,'curse did not become ready after30s');
- const beforeClear=K.curseState(p);G.Combat.clearFields(p);A.assert(K.stateFor(p)===null&&K.formFor(p)==='normal','clear retained curse state');
- A.near(p.spd,baseSpeed,'clear retained curse movement bonus');
- return {baseSpeed,baseAtk,enhancedDamage:enhanced,hpUnchanged:p.hp===hp,secondStart:beforeClear,slots:p.slots.map(g=>g.map(m=>m.id))};
+ flower.t=999;const checkpoints=[];
+ for(const clock of [9.05,30.2,120.2]){
+   A.advance(Math.max(0,clock-K.stateFor(p).clock),true);
+   const status=K.curseState(p);
+   A.assert(status.active&&status.permanent&&K.formFor(p)==='curse','permanent curse expired at '+clock);
+   A.assert(status.remaining===0&&status.cooldown===0,'permanent curse exposed a countdown');
+   A.assert(K.stateFor(p).castCounts.curse===1,'permanent curse transformed again at '+clock);
+   A.near(p.spd,baseSpeed*1.1,'permanent curse stacked movement speed');A.near(p.atk,baseAtk,'permanent curse mutated base attack');
+   checkpoints.push({clock,status,casts:K.stateFor(p).castCounts.curse});
+ }
+ const beforeClear=K.curseState(p);G.Combat.clearFields(p);
+ A.assert(K.stateFor(p)===null&&K.curseState(p).active&&K.formFor(p)==='curse','same-run temporary cleanup removed permanent evolution');
+ A.near(p.spd,baseSpeed*1.1,'same-run temporary cleanup removed curse movement bonus');
+ K.resetEvolution(p);A.assert(!K.curseState(p).active&&K.formFor(p)==='normal','explicit evolution reset retained curse');
+ A.near(p.spd,baseSpeed,'explicit evolution reset retained movement bonus');
+ return {baseSpeed,baseAtk,enhancedDamage:enhanced,hpUnchanged:p.hp===hp,checkpoints,beforeClear,slots:p.slots.map(g=>g.map(m=>m.id))};
 }"""
 
 COMBO = r"""() => {
