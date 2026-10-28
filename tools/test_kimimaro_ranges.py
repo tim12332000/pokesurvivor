@@ -45,11 +45,12 @@ BOUNDARIES = r"""() => {
  for(const rank of [1,5]){
   A.reset();const m=A.fixture('naruto-kimimaro-bracken',rank);
   const coords=rank===1?[[350,0],[-240,280],[0,-390],[430,0]]:[[550,0],[-354,472],[0,-590],[630,0]];
-  const es=coords.map(([x,y])=>A.spawn(x,y)),logs=es.map(A.watch);p.target=es[0];A.cast(m.id);A.advance(2.7);
+  const es=coords.map(([x,y])=>A.spawn(x,y)),logs=es.map(A.watch);p.target=es[0];A.cast(m.id);A.advance(2.09);
   const loss=es.map(e=>e.maxHp-e.hp),expected=A.expected(m,1,es[0]);
   A.assert(loss.slice(0,3).every(v=>v===expected),'spread forest damage/range rank '+rank+' '+loss);
   A.assert(logs.slice(0,3).every(v=>v.length===1)&&loss[3]===0,'forest repeats or extends outside radius');
-  A.advance(.5);A.assert(es.every((e,i)=>e.maxHp-e.hp===loss[i]),'late forest re-hit');
+  // The next burst cannot reach these outer-ring victims before 2.58 seconds.
+  A.advance(.48);A.assert(es.every((e,i)=>e.maxHp-e.hp===loss[i]),'first burst repeated an outer-ring hit');
   out.forests.push({rank,coords,loss,hits:logs.map(v=>v.length)});
  }
  for(const key of ['camellia','flower'])for(const rank of [1,5]){
@@ -82,7 +83,7 @@ BULLETS = r"""() => {
 
 DENSITY = r"""() => {
  const A=KAcceptance,p=A.p();A.reset();const m=A.fixture('naruto-kimimaro-bracken',5);p.target=A.spawn(200,0);
- A.cast(m.id);A.advance(2.7);A.fields();const single={...G.KimimaroArt.debugLast};
+ A.cast(m.id);A.advance(4.7);A.fields();const single={...G.KimimaroArt.debugLast};
  A.assert(single.forestColumns===72&&single.secondaryParticles<=20,'single forest density/budget '+JSON.stringify(single));
  A.reset();A.fixture(m.id,5);p.target=A.spawn(200,0);const owners=[p,...Array.from({length:3},()=>G.SelfClones.summon(p))];
  A.assert(owners.every(Boolean),'native clones missing');
@@ -92,15 +93,15 @@ DENSITY = r"""() => {
  // automatic targeting is independently exercised by the forty range casts.
  A.resume();try{for(const actor of owners){const move=actor.moves.find(v=>v.id===m.id);move.t=0;
   A.assert(G.DigimonSkills.cast(actor,move),'native owner forest cast failed '+owners.indexOf(actor))}}finally{A.pause()}
- A.advance(2.7);A.fields();const multiple={...G.KimimaroArt.debugLast};
+ A.advance(4.7);A.fields();const multiple={...G.KimimaroArt.debugLast};
  const forests=A.K.renderStates().filter(s=>s.forest).length;
  A.assert(forests===4&&multiple.forestColumns===72&&multiple.secondaryParticles<=20,'global four-owner budget '+JSON.stringify({forests,multiple}));
  return {single,forests,multiple};
 }"""
 
 STAGES = r"""() => {
- const A=KAcceptance,p=A.p();A.reset();const m=A.fixture('naruto-kimimaro-bracken',5);
- const victims=Array.from({length:6},(_,i)=>A.spawn((i+.75)*100,0)),logs=victims.map(A.watch);
+ const A=KAcceptance,p=A.p();A.reset();const m=A.fixture('naruto-kimimaro-bracken');
+ const victims=Array.from({length:6},(_,i)=>A.spawn((i+.75)*m.radius/6,0)),logs=victims.map(A.watch);
  p.target=victims[0];A.cast(m.id);const action=A.action(),counts=[],waves=[.48,.80,1.12,1.44,1.76,2.08];
  A.assert(action.hitTimes.length===6,'forest must have six stages');
  let age=0;
@@ -125,7 +126,7 @@ SCENE = r"""({origin}) => {
  let count=0;for(let ring=1;ring<=3;ring++)for(let n=0;n<18;n++){
   const angle=n*Math.PI/9+ring*.25,r=ring*115,x=p.x+Math.cos(angle)*r,y=p.y+Math.sin(angle)*r;
   if(G.World.isFree(x,y,12,true)&&!G.World.isWall(x,y)){A.spawn(x,y);count++}}
- A.assert(count>=3,'terrain scene lacks native targets');A.cast(m.id);A.advance(2.7);A.fields();
+ A.assert(count>=3,'terrain scene lacks native targets');A.cast(m.id);A.advance(4.7);A.fields();
  return {nativeTerrain:true,spawned:count,...G.KimimaroArt.debugLast};
 }"""
 

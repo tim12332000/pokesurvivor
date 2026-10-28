@@ -613,9 +613,10 @@
       desc:'手持骨鞭周身正反兩圈掃掠，各半傷，可正常走位。半徑200／220／240／260／280，無內圈死角、無減傷、吸附或推退；每圈每敵只命中一次。不吃數量，冷卻6秒。普通態可用為本作改編。',
       source_url:'https://wap.gamersky.com/sygl/Content-712909.html'}],
     ['bracken','早蕨之舞',12,'ground',12,[600,720,840,1020,1200],{
-      icon:'kimimaroBracken',radius:400,range:400,count:1,castDuration:3.20,minMaxHpFraction:.30,
-      ups:kimimaroUps([600,720,840,1020,1200],[400,450,500,550,600],[400,450,500,550,600]),
-      desc:'原地按地後可走開，大片亂骨林由近到遠六波擴張，約2.6秒鋪滿、3.2秒退場。基礎傷害600／720／840／1020／1200；每名敵人取正常結算傷害與自身最大生命30%中較高者，整次最多受傷一次，首領同樣適用。護盾仍依原規則吸收。半徑400／450／500／550／600，骨柱最多72組；首領免控，真正跳躍或懸浮小怪避開地面骨。不吃數量，冷卻12秒。'}],
+      icon:'kimimaroBracken',radius:400,range:400,count:1,castDuration:3.20,minMaxHpFraction:.30,burstCount:1,burstInterval:.5,
+      ups:kimimaroUps([600,720,840,1020,1200],[400,450,500,550,600],[400,450,500,550,600])
+        .map((up,i)=>({...up,t:up.t+'・連發 +1（間隔0.5秒）',m:{...up.m,burstCount:i+2,castDuration:3.2+(i+1)*.5}})),
+      desc:'每升一階多連發一次，五階連發1／2／3／4／5次，每次間隔0.5秒，重新生成不同位置的骨柱分布。每次骨林由近到遠六波擴張，最後一起退場。每發基傷600／720／840／1020／1200，取正常結算傷害與敵人最大生命30%中較高者；每發每敵最多受傷一次，首領同樣適用，護盾照常吸收。半徑400／450／500／550／600，所有連發共用最多72組骨柱；首領免控，真正跳躍或懸浮小怪避開地面骨。不吃數量卡，整串冷卻只計一次12秒。'}],
     ['curse','地之咒印',15,'fighting',0,[0,0,0,0,0],{
       icon:'kimimaroCurse',passive:true,radius:220,range:220,count:1,castDuration:1,fieldDuration:0,permanent:true,
       damageBonus:.10,speedBonus:.10,

@@ -164,10 +164,17 @@
     const signature=states.map(s=>`${s.clock}:${s.owner.x}:${s.owner.y}:${s.action?.castId||0}:${s.forest?.castId||0}:${s.bullets?.length||0}`).join('|');
     if(planCache?.signature===signature&&planCache.states.length===states.length&&
        states.every((state,index)=>state===planCache.states[index]))return planCache;
-    const forestStates=states.filter(s=>s.forest),selected=[],particles=[];
-    const allowance=Math.max(1,Math.floor(72/Math.max(1,forestStates.length)));
-    for(const state of forestStates){
-      const f=state.forest,R=f.radius||180,age=f.age??state.action?.age??0;
+    const forestStates=[],selected=[],particles=[];let reservations=0;
+    for(const state of states){
+      const active=state.forests?.length?state.forests:state.forest?[state.forest]:[];
+      if(!active.length)continue;
+      for(const forest of active)forestStates.push({state,forest,slot:reservations+(forest.index||0)});
+      reservations+=state.action?.bursts?.length||active.length;
+    }
+    const baseAllowance=Math.floor(72/Math.max(1,reservations)),extras=72%Math.max(1,reservations);
+    for(const {state,forest:f,slot} of forestStates){
+      const R=f.radius||180,age=f.age??state.action?.age??0,allowance=baseAllowance+Number(slot<extras);
+      if(!allowance)continue;
       const points=columns(f);for(let n=0;n<Math.min(points.length,allowance);n++){
         const p=points[Math.floor(n*points.length/allowance)],start=f.waves[p.wave]+p.seed*.16;
         const grow=ease((age-start)/(.24+p.seed*.16))*(1-ease((age-(f.duration-.38))/.38));

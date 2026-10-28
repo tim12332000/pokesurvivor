@@ -50,10 +50,13 @@ FORMER_ACTIVES = r"""() => {
    A.assert(p.slots.length===0&&p.activeGroup().length===0,'fixture has a selected group '+key);
    A.step(.001,true);A.assert(A.action()?.kind===key,'unselected learned skill did not auto cast '+key);
    A.assert(m.t>0,'auto cast omitted cooldown '+key);const started=m.t;
-   A.advance(key==='bracken'?3.3:1.2);
+   A.advance(key==='bracken'?3.3+.5*(rank-1):1.2);
    const shares=key==='camellia'?[.25,.25,.5]:key==='lily'?[.5,.5]:[1];
-   const expected=shares.reduce((sum,share)=>sum+A.expected(m,share,e),0);
+   const perBurst=shares.reduce((sum,share)=>sum+A.expected(m,share,e),0);
+   const expectedHits=key==='bracken'?Math.min(rank,Math.ceil(e.maxHp/perBurst)):null;
+   const expected=key==='bracken'?expectedHits*perBurst:perBurst;
    A.assert(e.maxHp-e.hp===expected,'native automatic damage '+key+' rank '+rank);
+   if(key==='bracken')A.assert(hits.length===expectedHits&&hits.every(h=>h.loss===perBurst),'automatic burst damage duplicated, split or damaged a dead target');
    A.assert(hits.every(h=>h.owner&&h.id===m.id),'automatic damage lost owner or technique '+key);
    A.assert(p.slots.length===0,'automatic cast created an active slot '+key);
    out.push({key,rank,hits:hits.length,loss:e.maxHp-e.hp,cooldownAtStart:started,expected});

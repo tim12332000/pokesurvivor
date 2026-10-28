@@ -19,7 +19,9 @@ HELPERS = r"""() => {
  function enemy(maxHp=10001,special=null,current=maxHp,x=80,y=0){
    const e=A.spawn(x,y,special);e.maxHp=maxHp;e.hp=current;e.types=['normal'];return e;
  }
- function cast(e,skill=id,seconds=3.3){
+ // Isolate the first burst's complete hit before the next burst reaches this
+ // near-origin fixture; the repeated-burst suite verifies the whole volley.
+ function cast(e,skill=id,seconds=.90){
    p.target=e;const hp=e.hp,hits=A.watch(e);A.cast(skill);A.advance(seconds);
    return {hits,loss:hp-e.hp};
  }
@@ -81,8 +83,8 @@ SHIELDS = r"""() => {
 }"""
 
 SIX_WAVES = r"""() => {
- const A=BDamage,p=A.p;A.prepare(5);
- const victims=Array.from({length:6},(_,i)=>A.enemy(10001,null,10001,(i+.75)*100,0)),logs=victims.map(A.watch);
+ const A=BDamage,p=A.p,m=A.prepare();
+ const victims=Array.from({length:6},(_,i)=>A.enemy(10001,null,10001,(i+.75)*m.radius/6,0)),logs=victims.map(A.watch);
  p.target=victims[0];KAcceptance.cast(A.id);const waveTimes=[.48,.80,1.12,1.44,1.76,2.08];let age=0;
  for(let i=0;i<waveTimes.length;i++){
    A.advance(waveTimes[i]-.01-age);age=waveTimes[i]-.01;

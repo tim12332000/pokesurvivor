@@ -45,7 +45,7 @@
     let s = states.get(owner);
     if (s && s.world !== G.World) { clear(owner); s = null; }
     if (!s) {
-      s = {owner,world:G.World,clock:0,action:null,forest:null,bullets:[],impacts:[],
+      s = {owner,world:G.World,clock:0,action:null,forest:null,forests:[],bullets:[],impacts:[],
         readySince:new Map(),selection:signature(owner),exitUntil:0,guardUntil:0,guardMove:null,
         curse:{startAt:hasEvolution(owner)?-1:-Infinity,readyAt:0},boneGuard:{readyAt:0,wall:null,blocks:0,triggers:0},
         boomerang:{lanes:[],count:1,launches:0,catches:0,hits:0,pose:null,log:[]},
@@ -145,7 +145,7 @@
     if (f) f.hold=null;
   }
   function cancel(s,exit=true) {
-    releaseHold(s.action);s.action=null;s.forest=null;s.guardUntil=0;s.guardMove=null;
+    releaseHold(s.action);s.action=null;s.forest=null;s.forests=[];s.guardUntil=0;s.guardMove=null;
     if (exit) s.exitUntil=s.clock+.10;
   }
   function held(enemy) {
@@ -214,14 +214,30 @@
     if (combined) {f.flowerSource=learned(owner,BASIC+'-flower');f.requiredIds.push(f.flowerSource.id);}
     if (kind==='curse') {s.curse.startAt=s.clock;s.curse.readyAt=0;source.t=0;}
     if (kind==='bracken') {
-      f.forest={owner,world:G.World,x:f.x,y:f.y,age:0,rank:f.rank,radius:radiusFor(m),castId:f.castId,
-        waves:f.hitTimes,duration:f.duration,hitTargets:new Set()};
-      s.forest=f.forest;
+      const repeats=Math.min(5,Math.max(1,Math.floor(f.move.burstCount||f.rank))),interval=.5;
+      f.duration=specs.bracken.duration+(repeats-1)*interval;f.burstLog=[];
+      f.bursts=Array.from({length:repeats},(_,index)=>{
+        const delay=index*interval;
+        return {owner,world:G.World,index,delay,startAt:f.clockStart+delay,started:false,
+          x:f.x,y:f.y,age:-delay,rank:f.rank,radius:radiusFor(m),castId:index?nextCast++:f.castId,
+          waves:specs.bracken.waves,duration:f.duration-delay,hitTargets:new Set(),phaseHits:new Map()};
+      });
+      f.hitEvents=f.bursts.flatMap(burst=>burst.waves.map((time,wave)=>({time:burst.delay+time,burst,wave})))
+        .sort((a,b)=>a.time-b.time);
+      f.hitTimes=f.hitEvents.map(event=>event.time);f.forest=f.bursts[0];syncForests(s,f);
     }
     s.action=f;s.castCounts[kind]=(s.castCounts[kind]||0)+1;s.readySince.delete(source);
     s.castLog.push({kind,time:s.clock,castId:f.castId});if(s.castLog.length>100)s.castLog.shift();
     owner.aim=f.aim;
     return true;
+  }
+  function syncForests(s,f) {
+    for(const burst of f.bursts){
+      burst.age=f.age-burst.delay;
+      if(!burst.started&&burst.age>=-EPS){burst.started=true;f.burstLog.push({index:burst.index,time:burst.startAt});}
+    }
+    s.forests=f.bursts.filter(burst=>burst.started&&burst.age<burst.duration);
+    s.forest=s.forests[0]||null;
   }
   function impact(s,f,e,damage,kind=f.kind) {
     const mark={x:e.x,y:e.y,time:s.clock,age:0,damage,kind,target:e,castId:f.castId};
@@ -362,7 +378,10 @@
     }else if(f.kind==='bullets')emitBullets(s,f,index);
     else if(f.kind==='larch')circle(s,f,radiusFor(f.move),.5,index);
     else if(f.kind==='lily')circle(s,f,radiusFor(f.move),.5,index);
-    else if(f.kind==='bracken')circle(s,f,f.forest.radius*(index+1)/f.hitTimes.length,1,0,true);
+    else if(f.kind==='bracken'){
+      const event=f.hitEvents[index],burst=event.burst;
+      circle(s,{...f,forest:burst,phaseHits:burst.phaseHits},burst.radius*(event.wave+1)/burst.waves.length,1,0,true);
+    }
     else if(f.kind==='vine'||(f.kind==='combo'&&index===0)){
       const target=f.target;
       if(alive(target)&&distance2(target,f.owner)<=rangeFor(f.move,'vine')**2&&clearPath(f.owner.x,f.owner.y,target.x,target.y)){
@@ -379,13 +398,14 @@
     // full frame of movement before their actual release time.
     for(let guard=0;left>EPS&&s.action===f&&guard<64;guard++){
       const boundaries=[f.duration,...f.hitTimes.filter(t=>t>f.age+EPS)];
+      if(f.bursts)boundaries.push(...f.bursts.filter(burst=>!burst.started).map(burst=>burst.delay));
       if(f.kind==='combo'&&!f.flowerStarted&&f.age<.54-EPS)boundaries.push(.54);
       if((f.kind==='flower'&&f.age<.30-EPS)||(f.kind==='combo'&&f.age<.84-EPS))boundaries.push(f.kind==='combo'?.84:.30);
       const next=Math.min(...boundaries.filter(t=>t>f.age+EPS));
       const step=Math.min(left,Number.isFinite(next)?next-f.age:left);
       updateBullets(s,step);f.age+=step;left-=step;
       if(f.kind!=='bracken'){f.x=f.owner.x;f.y=f.owner.y;}
-      if(f.forest)f.forest.age=f.age;
+      if(f.bursts)syncForests(s,f);
       updateHold(s,f);
       if(f.kind==='combo'&&!f.flowerStarted&&f.age>=.54-EPS)commitFlower(s,f);
       if((f.kind==='flower'&&f.age>=.30-EPS)||(f.kind==='combo'&&f.flowerStarted&&f.age>=.84-EPS)){
@@ -393,7 +413,7 @@
       }
       while(f.hitIndex<f.hitTimes.length&&f.age+EPS>=f.hitTimes[f.hitIndex])processHit(s,f,f.hitIndex++);
       if(f.baseKind==='larch'&&f.age>=.18-EPS){s.guardUntil=Math.max(s.guardUntil,f.clockStart+.88);s.guardMove=f.source.id;}
-      if(f.age+EPS>=f.duration){releaseHold(f);s.action=null;s.forest=null;}
+      if(f.age+EPS>=f.duration){releaseHold(f);s.action=null;s.forest=null;s.forests=[];}
     }
     if(left>EPS)updateBullets(s,left);
   }
