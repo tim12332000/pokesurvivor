@@ -415,9 +415,11 @@
     const curve=Array.from({length:33},(_,i)=>{const t=i/32,u=1-t;
       return {x:u*u*hand.x+2*u*t*cx+t*t*target.x,y:u*u*hand.y+2*u*t*cy+t*t*target.y};});
     const firstAim=Math.atan2(curve[1].y-hand.y,curve[1].x-hand.x);
+    const pierce=Math.max(0,Math.floor(finite(m.pierce)+(G.Quantity?.bonus(owner)||0)));
     lane.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(firstAim)*speed,vy:Math.sin(firstAim)*speed,
       aim,phase:'out',age:0,distance:0,range:finite(m.range,600),move:{...m},attack:owner.atk*damageBonus(owner),
-      kind:'boomerang',baseKind:'boomerang',castId,lane:lane.index,curve,curveIndex:1,phaseHits:new Map(),trail:[]};
+      kind:'boomerang',baseKind:'boomerang',castId,lane:lane.index,pierce,remainingPierce:pierce,
+      curve,curveIndex:1,phaseHits:new Map(),trail:[]};
     lane.readyAt=time+Math.max(.05,m.cd*(owner.cdMul||1));
     lane.launches++;g.launches++;g.pose={time,aim};
     boomerangEvent(g,lane,{kind:'launch',time,castId,x:hand.x,y:hand.y});
@@ -471,10 +473,14 @@
         b.distance+=travel;b.age+=travel/speed;left-=travel/speed;
         const wall=G.World.isWall(b.x,b.y),prop=wall?null:G.World.projectileBlock?.(b.x,b.y,7);
         const victim=!wall&&!prop?G.EnemyMgr.queryCircle(b.x,b.y,48)
-          .filter(e=>alive(e)&&!e.friendly&&distance2(e,b)<=((e.r||8)+7)**2)
+          .filter(e=>alive(e)&&!e.friendly&&!b.phaseHits.get(0)?.has(e)&&distance2(e,b)<=((e.r||8)+7)**2)
           .sort((a,c)=>distance2(a,b)-distance2(c,b))[0]:null;
-        if(prop||victim){const damage=hit(s,b,prop||victim,1,0,true);if(victim&&damage>0){lane.hits++;g.hits++;}}
-        if(wall||prop||victim||b.distance>=b.range-EPS)b.phase='return';
+        let exhausted=false;
+        if(prop||victim){
+          const damage=hit(s,b,prop||victim,1,0,true);
+          if(victim&&damage>0){lane.hits++;g.hits++;if(b.remainingPierce>0)b.remainingPierce--;else exhausted=true;}
+        }
+        if(wall||prop||exhausted||b.distance>=b.range-EPS)b.phase='return';
       }
       b.trail.push({x:b.x,y:b.y});if(b.trail.length>4)b.trail.shift();
       // An overdue catch can still relaunch at the end of the same frame.

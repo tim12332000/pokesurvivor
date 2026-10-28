@@ -31,7 +31,12 @@ HELPERS = r"""() => {
    for(let elapsed=0;elapsed<limit;elapsed+=dt){if(predicate())return elapsed;A.step(dt,true)}
    A.assert(predicate(),'boomerang event timed out');return limit;
  }
- window.KBoom={...A,p,K,id,prepare,state,start,until};
+ function single(rank=1,distance=400){
+   const m=prepare(rank);m.count=1;const anchor=A.spawn(distance,0),hits=A.watch(anchor);p.target=anchor;A.step(.001,true);
+   A.assert(state().count===1&&state().projectiles.length===1,'single-flight piercing fixture did not isolate count');
+   return {m,anchor,hits,b:state().projectile};
+ }
+ window.KBoom={...A,p,K,id,prepare,state,start,until,single};
 }"""
 
 PROGRESSION = r"""() => {
@@ -45,7 +50,8 @@ PROGRESSION = r"""() => {
    A.near(m.dmg,[64,76.8,89.6,108.8,128][rank-1],'full-hit base rank '+rank);
    A.near(m.range,[600,650,700,750,800][rank-1],'throw range rank '+rank);
    A.near(m.count,rank,'base bone count rank '+rank);
-   ranks.push({rank,damage:m.dmg,range:m.range,count:m.count,cd:m.cd,passive:m.passive});
+   A.near(m.pierce,rank-1,'base piercing budget rank '+rank);
+   ranks.push({rank,damage:m.dmg,range:m.range,count:m.count,pierce:m.pierce,cd:m.cd,passive:m.passive});
  }
  A.prepare();A.step(.001,true);A.advance(1,true);
  A.assert(!A.state()?.projectile&&!(A.state()?.launches),'idle throw escaped hand without a target');
@@ -56,22 +62,28 @@ HIT_AND_RETURN = r"""() => {
  const A=KBoom,p=A.p,out=[];
  for(let rank=1;rank<=5;rank++){
    const {m,e,hits}=A.start(100,rank);A.until(()=>A.state().lanes.every(lane=>lane.hits===1));
-   const hitState=A.state(),projectile=hitState.projectile,base=[64,76.8,89.6,108.8,128][rank-1];
+   let hitState=A.state();const base=[64,76.8,89.6,108.8,128][rank-1];
    const raw=base*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
-   A.assert(hits.length===rank&&hitState.projectiles.length===rank&&hitState.projectiles.every(q=>q.phase==='return'),'each first contact did not immediately return');
+   A.assert(hits.length===rank&&hitState.projectiles.length===rank,'each ranked bone did not hit once');
+   A.assert(hitState.projectiles.every(q=>q.phase===(rank===1?'return':'out')),'first contact ignored the per-rank piercing budget');
    for(const hit of hits){
      A.near(hit.raw,raw,'multiple ranked bones split their individual damage');
      A.assert(hit.loss===Math.max(1,Math.round(raw))&&hit.owner&&hit.id===A.id,'native full hit lost damage/owner');
    }
    A.assert(e.maxHp-e.hp===rank*Math.max(1,Math.round(raw)),'rank damage was not full damage per bone');
    e.dead=true;p.target=null;
+   if(rank>1)A.until(()=>A.state().projectiles.length===rank&&A.state().projectiles.every(q=>q.phase==='return'));
+   hitState=A.state();const projectile=hitState.projectile;
    const returnTarget=A.spawn((projectile.x+hitState.hand.x)/2,(projectile.y+hitState.hand.y)/2),returnHits=A.watch(returnTarget);
    A.until(()=>A.state().catches===rank);
    A.assert(returnHits.length===0&&hits.length===rank,'ranked bones dealt another hit during return');
-   A.assert(A.state().projectiles.length===0&&A.state().lanes.every(lane=>lane.cooldown>0),'early ranked catches ignored remaining launch cooldown');
-   const launches=A.state().launches;A.until(()=>A.state().launches>launches);
+   const waitedInHand=A.state().projectiles.length===0;
+   if(waitedInHand){
+     A.assert(A.state().lanes.every(lane=>lane.cooldown>0),'early ranked catches ignored remaining launch cooldown');
+     const launches=A.state().launches;A.until(()=>A.state().launches>launches);
+   }
    A.assert(A.state().projectiles.length===rank&&A.state().projectiles.every(q=>q.phase==='out'),'ranked bones did not relaunch after hand wait and cooldown');
-   out.push({rank,count:rank,rawPerBone:hits[0].raw,lossPerBone:hits[0].loss,totalLoss:rank*hits[0].loss,hits:hits.length,returnHits:returnHits.length,waitedInHand:true});
+   out.push({rank,count:rank,rawPerBone:hits[0].raw,lossPerBone:hits[0].loss,totalLoss:rank*hits[0].loss,hits:hits.length,returnHits:returnHits.length,waitedInHand});
  }
  return out;
 }"""
@@ -155,6 +167,8 @@ MULTI_CADENCE = r"""() => {
  A.assert(state.count===2&&state.projectiles.length===2&&state.lanes.length===2,'four quantity cards did not create two real flights');
  A.assert(state.lanes[0].projectile.vx>0&&state.lanes[1].projectile.vx<0,'lane indices did not distribute throws across separate targets');
  const ids=state.projectiles.map(q=>q.castId);A.assert(new Set(ids).size===2,'lanes share the same physical projectile');
+ // Isolate round-trip/CD geometry here; actual card piercing is tested separately.
+ for(const q of state.projectiles)q.remainingPierce=0;
  A.advance(.015,true);state=A.state();
  const offsets=state.lanes.map((lane,i)=>{
    const launch=lane.log.find(v=>v.kind==='launch'),target=i===0?near:far;
@@ -178,7 +192,7 @@ MULTI_CADENCE = r"""() => {
    const launches=lane.log.filter(v=>v.kind==='launch');
    for(let i=1;i<launches.length;i++)A.assert(launches[i].time-launches[i-1].time>=1-1e-8,'one lane fired before its own cooldown');
  }
- return {count:state.count,nearHits:nearHits.length,farHits:farHits.length,oppositeCurveOffsets:offsets,
+ return {count:state.count,initialPierceFixture:0,nearHits:nearHits.length,farHits:farHits.length,oppositeCurveOffsets:offsets,
    lanes:state.lanes.map(v=>({index:v.index,launches:v.launches,catches:v.catches,hits:v.hits,log:v.log}))};
 }"""
 
@@ -194,6 +208,8 @@ QUANTITY_GROW_AND_RETIRE = r"""() => {
    A.near(lane.readyAt,item.readyAt,'quantity growth reset an existing lane cooldown');
  }
  A.assert(state.lanes.slice(2).every(lane=>lane.launches===1&&lane.readyAt>saved[0].readyAt+.015),'new lanes shared an older lane launch clock');
+ // This case isolates quantity retirement before cooldown expires.
+ for(const q of state.projectiles)q.remainingPierce=0;
  A.until(()=>A.state().hits===5);state=A.state();
  A.assert(hits.length===5&&hits.every(h=>h.owner&&h.id===A.id),'simultaneous bones did not each hit the same enemy once');
  A.assert(e.maxHp-e.hp===5*102,'same-target quantity damage was split or duplicated');
@@ -207,7 +223,7 @@ QUANTITY_GROW_AND_RETIRE = r"""() => {
  A.until(()=>A.state().lanes[0].launches===2);state=A.state();
  A.assert(state.count===1&&state.projectiles.length===1&&state.launches===beforeLaunches+1,'reduced count did not retain exactly the original lane');
  A.assert(A.K.stateFor(p).boomerang.lanes[0]===saved[0].lane,'retirement recreated the remaining lane');
- return {grownTo:5,sameTargetHits:hits.length,firstVolleyDamage:5*102,retired:4,
+ return {grownTo:5,initialPierceFixture:0,sameTargetHits:hits.length,firstVolleyDamage:5*102,retired:4,
    retainedLane:state.lanes[0].index,totalLaunches:state.launches,totalCatches:state.catches};
 }"""
 
@@ -230,11 +246,12 @@ RANK_LEVEL_UP = r"""() => {
  G.Moves.levelUp=function(...args){nativeCalls++;return levelUp.apply(this,args)};
  try{
    for(let rank=2;rank<=5;rank++){
-     const before=A.K.stateFor(p).boomerang.lanes.map(lane=>({lane,projectile:lane.projectile,readyAt:lane.readyAt,damage:lane.projectile.move.dmg}));
+     const before=A.K.stateFor(p).boomerang.lanes.map(lane=>({lane,projectile:lane.projectile,readyAt:lane.readyAt,damage:lane.projectile.move.dmg,remainingPierce:lane.projectile.remainingPierce}));
      const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:'+A.id);
      A.assert(card&&/數量\s*\+1/.test(card.desc),'native upgrade card omitted quantity +1 at rank '+rank);
+     A.assert(/穿透\s*\+1/.test(card.desc),'native upgrade card omitted piercing +1 at rank '+rank);
      A.assert(card.apply(p)!==false,'native upgrade card failed');
-     A.assert(m.lvl===rank&&m.count===rank,'native levelUp failed to add one base bone');
+     A.assert(m.lvl===rank&&m.count===rank&&m.pierce===rank-1,'native levelUp failed to add one base bone and piercing charge');
      A.step(.001,true);const state=A.state(),raw=A.K.stateFor(p).boomerang.lanes;
      A.assert(state.count===rank&&state.projectiles.length===rank,'new rank bone did not immediately join existing flights');
      for(const saved of before){
@@ -242,9 +259,11 @@ RANK_LEVEL_UP = r"""() => {
        A.assert(lane===saved.lane&&lane.projectile===saved.projectile,'rank upgrade recreated a previous lane or flying bone');
        A.near(lane.readyAt,saved.readyAt,'rank upgrade reset previous lane cooldown');
        A.near(lane.projectile.move.dmg,saved.damage,'rank upgrade mutated an already launched damage snapshot');
+       A.near(lane.projectile.remainingPierce,saved.remainingPierce,'rank upgrade changed an already launched piercing budget');
      }
      A.assert(state.lanes.at(-1).launches===1&&state.lanes.at(-1).projectile,'newly unlocked rank lane waited on an older cooldown');
-     stages.push({rank,count:state.count,text:card.desc,newLaneReadyAt:state.lanes.at(-1).readyAt});
+     A.near(state.lanes.at(-1).projectile.remainingPierce,rank-1,'new rank lane did not receive the upgraded piercing budget');
+     stages.push({rank,count:state.count,pierce:m.pierce,text:card.desc,newLaneReadyAt:state.lanes.at(-1).readyAt});
    }
    A.assert(nativeCalls===4,'upgrade cards bypassed the native levelUp path');
  }finally{G.Moves.levelUp=levelUp}
@@ -255,20 +274,83 @@ RANK_LEVEL_UP = r"""() => {
 RANK_QUANTITY_STACK = r"""() => {
  const A=KBoom,p=A.p,m=A.prepare(3);p.quantityPicks=p.quantityBonus=4;p.target=A.spawn(400,0);A.step(.001,true);
  A.assert(m.count===3&&A.state().count===7&&A.state().projectiles.length===7,'rank-three base count was not multiplied by quantity cards');
+ A.assert(A.state().projectiles.every(q=>q.pierce===6&&q.remainingPierce===6),'rank-three piercing did not add four quantity-card charges');
  const stages=[{rank:3,base:m.count,count:A.state().count}];
  for(const [rank,count] of [[4,9],[5,12]]){
-   const saved=A.K.stateFor(p).boomerang.lanes.map(lane=>({lane,projectile:lane.projectile,readyAt:lane.readyAt}));
+   const saved=A.K.stateFor(p).boomerang.lanes.map(lane=>({lane,projectile:lane.projectile,readyAt:lane.readyAt,remainingPierce:lane.projectile.remainingPierce}));
    A.assert(G.Moves.levelUp(m),'native stacked rank upgrade failed');A.step(.001,true);
    const state=A.state(),raw=A.K.stateFor(p).boomerang.lanes;
    A.assert(m.lvl===rank&&m.count===rank&&state.count===count&&state.projectiles.length===count,'rank/quantity stacking order was incorrect');
    for(const item of saved){
      A.assert(raw[item.lane.index]===item.lane&&raw[item.lane.index].projectile===item.projectile,'stacked rank increase replaced an existing flight');
      A.near(item.lane.readyAt,item.readyAt,'stacked rank increase reset previous lane cooldown');
+     A.near(item.lane.projectile.remainingPierce,item.remainingPierce,'stacked rank increase reset previous piercing budget');
    }
    A.assert(state.lanes.slice(saved.length).every(lane=>lane.launches===1&&lane.projectile),'additional stacked lanes did not launch immediately');
-   stages.push({rank,base:m.count,count:state.count,added:count-saved.length});
+   A.assert(state.lanes.slice(saved.length).every(lane=>lane.projectile.remainingPierce===rank-1+4),'new stacked lanes missed rank/card piercing charges');
+   stages.push({rank,base:m.count,count:state.count,newLanePierce:rank-1+4,added:count-saved.length});
  }
  return {quantityCards:4,formula:'floor(base count * 1.25^4)',stages};
+}"""
+
+PIERCE_LIMITS = r"""() => {
+ const A=KBoom,out=[];
+ for(let rank=1;rank<=5;rank++){
+   const {m,anchor,hits:anchorHits,b}=A.single(rank),order=[];
+   const targets=[5,10,15,20,25,30].map(index=>A.spawn(b.curve[index].x,b.curve[index].y)),logs=targets.map(A.watch);
+   targets.forEach((e,index)=>{const hurt=e.hurt;e.hurt=function(...args){order.push(index);return hurt.apply(this,args)}});
+   A.near(b.pierce,rank-1,'launch-time rank piercing snapshot');
+   A.until(()=>A.state().projectile?.phase==='return');
+   A.assert(order.length===rank&&order.every((value,index)=>value===index),'piercing hit order or different-enemy limit rank '+rank+' '+JSON.stringify(order));
+   A.assert(logs.every((log,index)=>log.length===(index<rank?1:0))&&anchorHits.length===0,'piercing repeated a target or exceeded its allowance rank '+rank);
+   const raw=[64,76.8,89.6,108.8,128][rank-1]*1.6;
+   for(const log of logs.slice(0,rank)){A.near(log[0].raw,raw,'piercing divided full per-enemy damage');A.assert(log[0].loss===Math.round(raw)&&log[0].owner&&log[0].id===A.id,'piercing bypassed native hit ownership/damage')}
+   A.assert(b.remainingPierce===0&&b.phaseHits.get(0).size===rank,'allowance did not deplete per distinct enemy');
+   A.until(()=>A.state().catches===1);
+   A.assert(order.length===rank&&logs.every((log,index)=>log.length===(index<rank?1:0)),'return through pierced enemies repeated damage');
+   out.push({rank,isolatedCount:m.count,pierce:b.pierce,targetsHit:order,remaining:b.remainingPierce,rawPerTarget:raw});
+ }
+ return out;
+}"""
+
+PIERCE_OVERLAP_AND_QUANTITY = r"""() => {
+ const A=KBoom,p=A.p,{b}=A.single(5),point=b.curve[10],large=A.spawn(point.x,point.y),largeHits=A.watch(large);
+ large.r=60;G.EnemyMgr.rebuildGrid();A.until(()=>largeHits.length===1);A.advance(.06,true);
+ const overlap=A.state().projectile;
+ A.assert(overlap?.phase==='out'&&Math.hypot(overlap.x-large.x,overlap.y-large.y)<=large.r+7,'overlap fixture did not remain inside one victim');
+ A.assert(largeHits.length===1&&overlap.remainingPierce===3,'continued overlap consumed extra hit/piercing charges');
+ const overlapResult={hits:largeHits.length,remaining:overlap.remainingPierce,stillInside:true};
+ A.prepare();p.quantityPicks=p.quantityBonus=4;const anchor=A.spawn(400,0),anchorHits=A.watch(anchor);p.target=anchor;A.step(.001,true);
+ let state=A.state();A.assert(state.count===2&&state.projectiles.every(q=>q.pierce===4&&q.remainingPierce===4),'four quantity cards did not add four independent launch piercing charges');
+ const shots=[...state.projectiles],groups=shots.map(q=>[5,10,15,20,25,30].map(index=>A.spawn(q.curve[index].x,q.curve[index].y))),logs=groups.map(group=>group.map(A.watch));
+ A.until(()=>A.state().projectiles.length===2&&A.state().projectiles.every(q=>q.phase==='return'));
+ state=A.state();A.assert(state.hits===10&&state.lanes.every(lane=>lane.hits===5),'quantity piercing did not allow five separate victims per bone');
+ shots.forEach((q,lane)=>{
+   A.assert(q.remainingPierce===0&&q.phaseHits.get(0).size===5,'one bone consumed another bone piercing state');
+   A.assert(groups[lane].slice(0,5).every(e=>q.phaseHits.get(0).has(e)),'quantity bones lost their separate victim ledgers');
+   A.assert(logs[lane].every((log,index)=>log.length===(index<5?1:0)),'quantity bone repeated a victim or pierced one too many');
+ });
+ A.assert(anchorHits.length===0,'quantity piercing exceeded its launch allowance');A.until(()=>A.state().catches===2);
+ A.assert(logs.flat().reduce((sum,log)=>sum+log.length,0)===10,'quantity return paths applied extra hits');
+ return {overlap:overlapResult,quantityCards:4,count:2,piercePerBone:4,hitsPerBone:5,totalHits:10};
+}"""
+
+PIERCE_UNUSED_AND_OBSTACLES = r"""() => {
+ const A=KBoom,{b,hits}=A.single(5,200);A.until(()=>hits.length===1);
+ A.assert(b.phase==='out'&&b.remainingPierce===3,'unused charges did not continue after the first enemy');
+ A.until(()=>A.state().projectile?.phase==='return');
+ A.near(b.distance,800,'unused piercing did not reach authored range before returning');
+ A.assert(b.remainingPierce===3&&hits.length===1,'unused-range flight repeated the first victim');
+ A.until(()=>A.state().catches===1);A.assert(hits.length===1,'unused-charge return hit its earlier victim');
+ const rangeResult={distance:b.distance,unused:b.remainingPierce,hits:hits.length};
+ const wall=A.single(5);G.World.isWall=(x,y)=>x>=100;A.until(()=>A.state().projectile?.phase==='return');
+ A.assert(wall.b.remainingPierce===4&&wall.b.distance<800&&wall.hits.length===0,'wall did not return a bone with unused piercing');
+ const blocked=A.single(5);A.advance(.10,true);const q=blocked.b,speed=Math.hypot(q.vx,q.vy);
+ const prop={x:q.x+q.vx/speed*12,y:q.y+q.vy/speed*12,r:12,type:'chest',solid:true,destructible:true,hp:10000,tx:3,ty:0};
+ G.World.projectileBlock=(x,y,r)=>Math.hypot(x-prop.x,y-prop.y)<=prop.r+r?prop:false;
+ A.until(()=>A.state().projectile?.phase==='return');
+ A.assert(blocked.b.remainingPierce===4&&blocked.b.distance<800&&blocked.hits.length===0,'prop did not stop a bone with unused piercing');
+ return {range:rangeResult,wallReturnedWith:wall.b.remainingPierce,propReturnedWith:blocked.b.remainingPierce,propLoss:10000-prop.hp};
 }"""
 
 MULTI_CLONE_AND_UNLEARN = r"""() => {
@@ -412,7 +494,8 @@ def main():
                 for name,check in [('progression',PROGRESSION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndCurve',FIRST_TARGET_AND_CURVE),
                   ('cadence',CADENCE),('cooldownModifiers',COOLDOWN_MODIFIERS),('multiCadence',MULTI_CADENCE),
                   ('quantityGrowAndRetire',QUANTITY_GROW_AND_RETIRE),('quantityCap',QUANTITY_CAP),('rankLevelUp',RANK_LEVEL_UP),
-                  ('rankQuantityStack',RANK_QUANTITY_STACK),('multiCloneAndUnlearn',MULTI_CLONE_AND_UNLEARN),
+                  ('rankQuantityStack',RANK_QUANTITY_STACK),('pierceLimits',PIERCE_LIMITS),('pierceOverlapAndQuantity',PIERCE_OVERLAP_AND_QUANTITY),
+                  ('pierceUnusedAndObstacles',PIERCE_UNUSED_AND_OBSTACLES),('multiCloneAndUnlearn',MULTI_CLONE_AND_UNLEARN),
                   ('lateCatch',LATE_CATCH),('rangeAndObstacles',RANGE_AND_OBSTACLES),('movingCatch',MOVING_CATCH),('bodyAndGuard',BODY_AND_GUARD),('cloneAndLifecycle',CLONE_AND_LIFECYCLE)]:
                     print(label,name,flush=True)
                     try:result[name]=frame.evaluate(check)
