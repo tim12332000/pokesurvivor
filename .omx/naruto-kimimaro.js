@@ -512,35 +512,22 @@
       blocks:g.blocks,triggers:g.triggers,wall:w};
   }
   function guardBlockable(p) {
-    return p.friendly===false&&!p.unblockable&&!p.guardUnblockable&&!p.uninterceptable&&
-      !p.hazard&&!p.laser&&!p.beam&&!p.ground&&!p.orb&&
+    return p.friendly===false&&!p.hazard&&!p.laser&&!p.beam&&!p.ground&&!p.orb&&
       [p.x,p.y,p.vx,p.vy].every(Number.isFinite);
   }
-  // Contact with a finite ground footprint, expanded by the projectile radius.
+  // Swept contact with the full protective circle, including fast crossings.
   function wallContact(p,w,horizon) {
-    const ax=finite(p.px,p.x)-w.x,ay=finite(p.py,p.y)-w.y,r=Math.max(0,p.r||0);
-    const values=[[ax*w.nx+ay*w.ny,p.vx*w.nx+p.vy*w.ny,6+r],
-      [-ax*w.ny+ay*w.nx,-p.vx*w.ny+p.vy*w.nx,w.halfWidth+r]];
-    let enter=0,exit=horizon;
-    for(const [position,velocity,size] of values){
-      if(Math.abs(velocity)<EPS){if(Math.abs(position)>size)return null;continue;}
-      const first=(-size-position)/velocity,last=(size-position)/velocity;
-      enter=Math.max(enter,Math.min(first,last));exit=Math.min(exit,Math.max(first,last));
-      if(enter>exit)return null;
-    }
-    return enter;
+    const dx=finite(p.px,p.x)-w.x,dy=finite(p.py,p.y)-w.y,r=w.radius+Math.max(0,p.r||0);
+    const c=dx*dx+dy*dy-r*r;if(c<=0)return 0;
+    const a=p.vx*p.vx+p.vy*p.vy,b=dx*p.vx+dy*p.vy,disc=b*b-a*c;
+    if(a<EPS||b>=0||disc<0)return null;
+    const contact=(-b-Math.sqrt(disc))/a;
+    return contact>=0&&contact<=horizon+EPS?contact:null;
   }
   function guardThreat(p,owner,dt) {
-    const ax=finite(p.px,p.x),ay=finite(p.py,p.y),dx=ax-owner.x,dy=ay-owner.y;
-    const speed2=p.vx*p.vx+p.vy*p.vy,r=(owner.r||12)+Math.max(0,p.r||0);
-    const approach=dx*p.vx+dy*p.vy,c=dx*dx+dy*dy-r*r;
-    if(speed2<EPS||approach>=0||c<=0)return null;
-    const disc=approach*approach-speed2*c;if(disc<0)return null;
-    const impact=(-approach-Math.sqrt(disc))/speed2;
-    if(impact>dt+.22||impact>finite(p.life,Infinity)-finite(p.t)+dt)return null;
-    const speed=Math.sqrt(speed2),nx=-p.vx/speed,ny=-p.vy/speed;
-    const distance=Math.min(40,Math.max((owner.r||12)+6,Math.sqrt(dx*dx+dy*dy)-(p.r||0)-4));
-    return {x:owner.x+nx*distance,y:owner.y+ny*distance,nx,ny,halfWidth:42,age:0,duration:.65};
+    const impact=wallContact(p,{x:owner.x,y:owner.y,radius:owner.r||12},dt+.22);
+    if(impact===null||impact>finite(p.life,Infinity)-finite(p.t)+dt)return null;
+    return {x:owner.x,y:owner.y,radius:46,age:0,duration:1};
   }
   function interceptBones(dt,owner) {
     if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
@@ -551,33 +538,33 @@
       const s=state(actor);guards.push(s);
     }
     if(!guards.length)return;
+    const bullets=G.Projectiles.all().filter(guardBlockable);
+    // Open the window before resolving any bullet, so list order cannot leave
+    // a same-frame side or rear bullet unprotected.
+    for(const s of guards){
+      const g=s.boneGuard;
+      if(g.wall&&g.wall.age<g.wall.duration){g.wall.x=s.owner.x;g.wall.y=s.owner.y;continue;}
+      if(s.clock+EPS<g.readyAt)continue;
+      const wall=bullets.map(p=>guardThreat(p,s.owner,dt)).find(Boolean);
+      if(!wall)continue;
+      g.wall=wall;wall.born=s.clock;
+      g.readyAt=s.clock+[2.5,2.25,2,1.75,1.5][rank(learned(s.owner,BONE_GUARD))-1];
+      g.triggers++;learned(s.owner,BONE_GUARD).t=g.readyAt-s.clock;
+    }
     // Evaluate complete swept motion before native player and clone collisions.
-    for(const p of [...G.Projectiles.all()]){
-      if(!guardBlockable(p))continue;
+    for(const p of bullets){
       let first=null;
       for(const s of guards){
-        const g=s.boneGuard;
-        const existing=g.wall&&g.wall.age<g.wall.duration?g.wall:null;
-        // A rear shot must not be erased after crossing the owner first.
-        if(existing&&p.vx*existing.nx+p.vy*existing.ny>=0)continue;
-        const wall=existing||(s.clock+EPS>=g.readyAt?guardThreat(p,s.owner,dt):null);
-        if(!wall)continue;
-        const horizon=existing?Math.min(dt,wall.duration-wall.age):dt+.22;
+        const wall=s.boneGuard.wall;if(!wall||wall.age>=wall.duration)continue;
+        const horizon=Math.min(dt,wall.duration-wall.age);
         const contact=wallContact(p,wall,horizon);
-        if(contact!==null&&(!first||contact<first.contact))first={s,wall,contact,existing};
+        if(contact!==null&&(!first||contact<first.contact))first={s,wall,contact};
       }
       if(!first)continue;
-      const {s,wall,contact,existing}=first,g=s.boneGuard;
-      if(!existing){
-        g.wall=wall;wall.born=s.clock;
-        g.readyAt=s.clock+[2.5,2.25,2,1.75,1.5][rank(learned(s.owner,BONE_GUARD))-1];
-        g.triggers++;learned(s.owner,BONE_GUARD).t=g.readyAt-s.clock;
-      }
-      if(contact<=dt+EPS){
-        G.Projectiles.remove(p);g.blocks++;
-        wall.flash=.16;wall.impactX=finite(p.px,p.x)+p.vx*contact;
-        wall.impactY=finite(p.py,p.y)+p.vy*contact;
-      }
+      const {s,wall,contact}=first,g=s.boneGuard;
+      G.Projectiles.remove(p);g.blocks++;
+      wall.flash=.16;wall.impactX=finite(p.px,p.x)+p.vx*contact;
+      wall.impactY=finite(p.py,p.y)+p.vy*contact;
     }
   }
   function update(dt) {
@@ -591,7 +578,7 @@
       const guard=learned(s.owner,BONE_GUARD),g=s.boneGuard;
       if(guard){
         guard.t=Math.max(0,g.readyAt-s.clock);
-        if(g.wall){g.wall.age=s.clock-g.wall.born;g.wall.flash=Math.max(0,(g.wall.flash||0)-dt);
+        if(g.wall){g.wall.x=s.owner.x;g.wall.y=s.owner.y;g.wall.age=s.clock-g.wall.born;g.wall.flash=Math.max(0,(g.wall.flash||0)-dt);
           if(g.wall.age>=g.wall.duration)g.wall=null;}
       }else g.wall=null;
       for(const mark of s.impacts)mark.age=Math.max(0,s.clock-mark.time);

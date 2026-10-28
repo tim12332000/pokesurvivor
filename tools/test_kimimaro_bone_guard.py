@@ -1,4 +1,4 @@
-"""Native hostile-projectile acceptance for Kimimaro's slotless bone wall."""
+"""Native projectile acceptance for Kimimaro's one-second bone defense ring."""
 from __future__ import annotations
 
 import json
@@ -36,11 +36,15 @@ PROGRESSION = r"""() => {
 
 INTERCEPT = r"""() => {
  const B=BGuard,{A,p}=B,out=[];
- for(const [name,x,y,vx,vy,dt] of [
+ for(const [name,x,y,vx,vy,dt,flags={}] of [
    ['front',120,0,-500,0,.10],['back',-120,0,500,0,.10],
    ['top',0,-120,0,500,.10],['bottom',0,120,0,-500,.10],
-   ['diagonal',100,100,-500,-500,.10],['fast-crossing',120,0,-2000,0,.10]]){
-   B.prepare();const hp=p().hp,q=B.shot(x,y,vx,vy);A.step(dt);A.advance(.25);
+   ['diagonal',100,100,-500,-500,.10],['fast-crossing',120,0,-2000,0,.10],
+   ['unblockable',120,0,-500,0,.10,{unblockable:true}],
+   ['guardUnblockable',120,0,-500,0,.10,{guardUnblockable:true}],
+   ['uninterceptable',120,0,-500,0,.10,{uninterceptable:true}],
+   ['all-block-flags',120,0,-500,0,.10,{unblockable:true,guardUnblockable:true,uninterceptable:true}]]){
+   B.prepare();const hp=p().hp,q=B.shot(x,y,vx,vy,flags);A.step(dt);A.advance(.25);
    A.assert(!B.exists(q),'threat not intercepted '+name);A.near(p().hp,hp,'guard failed to protect '+name);
    const state=B.state();A.assert(state&&state.cooldown>0,'block did not start cooldown '+name);
    out.push({name,protected:true,state});
@@ -51,9 +55,7 @@ INTERCEPT = r"""() => {
 EXCLUSIONS = r"""() => {
  const B=BGuard,{A}=B,out=[];
  const cases=[['friendly',120,0,-500,0,{friendly:true}],['away',70,0,500,0,{}],
-   ['near-miss',120,100,-500,0,{}],['unblockable',120,0,-500,0,{unblockable:true}],
-   ['guardUnblockable',120,0,-500,0,{guardUnblockable:true}],
-   ['uninterceptable',120,0,-500,0,{uninterceptable:true}],
+   ['near-miss',120,100,-500,0,{}],
    ['ground',120,0,-500,0,{ground:true}],['beam',120,0,-500,0,{beam:true}],
    ['laser',120,0,-500,0,{laser:true}],['orb',120,0,-500,0,{orb:true,oa:0,ospeed:0,orad:120}],
    ['hazard',120,0,-500,0,{hazard:true}],['far',180,0,-10,0,{}]];
@@ -63,21 +65,56 @@ EXCLUSIONS = r"""() => {
    const state=B.state();A.assert(!state?.cooldown,'guard spent cooldown on excluded projectile '+name);
    out.push(name);
  }
- return {ignored:out};
+ const active=[];
+ for(const [name,flags] of [['friendly',{friendly:true}],['ground',{ground:true}],['beam',{beam:true}],
+   ['laser',{laser:true}],['hazard',{hazard:true}],['orb',{orb:true,oa:0,ospeed:0,orad:40}]]){
+   B.prepare();B.shot(60,0,-600,0);A.step(.1);const before=B.state();
+   const q=B.shot(60,0,-100,0,flags);A.step(.1);
+   A.assert(B.exists(q),'active defense consumed a non-bullet '+name);
+   A.assert(B.state().blocks===before.blocks&&B.state().triggers===1,'non-bullet changed active interception counters '+name);
+   active.push(name);
+ }
+ return {ignoredWhileIdle:out,ignoredDuringWindow:active};
 }"""
 
 WALL_AND_COOLDOWN = r"""() => {
- const B=BGuard,{A,p}=B;B.prepare();const hp=p().hp,first=B.shot();A.step(.10);A.advance(.12);
- A.assert(!B.exists(first),'first shot not blocked');
- const second=B.shot(90,0,-600,0);A.step(.10);A.advance(.04);
- A.assert(!B.exists(second)&&p().hp===hp,'active wall failed to block a second same-direction shot');
- const blocks=B.state().blocks,fastRear=B.shot(-120,0,2000,0);A.step(.10);
- A.assert(B.exists(fastRear)&&B.state().blocks===blocks,'wall blocked a backside projectile after it had crossed the owner');G.Projectiles.remove(fastRear);
- const rear=B.shot(-60,0,600,0);A.step(.10);
- A.assert(p().hp<hp&&!B.exists(rear),'short directional wall became a full invulnerability bubble');
- A.advance(.65);p().invuln=0;const before=p().hp,late=B.shot(60,0,-600,0);A.step(.10);
- A.assert(p().hp<before&&!B.exists(late),'cooldown did not allow later projectile damage');
- return {sameDirectionVolley:true,backsideStillDangerous:true,cooldownDamage:before-p().hp};
+ const B=BGuard,{A,p}=B;B.prepare();const hp=p().hp,first=B.shot(60,0,-600,0);A.step(.05);
+ A.assert(!B.exists(first)&&B.state().active,'first threat did not activate defense');
+ const initial=B.state(),volley=[];
+ A.near(initial.wall.duration,1,'defense window duration');A.near(initial.wall.radius,46,'defense circle radius');
+ for(let n=0;n<8;n++){const a=n*Math.PI/4;volley.push(B.shot(Math.cos(a)*90,Math.sin(a)*90,-Math.cos(a)*900,-Math.sin(a)*900))}
+ volley.push(B.shot(-120,0,2000,0));
+ volley.push(B.shot(90,0,-900,0,{unblockable:true}),B.shot(0,-90,0,900,{guardUnblockable:true}),B.shot(-90,0,900,0,{uninterceptable:true}));
+ const far=B.shot(180,0,-10,0);A.step(.1);
+ const state=B.state();A.assert(volley.every(q=>!B.exists(q))&&p().hp===hp,'one-second defense failed to block all directions or fast crossings');
+ A.assert(B.exists(far),'active defense cleared a distant bullet that never touched its circle');
+ A.assert(state.blocks===1+volley.length&&state.triggers===1,'continuous bullets restarted defense or failed to count blocks');
+ A.near(state.wall.born,initial.wall.born,'continuous blocks refreshed defense window');
+ A.near(initial.cooldown-state.cooldown,.1,'continuous blocks restarted cooldown');
+ return {directions:8,fastBackside:true,flaggedBullets:true,blocked:state.blocks,windowDuration:state.wall.duration,triggers:state.triggers,distantBulletRetained:true};
+}"""
+
+WINDOW_BOUNDARY = r"""() => {
+ const B=BGuard,{A,p}=B;B.prepare();B.shot(60,0,-600,0);A.step(.02);
+ const born=B.state().wall.born;A.advance(.99-B.state().wall.age);
+ const hp=p().hp,edge=B.shot(50,0,-600,0);A.step(.005);let state=B.state();
+ A.assert(!B.exists(edge)&&p().hp===hp&&state.active&&state.wall.age<1,'defense stopped before its one-second boundary');
+ A.near(state.wall.born,born,'boundary hit extended defense');
+ const blocks=state.blocks;A.advance(.006);state=B.state();
+ A.assert(!state.active&&state.cooldown>0,'defense remained active after its one-second boundary');
+ p().invuln=0;const after=B.shot(36,0,-600,0);A.step(.06);
+ A.assert(!B.exists(after)&&p().hp<hp&&B.state().blocks===blocks&&B.state().triggers===1,'expired window continued blocking bullets or restarted before cooldown');
+ return {blockedAt:.995,expiredBy:1.001,hpLossAfterExpiry:hp-p().hp,windowWasNotRefreshed:true};
+}"""
+
+MELEE_AND_GROUND = r"""() => {
+ const B=BGuard,{A,p}=B;B.prepare();B.shot(60,0,-600,0);A.step(.1);const active=B.state();
+ const enemy=A.spawn(10,0);enemy.dmg=30;enemy.touchCd=0;const before=p().hp;p().invuln=0;A.step(.01);
+ A.assert(p().hp<before&&B.state().active,'active bullet defense prevented native melee contact damage');
+ const meleeLoss=before-p().hp;enemy.dead=true;p().invuln=0;
+ const hp=p().hp,ground=B.shot(30,0,-600,0,{ground:true});A.step(.05);
+ A.assert(!B.exists(ground)&&p().hp<hp&&B.state().blocks===active.blocks,'active bullet defense blocked native ground attack damage');
+ return {meleeLoss,groundLoss:hp-p().hp,onlyBulletsBlocked:true};
 }"""
 
 CLONES = r"""() => {
@@ -113,20 +150,22 @@ FIXED_COOLDOWN = r"""() => {
  p().cdMul=1;p().quantityPicks=0;return out;
 }"""
 
-STATIONARY_AND_UNLEARN = r"""() => {
+MOVING_AND_UNLEARN = r"""() => {
  const B=BGuard,{A,p,id}=B;B.prepare();B.shot();A.step(.1);A.advance(.15);
  const original=B.state(),wall=original.wall,anchor={x:wall.x,y:wall.y},blocks=original.blocks;
- p().x+=100;p().y+=100;p().walking=true;A.step(.05);
- A.near(B.state().wall.x,anchor.x,'wall followed owner horizontally');
- A.near(B.state().wall.y,anchor.y,'wall followed owner vertically');
- const atOldWall=G.Projectiles.spawn({x:anchor.x+80,y:anchor.y,vx:-500,vy:0,friendly:false,r:5,dmg:30,mtype:'normal',life:4});
- A.step(.18);A.assert(!B.exists(atOldWall)&&B.state().blocks===blocks+1,'stationary wall no longer blocks at its original position');
+ p().x+=100;p().y+=100;p().walking=true;A.step(.02);
+ A.near(B.state().wall.x,p().x,'defense circle did not follow owner horizontally');
+ A.near(B.state().wall.y,p().y,'defense circle did not follow owner vertically');
+ const movingHp=p().hp,left=B.shot(-80,0,800,0),right=B.shot(80,0,-800,0);A.step(.1);
+ A.assert(!B.exists(left)&&!B.exists(right)&&p().hp===movingHp&&B.state().blocks===blocks+2,'moving owner lost all-direction projectile protection');
+ const old=G.Projectiles.spawn({x:anchor.x+30,y:anchor.y,vx:-100,vy:0,friendly:false,r:5,dmg:30,mtype:'normal',life:4});A.step(.1);
+ A.assert(B.exists(old),'moved defense left an extra blocking circle at the original position');
  B.prepare();B.shot();A.step(.1);A.advance(.15);
  p().moves=p().moves.filter(m=>m.id!==id);p().arrange();A.step(.01);
  A.assert(B.state()===null,'removed move retained guard state');
  const hp=p().hp,q=B.shot(60,0,-600,0);A.step(.1);
  A.assert(!B.exists(q)&&p().hp<hp,'removed guard continued intercepting hostile projectiles');
- return {fixedAnchor:anchor,blocksAfterMoving:blocks+1,unlearned:true};
+ return {originalAnchor:anchor,followedTo:{x:100,y:100},blocksAfterMoving:blocks+2,oldPositionUnprotected:true,unlearned:true};
 }"""
 
 INDEPENDENT_ACTION = r"""() => {
@@ -174,7 +213,9 @@ def main():
             result=report['viewports'][label]={}
             try:
                 frame=game.boot(page,label);frame.evaluate(SETUP)
-                for name,check in [('progression',PROGRESSION),('intercept',INTERCEPT),('exclusions',EXCLUSIONS),('wallAndCooldown',WALL_AND_COOLDOWN),('fixedCooldown',FIXED_COOLDOWN),('stationaryAndUnlearn',STATIONARY_AND_UNLEARN),('independentAction',INDEPENDENT_ACTION),('clones',CLONES),('lifecycle',LIFECYCLE)]:
+                for name,check in [('progression',PROGRESSION),('intercept',INTERCEPT),('exclusions',EXCLUSIONS),('wallAndCooldown',WALL_AND_COOLDOWN),
+                  ('windowBoundary',WINDOW_BOUNDARY),('meleeAndGround',MELEE_AND_GROUND),('fixedCooldown',FIXED_COOLDOWN),('movingAndUnlearn',MOVING_AND_UNLEARN),
+                  ('independentAction',INDEPENDENT_ACTION),('clones',CLONES),('lifecycle',LIFECYCLE)]:
                     print(label,name,flush=True)
                     try:result[name]=frame.evaluate(check)
                     except Exception as error:report['failures'].append(label+':'+name+': '+str(error))

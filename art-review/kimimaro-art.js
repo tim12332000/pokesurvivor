@@ -268,9 +268,9 @@
     let count=0;
     for(const state of states){
       const wall=state.boneGuard?.wall;if(!wall||wall.age>=wall.duration)continue;
-      const rise=ease(wall.age/.10),fade=1-ease((wall.age-.46)/.19),owner=state.owner;
+      const rise=ease(wall.age/.10),fade=1-ease((wall.age-(wall.duration-.19))/.19),owner=state.owner;
       for(let i=0;i<5&&count<20;i++,count++){
-        const lane=(i-2)*18,x=wall.x-wall.ny*lane,y=wall.y+wall.nx*lane;
+        const angle=i*TAU/5-Math.PI/2,x=owner.x+Math.cos(angle)*wall.radius,y=owner.y+Math.sin(angle)*wall.radius;
         if((y>=owner.y)!==front)continue;
         ctx.save();ctx.globalAlpha*=fade;
         if(!front){polygon(ctx,[[x-12,y],[x-4,y-5],[x+14,y+1],[x+3,y+6]],'#665335','#394329');}
