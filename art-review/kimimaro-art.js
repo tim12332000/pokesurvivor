@@ -296,7 +296,7 @@
         const b=lane.projectile;if(!b)continue;
         ctx.save();ctx.strokeStyle=b.phase==='return'?'#c4b3d8':'#e5dbc5';ctx.lineWidth=2;ctx.globalAlpha*=.35;
         ctx.beginPath();b.trail.forEach((point,i)=>i?ctx.lineTo(point.x,point.y-31):ctx.moveTo(point.x,point.y-31));ctx.stroke();ctx.restore();
-        ctx.save();ctx.translate(b.x,b.y-31);ctx.rotate(b.age*24);
+        ctx.save();ctx.translate(b.x,b.y-31);ctx.rotate(b.age*24);ctx.scale(1.5,1.5);
         bone(ctx,0,4,-18,-8,6);bone(ctx,0,4,18,-8,6);
         ctx.fillStyle='#f4efdf';ctx.strokeStyle='#34384b';ctx.beginPath();ctx.ellipse(0,4,4,3,0,0,TAU);ctx.fill();ctx.stroke();ctx.restore();
       }
