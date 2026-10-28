@@ -410,9 +410,14 @@
     const aim=Math.atan2(target.y-owner.y,target.x-owner.x),hand=boomerangHand(owner,aim);
     if(!clearPath(owner.x,owner.y,hand.x,hand.y))return false;
     const speed=finite(m.speed,650),castId=nextCast++;
-    lane.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(aim)*speed,vy:Math.sin(aim)*speed,
+    const distance=Math.hypot(target.x-hand.x,target.y-hand.y),bend=(lane.index%2?1:-1)*Math.min(140,distance*.4);
+    const cx=(hand.x+target.x)/2-Math.sin(aim)*bend,cy=(hand.y+target.y)/2+Math.cos(aim)*bend;
+    const curve=Array.from({length:33},(_,i)=>{const t=i/32,u=1-t;
+      return {x:u*u*hand.x+2*u*t*cx+t*t*target.x,y:u*u*hand.y+2*u*t*cy+t*t*target.y};});
+    const firstAim=Math.atan2(curve[1].y-hand.y,curve[1].x-hand.x);
+    lane.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(firstAim)*speed,vy:Math.sin(firstAim)*speed,
       aim,phase:'out',age:0,distance:0,range:finite(m.range,600),move:{...m},attack:owner.atk*damageBonus(owner),
-      kind:'boomerang',baseKind:'boomerang',castId,lane:lane.index,phaseHits:new Map(),trail:[]};
+      kind:'boomerang',baseKind:'boomerang',castId,lane:lane.index,curve,curveIndex:1,phaseHits:new Map(),trail:[]};
     lane.readyAt=time+Math.max(.05,m.cd*(owner.cdMul||1));
     lane.launches++;g.launches++;g.pose={time,aim};
     boomerangEvent(g,lane,{kind:'launch',time,castId,x:hand.x,y:hand.y});
@@ -455,9 +460,13 @@
         b.vx=(hand.x-b.x)/distance*speed;b.vy=(hand.y-b.y)/distance*speed;
         b.x+=b.vx*travel/speed;b.y+=b.vy*travel/speed;b.age+=travel/speed;left-=travel/speed;
       }else{
-        const speed=finite(b.move.speed,650),travel=Math.min(4,speed*left,b.range-b.distance);
+        const speed=finite(b.move.speed,650),point=b.curve[b.curveIndex];
+        const dx=point?point.x-b.x:Math.cos(b.aim),dy=point?point.y-b.y:Math.sin(b.aim),segment=Math.hypot(dx,dy);
+        if(point&&segment<=EPS){b.curveIndex++;continue;}
+        const travel=Math.min(4,speed*left,b.range-b.distance,point?segment:Infinity);
         if(travel<=EPS){b.phase='return';continue;}
-        b.x+=Math.cos(b.aim)*travel;b.y+=Math.sin(b.aim)*travel;
+        b.vx=dx/segment*speed;b.vy=dy/segment*speed;
+        b.x+=b.vx*travel/speed;b.y+=b.vy*travel/speed;
         b.distance+=travel;b.age+=travel/speed;left-=travel/speed;
         const wall=G.World.isWall(b.x,b.y),prop=wall?null:G.World.projectileBlock?.(b.x,b.y,7);
         const victim=!wall&&!prop?G.EnemyMgr.queryCircle(b.x,b.y,48)

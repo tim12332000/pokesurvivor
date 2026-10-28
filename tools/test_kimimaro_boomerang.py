@@ -72,16 +72,33 @@ HIT_AND_RETURN = r"""() => {
  return out;
 }"""
 
-FIRST_TARGET_AND_DIRECTION = r"""() => {
+FIRST_TARGET_AND_CURVE = r"""() => {
  const A=KBoom,p=A.p;A.prepare();const front=A.spawn(95,0),rear=A.spawn(190,0),frontHits=A.watch(front),rearHits=A.watch(rear);
  p.target=rear;A.step(.001,true);A.until(()=>frontHits.length>0);
  A.assert(frontHits.length===1&&rearHits.length===0&&A.state().projectile.phase==='return','outbound pierced first body');
- const {e}=A.start(200),first=A.state().projectile,vx=first.vx,vy=first.vy,castId=first.castId;
- A.near(Math.hypot(vx,vy),650,'outbound velocity');e.y=120;G.EnemyMgr.rebuildGrid();A.advance(.12,true);
- const moved=A.state().projectile;
- A.assert(moved?.phase==='out'&&moved.castId===castId,'throw unexpectedly turned before its fixed path ended');
- A.near(moved.vx,vx,'outbound homed horizontally');A.near(moved.vy,vy,'outbound homed vertically');
- return {firstBodyOnly:true,fixedVelocity:{vx,vy}};
+ const baseline=A.start(400),first={...A.state().projectile},samples=[];let previousTime=0;
+ for(const time of [.05,.15,.25,.35]){
+   A.advance(time-previousTime,true);previousTime=time;const q=A.state().projectile;
+   A.assert(q?.phase==='out'&&q.castId===first.castId,'curve returned before reaching its initial target');
+   A.near(Math.hypot(q.vx,q.vy),650,'curve does not preserve authored path speed');
+   samples.push({time,x:q.x,y:q.y,vx:q.vx,vy:q.vy});
+ }
+ const maxDeviation=Math.max(...samples.map(q=>Math.abs(q.y)));
+ const maxTurn=Math.max(...samples.map(q=>Math.abs(first.vx*q.vy-first.vy*q.vx)/(650*650)));
+ A.assert(maxDeviation>20,'outbound throw stayed on the initial aiming line');
+ A.assert(maxTurn>.15,'outbound velocity never visibly changed direction');
+ A.until(()=>baseline.hits.length>0);
+ A.assert(baseline.hits.length===1&&A.state().projectile.phase==='return','curved outbound path failed to hit its original stationary target');
+ const moved=A.start(400);moved.e.y=180;G.EnemyMgr.rebuildGrid();previousTime=0;
+ for(const sample of samples){
+   A.advance(sample.time-previousTime,true);previousTime=sample.time;const q=A.state().projectile;
+   A.assert(q?.phase==='out','moved-target curve unexpectedly returned');
+   A.near(q.x,sample.x,'target motion rewrote outbound snapshot curve x');
+   A.near(q.y,sample.y,'target motion rewrote outbound snapshot curve y');
+   A.near(q.vx,sample.vx,'target motion changed authored tangent vx');
+   A.near(q.vy,sample.vy,'target motion changed authored tangent vy');
+ }
+ return {firstBodyOnly:true,maxDeviation,maxTurn,originalTargetHit:true,snapshotCurve:true,samples};
 }"""
 
 CADENCE = r"""() => {
@@ -134,6 +151,14 @@ MULTI_CADENCE = r"""() => {
  A.assert(state.count===2&&state.projectiles.length===2&&state.lanes.length===2,'four quantity cards did not create two real flights');
  A.assert(state.lanes[0].projectile.vx>0&&state.lanes[1].projectile.vx<0,'lane indices did not distribute throws across separate targets');
  const ids=state.projectiles.map(q=>q.castId);A.assert(new Set(ids).size===2,'lanes share the same physical projectile');
+ A.advance(.015,true);state=A.state();
+ const offsets=state.lanes.map((lane,i)=>{
+   const launch=lane.log.find(v=>v.kind==='launch'),target=i===0?near:far;
+   const dx=target.x-launch.x,dy=target.y-launch.y,q=lane.projectile;
+   A.assert(q?.phase==='out','left/right curve fixture returned before sampling');
+   return (dx*(q.y-launch.y)-dy*(q.x-launch.x))/Math.hypot(dx,dy);
+ });
+ A.assert(offsets[0]*offsets[1]<0&&offsets.every(v=>Math.abs(v)>.1),'adjacent flight lanes did not bend in opposite relative directions');
  A.until(()=>A.state().lanes[0].catches===1);
  state=A.state();A.assert(!state.lanes[0].projectile&&state.lanes[0].cooldown>0,'near lane ignored its own remaining launch cooldown');
  A.assert(state.lanes[1].projectile&&state.lanes[1].catches===0,'far lane disappeared when the near lane caught');
@@ -149,7 +174,7 @@ MULTI_CADENCE = r"""() => {
    const launches=lane.log.filter(v=>v.kind==='launch');
    for(let i=1;i<launches.length;i++)A.assert(launches[i].time-launches[i-1].time>=1-1e-8,'one lane fired before its own cooldown');
  }
- return {count:state.count,nearHits:nearHits.length,farHits:farHits.length,
+ return {count:state.count,nearHits:nearHits.length,farHits:farHits.length,oppositeCurveOffsets:offsets,
    lanes:state.lanes.map(v=>({index:v.index,launches:v.launches,catches:v.catches,hits:v.hits,log:v.log}))};
 }"""
 
@@ -239,25 +264,31 @@ RANGE_AND_OBSTACLES = r"""() => {
  const A=KBoom,p=A.p,out=[];
  for(const rank of [1,5]){
    const {m,e}=A.start(200,rank),initial=A.state().projectile,sx=initial.x,sy=initial.y;
-   e.dead=true;p.target=null;let furthest=0;
+   e.dead=true;p.target=null;let walked=initial.distance,previous={x:sx,y:sy},outDistance=0;
    A.until(()=>{
      const q=A.state().projectile;if(!q)return false;
-     furthest=Math.max(furthest,Math.hypot(q.x-sx,q.y-sy));return q.phase==='return';
+     walked+=Math.hypot(q.x-previous.x,q.y-previous.y);previous={x:q.x,y:q.y};outDistance=q.distance;
+     return q.phase==='return';
    });
-   A.assert(furthest>=m.range-650*.01&&furthest<=m.range+650*.01,'missed throw did not return at authored range');
+   A.near(outDistance,m.range,'missed curve did not return at authored traveled distance');
+   A.assert(walked>=m.range-8&&walked<=m.range+8,'sampled curve travel disagrees with range budget');
+   const chord=Math.hypot(previous.x-sx,previous.y-sy);
+   A.assert(chord<outDistance-5,'range fixture did not distinguish curved travel from endpoint chord');
    A.until(()=>A.state().catches===1);
    A.assert(!A.state().projectile&&A.state().launches===1,'targetless catch relaunched into empty space');
-   out.push({rank,range:m.range,furthest,caught:true});
+   out.push({rank,range:m.range,traveled:outDistance,sampledTravel:walked,chord,caught:true});
  }
  A.start(200);G.World.isWall=(x,y)=>x>=100;
  A.until(()=>A.state().projectile?.phase==='return');const wallTurn={...A.state().projectile};
  A.assert(wallTurn.x<=106&&A.state().hits===0,'wall did not stop outward throw');
  A.until(()=>A.state().catches>=1);out.push({wallTurn:{x:wallTurn.x,y:wallTurn.y},caughtThroughReturnPath:true});
- const propFixture=A.start(200),prop={x:100,y:0,r:12,type:'chest',solid:true,destructible:true,hp:10000,tx:3,ty:0};
+ const propFixture=A.start(200);A.advance(.10,true);const q=A.state().projectile,speed=Math.hypot(q.vx,q.vy);
+ const prop={x:q.x+q.vx/speed*12,y:q.y+q.vy/speed*12,r:12,type:'chest',solid:true,destructible:true,hp:10000,tx:3,ty:0};
  G.World.projectileBlock=(x,y,r)=>Math.hypot(x-prop.x,y-prop.y)<=prop.r+r?prop:false;
  A.until(()=>A.state().projectile?.phase==='return');
- A.assert(A.state().projectile.x<=118&&propFixture.hits.length===0,'solid prop did not stop outward throw');
- out.push({propTurn:true,propLoss:10000-prop.hp});
+ const turn=A.state().projectile;
+ A.assert(Math.hypot(turn.x-prop.x,turn.y-prop.y)<=prop.r+11&&propFixture.hits.length===0,'solid prop on actual curve did not stop outward throw');
+ out.push({propTurn:true,prop:{x:prop.x,y:prop.y},propLoss:10000-prop.hp});
  return out;
 }"""
 
@@ -327,7 +358,7 @@ def main():
             result=report['viewports'][label]={}
             try:
                 frame=game.boot(page,label);frame.evaluate(HELPERS)
-                for name,check in [('progression',PROGRESSION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndDirection',FIRST_TARGET_AND_DIRECTION),
+                for name,check in [('progression',PROGRESSION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndCurve',FIRST_TARGET_AND_CURVE),
                   ('cadence',CADENCE),('cooldownModifiers',COOLDOWN_MODIFIERS),('multiCadence',MULTI_CADENCE),
                   ('quantityGrowAndRetire',QUANTITY_GROW_AND_RETIRE),('quantityCap',QUANTITY_CAP),('multiCloneAndUnlearn',MULTI_CLONE_AND_UNLEARN),
                   ('lateCatch',LATE_CATCH),('rangeAndObstacles',RANGE_AND_OBSTACLES),('movingCatch',MOVING_CATCH),('bodyAndGuard',BODY_AND_GUARD),('cloneAndLifecycle',CLONE_AND_LIFECYCLE)]:
