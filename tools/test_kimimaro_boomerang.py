@@ -27,7 +27,7 @@ HELPERS = r"""() => {
    A.assert(!A.action()&&p.slots.length===0,'throw created a body action or active slot');
    return {m,e,hits};
  }
- function until(predicate,limit=2,dt=.005){
+ function until(predicate,limit=5,dt=.005){
    for(let elapsed=0;elapsed<limit;elapsed+=dt){if(predicate())return elapsed;A.step(dt,true)}
    A.assert(predicate(),'boomerang event timed out');return limit;
  }
@@ -40,10 +40,10 @@ HELPERS = r"""() => {
 }"""
 
 PROGRESSION = r"""() => {
- const A=KBoom,p=A.p;A.reset();p.moves=[];p.slots=[];p.level=2;
- A.assert(!G.Moves.poolFor(p.mon).includes(A.id)&&!p.addMove(A.id),'boomerang learned before Lv3');
- p.level=3;A.assert(G.Moves.poolFor(p.mon).includes(A.id),'Lv3 pool omitted boomerang');
- A.assert(G.LevelUp.offer(p,100).some(c=>c.key==='new:'+A.id),'Lv3 normal learn choice omitted boomerang');
+ const A=KBoom,p=A.p;A.reset();p.moves=[];p.slots=[];p.level=1;
+ A.assert(!G.Moves.poolFor(p.mon).includes(A.id)&&!p.addMove(A.id),'boomerang learned before Lv2');
+ p.level=2;A.assert(G.Moves.poolFor(p.mon).includes(A.id),'Lv2 pool omitted boomerang');
+ A.assert(G.LevelUp.offer(p,100).some(c=>c.key==='new:'+A.id),'Lv2 normal learn choice omitted boomerang');
  A.assert(p.addMove(A.id)&&p.slots.length===0,'learning bone boomerang consumed a slot');
  const ranks=[];for(let rank=1;rank<=5;rank++){
    const m=G.Moves.instance(A.id,rank);A.assert(m.passive&&m.cd===1,'throw is not slotless with a one-second base cooldown rank '+rank);
@@ -51,11 +51,12 @@ PROGRESSION = r"""() => {
    A.near(m.range,[600,650,700,750,800][rank-1],'throw range rank '+rank);
    A.near(m.count,rank,'base bone count rank '+rank);
    A.near(m.pierce,rank-1,'base piercing budget rank '+rank);
-   ranks.push({rank,damage:m.dmg,range:m.range,count:m.count,pierce:m.pierce,cd:m.cd,passive:m.passive});
+   A.near(m.speed,450,'outbound speed rank '+rank);A.near(m.returnSpeed,650,'return speed rank '+rank);
+   ranks.push({rank,damage:m.dmg,range:m.range,count:m.count,pierce:m.pierce,speed:m.speed,returnSpeed:m.returnSpeed,cd:m.cd,passive:m.passive});
  }
  A.prepare();A.step(.001,true);A.advance(1,true);
  A.assert(!A.state()?.projectile&&!(A.state()?.launches),'idle throw escaped hand without a target');
- return {gate:3,slotless:true,idleInHand:true,ranks};
+ return {gate:2,slotless:true,idleInHand:true,ranks};
 }"""
 
 HIT_AND_RETURN = r"""() => {
@@ -90,15 +91,15 @@ FIRST_TARGET_AND_CURVE = r"""() => {
  p.target=rear;A.step(.001,true);A.until(()=>frontHits.length>0);
  A.assert(frontHits.length===1&&rearHits.length===0&&A.state().projectile.phase==='return','outbound pierced first body');
  const baseline=A.start(400),first={...A.state().projectile},samples=[];let previousTime=0;
- for(const time of [.05,.15,.25,.35]){
+ for(const time of [.10,.25,.40,.55,.70]){
    A.advance(time-previousTime,true);previousTime=time;const q=A.state().projectile;
    A.assert(q?.phase==='out'&&q.castId===first.castId,'curve returned before reaching its initial target');
-   A.near(Math.hypot(q.vx,q.vy),650,'curve does not preserve authored path speed');
+   A.near(Math.hypot(q.vx,q.vy),450,'curve does not preserve authored path speed');
    samples.push({time,x:q.x,y:q.y,vx:q.vx,vy:q.vy});
  }
  const maxDeviation=Math.max(...samples.map(q=>Math.abs(q.y)));
- const maxTurn=Math.max(...samples.map(q=>Math.abs(first.vx*q.vy-first.vy*q.vx)/(650*650)));
- A.assert(maxDeviation>20,'outbound throw stayed on the initial aiming line');
+ const maxTurn=Math.max(...samples.map(q=>Math.abs(first.vx*q.vy-first.vy*q.vx)/(450*450)));
+ A.assert(maxDeviation>100,'increased outbound curve did not visibly exceed the previous 69px deviation');
  A.assert(maxTurn>.15,'outbound velocity never visibly changed direction');
  A.until(()=>baseline.hits.length>0);
  A.assert(baseline.hits.length===1&&A.state().projectile.phase==='return','curved outbound path failed to hit its original stationary target');
@@ -112,6 +113,23 @@ FIRST_TARGET_AND_CURVE = r"""() => {
    A.near(q.vy,sample.vy,'target motion changed authored tangent vy');
  }
  return {firstBodyOnly:true,maxDeviation,maxTurn,originalTargetHit:true,snapshotCurve:true,samples};
+}"""
+
+FAR_NOMINAL_HITS = r"""() => {
+ const A=KBoom,out=[];
+ for(const [rank,distance] of [[1,560],[1,600],[5,800]]){
+   const {m,e,hits}=A.start(distance,rank),shots=[...A.state().projectiles];
+   for(const q of shots){
+     const chord=Math.hypot(q.curve.at(-1).x-q.curve[0].x,q.curve.at(-1).y-q.curve[0].y);
+     A.near(q.travelLimit,m.range+q.curveLength-chord,'large curve did not compensate nominal range');
+     A.assert(q.travelLimit>=q.curveLength,'far snapshot target became unreachable after stronger bending');
+   }
+   A.until(()=>hits.length>=rank);
+   A.assert(hits.length===rank&&shots.every(q=>q.phase==='return'),'far nominal-range target was missed or hit did not immediately return');
+   A.assert(shots.every(q=>q.distance<=q.curveLength+4),'far throw overshot its snapshot target before hitting');
+   out.push({rank,distance,nominalRange:m.range,hits:hits.length,curveLength:shots[0].curveLength,travelLimit:shots[0].travelLimit,hitAtDistance:shots[0].distance});
+ }
+ return out;
 }"""
 
 CADENCE = r"""() => {
@@ -129,7 +147,12 @@ CADENCE = r"""() => {
    A.assert(s.catches>=2&&log.some(v=>v.kind==='catch'),'catch event log missing');
    const launches=log.filter(v=>v.kind==='launch');
    for(let i=1;i<launches.length;i++)A.assert(launches[i].time-launches[i-1].time>=1-1e-8,'launch repeated before one-second cooldown');
-   A.assert(s.launches<=4&&waitedInHand,'short round trip did not wait for its one-second cooldown');
+   A.assert(s.launches<=4,'one-second cooldown allowed too many launches');
+   if(distance===60)A.assert(waitedInHand,'near target round trip did not wait for its one-second cooldown');
+   if(!waitedInHand)for(let i=0;i<log.length-1;i++)if(log[i].kind==='catch'){
+     A.assert(log[i+1].kind==='launch','overdue slower return waited after true catch');
+     A.near(log[i+1].time,log[i].time,'overdue slower catch added an extra cooldown');
+   }
    out.push({distance,launches:s.launches,catches:s.catches,hits:s.hits,waitedInHand,log});
  }
  A.start(60);A.until(()=>A.state().catches===1);const caught=A.state(),firstLaunch=caught.log.find(v=>v.kind==='launch');
@@ -342,9 +365,9 @@ PIERCE_UNUSED_AND_OBSTACLES = r"""() => {
  A.until(()=>A.state().catches===1);A.assert(hits.length===1,'unused-charge return hit its earlier victim');
  const firstContact={distance:b.distance,unused:b.remainingPierce,hits:hits.length};
  const missed=A.single(5,200);missed.anchor.dead=true;A.p.target=null;
- A.until(()=>missed.b.phase==='return');A.near(missed.b.distance,800,'missed outbound path did not retain its full range');
+ A.until(()=>missed.b.phase==='return');A.near(missed.b.distance,missed.b.travelLimit,'missed outbound path did not retain its compensated travel budget');
  A.assert(missed.b.remainingPierce===4&&missed.hits.length===0,'missed flight consumed return piercing without victims');
- const rangeResult={distance:missed.b.distance,unused:missed.b.remainingPierce,hits:missed.hits.length};
+ const rangeResult={nominalRange:missed.b.range,distance:missed.b.distance,travelLimit:missed.b.travelLimit,unused:missed.b.remainingPierce,hits:missed.hits.length};
  const wall=A.single(5);G.World.isWall=(x,y)=>x>=100;A.until(()=>A.state().projectile?.phase==='return');
  A.assert(wall.b.remainingPierce===4&&wall.b.distance<800&&wall.hits.length===0,'wall did not return a bone with unused piercing');
  const blocked=A.single(5);A.advance(.10,true);const q=blocked.b,speed=Math.hypot(q.vx,q.vy);
@@ -399,19 +422,24 @@ RANGE_AND_OBSTACLES = r"""() => {
  const A=KBoom,p=A.p,out=[];
  for(const rank of [1,5]){
    const {m,e}=A.start(200,rank),initial=A.state().projectile,sx=initial.x,sy=initial.y;
+   const curveLength=initial.curve.slice(1).reduce((sum,q,i)=>sum+Math.hypot(q.x-initial.curve[i].x,q.y-initial.curve[i].y),0);
+   const targetChord=Math.hypot(initial.curve.at(-1).x-initial.curve[0].x,initial.curve.at(-1).y-initial.curve[0].y);
+   A.near(initial.range,m.range,'compensated travel changed nominal target range');
+   A.near(initial.curveLength,curveLength,'reported polyline length does not match the actual curve');
+   A.near(initial.travelLimit,m.range+Math.max(0,curveLength-targetChord),'travel limit omitted extra curved distance');
    e.dead=true;p.target=null;let walked=initial.distance,previous={x:sx,y:sy},outDistance=0;
    A.until(()=>{
      const q=A.state().projectile;if(!q)return false;
      walked+=Math.hypot(q.x-previous.x,q.y-previous.y);previous={x:q.x,y:q.y};outDistance=q.distance;
      return q.phase==='return';
    });
-   A.near(outDistance,m.range,'missed curve did not return at authored traveled distance');
-   A.assert(walked>=m.range-8&&walked<=m.range+8,'sampled curve travel disagrees with range budget');
+   A.near(outDistance,initial.travelLimit,'missed curve did not return at compensated traveled distance');
+   A.assert(walked>=initial.travelLimit-8&&walked<=initial.travelLimit+8,'sampled curve travel disagrees with compensated budget');
    const chord=Math.hypot(previous.x-sx,previous.y-sy);
    A.assert(chord<outDistance-5,'range fixture did not distinguish curved travel from endpoint chord');
    A.until(()=>A.state().catches===rank);
    A.assert(A.state().projectiles.length===0&&A.state().launches===rank,'targetless ranked catches relaunched into empty space');
-   out.push({rank,count:rank,range:m.range,traveled:outDistance,sampledTravel:walked,chord,caught:true});
+   out.push({rank,count:rank,range:m.range,curveLength,travelLimit:initial.travelLimit,traveled:outDistance,sampledTravel:walked,chord,caught:true});
  }
  A.start(200);G.World.isWall=(x,y)=>x>=100;
  A.until(()=>A.state().projectile?.phase==='return');const wallTurn={...A.state().projectile};
@@ -435,12 +463,12 @@ MOVING_CATCH = r"""() => {
    A.assert(q.phase==='return','returning throw changed phase without catching');
    const dx=hand.x-q.x,dy=hand.y-q.y,d=Math.hypot(dx,dy);A.step(.01,true);const after=A.state();
    if(after.catches){
-     A.assert(d<=900*.01+8+.01,'throw caught without reaching moving hand');break;
+     A.assert(d<=650*.01+8+.01,'throw caught without reaching moving hand');break;
    }
    const next=after.projectile,mx=next.x-q.x,my=next.y-q.y;
    A.assert(mx*dx+my*dy>0,'return moved away from the current hand');
    A.assert(Math.abs(mx*dy-my*dx)<1e-5*Math.max(1,d),'return spiraled instead of moving straight to hand');
-   A.near(Math.hypot(mx,my),9,'return speed is not 900px/s');
+   A.near(Math.hypot(mx,my),6.5,'return speed is not 650px/s');
  }
  A.assert(A.state().catches===1&&!A.state().projectile&&steps<200,'moving owner never truly caught the throw');
  return {steps,owner:{x:p.x,y:p.y},state:A.state()};
@@ -493,7 +521,7 @@ def main():
             result=report['viewports'][label]={}
             try:
                 frame=game.boot(page,label);frame.evaluate(HELPERS)
-                for name,check in [('progression',PROGRESSION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndCurve',FIRST_TARGET_AND_CURVE),
+                for name,check in [('progression',PROGRESSION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndCurve',FIRST_TARGET_AND_CURVE),('farNominalHits',FAR_NOMINAL_HITS),
                   ('cadence',CADENCE),('cooldownModifiers',COOLDOWN_MODIFIERS),('multiCadence',MULTI_CADENCE),
                   ('quantityGrowAndRetire',QUANTITY_GROW_AND_RETIRE),('quantityCap',QUANTITY_CAP),('rankLevelUp',RANK_LEVEL_UP),
                   ('rankQuantityStack',RANK_QUANTITY_STACK),('pierceLimits',PIERCE_LIMITS),('pierceOverlapAndQuantity',PIERCE_OVERLAP_AND_QUANTITY),

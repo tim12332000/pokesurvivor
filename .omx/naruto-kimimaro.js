@@ -444,17 +444,20 @@
     const target=targets[lane.index%targets.length];
     const aim=Math.atan2(target.y-owner.y,target.x-owner.x),hand=boomerangHand(owner,aim);
     if(!clearPath(owner.x,owner.y,hand.x,hand.y))return false;
-    const speed=finite(m.speed,650),castId=nextCast++;
-    const distance=Math.hypot(target.x-hand.x,target.y-hand.y),bend=(lane.index%2?1:-1)*Math.min(140,distance*.4);
+    const speed=finite(m.speed,450),castId=nextCast++;
+    const distance=Math.hypot(target.x-hand.x,target.y-hand.y),bend=(lane.index%2?1:-1)*Math.min(280,distance*.8);
     const cx=(hand.x+target.x)/2-Math.sin(aim)*bend,cy=(hand.y+target.y)/2+Math.cos(aim)*bend;
     const curve=Array.from({length:33},(_,i)=>{const t=i/32,u=1-t;
       return {x:u*u*hand.x+2*u*t*cx+t*t*target.x,y:u*u*hand.y+2*u*t*cy+t*t*target.y};});
+    const curveLength=curve.reduce((length,point,i)=>i?length+Math.hypot(point.x-curve[i-1].x,point.y-curve[i-1].y):0,0);
+    // Curving must not shorten the advertised reach or cause an early return.
+    const travelLimit=finite(m.range,600)+Math.max(0,curveLength-distance);
     const firstAim=Math.atan2(curve[1].y-hand.y,curve[1].x-hand.x);
     const pierce=Math.max(0,Math.floor(finite(m.pierce)+(G.Quantity?.bonus(owner)||0)));
     lane.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(firstAim)*speed,vy:Math.sin(firstAim)*speed,
       aim,phase:'out',age:0,distance:0,range:finite(m.range,600),move:{...m},attack:owner.atk*damageBonus(owner),
       kind:'boomerang',baseKind:'boomerang',castId,lane:lane.index,pierce,remainingPierce:pierce,
-      curve,curveIndex:1,phaseHits:new Map(),trail:[]};
+      curve,curveLength,travelLimit,curveIndex:1,phaseHits:new Map(),trail:[]};
     lane.readyAt=time+Math.max(.05,m.cd*(owner.cdMul||1));
     lane.launches++;g.launches++;g.pose={time,aim};
     boomerangEvent(g,lane,{kind:'launch',time,castId,x:hand.x,y:hand.y});
@@ -494,7 +497,7 @@
         if(distance<=8){
           catchBoomerang(s,lane,hand,s.clock-left);continue;
         }
-        const speed=finite(b.move.returnSpeed,900),travel=Math.min(4,speed*left,distance-8);
+        const speed=finite(b.move.returnSpeed,650),travel=Math.min(4,speed*left,distance-8);
         b.vx=(hand.x-b.x)/distance*speed;b.vy=(hand.y-b.y)/distance*speed;
         b.x+=b.vx*travel/speed;b.y+=b.vy*travel/speed;b.age+=travel/speed;left-=travel/speed;
         if(b.remainingPierce>0){
@@ -504,10 +507,10 @@
           if(victim&&hit(s,b,victim,1,0,true)>0){lane.hits++;g.hits++;b.remainingPierce--;}
         }
       }else{
-        const speed=finite(b.move.speed,650),point=b.curve[b.curveIndex];
+        const speed=finite(b.move.speed,450),point=b.curve[b.curveIndex];
         const dx=point?point.x-b.x:Math.cos(b.aim),dy=point?point.y-b.y:Math.sin(b.aim),segment=Math.hypot(dx,dy);
         if(point&&segment<=EPS){b.curveIndex++;continue;}
-        const travel=Math.min(4,speed*left,b.range-b.distance,point?segment:Infinity);
+        const travel=Math.min(4,speed*left,b.travelLimit-b.distance,point?segment:Infinity);
         if(travel<=EPS){b.phase='return';continue;}
         b.vx=dx/segment*speed;b.vy=dy/segment*speed;
         b.x+=b.vx*travel/speed;b.y+=b.vy*travel/speed;
@@ -521,7 +524,7 @@
           if(victim&&damage>0){lane.hits++;g.hits++;}
         }
         // First contact always starts recovery, regardless of pierce upgrades.
-        if(wall||prop||victim||b.distance>=b.range-EPS)b.phase='return';
+        if(wall||prop||victim||b.distance>=b.travelLimit-EPS)b.phase='return';
       }
       b.trail.push({x:b.x,y:b.y});if(b.trail.length>4)b.trail.shift();
       // An overdue catch can still relaunch at the end of the same frame.

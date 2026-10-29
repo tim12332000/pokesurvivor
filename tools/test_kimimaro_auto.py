@@ -30,7 +30,7 @@ HELPERS = r"""() => {
 PROGRESSION = r"""() => {
  const A=KAuto,p=A.p,out={gates:[],flags:[],ranks:[]};
  A.assert(p.level===1&&p.moves.length===1&&p.moves[0].id===A.id('willow')&&!p.slots.length,'native fresh starter must only learn Willow');
- const gates={camellia:3,bullets:3,boomerang:3,larch:6,vine:6,'bone-guard':6,flower:9,lily:9,bracken:12,curse:15};
+ const gates={camellia:3,bullets:3,boomerang:2,larch:6,vine:6,'bone-guard':6,flower:9,lily:9,bracken:12,curse:15};
  for(const level of [1,2,3,5,6,8,9,11,12,14,15]){
    p.level=level;const pool=G.Moves.poolFor(p.mon),cards=G.LevelUp.offer(p,100);
    for(const [key,gate] of Object.entries(gates)){
