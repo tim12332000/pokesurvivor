@@ -47,7 +47,7 @@
     if (!s) {
       s = {owner,world:G.World,clock:0,action:null,forest:null,forests:[],bullets:[],impacts:[],
         readySince:new Map(),selection:signature(owner),exitUntil:0,guardUntil:0,guardMove:null,
-        curse:{startAt:hasEvolution(owner)?-1:-Infinity,readyAt:0},boneGuard:{readyAt:0,wall:null,blocks:0,triggers:0},
+        curse:{startAt:hasEvolution(owner)?-1:-Infinity,readyAt:0},boneGuard:{slots:[],walls:[],count:10,blocks:0,triggers:0},
         boomerang:{lanes:[],count:1,launches:0,catches:0,hits:0,pose:null,log:[]},
         castCounts:{},castLog:[],emitted:0,totalDamage:0};
       states.set(owner,s);
@@ -536,9 +536,19 @@
   function boneGuardState(owner=G.Game.player) {
     const s=states.get(owner);
     if(!validState(s)||!learned(owner,BONE_GUARD))return null;
-    const g=s.boneGuard,w=g.wall;
-    return {active:!!w&&w.age<w.duration,cooldown:Math.max(0,g.readyAt-s.clock),
-      blocks:g.blocks,triggers:g.triggers,wall:w};
+    const g=syncBoneGuard(s),slots=g.slots.slice(0,g.count).map(slot=>({...slot,cooldown:Math.max(0,slot.readyAt-s.clock)}));
+    return {active:g.walls.length>0,count:g.count,readyCount:slots.filter(slot=>slot.cooldown<=EPS).length,slots,
+      cooldown:Math.min(...slots.map(slot=>slot.cooldown)),blocks:g.blocks,triggers:g.triggers,wall:g.walls[0]||null,walls:g.walls};
+  }
+  function syncBoneGuard(s) {
+    const g=s.boneGuard,m=learned(s.owner,BONE_GUARD);
+    if(!m){g.slots=[];g.walls=[];return g;}
+    g.count=Math.min(20,Math.max(1,Math.floor(m.count||10)));
+    while(g.slots.length<g.count)g.slots.push({index:g.slots.length,readyAt:0,blocks:0});
+    g.walls=g.walls.filter(wall=>s.clock-wall.born<wall.duration);
+    for(const wall of g.walls){wall.age=Math.max(0,s.clock-wall.born);wall.flash=Math.max(0,.12-wall.age);}
+    m.t=Math.min(...g.slots.slice(0,g.count).map(slot=>Math.max(0,slot.readyAt-s.clock)));
+    return g;
   }
   function guardBlockable(p) {
     return p.friendly===false&&!p.hazard&&!p.laser&&!p.beam&&!p.ground&&!p.orb&&
@@ -556,7 +566,7 @@
   function guardThreat(p,owner,dt) {
     const impact=wallContact(p,{x:owner.x,y:owner.y,radius:owner.r||12},dt+.22);
     if(impact===null||impact>finite(p.life,Infinity)-finite(p.t)+dt)return null;
-    return {x:owner.x,y:owner.y,radius:46,age:0,duration:1};
+    return wallContact(p,{x:owner.x,y:owner.y,radius:46},dt);
   }
   function interceptBones(dt,owner) {
     if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
@@ -564,36 +574,23 @@
     const guards=[];
     for(const actor of actors){
       if(!validOwner(actor)||actor.frozen||!learned(actor,BONE_GUARD))continue;
-      const s=state(actor);guards.push(s);
+      const s=state(actor);syncBoneGuard(s);guards.push(s);
     }
     if(!guards.length)return;
-    const bullets=G.Projectiles.all().filter(guardBlockable);
-    // Open the window before resolving any bullet, so list order cannot leave
-    // a same-frame side or rear bullet unprotected.
-    for(const s of guards){
-      const g=s.boneGuard;
-      if(g.wall&&g.wall.age<g.wall.duration){g.wall.x=s.owner.x;g.wall.y=s.owner.y;continue;}
-      if(s.clock+EPS<g.readyAt)continue;
-      const wall=bullets.map(p=>guardThreat(p,s.owner,dt)).find(Boolean);
-      if(!wall)continue;
-      g.wall=wall;wall.born=s.clock;
-      g.readyAt=s.clock+[2.5,2.25,2,1.75,1.5][rank(learned(s.owner,BONE_GUARD))-1];
-      g.triggers++;learned(s.owner,BONE_GUARD).t=g.readyAt-s.clock;
+    const events=[];
+    for(const p of G.Projectiles.all())if(guardBlockable(p))for(const s of guards){
+      const contact=guardThreat(p,s.owner,dt);if(contact!==null)events.push({p,s,contact});
     }
-    // Evaluate complete swept motion before native player and clone collisions.
-    for(const p of bullets){
-      let first=null;
-      for(const s of guards){
-        const wall=s.boneGuard.wall;if(!wall||wall.age>=wall.duration)continue;
-        const horizon=Math.min(dt,wall.duration-wall.age);
-        const contact=wallContact(p,wall,horizon);
-        if(contact!==null&&(!first||contact<first.contact))first={s,wall,contact};
-      }
-      if(!first)continue;
-      const {s,wall,contact}=first,g=s.boneGuard;
-      G.Projectiles.remove(p);g.blocks++;
-      wall.flash=.16;wall.impactX=finite(p.px,p.x)+p.vx*contact;
-      wall.impactY=finite(p.py,p.y)+p.vy*contact;
+    events.sort((a,b)=>a.contact-b.contact);const removed=new Set();
+    for(const {p,s,contact} of events){
+      if(removed.has(p))continue;
+      const g=s.boneGuard,time=s.clock+contact;
+      let ready=null;
+      for(const slot of g.slots)if(slot.index<g.count&&slot.readyAt<=time+EPS&&(!ready||slot.readyAt<ready.readyAt))ready=slot;
+      if(!ready)continue;
+      G.Projectiles.remove(p);removed.add(p);ready.readyAt=time+3;ready.blocks++;g.blocks++;g.triggers++;
+      const x=finite(p.px,p.x)+p.vx*contact,y=finite(p.py,p.y)+p.vy*contact,speed=Math.hypot(p.vx,p.vy)||1;
+      g.walls.push({x,y,born:time,age:0,duration:.28,slot:ready.index,flash:.12,impactX:x,impactY:y,nx:-p.vx/speed});
     }
   }
   function update(dt) {
@@ -604,12 +601,7 @@
       if(s.owner.frozen)continue;
       s.clock+=dt;
       updateBoomerang(s,dt);
-      const guard=learned(s.owner,BONE_GUARD),g=s.boneGuard;
-      if(guard){
-        guard.t=Math.max(0,g.readyAt-s.clock);
-        if(g.wall){g.wall.x=s.owner.x;g.wall.y=s.owner.y;g.wall.age=s.clock-g.wall.born;g.wall.flash=Math.max(0,(g.wall.flash||0)-dt);
-          if(g.wall.age>=g.wall.duration)g.wall=null;}
-      }else g.wall=null;
+      syncBoneGuard(s);
       for(const mark of s.impacts)mark.age=Math.max(0,s.clock-mark.time);
       s.impacts=s.impacts.filter(mark=>mark.age<.45);
       const curse=learned(s.owner,CURSE);

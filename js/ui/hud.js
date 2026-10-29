@@ -404,6 +404,12 @@ G.HUD = (() => {
         ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#e7dbf2';
         ctx.fillText(label, x + S / 2, y + S - 17, S - 8);
       }
+      if (pl.mon?.dex === 30012 && m.id === 'naruto-kimimaro-bone-guard') {
+        const guard = G.NarutoKimimaro?.boneGuardState?.(pl), capacity = guard?.count ?? m.count;
+        ctx.fillStyle = 'rgba(10,16,28,.88)'; ctx.fillRect(x + 3, y + S - 26, S - 6, 12);
+        ctx.font = F(800, 8); ctx.textAlign = 'center'; ctx.fillStyle = '#eee7d8';
+        ctx.fillText((guard?.readyCount ?? capacity) + '/' + capacity, x + S / 2, y + S - 17, S - 8);
+      }
       if (pl.mon?.dex === 30012 && ['naruto-kimimaro','naruto-kimimaro-bullets'].includes(m.id)) {
         const base = m.id === 'naruto-kimimaro' ? 4 : 5, cap = m.id === 'naruto-kimimaro' ? 8 : 15;
         const label = Math.min(cap, G.Quantity?.count(pl, base) ?? base) + (m.id === 'naruto-kimimaro' ? '連' : '枚');

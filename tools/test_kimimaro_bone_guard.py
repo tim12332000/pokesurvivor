@@ -1,4 +1,4 @@
-"""Native projectile acceptance for Kimimaro's one-second bone defense ring."""
+"""Native projectile acceptance for independently recharging defensive bones."""
 from __future__ import annotations
 
 import json
@@ -12,7 +12,7 @@ from playwright.sync_api import sync_playwright
 
 SETUP = r"""() => {
  const A=KAcceptance,p=A.p,K=A.K,id='naruto-kimimaro-bone-guard';
- function prepare(rank=1){A.reset();const m=A.fixture(id,rank);p().invuln=0;return m}
+ function prepare(rank=1){A.reset();const m=A.fixture(id,rank);p().invuln=0;A.step(.001);return m}
  function shot(x=120,y=0,vx=-500,vy=0,extra={}){
    return G.Projectiles.spawn({x:p().x+x,y:p().y+y,vx,vy,r:5,dmg:30,mtype:'normal',friendly:false,life:4,...extra});
  }
@@ -29,7 +29,7 @@ PROGRESSION = r"""() => {
  A.assert(p().addMove(id),'cannot learn bone guard at Lv6');
  A.assert(p().moves.find(m=>m.id===id).passive&&p().slots.length===0,'bone guard consumed active slot');
  const cooldowns=[];for(let rank=1;rank<=5;rank++){
-   const m=G.Moves.instance(id,rank);A.near(m.cd,[2.5,2.25,2,1.75,1.5][rank-1],'rank cooldown '+rank);cooldowns.push(m.cd);
+   const m=G.Moves.instance(id,rank);A.near(m.cd,3,'independent root cooldown rank '+rank);cooldowns.push(m.cd);
  }
  return {learnLevel:6,slotless:true,cooldowns};
 }"""
@@ -46,7 +46,8 @@ INTERCEPT = r"""() => {
    ['all-block-flags',120,0,-500,0,.10,{unblockable:true,guardUnblockable:true,uninterceptable:true}]]){
    B.prepare();const hp=p().hp,q=B.shot(x,y,vx,vy,flags);A.step(dt);A.advance(.25);
    A.assert(!B.exists(q),'threat not intercepted '+name);A.near(p().hp,hp,'guard failed to protect '+name);
-   const state=B.state();A.assert(state&&state.cooldown>0,'block did not start cooldown '+name);
+   const state=B.state();A.assert(state&&state.blocks===1&&state.readyCount===state.count-1,'block did not consume exactly one root '+name);
+   A.assert(state.slots.filter(slot=>slot.blocks===1&&slot.cooldown>0).length===1,'blocked bullet did not start one independent cooldown '+name);
    out.push({name,protected:true,state});
  }
  return out;
@@ -62,7 +63,7 @@ EXCLUSIONS = r"""() => {
  for(const [name,x,y,vx,vy,flags] of cases){
    B.prepare();const q=B.shot(x,y,vx,vy,flags);A.step(.10);
    A.assert(B.exists(q),'guard deleted excluded projectile '+name);
-   const state=B.state();A.assert(!state?.cooldown,'guard spent cooldown on excluded projectile '+name);
+   const state=B.state();A.assert(state.blocks===0&&state.readyCount===state.count&&!state.walls.length,'guard spent a root or grew a bone for excluded projectile '+name);
    out.push(name);
  }
  const active=[];
@@ -71,46 +72,62 @@ EXCLUSIONS = r"""() => {
    B.prepare();B.shot(60,0,-600,0);A.step(.1);const before=B.state();
    const q=B.shot(60,0,-100,0,flags);A.step(.1);
    A.assert(B.exists(q),'active defense consumed a non-bullet '+name);
-   A.assert(B.state().blocks===before.blocks&&B.state().triggers===1,'non-bullet changed active interception counters '+name);
+   A.assert(B.state().blocks===before.blocks&&B.state().triggers===1&&B.state().readyCount===before.readyCount,'non-bullet spent a root while another visual bone remained '+name);
    active.push(name);
  }
- return {ignoredWhileIdle:out,ignoredDuringWindow:active};
+ return {ignoredWhileIdle:out,ignoredBesideVisualBone:active};
 }"""
 
 WALL_AND_COOLDOWN = r"""() => {
- const B=BGuard,{A,p}=B;B.prepare();const hp=p().hp,first=B.shot(60,0,-600,0);A.step(.05);
- A.assert(!B.exists(first)&&B.state().active,'first threat did not activate defense');
- const initial=B.state(),volley=[];
- A.near(initial.wall.duration,1,'defense window duration');A.near(initial.wall.radius,46,'defense circle radius');
- for(let n=0;n<8;n++){const a=n*Math.PI/4;volley.push(B.shot(Math.cos(a)*90,Math.sin(a)*90,-Math.cos(a)*900,-Math.sin(a)*900))}
- volley.push(B.shot(-120,0,2000,0));
- volley.push(B.shot(90,0,-900,0,{unblockable:true}),B.shot(0,-90,0,900,{guardUnblockable:true}),B.shot(-90,0,900,0,{uninterceptable:true}));
- const far=B.shot(180,0,-10,0);A.step(.1);
- const state=B.state();A.assert(volley.every(q=>!B.exists(q))&&p().hp===hp,'one-second defense failed to block all directions or fast crossings');
- A.assert(B.exists(far),'active defense cleared a distant bullet that never touched its circle');
- A.assert(state.blocks===1+volley.length&&state.triggers===1,'continuous bullets restarted defense or failed to count blocks');
- A.near(state.wall.born,initial.wall.born,'continuous blocks refreshed defense window');
- A.near(initial.cooldown-state.cooldown,.1,'continuous blocks restarted cooldown');
- return {directions:8,fastBackside:true,flaggedBullets:true,blocked:state.blocks,windowDuration:state.wall.duration,triggers:state.triggers,distantBulletRetained:true};
+ const B=BGuard,{A,p}=B,out=[];
+ for(let rank=1;rank<=5;rank++){
+   B.prepare(rank);p().quantityPicks=p().quantityBonus=30;p().cdMul=.01;A.step(.001);
+   const count=[10,12,15,18,20][rank-1],idle=B.state();
+   A.assert(idle.count===count&&idle.readyCount===count&&!idle.walls.length,'rank capacity changed with quantity/CD attributes or grew idle columns');
+   const hp=p().hp,volley=Array.from({length:count+1},()=>B.shot(60,0,-600,0));A.step(.1);
+   const state=B.state();
+   A.assert(state.blocks===count&&state.triggers===count&&state.readyCount===0,'rank did not intercept exactly one bullet per available root');
+   A.assert(state.slots.every(slot=>slot.blocks===1&&slot.cooldown>0),'one root blocked multiple simultaneous bullets');
+   A.assert(p().hp<hp&&volley.every(q=>!B.exists(q)),'capacity overflow did not deal native projectile damage');
+   A.assert(state.walls.length===count&&new Set(state.walls.map(w=>w.slot)).size===count,'blocked bullets did not each create exactly one visual root');
+   for(const wall of state.walls)A.near(state.slots[wall.slot].readyAt-wall.born,3,'root cooldown did not start at its own contact time');
+   p().invuln=0;const before=p().hp,extra=B.shot(40,0,-800,0);A.step(.05);
+   A.assert(!B.exists(extra)&&p().hp<before&&B.state().blocks===count,'remaining visual columns acted as a persistent shield');
+   A.assert(B.state().walls.length===count,'overflow bullet created an unearned additional column');
+   A.advance(.5);A.assert(B.state().walls.length===0&&B.state().readyCount===0,'visual bones did not disappear independently of recharge');
+   out.push({rank,count,blocked:state.blocks,overflowDamage:hp-p().hp,oneBulletPerRoot:true,visualOnly:true});
+ }
+ return out;
 }"""
 
 WINDOW_BOUNDARY = r"""() => {
- const B=BGuard,{A,p}=B;B.prepare();B.shot(60,0,-600,0);A.step(.02);
- const born=B.state().wall.born;A.advance(.99-B.state().wall.age);
- const hp=p().hp,edge=B.shot(50,0,-600,0);A.step(.005);let state=B.state();
- A.assert(!B.exists(edge)&&p().hp===hp&&state.active&&state.wall.age<1,'defense stopped before its one-second boundary');
- A.near(state.wall.born,born,'boundary hit extended defense');
- const blocks=state.blocks;A.advance(.006);state=B.state();
- A.assert(!state.active&&state.cooldown>0,'defense remained active after its one-second boundary');
- p().invuln=0;const after=B.shot(36,0,-600,0);A.step(.06);
- A.assert(!B.exists(after)&&p().hp<hp&&B.state().blocks===blocks&&B.state().triggers===1,'expired window continued blocking bullets or restarted before cooldown');
- return {blockedAt:.995,expiredBy:1.001,hpLossAfterExpiry:hp-p().hp,windowWasNotRefreshed:true};
+ const B=BGuard,{A,p,K}=B;B.prepare();B.shot(60,0,-600,0);A.step(.05);
+ const first=B.state(),firstReady=first.slots[0].readyAt;
+ A.advance(.45);B.shot(60,0,-600,0);A.step(.05);
+ const second=B.state(),secondReady=second.slots[1].readyAt;
+ A.near(secondReady-firstReady,.5,'staggered roots did not preserve independent contact times');
+ A.near(second.slots[0].readyAt,firstReady,'using a second root refreshed the first cooldown');
+ for(let n=0;n<8;n++)B.shot(60,0,-600,0);A.step(.05);
+ A.assert(B.state().readyCount===0&&B.state().blocks===10,'staggered cooldown fixture did not exhaust remaining roots');
+ A.advance(firstReady-.005-K.stateFor(p()).clock);p().invuln=0;
+ const hp=p().hp,early=B.shot(5,0,-600,0);A.step(.001);
+ A.assert(!B.exists(early)&&p().hp<hp&&B.state().blocks===10&&B.state().readyCount===0,'root rearmed before its three-second contact boundary');
+ A.advance(.01);A.assert(B.state().readyCount===1&&B.state().slots[0].cooldown===0&&B.state().slots[1].cooldown>0,'roots recovered globally instead of independently');
+ const ready=B.shot(60,0,-600,0);A.step(.05);let state=B.state();
+ A.assert(!B.exists(ready)&&state.slots[0].blocks===2&&state.slots[1].blocks===1,'earliest recovered root did not intercept independently');
+ const firstAgain=state.slots[0].readyAt;
+ A.near(state.slots[1].readyAt,secondReady,'reusing the first root reset the second cooldown');
+ A.advance(secondReady+.001-K.stateFor(p()).clock);A.assert(B.state().readyCount===1,'second root missed its separate recharge boundary');
+ const next=B.shot(60,0,-600,0);A.step(.04);state=B.state();
+ A.assert(!B.exists(next)&&state.slots[1].blocks===2,'second root could not fire while the first recharged again');
+ A.near(state.slots[0].readyAt,firstAgain,'second reuse refreshed the first root');
+ return {firstReady,secondReady,stagger:.5,firstAgain,blocks:state.blocks,independent:true};
 }"""
 
 MELEE_AND_GROUND = r"""() => {
  const B=BGuard,{A,p}=B;B.prepare();B.shot(60,0,-600,0);A.step(.1);const active=B.state();
  const enemy=A.spawn(10,0);enemy.dmg=30;enemy.touchCd=0;const before=p().hp;p().invuln=0;A.step(.01);
- A.assert(p().hp<before&&B.state().active,'active bullet defense prevented native melee contact damage');
+ A.assert(p().hp<before&&B.state().walls.length>0,'visible defensive bone prevented native melee contact damage');
  const meleeLoss=before-p().hp;enemy.dead=true;p().invuln=0;
  const hp=p().hp,ground=B.shot(30,0,-600,0,{ground:true});A.step(.05);
  A.assert(!B.exists(ground)&&p().hp<hp&&B.state().blocks===active.blocks,'active bullet defense blocked native ground attack damage');
@@ -124,8 +141,8 @@ CLONES = r"""() => {
  const q=G.Projectiles.spawn({x:clone.x+120,y:clone.y,vx:-500,vy:0,friendly:false,r:5,dmg:30,mtype:'normal',life:4});
  A.step(.1);A.advance(.25);
  A.assert(!B.exists(q)&&clone.hp===hp&&clone.hitsTaken===hitCount,'clone guard failed before clone projectile damage');
- A.assert(B.state(clone)?.blocks>=1&&B.state(clone)?.cooldown>0,'clone has no independent guard state');
- A.assert(!B.state()?.cooldown,'clone guard consumed parent cooldown');
+ A.assert(B.state(clone)?.blocks>=1&&B.state(clone).readyCount===B.state(clone).count-1,'clone has no independent guard inventory');
+ A.assert(!B.state()?.blocks&&B.state().readyCount===B.state().count,'clone guard consumed parent inventory');
  const own=B.shot(-120,0,500,0);A.step(.1);A.advance(.25);
  A.assert(!B.exists(own)&&p().hp===ownerHp&&B.state()?.blocks>=1,'parent guard unavailable after clone defense');
  G.Combat.clearFields(p());A.assert(!B.state(clone),'parent cleanup retained clone guard');
@@ -133,39 +150,44 @@ CLONES = r"""() => {
 }"""
 
 FIXED_COOLDOWN = r"""() => {
- const B=BGuard,{A,p}=B,out=[];
- for(let rank=1;rank<=5;rank++){
-   B.prepare(rank);p().cdMul=.1;p().quantityPicks=12;
-   B.shot(60,0,-600,0);A.step(.1);
-   const state=B.state();A.assert(state?.triggers===1&&state.blocks===1,'rank guard did not activate '+rank);
-   const cd=[2.5,2.25,2,1.75,1.5][rank-1];
-   A.assert(state.cooldown>=cd-.100001&&state.cooldown<=cd,'guard cooldown changed with cooldown/quantity attributes '+rank);
-   A.advance(state.cooldown-.02);
-   const early=B.shot(60,0,-600,0);A.step(.01);
-   A.assert(B.exists(early)&&B.state().triggers===1,'guard rearmed before its cooldown '+rank);G.Projectiles.remove(early);
-   A.advance(.02);const hp=p().hp,ready=B.shot(60,0,-600,0);A.step(.1);
-   A.assert(!B.exists(ready)&&p().hp===hp&&B.state().triggers===2&&B.state().blocks===2,'guard failed to rearm at halved cooldown '+rank);
-   out.push({rank,cooldown:state.cooldown,triggers:B.state().triggers,blocks:B.state().blocks,rearmed:true});
+ const B=BGuard,{A,p,K}=B,m=B.prepare();B.shot(60,0,-600,0);A.step(.1);const stages=[];
+ for(let rank=2;rank<=5;rank++){
+   const saved=K.stateFor(p()).boneGuard.slots.map(slot=>({slot,readyAt:slot.readyAt,blocks:slot.blocks}));
+   A.assert(G.Moves.levelUp(m),'native defensive-bone upgrade failed');A.step(.001);
+   const state=B.state(),raw=K.stateFor(p()).boneGuard.slots,count=[10,12,15,18,20][rank-1];
+   A.assert(state.count===count&&state.readyCount===count-1,'rank upgrade did not add ready roots while retaining the used one');
+   for(const item of saved){
+     A.assert(raw[item.slot.index]===item.slot,'rank upgrade replaced an existing defensive root');
+     A.near(item.slot.readyAt,item.readyAt,'rank upgrade reset an existing root cooldown');
+     A.assert(item.slot.blocks===item.blocks,'rank upgrade reset root usage history');
+   }
+   A.assert(state.slots.slice(saved.length).every(slot=>slot.blocks===0&&slot.cooldown===0),'new rank roots were not immediately ready');
+   A.assert(state.walls.length===1,'upgrading grew idle visual bones');
+   stages.push({rank,count,ready:state.readyCount,retainedReadyAt:state.slots[0].readyAt,added:count-saved.length});
  }
- p().cdMul=1;p().quantityPicks=0;return out;
+ p().quantityPicks=p().quantityBonus=40;p().cdMul=.01;A.step(.001);
+ A.assert(B.state().count===20&&B.state().readyCount===19,'quantity/cooldown cards changed the fixed rank inventory');
+ return {stages,fixedCooldown:3,quantityIgnored:true,cooldownMultiplierIgnored:true};
 }"""
 
 MOVING_AND_UNLEARN = r"""() => {
  const B=BGuard,{A,p,id}=B;B.prepare();B.shot();A.step(.1);A.advance(.15);
  const original=B.state(),wall=original.wall,anchor={x:wall.x,y:wall.y},blocks=original.blocks;
  p().x+=100;p().y+=100;p().walking=true;A.step(.02);
- A.near(B.state().wall.x,p().x,'defense circle did not follow owner horizontally');
- A.near(B.state().wall.y,p().y,'defense circle did not follow owner vertically');
- const movingHp=p().hp,left=B.shot(-80,0,800,0),right=B.shot(80,0,-800,0);A.step(.1);
- A.assert(!B.exists(left)&&!B.exists(right)&&p().hp===movingHp&&B.state().blocks===blocks+2,'moving owner lost all-direction projectile protection');
- const old=G.Projectiles.spawn({x:anchor.x+30,y:anchor.y,vx:-100,vy:0,friendly:false,r:5,dmg:30,mtype:'normal',life:4});A.step(.1);
- A.assert(B.exists(old),'moved defense left an extra blocking circle at the original position');
+ A.near(B.state().wall.x,anchor.x,'already-grown visual bone followed owner horizontally');
+ A.near(B.state().wall.y,anchor.y,'already-grown visual bone followed owner vertically');
+ const movingHp=p().hp,left=B.shot(-80,0,800,0);A.step(.1);
+ A.assert(!B.exists(left)&&p().hp===movingHp&&B.state().blocks===blocks+1,'moving owner could not use another ready root');
+ A.assert(B.state().slots[0].blocks===1&&B.state().slots[1].blocks===1,'old visual bone blocked another bullet without a separate root');
+ const secondVisual=B.state().walls[1];
+ const old=G.Projectiles.spawn({x:anchor.x+30,y:anchor.y,vx:-100,vy:0,friendly:false,r:5,dmg:30,mtype:'normal',life:4});A.step(.01);
+ A.assert(B.exists(old)&&B.state().blocks===blocks+1,'old visual bone kept intercepting non-threatening bullets');
  B.prepare();B.shot();A.step(.1);A.advance(.15);
  p().moves=p().moves.filter(m=>m.id!==id);p().arrange();A.step(.01);
  A.assert(B.state()===null,'removed move retained guard state');
  const hp=p().hp,q=B.shot(60,0,-600,0);A.step(.1);
  A.assert(!B.exists(q)&&p().hp<hp,'removed guard continued intercepting hostile projectiles');
- return {originalAnchor:anchor,followedTo:{x:100,y:100},blocksAfterMoving:blocks+2,oldPositionUnprotected:true,unlearned:true};
+ return {originalVisualFixed:anchor,newVisual:{x:secondVisual.x,y:secondVisual.y},blocksAfterMoving:blocks+1,oldPositionUnprotected:true,unlearned:true};
 }"""
 
 INDEPENDENT_ACTION = r"""() => {
@@ -183,21 +205,23 @@ LIFECYCLE = r"""() => {
  const B=BGuard,{A,p,K}=B;B.prepare();const q=B.shot();A.pause();
  const before=JSON.stringify(B.state());G.Combat.resolve(.1,p(),0);G.Combat.updateFields(.1);
  A.assert(B.exists(q)&&JSON.stringify(B.state())===before,'pause triggered interception or advanced guard');
- A.step(.1);A.assert(B.state()?.cooldown>0,'resume did not activate guard');
+ A.step(.2);A.assert(B.state()?.blocks===1&&B.state().readyCount===B.state().count-1,'resume did not consume a root for the actual bullet contact');
+ p().frozen=true;const frozen=JSON.stringify(B.state());A.advance(.5,true);
+ A.assert(JSON.stringify(B.state())===frozen,'freeze advanced defensive root cooldowns or visuals');p().frozen=false;
  const active=JSON.stringify(B.state());A.pause();G.Combat.resolve(.2,p(),0);G.Combat.updateFields(.2);
  A.assert(JSON.stringify(B.state())===active,'pause advanced active wall/cooldown');
  G.Combat.clearFields(p());A.assert(!B.state()?.active&&!B.state()?.cooldown,'owner clear leaked guard');
- B.prepare();B.shot();A.step(.1);const oldWorld=G.World;G.World={...oldWorld};
+ B.prepare();B.shot(60,0,-600,0);A.step(.1);const oldWorld=G.World;G.World={...oldWorld};
  try{A.assert(!B.state()?.active&&!B.state()?.cooldown,'world switch retained guard')}finally{G.World=oldWorld}
- B.prepare();B.shot();A.step(.1);p().dead=true;
+ B.prepare();B.shot(60,0,-600,0);A.step(.1);p().dead=true;
  A.assert(!B.state()?.active&&!B.state()?.cooldown,'death retained guard');p().dead=false;
  for(const method of ['quit','toUI']){
-   B.prepare();B.shot();A.step(.1);A.resume();
+   B.prepare();B.shot(60,0,-600,0);A.step(.1);A.resume();
    if(method==='toUI')G.Game.toUI('menu');else G.Game.quit();
    A.assert(!B.state()?.active&&!B.state()?.cooldown,'terminal method retained guard '+method);
    G.Game.startRun();A.pause();
  }
- return {paused:true,resumed:true,ownerClear:true,world:true,death:true,terminal:true};
+ return {paused:true,resumed:true,frozen:true,ownerClear:true,world:true,death:true,terminal:true};
 }"""
 
 
@@ -214,7 +238,7 @@ def main():
             try:
                 frame=game.boot(page,label);frame.evaluate(SETUP)
                 for name,check in [('progression',PROGRESSION),('intercept',INTERCEPT),('exclusions',EXCLUSIONS),('wallAndCooldown',WALL_AND_COOLDOWN),
-                  ('windowBoundary',WINDOW_BOUNDARY),('meleeAndGround',MELEE_AND_GROUND),('fixedCooldown',FIXED_COOLDOWN),('movingAndUnlearn',MOVING_AND_UNLEARN),
+                  ('independentRecovery',WINDOW_BOUNDARY),('meleeAndGround',MELEE_AND_GROUND),('rankUpgrade',FIXED_COOLDOWN),('movingAndUnlearn',MOVING_AND_UNLEARN),
                   ('independentAction',INDEPENDENT_ACTION),('clones',CLONES),('lifecycle',LIFECYCLE)]:
                     print(label,name,flush=True)
                     try:result[name]=frame.evaluate(check)
