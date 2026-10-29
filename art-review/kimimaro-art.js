@@ -203,7 +203,7 @@
     const crosses=col.y>=col.owner.y-8&&col.y-col.height<col.owner.y-20&&Math.abs(col.x-col.owner.x)<col.w+24;
     ctx.save();ctx.translate(col.x,col.y);ctx.globalAlpha*=crosses?.32:.98;
     ctx.save();ctx.globalAlpha*=.28;ctx.fillStyle='#17281e';ctx.beginPath();ctx.ellipse(0,1,col.w+4,4,0,0,TAU);ctx.fill();ctx.restore();
-    ctx.rotate(col.lean);ctx.imageSmoothingEnabled=false;
+    ctx.rotate(col.forest?0:col.lean);ctx.imageSmoothingEnabled=false;
     ctx.drawImage(images.effects,x,y,w,h,-a[0]/w*dw,-a[1]/h*col.height,dw,col.height);ctx.restore();
   }
   function drawGround(ctx,states) {
