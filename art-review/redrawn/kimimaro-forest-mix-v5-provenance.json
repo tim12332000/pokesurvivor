@@ -1,0 +1,16 @@
+{
+  "asset": "kimimaro-effects-v5.png",
+  "assembled_at": "2026-10-30",
+  "tool": "Deterministic proportional packing of existing imagegen assets",
+  "sources": [
+    "kimimaro-bone-spikes-generated-v3.png",
+    "kimimaro-forest-groves-generated-v4.png"
+  ],
+  "generation_prompts": [
+    "kimimaro-bone-spikes-v3-provenance.json",
+    "kimimaro-forest-groves-v4-provenance.json"
+  ],
+  "processing": "Restore four single-bone frames at 204px high in slots 5-8. Add four approved merged groves at 240px high in slots 9-12, three contiguous 80px strips each. Preserve source aspect ratios. Shared 640x768 effects atlas, original wall pixels preserved, drill/debris pixels relocated unchanged to bottom 100px.",
+  "usage": "Previous 96-anchor single-bone layout, now with three or four mid/outer grove inserts for a solo caster. Two or three inserts are dramatic 200-320px high points distributed across both sides, with one medium grove. Ordinary bones retain nearest-root width limits. Shared clone budgets reduce per-caster inserts. No new image generation.",
+  "runtime_sha256": "fae8dc184f470dd81e9ff8d217fd70466358a6a9b7af02868a2272f5ae12e2f4"
+}

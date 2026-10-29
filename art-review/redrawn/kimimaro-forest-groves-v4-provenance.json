@@ -1,0 +1,47 @@
+{
+  "asset": "kimimaro-effects-v4.png",
+  "generated_source": "kimimaro-forest-groves-generated-v4.png",
+  "tool": "built-in image_gen.imagegen",
+  "generated_at": "2026-10-30",
+  "prompt": "Game asset sprite sheet on TRUE TRANSPARENT background. Create FOUR distinct MERGED GROVES of Kimimaro's ivory bone forest, one complete grove per equal-width quarter in a single horizontal row. Wide landscape sheet 2048x768 preferred, generous transparent margins and separation. Reference 1 supplies ONLY the TOP ROW bone art style; reference 2 supplies the ivory/lavender faceted bone material. These are bone FOREST GROVES, not four isolated spikes and not crystals. EACH grove contains 5 to 8 distinguishable slender upright bone spires growing close together from a naturally interlocking compact base. Merge roots and overlap the lower stems intentionally so the silhouette reads as one connected grove with front/back layering; keep small transparent windows between the upper stems. Strong irregular height hierarchy: one extremely tall fine pointed leader, 2 medium tall spires, several shorter spires. The tallest leader rises conspicuously 1.6 to 2 times above its neighboring medium spires. Each INDIVIDUAL stem is long and slender, height-to-stem-width approximately 10 to 18, with nearly straight organic shaft, restrained angular bone joints, and sharply tapering tip. Whole grove overall height-to-width roughly 2.5 to 3.2. Short side ridges may echo the reference but DO NOT create massive broad antlers, chunky triangles or fat pillars. Vary composition strongly across the four groves: left-biased tallest leader, central tallest leader with lower understory, right-biased leader, two narrow leaders above an irregular dense lower mass. Match references: hand-drawn anime game sprite linework, warm ivory broad flat highlights, muted cool gray-lavender facet shadows, restrained charcoal-indigo outline. Paint solid bone surfaces with no transparent pinholes. Crisp readable connected root masses, no ground slab, no scene, no soil, no rocks, no cast shadow, no glow, no aura, no background color, no checkerboard, no text or labels. Orthographic flat game asset view with full tips and roots visible. Four DIFFERENT usable forest grove sprites only.",
+  "reference_images": [
+    "art-review/redrawn/kimimaro-effects-v1.png",
+    "art-review/redrawn/kimimaro-bone-spikes-generated-v3.png"
+  ],
+  "source_frames": [
+    [
+      27,
+      24,
+      481,
+      705
+    ],
+    [
+      559,
+      23,
+      470,
+      705
+    ],
+    [
+      1095,
+      23,
+      457,
+      709
+    ],
+    [
+      1611,
+      77,
+      416,
+      658
+    ]
+  ],
+  "user_approval": "User approved the generated merged grove sheet and requested integration.",
+  "processing": "Four connected 5-8-spire grove silhouettes extracted at alpha >=128 from inspected component bounds, resized proportionally to 288px high with Lanczos, packed as three contiguous 96px strips per grove. Effect atlas enlarged to 640x768; original top 240px preserved, original bottom 100px relocated from y380 to y668 without pixel changes. Metadata updated for relocated drill/debris frames.",
+  "runtime_budget": {
+    "maxGroveGroups": 32,
+    "maxSecondaryParticles": 20,
+    "maxDecodedSheetBytes": 5242880,
+    "maxAtlasBytes": 524288
+  },
+  "source_sha256": "c043e95429b975d3361807640c83207734e08fa4afb8fd095714305d1b943ca5",
+  "runtime_sha256": "da1a17ee6ba4a3387f05ad448acf4601394eea03e749a118df9ad25e57eb8888"
+}

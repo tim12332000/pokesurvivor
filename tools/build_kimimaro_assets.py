@@ -104,11 +104,11 @@ def main():
     sheets['effects']={'source':'redrawn/'+effect.name,'width':fx['width'],'height':fx['height'],
         'frames':fx['frames'],'sha256':sha(effect),'bytes':effect.stat().st_size}
     decoded=sum(s['width']*s['height']*4 for s in sheets.values())
-    assert decoded<=4*1024*1024,decoded
-    assert sheets['effects']['bytes']<=256*1024
+    assert decoded<=5*1024*1024,decoded
+    assert sheets['effects']['bytes']<=512*1024
     result={'version':1,'scope':'playable Kimimaro original art; up/down common poses, side attacks with explicit left mirror',
-        'bodyHeight':BODY,'sheets':sheets,'budget':{'decodedSheetBytes':decoded,'maxDecodedSheetBytes':4*1024*1024,
-        'maxForestColumns':72,'maxSecondaryParticles':20},
+        'bodyHeight':BODY,'sheets':sheets,'budget':{'decodedSheetBytes':decoded,'maxDecodedSheetBytes':5*1024*1024,
+        'maxForestColumns':96,'maxSecondaryParticles':20},
         'sources':{'actorMetadata':'kimimaro-design/actors.json','supplement':str(args.supplement.relative_to(ROOT)),
                    'supplementSha256':sha(args.supplement),'originalActorProvenance':'kimimaro-design/provenance-final.json',
                    'supplementProvenance':'kimimaro-design/game-supplement-provenance.json',
@@ -126,9 +126,15 @@ def main():
     portrait.alpha_composite(pose,((96-pose.width)//2,110-pose.height))
     target=ROOT/'.omx/naruto/portraits/kimimaro.png';target.parent.mkdir(parents=True,exist_ok=True)
     portrait.save(target,optimize=True)
-    if (ROOT/'art-review/redrawn/kimimaro-bone-spikes-generated-v2.png').is_file():
+    if (ROOT/'art-review/redrawn/kimimaro-forest-groves-generated-v4.png').is_file():
         from build_kimimaro_forest_assets import build
         sheets['effects']=build()
+        decoded=sum(s['width']*s['height']*4 for s in sheets.values())
+    if (ROOT/'art-review/redrawn/kimimaro-throw-generated-v1.png').is_file():
+        from build_kimimaro_throw_assets import build as build_throw
+        build_throw()
+        sheets=json.loads((ROOT/'art-review/kimimaro-frames.json').read_text(encoding='utf8'))['sheets']
+        decoded=sum(s['width']*s['height']*4 for s in sheets.values())
     print(json.dumps({'sheets':{key:{'source':s['source'],'bytes':s['bytes']} for key,s in sheets.items()},
         'frames':sum(len(s['frames']) for key,s in sheets.items() if key!='effects'),'decodedBytes':decoded},ensure_ascii=True))
 

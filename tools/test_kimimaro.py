@@ -55,7 +55,7 @@ def asset_inventory():
         result['decodedBytes']+=image.width*image.height*4
         result['sheets'][name]={'source':sheet['source'],'size':image.size,'frames':len(sheet['frames']),
             'transferBytes':path.stat().st_size,'sha256':digest}
-    assert result['decodedBytes']<=4*1024*1024,'runtime body/effect atlas budget exceeded'
+    assert result['decodedBytes']<=5*1024*1024,'runtime body/effect atlas budget exceeded'
     return result
 
 SETUP = r"""() => {
@@ -492,7 +492,7 @@ def capture_gameplay(page, frame, label):
         info['fields']=save_pose(f'{label}-{key}-field',info['fields'])
         if key == 'bracken':
             assert info['fields']['forestGroups'] > 0, (key, info['fields']['forestGroups'])
-            assert sum('kimimaro-effects-v2.png' in source for source in info['fields']['sources']) == info['fields']['forestGroups']*3, (key,info['fields']['sources'])
+            assert sum('kimimaro-effects-v5.png' in source for source in info['fields']['sources']) == info['fields']['forestGroups']*3, (key,info['fields']['sources'])
         if key == 'flower':
             assert any('kimimaro' in source.lower() and ('effect' in source.lower() or 'vfx' in source.lower()) for source in info['fields']['sources']), (key,info['fields']['sources'])
         page.wait_for_timeout(35)

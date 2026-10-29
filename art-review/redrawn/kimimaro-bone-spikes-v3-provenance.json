@@ -1,0 +1,21 @@
+{
+  "asset": "kimimaro-effects-v3.png",
+  "generated_source": "kimimaro-bone-spikes-generated-v3.png",
+  "tool": "built-in image_gen.imagegen",
+  "generated_at": "2026-10-30",
+  "prompt": "Edit target is reference image 2 (four tall upright bone spikes). Reference image 1 is STYLE AND SHAPE GUIDANCE ONLY: use only its TOP ROW of four large ivory curved bone pillars. Produce a modest style revision of the four upright forest spikes in image 2, moving them toward the top-row shapes of image 1: gentle alternating organic bends, irregular angular bony joints, a few restrained asymmetrical side ridges or short pointed spurs, slightly flared organic roots, distinct sharp tapered curved tips. Keep spikes tall and mostly upright for a bone forest, not squat wall clusters. Each complete spike silhouette height-to-width between about 5 and 6, with four noticeably different contours. Match image 1's hand-drawn anime game sprite look exactly: warm ivory broad flat lit planes, cool muted gray-lavender shadow planes, restrained dark charcoal-indigo outline, a few sharp clean irregular facets, readable solid bone volume. Make a small directional change, not an elaborate redesign. Remove image 2's soft halo entirely. No aura, no glow, no airbrushed gradients, no white geometric bars, no ice crystals, no metallic shine, no noisy texture. Four ISOLATED complete bone spikes, widely separated, precisely one spike per equal-width quarter of a single horizontal sheet, common baseline, generous transparent margins on all sides including tips and roots. The entire area inside each bone must be solid opaque painted bone with NO transparent pinholes. Canvas wide landscape preferably 2048 by 768. True transparent background, no black or gray fill, no ground or cast shadows, no text, no labels, no checkerboard. Only four bones. Preserve clean edges suitable for later proportional downsampling and reconstructing three contiguous strips.",
+  "reference_images": [
+    {
+      "path": "art-review/redrawn/kimimaro-effects-v1.png",
+      "role": "Top-row curved bone silhouettes, ivory faces, lavender-gray facet shadows and outline, matching user-supplied crop"
+    },
+    {
+      "path": "art-review/redrawn/kimimaro-bone-spikes-generated-v2.png",
+      "role": "Previous forest spike asset to revise"
+    }
+  ],
+  "processing": "Alpha threshold 128 removes generated halo; proportional Lanczos downsampling to 204px high. Three contiguous 68px strips per bone packed into two rows in existing atlas middle band. Original aspect ratio retained; no repeated textures; runtime strip edges snap to canvas pixels.",
+  "pack_script": "tools/build_kimimaro_forest_assets.py",
+  "source_sha256": "aec947c68f4de9eeb623b5edc5ae53f30d9b851ce769d352b84efedd62dab6dc",
+  "runtime_sha256": "4379b9c8d8728068bc3dbc09965cd7e270f8c7dabed0452632f3c97539eeb016"
+}

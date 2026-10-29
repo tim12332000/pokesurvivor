@@ -21,7 +21,7 @@ HELPERS = r"""() => {
  const state=(actor=p)=>K.boomerangState(actor);
  function start(distance=100,rank=1,cdMul=1){
    const m=prepare(rank);p.cdMul=cdMul;
-   const e=A.spawn(distance,0),hits=A.watch(e);p.target=e;A.step(.001,true);
+   const e=A.spawn(distance,0),hits=A.watch(e);p.target=e;A.advance(.121,true);
    A.assert(state()?.projectile?.phase==='out','native independent throw did not launch');
    A.assert(state().count===rank&&state().projectiles.length===rank,'zero-card fixture did not launch one bone per skill rank');
    A.assert(!A.action()&&p.slots.length===0,'throw created a body action or active slot');
@@ -32,11 +32,24 @@ HELPERS = r"""() => {
    A.assert(predicate(),'boomerang event timed out');return limit;
  }
  function single(rank=1,distance=400){
-   const m=prepare(rank);m.count=1;const anchor=A.spawn(distance,0),hits=A.watch(anchor);p.target=anchor;A.step(.001,true);
+   const m=prepare(rank);m.count=1;const anchor=A.spawn(distance,0),hits=A.watch(anchor);p.target=anchor;A.advance(.121,true);
    A.assert(state().count===1&&state().projectiles.length===1,'single-flight piercing fixture did not isolate count');
    return {m,anchor,hits,b:state().projectile};
  }
- window.KBoom={...A,p,K,id,prepare,state,start,until,single};
+ function returnPoints(distance=560){
+   const fixture=single(5,distance);until(()=>fixture.hits.length===1);
+   fixture.anchor.dead=true;p.target=null;
+   const path=[];let previous={x:fixture.b.x,y:fixture.b.y},travel=0;
+   for(let n=0;n<1000&&state().catches===0;n++){
+     A.step(.005,true);const q=fixture.b;
+     travel+=Math.hypot(q.x-previous.x,q.y-previous.y);previous={x:q.x,y:q.y};
+     path.push({...previous,travel});
+   }
+   const points=Array.from({length:6},(_,i)=>path.find(point=>point.travel>=travel*(.15+i*.13)));
+   A.assert(state().catches===1&&points.every(Boolean),'native curved-return fixture did not expose six separated sample points');
+   return points;
+ }
+ window.KBoom={...A,p,K,id,prepare,state,start,until,single,returnPoints};
 }"""
 
 PROGRESSION = r"""() => {
@@ -59,6 +72,32 @@ PROGRESSION = r"""() => {
  return {gate:2,slotless:true,idleInHand:true,ranks};
 }"""
 
+ANTICIPATION = r"""() => {
+ const A=KBoom,p=A.p;A.prepare();p.target=A.spawn(300,0);A.step(.001,true);
+ let state=A.state(),pose=A.K.boomerangPoseFor(p);
+ A.assert(state.launches===0&&!state.projectile&&state.lanes[0].windup,'physical throw skipped anticipation');
+ A.assert(pose?.kind==='boomerang-throw'&&pose.age>=0&&pose.age<.12,'windup reused the finger-bullet pose');
+ const frozen=JSON.stringify({state,pose});A.pause();G.Combat.updateFields(.3);
+ A.assert(JSON.stringify({state:A.state(),pose:A.K.boomerangPoseFor(p)})===frozen,'pause advanced the held weapon');
+ A.advance(.10,true);A.assert(A.state().launches===0&&!A.state().projectile,'weapon left the hand before .12 seconds');
+ A.advance(.020,true);state=A.state();pose=A.K.boomerangPoseFor(p);
+ A.assert(state.launches===1&&state.projectile?.phase==='out'&&pose.age>=.12&&pose.age<.20,'release pose did not coincide with physical launch');
+ A.near(state.projectile.curve[0].x,state.hand.x,'throw did not leave the release-frame hand x');
+ A.near(state.projectile.curve[0].y,state.hand.y,'throw did not leave the release-frame hand y');
+ A.near(state.projectile.height,state.hand.height??31,'throw did not use the release-frame hand height');
+ A.near(state.log.find(e=>e.kind==='launch').time,.12,'first throw anticipation duration');
+ A.advance(.09,true);pose=A.K.boomerangPoseFor(p);
+ A.assert(pose?.age>=.20&&pose.age<.32,'throw did not enter recovery');
+ A.advance(.12,true);A.assert(!A.K.boomerangPoseFor(p),'throw pose did not expire');
+ A.prepare();const target=A.spawn(300,0);p.target=target;A.step(.001,true);target.dead=true;
+ A.advance(.13,true);A.assert(!A.state().launches&&!A.state().projectile&&!A.K.boomerangPoseFor(p),'lost target released a held weapon');
+ A.prepare();p.target=A.spawn(300,0);A.step(.001,true);p.moves=p.moves.filter(m=>m.id!==A.id);p.arrange();A.step(.01,true);
+ A.assert(!A.state()&&!A.K.boomerangPoseFor(p),'unlearning retained windup or held weapon');
+ A.prepare();p.target=A.spawn(300,0);A.step(.001,true);p.dead=true;A.K.update(0);
+ A.assert(!A.state()&&!A.K.boomerangPoseFor(p),'death retained windup or held weapon');p.dead=false;
+ return {windup:.12,releaseAt:.12,recoveryAt:.20,endsAt:.32,releaseFromHand:true,paused:true,lostTargetCancels:true,unlearnCancels:true,deathCancels:true};
+}"""
+
 HIT_AND_RETURN = r"""() => {
  const A=KBoom,p=A.p,out=[];
  for(let rank=1;rank<=5;rank++){
@@ -77,7 +116,7 @@ HIT_AND_RETURN = r"""() => {
    A.assert(hits.length===rank&&A.state().hits===rank,'ranked bones hit their original outbound victim again during return');
    const waitedInHand=A.state().projectiles.length===0;
    if(waitedInHand){
-     A.assert(A.state().lanes.every(lane=>lane.cooldown>0),'early ranked catches ignored remaining launch cooldown');
+     A.assert(A.state().lanes.every(lane=>lane.cooldown>0||lane.windup||lane.log.at(-1)?.kind==='catch'),'ranked catch waited without cooldown or throw anticipation');
      const launches=A.state().launches;A.until(()=>A.state().launches>launches);
    }
    A.assert(A.state().projectiles.length===rank&&A.state().projectiles.every(q=>q.phase==='out'),'ranked bones did not relaunch after hand wait and cooldown');
@@ -91,15 +130,20 @@ FIRST_TARGET_AND_CURVE = r"""() => {
  p.target=rear;A.step(.001,true);A.until(()=>frontHits.length>0);
  A.assert(frontHits.length===1&&rearHits.length===0&&A.state().projectile.phase==='return','outbound pierced first body');
  const baseline=A.start(400),first={...A.state().projectile},samples=[];let previousTime=0;
- for(const time of [.10,.25,.40,.55,.70]){
+ const start=first.curve[0],end=first.curve.at(-1),middle=first.curve[16];
+ A.near(middle.x,(start.x+end.x)/2,'Sasuke-style midpoint drifted along the aim');
+ A.near(middle.y,(start.y+end.y)/2-130,'Sasuke-style outward bend is not 130px');
+ for(const time of [.10,.20,.30,.40,.50]){
    A.advance(time-previousTime,true);previousTime=time;const q=A.state().projectile;
    A.assert(q?.phase==='out'&&q.castId===first.castId,'curve returned before reaching its initial target');
-   A.near(Math.hypot(q.vx,q.vy),450,'curve does not preserve authored path speed');
+   const phase=Math.min(1,q.age/.65),slot=Math.min(31,Math.floor(phase*32)),mix=phase*32-slot;
+   const a=first.curve[slot],b=first.curve[slot+1];
+   A.assert(Math.hypot(q.x-(a.x+(b.x-a.x)*mix),q.y-(a.y+(b.y-a.y)*mix))<2,'outbound position does not follow the Sasuke .65-second curve');
    samples.push({time,x:q.x,y:q.y,vx:q.vx,vy:q.vy});
  }
  const maxDeviation=Math.max(...samples.map(q=>Math.abs(q.y)));
- const maxTurn=Math.max(...samples.map(q=>Math.abs(first.vx*q.vy-first.vy*q.vx)/(450*450)));
- A.assert(maxDeviation>100,'increased outbound curve did not visibly exceed the previous 69px deviation');
+ const maxTurn=Math.max(...samples.map(q=>Math.abs(first.vx*q.vy-first.vy*q.vx)/(Math.hypot(first.vx,first.vy)*Math.hypot(q.vx,q.vy))));
+ A.assert(maxDeviation>120&&maxDeviation<=131,'Sasuke-style outward arc did not reach its authored 130px bend');
  A.assert(maxTurn>.15,'outbound velocity never visibly changed direction');
  A.until(()=>baseline.hits.length>0);
  A.assert(baseline.hits.length===1&&A.state().projectile.phase==='return','curved outbound path failed to hit its original stationary target');
@@ -112,7 +156,7 @@ FIRST_TARGET_AND_CURVE = r"""() => {
    A.near(q.vx,sample.vx,'target motion changed authored tangent vx');
    A.near(q.vy,sample.vy,'target motion changed authored tangent vy');
  }
- return {firstBodyOnly:true,maxDeviation,maxTurn,originalTargetHit:true,snapshotCurve:true,samples};
+ return {firstBodyOnly:true,outboundDuration:.65,maxDeviation,maxTurn,originalTargetHit:true,snapshotCurve:true,samples};
 }"""
 
 FAR_NOMINAL_HITS = r"""() => {
@@ -123,6 +167,11 @@ FAR_NOMINAL_HITS = r"""() => {
      const chord=Math.hypot(q.curve.at(-1).x-q.curve[0].x,q.curve.at(-1).y-q.curve[0].y);
      A.near(q.travelLimit,q.curveLength,'large curve did not compensate nominal range');
      A.assert(q.travelLimit>=q.curveLength,'far snapshot target became unreachable after stronger bending');
+     for(let i=1;i<q.curve.length-1;i++){
+       const a=q.curve[i-1],b=q.curve[i],c=q.curve[i+1];
+       const turn=(b.x-a.x)*(c.y-b.y)-(b.y-a.y)*(c.x-b.x);
+       A.assert(turn>0,'flight lane '+q.lane+' contains counterclockwise outbound curvature');
+     }
    }
    A.until(()=>hits.length>=rank);
    A.assert(hits.length===rank&&shots.every(q=>q.phase==='return'),'far nominal-range target was missed or hit did not immediately return');
@@ -140,7 +189,7 @@ CADENCE = r"""() => {
      A.step(.005,true);const state=A.state();
      A.assert(state.launches-state.catches>=0&&state.launches-state.catches<=1,'an owner duplicated a flying throw');
      A.assert((state.launches-state.catches===1)===!!state.projectile,'flight count differs from actual boomerang ownership');
-     if(!state.projectile){waitedInHand=true;A.assert(state.cooldown>0,'caught throw waited after its cooldown was ready');}
+     if(!state.projectile){waitedInHand=true;A.assert(state.cooldown>0||state.lanes[0].windup,'caught throw waited without cooldown or anticipation');}
      A.assert(!A.action(),'independent boomerang occupied body scheduling');
    }
    const s=A.state(),log=s.log||[];
@@ -151,7 +200,7 @@ CADENCE = r"""() => {
    if(distance===60)A.assert(waitedInHand,'near target round trip did not wait for its one-second cooldown');
    if(!waitedInHand)for(let i=0;i<log.length-1;i++)if(log[i].kind==='catch'){
      A.assert(log[i+1].kind==='launch','overdue slower return waited after true catch');
-     A.near(log[i+1].time,log[i].time,'overdue slower catch added an extra cooldown');
+     A.near(log[i+1].time-log[i].time,.12,'overdue slower catch did not perform its anticipation');
    }
    out.push({distance,launches:s.launches,catches:s.catches,hits:s.hits,waitedInHand,log});
  }
@@ -173,7 +222,11 @@ COOLDOWN_MODIFIERS = r"""() => {
      A.step(.005,true);const s=A.state();A.assert(s.launches-s.catches>=0&&s.launches-s.catches<=1,'cooldown modifier duplicated a flying bone');
    }
    const state=A.state(),launches=state.log.filter(v=>v.kind==='launch');
-   A.assert(state.launches>3,'cooldown reduction had no effect');
+   A.assert(state.launches>1&&state.catches>0,'reduced-cooldown flight never completed a real catch');
+   for(let i=0;i<state.log.length;i++)if(state.log[i].kind==='catch'){
+     A.assert(state.log[i+1]?.kind==='launch','ready reduced cooldown added an extra hand wait');
+     A.near(state.log[i+1].time-state.log[i].time,.12,'ready reduced cooldown did not perform its throw anticipation');
+   }
    for(let i=1;i<launches.length;i++)A.assert(launches[i].time-launches[i-1].time>=expected-1e-8,'launch bypassed reduced cooldown/minimum');
    out.push({multiplier,expected,launches:state.launches,catches:state.catches,log:state.log});
  }
@@ -183,7 +236,7 @@ COOLDOWN_MODIFIERS = r"""() => {
 MULTI_CADENCE = r"""() => {
  const A=KBoom,p=A.p;A.prepare();p.quantityPicks=p.quantityBonus=4;
  const near=A.spawn(60,0),far=A.spawn(-560,0),nearHits=A.watch(near),farHits=A.watch(far);p.target=near;
- A.step(.001,true);let state=A.state();
+ A.advance(.121,true);let state=A.state();
  A.assert(state.count===2&&state.projectiles.length===2&&state.lanes.length===2,'four quantity cards did not create two real flights');
  A.assert(state.lanes[0].projectile.vx>0&&state.lanes[1].projectile.vx<0,'lane indices did not distribute throws across separate targets');
  const ids=state.projectiles.map(q=>q.castId);A.assert(new Set(ids).size===2,'lanes share the same physical projectile');
@@ -196,7 +249,7 @@ MULTI_CADENCE = r"""() => {
    A.assert(q?.phase==='out','left/right curve fixture returned before sampling');
    return (dx*(q.y-launch.y)-dy*(q.x-launch.x))/Math.hypot(dx,dy);
  });
- A.assert(offsets[0]*offsets[1]<0&&offsets.every(v=>Math.abs(v)>.1),'adjacent flight lanes did not bend in opposite relative directions');
+ A.assert(offsets.every(v=>v<-.1),'flight lanes did not share clockwise curvature relative to their target directions');
  A.until(()=>A.state().lanes[0].catches===1);
  state=A.state();A.assert(!state.lanes[0].projectile&&state.lanes[0].cooldown>0,'near lane ignored its own remaining launch cooldown');
  A.assert(state.lanes[1].projectile&&state.lanes[1].catches===0,'far lane disappeared when the near lane caught');
@@ -206,21 +259,21 @@ MULTI_CADENCE = r"""() => {
  state=A.state();const longLog=state.lanes[1].log,catchIndex=longLog.findIndex(v=>v.kind==='catch');
  A.assert(nearHits.length>=2&&farHits.length>=1,'separate flight lanes failed to damage their separate targets');
  A.assert(longLog[catchIndex+1]?.kind==='launch','late lane catch did not immediately relaunch independently');
- A.near(longLog[catchIndex+1].time,longLog[catchIndex].time,'late lane inherited another lane cooldown');
+ A.near(longLog[catchIndex+1].time-longLog[catchIndex].time,.12,'late lane did not perform its independent throw anticipation');
  A.assert(longLog[catchIndex].time-longLog[0].time>1,'far lane fixture did not outlast its cooldown');
  for(const lane of state.lanes){
    const launches=lane.log.filter(v=>v.kind==='launch');
    for(let i=1;i<launches.length;i++)A.assert(launches[i].time-launches[i-1].time>=1-1e-8,'one lane fired before its own cooldown');
  }
- return {count:state.count,initialPierceFixture:0,nearHits:nearHits.length,farHits:farHits.length,oppositeCurveOffsets:offsets,
+ return {count:state.count,initialPierceFixture:0,nearHits:nearHits.length,farHits:farHits.length,clockwiseCurveOffsets:offsets,
    lanes:state.lanes.map(v=>({index:v.index,launches:v.launches,catches:v.catches,hits:v.hits,log:v.log}))};
 }"""
 
 QUANTITY_GROW_AND_RETIRE = r"""() => {
  const A=KBoom,p=A.p;A.prepare();p.quantityPicks=p.quantityBonus=4;
- const e=A.spawn(200,0),hits=A.watch(e);p.target=e;A.step(.001,true);A.advance(.02,true);
+ const e=A.spawn(200,0),hits=A.watch(e);p.target=e;A.advance(.121,true);A.advance(.02,true);
  const raw=A.K.stateFor(p).boomerang.lanes,saved=raw.map(lane=>({lane,projectile:lane.projectile,castId:lane.projectile.castId,readyAt:lane.readyAt}));
- p.quantityPicks=p.quantityBonus=8;A.step(.001,true);let state=A.state();
+ p.quantityPicks=p.quantityBonus=8;A.advance(.121,true);let state=A.state();
  A.assert(state.count===5&&state.projectiles.length===5,'new quantity lanes were not immediately ready');
  for(const item of saved){
    const lane=A.K.stateFor(p).boomerang.lanes[item.lane.index];
@@ -233,13 +286,14 @@ QUANTITY_GROW_AND_RETIRE = r"""() => {
  A.until(()=>A.state().hits===5);state=A.state();
  A.assert(hits.length===5&&hits.every(h=>h.owner&&h.id===A.id),'simultaneous bones did not each hit the same enemy once');
  A.assert(e.maxHp-e.hp===5*102,'same-target quantity damage was split or duplicated');
- const inFlight=state.projectiles.map(q=>q.castId),beforeLaunches=state.launches;
+ const inFlight=state.projectiles.map(q=>q.castId),beforeLaunches=state.launches,retiring=[...A.K.stateFor(p).boomerang.lanes];
  A.assert(inFlight.length===5,'retirement fixture lost a throw before reduction');
  p.quantityPicks=p.quantityBonus=0;A.step(.001,true);state=A.state();
  A.assert(state.count===1&&state.projectiles.length===5,'quantity decrease deleted bones that had not reached the hand');
  A.assert(state.projectiles.every(q=>inFlight.includes(q.castId)),'quantity decrease replaced a returning bone');
  A.until(()=>A.state().catches===5);state=A.state();
- A.assert(state.projectiles.length===0&&state.lanes.length===1&&state.launches===beforeLaunches,'surplus bones relaunched instead of retiring after catch');
+ A.assert(state.lanes.length===1&&state.projectiles.length<=1&&state.launches<=beforeLaunches+1,'surplus bones relaunched instead of retiring after catch');
+ A.assert(retiring.slice(1).every(lane=>lane.launches===1&&!lane.projectile),'a surplus lane relaunched after completing its physical catch');
  A.until(()=>A.state().lanes[0].launches===2);state=A.state();
  A.assert(state.count===1&&state.projectiles.length===1&&state.launches===beforeLaunches+1,'reduced count did not retain exactly the original lane');
  A.assert(A.K.stateFor(p).boomerang.lanes[0]===saved[0].lane,'retirement recreated the remaining lane');
@@ -252,7 +306,7 @@ QUANTITY_CAP = r"""() => {
  for(let rank=1;rank<=5;rank++){
    A.start(200,rank);A.assert(A.state().count===rank&&A.state().projectiles.length===rank,'rank did not add one base bone per level');defaults.push({rank,count:A.state().count});
  }
- const m=A.prepare(5);p.quantityPicks=p.quantityBonus=30;p.target=A.spawn(200,0);A.step(.001,true);
+ const m=A.prepare(5);p.quantityPicks=p.quantityBonus=30;p.target=A.spawn(200,0);A.advance(.121,true);
  const state=A.state();A.assert(G.Quantity.count(p,m.count)>16,'rank-five cap fixture did not exceed sixteen bones');
  A.assert(state.count===16&&state.lanes.length===16&&state.projectiles.length===16,'quantity cap is not sixteen simultaneous bones');
  A.assert(new Set(state.projectiles.map(q=>q.castId)).size===16,'quantity cap lanes reused flying projectiles');
@@ -272,7 +326,7 @@ RANK_LEVEL_UP = r"""() => {
      A.assert(/穿透\s*\+1/.test(card.desc),'native upgrade card omitted piercing +1 at rank '+rank);
      A.assert(card.apply(p)!==false,'native upgrade card failed');
      A.assert(m.lvl===rank&&m.count===rank&&m.pierce===rank-1,'native levelUp failed to add one base bone and piercing charge');
-     A.step(.001,true);const state=A.state(),raw=A.K.stateFor(p).boomerang.lanes;
+     A.advance(.121,true);const state=A.state(),raw=A.K.stateFor(p).boomerang.lanes;
      A.assert(state.count===rank&&state.projectiles.length===rank,'new rank bone did not immediately join existing flights');
      for(const saved of before){
        const lane=raw[saved.lane.index];
@@ -292,13 +346,13 @@ RANK_LEVEL_UP = r"""() => {
 }"""
 
 RANK_QUANTITY_STACK = r"""() => {
- const A=KBoom,p=A.p,m=A.prepare(3);p.quantityPicks=p.quantityBonus=4;p.target=A.spawn(400,0);A.step(.001,true);
+ const A=KBoom,p=A.p,m=A.prepare(3);p.quantityPicks=p.quantityBonus=4;p.target=A.spawn(400,0);A.advance(.121,true);
  A.assert(m.count===3&&A.state().count===7&&A.state().projectiles.length===7,'rank-three base count was not multiplied by quantity cards');
  A.assert(A.state().projectiles.every(q=>q.pierce===6&&q.remainingPierce===6),'rank-three piercing did not add four quantity-card charges');
  const stages=[{rank:3,base:m.count,count:A.state().count}];
  for(const [rank,count] of [[4,9],[5,12]]){
    const saved=A.K.stateFor(p).boomerang.lanes.map(lane=>({lane,projectile:lane.projectile,readyAt:lane.readyAt,remainingPierce:lane.projectile.remainingPierce}));
-   A.assert(G.Moves.levelUp(m),'native stacked rank upgrade failed');A.step(.001,true);
+   A.assert(G.Moves.levelUp(m),'native stacked rank upgrade failed');A.advance(.121,true);
    const state=A.state(),raw=A.K.stateFor(p).boomerang.lanes;
    A.assert(m.lvl===rank&&m.count===rank&&state.count===count&&state.projectiles.length===count,'rank/quantity stacking order was incorrect');
    for(const item of saved){
@@ -314,13 +368,12 @@ RANK_QUANTITY_STACK = r"""() => {
 }"""
 
 PIERCE_LIMITS = r"""() => {
- const A=KBoom,out=[];
+ const A=KBoom,out=[],points=A.returnPoints(560);
  for(let rank=1;rank<=5;rank++){
    const {m,anchor,hits:anchorHits,b}=A.single(rank,560),order=[];
    A.until(()=>anchorHits.length===1);
    A.assert(b.phase==='return'&&b.remainingPierce===rank-1,'first outbound hit delayed its return or spent return quota');
-   const from={x:b.x,y:b.y},hand=A.state().hand,d=Math.hypot(hand.x-from.x,hand.y-from.y);
-   const targets=Array.from({length:6},(_,i)=>{const t=(60+i*70)/d;return A.spawn(from.x+(hand.x-from.x)*t,from.y+(hand.y-from.y)*t)}),logs=targets.map(A.watch);
+   const targets=points.map(point=>A.spawn(point.x,point.y)),logs=targets.map(A.watch);
    targets.forEach((e,index)=>{const hurt=e.hurt;e.hurt=function(...args){order.push(index);return hurt.apply(this,args)}});
    A.near(b.pierce,rank-1,'launch-time rank piercing snapshot');
    A.until(()=>A.state().catches===1);
@@ -336,19 +389,19 @@ PIERCE_LIMITS = r"""() => {
 }"""
 
 PIERCE_OVERLAP_AND_QUANTITY = r"""() => {
- const A=KBoom,p=A.p,first=A.single(5);A.until(()=>first.hits.length===1);
- const {b}=first,hand=A.state().hand,large=A.spawn((b.x+hand.x)/2,(b.y+hand.y)/2),largeHits=A.watch(large);
+ const A=KBoom,p=A.p,overlapPoints=A.returnPoints(400),points=A.returnPoints(560),first=A.single(5);A.until(()=>first.hits.length===1);
+ const {b}=first,large=A.spawn(overlapPoints[2].x,overlapPoints[2].y),largeHits=A.watch(large);
  large.r=60;G.EnemyMgr.rebuildGrid();A.until(()=>largeHits.length===1);A.advance(.06,true);
  const overlap=A.state().projectile;
  A.assert(overlap?.phase==='return'&&Math.hypot(overlap.x-large.x,overlap.y-large.y)<=large.r+7,'return-overlap fixture did not remain inside one victim');
  A.assert(largeHits.length===1&&first.hits.length===1&&overlap.remainingPierce===3,'continued return overlap consumed extra charges or re-hit the outbound victim');
  const overlapResult={hits:largeHits.length,remaining:overlap.remainingPierce,stillInside:true};
- A.prepare();p.quantityPicks=p.quantityBonus=4;const anchor=A.spawn(560,0),anchorHits=A.watch(anchor);p.target=anchor;A.step(.001,true);
+ A.prepare();p.quantityPicks=p.quantityBonus=4;const anchor=A.spawn(560,0),anchorHits=A.watch(anchor);p.target=anchor;A.advance(.121,true);
  let state=A.state();A.assert(state.count===2&&state.projectiles.every(q=>q.pierce===4&&q.remainingPierce===4),'four quantity cards did not add four independent launch piercing charges');
  const shots=[...state.projectiles];A.until(()=>anchorHits.length===2);
  A.assert(shots.every(q=>q.phase==='return'&&q.remainingPierce===4),'quantity cards delayed first-contact return');
- state=A.state();const from={x:(shots[0].x+shots[1].x)/2,y:(shots[0].y+shots[1].y)/2},to=state.hand,d=Math.hypot(to.x-from.x,to.y-from.y);
- const targets=Array.from({length:6},(_,i)=>{const t=(60+i*70)/d;return A.spawn(from.x+(to.x-from.x)*t,from.y+(to.y-from.y)*t)}),logs=targets.map(A.watch);
+ state=A.state();
+ const targets=points.map(point=>A.spawn(point.x,point.y)),logs=targets.map(A.watch);
  A.until(()=>A.state().catches===2);state=A.state();
  A.assert(state.hits===10&&state.lanes.every(lane=>lane.hits===5),'quantity return piercing did not allow four new victims per bone');
  for(const q of shots){
@@ -360,8 +413,8 @@ PIERCE_OVERLAP_AND_QUANTITY = r"""() => {
 }"""
 
 PIERCE_UNUSED_AND_OBSTACLES = r"""() => {
- const A=KBoom,{b,hits}=A.single(5,200);A.until(()=>hits.length===1);
- A.assert(b.phase==='return'&&b.remainingPierce===4&&b.distance<300,'unused return charges delayed first-contact return');
+ const A=KBoom,{b,hits,anchor}=A.single(5,200);A.until(()=>hits.length===1);
+ A.assert(b.phase==='return'&&b.remainingPierce===4&&b.distance<=b.travelLimit&&Math.hypot(b.x-anchor.x,b.y-anchor.y)<=anchor.r+16,'unused return charges delayed first-contact return');
  A.until(()=>A.state().catches===1);A.assert(hits.length===1,'unused-charge return hit its earlier victim');
  const firstContact={distance:b.distance,unused:b.remainingPierce,hits:hits.length};
  const missed=A.single(5,200);missed.anchor.dead=true;A.p.target=null;
@@ -381,7 +434,7 @@ PIERCE_UNUSED_AND_OBSTACLES = r"""() => {
 MULTI_CLONE_AND_UNLEARN = r"""() => {
  const A=KBoom,p=A.p;A.prepare();p.quantityPicks=p.quantityBonus=4;p.target=A.spawn(220,0);
  const clone=G.SelfClones.summon(p);A.assert(clone,'native quantity clone missing');clone.target=p.target;
- A.step(.001,true);A.advance(.02,true);
+ A.advance(.121,true);A.advance(.02,true);
  let main=A.state(),copy=A.state(clone);
  A.assert(main.count===2&&copy.count===2&&main.projectiles.length===2&&copy.projectiles.length===2,'native clone did not inherit quantity while keeping independent flights');
  A.assert(new Set([...main.projectiles,...copy.projectiles].map(q=>q.castId)).size===4,'clone shared projectile identities with parent');
@@ -394,11 +447,11 @@ MULTI_CLONE_AND_UNLEARN = r"""() => {
 
 LATE_CATCH = r"""() => {
  const A=KBoom,p=A.p;
- A.start(560);A.until(()=>A.state().catches===1);
+ A.start(560);A.until(()=>A.state().launches===2);
  const natural=A.state().log,naturalCatch=natural.findIndex(v=>v.kind==='catch');
  A.assert(natural[naturalCatch].time-natural[0].time>1,'extended stationary flight did not exceed cooldown');
  A.assert(natural[naturalCatch+1]?.kind==='launch','long-range catch failed to relaunch');
- A.near(natural[naturalCatch+1].time,natural[naturalCatch].time,'long-range catch restarted cooldown');
+ A.near(natural[naturalCatch+1].time-natural[naturalCatch].time,.12,'long-range catch did not retain its anticipation');
  const {e,hits}=A.start(100);A.until(()=>hits.length>0);e.dead=true;
  const flight=A.state().projectile.castId;p.x+=1400;const target=A.spawn(p.x+200,p.y);p.target=target;
  let expiredWhileFlying=false,steps=0;
@@ -409,11 +462,12 @@ LATE_CATCH = r"""() => {
    A.assert(state.launches===1,'ready cooldown allowed another throw while old bone was still flying');
    A.step(.01,true);
  }
- const state=A.state(),log=state.log,catchIndex=log.findIndex(v=>v.kind==='catch');
+ const caught=A.state();A.assert(caught.catches===1&&caught.launches===1&&!caught.projectile&&caught.lanes[0].windup,'late catch skipped physical throw anticipation');
+ A.until(()=>A.state().launches===2);const state=A.state(),log=state.log,catchIndex=log.findIndex(v=>v.kind==='catch');
  A.assert(expiredWhileFlying&&state.catches===1&&state.launches===2,'late real catch did not immediately relaunch');
  A.assert(state.projectile?.phase==='out'&&state.projectile.castId!==flight,'catch reused the old returning projectile');
  A.assert(catchIndex>=0&&log[catchIndex+1]?.kind==='launch','late catch omitted same-update relaunch event');
- A.near(log[catchIndex+1].time,log[catchIndex].time,'late catch added an unnecessary cooldown');
+ A.near(log[catchIndex+1].time-log[catchIndex].time,.12,'late catch did not take exactly one throw anticipation');
  A.assert(log[catchIndex].time-log[0].time>1,'late-catch fixture did not exceed base cooldown');
  return {naturalLongRange:natural,steps,expiredWhileFlying,log};
 }"""
@@ -457,21 +511,31 @@ RANGE_AND_OBSTACLES = r"""() => {
 
 MOVING_CATCH = r"""() => {
  const A=KBoom,p=A.p,{e,hits}=A.start(100);A.until(()=>hits.length>0);e.dead=true;p.target=null;
- p.x+=120;p.y+=150;let steps=0;
- while(A.state().catches===0&&steps++<200){
+ p.x+=120;p.y+=150;let steps=0,curvedSteps=0,maxVelocityChange=0;
+ const beforeTurn={...A.state().projectile},hand=A.state().hand,tiny=.0001;
+ const bend=.85*Math.max(0,1-(beforeTurn.age-(beforeTurn.returnAt??beforeTurn.age))/.4);
+ const angle=Math.atan2(hand.y-beforeTurn.y,hand.x-beforeTurn.x)+bend;
+ const expected={vx:G.U.damp(beforeTurn.vx,Math.cos(angle)*650,7,tiny),vy:G.U.damp(beforeTurn.vy,Math.sin(angle)*650,7,tiny)};
+ A.step(tiny,true);
+ A.near(A.state().projectile.vx,expected.vx,'return vx does not use Sasuke momentum damping');
+ A.near(A.state().projectile.vy,expected.vy,'return vy does not use Sasuke momentum damping');
+ while(A.state().catches===0&&steps++<300){
    p.x+=1.2;p.y+=.3;const before=A.state(),q={...before.projectile},hand=before.hand;
    A.assert(q.phase==='return','returning throw changed phase without catching');
-   const dx=hand.x-q.x,dy=hand.y-q.y,d=Math.hypot(dx,dy);A.step(.01,true);const after=A.state();
+   const dx=hand.x-q.x,dy=hand.y-q.y,d=Math.hypot(dx,dy),speed=Math.hypot(q.vx,q.vy);
+   A.step(.01,true);const after=A.state();
    if(after.catches){
-     A.assert(d<=650*.01+8+.01,'throw caught without reaching moving hand');break;
+     A.assert(d<=Math.max(speed,650)*.011+8.1,'throw caught without physically reaching the moving hand');break;
    }
-   const next=after.projectile,mx=next.x-q.x,my=next.y-q.y;
-   A.assert(mx*dx+my*dy>0,'return moved away from the current hand');
-   A.assert(Math.abs(mx*dy-my*dx)<1e-5*Math.max(1,d),'return spiraled instead of moving straight to hand');
-   A.near(Math.hypot(mx,my),6.5,'return speed is not 650px/s');
+   const next=after.projectile,mx=next.x-q.x,my=next.y-q.y,change=Math.hypot(next.vx-q.vx,next.vy-q.vy);
+   maxVelocityChange=Math.max(maxVelocityChange,change);
+   A.assert(change<7*.011*(speed+650)+1,'return velocity snapped instead of damping from its previous tangent');
+   if(Math.abs(mx*dy-my*dx)>.02*Math.max(1,d)*Math.hypot(mx,my))curvedSteps++;
+   A.assert(Number.isFinite(next.x)&&Number.isFinite(next.y),'curved return generated invalid coordinates');
  }
- A.assert(A.state().catches===1&&!A.state().projectile&&steps<200,'moving owner never truly caught the throw');
- return {steps,owner:{x:p.x,y:p.y},state:A.state()};
+ A.assert(A.state().catches===1&&!A.state().projectile&&steps<300,'moving owner never truly caught the throw');
+ A.assert(curvedSteps>=3,'Sasuke-style return never visibly curved toward the moving hand');
+ return {steps,curvedSteps,maxVelocityChange,sasukeDamping:true,owner:{x:p.x,y:p.y},state:A.state()};
 }"""
 
 BODY_AND_GUARD = r"""() => {
@@ -479,8 +543,8 @@ BODY_AND_GUARD = r"""() => {
  p.target=A.spawn(100,0);KAcceptance.cast('naruto-kimimaro-bracken');const body=A.action();
  A.assert(body?.kind==='bracken','native forest not started');A.advance(.1,true);
  const shot=G.Projectiles.spawn({x:p.x+100,y:p.y,vx:-600,vy:0,friendly:false,r:5,dmg:30,mtype:'normal',life:4});
- const hp=p.hp;A.advance(.3,true);
- A.assert(A.action()===body&&A.action().age>=.4,'throw replaced or interrupted native body action');
+ const hp=p.hp;A.advance(.6,true);
+ A.assert(A.action()===body&&A.action().age>=.7-1e-8,'throw replaced or interrupted native body action');
  A.assert(A.state().launches>=1&&A.state().hits>=1,'body action suppressed independent boomerang');
  A.assert(!G.Projectiles.all().includes(shot)&&p.hp===hp&&A.K.boneGuardState(p).blocks>=1,'boomerang interfered with bone defense');
  return {body:body.kind,bodyAge:body.age,launches:A.state().launches,throwHits:A.state().hits,guardBlocks:A.K.boneGuardState(p).blocks};
@@ -489,7 +553,7 @@ BODY_AND_GUARD = r"""() => {
 CLONE_AND_LIFECYCLE = r"""() => {
  const A=KBoom,p=A.p;A.prepare();p.target=A.spawn(220,0);
  const clone=G.SelfClones.summon(p);A.assert(clone,'native self clone missing');clone.target=p.target;
- A.step(.001,true);A.advance(.03,true);
+ A.advance(.121,true);A.advance(.03,true);
  const main=A.state(),copy=A.state(clone);
  A.assert(main?.projectile&&copy?.projectile&&main.projectile!==copy.projectile,'clone shares or omits its independent boomerang');
  A.assert(main.launches===1&&copy.launches===1,'new owner duplicated boomerang');
@@ -521,7 +585,7 @@ def main():
             result=report['viewports'][label]={}
             try:
                 frame=game.boot(page,label);frame.evaluate(HELPERS)
-                for name,check in [('progression',PROGRESSION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndCurve',FIRST_TARGET_AND_CURVE),('farNominalHits',FAR_NOMINAL_HITS),
+                for name,check in [('progression',PROGRESSION),('anticipation',ANTICIPATION),('hitAndReturn',HIT_AND_RETURN),('firstTargetAndCurve',FIRST_TARGET_AND_CURVE),('farNominalHits',FAR_NOMINAL_HITS),
                   ('cadence',CADENCE),('cooldownModifiers',COOLDOWN_MODIFIERS),('multiCadence',MULTI_CADENCE),
                   ('quantityGrowAndRetire',QUANTITY_GROW_AND_RETIRE),('quantityCap',QUANTITY_CAP),('rankLevelUp',RANK_LEVEL_UP),
                   ('rankQuantityStack',RANK_QUANTITY_STACK),('pierceLimits',PIERCE_LIMITS),('pierceOverlapAndQuantity',PIERCE_OVERLAP_AND_QUANTITY),

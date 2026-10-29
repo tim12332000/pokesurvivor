@@ -1,0 +1,27 @@
+{
+  "generator": "image_gen",
+  "source": "kimimaro-throw-generated-v1.png",
+  "sha256": "9a3622c97ab6f85bfbf951f23b020b6b9ccefb534b39a076702a83de98f1ca7d",
+  "references": [
+    {
+      "source": "kimimaro-normal-v1.png",
+      "sha256": "47acd0d37b0dbcc949493b759947a0f1af45e84b968c52b5de400aa04e0040af"
+    },
+    {
+      "source": "kimimaro-curse-v1.png",
+      "sha256": "6d300df7d91c26ab033ce0ca7b206ffe884e1122373c0f07736ba661d920adb3"
+    }
+  ],
+  "prompt": "Six transparent full-body Kimimaro poses in a 3x2 grid: normal and curse forms, facing right; side windup with throwing arm pulled back, open-hand release, and follow-through recovery. Match existing reference proportions, identity, clothes, outline and style. Empty hands, no weapons, no trails, no labels. 1536x1024.",
+  "packing": "Crop authored cells, threshold alpha, nearest-neighbor normalize to 84px, repack original unchanged frames within existing 560x660 atlases.",
+  "outputs": {
+    "normal": {
+      "source": "redrawn/kimimaro-normal-throw-v2.png",
+      "sha256": "658ff217bca62feb50b49a3720748153727c2d5073e454434b31952bef1ea755"
+    },
+    "curse": {
+      "source": "redrawn/kimimaro-curse-throw-v2.png",
+      "sha256": "287b8b305d44b6e88db778c15c26e001b56ce44455cc7cd50b1ce3883dbd4f9c"
+    }
+  }
+}

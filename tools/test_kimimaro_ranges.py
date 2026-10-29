@@ -84,7 +84,7 @@ BULLETS = r"""() => {
 DENSITY = r"""() => {
  const A=KAcceptance,p=A.p();A.reset();const m=A.fixture('naruto-kimimaro-bracken',5);p.target=A.spawn(200,0);
  A.cast(m.id);A.advance(4.7);A.fields();const single={...G.KimimaroArt.debugLast};
- A.assert(single.forestColumns===72&&single.secondaryParticles<=20,'single forest density/budget '+JSON.stringify(single));
+ A.assert(single.forestColumns===96&&single.secondaryParticles<=20,'single mixed forest density/budget '+JSON.stringify(single));
  A.reset();A.fixture(m.id,5);p.target=A.spawn(200,0);const owners=[p,...Array.from({length:3},()=>G.SelfClones.summon(p))];
  A.assert(owners.every(Boolean),'native clones missing');
  for(const actor of owners)for(const move of actor.moves)move.t=999;
@@ -95,7 +95,7 @@ DENSITY = r"""() => {
   A.assert(G.DigimonSkills.cast(actor,move),'native owner forest cast failed '+owners.indexOf(actor))}}finally{A.pause()}
  A.advance(4.7);A.fields();const multiple={...G.KimimaroArt.debugLast};
  const forests=A.K.renderStates().filter(s=>s.forest).length;
- A.assert(forests===4&&multiple.forestColumns===72&&multiple.secondaryParticles<=20,'global four-owner budget '+JSON.stringify({forests,multiple}));
+ A.assert(forests===4&&multiple.forestColumns===96&&multiple.secondaryParticles<=20,'global four-owner budget '+JSON.stringify({forests,multiple}));
  return {single,forests,multiple};
 }"""
 
@@ -113,7 +113,7 @@ STAGES = r"""() => {
    A.fields();counts.push(G.KimimaroArt.debugLast.forestColumns);
  }
  A.advance(2.7-age);A.fields();counts.push(G.KimimaroArt.debugLast.forestColumns);
- A.assert(counts.at(-1)===72&&counts[1]<counts.at(-1),'forest did not grow gradually');
+ A.assert(counts.at(-1)===96&&counts[1]<counts.at(-1),'forest did not grow gradually');
  A.assert(counts.every((n,i)=>i===0||n>=counts[i-1]),'forest shrank before final growth');
  A.advance(.51);A.fields();A.assert(!A.action()&&G.KimimaroArt.debugLast.forestColumns===0,'forest did not clear at 3.2 seconds');
  A.assert(logs.every(h=>h.length===1),'later wave repeated damage');
@@ -135,8 +135,8 @@ def main():
     game.OUT.mkdir(parents=True, exist_ok=True)
     report={'sourceHashes':game.runtime_hashes(),'assets':game.asset_inventory(),'viewports':{},'errors':[],'failures':[]}
     effects=report['assets']['sheets']['effects']
-    assert effects['source']=='redrawn/kimimaro-effects-v2.png', 'forest must load the reviewed raster atlas'
-    assert 0<effects['transferBytes']<=256*1024, 'forest effect atlas exceeds its transfer budget'
+    assert effects['source']=='redrawn/kimimaro-effects-v5.png', 'forest must load the reviewed mixed atlas'
+    assert 0<effects['transferBytes']<=512*1024, 'forest effect atlas exceeds its transfer budget'
     with sync_playwright() as pw:
         browser=pw.chromium.launch(executable_path=game.CHROME,headless=True)
         for label,viewport,mobile in [('desktop',{'width':1280,'height':900},False),('mobile',{'width':390,'height':844},True)]:

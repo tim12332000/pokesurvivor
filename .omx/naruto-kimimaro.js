@@ -443,7 +443,8 @@
     if(left>EPS)updateBullets(s,left);
   }
   function boomerangHand(owner,aim=owner.aim||0) {
-    return G.KimimaroArt?.muzzleFor?.(owner,aim)||{x:owner.x+Math.cos(aim)*12,y:owner.y+Math.sin(aim)*12,height:31};
+    return G.KimimaroArt?.boomerangHandFor?.(owner,aim)||G.KimimaroArt?.muzzleFor?.(owner,aim)||
+      {x:owner.x+Math.cos(aim)*12,y:owner.y+Math.sin(aim)*12,height:31};
   }
   function boomerangState(owner=G.Game.player) {
     const s=states.get(owner);if(!validState(s)||!learned(owner,BOOMERANG))return null;
@@ -455,8 +456,8 @@
   }
   function boomerangPoseFor(owner) {
     const s=states.get(owner),pose=s?.boomerang.pose;
-    return validState(s)&&learned(owner,BOOMERANG)&&pose&&s.clock-pose.time<.12
-      ?{kind:'bullets',age:.20,aim:pose.aim}:null;
+    return validState(s)&&learned(owner,BOOMERANG)&&pose&&s.clock-pose.time<.32
+      ?{kind:'boomerang-throw',age:Math.max(0,s.clock-pose.time),aim:pose.aim}:null;
   }
   function boomerangEvent(g,lane,event) {
     event.lane=lane.index;g.log.push(event);lane.log.push(event);
@@ -469,29 +470,31 @@
     const target=targets[lane.index%targets.length];
     const aim=Math.atan2(target.y-owner.y,target.x-owner.x),hand=boomerangHand(owner,aim);
     if(!clearPath(owner.x,owner.y,hand.x,hand.y))return false;
-    const speed=finite(m.speed,450),castId=nextCast++;
-    const distance=Math.hypot(target.x-hand.x,target.y-hand.y),bend=(lane.index%2?1:-1)*Math.min(280,distance*.8);
-    const cx=(hand.x+target.x)/2-Math.sin(aim)*bend,cy=(hand.y+target.y)/2+Math.cos(aim)*bend;
+    const castId=nextCast++;
+    // Screen-space clockwise curvature matches the bone shuriken's clockwise spin in every lane.
+    const distance=Math.hypot(target.x-hand.x,target.y-hand.y),bend=-260;
+    const dx=distance?(target.x-hand.x)/distance:Math.cos(aim),dy=distance?(target.y-hand.y)/distance:Math.sin(aim);
+    // Sasuke's Fuma curve: midpoint control offset by fumaCurve (130) * 2, over .65 seconds.
+    const cx=(hand.x+target.x)/2-dy*bend,cy=(hand.y+target.y)/2+dx*bend;
     const curve=Array.from({length:33},(_,i)=>{const t=i/32,u=1-t;
       return {x:u*u*hand.x+2*u*t*cx+t*t*target.x,y:u*u*hand.y+2*u*t*cy+t*t*target.y};});
     const curveLength=curve.reduce((length,point,i)=>i?length+Math.hypot(point.x-curve[i-1].x,point.y-curve[i-1].y):0,0);
     // A missed throw returns at its aimed curve endpoint, without flying farther.
     const travelLimit=curveLength;
-    const firstAim=Math.atan2(curve[1].y-hand.y,curve[1].x-hand.x);
     const pierce=Math.max(0,Math.floor(finite(m.pierce)+(G.Quantity?.bonus(owner)||0)));
-    lane.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(firstAim)*speed,vy:Math.sin(firstAim)*speed,
+    lane.projectile={owner,world:G.World,x:hand.x,y:hand.y,height:hand.height??31,vx:2*(cx-hand.x)/.65,vy:2*(cy-hand.y)/.65,
       aim,phase:'out',age:0,distance:0,range:finite(m.range,600),move:{...m},attack:owner.atk*damageBonus(owner),
       kind:'boomerang',baseKind:'boomerang',castId,lane:lane.index,pierce,remainingPierce:pierce,
-      curve,curveLength,travelLimit,curveIndex:1,phaseHits:new Map(),trail:[]};
+      curve,curveLength,travelLimit,curveIndex:1,curveDuration:.65,returnAt:null,phaseHits:new Map(),trail:[]};
     lane.readyAt=time+Math.max(.05,m.cd*(owner.cdMul||1));
-    lane.launches++;g.launches++;g.pose={time,aim};
+    lane.launches++;g.launches++;g.pose={time:time-.12,aim};lane.windup=null;
     boomerangEvent(g,lane,{kind:'launch',time,castId,x:hand.x,y:hand.y});
     return true;
   }
   function catchBoomerang(s,lane,hand,time) {
     const g=s.boomerang,b=lane.projectile;lane.catches++;g.catches++;
     boomerangEvent(g,lane,{kind:'catch',time,castId:b.castId,x:hand.x,y:hand.y});
-    lane.projectile=null;g.pose={time,aim:b.aim};launchBoomerang(s,lane,time);
+    lane.projectile=null;lane.windup=null;
   }
   function updateBoomerang(s,dt) {
     const g=s.boomerang,m=learned(s.owner,BOOMERANG);
@@ -503,7 +506,7 @@
     for(const lane of g.lanes)updateBoomerangLane(s,lane,dt);
     // A quantity decrease retires surplus bones only after they reach the hand.
     while(g.lanes.length>g.count&&!g.lanes.at(-1).projectile)g.lanes.pop();
-    m.t=g.lanes.reduce((time,lane)=>lane.index<g.count?Math.min(time,Math.max(0,lane.readyAt-s.clock)):time,Infinity);
+    m.t=g.lanes.reduce((time,lane)=>lane.index<g.count?Math.min(time,Math.max(0,(lane.windup?.releaseAt??lane.readyAt)-s.clock)):time,Infinity);
   }
   function updateBoomerangLane(s,lane,dt) {
     const g=s.boomerang;
@@ -511,10 +514,22 @@
     // Both the launch cooldown and the physical catch must finish before firing.
     for(let steps=0;left>EPS&&steps<1024;steps++){
       if(!lane.projectile){
-        const wait=Math.max(0,lane.readyAt-(s.clock-left));
+        if(lane.index>=g.count){lane.windup=null;break;}
+        if(!lane.windup){
+          const wait=Math.max(0,lane.readyAt-.12-(s.clock-left));
+          if(wait>left+EPS)break;
+          left-=Math.min(left,wait);
+          const m=learned(s.owner,BOOMERANG),targets=nearby(s.owner,finite(m?.range,600));
+          if(!targets.length)break;
+          const target=targets[lane.index%targets.length],aim=Math.atan2(target.y-s.owner.y,target.x-s.owner.x);
+          const time=s.clock-left;lane.windup={time,releaseAt:Math.max(lane.readyAt,time+.12),aim};
+          g.pose={time,aim};
+        }
+        const wait=Math.max(0,lane.windup.releaseAt-(s.clock-left));
         if(wait>left+EPS)break;
         left-=Math.min(left,wait);
-        if(!launchBoomerang(s,lane,s.clock-left)||left<=EPS)break;
+        if(!launchBoomerang(s,lane,s.clock-left)){lane.windup=null;g.pose=null;break;}
+        if(left<=EPS)break;
       }
       const b=lane.projectile,hand=boomerangHand(s.owner,b.aim);
       if(b.phase==='return'){
@@ -522,9 +537,19 @@
         if(distance<=8){
           catchBoomerang(s,lane,hand,s.clock-left);continue;
         }
-        const speed=finite(b.move.returnSpeed,650),travel=Math.min(4,speed*left,distance-8);
-        b.vx=(hand.x-b.x)/distance*speed;b.vy=(hand.y-b.y)/distance*speed;
-        b.x+=b.vx*travel/speed;b.y+=b.vy*travel/speed;b.age+=travel/speed;left-=travel/speed;
+        b.returnAt??=b.age;
+        const speed=finite(b.move.returnSpeed,650),step=Math.min(left,1/240,4/Math.max(speed,Math.hypot(b.vx,b.vy),1));
+        // Sasuke keeps outbound momentum, curls around, then homes back with exponential damping.
+        const bend=.85*Math.max(0,1-(b.age-b.returnAt)/.4),angle=Math.atan2(hand.y-b.y,hand.x-b.x)+bend;
+        b.vx=G.U.damp(b.vx,Math.cos(angle)*speed,7,step);
+        b.vy=G.U.damp(b.vy,Math.sin(angle)*speed,7,step);
+        const px=b.x,py=b.y;
+        b.x+=b.vx*step;b.y+=b.vy*step;b.age+=step;left-=step;
+        const mx=b.x-px,my=b.y-py,length2=mx*mx+my*my;
+        const nearest=length2?Math.max(0,Math.min(1,((hand.x-px)*mx+(hand.y-py)*my)/length2)):0;
+        if(Math.hypot(px+mx*nearest-hand.x,py+my*nearest-hand.y)<=8){
+          catchBoomerang(s,lane,hand,s.clock-left);continue;
+        }
         if(b.remainingPierce>0){
           const victim=G.EnemyMgr.queryCircle(b.x,b.y,48)
             .filter(e=>alive(e)&&!e.friendly&&!b.phaseHits.get(0)?.has(e)&&distance2(e,b)<=((e.r||8)+7)**2)
@@ -532,7 +557,8 @@
           if(victim&&hit(s,b,victim,1,0,true)>0){lane.hits++;g.hits++;b.remainingPierce--;}
         }
       }else{
-        const speed=finite(b.move.speed,450),point=b.curve[b.curveIndex];
+        const point=b.curve[b.curveIndex],previous=b.curve[b.curveIndex-1];
+        const speed=point&&previous?Math.hypot(point.x-previous.x,point.y-previous.y)/(b.curveDuration/32):0;
         const dx=point?point.x-b.x:Math.cos(b.aim),dy=point?point.y-b.y:Math.sin(b.aim),segment=Math.hypot(dx,dy);
         if(point&&segment<=EPS){b.curveIndex++;continue;}
         const travel=Math.min(4,speed*left,b.travelLimit-b.distance,point?segment:Infinity);
@@ -830,6 +856,23 @@
   if(speed?.get)Object.defineProperty(G.Player.prototype,'spd',{...speed,get(){
     return speed.get.call(this)*(validOwner(this)?speedMultiplier(this):1);
   }});
+  if(new URLSearchParams(location.search).get('kimimaroPractice')==='1'){
+    const startRun=G.Game.startRun;
+    G.Game.startRun=function(...args){
+      const result=startRun.apply(this,args),player=G.Game.player;
+      if(player?.dex===DEX){
+        player.level=30;player.xp=0;player.xpNext=G.Player.xpFor(30);
+        player.narutoMilestonesShown??=new Set();
+        for(const id of G.NarutoSkillCatalog.extraPools.get(DEX)||[]){
+          player.addMove(id);player.narutoMilestonesShown.add(id);
+        }
+        for(const move of player.moves)if(supports(move.digiMode))Object.assign(move,G.Moves.instance(move.id,5));
+        player.arrange();
+        G.UI.toast('君麻呂全技能五階已開啟',3000);
+      }
+      return result;
+    };
+  }
   G.NarutoKimimaro={dex:DEX,supports,handles:supports,canCast,cast,update,clear,resetEvolution,activeFor,formFor,curseState,boneGuardState,boomerangState,boomerangPoseFor,movementLocked,held,
     hurtClone:(owner,amount,type,pure,context,baseHurt)=>baseHurt(incomingAmount(owner,amount,pure),type,pure,context),
     stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return validState(s)?s:null;},renderStates,speedMultiplier,

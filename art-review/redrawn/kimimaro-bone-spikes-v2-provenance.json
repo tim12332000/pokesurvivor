@@ -11,9 +11,9 @@
     }
   ],
   "user_reference": "Two supplied Naruto bone-forest gameplay/animation images: tall pointed ivory bone forests with gray natural facets.",
-  "processing": "Alpha below 128 discarded to remove faint generated halo; surviving alpha set opaque. Four isolated spikes cropped, nearest-neighbor scaled into existing atlas second row only, about 9:1 height/width. Original top 240px and bottom 100px preserved byte-for-byte as RGBA pixels.",
+  "processing": "Alpha below 128 discarded to remove generated halo. Each source spike is scaled proportionally to 288 pixels high with Lanczos sampling, split into three contiguous 96-pixel strips and packed horizontally with one-pixel transparent gutters in the existing atlas second row. Runtime joins the three original strips at the same scale without repeated textures. Original top 240px and bottom 100px remain unchanged.",
   "pack_script": "tools/build_kimimaro_forest_assets.py",
   "runtime_budget": "Same 640x480 effects atlas slot; no additional decoded sheet. Forest max72 groups,3 sprites per group.",
   "source_sha256": "df90ba39b7040bba5dcaadd10126f085cd0fcca7b9cfab044486ef11fda4651b",
-  "runtime_sha256": "49f28cc05ba0c5a65f587958bf7d5a7e0601f432724c159cb2e2c6fd911dc6d3"
+  "runtime_sha256": "7a84db7d7f3c421d49efceabe4669cbe9229f3514c6600573d19eb2fbdd811ed"
 }

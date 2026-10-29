@@ -3,6 +3,7 @@
   'use strict';
   const base=new URL('./',document.currentScript.src),metadataVersion=new URL(document.currentScript.src).search,images={},frameWhites=new Map();
   const TAU=Math.PI*2, clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,Number(v)||0));
+  const FOREST_LIMIT=96,RING_COUNTS=[10,12,14,18,20,22];
   const lerp=(a,b,t)=>a+(b-a)*t, ease=v=>{const t=clamp(v);return t*t*(3-2*t);};
   const rand=seed=>{let n=seed>>>0;return()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};};
   const normalize=state=>String(state||'idle').replace(/^naruto-kimimaro-?/,'').replace(/^kimimaro-/,'')||'willow';
@@ -16,7 +17,7 @@
       const response=await fetch(metadataURL);
       if(!response.ok)throw Error('君麻呂動畫資料載入失敗');metadata=await response.json();
       await Promise.all(Object.entries(metadata.sheets).map(async([key,sheet])=>{
-        const image=new Image();image.src=new URL(sheet.source,base).href;await image.decode();images[key]=image;
+        const image=new Image(),url=new URL(sheet.source,base);url.searchParams.set('v',sheet.sha256);image.src=url.href;await image.decode();images[key]=image;
       }));
       api.loaded=true;return api;
     })().catch(error=>{pending=null;throw error;});return pending;
@@ -28,6 +29,7 @@
     if(state==='hurt')return t<.10?'hurt1':'hurt2';
     if(state==='death')return t<.15?'death1':'death2';
     if(state==='curse')return 'larch';
+    if(state==='boomerang-throw')return t<.12?'throwWindup':t<.20?'throwRelease':'throwRecover';
     if(state==='willow')return t<.12?'idle':Math.floor(t*18)%2?'willow1':'willow2';
     if(state==='camellia')return t<.16?'camellia1':Math.floor(t*12)%2?'camellia2':'camellia1';
     if(state==='bullets')return t<.12?'idle':t<.46?'bullets':'run2';
@@ -73,6 +75,18 @@
     if(!api.loaded){void load().catch(()=>{});return false;}
     let state=normalize(options.state||'idle'),time=options.time??0;
     const form=options.form||G.NarutoKimimaro?.formFor?.(owner)||'normal';
+    if(state==='boomerang-throw'){
+      const frame=sample(state,time,options.dir,form);
+      if(time<.12&&frame.hand){
+        const k=(options.height??64)/frame.bodyHeight,facing=options.facing??(frame.direction==='left'?-1:1);
+        ctx.save();ctx.globalAlpha*=options.alpha??1;
+        ctx.translate((options.x??0)+(frame.hand[0]-frame.anchor[0])*k*(facing===-1?-1:1),
+          (options.y??0)+(frame.hand[1]-frame.anchor[1])*k);
+        ctx.scale(facing===-1?-1:1,1);ctx.imageSmoothingEnabled=false;
+        ctx.drawImage(boomerangFrame(0),-44,-44);ctx.restore();
+      }
+      return paint(ctx,frame,options);
+    }
     if(state==='curse'&&time>=0&&time<1){
       const rise=ease(time/.55),fade=ease(time/.14)*(1-ease((time-.68)/.32));
       const facing=options.facing??(direction(options.dir)==='left'?-1:1);
@@ -115,6 +129,35 @@
     polygon(c,[[-2,-w*.45],[d*.12,-w*.62],[d*.7,-w*.3],[d,0],[d*.7,w*.3],[d*.1,w*.5],[-2,w*.35]],'#f0ebde','#34384b');
     polygon(c,[[0,0],[d,0],[d*.7,w*.3],[d*.1,w*.5]],'#a7a1b5',null);c.restore();
   }
+  function boneBoomerang(c) {
+    // Three long, forked bone blades with large root spurs follow the user's sketch.
+    c.save();c.scale(.88,.88);c.lineWidth=1.1;c.lineJoin='miter';
+    for(let i=0;i<3;i++){
+      c.save();c.rotate(i*TAU/3);
+      polygon(c,[[-4,1],[-7,-5],[-11,-7],[-7,-10],[-9,-13],[-12,-15],
+        [-7,-17],[-6,-21],[-1,-25],[7,-29],[3,-18],[13,-28],
+        [7,-14],[4,-6],[5,0]],'#e0dac9','#29283d');
+      polygon(c,[[7,-29],[3,-18],[13,-28],[7,-14],[4,-6],[5,0],
+        [0,2],[-1,-8],[2,-19]],'#9d96a8');
+      polygon(c,[[-7,-17],[-6,-21],[-1,-25],[7,-29],[-1,-19],[-3,-9],
+        [-5,-5],[-7,-10],[-9,-13],[-12,-15]],'#f7f1dd');
+      polygon(c,[[-7,-5],[-11,-7],[-7,-10],[-3,-9],[-4,-4]],'#b5abb0');
+      c.restore();
+    }
+    polygon(c,[[-4,-3],[4,-3],[0,5]],'#c4bcb0','#29283d');
+    polygon(c,[[-3,-2],[2,-2],[0,1]],'#f7f1dd');c.restore();
+  }
+  const boomerangFrames=new Map();
+  function boomerangFrame(age) {
+    const steps=64,index=((Math.floor(age*6/TAU*steps)%steps)+steps)%steps;
+    if(boomerangFrames.has(index))return boomerangFrames.get(index);
+    const canvas=document.createElement('canvas');canvas.width=canvas.height=88;
+    const c=canvas.getContext('2d');c.translate(44,44);c.rotate(index*TAU/steps);boneBoomerang(c);
+    // Rasterize each angle once, then remove the soft alpha fringe before pixel-art scaling.
+    const pixels=c.getImageData(0,0,88,88);
+    for(let i=3;i<pixels.data.length;i+=4)pixels.data[i]=pixels.data[i]>=128?255:0;
+    c.putImageData(pixels,0,0);boomerangFrames.set(index,canvas);return canvas;
+  }
   function slash(c,x,y,r,angle,alpha) {
     c.save();c.translate(x,y);c.rotate(angle);c.globalAlpha*=clamp(alpha);c.fillStyle='#fff7e4';
     c.beginPath();c.moveTo(r*.72,-r*.5);c.bezierCurveTo(r*1.05,-r*.24,r*.99,r*.24,r*.68,r*.47);
@@ -135,29 +178,66 @@
       y:owner.y+Math.sin(aim)*forward+Math.cos(aim)*side-height};
   }
   function muzzleFor(owner,aim=owner.aim||0){const p=local(owner,aim,12,0);return {...p,height:31};}
+  function boomerangHandFor(owner,aim=owner.aim||0){
+    const form=G.NarutoKimimaro?.formFor?.(owner)||'normal',frame=sample('boomerang-throw',.12,0,form);
+    if(!frame?.hand)return muzzleFor(owner,aim);
+    const k=64/ frame.bodyHeight,facing=Math.cos(aim)<0?-1:1;
+    return {x:owner.x+(frame.hand[0]-frame.anchor[0])*k*facing,y:owner.y,
+      height:(frame.anchor[1]-frame.hand[1])*k};
+  }
   function value(move,key,fallback){return Number.isFinite(move?.[key])?move[key]:fallback;}
-  function columns(forest) {
-    if(forests.has(forest))return forests.get(forest);
-    const random=rand((Number(forest.castId)||1)*571+Math.round(forest.x*13+forest.y*7)),points=[];
-    const clumps=[[-.47,-.30,.26],[.24,-.52,.25],[.53,.05,.30],[-.25,.49,.31],[.22,.43,.25],[-.60,.18,.24],
-      [.05,.04,.18],[-.24,-.75,.17],[.70,.38,.18]];
-    for(let attempt=0;points.length<72&&attempt<3000;attempt++){
-      const cluster=clumps[Math.floor(random()*clumps.length)],clustered=random()<.73;
-      const a=random()*TAU,r=Math.sqrt(random())*(clustered?cluster[2]:.97);
-      const nx=(clustered?cluster[0]:0)+Math.cos(a)*r,ny=(clustered?cluster[1]:0)+Math.sin(a)*r,d=Math.hypot(nx,ny);
-      if(d>.97||d<.09||points.some(p=>Math.hypot(p.nx-nx,p.ny-ny)<.048))continue;
-      points.push({nx,ny,wave:Math.min(forest.waves.length-1,Math.floor(d*forest.waves.length)),seed:random(),lean:(random()-.5)*.90});
+  function columns(forest,allowance) {
+    let cached=forests.get(forest);
+    if(!cached){cached=new Map();forests.set(forest,cached);}
+    if(cached.has(allowance))return cached.get(allowance);
+    const castId=(forest.castId||1)-(forest.index||0);
+    const random=rand(castId*571+Math.round(forest.x*13+forest.y*7));
+    const points=[];let reserved=0;
+    for(let wave=0;wave<6;wave++){
+      const next=reserved+RING_COUNTS[wave];
+      const count=Math.floor(next*allowance/FOREST_LIMIT)-Math.floor(reserved*allowance/FOREST_LIMIT),distance=.13+wave*.164;
+      reserved=next;
+      const phase=random(),contour=random()*TAU;
+      for(let slot=0;slot<count;slot++){
+        const cluster=Math.sin(slot*TAU/count+contour)*.24;
+        const angle=(slot+phase+cluster+(random()-.5)*.44)*TAU/count;
+        const spread=wave===0?.035:.048;
+        const radius=Math.min((wave+1)/6-.005,distance+Math.sin(angle*2+contour)*spread*.4+(random()*2-1)*spread*.6);
+        points.push({nx:Math.cos(angle)*radius,ny:Math.sin(angle)*radius,distance:radius,wave,
+          seed:random(),lean:0,variant:5+Math.floor(random()*4),flip:random()<.35,
+          h:(76+wave*10)*(.50+random()*.70),w:5+wave*.5});
+      }
     }
-    const tiers=new Map(points.map((p,i)=>({i,seed:p.seed})).sort((a,b)=>b.seed-a.seed)
-      .map((p,i)=>[p.i,i<6?0:i<18?1:i<36?2:3]));
-    const fieldScale=Math.min(1.55,Math.sqrt((forest.radius||320)/180));
-    const result=points.map((p,i)=>{
-      const tier=tiers.get(i),height=[[200,280],[115,190],[62,115],[24,60]][tier];
-      return {...p,variant:5+(i%4),
-        h:lerp(...height,random())*fieldScale,
-        w:([12,9,6,4][tier]+random()*3)*fieldScale};
-    });
-    forests.set(forest,result);return result;
+    for(const point of points){
+      let gap=Infinity;
+      for(const other of points)if(other!==point)gap=Math.min(gap,Math.hypot(point.nx-other.nx,point.ny-other.ny));
+      const [width,height]=metadata.sheets.effects.frames['pillar'+point.variant].sourceSize;
+      point.h=Math.min(point.h,gap*(forest.radius||180)*.72*height/width);
+    }
+    const candidates=[];
+    for(const point of points){
+      if(point.wave<2||Math.abs(point.nx)<.18)continue;
+      const nearby=points.filter(other=>other!==point).sort((a,b)=>
+        Math.hypot(a.nx-point.nx,a.ny-point.ny)-Math.hypot(b.nx-point.nx,b.ny-point.ny)).slice(0,6);
+      if(nearby.length<4)continue;
+      const heights=nearby.map(other=>other.h).sort((a,b)=>a-b);
+      const referenceHeight=(heights[2]+heights[3])/2;
+      candidates.push({point,referenceHeight});
+    }
+    const priority=point=>point.wave===2&&point.ny>0&&Math.abs(point.nx)<.36?2:point.wave===3?1:0;
+    candidates.sort((a,b)=>priority(b.point)-priority(a.point)||b.point.seed-a.point.seed);
+    const accents=[],accentCount=Math.min(random()<.5?3:4,Math.max(1,Math.floor(allowance/24)));
+    for(const candidate of candidates){
+      if(accents.length>=accentCount)break;
+      if(accents.length===1&&candidate.point.nx*accents[0].nx>0)continue;
+      if(accents.some(other=>Math.hypot(other.nx-candidate.point.nx,other.ny-candidate.point.ny)<.4))continue;
+      const dramatic=accents.length<Math.max(1,accentCount-1);
+      const height=dramatic?Math.min(320,Math.max(200,candidate.referenceHeight*(2+random()*.5))):
+        Math.min(180,candidate.referenceHeight*(1.3+random()*.3));
+      Object.assign(candidate.point,{h:height,referenceHeight:candidate.referenceHeight,accent:true,dramatic,variant:9+Math.floor(random()*4)});
+      accents.push(candidate.point);
+    }
+    cached.set(allowance,points);return points;
   }
   function liveStates(states){return (states||G.NarutoKimimaro?.renderStates?.()||[]).filter(s=>s?.owner&&!s.owner.dead&&s.owner.hp>0&&s.world===G.World);}
   function plan(states) {
@@ -169,16 +249,16 @@
     for(const state of states){
       const active=state.forests?.length?state.forests:state.forest?[state.forest]:[];
       if(!active.length)continue;
-      for(const forest of active)forestStates.push({state,forest,slot:reservations+(forest.index||0)});
-      reservations+=state.action?.bursts?.length||active.length;
+      // Overlapping bursts share one grove layout; damage still uses every burst.
+      forestStates.push({state,forest:active[0],slot:reservations++});
     }
-    const baseAllowance=Math.floor(72/Math.max(1,reservations)),extras=72%Math.max(1,reservations);
+    const baseAllowance=Math.floor(FOREST_LIMIT/Math.max(1,reservations)),extras=FOREST_LIMIT%Math.max(1,reservations);
     for(const {state,forest:f,slot} of forestStates){
       const R=f.radius||180,age=f.age??state.action?.age??0,allowance=baseAllowance+Number(slot<extras);
       if(!allowance)continue;
-      const points=columns(f);for(let n=0;n<Math.min(points.length,allowance);n++){
-        const p=points[Math.floor(n*points.length/allowance)],start=f.waves[p.wave]+p.seed*.16;
-        const grow=ease((age-start)/(.24+p.seed*.16))*(1-ease((age-(f.duration-.38))/.38));
+      for(const p of columns(f,allowance)){
+        const start=f.waves[p.wave]-.18;
+        const grow=ease((age-start)/.18)*(1-ease((age-(f.duration-.38))/.38));
         if(grow<=.005)continue;
         selected.push({...p,x:f.x+p.nx*R,y:f.y+p.ny*R,height:p.h*grow,age,start,grow,owner:state.owner,forest:f});
         if(age-start>=0&&age-start<.28&&particles.length<20){
@@ -195,21 +275,24 @@
         particles.push({kind:'bone',x:hit.x+Math.cos(a)*q*22,y:hit.y-22+Math.sin(a)*q*14+q*q*8,q,size:2});
       }
     }
-    planCache={signature,states,columns:selected.slice(0,72),particles:particles.slice(0,20)};
-    api.debugLast={forestColumns:planCache.columns.length,secondaryParticles:planCache.particles.length};return planCache;
+    planCache={signature,states,columns:selected.slice(0,FOREST_LIMIT),particles:particles.slice(0,20)};
+    api.debugLast={forestColumns:planCache.columns.length,secondaryParticles:planCache.particles.length,
+      tallColumns:planCache.columns.filter(p=>p.accent).map(p=>({x:p.x,y:p.y,height:p.height,referenceHeight:p.referenceHeight,wave:p.wave,dramatic:p.dramatic}))};return planCache;
   }
   function pillar(ctx,col) {
     if(col.forest){
-      const crosses=col.y>=col.owner.y-8&&col.y-col.height<col.owner.y-20&&Math.abs(col.x-col.owner.x)<col.w+24;
-      const random=rand(Math.round(col.seed*0xffffffff));
-      ctx.save();ctx.translate(col.x,col.y);ctx.globalAlpha*=crosses?.32:.98;
+      const frame=metadata.sheets.effects.frames['pillar'+col.variant];
+      const [sw,sh]=frame.sourceSize,width=col.height*sw/sh,scale=col.height/sh;
+      const crosses=col.y>=col.owner.y-8&&col.y-col.height<col.owner.y-20&&Math.abs(col.x-col.owner.x)<width/2+24;
+      ctx.save();ctx.translate(col.x,col.y);ctx.globalAlpha*=crosses?.22:.98;
       ctx.save();ctx.globalAlpha*=.28;ctx.fillStyle='#17281e';ctx.beginPath();ctx.ellipse(0,1,col.w*1.8+3,3,0,0,TAU);ctx.fill();ctx.restore();
       ctx.imageSmoothingEnabled=false;
-      for(const side of [-1,1,0]){
-        const height=col.height*(side?(.48+random()*.38):1),offset=side*col.w*(.8+random()*.45);
-        const variant=5+((col.variant-5+(side<0?1:side>0?2:0))%4),frame=metadata.sheets.effects.frames['pillar'+variant];
-        const [sx,sy,sw,sh]=frame.rect,anchor=frame.anchor||[sw/2,sh],width=height*sw/sh;
-        ctx.drawImage(images.effects,sx,sy,sw,sh,offset-anchor[0]/sw*width,-anchor[1]/sh*height,width,height);
+      if(col.flip)ctx.scale(-1,1);
+      const transform=ctx.getTransform(),pixelY=y=>(Math.round(y*transform.d+transform.f)-transform.f)/transform.d;
+      for(const segment of frame.segments){
+        const [sx,sy,w,h]=segment.rect;
+        const top=pixelY((segment.offsetY-sh+1)*scale),bottom=pixelY((segment.offsetY+h-sh+1)*scale);
+        ctx.drawImage(images.effects,sx,sy,w,h,-width/2,top,width,bottom-top);
       }
       ctx.restore();return;
     }
@@ -333,10 +416,10 @@
       for(const lane of state.boomerang?.lanes||[]){
         const b=lane.projectile;if(!b)continue;
         ctx.save();ctx.strokeStyle=b.phase==='return'?'#c4b3d8':'#e5dbc5';ctx.lineWidth=2;ctx.globalAlpha*=.35;
-        ctx.beginPath();b.trail.forEach((point,i)=>i?ctx.lineTo(point.x,point.y-31):ctx.moveTo(point.x,point.y-31));ctx.stroke();ctx.restore();
-        ctx.save();ctx.translate(b.x,b.y-31);ctx.rotate(b.age*24);ctx.scale(2,2);
-        bone(ctx,0,4,-18,-8,6);bone(ctx,0,4,18,-8,6);
-        ctx.fillStyle='#f4efdf';ctx.strokeStyle='#34384b';ctx.beginPath();ctx.ellipse(0,4,4,3,0,0,TAU);ctx.fill();ctx.stroke();ctx.restore();
+        const height=b.height??31;
+        ctx.beginPath();b.trail.forEach((point,i)=>i?ctx.lineTo(point.x,point.y-height):ctx.moveTo(point.x,point.y-height));ctx.stroke();ctx.restore();
+        ctx.save();ctx.imageSmoothingEnabled=false;
+        ctx.drawImage(boomerangFrame(b.age),Math.round(b.x)-44,Math.round(b.y-height)-44);ctx.restore();
       }
       for(const b of state.bullets||[]){
         const aim=b.aim??Math.atan2(b.vy,b.vx),height=lerp(31,18,clamp((b.travelled??b.distance??0)/100));
@@ -377,7 +460,7 @@
     kimimaroCurse:['..p.....p...','.ppp...ppp..','..ppp.ppp...','...ppppp....','..pgpppgp...','.ppppppppp..','..ppppppp...','...ppppp....','..p.ppp.p...','.p...p...p..','p....p....p.','............']
   };
   if(typeof G==='object'&&G.Icons?.UI)Object.assign(G.Icons.UI,Object.fromEntries(Object.entries(rows).map(([key,rows])=>[key,{pal,rows}])));
-  const api={loaded:false,load,draw,sample,portrait,drawGround,drawAir,muzzleFor,debugLast:{forestColumns:0,secondaryParticles:0},
+  const api={loaded:false,load,draw,sample,portrait,drawGround,drawAir,muzzleFor,boomerangHandFor,debugLast:{forestColumns:0,secondaryParticles:0},
     get ready(){return load();},get metadata(){return metadata;},get images(){return images;}};
   window.KimimaroArt=api;if(typeof G==='object')G.KimimaroArt=api;
 })();
