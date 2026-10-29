@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 from pathlib import Path
 
@@ -10,10 +11,18 @@ import test_kimimaro as game
 from playwright.sync_api import sync_playwright
 
 
+def source_hashes():
+    result=game.runtime_hashes()
+    path='js/systems/ninja-tool-bounce.js'
+    result[path]=hashlib.sha256((game.ROOT/path).read_bytes()).hexdigest()
+    return result
+
+
 HELPERS = r"""() => {
  const A=KAcceptance,K=A.K,id='naruto-kimimaro-bullets',p=A.p;
  function prepare(rank=1,quantity=0){
    A.reset();const m=A.fixture(id,rank),owner=p();owner.baseAtk=1;owner.atkMul=1;owner.buffs.atk.n=0;owner.critChance=0;
+   owner.ninjaToolBouncePicks=0;
    owner.quantityPicks=owner.quantityBonus=quantity;A.near(owner.atk,1,'controlled finger attack');return m;
  }
  function watch(e){
@@ -22,8 +31,14 @@ HELPERS = r"""() => {
        player:args[6]===p(),clone:!!args[6]?.cloneId,id:args[7],x:this.x,y:this.y});return result;
    };return events;
  }
- function single(rank=1,distance=190){
-   const m=prepare(rank),first=A.spawn(distance,0),hits=watch(first);p().target=first;A.cast(id);A.advance(.161);
+ function addCard(){
+   const before=G.NinjaToolBounce.count(p()),card=G.LevelUp.offer(p(),100).find(c=>c.key==='stat:ninjaToolBounce');
+   A.assert(card,'eligible native ninja-tool ricochet card was not offered');card.apply(p());
+   A.assert(G.NinjaToolBounce.count(p())===before+1,'native ricochet card did not add exactly one jump');return card;
+ }
+ function single(rank=1,distance=190,cards=0){
+   const m=prepare(rank);for(let n=0;n<cards;n++)addCard();
+   const first=A.spawn(distance,0),hits=watch(first);p().target=first;A.cast(id);A.advance(.161);
    const s=K.stateFor(p()),action=s.action;
    A.assert(action?.kind==='bullets'&&s.bullets.length===1&&action.emitted===1,'native first pulse did not produce one actual bone');
    const bone=s.bullets[0];s.action=null;
@@ -36,7 +51,27 @@ HELPERS = r"""() => {
  }
  const live=(owner=p())=>K.bullets.filter(b=>b.owner===owner);
  function cluster(){return Array.from({length:6},(_,i)=>{const a=Math.PI+i*Math.PI/3;return A.spawn(230+Math.cos(a)*60,Math.sin(a)*60)})}
- window.KFinger={...A,K,p,id,prepare,watch,single,until,live,cluster};
+ function artTrace(){
+   const canvas=document.createElement('canvas');canvas.width=800;canvas.height=600;const c=canvas.getContext('2d');c.translate(200,300);
+   const color=document.createElement('canvas').getContext('2d'),commands=[];let points=0,closed=false;
+   for(const name of ['beginPath','moveTo','lineTo','closePath']){
+     const original=c[name].bind(c);c[name]=(...args)=>{
+       if(name==='beginPath'){points=0;closed=false}else if(name==='closePath')closed=true;else points++;
+       return original(...args);
+     };
+   }
+   for(const name of ['stroke','fill']){
+     const original=c[name].bind(c);c[name]=(...args)=>{
+       const style=name==='stroke'?c.strokeStyle:c.fillStyle;color.clearRect(0,0,1,1);color.fillStyle=style;color.fillRect(0,0,1,1);
+       const [r,g,b]=color.getImageData(0,0,1,1).data;
+       commands.push({name,style,points,closed,cyan:g>=180&&b>=140&&g>r+10,alpha:c.globalAlpha});return original(...args);
+     };
+   }
+   G.KimimaroArt.drawAir(c,K.renderStates());
+   return {cyanStrokes:commands.filter(v=>v.cyan&&v.name==='stroke'),
+     cyanDiamonds:commands.filter(v=>v.cyan&&v.closed&&v.points===4),commands};
+ }
+ window.KFinger={...A,K,p,id,prepare,addCard,watch,single,until,live,cluster,artTrace};
 }"""
 
 RANK_CHAINS = r"""() => {
@@ -44,7 +79,7 @@ RANK_CHAINS = r"""() => {
  for(let rank=1;rank<=5;rank++){
    const {m,first,hits,bone,startedAt}=A.single(rank),targets=[first,...Array.from({length:rank+1},(_,i)=>A.spawn(190,(i+1)*70))],logs=[hits,...targets.slice(1).map(A.watch)];
    A.near(m.chainCount,rank,'rank chain count');A.near(m.chainRadius,180,'rank chain radius');A.near(m.cd,2.4,'finger cooldown');
-   A.assert(bone.chainCount===rank&&bone.remainingChains===rank&&bone.chainHops===0,'native shot did not snapshot its rank chain allowance');
+   A.assert(bone.baseChainCount===rank&&bone.cardChains===0&&bone.chainCount===rank&&bone.remainingChains===rank&&bone.chainHops===0,'native shot did not snapshot its unbought rank chain allowance');
    A.advance(.15);A.assert(logs.every(log=>!log.length),'bone damage arrived before actual flight');
    let previousAge=bone.age,previousTravel=bone.travelled,maxLive=0;
    A.until(()=>{
@@ -113,7 +148,7 @@ FULL_VOLLEY_AND_QUANTITY = r"""() => {
    const source=A.K.activeFor(p()),seen=new Set(),emissions=[];let maxLive=0,lastCount=0;
    A.assert(JSON.stringify(source.hitTimes)===JSON.stringify([.16,.23,.30,.37,.44]),'finger volley lost its original five pulse times');
    for(let n=0;n<360;n++){
-     A.step(.005,true);const live=A.live();maxLive=Math.max(maxLive,live.length);for(const b of live){seen.add(b);A.assert(b.chainCount===3,'quantity cards added chain jumps')}
+     A.step(.005,true);const live=A.live();maxLive=Math.max(maxLive,live.length);for(const b of live){seen.add(b);A.assert(b.baseChainCount===3&&b.cardChains===0&&b.chainCount===3,'quantity cards added chain jumps')}
      A.assert(live.length<=expected&&live.length<=15,'chain hops grew the physical projectile budget');
      if(source.emitted!==lastCount){emissions.push({age:source.age,total:source.emitted});lastCount=source.emitted;}
    }
@@ -146,15 +181,75 @@ UPGRADE_SNAPSHOT = r"""() => {
  return {oldSnapshot:old,newSnapshot:{chains:newest.chainCount,damage:newest.move.dmg},levels};
 }"""
 
+NATIVE_CARD_AND_TOTAL_CHAINS = r"""() => {
+ const A=KFinger,p=A.p;A.prepare();
+ A.assert(G.NinjaToolBounce.eligibleMove(A.id)&&G.NinjaToolBounce.eligible(p()),'finger bones did not enable the global ninja-tool card');
+ p().moves=[];p().slots=[];
+ A.assert(!G.NinjaToolBounce.eligible(p())&&!G.LevelUp.offer(p(),100).some(c=>c.key==='stat:ninjaToolBounce'),'card appeared without any eligible learned tool');
+ A.assert(p().addMove(A.id),'could not restore native finger skill');A.addCard();A.addCard();
+ A.assert(p().ninjaToolBouncePicks===2,'repeated native cards did not accumulate');
+ const results=[];
+ for(const [rank,cards,expectedHops] of [[1,1,2],[5,2,7],[1,3,4]]){
+   const {first,hits,bone}=A.single(rank,190,cards),targets=[first,...Array.from({length:expectedHops+1},(_,i)=>A.spawn(190,(i+1)*70))],logs=[hits,...targets.slice(1).map(A.watch)];
+   A.assert(bone.baseChainCount===rank&&bone.cardChains===cards&&bone.chainCount===expectedHops&&bone.remainingChains===expectedHops,'native card quota was capped, omitted or added more than once');
+   A.until(()=>!A.live().length);
+   A.assert(logs.every((log,index)=>log.length===(index<=expectedHops?1:0)),'global card did not allow the exact additional distinct targets');
+   A.assert(bone.chainHops===expectedHops&&bone.phaseHits.get(0).size===expectedHops+1,'global card shared/repeated a per-bone victim ledger');
+   const raw=rank===5?18:9;for(const log of logs.slice(0,expectedHops+1)){A.near(log[0].raw,raw,'global ricochet reduced each hop damage');A.assert(log[0].loss===raw&&log[0].player,'global ricochet bypassed native HP damage')}
+   A.assert(A.K.stateFor(p()).emitted===1,'global ricochet split a bone into more projectiles');
+   results.push({rank,cards,base:bone.baseChainCount,extra:bone.cardChains,hops:bone.chainHops,totalVictims:expectedHops+1,rawPerHit:raw});
+ }
+ return {nativeCardEligible:true,repeatedCardCount:2,results};
+}"""
+
+CARD_CAST_SNAPSHOT = r"""() => {
+ const A=KFinger,p=A.p;A.prepare(2,1);A.addCard();const targets=A.cluster(),logs=targets.map(A.watch);p().target=targets[0];A.cast(A.id);
+ const source=A.K.activeFor(p());A.advance(.161);const seen=new Set(A.live());
+ A.assert(seen.size===2&&[...seen].every(b=>b.baseChainCount===2&&b.cardChains===1&&b.chainCount===3),'first quantity-adjusted pulse missed its cast card snapshot');
+ A.addCard();A.assert(G.NinjaToolBounce.count(p())===2,'mid-cast card application failed');
+ for(let n=0;n<300;n++){
+   A.step(.005,true);for(const bone of A.live()){
+     seen.add(bone);A.assert(bone.baseChainCount===2&&bone.cardChains===1&&bone.chainCount===3,'later pulse resampled a card added during the same five-pulse cast');
+   }
+ }
+ A.assert(source.emitted===6&&seen.size===6&&[...seen].every(b=>b.chainHops===3&&b.phaseHits.get(0).size===4),'first complete volley did not retain identical card quotas');
+ A.assert(logs.flat().length===24,'mid-cast card changed the already-cast volley total hits');
+ for(const hit of logs.flat()){A.near(hit.raw,10.8,'card/quantity cast changed per-hop damage');A.assert(hit.loss===11,'card/quantity cast native rounding')}
+ for(let n=0;n<1000&&A.K.stateFor(p()).castCounts.bullets<2;n++)A.step(.005,true);
+ A.assert(A.K.stateFor(p()).castCounts.bullets===2,'next native cast did not resume after its source cooldown');
+ const nextSource=A.K.activeFor(p());A.assert(nextSource?.kind==='bullets','second source cast missing');A.advance(.161);
+ const next=A.live();A.assert(next.length===2&&next.every(b=>b.baseChainCount===2&&b.cardChains===2&&b.chainCount===4),'next cast did not use the new total card count exactly once');
+ A.assert([...seen].every(b=>b.cardChains===1&&b.chainCount===3),'new cast mutated the old volley snapshots');
+ A.K.stateFor(p()).action=null;
+ return {firstVolleyCards:1,currentCards:2,firstVolleyBones:seen.size,firstVolleyHits:24,nextFirstPulseBones:next.length,nextCastChains:4};
+}"""
+
+CHAIN_ART = r"""() => {
+ const A=KFinger,{bone}=A.single(),initial=A.artTrace();
+ A.assert(bone.chainHops===0&&initial.cyanStrokes.length===0&&initial.cyanDiamonds.length===0,'initial bone was glowing before any chain');
+ A.spawn(370,0);A.until(()=>bone.chainHops===1);A.advance(.06);
+ A.assert(A.live().includes(bone)&&bone.chainHops===1,'chain-art fixture finished its long next leg too early');
+ A.assert(bone.chainTrail.length===8&&bone.age-bone.chainFlash.time<.16,'chain trail was not bounded to eight samples or turn flash expired early');
+ const turning=A.artTrace();
+ A.assert(turning.cyanStrokes.some(command=>!command.closed&&command.points>=2&&command.points<=9),'actual renderer omitted the bright cyan-green chain trail');
+ A.assert(turning.cyanDiamonds.length>0,'actual renderer omitted the four-point turn flash');
+ A.advance(.12);const expired=A.artTrace();
+ A.assert(A.live().includes(bone)&&bone.chainHops===1&&bone.age-bone.chainFlash.time>.16,'flash-expiry fixture had already entered another hop');
+ A.assert(expired.cyanDiamonds.length===0&&expired.cyanStrokes.some(command=>!command.closed),'turn flash did not expire independently of persistent trail');
+ return {initialBoneWhite:true,trailSamples:bone.chainTrail.length,trailColor:turning.cyanStrokes.find(command=>!command.closed).style,
+   turnFlashColor:turning.cyanDiamonds[0].style,turnFlashDuration:.16,expiredWithoutNewHop:true};
+}"""
+
 CLONE_AND_LIFECYCLE = r"""() => {
- const A=KFinger,p=A.p;A.prepare();p().moves[0].t=999;const clone=G.SelfClones.summon(p());A.assert(clone,'native self-clone missing');
- const first=A.spawn(clone.x+190,clone.y),second=A.spawn(first.x,first.y+70),logs=[A.watch(first),A.watch(second)];clone.target=first;
+ const A=KFinger,p=A.p;A.prepare();A.addCard();A.addCard();p().moves[0].t=999;const clone=G.SelfClones.summon(p());A.assert(clone,'native self-clone missing');
+ A.assert(G.NinjaToolBounce.count(clone)===2,'native clone did not inherit global ricochet picks');
+ const targets=Array.from({length:4},(_,i)=>A.spawn(clone.x+190,clone.y+i*70)),logs=targets.map(A.watch);clone.target=targets[0];
  A.resume();try{G.Combat.tick(.001,clone,0)}finally{A.pause()}
  A.advance(.161);const s=A.K.stateFor(clone);A.assert(s.bullets.length===1,'clone first native pulse did not emit one bone');
- const b=s.bullets[0];s.action=null;A.until(()=>!A.live(clone).length);
+ const b=s.bullets[0];A.assert(b.baseChainCount===1&&b.cardChains===2&&b.chainCount===3,'clone applied card chains incorrectly or more than once');s.action=null;A.until(()=>!A.live(clone).length);
  A.assert(logs.every(log=>log.length===1&&log[0].clone&&!log[0].player&&log[0].id===A.id),'clone chain lost independent native ownership');
  for(const log of logs){A.near(log[0].raw,3,'clone chain damage applied owner ratio more than once');A.assert(log[0].loss===3,'native clone hop rounding')}
- A.assert(b.chainHops===1&&b.phaseHits.get(0).size===2&&!A.K.stateFor(p())?.castCounts.bullets,'parent cast contaminated clone chain fixture');
+ A.assert(b.chainHops===3&&b.phaseHits.get(0).size===4&&!A.K.stateFor(p())?.castCounts.bullets,'parent cast contaminated clone card-chain fixture');
  G.Combat.clearFields(p());A.assert(!A.live().length&&!G.SelfClones.actors().length,'parent cleanup retained clone bones');
  const paused=A.single(),snapshot=()=>JSON.stringify({x:paused.bone.x,y:paused.bone.y,age:paused.bone.age,travelled:paused.bone.travelled,hops:paused.bone.chainHops,remaining:paused.bone.remainingChains});
  const before=snapshot();A.pause();G.Combat.updateFields(.5);A.assert(snapshot()===before,'pause advanced a flying chain bone');
@@ -170,13 +265,13 @@ CLONE_AND_LIFECYCLE = r"""() => {
      cleanup.push(reason);
    }finally{if(reason==='world')G.World=originalWorld;if(reason==='death')owner.dead=false;if(reason==='quit'||reason==='toUI'){G.Game.startRun();A.pause()}}
  }
- return {nativeCloneTwoHits:true,cloneDamagePerHop:3,pause:true,freeze:true,cleanup};
+ return {nativeCloneHits:4,cloneInheritedCards:2,cloneDamagePerHop:3,pause:true,freeze:true,cleanup};
 }"""
 
 
 def main():
     game.OUT.mkdir(parents=True,exist_ok=True)
-    report={'url':game.URL,'errors':[],'failedRequests':[],'failures':[],'viewports':{},'sourceHashes':game.runtime_hashes()}
+    report={'url':game.URL,'errors':[],'failedRequests':[],'failures':[],'viewports':{},'sourceHashes':source_hashes()}
     with sync_playwright() as pw:
         browser=pw.chromium.launch(executable_path=game.CHROME,headless=True)
         for label,viewport,mobile in [('desktop',{'width':1280,'height':900},False),('mobile',{'width':390,'height':844},True)]:
@@ -187,14 +282,15 @@ def main():
             try:
                 frame=game.boot(page,label);frame.evaluate(HELPERS)
                 for name,check in [('rankChains',RANK_CHAINS),('radiusLosAndRange',RADIUS_LOS_AND_RANGE),('fixedLegAndObstacles',FIXED_NEXT_LEG_AND_OBSTACLES),
-                  ('fullVolleyAndQuantity',FULL_VOLLEY_AND_QUANTITY),('upgradeSnapshot',UPGRADE_SNAPSHOT),('cloneAndLifecycle',CLONE_AND_LIFECYCLE)]:
+                  ('fullVolleyAndQuantity',FULL_VOLLEY_AND_QUANTITY),('upgradeSnapshot',UPGRADE_SNAPSHOT),
+                  ('nativeCardAndTotalChains',NATIVE_CARD_AND_TOTAL_CHAINS),('cardCastSnapshot',CARD_CAST_SNAPSHOT),('chainArt',CHAIN_ART),('cloneAndLifecycle',CLONE_AND_LIFECYCLE)]:
                     print(label,name,flush=True)
                     try:result[name]=frame.evaluate(check)
                     except Exception as error:report['failures'].append(label+':'+name+': '+str(error))
             except Exception as error:report['failures'].append(label+':boot: '+str(error))
             finally:context.close()
         browser.close()
-    report['sourceHashesAfter']=game.runtime_hashes()
+    report['sourceHashesAfter']=source_hashes()
     if report['sourceHashesAfter']!=report['sourceHashes']:report['failures'].append('runtime changed during acceptance')
     report['ok']=not(report['errors'] or report['failedRequests'] or report['failures'])
     path=game.OUT/'report-finger-chains.json';path.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf8')

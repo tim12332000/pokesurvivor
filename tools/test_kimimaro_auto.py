@@ -42,7 +42,7 @@ PROGRESSION = r"""() => {
    const passive=true,def=G.Moves.instance(A.id(key));
    A.assert(!!def.passive===passive,'passive flag '+key);out.flags.push({key,passive});
  }
- const stats={willow:[30,.9],camellia:[120,5],bullets:[45,2.4],boomerang:[64,1],larch:[96,6],vine:[48,8],flower:[192,8],lily:[100,6],bracken:[600,12]};
+ const stats={willow:[30,.9],camellia:[120,5],bullets:[45,2.4],boomerang:[64,1],larch:[96,6],vine:[48,8],flower:[192,8],lily:[100,6],bracken:[600,17]};
  for(const [key,[damage,cd]] of Object.entries(stats))for(let rank=1;rank<=5;rank++){
    const m=G.Moves.instance(A.id(key),rank);A.near(m.dmg,damage*[1,1.2,1.4,1.7,2][rank-1],'rank damage '+key);A.near(m.cd,cd,'fixed cooldown '+key);out.ranks.push({key,rank,dmg:m.dmg,cd:m.cd});
  }

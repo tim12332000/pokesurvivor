@@ -1,7 +1,7 @@
 /* Original Kimimaro gameplay art. No showcase scene or target simulation. */
 (() => {
   'use strict';
-  const base=new URL('./',document.currentScript.src),images={},frameWhites=new Map();
+  const base=new URL('./',document.currentScript.src),metadataVersion=new URL(document.currentScript.src).search,images={},frameWhites=new Map();
   const TAU=Math.PI*2, clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,Number(v)||0));
   const lerp=(a,b,t)=>a+(b-a)*t, ease=v=>{const t=clamp(v);return t*t*(3-2*t);};
   const rand=seed=>{let n=seed>>>0;return()=>{n=(Math.imul(n,1664525)+1013904223)>>>0;return n/4294967296;};};
@@ -12,7 +12,8 @@
   async function load() {
     if(pending)return pending;
     pending=(async()=>{
-      const response=await fetch(new URL('kimimaro-frames.json',base));
+      const metadataURL=new URL('kimimaro-frames.json',base);metadataURL.search=metadataVersion;
+      const response=await fetch(metadataURL);
       if(!response.ok)throw Error('君麻呂動畫資料載入失敗');metadata=await response.json();
       await Promise.all(Object.entries(metadata.sheets).map(async([key,sheet])=>{
         const image=new Image();image.src=new URL(sheet.source,base).href;await image.decode();images[key]=image;
@@ -151,10 +152,10 @@
       .map((p,i)=>[p.i,i<6?0:i<18?1:i<36?2:3]));
     const fieldScale=Math.min(1.55,Math.sqrt((forest.radius||320)/180));
     const result=points.map((p,i)=>{
-      const tier=tiers.get(i),height=[[200,280],[105,180],[55,95],[15,43]][tier];
-      return {...p,variant:1+(i%4)+(tier<2?0:4),
+      const tier=tiers.get(i),height=[[200,280],[115,190],[62,115],[24,60]][tier];
+      return {...p,variant:5+(i%4),
         h:lerp(...height,random())*fieldScale,
-        w:([20,16,12,8][tier]+random()*7)*fieldScale};
+        w:([12,9,6,4][tier]+random()*3)*fieldScale};
     });
     forests.set(forest,result);return result;
   }
@@ -198,6 +199,20 @@
     api.debugLast={forestColumns:planCache.columns.length,secondaryParticles:planCache.particles.length};return planCache;
   }
   function pillar(ctx,col) {
+    if(col.forest){
+      const crosses=col.y>=col.owner.y-8&&col.y-col.height<col.owner.y-20&&Math.abs(col.x-col.owner.x)<col.w+24;
+      const random=rand(Math.round(col.seed*0xffffffff));
+      ctx.save();ctx.translate(col.x,col.y);ctx.globalAlpha*=crosses?.32:.98;
+      ctx.save();ctx.globalAlpha*=.28;ctx.fillStyle='#17281e';ctx.beginPath();ctx.ellipse(0,1,col.w*1.8+3,3,0,0,TAU);ctx.fill();ctx.restore();
+      ctx.imageSmoothingEnabled=false;
+      for(const side of [-1,1,0]){
+        const height=col.height*(side?(.48+random()*.38):1),offset=side*col.w*(.8+random()*.45);
+        const variant=5+((col.variant-5+(side<0?1:side>0?2:0))%4),frame=metadata.sheets.effects.frames['pillar'+variant];
+        const [sx,sy,sw,sh]=frame.rect,anchor=frame.anchor||[sw/2,sh],width=height*sw/sh;
+        ctx.drawImage(images.effects,sx,sy,sw,sh,offset-anchor[0]/sw*width,-anchor[1]/sh*height,width,height);
+      }
+      ctx.restore();return;
+    }
     const frame=metadata?.sheets.effects.frames['pillar'+col.variant];if(!frame)return;
     const [x,y,w,h]=frame.rect,a=frame.anchor||[w/2,h],dw=col.w*2.3;
     const crosses=col.y>=col.owner.y-8&&col.y-col.height<col.owner.y-20&&Math.abs(col.x-col.owner.x)<col.w+24;
@@ -325,6 +340,18 @@
       }
       for(const b of state.bullets||[]){
         const aim=b.aim??Math.atan2(b.vy,b.vx),height=lerp(31,18,clamp((b.travelled??b.distance??0)/100));
+        if(b.chainHops>0&&b.chainTrail?.length){
+          ctx.save();ctx.globalAlpha*=.85;ctx.strokeStyle='#83f5cb';ctx.lineWidth=3;ctx.lineJoin='bevel';ctx.beginPath();
+          b.chainTrail.forEach((point,i)=>i?ctx.lineTo(point.x,point.y-height):ctx.moveTo(point.x,point.y-height));
+          ctx.lineTo(b.x,b.y-height);ctx.stroke();ctx.restore();
+        }
+        const flash=b.chainFlash,flashAge=flash?b.age-flash.time:1;
+        if(flash&&flashAge<.16){
+          const radius=6+flashAge/.16*12;
+          ctx.save();ctx.globalAlpha*=1-flashAge/.16;ctx.strokeStyle='#acffe0';ctx.lineWidth=2;ctx.beginPath();
+          ctx.moveTo(flash.x-radius,flash.y-height);ctx.lineTo(flash.x,flash.y-height-radius);
+          ctx.lineTo(flash.x+radius,flash.y-height);ctx.lineTo(flash.x,flash.y-height+radius);ctx.closePath();ctx.stroke();ctx.restore();
+        }
         ctx.save();ctx.translate(b.x,b.y-height);ctx.rotate(aim);
         polygon(ctx,[[-5,-2],[4,-2],[10,0],[4,2],[-5,1.5]],'#f2eddf','#34394c');
         polygon(ctx,[[-2,0],[8,0],[4,1.5],[-3,1.5]],'#a39daf',null);ctx.restore();

@@ -38,6 +38,9 @@ def asset_inventory():
     required={'frontIdle','backIdle','frontRun','backRun','hurt1','hurt2','death1','death2'}
     for name,sheet in metadata['sheets'].items():
         path=ROOT/'art-review'/sheet['source']
+        digest=hashlib.sha256(path.read_bytes()).hexdigest()
+        assert digest==sheet['sha256'],(name,'atlas bytes do not match registered SHA')
+        assert path.stat().st_size==sheet['bytes'],(name,'atlas byte budget metadata is stale')
         image=Image.open(path).convert('RGBA')
         assert image.size==(sheet['width'],sheet['height'])
         assert image.getextrema()[3][0]==0, (name,'missing real transparency')
@@ -51,7 +54,7 @@ def asset_inventory():
             assert len(sheet['frames'])>=24
         result['decodedBytes']+=image.width*image.height*4
         result['sheets'][name]={'source':sheet['source'],'size':image.size,'frames':len(sheet['frames']),
-            'transferBytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
+            'transferBytes':path.stat().st_size,'sha256':digest}
     assert result['decodedBytes']<=4*1024*1024,'runtime body/effect atlas budget exceeded'
     return result
 
@@ -115,10 +118,11 @@ SETUP = r"""() => {
    return {calls,pixels:n,png:c.toDataURL(),animation:actor.anim.cur};
  }
  function action(){return K.activeFor(p())}
- function fields(){const c=document.createElement('canvas');c.width=860;c.height=560;const ctx=c.getContext('2d'),sources=[],draw=ctx.drawImage.bind(ctx);
+ function fields(){const c=document.createElement('canvas');c.width=860;c.height=560;const ctx=c.getContext('2d'),sources=[],draw=ctx.drawImage.bind(ctx),ellipse=ctx.ellipse.bind(ctx);let forestGroups=0;
    ctx.drawImage=(image,...args)=>{sources.push(image.src||image.dataset?.source||'');return draw(image,...args)};
+   ctx.ellipse=(x,y,rx,ry,...args)=>{if(ry===3)forestGroups++;return ellipse(x,y,rx,ry,...args)};
    ctx.translate(330,370);G.Combat.drawGroundFields(ctx);p().draw(ctx);G.Combat.drawAirFields(ctx);
-   return {sources,png:c.toDataURL()}}
+   return {sources,forestGroups,png:c.toDataURL()}}
  function summarize(){const a=action();return a?{kind:a.kind,age:a.age,phase:a.phase,aim:a.aim,castId:a.castId}:null}
  function expected(m,share=1,e={types:['normal']}){
    const normal=m.dmg*share*p().atk*G.Types.mult(m.type,e.types)*G.Weather.mult(m.type);
@@ -142,7 +146,7 @@ PROGRESSION = r"""() => {
  const stats=[['naruto-kimimaro',[30,36,42,51,60],.9],['camellia',[120,144,168,204,240],5],
   ['bullets',[45,54,63,76.5,90],2.4],['larch',[96,115.2,134.4,163.2,192],6],
   ['vine',[48,57.6,67.2,81.6,96],8],['flower',[192,230.4,268.8,326.4,384],8],
-  ['lily',[100,120,140,170,200],6],['bracken',[600,720,840,1020,1200],12]];
+  ['lily',[100,120,140,170,200],6],['bracken',[600,720,840,1020,1200],17]];
  for(const [key,damage,cd] of stats){const id=key==='naruto-kimimaro'?key:'naruto-kimimaro-'+key;
    for(let rank=1;rank<=5;rank++){const move=G.Moves.instance(id,rank);A.near(move.dmg,damage[rank-1],'five-rank damage '+id+' '+rank);A.near(move.cd,cd,'fixed CD '+id);out.ranks.push({id,rank,dmg:move.dmg,cd:move.cd})}}
  const mon=p.mon;for(const dex of [30001,30007,30011,20001]){
@@ -486,7 +490,10 @@ def capture_gameplay(page, frame, label):
         }''',{'skill':skill,'at':at,'distance':distance})
         info['art']=save_pose(f'{label}-{key}-actor',info['art'])
         info['fields']=save_pose(f'{label}-{key}-field',info['fields'])
-        if key in ('bracken','flower'):
+        if key == 'bracken':
+            assert info['fields']['forestGroups'] > 0, (key, info['fields']['forestGroups'])
+            assert sum('kimimaro-effects-v2.png' in source for source in info['fields']['sources']) == info['fields']['forestGroups']*3, (key,info['fields']['sources'])
+        if key == 'flower':
             assert any('kimimaro' in source.lower() and ('effect' in source.lower() or 'vfx' in source.lower()) for source in info['fields']['sources']), (key,info['fields']['sources'])
         page.wait_for_timeout(35)
         page.screenshot(path=str(OUT/f'{label}-{key}-game.png'))

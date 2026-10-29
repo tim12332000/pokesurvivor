@@ -20,7 +20,7 @@ RANGES = r"""() => {
   ['vine',[320,340,360,380,400],[48,57.6,67.2,81.6,96],8],
   ['flower',[220,240,260,280,300],[192,230.4,268.8,326.4,384],8,[42,46,50,54,58]],
   ['lily',[200,220,240,260,280],[100,120,140,170,200],6],
-  ['bracken',[400,450,500,550,600],[600,720,840,1020,1200],12]];
+  ['bracken',[400,450,500,550,600],[600,720,840,1020,1200],17]];
  for(const [key,ranges,damage,cd,widths] of rows){
   const id=key==='willow'?'naruto-kimimaro':'naruto-kimimaro-'+key;
   for(let rank=1;rank<=5;rank++){
@@ -134,7 +134,9 @@ SCENE = r"""({origin}) => {
 def main():
     game.OUT.mkdir(parents=True, exist_ok=True)
     report={'sourceHashes':game.runtime_hashes(),'assets':game.asset_inventory(),'viewports':{},'errors':[],'failures':[]}
-    assert report['assets']['sheets']['effects']['transferBytes']==145972
+    effects=report['assets']['sheets']['effects']
+    assert effects['source']=='redrawn/kimimaro-effects-v2.png', 'forest must load the reviewed raster atlas'
+    assert 0<effects['transferBytes']<=256*1024, 'forest effect atlas exceeds its transfer budget'
     with sync_playwright() as pw:
         browser=pw.chromium.launch(executable_path=game.CHROME,headless=True)
         for label,viewport,mobile in [('desktop',{'width':1280,'height':900},False),('mobile',{'width':390,'height':844},True)]:

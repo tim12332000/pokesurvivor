@@ -1,0 +1,19 @@
+{
+  "asset": "kimimaro-effects-v2.png",
+  "generated_source": "kimimaro-bone-spikes-generated-v2.png",
+  "tool": "built-in image_gen.imagegen",
+  "generated_at": "2026-10-29",
+  "prompt": "Game sprite asset sheet, transparent background: FOUR independent upright ivory bone spikes, separated widely in one horizontal row with common flat ground baseline. Each spike extremely tall and slender, height-to-width about 10 to 16, pointed sharp asymmetrical natural bone tip, mostly straight vertically, slightly irregular chipped angular silhouette and natural organic bony facets. Different heights: tallest, medium tall, slightly shorter, tall. Each is a SINGLE spike, no branches, no forks, no clusters. Bone ivory-white broad lit face, medium cool gray shaded side face, a few subtle irregular longitudinal fracture facets and restrained thin dark gray pixel edge. Clearly readable physical bone volume and thickness, not plain white bars, not smooth geometric triangles, not metal, glass, ice or crystals. Narrow roots do not flare into fat feet. Match attached existing cel shaded pixel-edge Naruto game bone asset palette and edge treatment, but completely redesign into slender straight pointed forest bones rather than curved branches. Orthographic game asset, no camera perspective, no ground, no shadow, no characters, no labels, no text, no checkerboard. Give all four sprites generous clear alpha margins, do not crop their tips or roots.",
+  "reference_images": [
+    {
+      "path": "art-review/redrawn/kimimaro-effects-v1.png",
+      "role": "palette and cel shaded pixel-edge style only"
+    }
+  ],
+  "user_reference": "Two supplied Naruto bone-forest gameplay/animation images: tall pointed ivory bone forests with gray natural facets.",
+  "processing": "Alpha below 128 discarded to remove faint generated halo; surviving alpha set opaque. Four isolated spikes cropped, nearest-neighbor scaled into existing atlas second row only, about 9:1 height/width. Original top 240px and bottom 100px preserved byte-for-byte as RGBA pixels.",
+  "pack_script": "tools/build_kimimaro_forest_assets.py",
+  "runtime_budget": "Same 640x480 effects atlas slot; no additional decoded sheet. Forest max72 groups,3 sprites per group.",
+  "source_sha256": "df90ba39b7040bba5dcaadd10126f085cd0fcca7b9cfab044486ef11fda4651b",
+  "runtime_sha256": "49f28cc05ba0c5a65f587958bf7d5a7e0601f432724c159cb2e2c6fd911dc6d3"
+}

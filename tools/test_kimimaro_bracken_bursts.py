@@ -33,13 +33,16 @@ HELPERS = r"""() => {
  }
  function columns(states=K.renderStates()){
    const canvas=document.createElement('canvas');canvas.width=1280;canvas.height=900;
-   const ctx=canvas.getContext('2d'),draw=ctx.drawImage.bind(ctx),points=[];
-   ctx.drawImage=(image,...args)=>{
-     if((image.src||'').includes('kimimaro-effects-v1.png')){const t=ctx.getTransform();points.push({x:+t.e.toFixed(4),y:+t.f.toFixed(4)})}
-     return draw(image,...args);
+   const ctx=canvas.getContext('2d'),ellipse=ctx.ellipse.bind(ctx),rotate=ctx.rotate.bind(ctx),draw=ctx.drawImage.bind(ctx),points=[],rotations=[],rasters=[];
+   ctx.ellipse=(x,y,rx,ry,...args)=>{
+     // Forest group shadows are ry=3; the separate bone guard uses ry=4.
+     if(ry===3){const t=ctx.getTransform();points.push({x:+t.e.toFixed(4),y:+t.f.toFixed(4)})}
+     return ellipse(x,y,rx,ry,...args);
    };
+   ctx.rotate=angle=>{rotations.push(angle);return rotate(angle)};
+   ctx.drawImage=(image,...args)=>{rasters.push(image.src||image.dataset?.source||'');return draw(image,...args)};
    G.KimimaroArt.drawGround(ctx,states);G.KimimaroArt.drawAir(ctx,states);
-   return {points,debug:{...G.KimimaroArt.debugLast}};
+   return {points,rotations,rasters,debug:{...G.KimimaroArt.debugLast}};
  }
  window.KBursts={...A,K,p,id,prepare,enemy,watch,start,columns};
 }"""
@@ -84,7 +87,7 @@ RANK_TIMING_AND_DAMAGE = r"""() => {
    A.assert(near.hp===10001&&far.hp===20003,'burst damage bypassed native shields');
    A.assert(!K.activeFor(p())&&K.stateFor(p()).forests.length===0,'completed burst sequence retained forests');
    A.assert(K.stateFor(p()).castCounts.bracken===1,'one burst sequence charged or counted as multiple casts');
-   A.assert(Math.abs(m.t-(12-f.duration-.05))<.011,'later bursts reset the twelve-second cast cooldown');
+   A.assert(Math.abs(m.t-(17-f.duration-.05))<.011,'later bursts reset the seventeen-second cast cooldown');
    out.push({rank,burstLog:f.burstLog,castIds:forests.map(b=>b.castId),nearHits,farHits,remainingCooldown:m.t,unlockedMovement:true,originalCenter:origin});
  }
  return out;
@@ -111,10 +114,13 @@ VISUAL_SEEDS_AND_STABILITY = r"""() => {
  for(const forest of f.bursts){
    const copied={...s,forest,forests:[forest]},render=A.columns([copied]);
    const coords=[...new Set(render.points.map(p=>p.x+':'+p.y))].sort();
-   A.assert(coords.length>0,'one emitted burst has no drawn bone columns');distributions.push({castId:forest.castId,coords});
+   A.assert(coords.length>0,'one emitted burst has no drawn bone columns');
+   A.assert(render.rotations.every(angle=>Math.abs(angle)<1e-9),'forest columns rotated instead of remaining upright');
+   A.assert(render.rasters.length===render.points.length*3&&render.rasters.every(source=>source.includes('kimimaro-effects-v2.png')),'forest groups did not draw three real raster bones each');
+   distributions.push({castId:forest.castId,coords});
  }
  A.assert(new Set(distributions.map(d=>JSON.stringify(d.coords))).size===5,'different burst seeds produced the same drawn column positions');
- const total=A.columns();A.assert(total.debug.forestColumns===72&&total.debug.secondaryParticles<=20,'five bursts multiplied the shared visual budget');
+ const total=A.columns();A.assert(total.points.length===72&&total.rasters.length===216&&total.debug.forestColumns===72&&total.debug.secondaryParticles<=20,'five bursts multiplied the shared visual budget or bypassed raster art');
  return {stableColumnsAcrossThirdBurst:beforeSet.size,distributions,fullyGrownBudget:total.debug};
 }"""
 
@@ -127,7 +133,7 @@ CLONE_BUDGET = r"""() => {
  A.advance(4.7);const states=A.K.renderStates(),forests=states.reduce((sum,s)=>sum+s.forests.length,0),render=A.columns();
  A.assert(states.length===4&&forests===20,'native clones did not produce independent five-burst sequences');
  A.assert(new Set(states.flatMap(s=>s.forests.map(f=>f.castId))).size===20,'clone bursts shared cast identities');
- A.assert(render.debug.forestColumns===72&&render.debug.secondaryParticles<=20,'four-owner burst sequences exceeded global bone/particle budget');
+ A.assert(render.points.length===72&&render.rasters.length===216&&render.debug.forestColumns===72&&render.debug.secondaryParticles<=20,'four-owner burst sequences exceeded global bone/particle budget');
  G.Combat.clearFields(p());A.assert(A.K.renderStates().length===0&&!G.SelfClones.actors().length,'parent cleanup retained cloned burst sequences');
  return {owners:4,forests,globalBudget:render.debug,cleared:true};
 }"""

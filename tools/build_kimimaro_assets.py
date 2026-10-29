@@ -126,6 +126,9 @@ def main():
     portrait.alpha_composite(pose,((96-pose.width)//2,110-pose.height))
     target=ROOT/'.omx/naruto/portraits/kimimaro.png';target.parent.mkdir(parents=True,exist_ok=True)
     portrait.save(target,optimize=True)
+    if (ROOT/'art-review/redrawn/kimimaro-bone-spikes-generated-v2.png').is_file():
+        from build_kimimaro_forest_assets import build
+        sheets['effects']=build()
     print(json.dumps({'sheets':{key:{'source':s['source'],'bytes':s['bytes']} for key,s in sheets.items()},
         'frames':sum(len(s['frames']) for key,s in sheets.items() if key!='effects'),'decodedBytes':decoded},ensure_ascii=True))
 

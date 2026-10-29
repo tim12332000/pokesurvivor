@@ -212,6 +212,7 @@
       hitIndex:0,hitMarks:[],phaseHits:new Map(),attack:owner.atk*damageBonus(owner),requiredIds:[source.id],
       emitted:0,flowerStarted:false,clockStart:s.clock};
     if (combined) {f.flowerSource=learned(owner,BASIC+'-flower');f.requiredIds.push(f.flowerSource.id);}
+    if(kind==='bullets')f.cardChains=G.NinjaToolBounce?.count(owner)||0;
     if (kind==='curse') {s.curse.startAt=s.clock;s.curse.readyAt=0;source.t=0;}
     if (kind==='bracken') {
       const repeats=Math.min(5,Math.max(1,Math.floor(f.move.burstCount||f.rank))),interval=.5;
@@ -321,10 +322,11 @@
       const desired=G.KimimaroArt?.muzzleFor?.(f.owner,aim)||{x:f.owner.x+Math.cos(aim)*12,y:f.owner.y+Math.sin(aim)*12};
       if(!clearPath(f.owner.x,f.owner.y,desired.x,desired.y))continue;
       const speed=finite(f.move.speed,600);
+      const baseChainCount=Math.min(5,Math.max(1,Math.floor(f.move.chainCount||f.rank))),cardChains=f.cardChains||0;
       s.bullets.push({owner:f.owner,world:f.world,x:desired.x,y:desired.y,startX:desired.x,startY:desired.y,
         vx:Math.cos(aim)*speed,vy:Math.sin(aim)*speed,aim,age:0,distance:0,travelled:0,range:rangeFor(f.move,'bullets'),
-        chainCount:Math.min(5,Math.max(1,Math.floor(f.move.chainCount||f.rank))),
-        remainingChains:Math.min(5,Math.max(1,Math.floor(f.move.chainCount||f.rank))),chainHops:0,chainRadius:finite(f.move.chainRadius,180),
+        baseChainCount,cardChains,chainCount:baseChainCount+cardChains,
+        remainingChains:baseChainCount+cardChains,chainHops:0,chainRadius:finite(f.move.chainRadius,180),chainTrail:[],
         rank:f.rank,move:f.move,m:f.move,attack:f.attack,damageRatio:1/5,castId:f.castId,phaseHits:new Map(),baseKind:'bullets',kind:'bullets'});
       f.emitted++;s.emitted++;
       f.aim=aim;f.owner.aim=aim;
@@ -337,6 +339,8 @@
       .filter(e=>alive(e)&&!e.friendly&&!seen?.has(e)&&distance2(e,from)<=b.chainRadius*b.chainRadius&&clearPath(b.x,b.y,e.x,e.y))
       .sort((a,c)=>distance2(a,from)-distance2(c,from))[0];
     if(!next)return false;
+    b.chainTrail.push({x:b.x,y:b.y});if(b.chainTrail.length>8)b.chainTrail.shift();
+    b.chainFlash={x:b.x,y:b.y,time:b.age};
     b.remainingChains--;b.chainHops++;b.chainTarget=next;
     b.aim=Math.atan2(next.y-b.y,next.x-b.x);const speed=finite(b.move.speed,600);
     b.vx=Math.cos(b.aim)*speed;b.vy=Math.sin(b.aim)*speed;
@@ -352,6 +356,9 @@
         if(speed<=EPS||step<=EPS){remove=true;break;}
         b.x+=Math.cos(b.aim)*step;b.y+=Math.sin(b.aim)*step;b.distance+=step;b.travelled+=step;
         b.age+=step/speed;left-=step/speed;
+        if(b.chainHops>0&&(!b.chainTrail.length||Math.hypot(b.x-b.chainTrail.at(-1).x,b.y-b.chainTrail.at(-1).y)>=4)){
+          b.chainTrail.push({x:b.x,y:b.y});if(b.chainTrail.length>8)b.chainTrail.shift();
+        }
         if(G.World.isWall(b.x,b.y)){remove=true;break;}
         const prop=G.World.projectileBlock?.(b.x,b.y,2);
         if(prop){hit(s,b,prop,b.damageRatio,0,true);remove=true;break;}
@@ -588,7 +595,7 @@
   function guardThreat(p,owner,dt) {
     const dx=finite(p.px,p.x)-owner.x,dy=finite(p.py,p.y)-owner.y;
     if(dx*p.vx+dy*p.vy>=0)return null;
-    return wallContact(p,{x:owner.x,y:owner.y,radius:300},dt+.10);
+    return wallContact(p,{x:owner.x,y:owner.y,radius:160},dt+.10);
   }
   function boneRowContact(p,wall,horizon) {
     const dx=finite(p.px,p.x)-wall.x,dy=finite(p.py,p.y)-wall.y,padding=Math.max(0,p.r||0);

@@ -3,7 +3,7 @@
   if (G.NinjaToolBounce) return;
   const range = 160;
   const tools = new Set(['naruto-pain','naruto-kunai','naruto-shuriken','naruto-fuma-shuriken',
-    'naruto-tenten','naruto-tenten-fuma','naruto-tenten-twin']);
+    'naruto-tenten','naruto-tenten-fuma','naruto-tenten-twin','naruto-kimimaro-bullets']);
   const alive = e => !!e && !e.dead && e.hp > 0 && !e.friendly;
   const count = owner => Math.max(0, Math.floor(owner?.ninjaToolBouncePicks || 0));
   const eligibleMove = id => tools.has(id);

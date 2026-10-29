@@ -30,7 +30,8 @@ PROGRESSION = r"""() => {
  A.assert(p().addMove(id),'cannot learn bone guard at Lv6');
  A.assert(p().moves.find(m=>m.id===id).passive&&p().slots.length===0,'bone guard consumed active slot');
  const cooldowns=[];for(let rank=1;rank<=5;rank++){
-   const m=G.Moves.instance(id,rank);A.near(m.cd,3,'independent root cooldown rank '+rank);cooldowns.push(m.cd);
+   const m=G.Moves.instance(id,rank);A.near(m.cd,3,'independent root cooldown rank '+rank);
+   A.near(m.radius,160,'guard interception radius rank '+rank);A.near(m.range,160,'guard definition range rank '+rank);cooldowns.push(m.cd);
  }
  return {learnLevel:6,slotless:true,cooldowns};
 }"""
@@ -42,8 +43,8 @@ INTERCEPT = r"""() => {
    ['top',0,-120,0,500,.10],['bottom',0,120,0,-500,.10],
    ['diagonal',100,100,-500,-500,.10],['fast-crossing',120,0,-2000,0,.10],
    ['near-graze-40',120,40,-500,0,.10],['near-graze-45',120,45,-500,0,.10],
-   ['broad-graze-80',120,80,-500,0,.10],['broad-graze-200',120,200,-500,0,.10],
-   ['300-boundary',300,0,-500,0,.10],
+   ['broad-graze-80',120,80,-500,0,.10],['broad-graze-150',120,150,-500,0,.10],
+   ['160-boundary',160,0,-500,0,.10],
    ['unblockable',120,0,-500,0,.10,{unblockable:true}],
    ['guardUnblockable',120,0,-500,0,.10,{guardUnblockable:true}],
    ['uninterceptable',120,0,-500,0,.10,{uninterceptable:true}],
@@ -62,7 +63,8 @@ EXCLUSIONS = r"""() => {
  const cases=[['friendly',120,0,-500,0,{friendly:true}],['away',70,0,500,0,{}],
    ['ground',120,0,-500,0,{ground:true}],['beam',120,0,-500,0,{beam:true}],
    ['laser',120,0,-500,0,{laser:true}],['orb',120,0,-500,0,{orb:true,oa:0,ospeed:0,orad:120}],
-   ['hazard',120,0,-500,0,{hazard:true}],['far-outside-300',330,0,-1,0,{}]];
+   ['hazard',120,0,-500,0,{hazard:true}],['far-outside-160',190,0,-1,0,{}],
+   ['outside-graze-200',120,200,-500,0,{}],['old-300-boundary',300,0,-1,0,{}]];
  for(const [name,x,y,vx,vy,flags] of cases){
    B.prepare();const q=B.shot(x,y,vx,vy,flags);A.step(.10);
    A.assert(B.exists(q),'guard deleted excluded projectile '+name);
@@ -133,12 +135,12 @@ WINDOW_BOUNDARY = r"""() => {
 }"""
 
 RISE_CONTACT_CANCEL = r"""() => {
- const B=BGuard,{A,p,K}=B;B.prepare();G.Camera.x=100;G.Camera.y=100;const q=B.shot(350,0,-500,0);
+ const B=BGuard,{A,p,K}=B;B.prepare();G.Camera.x=100;G.Camera.y=100;const q=B.shot(210,0,-500,0);
  A.step(.01);const rising=B.state(),wall=rising.wall;
  A.assert(B.exists(q)&&rising.blocks===0&&rising.readyCount===9,'pre-rise erased bullet or failed to reserve a root');
- A.assert(wall?.phase==='rise'&&wall.x>275&&wall.x<310,'row did not rise before contact near the 300-unit interception boundary');
+ A.assert(wall?.phase==='rise'&&wall.x>135&&wall.x<170,'row did not rise before contact near the 160-unit interception boundary');
  A.assert(rising.slots[0].reserved&&rising.slots[0].readyAt===0,'reservation consumed cooldown before contact');
- const next=B.shot(0,350,0,-500);A.step(.01);
+ const next=B.shot(0,210,0,-500);A.step(.01);
  A.assert(B.state().readyCount===8&&B.state().slots.filter(s=>s.reserved).length===2,'reserved root reused for another bullet');
  A.advance(.04);A.assert(B.exists(q)&&B.exists(next)&&B.state().blocks===0,'bullet disappeared before physical contact');
  A.advance(.05);const hit=B.state();
@@ -147,9 +149,9 @@ RISE_CONTACT_CANCEL = r"""() => {
  for(const w of hit.walls)A.near(hit.slots[w.slot].readyAt-w.hitAt,3,'cooldown did not start at physical contact');
  A.advance(1.16);A.assert(B.state().walls.length===2,'rows vanished before their 1.2-second impact lifetime');
  A.advance(.08);A.assert(B.state().walls.length===0,'expired rows did not crumble away');
- B.prepare();G.Camera.x=100;const canceled=B.shot(350,0,-500,0);A.step(.01);G.Projectiles.remove(canceled);A.step(.01);
+ B.prepare();G.Camera.x=100;const canceled=B.shot(210,0,-500,0);A.step(.01);G.Projectiles.remove(canceled);A.step(.01);
  A.assert(B.state().readyCount===10&&B.state().blocks===0&&!B.state().walls.length,'disappearing shot consumed reserved root');
- const veer=B.shot(350,0,-500,0);A.step(.01);veer.vx=0;veer.vy=500;A.step(.01);
+ const veer=B.shot(210,0,-500,0);A.step(.01);veer.vx=0;veer.vy=500;A.step(.01);
  A.assert(B.exists(veer)&&B.state().readyCount===10&&!B.state().walls.length,'veering shot was erased or left a reservation');
  return {preRise:true,outerContact:wall.x,separateReservations:true,contactCooldown:3,canceledWithoutCooldown:true,impactDuration:1.2};
 }"""
