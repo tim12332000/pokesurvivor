@@ -272,33 +272,39 @@
     }
   }
   function drawBoneGuards(ctx,states,front) {
+    const rows=[];
+    for(const state of states)for(const wall of state.boneGuard?.walls||[])
+      if(wall.age<wall.duration)rows.push({state,wall});
+    rows.sort((a,b)=>b.wall.born-a.wall.born||
+      Math.hypot(a.wall.x-a.state.owner.x,a.wall.y-a.state.owner.y)-Math.hypot(b.wall.x-b.state.owner.x,b.wall.y-b.state.owner.y));
     let count=0;
-    for(const state of states){
-      const owner=state.owner;
-      for(const wall of state.boneGuard?.walls||[]){
-        if(wall.age>=wall.duration||count>=20)continue;
-        count++;
-        const hitAge=wall.phase==='impact'?Math.max(0,state.clock-wall.hitAt):0;
-        const rise=wall.phase==='impact'?1:ease(wall.age/.085),fade=wall.phase==='impact'?1-ease((hitAge-.18)/.32):1,x=wall.x,y=wall.y;
+    for(const {state,wall} of rows){
+      if(count>=20)break;
+      const owner=state.owner,nx=wall.nx||0,ny=wall.ny||0,remaining=wall.duration-wall.age,
+        fade=wall.phase==='block'?ease(remaining/.25):1,offsets=[0,-24,24];
+      for(let j=0;j<offsets.length&&count<20;j++,count++){
+        const offset=offsets[j],x=wall.x-ny*offset,y=wall.y+nx*offset;
         if((y>=owner.y)!==front)continue;
+        const rise=wall.phase==='block'?1:ease(Math.max(0,wall.age-j*.012)/.075);
         ctx.save();ctx.globalAlpha*=fade;
-        polygon(ctx,[[x-16,y],[x-5,y-6],[x+18,y+1],[x+4,y+7]],'#665335','#394329');
-        pillar(ctx,{x:x+wall.nx*Math.min(5,hitAge*24),y,owner,variant:1+wall.slot%4,w:18,
-          height:(92+wall.slot%3*12)*rise*(1-Math.min(.3,hitAge*.6)),lean:-wall.nx*.18});
-        if(wall.phase==='impact'){
-          ctx.fillStyle='#eee7cf';
-          for(let j=0;j<5;j++){
-            const a=j*2.4+wall.slot,travel=hitAge*(36+j*11),cx=x+Math.cos(a)*travel,
-              cy=y-28+Math.sin(a)*travel-hitAge*35+hitAge*hitAge*110;
+        polygon(ctx,[[x-15,y],[x-5,y-6],[x+17,y+1],[x+4,y+7]],'#665335','#394329');
+        pillar(ctx,{x,y,owner,variant:1+(wall.slot+j)%4,w:20,
+          height:[108,86,98][j]*rise,lean:-nx*(j===1?.12:.07)});
+        if(wall.phase==='block'&&remaining<.25){
+          const crumble=.25-remaining;
+          for(let k=0;k<2;k++){
+            const angle=k*2.7+wall.slot+j,travel=crumble*(40+k*25),cx=x+Math.cos(angle)*travel,
+              cy=y-20+Math.sin(angle)*travel-crumble*20+crumble*crumble*120;
             polygon(ctx,[[cx-3,cy-4],[cx+4,cy-1],[cx+1,cy+4]],'#eee7cf','#a99e86');
           }
         }
-        if(wall.flash>0){
-          ctx.globalAlpha*=wall.flash/.14;ctx.strokeStyle='#fff8da';ctx.lineWidth=3;
-          const ix=wall.impactX,iy=wall.impactY-(G.LIFT||20);
-          for(let j=0;j<5;j++){const a=j*TAU/5;ctx.beginPath();ctx.moveTo(ix+Math.cos(a)*5,iy+Math.sin(a)*5);
-            ctx.lineTo(ix+Math.cos(a)*24,iy+Math.sin(a)*24);ctx.stroke();}
-        }
+        ctx.restore();
+      }
+      if(wall.flash>0&&((wall.y>=owner.y)===front)){
+        ctx.save();ctx.globalAlpha*=fade*Math.min(1,wall.flash/.14);ctx.strokeStyle='#fff8da';ctx.lineWidth=3;
+        const ix=wall.impactX,iy=wall.impactY-(G.LIFT||20);
+        for(let j=0;j<5;j++){const a=j*TAU/5;ctx.beginPath();ctx.moveTo(ix+Math.cos(a)*5,iy+Math.sin(a)*5);
+          ctx.lineTo(ix+Math.cos(a)*24,iy+Math.sin(a)*24);ctx.stroke();}
         ctx.restore();
       }
     }

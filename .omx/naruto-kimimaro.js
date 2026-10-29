@@ -567,7 +567,7 @@
     g.walls=g.walls.filter(wall=>s.clock-wall.born<wall.duration);
     for(const wall of g.walls){
       wall.age=Math.max(0,s.clock-wall.born);
-      wall.flash=wall.phase==='impact'?Math.max(0,.14-(s.clock-wall.hitAt)):0;
+      wall.flash=wall.phase==='block'?Math.max(0,.14-(s.clock-wall.lastHitAt)):0;
     }
     m.t=Math.min(...g.slots.slice(0,g.count).map(slot=>Math.max(0,slot.readyAt-s.clock)));
     return g;
@@ -586,9 +586,22 @@
     return contact>=0&&contact<=horizon+EPS?contact:null;
   }
   function guardThreat(p,owner,dt) {
-    const impact=wallContact(p,{x:owner.x,y:owner.y,radius:owner.r||12},Infinity);
-    if(impact===null||impact>finite(p.life,Infinity)-finite(p.t)+dt)return null;
-    return wallContact(p,{x:owner.x,y:owner.y,radius:96},dt+.10);
+    const dx=finite(p.px,p.x)-owner.x,dy=finite(p.py,p.y)-owner.y;
+    if(dx*p.vx+dy*p.vy>=0)return null;
+    return wallContact(p,{x:owner.x,y:owner.y,radius:300},dt+.10);
+  }
+  function boneRowContact(p,wall,horizon) {
+    const dx=finite(p.px,p.x)-wall.x,dy=finite(p.py,p.y)-wall.y,padding=Math.max(0,p.r||0);
+    const axes=[[dx*wall.nx+dy*wall.ny,p.vx*wall.nx+p.vy*wall.ny,wall.radius+padding],
+      [-dx*wall.ny+dy*wall.nx,-p.vx*wall.ny+p.vy*wall.nx,wall.halfWidth+padding]];
+    let enter=0,exit=horizon;
+    for(const [position,velocity,size] of axes){
+      if(Math.abs(velocity)<EPS){if(Math.abs(position)>size)return null;continue;}
+      const a=(-size-position)/velocity,b=(size-position)/velocity;
+      enter=Math.max(enter,Math.min(a,b));exit=Math.min(exit,Math.max(a,b));
+      if(enter>exit+EPS)return null;
+    }
+    return enter;
   }
   function interceptBones(dt,owner) {
     if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
@@ -599,45 +612,61 @@
       const s=state(actor);syncBoneGuard(s);guards.push(s);
     }
     if(!guards.length)return;
-    const projectiles=G.Projectiles.all(),live=new Set(projectiles),claimed=new Set(),events=[];
+    const projectiles=G.Projectiles.all(),live=new Set(projectiles),claimed=new Set(),covered=new Set(),events=[];
     const cancel=(s,slot)=>{
       const wall=slot.reservation.wall;
       s.boneGuard.walls=s.boneGuard.walls.filter(w=>w!==wall);slot.reservation=null;
     };
+    const rowEvents=(s,wall)=>{
+      const remaining=wall.duration-wall.age;
+      for(const p of projectiles)if(guardBlockable(p)){
+        const contact=boneRowContact(p,wall,Math.min(dt+.10,remaining));
+        if(contact===null)continue;
+        const body=wallContact(p,{x:s.owner.x,y:s.owner.y,radius:s.owner.r||12},dt+.10);
+        if(body!==null&&body+EPS<contact)continue;
+        covered.add(p);
+        if(contact<=dt+EPS)events.push({s,slot:s.boneGuard.slots[wall.slot],p,wall,contact});
+      }
+    };
+    for(const s of guards)for(const wall of s.boneGuard.walls)if(wall.phase==='block')rowEvents(s,wall);
     for(const s of guards)for(const slot of s.boneGuard.slots){
       const reservation=slot.reservation;if(!reservation)continue;
-      const {p,wall}=reservation,contact=wallContact(p,wall,dt+.12);
+      const {p,wall}=reservation,contact=boneRowContact(p,wall,dt+.12);
+      const body=wallContact(p,{x:s.owner.x,y:s.owner.y,radius:s.owner.r||12},dt+.12);
       if(slot.index>=s.boneGuard.count||!live.has(p)||!guardBlockable(p)||claimed.has(p)||
-        contact===null||s.clock>reservation.expiresAt+EPS){cancel(s,slot);continue;}
-      claimed.add(p);events.push({s,slot,p,wall,contact});
+        covered.has(p)||contact===null||(body!==null&&body+EPS<contact)||s.clock>reservation.expiresAt+EPS){cancel(s,slot);continue;}
+      claimed.add(p);rowEvents(s,wall);
     }
     const threats=[];
-    for(const p of projectiles)if(guardBlockable(p)&&!claimed.has(p))for(const s of guards){
+    for(const p of projectiles)if(guardBlockable(p)&&!claimed.has(p)&&!covered.has(p))for(const s of guards){
       const contact=guardThreat(p,s.owner,dt);if(contact!==null)threats.push({p,s,contact});
     }
     threats.sort((a,b)=>a.contact-b.contact);
     for(const {p,s,contact} of threats){
-      if(claimed.has(p))continue;
+      if(claimed.has(p)||covered.has(p))continue;
       const g=s.boneGuard,time=s.clock+Math.min(contact,dt);
       const slot=g.slots.find(slot=>slot.index<g.count&&!slot.reservation&&slot.readyAt<=time+EPS);
       if(!slot)continue;
       const speed=Math.hypot(p.vx,p.vy)||1,nx=p.vx/speed,ny=p.vy/speed;
       // The bone's near face sits on the outer interception ring.
-      const x=finite(p.px,p.x)+p.vx*contact+nx*(8+Math.max(0,p.r||0)),
-        y=finite(p.py,p.y)+p.vy*contact+ny*(8+Math.max(0,p.r||0));
-      const wall={x,y,radius:8,born:s.clock,age:0,duration:contact+.6,slot:slot.index,
+      const x=finite(p.px,p.x)+p.vx*contact+nx*(12+Math.max(0,p.r||0)),
+        y=finite(p.py,p.y)+p.vy*contact+ny*(12+Math.max(0,p.r||0));
+      const wall={x,y,radius:12,halfWidth:44,born:s.clock,age:0,duration:contact+.6,slot:slot.index,
         phase:'rise',flash:0,impactX:x,impactY:y,nx:-nx,ny:-ny};
       slot.reservation={p,wall,expiresAt:s.clock+contact+.12};g.walls.push(wall);claimed.add(p);
-      events.push({s,slot,p,wall,contact});
+      rowEvents(s,wall);
     }
     events.sort((a,b)=>a.contact-b.contact);
     for(const {s,slot,p,wall,contact} of events){
       if(contact>dt+EPS)continue;
-      if(!live.has(p)){if(slot.reservation)cancel(s,slot);continue;}
+      if(!live.has(p))continue;
       const g=s.boneGuard,time=s.clock+contact;
       G.Projectiles.remove(p);live.delete(p);slot.reservation=null;
-      slot.readyAt=time+3;slot.blocks++;g.blocks++;g.triggers++;
-      wall.phase='impact';wall.hitAt=time;wall.duration=time-wall.born+.50;wall.flash=.14;
+      if(wall.phase==='rise'){
+        slot.readyAt=time+3;g.triggers++;
+        wall.phase='block';wall.hitAt=time;wall.duration=time-wall.born+1.2;
+      }
+      slot.blocks++;g.blocks++;wall.lastHitAt=time;wall.flash=.14;
       wall.impactX=finite(p.px,p.x)+p.vx*contact;wall.impactY=finite(p.py,p.y)+p.vy*contact;
     }
   }
