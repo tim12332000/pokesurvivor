@@ -468,8 +468,8 @@
     const curve=Array.from({length:33},(_,i)=>{const t=i/32,u=1-t;
       return {x:u*u*hand.x+2*u*t*cx+t*t*target.x,y:u*u*hand.y+2*u*t*cy+t*t*target.y};});
     const curveLength=curve.reduce((length,point,i)=>i?length+Math.hypot(point.x-curve[i-1].x,point.y-curve[i-1].y):0,0);
-    // Curving must not shorten the advertised reach or cause an early return.
-    const travelLimit=finite(m.range,600)+Math.max(0,curveLength-distance);
+    // A missed throw returns at its aimed curve endpoint, without flying farther.
+    const travelLimit=curveLength;
     const firstAim=Math.atan2(curve[1].y-hand.y,curve[1].x-hand.x);
     const pierce=Math.max(0,Math.floor(finite(m.pierce)+(G.Quantity?.bonus(owner)||0)));
     lane.projectile={owner,world:G.World,x:hand.x,y:hand.y,vx:Math.cos(firstAim)*speed,vy:Math.sin(firstAim)*speed,

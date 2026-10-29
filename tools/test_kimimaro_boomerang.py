@@ -121,7 +121,7 @@ FAR_NOMINAL_HITS = r"""() => {
    const {m,e,hits}=A.start(distance,rank),shots=[...A.state().projectiles];
    for(const q of shots){
      const chord=Math.hypot(q.curve.at(-1).x-q.curve[0].x,q.curve.at(-1).y-q.curve[0].y);
-     A.near(q.travelLimit,m.range+q.curveLength-chord,'large curve did not compensate nominal range');
+     A.near(q.travelLimit,q.curveLength,'large curve did not compensate nominal range');
      A.assert(q.travelLimit>=q.curveLength,'far snapshot target became unreachable after stronger bending');
    }
    A.until(()=>hits.length>=rank);
@@ -426,7 +426,7 @@ RANGE_AND_OBSTACLES = r"""() => {
    const targetChord=Math.hypot(initial.curve.at(-1).x-initial.curve[0].x,initial.curve.at(-1).y-initial.curve[0].y);
    A.near(initial.range,m.range,'compensated travel changed nominal target range');
    A.near(initial.curveLength,curveLength,'reported polyline length does not match the actual curve');
-   A.near(initial.travelLimit,m.range+Math.max(0,curveLength-targetChord),'travel limit omitted extra curved distance');
+   A.near(initial.travelLimit,curveLength,'travel limit omitted extra curved distance');
    e.dead=true;p.target=null;let walked=initial.distance,previous={x:sx,y:sy},outDistance=0;
    A.until(()=>{
      const q=A.state().projectile;if(!q)return false;
