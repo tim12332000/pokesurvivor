@@ -90,7 +90,7 @@ WALL_AND_COOLDOWN = r"""() => {
    A.assert(state.slots.every(slot=>slot.blocks===1&&slot.cooldown>0),'one root blocked multiple simultaneous bullets');
    A.assert(p().hp<hp&&volley.every(q=>!B.exists(q)),'capacity overflow did not deal native projectile damage');
    A.assert(state.walls.length===count&&new Set(state.walls.map(w=>w.slot)).size===count,'blocked bullets did not each create exactly one visual root');
-   for(const wall of state.walls)A.near(state.slots[wall.slot].readyAt-wall.born,3,'root cooldown did not start at its own contact time');
+   for(const wall of state.walls)A.near(state.slots[wall.slot].readyAt-wall.hitAt,3,'root cooldown did not start at its own contact time');
    p().invuln=0;const before=p().hp,extra=B.shot(40,0,-800,0);A.step(.05);
    A.assert(!B.exists(extra)&&p().hp<before&&B.state().blocks===count,'remaining visual columns acted as a persistent shield');
    A.assert(B.state().walls.length===count,'overflow bullet created an unearned additional column');
@@ -122,6 +122,28 @@ WINDOW_BOUNDARY = r"""() => {
  A.assert(!B.exists(next)&&state.slots[1].blocks===2,'second root could not fire while the first recharged again');
  A.near(state.slots[0].readyAt,firstAgain,'second reuse refreshed the first root');
  return {firstReady,secondReady,stagger:.5,firstAgain,blocks:state.blocks,independent:true};
+}"""
+
+RISE_CONTACT_CANCEL = r"""() => {
+ const B=BGuard,{A,p,K}=B;B.prepare();const q=B.shot(150,0,-500,0);
+ A.step(.01);const rising=B.state(),wall=rising.wall;
+ A.assert(B.exists(q)&&rising.blocks===0&&rising.readyCount===9,'pre-rise erased bullet or failed to reserve a root');
+ A.assert(wall?.phase==='rise'&&wall.x>80&&wall.x<105,'bone did not grow on outer interception ring');
+ A.assert(rising.slots[0].reserved&&rising.slots[0].readyAt===0,'reservation consumed cooldown before contact');
+ const next=B.shot(150,0,-500,0);A.step(.01);
+ A.assert(B.state().readyCount===8&&B.state().slots.filter(s=>s.reserved).length===2,'reserved root reused for another bullet');
+ A.advance(.04);A.assert(B.exists(q)&&B.exists(next)&&B.state().blocks===0,'bullet disappeared before physical contact');
+ A.advance(.05);const hit=B.state();
+ A.assert(!B.exists(q)&&!B.exists(next)&&hit.blocks===2,'physical contact failed to consume assigned bullets');
+ A.assert(hit.walls.every(w=>w.phase==='impact'&&w.flash>0),'contact lacked visible impact');
+ for(const w of hit.walls)A.near(hit.slots[w.slot].readyAt-w.hitAt,3,'cooldown did not start at physical contact');
+ A.advance(.35);A.assert(B.state().walls.length===2,'impact bones vanished too quickly');
+ A.advance(.17);A.assert(B.state().walls.length===0,'impact bones did not crumble away');
+ B.prepare();const canceled=B.shot(150,0,-500,0);A.step(.01);G.Projectiles.remove(canceled);A.step(.01);
+ A.assert(B.state().readyCount===10&&B.state().blocks===0&&!B.state().walls.length,'disappearing shot consumed reserved root');
+ const veer=B.shot(150,0,-500,0);A.step(.01);veer.vx=0;veer.vy=500;A.step(.01);
+ A.assert(B.exists(veer)&&B.state().readyCount===10&&!B.state().walls.length,'veering shot was erased or left a reservation');
+ return {preRise:true,outerContact:wall.x,oneReservationPerBullet:true,contactCooldown:3,canceledWithoutCooldown:true,impactDuration:.5};
 }"""
 
 MELEE_AND_GROUND = r"""() => {
@@ -238,7 +260,7 @@ def main():
             try:
                 frame=game.boot(page,label);frame.evaluate(SETUP)
                 for name,check in [('progression',PROGRESSION),('intercept',INTERCEPT),('exclusions',EXCLUSIONS),('wallAndCooldown',WALL_AND_COOLDOWN),
-                  ('independentRecovery',WINDOW_BOUNDARY),('meleeAndGround',MELEE_AND_GROUND),('rankUpgrade',FIXED_COOLDOWN),('movingAndUnlearn',MOVING_AND_UNLEARN),
+                  ('riseContactCancel',RISE_CONTACT_CANCEL),('independentRecovery',WINDOW_BOUNDARY),('meleeAndGround',MELEE_AND_GROUND),('rankUpgrade',FIXED_COOLDOWN),('movingAndUnlearn',MOVING_AND_UNLEARN),
                   ('independentAction',INDEPENDENT_ACTION),('clones',CLONES),('lifecycle',LIFECYCLE)]:
                     print(label,name,flush=True)
                     try:result[name]=frame.evaluate(check)

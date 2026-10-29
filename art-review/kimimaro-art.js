@@ -278,17 +278,26 @@
       for(const wall of state.boneGuard?.walls||[]){
         if(wall.age>=wall.duration||count>=20)continue;
         count++;
-        const rise=ease(wall.age/.04),fade=1-ease((wall.age-.10)/.18),x=wall.x,y=wall.y;
+        const hitAge=wall.phase==='impact'?Math.max(0,state.clock-wall.hitAt):0;
+        const rise=wall.phase==='impact'?1:ease(wall.age/.085),fade=wall.phase==='impact'?1-ease((hitAge-.18)/.32):1,x=wall.x,y=wall.y;
         if((y>=owner.y)!==front)continue;
         ctx.save();ctx.globalAlpha*=fade;
-        if(!front){polygon(ctx,[[x-12,y],[x-4,y-5],[x+14,y+1],[x+3,y+6]],'#665335','#394329');}
-        pillar(ctx,{x,y,owner,variant:1+wall.slot%4,w:12,
-          height:(72+wall.slot%3*8)*rise,lean:-wall.nx*.12});
+        polygon(ctx,[[x-16,y],[x-5,y-6],[x+18,y+1],[x+4,y+7]],'#665335','#394329');
+        pillar(ctx,{x:x+wall.nx*Math.min(5,hitAge*24),y,owner,variant:1+wall.slot%4,w:18,
+          height:(92+wall.slot%3*12)*rise*(1-Math.min(.3,hitAge*.6)),lean:-wall.nx*.18});
+        if(wall.phase==='impact'){
+          ctx.fillStyle='#eee7cf';
+          for(let j=0;j<5;j++){
+            const a=j*2.4+wall.slot,travel=hitAge*(36+j*11),cx=x+Math.cos(a)*travel,
+              cy=y-28+Math.sin(a)*travel-hitAge*35+hitAge*hitAge*110;
+            polygon(ctx,[[cx-3,cy-4],[cx+4,cy-1],[cx+1,cy+4]],'#eee7cf','#a99e86');
+          }
+        }
         if(wall.flash>0){
-          ctx.globalAlpha*=wall.flash/.12;ctx.strokeStyle='#fff8da';ctx.lineWidth=2;
+          ctx.globalAlpha*=wall.flash/.14;ctx.strokeStyle='#fff8da';ctx.lineWidth=3;
           const ix=wall.impactX,iy=wall.impactY-(G.LIFT||20);
           for(let j=0;j<5;j++){const a=j*TAU/5;ctx.beginPath();ctx.moveTo(ix+Math.cos(a)*5,iy+Math.sin(a)*5);
-            ctx.lineTo(ix+Math.cos(a)*15,iy+Math.sin(a)*15);ctx.stroke();}
+            ctx.lineTo(ix+Math.cos(a)*24,iy+Math.sin(a)*24);ctx.stroke();}
         }
         ctx.restore();
       }
@@ -309,7 +318,7 @@
         ctx.fillStyle='#f4efdf';ctx.strokeStyle='#34384b';ctx.beginPath();ctx.ellipse(0,4,4,3,0,0,TAU);ctx.fill();ctx.stroke();ctx.restore();
       }
       for(const b of state.bullets||[]){
-        const aim=b.aim??Math.atan2(b.vy,b.vx),height=lerp(31,18,clamp((b.distance||0)/100));
+        const aim=b.aim??Math.atan2(b.vy,b.vx),height=lerp(31,18,clamp((b.travelled??b.distance??0)/100));
         ctx.save();ctx.translate(b.x,b.y-height);ctx.rotate(aim);
         polygon(ctx,[[-5,-2],[4,-2],[10,0],[4,2],[-5,1.5]],'#f2eddf','#34394c');
         polygon(ctx,[[-2,0],[8,0],[4,1.5],[-3,1.5]],'#a39daf',null);ctx.restore();

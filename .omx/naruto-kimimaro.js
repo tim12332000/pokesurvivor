@@ -322,28 +322,46 @@
       if(!clearPath(f.owner.x,f.owner.y,desired.x,desired.y))continue;
       const speed=finite(f.move.speed,600);
       s.bullets.push({owner:f.owner,world:f.world,x:desired.x,y:desired.y,startX:desired.x,startY:desired.y,
-        vx:Math.cos(aim)*speed,vy:Math.sin(aim)*speed,aim,age:0,distance:0,range:rangeFor(f.move,'bullets'),
+        vx:Math.cos(aim)*speed,vy:Math.sin(aim)*speed,aim,age:0,distance:0,travelled:0,range:rangeFor(f.move,'bullets'),
+        chainCount:Math.min(5,Math.max(1,Math.floor(f.move.chainCount||f.rank))),
+        remainingChains:Math.min(5,Math.max(1,Math.floor(f.move.chainCount||f.rank))),chainHops:0,chainRadius:finite(f.move.chainRadius,180),
         rank:f.rank,move:f.move,m:f.move,attack:f.attack,damageRatio:1/5,castId:f.castId,phaseHits:new Map(),baseKind:'bullets',kind:'bullets'});
       f.emitted++;s.emitted++;
       f.aim=aim;f.owner.aim=aim;
     }
   }
+  function chainBullet(b,from) {
+    if(b.remainingChains<=0)return false;
+    const seen=b.phaseHits.get(0);
+    const next=G.EnemyMgr.queryCircle(from.x,from.y,b.chainRadius)
+      .filter(e=>alive(e)&&!e.friendly&&!seen?.has(e)&&distance2(e,from)<=b.chainRadius*b.chainRadius&&clearPath(b.x,b.y,e.x,e.y))
+      .sort((a,c)=>distance2(a,from)-distance2(c,from))[0];
+    if(!next)return false;
+    b.remainingChains--;b.chainHops++;b.chainTarget=next;
+    b.aim=Math.atan2(next.y-b.y,next.x-b.x);const speed=finite(b.move.speed,600);
+    b.vx=Math.cos(b.aim)*speed;b.vy=Math.sin(b.aim)*speed;
+    b.distance=0;b.range=Math.hypot(next.x-b.x,next.y-b.y)+(next.r||0)+2;
+    return true;
+  }
   function updateBullets(s,dt) {
     for(let i=s.bullets.length-1;i>=0;i--){
       const b=s.bullets[i];if(!validState(s)||b.world!==G.World){s.bullets.splice(i,1);continue;}
-      const speed=Math.hypot(b.vx,b.vy),travel=Math.min(speed*dt,b.range-b.distance);
-      const steps=Math.min(256,Math.max(1,Math.ceil(travel/2))),step=travel/steps;
-      let remove=false;
-      for(let j=0;j<steps;j++){
-        b.x+=Math.cos(b.aim)*step;b.y+=Math.sin(b.aim)*step;b.distance+=step;
+      let remove=false,left=dt;
+      for(let j=0;left>EPS&&j<1024;j++){
+        const speed=Math.hypot(b.vx,b.vy),step=Math.min(2,speed*left,b.range-b.distance);
+        if(speed<=EPS||step<=EPS){remove=true;break;}
+        b.x+=Math.cos(b.aim)*step;b.y+=Math.sin(b.aim)*step;b.distance+=step;b.travelled+=step;
+        b.age+=step/speed;left-=step/speed;
         if(G.World.isWall(b.x,b.y)){remove=true;break;}
         const prop=G.World.projectileBlock?.(b.x,b.y,2);
         if(prop){hit(s,b,prop,b.damageRatio,0,true);remove=true;break;}
-        const victims=G.EnemyMgr.queryCircle(b.x,b.y,42).filter(e=>alive(e)&&distance2(e,b)<=((e.r||8)+2)**2)
+        const victims=G.EnemyMgr.queryCircle(b.x,b.y,42).filter(e=>alive(e)&&!e.friendly&&!b.phaseHits.get(0)?.has(e)&&distance2(e,b)<=((e.r||8)+2)**2)
           .sort((a,b2)=>distance2(a,b)-distance2(b2,b));
-        if(victims.length){hit(s,b,victims[0],b.damageRatio,0,true);remove=true;break;}
+        if(victims.length){
+          const victim=victims[0],damage=hit(s,b,victim,b.damageRatio,0,true);
+          if(damage<=0||!chainBullet(b,victim)){remove=true;break;}
+        }
       }
-      b.age+=dt;
       if(remove||b.distance>=b.range-EPS)s.bullets.splice(i,1);
     }
   }
@@ -536,17 +554,21 @@
   function boneGuardState(owner=G.Game.player) {
     const s=states.get(owner);
     if(!validState(s)||!learned(owner,BONE_GUARD))return null;
-    const g=syncBoneGuard(s),slots=g.slots.slice(0,g.count).map(slot=>({...slot,cooldown:Math.max(0,slot.readyAt-s.clock)}));
-    return {active:g.walls.length>0,count:g.count,readyCount:slots.filter(slot=>slot.cooldown<=EPS).length,slots,
+    const g=syncBoneGuard(s),slots=g.slots.slice(0,g.count).map(({reservation,...slot})=>
+      ({...slot,reserved:!!reservation,cooldown:Math.max(0,slot.readyAt-s.clock)}));
+    return {active:g.walls.length>0,count:g.count,readyCount:slots.filter(slot=>!slot.reserved&&slot.cooldown<=EPS).length,slots,
       cooldown:Math.min(...slots.map(slot=>slot.cooldown)),blocks:g.blocks,triggers:g.triggers,wall:g.walls[0]||null,walls:g.walls};
   }
   function syncBoneGuard(s) {
     const g=s.boneGuard,m=learned(s.owner,BONE_GUARD);
     if(!m){g.slots=[];g.walls=[];return g;}
     g.count=Math.min(20,Math.max(1,Math.floor(m.count||10)));
-    while(g.slots.length<g.count)g.slots.push({index:g.slots.length,readyAt:0,blocks:0});
+    while(g.slots.length<g.count)g.slots.push({index:g.slots.length,readyAt:0,blocks:0,reservation:null});
     g.walls=g.walls.filter(wall=>s.clock-wall.born<wall.duration);
-    for(const wall of g.walls){wall.age=Math.max(0,s.clock-wall.born);wall.flash=Math.max(0,.12-wall.age);}
+    for(const wall of g.walls){
+      wall.age=Math.max(0,s.clock-wall.born);
+      wall.flash=wall.phase==='impact'?Math.max(0,.14-(s.clock-wall.hitAt)):0;
+    }
     m.t=Math.min(...g.slots.slice(0,g.count).map(slot=>Math.max(0,slot.readyAt-s.clock)));
     return g;
   }
@@ -554,7 +576,7 @@
     return p.friendly===false&&!p.hazard&&!p.laser&&!p.beam&&!p.ground&&!p.orb&&
       [p.x,p.y,p.vx,p.vy].every(Number.isFinite);
   }
-  // Swept contact with the full protective circle, including fast crossings.
+  // All contacts use the actual swept bullet segment, including fast crossings.
   function wallContact(p,w,horizon) {
     const dx=finite(p.px,p.x)-w.x,dy=finite(p.py,p.y)-w.y,r=w.radius+Math.max(0,p.r||0);
     const c=dx*dx+dy*dy-r*r;if(c<=0)return 0;
@@ -564,9 +586,9 @@
     return contact>=0&&contact<=horizon+EPS?contact:null;
   }
   function guardThreat(p,owner,dt) {
-    const impact=wallContact(p,{x:owner.x,y:owner.y,radius:owner.r||12},dt+.22);
+    const impact=wallContact(p,{x:owner.x,y:owner.y,radius:owner.r||12},Infinity);
     if(impact===null||impact>finite(p.life,Infinity)-finite(p.t)+dt)return null;
-    return wallContact(p,{x:owner.x,y:owner.y,radius:46},dt);
+    return wallContact(p,{x:owner.x,y:owner.y,radius:96},dt+.10);
   }
   function interceptBones(dt,owner) {
     if(G.Game.state!=='playing'||!(dt>0)||!Number.isFinite(dt))return;
@@ -577,20 +599,46 @@
       const s=state(actor);syncBoneGuard(s);guards.push(s);
     }
     if(!guards.length)return;
-    const events=[];
-    for(const p of G.Projectiles.all())if(guardBlockable(p))for(const s of guards){
-      const contact=guardThreat(p,s.owner,dt);if(contact!==null)events.push({p,s,contact});
+    const projectiles=G.Projectiles.all(),live=new Set(projectiles),claimed=new Set(),events=[];
+    const cancel=(s,slot)=>{
+      const wall=slot.reservation.wall;
+      s.boneGuard.walls=s.boneGuard.walls.filter(w=>w!==wall);slot.reservation=null;
+    };
+    for(const s of guards)for(const slot of s.boneGuard.slots){
+      const reservation=slot.reservation;if(!reservation)continue;
+      const {p,wall}=reservation,contact=wallContact(p,wall,dt+.12);
+      if(slot.index>=s.boneGuard.count||!live.has(p)||!guardBlockable(p)||claimed.has(p)||
+        contact===null||s.clock>reservation.expiresAt+EPS){cancel(s,slot);continue;}
+      claimed.add(p);events.push({s,slot,p,wall,contact});
     }
-    events.sort((a,b)=>a.contact-b.contact);const removed=new Set();
-    for(const {p,s,contact} of events){
-      if(removed.has(p))continue;
+    const threats=[];
+    for(const p of projectiles)if(guardBlockable(p)&&!claimed.has(p))for(const s of guards){
+      const contact=guardThreat(p,s.owner,dt);if(contact!==null)threats.push({p,s,contact});
+    }
+    threats.sort((a,b)=>a.contact-b.contact);
+    for(const {p,s,contact} of threats){
+      if(claimed.has(p))continue;
+      const g=s.boneGuard,time=s.clock+Math.min(contact,dt);
+      const slot=g.slots.find(slot=>slot.index<g.count&&!slot.reservation&&slot.readyAt<=time+EPS);
+      if(!slot)continue;
+      const speed=Math.hypot(p.vx,p.vy)||1,nx=p.vx/speed,ny=p.vy/speed;
+      // The bone's near face sits on the outer interception ring.
+      const x=finite(p.px,p.x)+p.vx*contact+nx*(8+Math.max(0,p.r||0)),
+        y=finite(p.py,p.y)+p.vy*contact+ny*(8+Math.max(0,p.r||0));
+      const wall={x,y,radius:8,born:s.clock,age:0,duration:contact+.6,slot:slot.index,
+        phase:'rise',flash:0,impactX:x,impactY:y,nx:-nx,ny:-ny};
+      slot.reservation={p,wall,expiresAt:s.clock+contact+.12};g.walls.push(wall);claimed.add(p);
+      events.push({s,slot,p,wall,contact});
+    }
+    events.sort((a,b)=>a.contact-b.contact);
+    for(const {s,slot,p,wall,contact} of events){
+      if(contact>dt+EPS)continue;
+      if(!live.has(p)){if(slot.reservation)cancel(s,slot);continue;}
       const g=s.boneGuard,time=s.clock+contact;
-      let ready=null;
-      for(const slot of g.slots)if(slot.index<g.count&&slot.readyAt<=time+EPS&&(!ready||slot.readyAt<ready.readyAt))ready=slot;
-      if(!ready)continue;
-      G.Projectiles.remove(p);removed.add(p);ready.readyAt=time+3;ready.blocks++;g.blocks++;g.triggers++;
-      const x=finite(p.px,p.x)+p.vx*contact,y=finite(p.py,p.y)+p.vy*contact,speed=Math.hypot(p.vx,p.vy)||1;
-      g.walls.push({x,y,born:time,age:0,duration:.28,slot:ready.index,flash:.12,impactX:x,impactY:y,nx:-p.vx/speed});
+      G.Projectiles.remove(p);live.delete(p);slot.reservation=null;
+      slot.readyAt=time+3;slot.blocks++;g.blocks++;g.triggers++;
+      wall.phase='impact';wall.hitAt=time;wall.duration=time-wall.born+.50;wall.flash=.14;
+      wall.impactX=finite(p.px,p.x)+p.vx*contact;wall.impactY=finite(p.py,p.y)+p.vy*contact;
     }
   }
   function update(dt) {

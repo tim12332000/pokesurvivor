@@ -202,9 +202,10 @@ PROJECTILES = r"""() => {
    A.assert(e.maxHp-e.hp===count*A.expected(m,.2,e),'quantity duplicated per-bullet multiplier');
    out[q]={count,hits,damage:e.maxHp-e.hp};
  }
- // A foreground victim catches each bone; none pierce to the second body.
+ // Chain damage happens only after a real first hit and another flight leg.
  A.reset();const m=A.fixture('naruto-kimimaro-bullets'),front=A.spawn(150,0),rear=A.spawn(260,0);p.target=rear;
- A.cast(m.id);A.advance(1.4);A.assert(front.hp<front.maxHp&&rear.hp===rear.maxHp,'bones pierce a foreground body');out.noPierce=true;
+ A.cast(m.id);A.advance(.38);A.assert(front.hp<front.maxHp&&rear.hp===rear.maxHp,'chain bypassed the first collision or travel time');
+ A.advance(1.1);A.assert(front.hp<front.maxHp&&rear.hp<rear.maxHp,'bone did not chain to its nearby second target');out.physicalChain=true;
  A.reset();A.fixture('naruto-kimimaro-bullets');const blocked=A.spawn(190,0);p.target=blocked;
  // Cast while target visible, then introduce an obstacle before the first shot.
  A.cast('naruto-kimimaro-bullets');A.advance(.17);A.assert(A.K.stateFor(p).emitted>=1,'wall fixture has no real in-flight bone');G.World.isWall=(x,y)=>x>=60&&x<=68;
