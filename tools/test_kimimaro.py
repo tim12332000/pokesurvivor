@@ -135,8 +135,8 @@ PROGRESSION = r"""() => {
  const A=KAcceptance,p=A.p(),out={levels:[],ranks:[],learn:[]};
  A.assert(p.dex===30012&&p.moves.length===1&&p.moves[0].id==='naruto-kimimaro','fresh starter contains unexpected skills');
  A.assert(p.moves[0].passive&&p.slots.length===0,'willow must start without an active slot');
- const gates={camellia:3,bullets:3,larch:6,vine:6,'bone-guard':6,flower:9,lily:9,bracken:12,curse:15};
- for(const level of [1,2,3,5,6,8,9,11,12,14,15]){
+ const gates={camellia:3,bullets:3,larch:6,vine:6,'bone-guard':6,flower:9,lily:9,bracken:12,curse:4};
+ for(const level of [1,2,3,4,5,6,8,9,11,12,14,15]){
    p.level=level;const pool=G.Moves.poolFor(p.mon),cards=G.LevelUp.offer(p,100);
    for(const [key,unlock] of Object.entries(gates)){const id='naruto-kimimaro-'+key,eligible=level>=unlock;
      A.assert(pool.includes(id)===eligible,'pool gate '+key+' Lv'+level);

@@ -618,7 +618,7 @@
       ups:kimimaroUps([600,720,840,1020,1200],[400,450,500,550,600],[400,450,500,550,600])
         .map((up,i)=>({...up,t:up.t+'・連發 +1（間隔0.5秒）',m:{...up.m,burstCount:i+2,castDuration:3.2+(i+1)*.5}})),
       desc:'每升一階多連發一次，五階連發1／2／3／4／5次，每次間隔0.5秒，重新生成不同位置的骨柱分布。每次骨林由近到遠六波擴張，最後一起退場。每發基傷600／720／840／1020／1200，取正常結算傷害與敵人最大生命30%中較高者；每發每敵最多受傷一次，首領同樣適用，護盾照常吸收。半徑400／450／500／550／600，所有連發共用最多72組骨柱；首領免控，真正跳躍或懸浮小怪避開地面骨。不吃數量卡，整串冷卻只計一次17秒。'}],
-    ['curse','地之咒印',15,'fighting',0,[0,0,0,0,0],{
+    ['curse','地之咒印',4,'fighting',0,[0,0,0,0,0],{
       icon:'kimimaroCurse',passive:true,radius:220,range:220,count:1,castDuration:1,fieldDuration:0,permanent:true,
       damageBonus:.10,speedBonus:.10,
       ups:kimimaroRanks.slice(1).map((_,index)=>({t:`咒印二期間傷害 +${[12.5,15,17.5,20][index]}%`,m:{damageBonus:[.125,.15,.175,.20][index]}})),
