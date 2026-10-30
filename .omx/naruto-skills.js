@@ -345,31 +345,29 @@
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-lotus', [30006], {
-      icon:'frontLotus', name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:10, dmg:220,
+      icon:'frontLotus', name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:13, dmg:220,
       range:145, radius:60,
       ups:[
         {t:'傷害 +20%',m:{dmg:1.2}},
-        {t:'基礎冷卻維持 10 秒，可用冷卻縮減卡縮短',m:{}},
+        {t:'基礎冷卻維持 13 秒，可用冷卻縮減卡縮短',m:{}},
         {t:'攻擊範圍與持續時間 +12%',m:{radius:1.12,width:1.12,life:1.12,range:162.4}},
         {t:'傷害 +25%',m:{dmg:1.25}}
       ],
-      vis:{pal:'grass'}, desc:'基礎冷卻 10 秒，冷卻縮減卡有效。繃帶同時拉近 3 名一般地面敵人，數量卡使綁定數 ×1.25，取整後最多 12 名。主目標踢起後從背後抱緊，倒栽旋轉墜地並放手重摔；其餘只吃落地震擊。主目標致命傷延至落地結算。冷卻自動近身普攻，連段中不插普攻。優先追擊首領；首領與精英免拉免浮空，改為地面貼身連打，完全未碰到時最多0.5秒可重試。',
+      vis:{pal:'grass'}, desc:'基礎冷卻 13 秒，冷卻縮減卡有效。繃帶同時拉近 3 名一般地面敵人，數量卡使綁定數 ×1.25，取整後最多 12 名。主目標踢起後從背後抱緊，倒栽旋轉墜地並放手重摔；其餘只吃落地震擊。主目標致命傷延至落地結算。冷卻自動近身普攻，連段中不插普攻。優先追擊首領；首領與精英免拉免浮空，改為地面貼身連打，完全未碰到時最多0.5秒可重試。',
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
-      icon:'eightGates', name:'八門遁甲・開門', mode:'gates-passive', passive:true, type:'fighting', learnLevel:6, cd:25, dmg:0,
+      icon:'eightGates', name:'八門遁甲・杜門', mode:'gates-passive', passive:true, type:'fighting', learnLevel:4, cd:25, dmg:0,
       vis:{pal:'grass'},
-      desc:'學會後每30秒自動開門，不占主動槽；演出5秒後冷卻25秒，八門效果只在開門15秒內生效（演出5秒＋後續10秒）。演出期間只補回實際受傷扣血，不吃回血量加成；演出5秒結束後，對半徑140內敵人造成其最大生命30%傷害一次，首領、傳說與審判者改為10%；不受攻擊、暴擊、屬性或生命剝奪卡加成。開門期間生命上限＋LV×N；每秒回血N%；回血量＋(10N＋LV)%；移速、攻速各＋10N%；攻擊＋30／35／40／45／50%。關門恢復生命上限與各項加成，保留當下血量；高於上限時回血不再增加，也不扣回。升級立即重新開門。N＝技能等級，LV＝角色等級。',
+      desc:'角色 Lv.4／8／16 各提供一次八門選項，略過不補發。學會後每30秒自動開門，不占主動槽；演出5秒後冷卻25秒，八門效果只在開門15秒內生效（演出5秒＋後續10秒）。演出期間只補回實際受傷扣血，不吃回血量加成；演出5秒結束後，對半徑140內敵人造成其最大生命30%傷害一次，首領、傳說與審判者改為10%；不受攻擊、暴擊、屬性或生命剝奪卡加成。開門期間生命上限＋LV×N；每秒回血N%；回血量＋(10N＋LV)%；移速、攻速各＋10N%；攻擊＋30／40／50%。關門恢復生命上限與各項加成，保留當下血量；高於上限時回血不再增加，也不扣回。升級立即重新開門。杜門／景門／死門三階，N＝1／3／5，LV＝角色等級。',
       ups:[
-        {t:'休門：生命上限＋LV×2；回血2%/秒；攻擊＋35%；回血量＋(20＋LV)%；移速／攻速＋20%',m:{}},
-        {t:'生門：生命上限＋LV×3；回血3%/秒；攻擊＋40%；回血量＋(30＋LV)%；移速／攻速＋30%',m:{}},
-        {t:'傷門：生命上限＋LV×4；回血4%/秒；攻擊＋45%；回血量＋(40＋LV)%；移速／攻速＋40%',m:{}},
-        {t:'杜門：生命上限＋LV×5；回血5%/秒；攻擊＋50%；回血量＋(50＋LV)%；移速／攻速＋50%',m:{}}
+        {t:'景門：生命上限＋LV×3；回血3%/秒；攻擊＋40%；回血量＋(30＋LV)%；移速／攻速＋30%',m:{}},
+        {t:'死門：生命上限＋LV×5；回血5%/秒；攻擊＋50%；回血量＋(50＋LV)%；移速／攻速＋50%',m:{}}
       ],
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-reverse-lotus', [30006], {
-      icon:'reverseLotus', name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:10, dmg:420,
+      icon:'reverseLotus', name:'裏蓮華', mode:'lee-reverse-lotus', type:'fighting', learnLevel:9, cd:14, dmg:420,
       range:180, radius:100,
       ups:[
         {t:'空中連擊 +2（7 次）・傷害 +20%・落地範圍擴大至 120',m:{dmg:1.2,radius:1.2}},
@@ -377,7 +375,7 @@
         {t:'空中連擊 +2（11 次）・繃帶射程 +12%・落地範圍擴大至 160',m:{range:201.6,radius:8/7}},
         {t:'空中連擊 +2（13 次）・傷害 +25%・落地範圍擴大至 180',m:{dmg:1.25,radius:9/8}}
       ],
-      vis:{pal:'grass'}, desc:'基礎冷卻 10 秒，冷卻卡有效，全程最多 3.3 秒。繃帶同時拉近 10 名一般地面敵人，整群挑空、連踢並重摔；數量卡使綁定數 ×1.25，最多 40 名。每名綁定敵人承受完整連段，其他範圍內敵人只吃落地震擊。基礎空中連擊 5／7／9／11／13 次；數量卡每張使連擊數 ×1.25，累乘取整。第 n 擊傷害 ×1.10^n，越踢越快、空中無敵。致命傷延至落地才擊倒；冷卻自動普攻。優先追擊首領；首領與精英免拉免浮空，改為地面貼身連打，完全未碰到時最多0.5秒可重試。',
+      vis:{pal:'grass'}, desc:'基礎冷卻 14 秒，冷卻卡有效，全程最多 3.3 秒。繃帶同時拉近 10 名一般地面敵人，整群挑空、連踢並重摔；數量卡使綁定數 ×1.25，最多 40 名。每名綁定敵人承受完整連段，其他範圍內敵人只吃落地震擊。基礎空中連擊 5／7／9／11／13 次；數量卡每張使連擊數 ×1.25，累乘取整。第 n 擊傷害 ×1.10^n，越踢越快、空中無敵。致命傷延至落地才擊倒；冷卻自動普攻。優先追擊首領；首領與精英免拉免浮空，改為地面貼身連打，完全未碰到時最多0.5秒可重試。',
       source_url:'https://naruto-official.com/en/anime/naruto1/list/01_273'
     }],
     ['naruto-sand-coffin', [30007], {
@@ -661,7 +659,7 @@
       speed: 340, life: 1.5, size: 7, count: 1, arc: 1.6, spread: 0, pierce: 0,
       radius: 140, range: 480, width: 24, homing: 0, knock: 0, burn: 0, poison: 0, slow: 0,
       ...design, id, kind: kinds[design.mode], digimonSkill: true, narutoSkill: true,
-      digiMode: design.mode, digiVis: design.vis || {}, maxLvl: design.mode==='shadow-clones'?clones.counts.length:5,
+      digiMode: design.mode, digiVis: design.vis || {}, maxLvl: design.mode==='shadow-clones'?clones.counts.length:design.mode==='gates-passive'?3:5,
       ups: design.ups || (design.dmg === 0 ? supportUps(design) : [
         { t: '傷害 +20%', m: { dmg: 1.2 } },
         { t: '冷卻 -10%', m: { cd: .9 } },
@@ -718,7 +716,7 @@
 
   const nameSharingan = move => {
     if(move.id==='naruto-sharingan')move.name='寫輪眼・'+G.NarutoSharingan.config.stageNames[Math.max(0,Math.min(4,move.lvl-1))];
-    if(move.id==='naruto-gates')move.name='八門遁甲・'+G.NarutoGates.config.stageNames[Math.max(0,Math.min(4,move.lvl-1))];
+    if(move.id==='naruto-gates')move.name='八門遁甲・'+G.NarutoGates.config.stageNames[Math.max(0,Math.min(2,move.lvl-1))];
     return move;
   };
   const instance=G.Moves.instance,levelUp=G.Moves.levelUp;
@@ -762,7 +760,7 @@
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = `Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.5`;
+      extraStats.textContent = `Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.${move.maxLvl||5}`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';

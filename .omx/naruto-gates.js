@@ -4,13 +4,12 @@
   const id = 'naruto-gates';
   const config = Object.freeze({
     duration: 15, cooldown: 25, openingDuration: 4, openingBurstDuration: 1, openingRadius: 140, openingDamageFraction: .3, openingBossDamageFraction: .1,
-    stageNames: Object.freeze(['開門', '休門', '生門', '傷門', '杜門']),
-    atkMultipliers: Object.freeze([1.3, 1.35, 1.4, 1.45, 1.5]),
+    stageNames: Object.freeze(['杜門', '景門', '死門']),
+    effectTiers: Object.freeze([1, 3, 5]),
+    atkMultipliers: Object.freeze([1.3, 1.4, 1.5]),
     trails: Object.freeze([
       { scale: 1.10, count: 6, life: .55, interval: .09, opacity: .48, color: '#55aaff' },
-      { scale: 1.18, count: 7, life: .64, interval: .09, opacity: .52, color: '#70f5aa' },
       { scale: 1.28, count: 8, life: .70, interval: .085, opacity: .56, color: '#70f5aa' },
-      { scale: 1.38, count: 9, life: .78, interval: .085, opacity: .60, color: '#70f5aa' },
       { scale: 1.50, count: 10, life: .86, interval: .08, opacity: .66, color: '#ff315b' }
     ].map(style => Object.freeze(style)))
   });
@@ -21,8 +20,8 @@
   const appliedHealth = new WeakMap();
   function maxHealthBonus(owner = G.Game.player) {
     if (isClone(owner)) return 0; // The summon snapshot already includes the source Gates health.
-    const level = stage(owner);
-    return level ? Math.max(1, Number.isFinite(owner.level) ? owner.level : 1) * level : 0;
+    const tier = effectTier(owner);
+    return tier ? Math.max(1, Number.isFinite(owner.level) ? owner.level : 1) * tier : 0;
   }
   function syncMaxHealth(owner = G.Game.player) {
     if (isClone(owner)) return 0;
@@ -39,7 +38,7 @@
   function learnedStage(owner = G.Game.player) {
     if (!owner || !controlled(owner) || owner.mon?.dex !== 30006 || owner.dead || !(owner.hp > 0)) return 0;
     const move = owner.moves?.find(m => m.id === id);
-    return move ? Math.max(1, Math.min(5, move.lvl | 0)) : 0;
+    return move ? Math.max(1, Math.min(config.stageNames.length, move.lvl | 0)) : 0;
   }
   function stage(owner = G.Game.player) {
     const level = learnedStage(owner);
@@ -47,6 +46,7 @@
     const source = owner.sourceOwner || owner, cycle = cycles.get(source);
     return cycle?.world === G.World && cycle.active && cycle.age < config.duration ? level : 0;
   }
+  const effectTier = owner => config.effectTiers[stage(owner) - 1] || 0;
   function status(owner = G.Game.player) {
     const source = owner?.sourceOwner || owner, cycle = cycles.get(source);
     const active = stage(owner) > 0;
@@ -55,11 +55,11 @@
       duration: config.duration, cooldown: config.cooldown };
   }
   function bonusPercent(owner = G.Game.player) {
-    const level = stage(owner);
-    return level ? 10 * level + Math.max(1, Number.isFinite(owner.level) ? owner.level : 1) : 0;
+    const tier = effectTier(owner);
+    return tier ? 10 * tier + Math.max(1, Number.isFinite(owner.level) ? owner.level : 1) : 0;
   }
   const healingMultiplier = owner => 1 + bonusPercent(owner) / 100;
-  const attackSpeedMultiplier = owner => 1 + stage(owner) * .1;
+  const attackSpeedMultiplier = owner => 1 + effectTier(owner) * .1;
   // Clone getters inherit the source's Gates stats; do not apply the tier again.
   function inheritedRegen(owner) {
     if (!isClone(owner) || !stage(owner) || !stage(owner.sourceOwner)) return 0;
@@ -69,10 +69,11 @@
     const move = owner?.moves?.find(m => m.id === id);
     if (!move || owner.mon?.dex !== 30006) return;
     // Old runs can still contain the five-second support version and its shortcut.
+    move.lvl = Math.max(1, Math.min(config.stageNames.length, move.lvl | 0));
     move.passive = true;
     move.digiMode = 'gates-passive';
     move.cd = config.cooldown; move.t = status(owner).cooldownRemaining;
-    move.name = '八門遁甲・' + config.stageNames[Math.max(0, Math.min(4, (move.lvl | 0) - 1))];
+    move.name = '八門遁甲・' + config.stageNames[move.lvl - 1];
     for (const key of ['fieldDuration', 'atkMul', 'speedMul', 'fatigueDuration', 'fatigueSpeedMul']) delete move[key];
     if (owner.bind) delete owner.bind[id];
     if (!owner.slots?.some(group => group.some(m => m.id === id))) return;
@@ -112,7 +113,7 @@
     if (!descriptor?.get) continue;
     Object.defineProperty(G.Player.prototype, key, { ...descriptor, get() {
       const value = descriptor.get.call(this), level = stage(this);
-      const innate = key === 'regen' && level ? this.maxHp * level * .01 : 0;
+      const innate = key === 'regen' && level ? this.maxHp * effectTier(this) * .01 : 0;
       const multiplier = key === 'atk' ? (level ? config.atkMultipliers[level - 1] : 1) :
         key === 'spd' ? attackSpeedMultiplier(this) : healingMultiplier(this);
       return (value + innate) * multiplier;
@@ -446,7 +447,7 @@
   C.drawAirFields = function(ctx) { air.call(this, ctx); draw(ctx, false); };
   const afterimagesFor = owner => (states.get(owner)?.world === G.World && stage(owner) && states.get(owner).level === stage(owner) ? states.get(owner).images : [])
     .map(({ x, y, ttl, life, scale, color, opacity }) => ({ x, y, ttl, life, scale, color, opacity }));
-  G.NarutoGates = { config, openingFor, charging, performing, presentationFor, learnedStage, status, stage, level: stage, bonusPercent, healingMultiplier, attackSpeedMultiplier, inheritedRegen, maxHealthBonus, syncMaxHealth, afterimagesFor,
+  G.NarutoGates = { config, openingFor, charging, performing, presentationFor, learnedStage, status, stage, effectTier, level: stage, bonusPercent, healingMultiplier, attackSpeedMultiplier, inheritedRegen, maxHealthBonus, syncMaxHealth, afterimagesFor,
     active: owner => stage(owner) > 0,
     redSkin: owner => stage(owner) > 0, redForm: owner => stage(owner) >= 3,
     intense: owner => stage(owner) >= 3, migrate, update, clear,

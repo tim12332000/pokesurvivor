@@ -17,7 +17,7 @@
     'naruto-lee': 'redrawn sweeping roundhouse; close-range AOE',
     'naruto-lee-pursuit': 'native automatic pursuit and flurry using authored running and punch poses',
     'naruto-lotus': 'redrawn step-in, rising kick, airborne drive and landing',
-    'naruto-gates': 'learned five-stage passive; dedicated red-skin action set and green aura',
+    'naruto-gates': 'three-stage passive; red-skin action sets and dedicated red-haired Death Gate',
     'naruto-reverse-lotus': 'redrawn committed aerial taijutsu combo and finisher',
     'naruto-gaara': 'redrawn directed sand-release gesture; real sand projectiles',
     'naruto-sand-coffin': 'redrawn seal, enclosing fist, crush and recovery',
@@ -274,7 +274,8 @@
       const pose = baseStateFor(anim);
       const owner = actor(anim);
       if (anim.dex === 30006 && G.NarutoGates?.redSkin(owner?.sourceOwner || owner)) {
-        return { ...pose, key: pose.key.replace(/^lee-/, 'lee-opened-'), form: 'gates' };
+        const death = G.NarutoGates.redForm(owner?.sourceOwner || owner);
+        return { ...pose, key: pose.key.replace(/^lee-/, death ? 'lee-death-' : 'lee-opened-'), form: death ? 'death-gate' : 'gates' };
       }
       return pose;
     }

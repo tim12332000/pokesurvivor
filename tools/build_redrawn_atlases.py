@@ -330,6 +330,8 @@ def main():
     register_tenten_fallback(sources['tenten-common'])
     register_menu_portraits(assets, images)
     write_registered_entries(ART / 'animation-assets.json', assets)
+    from register_lee_death import main as register_lee_death
+    register_lee_death()
     form = sources['one-tail']
     animations = {}
     for kind, indices, fps, loop in (

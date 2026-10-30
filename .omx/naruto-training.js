@@ -181,6 +181,7 @@
       }};
   }
   const offer=G.LevelUp.offer;
+  const gatesLevels=[4,8,16];
   G.LevelUp.offer=(player,n=3)=>{
     G.NarutoSharingan?.migrate(player);
     migrateGaaraPassives(player);
@@ -191,12 +192,30 @@
     const retired=['naruto-kunai','naruto-shuriken'];
     return offer(player,n,candidates=>{
       const cards=new Map(candidates.filter(c=>!retired.some(id=>c.key.endsWith(':'+id))).map(c=>[c.key,c]));
+      if(player.mon.dex===30006){
+        cards.delete('new:naruto-gates');
+        cards.delete('up:naruto-gates');
+      }
       for(const milestone of milestonesFor(player.mon.dex)){
+        if(player.mon.dex===30006&&milestone.id==='naruto-gates')continue;
         if(player.level<milestone.level||player.hasMove(milestone.id)||player.banned?.has(milestone.id))continue;
         const card=signatureCard(player,milestone);
         if(card)cards.set(card.key,card);
       }
       const result=[...cards.values()];
+      if(player.mon.dex===30006){
+        const move=player.moves.find(move=>move.id==='naruto-gates');
+        const tier=move?.lvl||0,required=player.level,opportunity='naruto-gates:'+required;
+        if(tier<3&&gatesLevels.includes(required)&&!player.narutoMilestonesShown?.has(opportunity)&&(move||!player.banned?.has('naruto-gates'))){
+          const card=move?candidates.find(card=>card.key==='up:naruto-gates'):signatureCard(player,{id:'naruto-gates'});
+          if(card){
+            card.guaranteed=true;
+            card.onShown=p=>{if(p===player)(p.narutoMilestonesShown??=new Set()).add(opportunity);};
+            card.tag=`Lv.${required}・${G.NarutoGates.config.stageNames[tier]}`;
+            result.unshift(card);
+          }
+        }
+      }
       if(player.mon.dex===30012)result.sort((a,b)=>{
         if(!a.guaranteed||!b.guaranteed)return Number(!!b.guaranteed)-Number(!!a.guaranteed);
         const level=card=>G.Moves.BY_ID[card.key.replace(/^new:/,'')]?.learnLevel||0;

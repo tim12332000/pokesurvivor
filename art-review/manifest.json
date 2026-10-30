@@ -3003,7 +3003,7 @@
       "image": "redrawn/lee-gates-common-v1.png",
       "status": "candidate",
       "runtimePreview": true,
-      "summary": "八門五階專用紅臉、白眼、豎髮動作；學會被動後持續使用，第三階起氣場更強。前兩階紅臉屬本作改編。",
+      "summary": "杜門與景門期間使用紅膚黑髮動作；死門切換專用紅髮圖集，關門直接恢復普通小李。",
       "improvements": [
         "統一固定身高與腳底定位",
         "完整動作已接入實際戰鬥"
@@ -3578,7 +3578,7 @@
       "image": "redrawn/lee-gates-skills-v1.png",
       "status": "candidate",
       "runtimePreview": true,
-      "summary": "八門五階專用紅臉、白眼、豎髮動作；學會被動後持續使用，第三階起氣場更強。前兩階紅臉屬本作改編。",
+      "summary": "杜門與景門期間使用紅膚黑髮動作；死門切換專用紅髮圖集，關門直接恢復普通小李。",
       "improvements": [
         "統一固定身高與腳底定位",
         "完整動作已接入實際戰鬥"
@@ -4783,6 +4783,1331 @@
       "limitations": [
         "Side-facing poses use explicit mirroring and vertical fallback."
       ]
+    },
+    {
+      "id": "lee-death-common-v3",
+      "title": "小李・死門：common-v3",
+      "character": "小李",
+      "category": "common",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/lee-death-common-v3.png",
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "死門期間使用赤紅上揚火焰髮；關門直接恢復普通小李。",
+      "references": [
+        {
+          "title": "官方八門遁甲",
+          "url": "https://naruto-official.com/en/anime/naruto2/list/01_864"
+        }
+      ],
+      "animation": {
+        "fps": 8,
+        "bodyHeight": 186.21,
+        "frames": [
+          {
+            "rect": [
+              58,
+              21,
+              122,
+              215
+            ],
+            "anchor": [
+              61.5,
+              211
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              266,
+              22,
+              123,
+              214
+            ],
+            "anchor": [
+              60.5,
+              210
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              487,
+              19,
+              116,
+              217
+            ],
+            "anchor": [
+              59.0,
+              213
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              694,
+              18,
+              116,
+              218
+            ],
+            "anchor": [
+              58.0,
+              214
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              67,
+              252,
+              135,
+              200
+            ],
+            "anchor": [
+              56.5,
+              196
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              274,
+              252,
+              111,
+              200
+            ],
+            "anchor": [
+              55.5,
+              196
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              487,
+              255,
+              134,
+              197
+            ],
+            "anchor": [
+              69.5,
+              194
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              701,
+              253,
+              132,
+              199
+            ],
+            "anchor": [
+              54.0,
+              195
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              43,
+              470,
+              145,
+              204
+            ],
+            "anchor": [
+              64.0,
+              199
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              259,
+              470,
+              141,
+              204
+            ],
+            "anchor": [
+              76.5,
+              200
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              470,
+              470,
+              137,
+              204
+            ],
+            "anchor": [
+              65.0,
+              200
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              686,
+              472,
+              147,
+              202
+            ],
+            "anchor": [
+              75.0,
+              198
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              28,
+              681,
+              157,
+              211
+            ],
+            "anchor": [
+              76.5,
+              207
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              237,
+              685,
+              168,
+              207
+            ],
+            "anchor": [
+              118.0,
+              203
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              450,
+              687,
+              162,
+              205
+            ],
+            "anchor": [
+              116.0,
+              201
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              668,
+              685,
+              164,
+              207
+            ],
+            "anchor": [
+              119.0,
+              203
+            ],
+            "atlasIndex": 15
+          },
+          {
+            "rect": [
+              45,
+              909,
+              132,
+              216
+            ],
+            "anchor": [
+              67.0,
+              212
+            ],
+            "atlasIndex": 16
+          },
+          {
+            "rect": [
+              262,
+              911,
+              127,
+              214
+            ],
+            "anchor": [
+              71.5,
+              210
+            ],
+            "atlasIndex": 17
+          },
+          {
+            "rect": [
+              480,
+              911,
+              122,
+              214
+            ],
+            "anchor": [
+              47.0,
+              210
+            ],
+            "atlasIndex": 18
+          },
+          {
+            "rect": [
+              689,
+              912,
+              128,
+              213
+            ],
+            "anchor": [
+              73.5,
+              209
+            ],
+            "atlasIndex": 19
+          },
+          {
+            "rect": [
+              54,
+              1132,
+              125,
+              202
+            ],
+            "anchor": [
+              62.5,
+              198
+            ],
+            "atlasIndex": 20
+          },
+          {
+            "rect": [
+              260,
+              1134,
+              134,
+              200
+            ],
+            "anchor": [
+              67.0,
+              196
+            ],
+            "atlasIndex": 21
+          },
+          {
+            "rect": [
+              483,
+              1136,
+              121,
+              198
+            ],
+            "anchor": [
+              60.5,
+              194
+            ],
+            "atlasIndex": 22
+          },
+          {
+            "rect": [
+              689,
+              1136,
+              125,
+              198
+            ],
+            "anchor": [
+              61.0,
+              194
+            ],
+            "atlasIndex": 23
+          },
+          {
+            "rect": [
+              38,
+              1351,
+              139,
+              185
+            ],
+            "anchor": [
+              69.0,
+              181
+            ],
+            "atlasIndex": 24
+          },
+          {
+            "rect": [
+              222,
+              1369,
+              178,
+              166
+            ],
+            "anchor": [
+              83.5,
+              162
+            ],
+            "atlasIndex": 25
+          },
+          {
+            "rect": [
+              417,
+              1387,
+              212,
+              146
+            ],
+            "anchor": [
+              101.5,
+              142
+            ],
+            "atlasIndex": 26
+          },
+          {
+            "rect": [
+              648,
+              1401,
+              204,
+              122
+            ],
+            "anchor": [
+              100.0,
+              118
+            ],
+            "atlasIndex": 27
+          },
+          {
+            "rect": [
+              30,
+              1549,
+              146,
+              208
+            ],
+            "anchor": [
+              73.0,
+              204
+            ],
+            "atlasIndex": 28
+          },
+          {
+            "rect": [
+              239,
+              1552,
+              182,
+              206
+            ],
+            "anchor": [
+              70.5,
+              202
+            ],
+            "atlasIndex": 29
+          },
+          {
+            "rect": [
+              457,
+              1552,
+              183,
+              207
+            ],
+            "anchor": [
+              71.0,
+              203
+            ],
+            "atlasIndex": 30
+          },
+          {
+            "rect": [
+              688,
+              1549,
+              134,
+              211
+            ],
+            "anchor": [
+              66.0,
+              207
+            ],
+            "atlasIndex": 31
+          }
+        ],
+        "sequences": [
+          {
+            "name": "lee-death-movement",
+            "indices": [
+              8,
+              9,
+              10,
+              11,
+              16,
+              17,
+              18,
+              19,
+              12,
+              13,
+              14,
+              15,
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": false
+          },
+          {
+            "name": "lee-death-idle",
+            "indices": [
+              0,
+              1,
+              0,
+              1,
+              2,
+              3,
+              2,
+              3,
+              4,
+              5,
+              4,
+              5,
+              4,
+              5,
+              4,
+              5
+            ],
+            "loop": false
+          },
+          {
+            "name": "lee-death-hurt",
+            "indices": [
+              20,
+              21,
+              0,
+              1,
+              22,
+              23,
+              2,
+              3,
+              6,
+              7,
+              4,
+              5,
+              6,
+              7,
+              4,
+              5
+            ],
+            "loop": false
+          },
+          {
+            "name": "lee-death-death",
+            "indices": [
+              24,
+              25,
+              26,
+              27
+            ],
+            "loop": false
+          },
+          {
+            "name": "lee-death-attack",
+            "indices": [
+              28,
+              29,
+              30,
+              31
+            ],
+            "loop": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "lee-death-skills-v3",
+      "title": "小李・死門：skills-v3",
+      "character": "小李",
+      "category": "skill",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/lee-death-skills-v3.png",
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "死門期間使用赤紅上揚火焰髮；關門直接恢復普通小李。",
+      "references": [
+        {
+          "title": "官方八門遁甲",
+          "url": "https://naruto-official.com/en/anime/naruto2/list/01_864"
+        }
+      ],
+      "animation": {
+        "fps": 8,
+        "bodyHeight": 251.33,
+        "frames": [
+          {
+            "rect": [
+              50,
+              39,
+              227,
+              297
+            ],
+            "anchor": [
+              114.5,
+              293
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              391,
+              36,
+              195,
+              301
+            ],
+            "anchor": [
+              54.0,
+              297
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              669,
+              46,
+              290,
+              290
+            ],
+            "anchor": [
+              69.0,
+              286
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              982,
+              47,
+              241,
+              289
+            ],
+            "anchor": [
+              118.0,
+              285
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              55,
+              393,
+              202,
+              271
+            ],
+            "anchor": [
+              101.0,
+              267
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              377,
+              359,
+              252,
+              306
+            ],
+            "anchor": [
+              72.0,
+              302
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              714,
+              380,
+              175,
+              238
+            ],
+            "anchor": [
+              71.0,
+              234
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              985,
+              439,
+              256,
+              228
+            ],
+            "anchor": [
+              131.5,
+              224
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              58,
+              693,
+              224,
+              271
+            ],
+            "anchor": [
+              112.5,
+              267
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              355,
+              695,
+              248,
+              269
+            ],
+            "anchor": [
+              124.5,
+              265
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              674,
+              673,
+              229,
+              292
+            ],
+            "anchor": [
+              114.5,
+              289
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              989,
+              705,
+              250,
+              262
+            ],
+            "anchor": [
+              117.0,
+              258
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              30,
+              999,
+              265,
+              221
+            ],
+            "anchor": [
+              121.0,
+              217
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              364,
+              980,
+              297,
+              248
+            ],
+            "anchor": [
+              42.0,
+              245
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              695,
+              979,
+              235,
+              224
+            ],
+            "anchor": [
+              62.5,
+              221
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              989,
+              1013,
+              252,
+              213
+            ],
+            "anchor": [
+              196.5,
+              209
+            ],
+            "atlasIndex": 15
+          }
+        ],
+        "sequences": [
+          {
+            "name": "lee-death-whirlwind",
+            "indices": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "loop": false
+          },
+          {
+            "name": "lee-death-lotus",
+            "indices": [
+              4,
+              5,
+              6,
+              7
+            ],
+            "loop": false
+          },
+          {
+            "name": "lee-death-gates",
+            "indices": [
+              8,
+              9,
+              10,
+              11
+            ],
+            "loop": false
+          },
+          {
+            "name": "lee-death-reverse",
+            "indices": [
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "lee-death-bandage-v3",
+      "title": "小李・死門：bandage-v3",
+      "character": "小李",
+      "category": "skill",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/lee-death-bandage-v3.png",
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "死門期間使用赤紅上揚火焰髮；關門直接恢復普通小李。",
+      "references": [
+        {
+          "title": "官方八門遁甲",
+          "url": "https://naruto-official.com/en/anime/naruto2/list/01_864"
+        }
+      ],
+      "animation": {
+        "fps": 8,
+        "bodyHeight": 382.09,
+        "frames": [
+          {
+            "rect": [
+              64,
+              23,
+              287,
+              406
+            ],
+            "anchor": [
+              140.5,
+              402
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              468,
+              20,
+              399,
+              409
+            ],
+            "anchor": [
+              156.5,
+              405
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              963,
+              21,
+              298,
+              408
+            ],
+            "anchor": [
+              149.0,
+              404
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              1401,
+              22,
+              313,
+              407
+            ],
+            "anchor": [
+              142.5,
+              403
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              64,
+              456,
+              288,
+              410
+            ],
+            "anchor": [
+              140.5,
+              407
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              467,
+              455,
+              405,
+              412
+            ],
+            "anchor": [
+              157.0,
+              408
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              963,
+              456,
+              298,
+              410
+            ],
+            "anchor": [
+              149.0,
+              406
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              1399,
+              459,
+              317,
+              407
+            ],
+            "anchor": [
+              146.0,
+              404
+            ],
+            "atlasIndex": 7
+          }
+        ],
+        "sequences": [
+          {
+            "name": "lee-death-bandage",
+            "indices": [
+              4,
+              5,
+              6,
+              7
+            ],
+            "loop": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "lee-death-front-lotus-hold-v3",
+      "title": "小李・死門：front-lotus-hold-v3",
+      "character": "小李",
+      "category": "skill",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/lee-death-front-lotus-hold-v3.png",
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "死門期間使用赤紅上揚火焰髮；關門直接恢復普通小李。",
+      "references": [
+        {
+          "title": "官方八門遁甲",
+          "url": "https://naruto-official.com/en/anime/naruto2/list/01_864"
+        }
+      ],
+      "animation": {
+        "fps": 8,
+        "bodyHeight": 330.67,
+        "frames": [
+          {
+            "rect": [
+              69,
+              28,
+              380,
+              401
+            ],
+            "anchor": [
+              45.0,
+              397
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              569,
+              27,
+              238,
+              387
+            ],
+            "anchor": [
+              106.0,
+              383
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              991,
+              34,
+              260,
+              403
+            ],
+            "anchor": [
+              141.5,
+              399
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              1418,
+              25,
+              306,
+              409
+            ],
+            "anchor": [
+              161.5,
+              405
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              65,
+              467,
+              386,
+              399
+            ],
+            "anchor": [
+              46.5,
+              395
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              568,
+              470,
+              242,
+              386
+            ],
+            "anchor": [
+              107.0,
+              382
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              992,
+              465,
+              260,
+              407
+            ],
+            "anchor": [
+              138.0,
+              403
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              1417,
+              467,
+              308,
+              408
+            ],
+            "anchor": [
+              161.5,
+              404
+            ],
+            "atlasIndex": 7
+          }
+        ],
+        "sequences": [
+          {
+            "name": "lee-death-lotus-hold",
+            "indices": [
+              4,
+              5,
+              6,
+              7
+            ],
+            "loop": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "lee-death-whirlwind-air-v3",
+      "title": "小李・死門：whirlwind-air-v3",
+      "character": "小李",
+      "category": "skill",
+      "kind": "原創重繪・AI 輔助製作",
+      "image": "redrawn/lee-death-whirlwind-air-v3.png",
+      "status": "candidate",
+      "runtimePreview": true,
+      "summary": "死門期間使用赤紅上揚火焰髮；關門直接恢復普通小李。",
+      "references": [
+        {
+          "title": "官方八門遁甲",
+          "url": "https://naruto-official.com/en/anime/naruto2/list/01_864"
+        }
+      ],
+      "animation": {
+        "fps": 8,
+        "bodyHeight": 263.12,
+        "frames": [
+          {
+            "rect": [
+              37,
+              58,
+              250,
+              283
+            ],
+            "anchor": [
+              121.5,
+              279
+            ],
+            "atlasIndex": 0
+          },
+          {
+            "rect": [
+              381,
+              17,
+              185,
+              337
+            ],
+            "anchor": [
+              73.0,
+              333
+            ],
+            "atlasIndex": 1
+          },
+          {
+            "rect": [
+              581,
+              55,
+              365,
+              261
+            ],
+            "anchor": [
+              182.0,
+              257
+            ],
+            "atlasIndex": 2
+          },
+          {
+            "rect": [
+              1020,
+              52,
+              196,
+              290
+            ],
+            "anchor": [
+              85.0,
+              286
+            ],
+            "atlasIndex": 3
+          },
+          {
+            "rect": [
+              52,
+              370,
+              273,
+              264
+            ],
+            "anchor": [
+              109.5,
+              260
+            ],
+            "atlasIndex": 4
+          },
+          {
+            "rect": [
+              361,
+              359,
+              285,
+              275
+            ],
+            "anchor": [
+              96.5,
+              262
+            ],
+            "atlasIndex": 5
+          },
+          {
+            "rect": [
+              674,
+              401,
+              251,
+              232
+            ],
+            "anchor": [
+              126.0,
+              228
+            ],
+            "atlasIndex": 6
+          },
+          {
+            "rect": [
+              989,
+              385,
+              238,
+              248
+            ],
+            "anchor": [
+              113.0,
+              244
+            ],
+            "atlasIndex": 7
+          },
+          {
+            "rect": [
+              37,
+              656,
+              252,
+              274
+            ],
+            "anchor": [
+              122.0,
+              270
+            ],
+            "atlasIndex": 8
+          },
+          {
+            "rect": [
+              381,
+              634,
+              187,
+              304
+            ],
+            "anchor": [
+              73.0,
+              300
+            ],
+            "atlasIndex": 9
+          },
+          {
+            "rect": [
+              580,
+              654,
+              369,
+              250
+            ],
+            "anchor": [
+              184.0,
+              246
+            ],
+            "atlasIndex": 10
+          },
+          {
+            "rect": [
+              1020,
+              666,
+              198,
+              265
+            ],
+            "anchor": [
+              85.5,
+              260
+            ],
+            "atlasIndex": 11
+          },
+          {
+            "rect": [
+              56,
+              946,
+              265,
+              267
+            ],
+            "anchor": [
+              108.0,
+              263
+            ],
+            "atlasIndex": 12
+          },
+          {
+            "rect": [
+              361,
+              938,
+              290,
+              265
+            ],
+            "anchor": [
+              98.5,
+              261
+            ],
+            "atlasIndex": 13
+          },
+          {
+            "rect": [
+              671,
+              978,
+              254,
+              231
+            ],
+            "anchor": [
+              127.5,
+              227
+            ],
+            "atlasIndex": 14
+          },
+          {
+            "rect": [
+              988,
+              956,
+              242,
+              253
+            ],
+            "anchor": [
+              114.0,
+              249
+            ],
+            "atlasIndex": 15
+          }
+        ],
+        "sequences": [
+          {
+            "name": "lee-death-whirlwind-air",
+            "indices": [
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ],
+            "loop": false
+          }
+        ]
+      }
     }
   ]
 }

@@ -1,0 +1,125 @@
+{
+  "tool": "image_gen",
+  "purpose": "Rock Lee Death Gate curved crimson hair adapted to existing chibi game style",
+  "reference": {
+    "prompt": "Use the attached figurine as hair shape reference. Produce ONE small chibi Rock Lee Gate of Death head reference on transparent background, matching the reference's very tall upward-flowing wavy crimson hair. Hair rises like a roaring flame, MANY curved tapered locks, swept away from forehead, dark burgundy roots and orange-red tips, taller center peak and curled flame-shaped side tufts. NO straight rigid triangular Dragon Ball spikes, NO bowl haircut. White intense eyes and red flushed face; keep thick dark outlines and readable simplified painted sprite style. No body, no pedestal, no text. Purpose is production hair silhouette reference for a small game character.",
+    "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-ca0f6659-541c-4242-9c4a-d156e156f0f1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link."
+  },
+  "assets": [
+    {
+      "kind": "common",
+      "path": "art-review/redrawn/lee-death-common-v3.png",
+      "flameEdit": {
+        "kind": "common",
+        "prompt": "Image 1 is the EDIT TARGET sprite atlas. Image 2 is the HAIR SILHOUETTE reference. Revise ONLY the scalp hair in image1 to a simplified chibi game-sprite adaptation of image2: a TALL UPWARD FLOWING FLAME CROWN, with CURVED S-SHAPED red locks, narrow deep burgundy grooves, long curling tips and a taller central flame peak. Expose forehead; hair swept UP AND BACK away from brow. Main color rich crimson and scarlet, NO yellow/gold fire and NO white horizontal bowl-hair shine stripes. Must resemble Might Guy Eighth Gate anime: tall wavy red flame hair, not rigid triangular Super Saiyan spikes, not a round bowl/bob haircut. Keep thick outlined existing game style, don't paste detailed realistic head. Hair should be visibly taller than original but stay within each frame cell; use 5-7 readable curling flame locks at game resolution. For upside-down poses orient hair with skull, back views also curl upwards. Preserve EVERY face, eye expression, red skin, clothing, pose, body location/size and foot anchor exactly. Preserve EXACT canvas dimensions and sprite grid and transparent alpha. No face replacement, no new aura, no extra particles, no text. For any mixed-form atlas change hair in all frames, but preserve all original skin colors.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-155784ca-e80d-43e9-8099-11ab39188e88.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-155784ca-e80d-43e9-8099-11ab39188e88.png",
+        "sha256": "c6ea91ecfa40b50a9242812941a2c64be7bcd602b84c6abd401e6e536fea631a"
+      },
+      "compactEdit": {
+        "kind": "common",
+        "prompt": "Edit this game sprite atlas carefully: the flame hair is too oversized and touches canvas edges. Keep the SAME curved upward crimson hair DESIGN, but make every hair mass 25 percent SHORTER and 15 percent NARROWER, anchored to the same scalp, so it fits a compact chibi ninja sprite style. EVERY head needs a complete clean silhouette and at least 10 pixels transparent gap from canvas edges and neighboring sprite rows/columns. Top and bottom rows MUST NOT be clipped. Keep exact canvas size. Do not move, resize, or redraw any body, face, clothing, arms, feet or pose; ONLY shrink/simplify hair with fewer readable curling locks. It is stylized hair with flame silhouette, not an actual oversized fire plume. Preserve transparent background.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-b712f3b5-c89c-4215-8e2d-28800f524b7e.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-b712f3b5-c89c-4215-8e2d-28800f524b7e.png",
+        "sha256": "26bdc727b887778a4eeca8788181672a672bab18d4491fbced62d0d149486af3"
+      },
+      "sha256": "26bdc727b887778a4eeca8788181672a672bab18d4491fbced62d0d149486af3",
+      "inputDraft": {
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-117043e4-d1da-4949-8a39-70fa51e865d8.png",
+        "sha256": "d059238e2ee471fb67765578b4fc4ab46b3a0d258acefe908b1854a178d246b7"
+      }
+    },
+    {
+      "kind": "skills",
+      "path": "art-review/redrawn/lee-death-skills-v3.png",
+      "flameEdit": {
+        "kind": "skills",
+        "prompt": "Image 1 is the EDIT TARGET sprite atlas. Image 2 is the HAIR SILHOUETTE reference. Revise ONLY the scalp hair in image1 to a simplified chibi game-sprite adaptation of image2: a TALL UPWARD FLOWING FLAME CROWN, with CURVED S-SHAPED red locks, narrow deep burgundy grooves, long curling tips and a taller central flame peak. Expose forehead; hair swept UP AND BACK away from brow. Main color rich crimson and scarlet, NO yellow/gold fire and NO white horizontal bowl-hair shine stripes. Must resemble Might Guy Eighth Gate anime: tall wavy red flame hair, not rigid triangular Super Saiyan spikes, not a round bowl/bob haircut. Keep thick outlined existing game style, don't paste detailed realistic head. Hair should be visibly taller than original but stay within each frame cell; use 5-7 readable curling flame locks at game resolution. For upside-down poses orient hair with skull, back views also curl upwards. Preserve EVERY face, eye expression, red skin, clothing, pose, body location/size and foot anchor exactly. Preserve EXACT canvas dimensions and sprite grid and transparent alpha. No face replacement, no new aura, no extra particles, no text. For any mixed-form atlas change hair in all frames, but preserve all original skin colors.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-ddd86446-c52c-4da4-82c8-2fa5c1ec57ac.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-ddd86446-c52c-4da4-82c8-2fa5c1ec57ac.png",
+        "sha256": "1c30262e0b6208509610bcccbf747822a3861042c08dc042db5ac7622080e316"
+      },
+      "compactEdit": {
+        "kind": "skills",
+        "prompt": "Edit this game sprite atlas carefully: the flame hair is too oversized and touches canvas edges. Keep the SAME curved upward crimson hair DESIGN, but make every hair mass 25 percent SHORTER and 15 percent NARROWER, anchored to the same scalp, so it fits a compact chibi ninja sprite style. EVERY head needs a complete clean silhouette and at least 10 pixels transparent gap from canvas edges and neighboring sprite rows/columns. Top and bottom rows MUST NOT be clipped. Keep exact canvas size. Do not move, resize, or redraw any body, face, clothing, arms, feet or pose; ONLY shrink/simplify hair with fewer readable curling locks. It is stylized hair with flame silhouette, not an actual oversized fire plume. Preserve transparent background.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-1131ca84-de4b-4746-8867-f1fba4429248.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-1131ca84-de4b-4746-8867-f1fba4429248.png",
+        "sha256": "03f96a26dad61e66a2d8c1544fa83e73322b629b779670fff893ade0076fd5bc"
+      },
+      "sha256": "03f96a26dad61e66a2d8c1544fa83e73322b629b779670fff893ade0076fd5bc",
+      "inputDraft": {
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-bbdd0b41-49ec-49f6-bd9f-33a44629fa2d.png",
+        "sha256": "8d10f6e841a7881dfe05a88abf23dcb833b5f3ca5e243aac0503649307d8fa7e"
+      }
+    },
+    {
+      "kind": "bandage",
+      "path": "art-review/redrawn/lee-death-bandage-v3.png",
+      "flameEdit": {
+        "kind": "bandage",
+        "prompt": "Image 1 is the EDIT TARGET sprite atlas. Image 2 is the HAIR SILHOUETTE reference. Revise ONLY the scalp hair in image1 to a simplified chibi game-sprite adaptation of image2: a TALL UPWARD FLOWING FLAME CROWN, with CURVED S-SHAPED red locks, narrow deep burgundy grooves, long curling tips and a taller central flame peak. Expose forehead; hair swept UP AND BACK away from brow. Main color rich crimson and scarlet, NO yellow/gold fire and NO white horizontal bowl-hair shine stripes. Must resemble Might Guy Eighth Gate anime: tall wavy red flame hair, not rigid triangular Super Saiyan spikes, not a round bowl/bob haircut. Keep thick outlined existing game style, don't paste detailed realistic head. Hair should be visibly taller than original but stay within each frame cell; use 5-7 readable curling flame locks at game resolution. For upside-down poses orient hair with skull, back views also curl upwards. Preserve EVERY face, eye expression, red skin, clothing, pose, body location/size and foot anchor exactly. Preserve EXACT canvas dimensions and sprite grid and transparent alpha. No face replacement, no new aura, no extra particles, no text. For any mixed-form atlas change hair in all frames, but preserve all original skin colors.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-44b89bb4-9ecb-44be-944f-aa7dd037fa70.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-44b89bb4-9ecb-44be-944f-aa7dd037fa70.png",
+        "sha256": "63591a980460cc4441c9020f6b9577267a71344d27982e427aa03fd3f8068daa"
+      },
+      "compactEdit": {
+        "kind": "bandage",
+        "prompt": "Edit this sprite atlas. Keep the same curved crimson flame-hair design, but make EVERY hair mass 25% shorter and 15% narrower, anchored to the same scalp, suitable for compact chibi game characters. Simplify to a few readable curling hair locks, preserve upward flame shape and exposed forehead. Ensure ALL hair tips in EVERY row and inverted pose have at least 10px transparent margin from canvas edges and neighboring sprite rows/columns. Nothing may be cut off. Preserve EXACT canvas size, every body/face/clothing pose, foot location, original skin colors, and transparency. ONLY reduce/simplify hair, do not move/resize any body. Hair should fit the existing sprite style; not oversized flames.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-e0989fe0-a4a4-4793-90ff-dbd657c674d0.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-e0989fe0-a4a4-4793-90ff-dbd657c674d0.png",
+        "sha256": "a5ecdaf2c6a9431d2843ee896b01f9a20b70aba01e56917fb4ed8bedff0591cb"
+      },
+      "sha256": "a5ecdaf2c6a9431d2843ee896b01f9a20b70aba01e56917fb4ed8bedff0591cb",
+      "inputDraft": {
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-de541643-fb5a-4b49-9e7a-e8d85abe0ccd.png",
+        "sha256": "c60e566b0e3504c9076caf50c547b9526a9c087a30522a906493b11dd06c12a1"
+      }
+    },
+    {
+      "kind": "front-lotus-hold",
+      "path": "art-review/redrawn/lee-death-front-lotus-hold-v3.png",
+      "flameEdit": {
+        "kind": "front-lotus-hold",
+        "prompt": "Image 1 is the EDIT TARGET sprite atlas. Image 2 is the HAIR SILHOUETTE reference. Revise ONLY the scalp hair in image1 to a simplified chibi game-sprite adaptation of image2: a TALL UPWARD FLOWING FLAME CROWN, with CURVED S-SHAPED red locks, narrow deep burgundy grooves, long curling tips and a taller central flame peak. Expose forehead; hair swept UP AND BACK away from brow. Main color rich crimson and scarlet, NO yellow/gold fire and NO white horizontal bowl-hair shine stripes. Must resemble Might Guy Eighth Gate anime: tall wavy red flame hair, not rigid triangular Super Saiyan spikes, not a round bowl/bob haircut. Keep thick outlined existing game style, don't paste detailed realistic head. Hair should be visibly taller than original but stay within each frame cell; use 5-7 readable curling flame locks at game resolution. For upside-down poses orient hair with skull, back views also curl upwards. Preserve EVERY face, eye expression, red skin, clothing, pose, body location/size and foot anchor exactly. Preserve EXACT canvas dimensions and sprite grid and transparent alpha. No face replacement, no new aura, no extra particles, no text. For any mixed-form atlas change hair in all frames, but preserve all original skin colors.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-c43d8a8f-22ed-4e67-b9ff-307acb204efa.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-c43d8a8f-22ed-4e67-b9ff-307acb204efa.png",
+        "sha256": "c267c10dfac1235242afb6ca95807332c2310fa615009f85cfb8f72007690981"
+      },
+      "compactEdit": {
+        "kind": "front-lotus-hold",
+        "prompt": "Edit this sprite atlas. Keep the same curved crimson flame-hair design, but make EVERY hair mass 25% shorter and 15% narrower, anchored to the same scalp, suitable for compact chibi game characters. Simplify to a few readable curling hair locks, preserve upward flame shape and exposed forehead. Ensure ALL hair tips in EVERY row and inverted pose have at least 10px transparent margin from canvas edges and neighboring sprite rows/columns. Nothing may be cut off. Preserve EXACT canvas size, every body/face/clothing pose, foot location, original skin colors, and transparency. ONLY reduce/simplify hair, do not move/resize any body. Hair should fit the existing sprite style; not oversized flames.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-ad75769e-672b-457a-bddd-327700f40488.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-ad75769e-672b-457a-bddd-327700f40488.png",
+        "sha256": "4cc64bc7783458a2d104fbcff4a27adf332fbfcfa68f08d0acfa6e3749586960"
+      },
+      "sha256": "4cc64bc7783458a2d104fbcff4a27adf332fbfcfa68f08d0acfa6e3749586960",
+      "inputDraft": {
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-9aa3e6bc-57d8-4920-874f-ad809bde4075.png",
+        "sha256": "5699c1b48e58aeb59fafbf53a096f9b40820de92e152d955e512d573b3e5cc3b"
+      }
+    },
+    {
+      "kind": "whirlwind-air",
+      "path": "art-review/redrawn/lee-death-whirlwind-air-v3.png",
+      "flameEdit": {
+        "kind": "whirlwind-air",
+        "prompt": "Image 1 is the EDIT TARGET sprite atlas. Image 2 is the HAIR SILHOUETTE reference. Revise ONLY the scalp hair in image1 to a simplified chibi game-sprite adaptation of image2: a TALL UPWARD FLOWING FLAME CROWN, with CURVED S-SHAPED red locks, narrow deep burgundy grooves, long curling tips and a taller central flame peak. Expose forehead; hair swept UP AND BACK away from brow. Main color rich crimson and scarlet, NO yellow/gold fire and NO white horizontal bowl-hair shine stripes. Must resemble Might Guy Eighth Gate anime: tall wavy red flame hair, not rigid triangular Super Saiyan spikes, not a round bowl/bob haircut. Keep thick outlined existing game style, don't paste detailed realistic head. Hair should be visibly taller than original but stay within each frame cell; use 5-7 readable curling flame locks at game resolution. For upside-down poses orient hair with skull, back views also curl upwards. Preserve EVERY face, eye expression, red skin, clothing, pose, body location/size and foot anchor exactly. Preserve EXACT canvas dimensions and sprite grid and transparent alpha. No face replacement, no new aura, no extra particles, no text. For any mixed-form atlas change hair in all frames, but preserve all original skin colors.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-68a8c328-48b7-4ac8-9821-a41967239c75.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-68a8c328-48b7-4ac8-9821-a41967239c75.png",
+        "sha256": "94b0bf3009338bf201ba579a32abef45855929f3e6fd80e14cf2551142488ecc"
+      },
+      "compactEdit": {
+        "kind": "whirlwind-air",
+        "prompt": "Edit this sprite atlas. Keep the same curved crimson flame-hair design, but make EVERY hair mass 25% shorter and 15% narrower, anchored to the same scalp, suitable for compact chibi game characters. Simplify to a few readable curling hair locks, preserve upward flame shape and exposed forehead. Ensure ALL hair tips in EVERY row have at least 10px transparent margin from canvas edges and neighboring sprite rows/columns. Nothing may be cut off. Preserve EXACT canvas size, every body/face/clothing pose, foot location, original skin colors, and transparency. ONLY reduce/simplify hair, do not move/resize any body. Hair should fit the existing sprite style; not oversized flames.",
+        "output_hint": "Generated images are saved to C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5 as C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-ebb206ac-2979-4984-aede-4aa0159dbe1b.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-ebb206ac-2979-4984-aede-4aa0159dbe1b.png",
+        "sha256": "5d8834091ba8f29804ebd498b1c536764fc232aad2746c9f56a5e970b8644f88"
+      },
+      "sha256": "5d8834091ba8f29804ebd498b1c536764fc232aad2746c9f56a5e970b8644f88",
+      "inputDraft": {
+        "rawOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a18e2a-11c2-73c3-af77-ad8e9c8591e5\\exec-feff4527-5c89-4507-929f-28529f04f594.png",
+        "sha256": "9a46f59605335f9a315f47005ef825550c73b55dfc3b5c209c378bc145ee32b9"
+      }
+    }
+  ]
+}

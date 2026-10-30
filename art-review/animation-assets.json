@@ -8358,5 +8358,1531 @@
         "bodyHeight": 263.12
       }
     ]
+  },
+  "lee-death-movement": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          43,
+          470,
+          145,
+          204
+        ],
+        "anchor": [
+          64.0,
+          199.0
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          259,
+          470,
+          141,
+          204
+        ],
+        "anchor": [
+          76.5,
+          200.0
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          470,
+          470,
+          137,
+          204
+        ],
+        "anchor": [
+          65.0,
+          200.0
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          686,
+          472,
+          147,
+          202
+        ],
+        "anchor": [
+          75.0,
+          198.0
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          45,
+          909,
+          132,
+          216
+        ],
+        "anchor": [
+          67.0,
+          212.0
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          262,
+          911,
+          127,
+          214
+        ],
+        "anchor": [
+          71.5,
+          210.0
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          480,
+          911,
+          122,
+          214
+        ],
+        "anchor": [
+          47.0,
+          210.0
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          689,
+          912,
+          128,
+          213
+        ],
+        "anchor": [
+          73.5,
+          209.0
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          28,
+          681,
+          157,
+          211
+        ],
+        "anchor": [
+          76.5,
+          207.0
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          237,
+          685,
+          168,
+          207
+        ],
+        "anchor": [
+          118.0,
+          203.0
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          450,
+          687,
+          162,
+          205
+        ],
+        "anchor": [
+          116.0,
+          201.0
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          668,
+          685,
+          164,
+          207
+        ],
+        "anchor": [
+          119.0,
+          203.0
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          28,
+          681,
+          157,
+          211
+        ],
+        "anchor": [
+          76.5,
+          207.0
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          237,
+          685,
+          168,
+          207
+        ],
+        "anchor": [
+          118.0,
+          203.0
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          450,
+          687,
+          162,
+          205
+        ],
+        "anchor": [
+          116.0,
+          201.0
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          668,
+          685,
+          164,
+          207
+        ],
+        "anchor": [
+          119.0,
+          203.0
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-death-idle": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          58,
+          21,
+          122,
+          215
+        ],
+        "anchor": [
+          61.5,
+          211.0
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          266,
+          22,
+          123,
+          214
+        ],
+        "anchor": [
+          60.5,
+          210.0
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          58,
+          21,
+          122,
+          215
+        ],
+        "anchor": [
+          61.5,
+          211.0
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          266,
+          22,
+          123,
+          214
+        ],
+        "anchor": [
+          60.5,
+          210.0
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          487,
+          19,
+          116,
+          217
+        ],
+        "anchor": [
+          59.0,
+          213.0
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          694,
+          18,
+          116,
+          218
+        ],
+        "anchor": [
+          58.0,
+          214.0
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          487,
+          19,
+          116,
+          217
+        ],
+        "anchor": [
+          59.0,
+          213.0
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          694,
+          18,
+          116,
+          218
+        ],
+        "anchor": [
+          58.0,
+          214.0
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-death-hurt": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          54,
+          1132,
+          125,
+          202
+        ],
+        "anchor": [
+          62.5,
+          198.0
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          260,
+          1134,
+          134,
+          200
+        ],
+        "anchor": [
+          67.0,
+          196.0
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          58,
+          21,
+          122,
+          215
+        ],
+        "anchor": [
+          61.5,
+          211.0
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          266,
+          22,
+          123,
+          214
+        ],
+        "anchor": [
+          60.5,
+          210.0
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          483,
+          1136,
+          121,
+          198
+        ],
+        "anchor": [
+          60.5,
+          194.0
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          689,
+          1136,
+          125,
+          198
+        ],
+        "anchor": [
+          61.0,
+          194.0
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          487,
+          19,
+          116,
+          217
+        ],
+        "anchor": [
+          59.0,
+          213.0
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          694,
+          18,
+          116,
+          218
+        ],
+        "anchor": [
+          58.0,
+          214.0
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          487,
+          255,
+          134,
+          197
+        ],
+        "anchor": [
+          69.5,
+          194.0
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          701,
+          253,
+          132,
+          199
+        ],
+        "anchor": [
+          54.0,
+          195.0
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          487,
+          255,
+          134,
+          197
+        ],
+        "anchor": [
+          69.5,
+          194.0
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          701,
+          253,
+          132,
+          199
+        ],
+        "anchor": [
+          54.0,
+          195.0
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-death-death": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          38,
+          1351,
+          139,
+          185
+        ],
+        "anchor": [
+          69.0,
+          181.0
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          222,
+          1369,
+          178,
+          166
+        ],
+        "anchor": [
+          83.5,
+          162.0
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          417,
+          1387,
+          212,
+          146
+        ],
+        "anchor": [
+          101.5,
+          142.0
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          648,
+          1401,
+          204,
+          122
+        ],
+        "anchor": [
+          100.0,
+          118.0
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 186.21
+      }
+    ]
+  },
+  "lee-death-attack": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          30,
+          1549,
+          146,
+          208
+        ],
+        "anchor": [
+          73.0,
+          204.0
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          239,
+          1552,
+          182,
+          206
+        ],
+        "anchor": [
+          70.5,
+          202.0
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          457,
+          1552,
+          183,
+          207
+        ],
+        "anchor": [
+          71.0,
+          203.0
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          688,
+          1549,
+          134,
+          211
+        ],
+        "anchor": [
+          66.0,
+          207.0
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 186.21
+      }
+    ]
+  },
+  "lee-death-whirlwind": {
+    "source": "redrawn/lee-death-skills-v3.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          50,
+          39,
+          227,
+          297
+        ],
+        "anchor": [
+          114.5,
+          293.0
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          391,
+          36,
+          195,
+          301
+        ],
+        "anchor": [
+          54.0,
+          297.0
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          669,
+          46,
+          290,
+          290
+        ],
+        "anchor": [
+          69.0,
+          286.0
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          982,
+          47,
+          241,
+          289
+        ],
+        "anchor": [
+          118.0,
+          285.0
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-death-lotus": {
+    "source": "redrawn/lee-death-skills-v3.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          55,
+          393,
+          202,
+          271
+        ],
+        "anchor": [
+          101.0,
+          267.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          377,
+          359,
+          252,
+          306
+        ],
+        "anchor": [
+          72.0,
+          302.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          714,
+          380,
+          175,
+          238
+        ],
+        "anchor": [
+          71.0,
+          234.0
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          985,
+          439,
+          256,
+          228
+        ],
+        "anchor": [
+          131.5,
+          224.0
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-death-gates": {
+    "source": "redrawn/lee-death-skills-v3.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          58,
+          693,
+          224,
+          271
+        ],
+        "anchor": [
+          112.5,
+          267.0
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          355,
+          695,
+          248,
+          269
+        ],
+        "anchor": [
+          124.5,
+          265.0
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          674,
+          673,
+          229,
+          292
+        ],
+        "anchor": [
+          114.5,
+          289.0
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          989,
+          705,
+          250,
+          262
+        ],
+        "anchor": [
+          117.0,
+          258.0
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-death-reverse": {
+    "source": "redrawn/lee-death-skills-v3.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          30,
+          999,
+          265,
+          221
+        ],
+        "anchor": [
+          121.0,
+          217.0
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          364,
+          980,
+          297,
+          248
+        ],
+        "anchor": [
+          42.0,
+          245.0
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          695,
+          979,
+          235,
+          224
+        ],
+        "anchor": [
+          62.5,
+          221.0
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          989,
+          1013,
+          252,
+          213
+        ],
+        "anchor": [
+          196.5,
+          209.0
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-death-bandage": {
+    "source": "redrawn/lee-death-bandage-v3.png",
+    "bodyHeight": 382.09,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          64,
+          456,
+          288,
+          410
+        ],
+        "anchor": [
+          140.5,
+          407.0
+        ],
+        "atlasIndex": 4,
+        "hand": [
+          230.5,
+          247.0
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          467,
+          455,
+          405,
+          412
+        ],
+        "anchor": [
+          157.0,
+          408.0
+        ],
+        "atlasIndex": 5,
+        "hand": [
+          370.0,
+          208.0
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          963,
+          456,
+          298,
+          410
+        ],
+        "anchor": [
+          149.0,
+          406.0
+        ],
+        "atlasIndex": 6,
+        "hand": [
+          207.0,
+          223.0
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          1399,
+          459,
+          317,
+          407
+        ],
+        "anchor": [
+          146.0,
+          404.0
+        ],
+        "atlasIndex": 7,
+        "hand": [
+          238.0,
+          222.0
+        ],
+        "bodyHeight": 382.09
+      }
+    ]
+  },
+  "lee-death-lotus-hold": {
+    "source": "redrawn/lee-death-front-lotus-hold-v3.png",
+    "bodyHeight": 330.67,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          65,
+          467,
+          386,
+          399
+        ],
+        "anchor": [
+          46.5,
+          395.0
+        ],
+        "atlasIndex": 4,
+        "grip": [
+          337.0,
+          193.0
+        ],
+        "hand": [
+          337.0,
+          193.0
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          568,
+          470,
+          242,
+          386
+        ],
+        "anchor": [
+          107.0,
+          382.0
+        ],
+        "atlasIndex": 5,
+        "grip": [
+          201.5,
+          224.0
+        ],
+        "hand": [
+          201.5,
+          224.0
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          992,
+          465,
+          260,
+          407
+        ],
+        "anchor": [
+          138.0,
+          403.0
+        ],
+        "atlasIndex": 6,
+        "grip": [
+          185.0,
+          236.0
+        ],
+        "hand": [
+          185.0,
+          236.0
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          1417,
+          467,
+          308,
+          408
+        ],
+        "anchor": [
+          161.5,
+          404.0
+        ],
+        "atlasIndex": 7,
+        "grip": [
+          268.0,
+          182.0
+        ],
+        "hand": [
+          268.0,
+          182.0
+        ],
+        "bodyHeight": 330.67
+      }
+    ]
+  },
+  "lee-death-whirlwind-air": {
+    "source": "redrawn/lee-death-whirlwind-air-v3.png",
+    "bodyHeight": 263.12,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "frames": [
+      {
+        "rect": [
+          37,
+          656,
+          252,
+          274
+        ],
+        "anchor": [
+          122.0,
+          270.0
+        ],
+        "atlasIndex": 8,
+        "foot": [
+          216.5,
+          257.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          381,
+          634,
+          187,
+          304
+        ],
+        "anchor": [
+          73.0,
+          300.0
+        ],
+        "atlasIndex": 9,
+        "foot": [
+          146.0,
+          218.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          580,
+          654,
+          369,
+          250
+        ],
+        "anchor": [
+          184.0,
+          246.0
+        ],
+        "atlasIndex": 10,
+        "foot": [
+          340.5,
+          228.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          1020,
+          666,
+          198,
+          265
+        ],
+        "anchor": [
+          85.5,
+          260.0
+        ],
+        "atlasIndex": 11,
+        "foot": [
+          104.5,
+          239.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          56,
+          946,
+          265,
+          267
+        ],
+        "anchor": [
+          108.0,
+          263.0
+        ],
+        "atlasIndex": 12,
+        "foot": [
+          252.5,
+          121.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          361,
+          938,
+          290,
+          265
+        ],
+        "anchor": [
+          98.5,
+          261.0
+        ],
+        "atlasIndex": 13,
+        "foot": [
+          270.0,
+          151.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          671,
+          978,
+          254,
+          231
+        ],
+        "anchor": [
+          127.5,
+          227.0
+        ],
+        "atlasIndex": 14,
+        "foot": [
+          219.5,
+          210.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          988,
+          956,
+          242,
+          253
+        ],
+        "anchor": [
+          114.0,
+          249.0
+        ],
+        "atlasIndex": 15,
+        "foot": [
+          193.0,
+          231.0
+        ],
+        "bodyHeight": 263.12
+      }
+    ]
   }
 }

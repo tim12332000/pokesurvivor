@@ -36,10 +36,11 @@ SETUP = r"""() => {
 PROGRESSION = r"""() => {
  const A=Acceptance,p=A.p(),out={levels:[],isolated:[]},ids=['naruto-lotus','naruto-gates','naruto-reverse-lotus'];
  A.assert(p.moves.length===1&&p.hasMove('naruto-lee'),'Lee must start with signature only');
- for(const level of [1,3,6,9,12]){
+ for(const level of [1,3,4,6,9,12]){
    p.level=level;const pool=G.Moves.poolFor(p.mon),cards=G.LevelUp.offer(p,100);
-   ids.forEach((id,i)=>{const eligible=level>=[3,6,9][i];A.assert(pool.includes(id)===eligible,'wrong pool gate '+id+' Lv'+level);
-     A.assert(cards.some(c=>c.key==='new:'+id)===eligible,'wrong card gate '+id+' Lv'+level)});
+   ids.forEach((id,i)=>{const eligible=level>=[3,4,9][i];A.assert(pool.includes(id)===eligible,'wrong pool gate '+id+' Lv'+level);
+     const offered=eligible&&(id!=='naruto-gates'||[4,8,16].includes(level));
+     A.assert(cards.some(c=>c.key==='new:'+id)===offered,'wrong card gate '+id+' Lv'+level)});
    out.levels.push({level,pool,cards:cards.map(c=>c.key)});
  }
  const originalMon=p.mon;
@@ -47,7 +48,7 @@ PROGRESSION = r"""() => {
    p.mon=G.DEX.find(m=>m.dex===dex)||{dex,gen:10,types:['normal']};
    const pool=G.Moves.poolFor(p.mon);A.assert(!pool.some(id=>ids.includes(id)||id==='naruto-lee'),'Lee leaked into '+dex);out.isolated.push(dex);
  }p.mon=originalMon;
- p.level=12;
+ p.level=16;
  // A genuinely full legacy loadout must replace a retired tool, not drop a card.
  const primary=p.moves[0];p.moves=[primary];p.slots=[[primary]];p.active=0;
  for(const id of ['naruto-kunai','naruto-shuriken','tackle','scratch']){

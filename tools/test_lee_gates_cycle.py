@@ -47,7 +47,7 @@ CHECK = r"""() => {
  A.advance(15);const m=p.moves.find(move=>move.id==='naruto-gates');
  A.assert(G.Moves.levelUp(m),'upgrade failed');
  A.assert(g.stage(p)===2&&g.performing(p)&&g.status(p).cooldownRemaining===25,'upgrade did not restart at new stage');
- A.assert(near(p.maxHp,withCards-6+12),'upgrade maximum HP delta stacked');
+ A.assert(near(p.maxHp,withCards-6+18),'upgrade maximum HP delta stacked');
  // An external clear cancels presentation and buffs while retaining the ordinary deadline.
  A.advance(2);const remaining=28;G.Combat.clearFields(p);
  A.assert(!g.active(p)&&!g.performing(p)&&g.status(p).cooldownRemaining===remaining,'clear retained buff or reset timer');

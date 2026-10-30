@@ -1,4 +1,4 @@
-"""All five Gates speed tiers, real attack intervals, and retained excess HP."""
+"""All three Gates speed tiers, real attack intervals, and retained excess HP."""
 import json
 from pathlib import Path
 
@@ -12,10 +12,11 @@ URL = 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&hero=lee&layout=wide&t
 CHECK = r"""() => {
  const A=Acceptance,p=A.p(),g=G.NarutoGates,near=(a,b)=>Math.abs(a-b)<1e-7;
  A.leeArena();p.level=6;p.maxHp=1000;p.hp=1000;p.regenFlat=0;p.cdMul=.8;
- const base={spd:p.spd,max:p.maxHp,cd:p.cdMul,slots:p.slots.length},out={stages:[]};
+ const base={atk:p.atk,spd:p.spd,max:p.maxHp,cd:p.cdMul,slots:p.slots.length},out={stages:[]};
  A.assert(g.attackSpeedMultiplier(p)===1,'unlearned Gates accelerated attacks');
  A.assert(p.addMove('naruto-gates'),'learning Gates failed');
  const gates=p.moves.find(m=>m.id==='naruto-gates');
+ A.assert(gates.def.maxLvl===3&&gates.def.ups.length===2,'Gates still has five learnable tiers');
  A.assert(gates.passive&&p.slots.length===base.slots,'automatic Gates consumed an active slot');
  const combatTick=()=>{A.resume();try{G.Combat.tick(.001,p,0)}finally{A.pause()}};
  function nativeInterval(){
@@ -24,10 +25,17 @@ CHECK = r"""() => {
    try{combatTick()}finally{p.activeGroup=group;p.target=target}
    return {actual:move.t,base:move.cd};
  }
- for(let level=1;level<=5;level++){
+ for(let level=1;level<=3;level++){
    if(level>1){A.leeArena();A.assert(G.Moves.levelUp(gates),'upgrade failed '+level)}
-   const factor=1+level*.1;
+   const tier=[1,3,5][level-1],factor=1+tier*.1,healing=1+(10*tier+p.level)/100;
    A.assert(g.stage(p)===level&&g.performing(p),'tier did not open '+level);
+   A.assert(g.effectTier(p)===tier,'effect tier mismatch '+level);
+   A.assert(near(p.atk,base.atk*[1.3,1.4,1.5][level-1]),'attack did not preserve original effect tier');
+   A.assert(near(p.maxHp,base.max+p.level*tier),'maximum health did not preserve original effect tier');
+   A.assert(near(p.regen,p.maxHp*tier*.01*healing),'innate regeneration or healing multiplier wrong');
+   p.regenFlat=4;A.assert(near(p.regen,(4+p.maxHp*tier*.01)*healing),'existing regeneration did not compose once');p.regenFlat=0;
+   A.assert(near(g.healingMultiplier(p),healing),'direct healing multiplier wrong');
+   A.assert(g.redForm(p)===(level===3),'death appearance enabled on wrong tier');
    A.assert(near(p.spd,base.spd*factor),'movement speed wrong '+level);
    A.assert(near(g.attackSpeedMultiplier(p),factor),'attack speed wrong '+level);
    // Character levels do not add a hidden movement/attack speed percentage.
@@ -56,6 +64,9 @@ CHECK = r"""() => {
    A.advance(15);A.assert(!g.active(p)&&near(p.maxHp,base.max)&&p.hp===activeMax,'repeat closing removed retained HP');
    out.stages.push({level,speedMultiplier:factor,nativeInterval:native.actual,whirlwindInterval:whirlwind.cd*base.cd/factor,activeMax,closedMax:p.maxHp,retainedHp:p.hp});
  }
+ A.assert(!G.Moves.levelUp(gates)&&gates.lvl===3,'fourth Gates upgrade was allowed');
+ A.assert(!G.LevelUp.offer(p,100).some(card=>card.key==='up:naruto-gates'),'fourth Gates upgrade card offered');
+ gates.lvl=5;g.migrate(p);A.assert(gates.lvl===3&&g.learnedStage(p)===3,'legacy fifth tier did not clamp to death');
  out.timing={opening:5,postOpening:10,cycle:30};out.cooldownCardsPreserved=true;out.overcapSources=['heal','regen','shellBell','spring'];
  return out;
 }"""

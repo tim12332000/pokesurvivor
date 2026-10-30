@@ -9,14 +9,14 @@ from test_rock_lee import SETUP
 OUT = Path(__file__).resolve().parents[1] / '.omx/state/lee-gates-opening'
 URL = 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&hero=lee&layout=wide&test=gates-opening'
 TEST = r"""() => {
- const A=Acceptance,p=A.p(),g=G.NarutoGates;A.leeArena();p.level=6;
+ const A=Acceptance,p=A.p(),g=G.NarutoGates;A.leeArena();p.level=4;
  const learn=G.LevelUp.offer(p,100).find(c=>c.key==='new:naruto-gates');
  A.assert(learn&&learn.apply(p)!==false,'learning card missing');
  const out={stages:[]};p.addMove('naruto-lee-pursuit');
  A.openingCapture=()=>{const c=document.createElement('canvas');c.width=520;c.height=620;
    const ctx=c.getContext('2d');ctx.fillStyle='#17251d';ctx.fillRect(0,0,520,620);ctx.translate(260-p.x,420-p.y);
    G.Combat.drawGroundFields(ctx);p.draw(ctx);G.Combat.drawAirFields(ctx);return c.toDataURL()};
- for(let level=1;level<=5;level++){
+ for(let level=1;level<=3;level++){
    A.assert(g.stage(p)===level&&g.charging(p),'charge missing at stage '+level);
    const foes=[[65,0],[-80,0],[0,100],[180,0]].map(([x,y])=>A.spawn(x,y));
    foes.push(A.spawn(0,-90,true),A.spawn(-100,-50),A.spawn(100,-50));foes[1].elite=true;
@@ -30,7 +30,7 @@ TEST = r"""() => {
    tick(.7);
    A.assert(g.openingFor(p).age===1,'charge timer mismatch');
    const pose=()=>G.AnimationLab.stateFor(p.anim);
-   A.assert(pose().id==='naruto-gates'&&pose().key==='lee-opened-gates'&&pose().frame===1,'charge pose did not stay synchronized');
+   A.assert(pose().id==='naruto-gates'&&pose().key===(level===3?'lee-death-gates':'lee-opened-gates')&&pose().frame===1,'charge pose did not stay synchronized');
    const pausedAge=g.openingFor(p).age;G.Combat.updateFields(1);
    A.assert(g.openingFor(p).age===pausedAge,'pause advanced charge');
    A.assert(p.addMove('naruto-gates')===false&&g.openingFor(p).age===pausedAge,'duplicate retriggered opening');
@@ -64,7 +64,7 @@ TEST = r"""() => {
    A.assert(pose().id!=='naruto-gates','opening pose leaked after five seconds');
    A.resume();p.update(.02);A.pause();A.assert(p.x>pos[0],'movement did not resume');
    out.stages.push({level,before:hp,after,charging,burst});A.leeArena();
-   if(level<5){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:naruto-gates');
+   if(level<3){p.level=[4,8,16][level];const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:naruto-gates');
      A.assert(card&&card.apply(p)!==false,'upgrade card missing');}
  }
  for(const reason of ['clear','death','world']){

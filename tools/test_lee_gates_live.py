@@ -29,10 +29,10 @@ def main():
             page.evaluate(HARNESS)
             page.evaluate(SETUP)
             result = []
-            for level in (1, 5):
+            for level in (1, 3):
                 page.evaluate(r"""level => {
-                  const A=Acceptance,p=A.p();A.leeArena();p.level=6;p.invuln=0;
-                  if(level===5)p.moves.find(m=>m.id==='naruto-gates').lvl=4;
+                  const A=Acceptance,p=A.p();A.leeArena();p.level=level===1?3:15;p.invuln=0;
+                  if(level===3)p.moves.find(m=>m.id==='naruto-gates').lvl=2;
                   const key=(level===1?'new:':'up:')+'naruto-gates',offer=G.LevelUp.offer;
                   A.restoreOffer=()=>{G.LevelUp.offer=offer};
                   G.LevelUp.offer=(p)=>offer(p,100).filter(c=>c.key===key);
@@ -60,7 +60,7 @@ def main():
                   Acceptance.assert(f.age<4&&g.charging(p),'native charge missing');
                   Acceptance.assert(p.x===Acceptance.position[0]&&p.y===Acceptance.position[1],'native charge allowed movement');
                   const pose=G.AnimationLab.stateFor(p.anim);
-                  Acceptance.assert(pose.id==='naruto-gates'&&pose.key==='lee-opened-gates'&&pose.frame===1,'native charging pose mismatch');
+                  Acceptance.assert(pose.id==='naruto-gates'&&pose.key===(g.stage(p)===3?'lee-death-gates':'lee-opened-gates')&&pose.frame===1,'native charging pose mismatch');
                   return {stage:g.stage(p),age:f.age,color:g.config.trails[g.stage(p)-1].color};
                 }""")
                 page.screenshot(path=str(OUT / f'{label}-stage{level}-charge.png'))
@@ -93,7 +93,7 @@ def main():
     report['ok'] = True
     (OUT / 'report.json').write_text(json.dumps(report, indent=2), 'utf-8')
     previews = ''.join(f'<figure><figcaption>{label} / {stage}</figcaption><video controls loop playsinline preload="metadata" src="{label}-stage{stage}-opening.webm"></video></figure>'
-                       for label in ('desktop', 'mobile') for stage in (1, 5))
+                       for label in ('desktop', 'mobile') for stage in (1, 3))
     (OUT / 'index.html').write_text('<!doctype html><html lang="zh-TW"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
         '<title>小李八門實機演出</title><style>body{background:#111a17;color:#e7f9ee;font:16px system-ui;margin:24px}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}figure{margin:0}video{width:100%;max-height:75vh;background:#000}figcaption{margin:12px 0}</style>'
         '<h1>小李八門實機演出</h1><p>實際點選卡片後錄製：蓄力 4 秒、爆發與收勢 1 秒；演出期間僅補回實際受傷扣血，結束後冷卻 25 秒，總週期 30 秒。第一階藍光、最高階紅光。</p><main>' + previews + '</main></html>', 'utf-8')
