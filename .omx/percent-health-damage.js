@@ -11,9 +11,9 @@
   G.Enemy.prototype.hurt = function(amount, color, dirX, dirY, knock, eff, owner, moveId) {
     const rate = owner?.percentHealthDamage;
     const boss = this.boss || this.legend || this.judge;
-    const guardianBossHit = (moveId === 'naruto-sand-shield' || moveId === 'naruto-sand-guard') &&
-      boss;
-    const bonus = !guardianBossHit && !G.DamageSplash?.isSecondary() && !this.dead && this.hp > 0 && owner && !owner.dead && owner.hp > 0 &&
+    const fixedPercentHit = moveId === 'naruto-gates' ||
+      ((moveId === 'naruto-sand-shield' || moveId === 'naruto-sand-guard') && boss);
+    const bonus = !fixedPercentHit && !G.DamageSplash?.isSecondary() && !this.dead && this.hp > 0 && owner && !owner.dead && owner.hp > 0 &&
       (G.Game.everyone().includes(owner) || G.SelfClones?.isActor(owner) || G.NarutoTemariReflect?.isDamageOwner(owner)) && Number.isFinite(amount) && amount > 0 &&
       Number.isFinite(rate) && rate > 0 && Number.isFinite(this.maxHp) && this.maxHp > 0
         ? this.maxHp * rate * (boss ? bossMultiplier : 1) : 0;

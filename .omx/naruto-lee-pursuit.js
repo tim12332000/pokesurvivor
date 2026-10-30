@@ -9,7 +9,7 @@
   const hitRange=(move,target)=>move.radius+(target.r||0);
   const contactRange=(owner,move,target)=>Math.max(move.radius*.65,(owner.r||12)+(target.r||10)+8);
   const learned=owner=>owner?.mon?.dex===30006&&owner.moves?.find(move=>move.id===id);
-  const heavy=owner=>G.NarutoLee?.activeFor(owner)||G.DigimonSkills?.whirlwindFor(owner);
+  const heavy=owner=>G.NarutoGates?.performing(owner)||G.NarutoLee?.activeFor(owner)||G.DigimonSkills?.whirlwindFor(owner);
   const moving=owner=>owner===G.Game.player&&Math.hypot(...G.Input.axis())>.2;
   function clear(owner){if(owner)states.delete(owner);else states.clear();}
   function activeFor(owner){const state=states.get(owner);return state?.world===G.World&&alive(owner)&&controlled(owner)&&learned(owner)?state.active:null;}
@@ -51,7 +51,7 @@
   function start(owner,move,target){
     const snapshot=G.Quantity?.snapshot(owner,move)||{...move};
     snapshot.dmg*=G.NarutoSupport?.takeAttackBonus(owner)||1;
-    move.t=Math.max(config.minimumCooldown,move.cd*owner.cdMul);
+    move.t=Math.max(config.minimumCooldown,move.cd*owner.cdMul/(G.NarutoGates?.attackSpeedMultiplier(owner)??1));
     const active={owner,move:snapshot,target,phase:'rush',age:0,attackAge:0,hitIndex:0,
       hits:Math.min(config.maxHits,Math.max(1,snapshot.count|0)),aim:Math.atan2(target.y-owner.y,target.x-owner.x),
       duration:Math.min(.42,Math.max(.16,move.t*.65)),camera:{x:G.Camera.x,y:G.Camera.y}};

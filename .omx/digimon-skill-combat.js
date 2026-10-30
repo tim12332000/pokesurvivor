@@ -121,7 +121,7 @@
   }
   function startWhirlwind(owner,m){
     if(whirlwindFor(owner)||G.NarutoLee?.activeFor(owner))return false;
-    const life=Math.min(.72,Math.max(.016,Math.max(m.minCooldown||.05,m.cd*owner.cdMul)*.8));
+    const life=Math.min(.72,Math.max(.016,Math.max(m.minCooldown||.05,m.cd*owner.cdMul/(G.NarutoGates?.attackSpeedMultiplier(owner)??1))*.8));
     const count=Math.max(1,m.count|0),target=owner.target;
     const distance=target?Math.hypot(target.x-owner.x,target.y-owner.y):0;
     const travel=Math.min(20,Math.max(0,distance-(owner.r||12)-(target?.r||10)-4));
@@ -355,7 +355,7 @@
       if(handler?.canCast&&!handler.canCast(pl,m)){m.t=.15;continue;}
       if(m.digiMode==='shadow-clones'&&!G.NarutoClones?.canCast(pl,m)){m.t=.15;continue;}
       if(['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode)&&(!target||target.dead||G.U.dist(pl.x,pl.y,target.x,target.y)>(m.range||m.radius||520))){m.t=.05;continue;}
-      m.t=Math.max(m.minCooldown||.05,m.cd*pl.cdMul);const snapshot=cloneMove(m);
+      m.t=Math.max(m.minCooldown||.05,m.cd*pl.cdMul/(G.NarutoGates?.attackSpeedMultiplier(pl)??1));const snapshot=cloneMove(m);
       pl.cast(m);if(G.Coop.active&&!G.SelfClones?.isActor(pl))G.Coop.cast(pl,m);m.castAt=performance.now();
       if(!cast(pl,snapshot))m.t=.25;
     }

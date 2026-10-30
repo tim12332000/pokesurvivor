@@ -271,7 +271,14 @@ G.HUD = (() => {
     const sx = controls ? controls.slots[0].x : (w - totalW) / 2;
     const sy = controls ? controls.slots[0].y : h - S - 18;
     const BOND = '#ff8ad8';
-    const cdOf = m => {if(autoPain){const status=G.PainUI.skillState(pl,m);return G.U.clamp(status.remaining/status.duration,0,1);}return m.passive || m.kind === 'orbit' || (m.id !== 'naruto-sand-armor' && G.NarutoGaara?.maintains(pl, m)) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul), 0, 1);};
+    const cdOf = m => {
+      if(m.id==='naruto-gates'){
+        const status=G.NarutoGates?.status(pl);
+        return status&&!status.active?G.U.clamp(status.cooldownRemaining/status.cooldown,0,1):0;
+      }
+      if(autoPain){const status=G.PainUI.skillState(pl,m);return G.U.clamp(status.remaining/status.duration,0,1);}
+      return m.passive || m.kind === 'orbit' || (m.id !== 'naruto-sand-armor' && G.NarutoGaara?.maintains(pl, m)) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul / (G.NarutoGates?.attackSpeedMultiplier(pl) ?? 1)), 0, 1);
+    };
     const tentenState = pl.dex === 30009 ? G.NarutoTenten?.stateFor(pl) : null;
     const tentenPose = pl.dex === 30009 ? G.NarutoTenten?.activeFor(pl) : null;
     const tentenGuard = pl.dex === 30009 ? G.NarutoTenten?.guardFor?.(pl) : null;
@@ -461,6 +468,14 @@ G.HUD = (() => {
           ctx.fillStyle = '#ffe3a0'; ctx.font = F(800, 8);
           ctx.fillText('蓄勢 +30% ' + Math.ceil(state.chargeRemaining) + 's', x + S / 2, y + 10, S - 6);
         }
+      }
+      if(m.id==='naruto-gates'){
+        const status=G.NarutoGates?.status(pl);
+        const label=
+          status?(status.active?'八門 ':'冷卻 ')+Math.ceil(status.active?status.activeRemaining:status.cooldownRemaining)+'s':'';
+        ctx.fillStyle='rgba(10,16,28,.88)';ctx.fillRect(x+3,y+S-26,S-6,12);
+        ctx.font=F(800,8);ctx.textAlign='center';ctx.fillStyle='#b9efab';
+        ctx.fillText(label,x+S/2,y+S-17,S-8);
       }
       if (m.id === 'naruto-sand-prison') {
         const prison = G.NarutoGaara?.sandPrisonState(pl);

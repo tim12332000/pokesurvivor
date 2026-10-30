@@ -219,7 +219,7 @@ G.Player = class Player {
     if (this.anim.busy() && this.anim.progress() < 0.65) return;
     const meta = G.Sprites.animMeta(this.dex, anim);
     const len = meta ? meta.d.reduce((a, b) => a + b, 0) / 60 : 0.4;
-    const cd = Math.max(0.12, m.cd * this.cdMul);
+    const cd = Math.max(0.12, m.cd * this.cdMul / (G.NarutoGates?.attackSpeedMultiplier(this) ?? 1));
     this.anim.play(anim, { speed: Math.max(1, len / (cd * 0.9)) });
     this.attackFace = 0.35;
   }
@@ -265,7 +265,7 @@ G.Player = class Player {
 
   heal(amount) {
     const before = this.hp;
-    this.hp = Math.min(this.maxHp, this.hp + amount);
+    this.hp = Math.min(Math.max(this.maxHp, this.hp), this.hp + amount);
     const got = Math.round(this.hp - before);
     if (got >= 1) G.FX.dmgText(this.x, this.y - this.bodyH - 6, '+' + got, '#5fe08a');
   }
@@ -328,9 +328,9 @@ G.Player = class Player {
       if (b.n > 0) { b.t -= dt; if (b.t <= 0) b.n = 0; }
     }
     if (this.slowT > 0) this.slowT -= dt;
-    if (this.bellHeal > 0) { const h = Math.min(this.bellHeal, 4 * dt); this.hp = Math.min(this.maxHp, this.hp + h * (G.NarutoGates?.healingMultiplier(this) ?? 1)); this.bellHeal -= h; }
+    if (this.bellHeal > 0) { const h = Math.min(this.bellHeal, 4 * dt); this.hp = Math.min(Math.max(this.maxHp, this.hp), this.hp + h * (G.NarutoGates?.healingMultiplier(this) ?? 1)); this.bellHeal -= h; }
     if (this.power && (this.power.t -= dt) <= 0) { this.power.def.off(this); this.power = null; }
-    if (this.regen > 0) this.hp = Math.min(this.maxHp, this.hp + this.regen * dt);
+    if (this.regen > 0) this.hp = Math.min(Math.max(this.maxHp, this.hp), this.hp + this.regen * dt);
 
     // --- movimiento con colisiones ---
     // (En cooperativo la pausa no para el juego: sólo te quedas quieto.)

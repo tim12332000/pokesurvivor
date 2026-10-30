@@ -128,7 +128,6 @@
         // Passive synchronization may run immediately after a scene clear or
         // accepted attack. It must never replace that attack's presentation.
         if (!state.cast && level !== state.sharingan && level) record(pl, { id: 'naruto-sharingan' }, .62);
-        if (!state.cast && gates !== state.gates && gates) record(pl, { id: 'naruto-gates' }, .5);
         if (!state.cast && !G.NarutoGaara?.active?.(pl) && gaaraShield !== state.gaaraShield && gaaraShield) record(pl, { id: 'naruto-sand-shield' }, .2);
         if (!state.cast && sword && !state.kusanagi) record(pl, { id: 'naruto-kusanagi' }, .48);
         state.sharingan = level; state.gates = gates; state.gaaraShield = gaaraShield; state.kusanagi = sword;
@@ -163,6 +162,8 @@
         const age = state.deathAge ?? 0;
         return { ...base, state: 'death', phase: age >= .8 ? 'hold' : 'collapse', key: name + '-death', frame: Math.min(3, Math.floor(age * 5)), mirror: dir === 'left', age };
       }
+      const gatesOpening = G.NarutoGates?.presentationFor(pl);
+      if (gatesOpening && pl?.anim === anim) return { ...base, ...gatesOpening };
       const rasengan=G.DigimonSkills?.rasenganFor?.(pl);
       if(rasengan?.owner?.anim===anim)return {...base,state:'skill',id:'naruto-naruto',phase:rasengan.phase,key:'naruto-rasengan',frame:rasengan.phase==='charge'?(rasengan.phaseAge/Math.max(.01,rasengan.m.charge)<.4?0:1):rasengan.phase==='dash'?2:3,mirror:Math.cos(rasengan.aim)<0};
       const chidori = G.NarutoChidori?.activeFor?.(pl) || G.NarutoChidori?.active;

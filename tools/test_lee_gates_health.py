@@ -33,10 +33,10 @@ EXACT=r"""() => {
  p.hp=70;for(let n=0;n<10000;n++){g.syncMaxHealth(p);G.Combat.updateFields(0)}N(p.maxHp,456);N(p.hp,70);
  A.assert(!p.addMove('naruto-gates'),'duplicate learned gates accepted');N(p.maxHp,456);N(p.hp,70);
  const world=G.World;G.Combat.clearFields(p);G.Combat.updateFields(0);G.World={...world};G.Combat.updateFields(0);G.World=world;G.Combat.updateFields(0);
- N(p.maxHp,456);N(p.hp,70);out.push({syncs:10000,max:p.maxHp,hp:p.hp,worldAndClearStable:true});
- p.dead=true;p.hp=0;g.syncMaxHealth(p);N(p.maxHp,456);N(p.hp,0);A.assert(g.stage(p)===0&&g.maxHealthBonus(p)===155,'death removed learned capacity or retained active buffs');
- p.level=32;g.syncMaxHealth(p);N(p.maxHp,461);N(p.hp,0);for(let n=0;n<100;n++)g.syncMaxHealth(p);N(p.hp,0);
- p.revive(.5);N(p.maxHp,461);N(p.hp,230.5);g.syncMaxHealth(p);N(p.hp,230.5);out.push({deadLevel:32,max:p.maxHp,revived:p.hp});
+ N(p.maxHp,301);N(p.hp,70);out.push({syncs:10000,max:p.maxHp,hp:p.hp,temporaryBonusCleared:true});
+ p.dead=true;p.hp=0;g.syncMaxHealth(p);N(p.maxHp,301);N(p.hp,0);A.assert(g.stage(p)===0&&g.maxHealthBonus(p)===0,'death retained temporary capacity or active buffs');
+ p.level=32;g.syncMaxHealth(p);N(p.maxHp,301);N(p.hp,0);for(let n=0;n<100;n++)g.syncMaxHealth(p);N(p.hp,0);
+ p.revive(.5);N(p.maxHp,301);N(p.hp,150.5);g.syncMaxHealth(p);N(p.hp,150.5);out.push({deadLevel:32,max:p.maxHp,revived:p.hp});
  return out;
 }"""
 

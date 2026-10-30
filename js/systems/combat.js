@@ -37,7 +37,7 @@ G.Combat = (() => {
       m.t = 0.05;
       return;
     }
-    m.t = Math.max(0.05, m.cd * pl.cdMul);
+    m.t = Math.max(0.05, m.cd * pl.cdMul / (G.NarutoGates?.attackSpeedMultiplier(pl) ?? 1));
     pl.cast(m);
     if (G.Coop.active && !G.SelfClones?.isActor(pl)) G.Coop.cast(pl, m);
     // Vínculo: su icono destella en el HUD al lanzarse (uno que explota pegado al

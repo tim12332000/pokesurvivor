@@ -357,14 +357,14 @@
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
     ['naruto-gates', [30006], {
-      icon:'eightGates', name:'八門遁甲・開門', mode:'gates-passive', passive:true, type:'fighting', learnLevel:6, cd:0, dmg:0,
+      icon:'eightGates', name:'八門遁甲・開門', mode:'gates-passive', passive:true, type:'fighting', learnLevel:6, cd:25, dmg:0,
       vis:{pal:'grass'},
-      desc:'常駐被動，學會即生效、不占主動槽：生命上限＋LV×N；每秒回血 N%；回血量／跑速＋(10N＋LV)%，並提高攻擊。N＝技能等級，LV＝角色等級。',
+      desc:'學會後每30秒自動開門，不占主動槽；演出5秒後冷卻25秒，八門效果只在開門15秒內生效（演出5秒＋後續10秒）。演出期間只補回實際受傷扣血，不吃回血量加成；演出5秒結束後，對半徑140內敵人造成其最大生命30%傷害一次，首領、傳說與審判者改為10%；不受攻擊、暴擊、屬性或生命剝奪卡加成。開門期間生命上限＋LV×N；每秒回血N%；回血量＋(10N＋LV)%；移速、攻速各＋10N%；攻擊＋30／35／40／45／50%。關門恢復生命上限與各項加成，保留當下血量；高於上限時回血不再增加，也不扣回。升級立即重新開門。N＝技能等級，LV＝角色等級。',
       ups:[
-        {t:'休門：生命加成改為 LV×2；回血 2%/秒；攻擊＋35%；回血量／跑速＋(20＋LV)%',m:{}},
-        {t:'生門：生命加成改為 LV×3；回血 3%/秒；攻擊＋40%；回血量／跑速＋(30＋LV)%',m:{}},
-        {t:'傷門：生命加成改為 LV×4；回血 4%/秒；攻擊＋45%；回血量／跑速＋(40＋LV)%',m:{}},
-        {t:'杜門：生命加成改為 LV×5；回血 5%/秒；攻擊＋50%；回血量／跑速＋(50＋LV)%',m:{}}
+        {t:'休門：生命上限＋LV×2；回血2%/秒；攻擊＋35%；回血量＋(20＋LV)%；移速／攻速＋20%',m:{}},
+        {t:'生門：生命上限＋LV×3；回血3%/秒；攻擊＋40%；回血量＋(30＋LV)%；移速／攻速＋30%',m:{}},
+        {t:'傷門：生命上限＋LV×4；回血4%/秒；攻擊＋45%；回血量＋(40＋LV)%；移速／攻速＋40%',m:{}},
+        {t:'杜門：生命上限＋LV×5；回血5%/秒；攻擊＋50%；回血量＋(50＋LV)%；移速／攻速＋50%',m:{}}
       ],
       source_url:'https://naruto-official.com/en/news/01_1652'
     }],
@@ -732,6 +732,7 @@
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   function activationLabel(move) {
     if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari','naruto-lee-pursuit','naruto-kimimaro'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
+    if (move.id==='naruto-gates') return '自動開門 · 維持15秒（5+10） · 演出5秒後CD25秒 · 週期30秒 · 不占主動槽';
     if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';
     if (['naruto-kusanagi', 'naruto-sand-prison'].includes(move.id)) return '主動 · 需保持選中';
     if (['naruto-shadow-clones', 'naruto-nine-tails-cloak'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';
