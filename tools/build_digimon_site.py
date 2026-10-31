@@ -81,7 +81,7 @@ for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-lee-pursuit.j
     target = OUT / name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / name, target)
-for name in filter(None, tracked + public_new):
+for name in filter(None, tracked + public_new + ['.omx/naruto-en.js', '.omx/naruto-skills-en.js']):
     if name in excluded:
         continue
     path = Path(name)

@@ -726,7 +726,7 @@
   const guide = document.createElement('section');
   guide.id = 'scr-naruto-skills';
   guide.className = 'scr dim hidden';
-  guide.translate = false;
+  guide.translate = true;
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   function activationLabel(move) {
     if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari','naruto-lee-pursuit','naruto-kimimaro'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
@@ -742,7 +742,7 @@
     const item = document.createElement('article');
     item.className = 'naruto-skill-entry';
     const title = document.createElement('h3');
-    title.textContent = `${record.chinese || record.name} · ${definition.name}`;
+    title.append(record.chinese || record.name, ' · ', definition.name);
     const description = document.createElement('p');
     description.textContent = definition.desc;
     const stats = document.createElement('small');

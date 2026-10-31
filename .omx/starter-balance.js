@@ -18,7 +18,7 @@
     if (!host || existing) return;
     const note = document.createElement('span');
     note.id = 'starter-balance-notice';
-    note.setAttribute('translate', 'no');
+    note.setAttribute('translate', 'yes');
     note.style.display = 'block';
     note.textContent = '開局已套用永久強化全滿的基礎能力，無需先購買強化。';
     host.append(note);

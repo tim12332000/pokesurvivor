@@ -57,7 +57,7 @@ G.I18n = (() => {
   }
 
   function keepCase(src, en) {
-    if (src === src.toUpperCase() && /\p{L}/u.test(src)) return en.toUpperCase();
+    if (src === src.toUpperCase() && src !== src.toLowerCase()) return en.toUpperCase();
     return en;
   }
 
@@ -79,7 +79,7 @@ G.I18n = (() => {
     // Los textos del HTML pueden ocupar varias líneas: se comparan con los espacios juntos.
     const lead = m[1], tail = m[3], body = m[2].replace(/\s+/g, ' ');
     if (!body) return s;
-    const upper = body === body.toUpperCase() && /\p{L}/u.test(body);
+    const upper = body === body.toUpperCase() && body !== body.toLowerCase();
     let r = exact.get(body);
     if (r === undefined && upper) { const e = exactLow.get(body.toLowerCase()); if (e !== undefined) r = keepCase(body, e); }
     if (r === undefined) {

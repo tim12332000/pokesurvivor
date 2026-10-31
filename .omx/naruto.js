@@ -3,7 +3,8 @@
   // Public beta roster. Keep all definitions so hidden characters can return later.
   const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011,30012]);
   const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
-  const version='火影 beta 0.01';
+  const t=text=>G.I18n.t(text);
+  const version=t('火影 beta 0.01');
   const roster = [
     ['naruto','Naruto Uzumaki','漩渦鳴人','第七班',['fighting','flying'],3,120,116],
     ['sasuke','Sasuke Uchiha','宇智波佐助','第七班',['electric','fire'],4,108,123],
@@ -184,7 +185,7 @@
   G.UI.sprite=(canvas,dex,opts)=>{if(records.has(dex))previews.add(canvas);return sprite(canvas,dex,opts);};
   G.UI.spriteCanvas=(dex,w,h,opts)=>{const canvas=spriteCanvas(dex,w,h,opts);if(records.has(dex))previews.add(canvas);return canvas;};
 
-  const picker=document.createElement('section');picker.id='scr-naruto';picker.className='scr dim hidden';picker.translate=false;
+  const picker=document.createElement('section');picker.id='scr-naruto';picker.className='scr dim hidden';picker.translate=true;
   picker.innerHTML=`<div class="box"><div class="naruto-heading"><div><h2>火影忍者</h2><p class="naruto-version">${version}</p><p class="sub">選擇忍者，踏上你的忍道。</p></div><button id="naruto-close" class="btn small ghost">返回</button></div>
     <div class="naruto-actions"><button id="naruto-to-digimon" class="btn small">數碼寶貝</button></div>
     <div class="naruto-grid"></div><p class="note">${availableDexes.length} 位忍者・招式為生存玩法改編・存檔保存在此瀏覽器</p>
@@ -213,7 +214,7 @@
     button.onclick=()=>choose(record.dex);grid.append(button);
   }
   // Keep available beta characters visible beside the play button.
-  const quickPick=document.createElement('section');quickPick.id='naruto-quick-pick';quickPick.translate=false;
+  const quickPick=document.createElement('section');quickPick.id='naruto-quick-pick';quickPick.translate=true;
   quickPick.setAttribute('aria-label','選擇出戰角色');
   quickPick.innerHTML='<div class="launch-roster-heading"><div><span class="launch-eyebrow">忍者集結</span><h2>選擇出戰角色</h2></div><span class="launch-roster-count"></span></div><p>選一位夥伴，展開這次冒險。</p><div class="naruto-grid"></div>';
   quickPick.querySelector('.launch-roster-count').textContent=`${availableDexes.length} 位忍者`;
@@ -252,7 +253,7 @@
     partnerCard.classList.toggle('hidden',availableDexes.includes(+selected));
     const record=records.get(+selected),isNaruto=availableDexes.includes(+selected);
     detail.dataset.selectedHero=selected;
-    action.dataset.heroName=isNaruto?record.chinese:G.I18n.t(G.DEX_BY[selected]?.name||'');
+    action.dataset.heroName=isNaruto?t(record.chinese):G.I18n.t(G.DEX_BY[selected]?.name||'');
     detail.classList.toggle('launch-fallback',!isNaruto);
     if(previewDex!==selected){
       const portrait=detail.querySelector('.launch-portrait');portrait.replaceChildren();
@@ -277,9 +278,9 @@
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').hidden=!G.Digimon.enabled;
-  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位忍者：鳴人、佐助、小李、我愛羅、天天、沛恩六道、手鞠。`;
+  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位忍者：鳴人、佐助、小李、我愛羅、天天、沛恩六道、手鞠、君麻呂。`;
   document.getElementById('naruto-close').onclick=()=>{hideOverlays();G.Flow.goMenu();};
-  const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='火影忍者';nav.translate=false;nav.onclick=openPicker;
+  const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='火影忍者';nav.translate=true;nav.onclick=openPicker;
   document.getElementById('btn-settings').before(nav);
   const shortcut=document.createElement('button');shortcut.id='digimon-to-naruto';shortcut.className='btn small';shortcut.textContent='火影忍者 →';shortcut.onclick=openPicker;
   document.querySelector('#scr-digimon .digimon-heading').after(shortcut);
@@ -313,14 +314,14 @@
   }).observe(starterGrid,{childList:true});
   new MutationObserver(()=>{
     const tab=document.querySelector('#gacha-gens [data-gen="11"]');if(!tab)return;
-    const small=tab.querySelector('small');if(small&&small.textContent!=='忍者')small.textContent='忍者';
+    const small=tab.querySelector('small');if(small&&small.textContent!==t('忍者'))small.textContent=t('忍者');
     if(!tab.classList.contains('on'))return;
-    const description=document.getElementById('banner-desc'),copy=`木葉與砂隱的忍者集結・${availableDexes.length} 位角色・招牌忍術`;
+    const description=document.getElementById('banner-desc'),copy=t(`木葉與砂隱的忍者集結・${availableDexes.length} 位角色・招牌忍術`);
     if(description.textContent!==copy)description.textContent=copy;
     const rates=document.getElementById('gacha-rates');
     const shinyRow=rates.querySelectorAll(':scope > div')[5];if(shinyRow)shinyRow.remove();
-    const note=rates.querySelector('.note'),noteText='十連抽至少獲得一位史詩忍者。\n同一轉蛋池連續 70 抽未獲得傳說，下次必定獲得。\n重複角色會轉換成金幣，本分類沒有異色版本。';
-    if(note&&note.textContent!==noteText){note.translate=false;note.textContent=noteText;note.style.whiteSpace='pre-line';}
+    const note=rates.querySelector('.note'),noteText=t('十連抽至少獲得一位史詩忍者。 同一轉蛋池連續 70 抽未獲得傳說，下次必定獲得。 重複角色會轉換成金幣，本分類沒有異色版本。');
+    if(note&&note.textContent!==noteText){note.translate=true;note.textContent=noteText;note.style.whiteSpace='pre-line';}
   }).observe(document.getElementById('scr-gacha'),{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['class']});
   document.querySelector('#scr-menu .logo .t2').textContent='寶可夢 × 數碼寶貝 × 火影忍者';
   document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代＋數碼寶貝＋火影忍者';

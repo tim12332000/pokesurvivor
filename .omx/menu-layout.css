@@ -120,3 +120,5 @@ body:has(#scr-menu.launch-menu:not(.hidden)) #credits-line {display:none}
   body #scr-menu.launch-menu .menu-item.play {min-height:48px;font-size:18px;line-height:1.1;padding:6px 10px}
   body #scr-menu.launch-menu .launch-role {font-size:10px;line-height:1.2;margin-bottom:6px}
 }
+
+html[lang="en"] body #scr-menu.launch-menu .launch-action::before {content:attr(data-hero-name) " · Ready for battle"}

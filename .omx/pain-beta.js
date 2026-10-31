@@ -3,7 +3,7 @@
   if(new URLSearchParams(location.search).get('painBeta')!=='1')return;
   let practice=true;
   const panel=document.createElement('section');
-  panel.id='pain-beta-options';panel.translate=false;
+  panel.id='pain-beta-options';panel.translate=true;
   panel.innerHTML='<b>只管移動，六道自動出招</b><p>你控制天道，其他五道各自幫忙攻擊與防守。<br>電腦用方向鍵／WASD；手機拖曳左下搖桿。</p><details><summary>其他玩法</summary><div><button type="button" data-pain-mode="practice" aria-pressed="true">直接試全部招式</button><button type="button" data-pain-mode="normal" aria-pressed="false">從頭升級學招</button></div></details>';
   const action=document.querySelector('.launch-action');action.before(panel);
   for(const button of panel.querySelectorAll('button'))button.onclick=()=>{

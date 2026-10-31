@@ -133,6 +133,10 @@ const en = boot({ saved: 'en' });
 assert.equal(en.G.T(en.G.U.TYPE_NAME.psychic), 'Psychic');
 assert.equal(en.G.T('Jugar como invitado'), 'Play as guest');
 assert.equal(en.G.I18n.f('Pregunta {x} de {x}', 2, 8), 'Question 2 of 8');
+en.G.I18n.add({ '忍者 {x}': 'Ninja {x}', '已選擇角色': 'Selected Ninja' });
+assert.equal(en.G.T('忍者 8'), 'Ninja 8');
+assert.equal(en.G.T('✓ 已選擇角色'), '✓ Selected Ninja');
+assert.equal(en.G.T('JUGAR COMO INVITADO'), 'PLAY AS GUEST');
 assert.equal(boot({ saved: 'es' }).G.T('Jugar como invitado'), 'Jugar como invitado');
 for (const [key, value] of Object.entries(zh.dictionaries['zh-TW'])) {
   assert.equal((value.match(/\{x\}/g) || []).length, (key.match(/\{x\}/g) || []).length,

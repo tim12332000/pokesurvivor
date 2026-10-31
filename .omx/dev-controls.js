@@ -2,11 +2,11 @@
 (() => {
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
   const button=document.createElement('button');
-  button.id='dev-level-up';button.className='btn small gold hidden';button.translate=false;
+  button.id='dev-level-up';button.className='btn small gold hidden';button.translate=true;
   button.textContent='升一等（測試）';button.title='測試用：升一等並選擇升級';
   button.style.cssText='margin-top:12px;min-height:44px;touch-action:manipulation';
   document.querySelector('#scr-pause .box').append(button);
-  const notice=document.createElement('p');notice.translate=false;notice.id='dev-network-notice';
+  const notice=document.createElement('p');notice.translate=true;notice.id='dev-network-notice';
   notice.textContent='測試按鈕會透過 ipify 查詢目前的公網 IPv4，用於判斷是否顯示個人測試控制。本網站不將完整 IP 寫入遊戲存檔；查詢失敗不影響一般遊玩。';
   if (!local) document.querySelector('#scr-legal .box')?.append(notice);
   let allowed=false,pending=false,controller=null,generation=0;
