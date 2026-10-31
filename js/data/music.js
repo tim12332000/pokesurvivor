@@ -151,7 +151,7 @@ G.MUSIC.judgment = {
 /** Tema de cada bioma durante la run. */
 G.BIOME_MUSIC = ['forest', 'cave', 'volcano'];
 
-// One continuous battle recording across biome and boss transitions.
-for (const name of [...G.BIOME_MUSIC, 'boss', 'rift', 'judgment']) {
+// One continuous recording from character selection through battle transitions.
+for (const name of ['village', ...G.BIOME_MUSIC, 'boss', 'rift', 'judgment']) {
   G.MUSIC[name].file = 'assets/music/strong-and-strike.mp3';
 }
