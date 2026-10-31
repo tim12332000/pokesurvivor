@@ -3,7 +3,7 @@
   if (G.NarutoGates) return;
   const id = 'naruto-gates';
   const config = Object.freeze({
-    duration: 15, cooldown: 25, openingDuration: 4, openingBurstDuration: 1, openingRadius: 140, openingDamageFraction: .3, openingBossDamageFraction: .1,
+    duration: 15, cooldown: 25, openingDuration: 4, openingBurstDuration: 1, openingRadius: 1000, openingDamageFraction: .3, openingBossDamageFraction: .1,
     stageNames: Object.freeze(['杜門', '景門', '死門']),
     effectTiers: Object.freeze([1, 3, 5]),
     atkMultipliers: Object.freeze([1.3, 1.4, 1.5]),

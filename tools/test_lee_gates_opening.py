@@ -18,7 +18,7 @@ TEST = r"""() => {
    G.Combat.drawGroundFields(ctx);p.draw(ctx);G.Combat.drawAirFields(ctx);return c.toDataURL()};
  for(let level=1;level<=3;level++){
    A.assert(g.stage(p)===level&&g.charging(p),'charge missing at stage '+level);
-   const foes=[[65,0],[-80,0],[0,100],[180,0]].map(([x,y])=>A.spawn(x,y));
+   const foes=[[65,0],[-80,0],[0,1000],[1001,0]].map(([x,y])=>A.spawn(x,y));
    foes.push(A.spawn(0,-90,true),A.spawn(-100,-50),A.spawn(100,-50));foes[1].elite=true;
    foes[5].legend=true;foes[6].judge=true;
    foes.forEach(e=>e.hp=e.maxHp*.8);
