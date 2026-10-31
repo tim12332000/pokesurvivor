@@ -9,6 +9,7 @@
   const accelerate=t=>{t=Math.max(0,Math.min(1,t));return t*t;};
   const survivalConfig=Object.freeze({hpFraction:Object.freeze({asura:2,animal:2,human:2,preta:2,naraka:2}),protectionSeconds:1.5,retreatBelow:.35,resumeAbove:.5,safeRecoveryDelay:3,safeRecoveryRate:.04});
   const durabilityConfig=Object.freeze({healthPerLevel:6,maxHealth:200,reductionPerLevel:.01,maxReduction:.2});
+  const supportGrowthBeta=new URLSearchParams(location.search).get('painSupportGrowth')==='1';
   const ready=b=>alive(b)&&b.formed&&b.protectionRemaining<=0;
   const shots=[], effects=[], batches=[], timers=new Map(); let family=null, sequence=0, lifestealSource=null;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
@@ -17,17 +18,26 @@
   const currentFamily=owner=>!!family&&family.owner===owner&&owner===G.Game.player&&owner.mon?.dex===30010&&family.world===G.World;
   const speedMultiplier=owner=>currentFamily(owner)&&alive(owner)&&family.playerSpeedRemaining>0?2:1;
   const durabilityLevels=owner=>owner===G.Game.player&&owner?.mon?.dex===30010?Math.max(0,(Number.isFinite(owner.level)?Math.floor(owner.level):1)-1):0;
-  const damageReductionBonus=owner=>Math.min(durabilityConfig.maxReduction,durabilityLevels(owner)*durabilityConfig.reductionPerLevel);
+  const growthHealth=owner=>Math.min(durabilityConfig.maxHealth,durabilityLevels(owner)*durabilityConfig.healthPerLevel);
+  const growthReduction=owner=>Math.min(durabilityConfig.maxReduction,durabilityLevels(owner)*durabilityConfig.reductionPerLevel);
+  const damageReductionBonus=owner=>supportGrowthBeta?(currentFamily(owner?.sourceOwner)&&family.bodies.includes(owner)?growthReduction(owner.sourceOwner)+(owner.path==='naraka'&&owner.sourceOwner.dead?.2:0):0):growthReduction(owner);
+  const bodyCapacity=(owner,fraction)=>owner.maxHp*fraction+(supportGrowthBeta?growthHealth(owner):0);
+  function syncBodyCapacity(b,owner){
+    const capacity=bodyCapacity(owner,b.hpFraction);
+    if(capacity!==b.maxHp){if(alive(b))b.hp=Math.max(1,Math.min(capacity,b.hp+capacity-b.maxHp));b.maxHp=capacity;}
+  }
   function syncDurability(owner){
     if(!owner)return;
-    const bonus=Math.min(durabilityConfig.maxHealth,durabilityLevels(owner)*durabilityConfig.healthPerLevel),previous=owner.painHealthBonus||0;
-    if(bonus===previous)return;
-    const delta=bonus-previous;owner.maxHp=Math.max(1,owner.maxHp+delta);
-    if(alive(owner))owner.hp=Math.max(1,Math.min(owner.maxHp,owner.hp+delta));
-    owner.painHealthBonus=bonus;
+    const bonus=supportGrowthBeta?0:growthHealth(owner),previous=owner.painHealthBonus||0;
+    if(bonus!==previous){
+      const delta=bonus-previous;owner.maxHp=Math.max(1,owner.maxHp+delta);
+      if(alive(owner))owner.hp=Math.max(1,Math.min(owner.maxHp,owner.hp+delta));
+      owner.painHealthBonus=bonus;
+    }
+    if(supportGrowthBeta&&currentFamily(owner))for(const b of family.bodies)syncBodyCapacity(b,owner);
   }
   function durabilityState(owner=G.Game.player){
-    return owner===G.Game.player&&owner?.mon?.dex===30010?{healthBonus:owner.painHealthBonus||0,reductionBonus:damageReductionBonus(owner)}:null;
+    return owner===G.Game.player&&owner?.mon?.dex===30010?{healthBonus:supportGrowthBeta?growthHealth(owner):owner.painHealthBonus||0,reductionBonus:supportGrowthBeta?growthReduction(owner):damageReductionBonus(owner),supportOnly:supportGrowthBeta}:null;
   }
   function canRevivePlayer(owner=G.Game.player) {
     return currentFamily(owner)&&G.Game.state!=='ui'&&G.Game.state!=='over'&&owner.dead&&family.bodies.some(b=>b.path==='naraka'&&alive(b)&&b.formed);
@@ -61,6 +71,11 @@
     return targets.find(special)||targets.find(e=>targets.filter(t=>!special(t)&&dist(e,t)<=radius&&clearPath(e.x,e.y,t.x,t.y)).length>=3);
   }
   const rank=m=>Math.max(0,Math.min(4,(m?.lvl||1)-1));
+  function projectileCount(owner,m){
+    const k=kind(m);if(k!=='basic'&&k!=='missiles')return 0;
+    const base=m.quantityBaseCount??(k==='basic'?[5,5,6,7,8]:[10,10,12,14,16])[rank(m)];
+    return Math.min(k==='basic'?40:60,G.Quantity?.countAtCast(owner,m,base)??base);
+  }
   function clearPath(ax,ay,bx,by,target=null) {
     return G.World.projectilePathClear(ax,ay,bx,by,target);
   }
@@ -137,7 +152,7 @@
   class Body extends G.Player {
     constructor(owner,path,index) {
       super(owner.mon,{},owner.shiny);this.path=path;this.index=index;this.id='pain-'+path+'-'+(++sequence);this.sourceOwner=owner;this.world=G.World;
-      this.hpFraction=survivalConfig.hpFraction[path];this.maxHp=this.hp=owner.maxHp*this.hpFraction;this.r=10;this.bodyH=owner.bodyH||48;this.dead=false;this.reviveRemaining=0;
+      this.hpFraction=survivalConfig.hpFraction[path];this.maxHp=this.hp=bodyCapacity(owner,this.hpFraction);this.r=10;this.bodyH=owner.bodyH||48;this.dead=false;this.reviveRemaining=0;
       this.formed=false;this.protectionRemaining=0;this.retreating=false;this.mode='waiting';this.placementRetry=0;
       this.sinceDamage=0;this.recovering=false;
       this.cooldown=0;this.pose=null;this.poseAge=0;this.target=null;this.invuln=0;this.flash=0;this.deathSerial=0;this.moves=[];
@@ -145,7 +160,7 @@
     hurt(amount,type=null,pure=false) {
       if(!family||!ready(this)||family.owner.frozen||this.invuln>0||!(amount>0))return;
       const typed=type?G.Types.mult(type,this.mon.types)*G.Weather.mult(type):1;
-      const damage=pure?amount:Math.max(1,amount*typed*(1-Math.min(.8,this.sourceOwner.dmgReduce||0)));
+      const damage=pure?amount:Math.max(1,amount*typed*(1-Math.min(.8,(this.sourceOwner.dmgReduce||0)+damageReductionBonus(this))));
       this.hp=Math.max(0,this.hp-damage);this.invuln=.45;this.flash=.14;this.poseAge=0;
       this.sinceDamage=0;this.recovering=false;
       G.FX.dmgText(this.x,this.y-visualHeight(this.path,this.sourceOwner)-6,'-'+Math.round(damage),'#c5abd9');
@@ -199,7 +214,7 @@
   }
   function basic(owner,m) {
     const targets=nearby(owner,m.range||280);if(!targets.length)return false;
-    const f=frame(owner,m),base=m.quantityBaseCount??[5,5,6,7,8][rank(m)],count=Math.min(40,G.Quantity?.countAtCast(owner,f.m,base)??base);
+    const f=frame(owner,m),count=projectileCount(owner,f.m);
     f.toolBounceCount=G.NinjaToolBounce?.count(owner)||0;
     family.lastCount=count;
     batches.push({...f,kind:'rod',targets,count,emitted:0,interval:Math.min(.08,.32/Math.max(1,count-1)),range:m.range||280});
@@ -239,7 +254,7 @@
       f.pulls=targets.map(target=>({target,distance:0,pullDistance:Math.max(0,dist(f.owner,target)-(f.m.pullRadius??100))}));
     }
     if(k==='missiles') {
-      f.targets=targets;f.baseCount=f.m.quantityBaseCount??[10,10,12,14,16][rank(f.m)];f.count=Math.min(60,G.Quantity?.countAtCast(f.owner,f.m,f.baseCount)??f.baseCount);family.lastCount=f.count;
+      f.targets=targets;f.baseCount=f.m.quantityBaseCount??[10,10,12,14,16][rank(f.m)];f.count=projectileCount(f.owner,f.m);family.lastCount=f.count;
       f.interval=Math.min(.08,.32/Math.max(1,f.count-1));f.body.pose='special';f.body.poseAge=0;
     }
     if(k==='summon'){f.angle=Math.atan2(f.target.y-b.y,f.target.x-b.x);f.x=b.x;f.y=b.y;f.distance=0;b.pose='special';b.poseAge=0;}
@@ -266,7 +281,7 @@
   }
   function revive(b,serial) {
     if(!b.dead||b.deathSerial!==serial||!place(b,family.owner,b.index))return false;
-    b.dead=false;b.maxHp=family.owner.maxHp*b.hpFraction;b.hp=b.maxHp;b.reviveRemaining=0;reform(b);family.revives++;
+    b.dead=false;b.maxHp=bodyCapacity(family.owner,b.hpFraction);b.hp=b.maxHp;b.reviveRemaining=0;reform(b);family.revives++;
     visualEffect(frame(family.owner,learned(family.owner,'repair')||{id:'naruto-pain-repair',dmg:0},{support:true}),'repair-complete',.45,{x:b.x,y:b.y,target:b});return true;
   }
   function anchor(b,owner) {
@@ -299,7 +314,7 @@
       b.level=owner.level;
       b.poseAge+=dt;b.flash=Math.max(0,b.flash-dt);b.invuln=Math.max(0,b.invuln-dt);b.protectionRemaining=Math.max(0,b.protectionRemaining-dt);
       b.cooldown=Math.max(0,b.cooldown-dt);b.castRecovery=Math.max(0,(b.castRecovery||0)-dt);b.placementRetry=Math.max(0,b.placementRetry-dt);
-      const capacity=owner.maxHp*b.hpFraction;if(capacity!==b.maxHp){if(alive(b))b.hp=Math.max(1,Math.min(capacity,b.hp+capacity-b.maxHp));b.maxHp=capacity;}
+      syncBodyCapacity(b,owner);
       if(b.dead){b.mode='down';b.reviveRemaining=Math.max(0,b.reviveRemaining-dt);if(b.reviveRemaining<=0&&b.placementRetry<=0){b.placementRetry=.25;revive(b,b.deathSerial);}continue;}
       if(!b.formed){b.mode='waiting';if(b.placementRetry<=0){b.placementRetry=.25;if(place(b,owner,b.index))reform(b);}continue;}
       const fraction=b.hp/b.maxHp;
@@ -882,7 +897,7 @@
     if(currentFamily(this)&&this.dead)return;
     return originalOnDealt.call(this,damage,...args);
   };
-  G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,gravityPoseFor,stateFor,snapshot,canRevivePlayer,playerReviveState,speedMultiplier,damageReductionBonus,syncDurability,durabilityState,durabilityConfig,visualHeights,visualHeight,survivalConfig,planetVisual,
+  G.NarutoPain={supports,canCast,cast,update,clear,activeFor,actionsFor,gravityPoseFor,stateFor,snapshot,canRevivePlayer,playerReviveState,speedMultiplier,damageReductionBonus,syncDurability,durabilityState,durabilityConfig,projectileCount,visualHeights,visualHeight,survivalConfig,planetVisual,
     actors:()=>family?.bodies.filter(ready)||[],actorsFor:owner=>root(owner)===family?.owner?family.bodies:[],
     drawables:cam=>family?.bodies.filter(a=>a.formed&&cam.sees(a.x,a.y,Math.max(100,visualHeight(a.path,a.sourceOwner)+12)))||[],
     get shots(){return shots;},get effects(){return effects;},absorbable};

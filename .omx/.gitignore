@@ -6,6 +6,7 @@
 !/naruto/
 !/naruto.js
 !/naruto-skills.js
+!/naruto-summoning.js
 !/naruto-sand-vfx.js
 !/naruto-clones.js
 !/quantity.js
@@ -92,3 +93,9 @@
 !/check_digimon_size.py
 !/check_digimon_skills.py
 !/check_unlimited.py
+
+!/naruto-lee-drunken.js
+
+!/naruto-rasengan-vfx.js
+
+!/naruto-rasenshuriken-vfx.js

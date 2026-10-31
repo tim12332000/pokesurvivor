@@ -8,7 +8,7 @@ from test_animation_complete import CHROME, HARNESS
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / '.omx/state/run-controls'
-URL = os.environ.get('RUN_CONTROLS_URL', 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&test=run-controls')
+URL = os.environ.get('RUN_CONTROLS_URL', 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW&layout=wide&test=run-controls')
 
 SETUP = r"""() => {
  Acceptance.arena();
@@ -68,9 +68,9 @@ def main():
                 page.evaluate(SETUP)
                 result = {'speedMeasurements': []}
                 report['viewports'][label] = result
-                assert page.evaluate('G.Game.playbackSpeed===1 && !G.Game.autoPickUpgrades')
-                for speed in (1,2,3):
-                    if speed>1:
+                assert page.evaluate('G.Game.playbackSpeed===2 && !G.Game.autoPickUpgrades')
+                for index, speed in enumerate((2,3,1)):
+                    if index:
                         click_control(page,mobile,'speed')
                     page.wait_for_function('(speed)=>G.Game.playbackSpeed===speed',arg=speed)
                     measurement = page.evaluate("""async () => {
@@ -81,7 +81,6 @@ def main():
                     measurement['ratio']=measurement['simulation']/measurement['wall']
                     assert speed*.72 < measurement['ratio'] < speed*1.2, measurement
                     result['speedMeasurements'].append(measurement)
-                click_control(page,mobile,'speed')
                 page.wait_for_function('G.Game.playbackSpeed===1')
                 click_control(page,mobile,'auto')
                 page.wait_for_function('G.Game.autoPickUpgrades')
@@ -128,7 +127,7 @@ def main():
                 assert any('自動選卡' in text for text in result['labels']),result['labels']
                 assert all(any('x'+str(n) in text or '×'+str(n) in text for text in result['labels']) for n in (1,2,3)),result['labels']
                 page.evaluate('G.Game.startRun()')
-                assert page.evaluate('G.Game.playbackSpeed===1 && !G.Game.autoPickUpgrades')
+                assert page.evaluate('G.Game.playbackSpeed===2 && !G.Game.autoPickUpgrades')
                 result['newRunReset']=True
                 page.wait_for_timeout(100)
                 page.screenshot(path=str(OUT/f'{label}-reset.png'))

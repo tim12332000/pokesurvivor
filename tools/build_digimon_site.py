@@ -39,6 +39,10 @@ for hero in ('naruto', 'sasuke', 'rock-lee', 'gaara', 'tenten'):
     assert source.startswith('.omx/naruto/portraits/') and Path(source).suffix == '.png'
     assert (ROOT / source).resolve().is_relative_to((ROOT / '.omx/naruto/portraits').resolve())
     review_runtime.append(source)
+review_runtime.append('.omx/naruto-rasenshuriken-vfx.js')
+review_runtime.extend(['.omx/naruto-summoning.js', 'art-review/redrawn/gamabunta-summon-v2.png', 'art-review/redrawn/gamabunta-water-v1.png'])
+review_runtime.extend('art-review/redrawn/'+name for name in ['gamabunta-sword-v1.png','gamabunta-oil-v1.png','gamabunta-combo-fox-v2.png'])
+review_runtime.append('.omx/naruto-rasengan-vfx.js')
 review_runtime.extend(['.omx/naruto/portraits/pain.png', '.omx/naruto/portraits/temari.png'])
 assert sources == {
     'redrawn/naruto-common-v1.png', 'redrawn/naruto-skills-v2.png',
@@ -77,7 +81,7 @@ for sheet in kimimaro['sheets'].values():
     review_runtime.append('art-review/' + source)
 for source in ('temari-common-v1.png', 'temari-skills-v1.png', 'temari-kamatari-v2.png', 'temari-spin-v1.png'):
     review_runtime.append('art-review/redrawn/' + source)
-for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-lee-pursuit.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-temari.js', '.omx/naruto-temari-reflect.js', '.omx/temari-cyclone-vfx.js', '.omx/temari-coop.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:
+for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-lee-pursuit.js', '.omx/naruto-lee-drunken.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-temari.js', '.omx/naruto-temari-reflect.js', '.omx/temari-cyclone-vfx.js', '.omx/temari-coop.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:
     target = OUT / name
     target.parent.mkdir(parents=True, exist_ok=True)
     shutil.copyfile(ROOT / name, target)

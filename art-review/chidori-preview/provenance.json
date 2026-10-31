@@ -1,0 +1,12 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "prompt": "Create an ORIGINAL game animation sprite atlas using the two attached local atlases as STYLE AND CHARACTER reference only. Young Sasuke, navy shirt, white shorts, navy leg wraps and sandals, small face, spiky navy hair, about three heads tall, exactly same proportions as reference sasuke-common-v1.png. Transparent background. Exactly FOUR COLUMNS and THREE ROWS, twelve equally sized cells, one complete full body per cell, all facing RIGHT. Consistent character size and feet baseline within every cell. Ample empty padding. Read left to right then next row: frames 1-2 hands rise to chest and form a ninja hand seal; frames 3-4 finish seal and separate hands as knees bend; frames 5-6 gradually crouch, anatomical LEFT arm lowers toward ground while right hand braces near waist; frames 7-8 left hand draws back close to hip, torso leans forward and tiny blue white sparks gather only around LEFT hand; frames 9-10 weight shifts onto front foot, left charged arm moves forward into thrust preparation; frame 11 first forward running lunge with LEFT charged palm extending; frame12 full committed left-arm-forward Chidori thrust. Coherent progressive movement, twelve DISTINCT sequential poses and intermediate drawings, no duplicated held frames. Smooth silhouette progression, preserve body scale. Hard edged pixel clusters, clean dark navy outlines, limited flat colors and two-tone shading, no blur or gradients. Lightning restrained and hand-local, no giant aura. No ground, shadows, text, frames, grid, weapons, extra characters. This is a 1-second anticipation animation followed by a dash, NOT twelve unrelated attack poses.",
+  "styleReferences": [
+    "../redrawn/sasuke-common-v1.png",
+    "../redrawn/sasuke-skills-v2.png"
+  ],
+  "chargeReference": "../references/sasuke-original.png — bottom Charging Chidori row; Naruto: Path of the Ninja 2, ripped by Hwdphg",
+  "scope": "Standalone animation preview only; no game integration.",
+  "notes": "Yellow branching discharge follows the original reference. Blue-white hand-local energy remains in the new drawings.",
+  "sha256": "3589c62209881993024b461c07a39f1ba4ea10e08a7bf379c19881748d9c3341"
+}

@@ -1,0 +1,28 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "prompt": "Use case: stylized-concept. Asset type: PRODUCTION-STYLE BONE VFX SPRITE ATLAS for young Kimimaro game ability, no character. Reference image1 is our own Kimimaro sprite atlas: STYLE AND PALETTE ONLY, darkfineoutlines, crisp opaque flat clusters, restrained 2-tone celshading, warmivory bonewithgrayvioletshadow. Create TRUE ALPHA transparent PNG. Exactly FOUR COLUMNS THREE ROWS =12 isolated VFX sprites in equal cells with VERY LARGE transparentgutters. Every objectfullyinsideitsOWNcell; no overlaps, no actors, text, labels, grids, background, glow, lights, shadows, smokecloudbackground. This must look like handdrawn anime-game BONE MATERIAL not smooth generic geometriccones. ROW1 four DIFFERENT upright erupting bone spires. 1 tall curved femur-like spear, irregular segmented nodules and chipped taperedtip, thickjaggedroot. 2 leaning slightlyRIGHT twisted rib-like spike with uneven angular ridges andsmalllateralspur, jaggedroot. 3 leaningLEFT crooked vertebral blade-pillar with asymmetricsilhouette and narrowtip. 4 thick jagged irregular bone column with branching fork midway andone largepointedtop, worn boneplanes. ROW2 fourMOREdistinct taller boneforest pieces. 1 clustered TWO unequal curved bone spears sharing a craggybaseroot. 2 massive broad-base tapered bone spear with oblique fractured side andsplinterspur, irregular NOT triangle. 3 long narrow serpentine curvedribspike withtinyvertebralnubs andsharphead. 4 small tangledcluster of THREE uneven ivorybonethorns with differentslants andraggedroot. Bone roots have attached few darkbrownrockchunks and brokenearth, no painted groundshadow. Eachspike filledwarmivory surface, graylavendershadowplanes, thin darkcontours, occasional hairlinecracks, chippedsurfaces. Strongly varied shapes NOT8copies. Uprightpillars fill~65percentcellheight, comparablematerialscale. ROW3 column1 = short horizontal spiral BONE DRILL charging head, blunt-leftbase andpointRIGHT, unevenoverlapping rib-like plates not triangularstripes. column2 = long horizontal spearpointRIGHT, interlocking spiral boneplates, broadleftforearmattachmentbase, wickedsharpasymmetrictip. column3 = small isolated clusterofsix bonefragments andearthchips, variedfacets. column4 = small isolated jagged brokenearthandbone rootbase viewedslightlyfromabove, five brokenstonechunks no circle. Boneweapons are opaque physical material no energybeams. No gore blood skulls or humanfaces. Avoid perfectlystraightshapes, smoothplastic, symmetrictrafficcones, identicaltriangles, 3Dpolishedrender, blur, airbrush, alpha halos ormagicalcircles. New original gameVFX art.",
+  "reference": "actors-normal-v1.png",
+  "output": "effects-bones-v1.png",
+  "scope": "original physical-bone visual effects for independent design preview",
+  "transparent_background": true,
+  "outputSha256": "756530db699c1bbcef09c9b17a469907ec317c53871d0243e74a7b24344257c9",
+  "referenceSha256": "814004062dd1cb239527d8275fe4907c3e09cb2b8a2357654eb9d78614d47fcd",
+  "runtime": {
+    "image": "effects-bones-runtime.png",
+    "sha256": "b21fcd1447260509c27f8c134146ccae4ac8f29db22fe16cb343ad7859822caa",
+    "dimensions": [
+      640,
+      480
+    ],
+    "budget": {
+      "maxPillars": 36,
+      "maxTransientParticles": 20,
+      "maxTransferBytes": 262144,
+      "maxDecodedBytes": 1835008,
+      "actualTransferBytes": 205748,
+      "actualDecodedBytes": 1228800
+    },
+    "build": "build-effects.py",
+    "method": "uniform downsampling and bounded palette encoding; original retained"
+  }
+}

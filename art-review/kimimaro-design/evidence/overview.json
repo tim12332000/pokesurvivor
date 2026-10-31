@@ -1,0 +1,72 @@
+[
+  {
+    "skill": "willow",
+    "time": 0.467,
+    "form": "normal",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-normal-v1.png",
+    "pose": "willow1"
+  },
+  {
+    "skill": "camellia",
+    "time": 0.57,
+    "form": "normal",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-normal-v1.png",
+    "pose": "camellia1"
+  },
+  {
+    "skill": "bullets",
+    "time": 0.42,
+    "form": "normal",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-normal-v1.png",
+    "pose": "bullets"
+  },
+  {
+    "skill": "larch",
+    "time": 0.4,
+    "form": "normal",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-normal-v1.png",
+    "pose": "larch"
+  },
+  {
+    "skill": "vine",
+    "time": 0.54,
+    "form": "normal",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-normal-v1.png",
+    "pose": "vine2"
+  },
+  {
+    "skill": "flower",
+    "time": 0.58,
+    "form": "normal",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-normal-v1.png",
+    "pose": "flower2"
+  },
+  {
+    "skill": "bracken",
+    "time": 1.0,
+    "form": "normal",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-normal-v1.png",
+    "pose": "run1"
+  },
+  {
+    "skill": "lily",
+    "time": 0.52,
+    "form": "normal",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-normal-v1.png",
+    "pose": "lily"
+  },
+  {
+    "skill": "combo",
+    "time": 1.12,
+    "form": "curse",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-curse-v2.png",
+    "pose": "flower2"
+  },
+  {
+    "skill": "curse",
+    "time": 1.1,
+    "form": "curse",
+    "source": "http://127.0.0.1:8327/art-review/kimimaro-design/actors-curse-v2.png",
+    "pose": "run1"
+  }
+]

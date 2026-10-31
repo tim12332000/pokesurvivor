@@ -68,6 +68,11 @@ G.Icons = (() => {
       '.......kkttttk..', '......ktttttttk.', '...kkkttktktktk.', '..kggwttttttttk.',
       'bbkggwwwwwwwwk..', '.bkggwwswwswk...', '...kggwwwwwk....', '....kggwwwk.....',
       '.bbbbkkkkk......', 'bbwwbb..........', '................', '................'] },
+    leeDrunken: { pal: { r:'#d65352', w:'#fff0cb', a:'#d9a456', s:'#916338', g:'#77bd8a' }, rows: [
+      '................', '.......kkk......', '......krrrk.....', '.......kak......',
+      '..g....kak......', '.g....kawak..g..', '.g...kawwaak..g.', '..g.kawwwaaak.g.',
+      '....kawwwaaak...', '...kawwwwwaaak..', '...kawkkkrwaak..', '...kawkrrkwaak..',
+      '...kawkwrkwaak..', '....kasssssak...', '.....kkkkkkk....', '................'] },
     frontLotus: { pal: { w:'#eef7ff', p:'#b893ef' }, rows: [
       '.....p......', '..p.kpk.p...', '.kpkpppkpk..', '.kpppppppk..', '..kpppppk...', '...kkkkk....',
       '....kwwk....', '...kwwk.....', '..kwwk......', '.kwwk.......', 'kwwk........', '.kk.........'] },
@@ -183,6 +188,10 @@ G.Icons = (() => {
     cards: { pal: { a: '#ffd23f', b: '#4fb4ff', w: '#e6f4ff' }, rows: [
       '............', '.kkkkkk.....', '.kaaaaakkkk.', '.kaaaakbbbbk', '.kaaaakbwwbk', '.kaaaakbwwbk',
       '.kaaaakbbbbk', '.kaaaakbwwbk', '.kkkkkkbwwbk', '......kbbbbk', '......kkkkkk', '............'] },
+    toadSummon: { pal: { r: '#b95132', b: '#223b54', w: '#f3daa4', y: '#edce59' }, rows: [
+      '............', '..kk....kk..', '.kyrk..kryk.', '.krrkkkkrrk.', 'krrrrrrrrrrk',
+      'krwrrrrrrwrk', '.kwwwwwwwwk.', '..kbbbbbbk..', '.krbbbbbbrrk',
+      'krrkbbbbkrrk', 'kkk.kkkk.kkk', '............'] },
     rationPill: { pal: { b: '#9c613a', d: '#5d3528', w: '#e1b77b', r: '#ba6650' }, rows: [
       '............', '..kkkk......', '.kwbbdk.....', 'kwbbbbdk....', 'kbbbbbddk...', '.kbbbddk....', '..kkkk..kk..', '.......kwrk.', '..kk..krrrdk', '.kwbk.krrddk', '.kbdk..kddk.', '..kk....kk..'] },
     berry: { pal: { r: '#ff7a9e', s: '#c23a6b', w: '#ffd3e0', g: '#5fe08a', d: '#2f9a52' }, rows: [

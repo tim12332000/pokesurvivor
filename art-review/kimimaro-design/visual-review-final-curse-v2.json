@@ -1,0 +1,1 @@
+{"score":87,"verdict":"revise","category_match":true,"differences":["增加間距後仍有兩個矩形裁切含鄰格尾部"],"suggestions":["保留原始PNG，將alpha連通輪廓記為裁切路徑，渲染時只顯示所選姿勢"],"reasoning":"二階造型與姿勢可用，但矩形索引仍不足以隔離曲折尾部。需在索引與渲染裁切修正後，以實際畫面重新驗收。"}

@@ -1,0 +1,48 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "reference": "art-review/redrawn/naruto-common-v1.png",
+  "draft": {
+    "source": "art-review/redrawn/gamabunta-summon-v1.png",
+    "prompt": "Create a transparent PNG game sprite sheet, four equally spaced square cells in ONE horizontal row. Subject: Gamabunta from Naruto, the giant rusty orange-red toad boss, stern yellow eyes, scar over left eye, navy blue open sleeveless vest, white bandage belt, pipe at mouth, sheathed short sword at waist. Original newly drawn pixel-art sprites matching attached Naruto game sheet's dark outlines, chunky discrete pixels, limited cel shaded colors and 3/4 top-down JRPG perspective. Reference is STYLE ONLY, do not draw Naruto. Four full-body sprites facing down-right, same body scale and same bottom anchor: 1 compressed crouch preparing leap; 2 airborne legs spread; 3 heavy landing squash front hands ground; 4 proud seated resting. Isolated four toads only, ample transparent gap, no text, no shadows, no effects, no grid, no background. Crisp readable at 140px wide ingame, no smooth painting. Layout exactly 4 equal cells and 1 row.",
+    "selected": false,
+    "reason": "Cell edges intersect neighboring sprite",
+    "sha256": "b872a200567df907561188ae2a662fe4141be19686a4458cf999ab6c6ffc1dce"
+  },
+  "final": {
+    "source": "art-review/redrawn/gamabunta-summon-v2.png",
+    "prompt": "Edit the attached Gamabunta sprite sheet. Keep exactly this Gamabunta design, colors, chunky pixel-art style and four poses. CRITICAL production fix: four equally sized SQUARE cells in one horizontal row, TOTAL image aspect ratio 4:1. Draw EACH toad fully INSIDE the central 70% width of its cell. At least 15% EMPTY TRANSPARENT MARGIN on left and right of every cell; no pipe, sword or fingers may cross that margin. All four ground-contact baselines must be at 85% cell height. The seated and crouching toads naturally have shorter height than jumping pose, but same head/body scale. Transparent background. No text, no grid, no borders, no smoke, no shadow. Do not enlarge the toads to fill the image. Readability at 140px ingame. Four separate safe square cells with WIDE TRANSPARENT GAPS.",
+    "reference": "art-review/redrawn/gamabunta-summon-v1.png",
+    "selected": true,
+    "frames": [
+      [
+        69,
+        312,
+        434,
+        279
+      ],
+      [
+        585,
+        157,
+        458,
+        383
+      ],
+      [
+        1121,
+        297,
+        448,
+        287
+      ],
+      [
+        1672,
+        209,
+        408,
+        375
+      ]
+    ],
+    "anchor": "Each rect center x, bottom minus 4 pixels",
+    "direction": "down-right only",
+    "scale": "Shared 458 pixel reference width; no per-pose stretching",
+    "sha256": "7bc9021def1376a73da5bc11fdc01ab1a5d8dd85f8bfada09c51432c737eb836"
+  },
+  "referenceSHA256": "1c562132eb25249f859ec3e071ac90ad8e0e24cdcc08abc89a873e0ff662c391"
+}

@@ -4,7 +4,7 @@
   if (G.NarutoClones) return;
   const actors = [], smoke = [], C = G.Combat, TAU = Math.PI * 2;
   // Balance knobs: UI descriptions, upgrades and actor limits all read this object.
-  const config = Object.freeze({ counts: Object.freeze([2,3,4,8,12]), cooldown: 12,
+  const config = Object.freeze({ counts: Object.freeze([8,10,12,14,16]), damageMultiplier: .3, cooldown: 12,
     duration: 10, sealDuration: .4, punchDamage: 8, punchCooldown: .65, hitsToDismiss: 5 });
   const summons = [];
   let serial = 0;
@@ -21,7 +21,10 @@
     return {x:Math.cos(angle)*radius,y:Math.sin(angle)*radius*.87};
   }
   const mimicIds = new Set(['naruto-naruto', 'naruto-rasenshuriken', 'naruto-kunai', 'naruto-shuriken']);
-  const selectedTechnique = owner => (owner.activeGroup?.() || []).find(m => mimicIds.has(m.id) && owner.moves?.some(learned => learned === m || learned.id === m.id)) || null;
+  const techniquesFor = owner => [...new Set([
+    ...(owner.moves||[]).filter(m=>m.autoCast&&mimicIds.has(m.id)),
+    ...(owner.activeGroup?.()||[]).filter(m=>mimicIds.has(m.id)&&owner.moves?.some(learned=>learned===m||learned.id===m.id))
+  ])];
   const canCast = (owner,move) => controlled(owner)&&!owner.dead&&owner.hp>0&&owner.mon?.dex===30001&&living(owner).length<limitOf(move,owner)&&!summons.some(s=>s.owner===owner);
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
   const nearby = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
@@ -72,9 +75,9 @@
       if (!G.World.isFree(x, y, 10, true) || !clearPath(owner.x, owner.y, x, y, 10) || living(owner).some(a => Math.hypot(a.x - x, a.y - y) < 25)) continue;
       occupied.add(formationIndex);
       const a = { id: ++serial, formationIndex, formationTotal:limit, owner, moveId: move.id, world: G.World, x, y, r: 10, age: 0, ttl: move.cloneDuration || config.duration,
-        lvl, hitsRemaining:config.hitsToDismiss, dmg: Number.isFinite(move.dmg) ? move.dmg : config.punchDamage, punchCd: move.punchCd || config.punchCooldown,
+        lvl, hitsRemaining:config.hitsToDismiss, dmg: (Number.isFinite(move.dmg) ? move.dmg : config.punchDamage) * config.damageMultiplier, punchCd: move.punchCd || config.punchCooldown,
         cd: .16 + count % 8 * .08, anim: new G.Sprites.Animator(30001, 1), target: null, dead: false, comboT: 0,
-        cloneTechniqueCdMul: move.cloneTechniqueCdMul ?? 1, cloneTechniqueDamageMul: move.cloneTechniqueDamageMul ?? 1,
+        cloneTechniqueCdMul: move.cloneTechniqueCdMul ?? 1, cloneTechniqueDamageMul: (move.cloneTechniqueDamageMul ?? 1) * config.damageMultiplier,
         // Retain one cooldown per technique across slot switches; phase spreads eight casts out.
         cooldowns: new Map([...mimicIds].map(id => [id, .16 + count % 8 * .08])), mimickedId: null };
       a.anim.dir = owner.anim.dir; actors.push(a); puff(a); count++; spawned = true;
@@ -143,7 +146,8 @@
         a.age += sub; a.cd -= sub; a.comboT = Math.max(0, a.comboT - sub);
         for (const [id, remaining] of a.cooldowns) a.cooldowns.set(id, Math.max(0, remaining - sub));
         if (a.age >= a.ttl) { dismiss(a); continue; }
-        const technique = selectedTechnique(a.owner);
+        const techniques=techniquesFor(a.owner);
+        const technique=techniques.find(m=>(a.cooldowns.get(m.id)||0)<=0)||techniques.find(m=>!m.autoCast)||null;
         a.mimickedId = technique?.id || null;
         const range = technique?.id==='naruto-naruto'?280:technique?Math.min(600,technique.range||technique.speed*technique.life||280):280;
         const tethered = distance(a, a.owner) <= 420;
@@ -162,13 +166,14 @@
               if (rasengan) {
                 a.anim.play('Attack'); a.comboT = .4; a.comboAim = aim;
                 hit(a, e, technique.dmg * a.owner.atk * a.cloneTechniqueDamageMul, technique.type || 'fighting', technique.knock || 28, technique.id);
-                G.FX.beam(a.x, a.y - G.LIFT, aim, distance(a, e), 8, '#83dcff', { pal: 'water' });
+                G.FX.sp('naruto-rasengan-contact','naruto-blue',e.x,e.y-G.LIFT,{life:.18,scale:.65,frameRate:24,fade:false});
               } else if (G.DigimonSkills?.fireFrom) {
                 const shots = G.DigimonSkills.fireFrom(a.owner, technique, a.x, a.y, aim, a.cloneTechniqueDamageMul) || [];
                 for (const p of shots) p.narutoClone = true;
                 a.anim.play('Shoot');
               }
-              a.cooldowns.set(technique.id, Math.max(.1, (technique.cd || 1) * a.cloneTechniqueCdMul * (G.Giant?.interval(a.owner) || 1)));
+              const cooldownScale=technique.autoCast?a.owner.cdMul:a.cloneTechniqueCdMul*(G.Giant?.interval(a.owner)||1);
+              a.cooldowns.set(technique.id, Math.max(.1, (technique.cd || 1) * cooldownScale));
             } else if (!technique && a.cd <= 0 && clearPath(a.x, a.y, e.x, e.y)) {
               a.cd = a.punchCd * (G.Giant?.interval(a.owner) || 1); a.anim.play('Attack', { speed: 1.3 });
               hit(a, e, a.dmg * a.owner.atk, 'fighting');

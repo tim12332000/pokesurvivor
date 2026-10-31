@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>鳴人・螺旋手裏劍演出預覽</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0c131c;color:#edf5f4;font:15px/1.6 system-ui,sans-serif}main{max-width:1080px;margin:auto;padding:28px 24px}.eyebrow{color:#9edfe9;font-size:12px;letter-spacing:.18em}h1{font-size:28px;margin:6px 0}p{color:#a5b7bf;margin:6px 0 18px}.panel{overflow:hidden;border:1px solid #33494e;border-radius:12px;background:#162a2b}canvas{display:block;width:100%;image-rendering:pixelated}nav{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0}button,select{border:1px solid #405b63;border-radius:6px;background:#1a2b35;color:#edf5f4;padding:9px 14px;font:inherit;cursor:pointer}button:hover{border-color:#95e8ee}button[aria-pressed=true]{background:#23505a;border-color:#95e8ee}input{width:100%;accent-color:#a2edf5}.time{display:flex;justify-content:space-between;color:#aac5cf;font-size:13px;font-variant-numeric:tabular-nums}.cuts{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.cuts button{font-size:13px}.sources{font-size:13px;margin-top:22px;color:#9eafb8}a{color:#aceaf1}#error{color:#ffb2a5}@media(max-width:600px){main{padding:20px 14px}h1{font-size:23px}nav{gap:8px}button,select{padding:8px 10px}}
+</style>
+<main>
+<div class="eyebrow">NARUTO / WIND STYLE</div>
+<h1>風遁・螺旋手裏劍</h1>
+<p>螺旋丸球心 × 四片風刃 · 遊戲同款像素顆粒與藍白色階</p>
+<div class="panel" style="max-width:540px;margin:auto"><iframe id="game" title="正式遊戲視角・螺旋手裏劍預覽" style="display:block;width:100%;height:min(72vh,720px);min-height:480px;border:0" src="../../.omx/digimon.html?lang=zh-TW&amp;layout=portrait&amp;rasenPreview=2"></iframe></div>
+<nav><button id="play">暫停</button><button id="replay">重播</button><label>速度 <select id="speed"><option value="1">正常 1×</option><option value="0.5">慢放 0.5×</option><option value="0.25">慢放 0.25×</option></select></label><button id="style" aria-pressed="false">對照第三版</button><button id="original" aria-pressed="false">對照現版風刃</button><label>方向 <select id="direction"><option value="-0.65">右上</option><option value="0">右</option><option value="-1.57">上</option><option value="2.49">左下</option></select></label></nav>
+<input id="seek" type="range" min="0" max="2200" value="0" aria-label="動畫時間">
+<div class="time"><span id="phase">聚風</span><span id="clock">0.00 s</span></div>
+<div class="cuts"><button id="spin" aria-pressed="false">原地看旋轉</button><button data-time="0.36">聚風</button><button data-time="0.84">飛行</button><button data-time="1.20">爆開</button><button data-time="1.48">散去</button></div>
+<details class="sources"><summary>本次動態參考</summary><p>已逐格檢視蓄力與出手 GIF：四片彎曲風刃掃成風盤，外緣殘影持續變化。預覽以遊戲的像素色階重新表現。<a href="https://makeagif.com/gif/wind-style-rasenshuriken-0EwUz9" target="_blank" rel="noopener">蓄力旋轉片段</a> · <a href="https://gifdb.com/gif/naruto-rasenshuriken-toss-ac7txmb01y2w9oyr.html" target="_blank" rel="noopener">出手片段</a> · <a href="https://www.youtube.com/watch?v=GOBZIdBKaHw" target="_blank" rel="noopener">Crunchyroll 招式片段</a></p></details>
+<p class="sources">與正式遊戲共用特效；此頁循環重播單次演出。正式遊戲基礎 CD 6 秒，學會後常駐自動、不需選招。姿勢沿用專案的投擲動作。<br>參考：<a href="https://spritedatabase.net/game/55" target="_blank" rel="noopener">Ninja Council 3 風格</a> · <a href="https://spritedatabase.net/display.php?object=1409" target="_blank" rel="noopener">Ninja Council 4 查克拉效果</a> · <a href="https://naruto-official.com/en/news/01_1321" target="_blank" rel="noopener">官方動畫回顧</a></p>
+<p id="error" role="alert"></p>
+</main>
+<script src="preview.js"></script>
+</html>

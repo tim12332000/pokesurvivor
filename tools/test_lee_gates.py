@@ -112,7 +112,10 @@ ART = r"""() => {
    A.leeArena();p.target=A.spawn(35,0);A.actualCast(id);A.advance(.3);out[id]=A.render();
  }
  for(const [name,sample] of Object.entries(out)){
-   A.assert(sample.sources.length&&sample.sources.every(src=>/lee-gates-(common|skills)-v1\.png/.test(src)),'normal/non-red gates art '+name+' '+sample.sources);
+   A.assert(sample.sources.length&&sample.sources.every(src=>/lee-gates-(common|skills)-v1\.png/.test(src)||
+     name==='naruto-lee'&&/lee-whirlwind-air-v1\.png/.test(src)||
+     ['naruto-lotus','naruto-reverse-lotus'].includes(name)&&/lee-bandage-v1\.png/.test(src)),
+     'unexpected gates art '+name+' '+sample.sources);
  }
  A.leeArena();return out;
 }"""

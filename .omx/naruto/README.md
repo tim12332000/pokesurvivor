@@ -395,3 +395,9 @@ personal `feat/digimon-sandbox` branch. No upstream PR is created or changed.
 實際戰鬥模組為 `.omx/naruto-kimimaro.js`，美術由 `art-review/kimimaro-art.js` 按需載入。普通與咒印二各24姿勢，含正背常用動作、受傷與倒下；攻擊採側向與明確左鏡射。三張執行圖約645KiB、解碼約3.99MiB，共用72骨柱／20次要粒子上限。不載入獨立預覽場景、假敵人或整個設計來源包。
 
 驗證執行 `python tools/test_kimimaro.py`，預設測試8341埠；本機建議用 `python tools/serve_animation_lab.py --port 8341`，避免一般HTTP伺服器的小型連線佇列漏接大量同時腳本請求。設計與試玩交付紀錄在 `art-review/kimimaro-playable-delivery.md`。
+
+## 鳴人雙螺旋招式常駐自動
+
+螺旋丸 Lv.3 可學，基礎 CD 5 秒；螺旋手裏劍 Lv.6 可學，基礎 CD 6 秒。兩招學會後不需選招、不占主動槽，按各自冷卻自動施放；冷卻縮減仍有效。影分身各自按冷卻模仿兩招，舊主動配置自動移出選招欄並保留技能成長及冷卻比例。詳見 `art-review/naruto-automatic-attacks.md`，專項驗證 `python tools/test_naruto_automatic_attacks.py`。
+
+螺旋丸本體已改為近身射程 80 的原地出掌，不強制位移，也不鎖定集氣／出掌期間的手動走位；分身保留接近與突進，永久分身卡的突進距離仍為 125。詳見 `art-review/rasengan-stationary.md`。

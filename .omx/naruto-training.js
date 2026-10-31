@@ -1,6 +1,28 @@
 // Each ninja learns signature choices at their explicit or default milestones.
 (() => {
   const sandShieldId='naruto-sand-shield', sandGuardId='naruto-sand-guard', basicId='naruto-gaara';
+  const narutoAutomatic=new Set(['naruto-naruto','naruto-rasenshuriken','naruto-toad-summon']);
+  function migrateNarutoAutomatic(player){
+    if(player.mon?.dex!==30001)return;
+    for(const move of player.moves)if(narutoAutomatic.has(move.id)){
+      if(move.id==='naruto-naruto'&&move.cloneDashRange==null){
+        const current=G.Moves.instance(move.id,move.lvl||1);
+        move.range=current.range;move.cloneDashRange=current.cloneDashRange;
+      }
+      if(!move.autoCast){
+        const previous=move.cd,next=G.Moves.instance(move.id,move.lvl||1).cd;
+        if(move.t>0&&previous>0)move.t*=next/previous;
+        move.cd=next;move.autoCast=true;
+      }
+      move.passive=true;
+      if(player.bind)delete player.bind[move.id];
+    }
+    if(!player.slots.some(group=>group.some(move=>narutoAutomatic.has(move.id))))return;
+    const selected=player.slots[player.active];
+    for(const group of player.slots)for(let i=group.length-1;i>=0;i--)if(narutoAutomatic.has(group[i].id))group.splice(i,1);
+    player.slots=player.slots.filter(group=>group.length);
+    const retained=player.slots.indexOf(selected);player.active=retained>=0?retained:0;
+  }
   const gaaraPassives=new Set([sandShieldId,sandGuardId,'naruto-sand-armor']);
   const painMove=move=>move.id==='naruto-pain'||move.id.startsWith('naruto-pain-');
   const temariPassives=new Set(['naruto-temari','naruto-temari-three-stars','naruto-temari-blade-dance','naruto-temari-reflect']);
@@ -93,11 +115,21 @@
     player.active=retained>=0?retained:Math.max(0,Math.min(player.active,player.slots.length-1));
   }
   G.NarutoSkillCatalog.migrateGaaraPassives=migrateGaaraPassives;
+  G.NarutoSkillCatalog.migrateNarutoAutomatic=migrateNarutoAutomatic;
   G.NarutoSkillCatalog.migrateKimimaroPassives=migrateKimimaroPassives;
   const arrange=G.Player.prototype.arrange;
-  G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateGaaraPassives(this);migratePainPassives(this);migrateTemariPassives(this);migrateKimimaroPassives(this);return arrange.apply(this,args);};
+  G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateNarutoAutomatic(this);migrateGaaraPassives(this);migratePainPassives(this);migrateTemariPassives(this);migrateKimimaroPassives(this);return arrange.apply(this,args);};
   const addMove=G.Player.prototype.addMove;
   G.Player.prototype.addMove=function(id,...args){
+    if(id==='naruto-toad-summon'&&(this.mon?.dex!==30001||this.level<12))return false;
+    if(this.mon?.dex===30001&&narutoAutomatic.has(id)){
+      if(this.hasMove(id)){migrateNarutoAutomatic(this);return false;}
+      this.moves.push(G.Moves.instance(id,1));this.arrange();return true;
+    }
+    if(id==='naruto-lee-drunken'){
+      if(this.mon?.dex!==30006||this.level<4||this.hasMove(id))return false;
+      this.moves.push(G.Moves.instance(id,1));this.arrange();return true;
+    }
     if(this.mon?.dex===30012){
       const def=G.Moves.BY_ID[id];
       if(def?.learnLevel>Math.max(1,this.level||1))return false;
@@ -138,7 +170,7 @@
   const poolFor=G.Moves.poolFor;
   G.Moves.poolFor=mon=>{
     const player=G.Game.player;
-    if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateGaaraPassives(player);migratePainPassives(player);migrateTemariPassives(player);migrateKimimaroPassives(player);}
+    if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateNarutoAutomatic(player);migrateGaaraPassives(player);migratePainPassives(player);migrateTemariPassives(player);migrateKimimaroPassives(player);}
     const ids=poolFor(mon);
     if(mon.dex===30012){
       const level=startingRun?1:player?.mon===mon?Math.max(1,player.level||1):1;
@@ -147,7 +179,7 @@
     // startRun may ask for a second starting attack before all wrappers expose
     // the new player; Temari has no legal second attack at level one.
     if(startingRun&&mon.dex===30011)return ids.filter(id=>!G.Moves.BY_ID[id].learnLevel);
-    if(startingRun&&mon.dex===30002){
+    if(startingRun&&[30001,30002].includes(mon.dex)){
       const milestones=milestonesFor(mon.dex);
       return ids.filter(id=>!milestones.some(m=>m.id===id&&m.level>1));
     }
@@ -184,6 +216,7 @@
   const gatesLevels=[4,8,16];
   G.LevelUp.offer=(player,n=3)=>{
     G.NarutoSharingan?.migrate(player);
+    migrateNarutoAutomatic(player);
     migrateGaaraPassives(player);
     migratePainPassives(player);
     migrateTemariPassives(player);

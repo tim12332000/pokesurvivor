@@ -14,7 +14,7 @@
   const valid = f => f.owner && controlled(f.owner) && !f.owner.dead && f.owner.hp > 0 && f.world === G.World;
   const cap = () => { const limit=G.Quantity?.count(G.Game.player,CAP)??CAP; while (fields.length > limit) fields.shift(); };
   const targets = (x, y, r) => [...new Set(G.EnemyMgr.queryCircle(x, y, r))].filter(e => !e.dead);
-  const techniqueFor = mode => [G.NarutoGaara,G.NarutoSupport,G.NarutoLee,G.NarutoOffense,G.NarutoChidori,G.NarutoTenten,G.NarutoPain,G.NarutoTemari,G.NarutoTemariReflect,G.NarutoKimimaro].find(api=>api?.supports(mode));
+  const techniqueFor = mode => [G.NarutoSummoning,G.NarutoGaara,G.NarutoSupport,G.NarutoLee,G.NarutoOffense,G.NarutoChidori,G.NarutoTenten,G.NarutoPain,G.NarutoTemari,G.NarutoTemariReflect,G.NarutoKimimaro].find(api=>api?.supports(mode));
   function hit(pl, m, e, base, dx, dy, knock = m.knock || 0) {
     if (!e || e.dead) return 0;
     const k = G.Types.mult(m.type, e.types) * G.Weather.mult(m.type), crit = pl.critChance > 0 && Math.random() < pl.critChance;
@@ -197,43 +197,52 @@
     }
     G.FX.spark(pl.x+Math.cos(f.aim)*22,pl.y-G.LIFT+Math.sin(f.aim)*22,'#b9f5ff',Math.cos(f.aim),Math.sin(f.aim),12);
     G.Audio.sfx('hit');
+    if(pl===G.Game.player)G.Camera.kick(.18);
   }
   function updateRasengan(f, dt) {
-    if(!f.owner.activeGroup().some(m=>m.id===f.m.id))return false;
+    const learned=f.owner.moves.some(m=>m.id===f.m.id&&m.autoCast);
+    if(f.m.autoCast?!learned:!f.owner.activeGroup().some(m=>m.id===f.m.id))return false;
     let remaining=dt;
     while(remaining>1e-9) {
-      const duration=f.phase==='charge'?Math.max(.01,f.m.charge||.6):f.phase==='dash'?.16:.28;
+      const duration=f.phase==='charge'?Math.max(.01,f.m.charge||.6):['dash','strike'].includes(f.phase)?.16:.28;
       const step=Math.min(remaining,duration-f.phaseAge);remaining-=step;f.phaseAge+=step;
+      if(f.phase==='strike'){
+        const reach=f.m.range-f.m.width/2;
+        rasenganContact(f,f.owner.x+Math.cos(f.aim)*reach,f.owner.y+Math.sin(f.aim)*reach);
+      }
       if(f.phase==='dash') {
-        const pl=f.owner,travel=f.m.range/.16*step,pieces=Math.max(1,Math.ceil(travel/4));
+        const pl=f.owner,travel=(f.m.cloneDashRange||f.m.range)/.16*step,pieces=Math.max(1,Math.ceil(travel/4));
         let blocked=false;
         for(let i=0;i<pieces;i++) {
           const x=pl.x+Math.cos(f.aim)*travel/pieces,y=pl.y+Math.sin(f.aim)*travel/pieces;
           if(!G.World.isFree(x,y,pl.r,true)){blocked=true;break;}
           pl.x=x;pl.y=y;
-          for(const e of targets(x,y,f.m.width/2+32)) {
-            if(f.hits.has(e)||Math.hypot(e.x-x,e.y-y)>f.m.width/2+e.r||!rasenganPath(x,y,e.x,e.y,1))continue;
-            f.hits.add(e);hit(pl,f.m,e,f.m.dmg*pl.atk,Math.cos(f.aim),Math.sin(f.aim));
-          }
+          rasenganContact(f,x,y);
         }
         if(blocked)f.phaseAge=duration;
       }
       if(f.phaseAge+1e-9<duration)break;
-      if(f.phase==='charge'){f.phase='dash';f.phaseAge=0;}
-      else if(f.phase==='dash')rasenganImpact(f);
+      if(f.phase==='charge'){f.phase=f.stationary?'strike':'dash';f.phaseAge=0;}
+      else if(f.phase==='dash'||f.phase==='strike')rasenganImpact(f);
       else return false;
     }
     return true;
   }
+  function rasenganContact(f,x,y){
+    for(const e of targets(x,y,f.m.width/2+32)){
+      if(f.hits.has(e)||Math.hypot(e.x-x,e.y-y)>f.m.width/2+e.r||!rasenganPath(f.owner.x,f.owner.y,e.x,e.y,1))continue;
+      f.hits.add(e);hit(f.owner,f.m,e,f.m.dmg*f.owner.atk,Math.cos(f.aim),Math.sin(f.aim));
+    }
+  }
   const playerUpdate=G.Player.prototype.update,playerHurt=G.Player.prototype.hurt;
   G.Player.prototype.update=function(dt) {
     const f=rasenganFor(this);
-    if(!f||f.phase==='impact')return playerUpdate.call(this,dt);
+    if(!f||f.stationary||f.phase==='impact')return playerUpdate.call(this,dt);
     const frozen=this.frozen;this.frozen=true;
     try{return playerUpdate.call(this,dt);}finally{this.frozen=frozen;}
   };
   G.Player.prototype.hurt=function(...args) {
-    if(rasenganFor(this)?.phase==='dash')return;
+    if(['dash','strike'].includes(rasenganFor(this)?.phase))return;
     return playerHurt.apply(this,args);
   };
   function inSand(f, e, front = f.m.range) {
@@ -310,7 +319,7 @@
     if(m.id==='naruto-lee')return startWhirlwind(pl,m);
     if(m.id==='naruto-naruto') {
       if(rasenganFor(pl))return false;
-      field(pl,m,'rasengan',{phase:'charge',phaseAge:0,aim:pl.aim,hits:new Set()});
+      field(pl,m,'rasengan',{phase:'charge',phaseAge:0,aim:pl.aim,hits:new Set(),stationary:pl===G.Game.player});
       return true;
     }
     if(handler)return handler.cast(pl,m);
@@ -343,27 +352,41 @@
   function clear(owner) { vanilla.clear(owner); for (let i = fields.length - 1; i >= 0; i--) if (!owner || fields[i].owner === owner) fields.splice(i, 1); for (const p of [...bombs]) if (!owner || p.owner === owner) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } }
   C.tick = function(dt, pl, now) {
     if (!pl || pl.dead) return vanilla.tick(dt, pl, now);
+    G.NarutoSkillCatalog?.migrateNarutoAutomatic?.(pl);
     const original = pl.activeGroup; let custom = [];
-    if (original) { const group = original.call(pl); custom = group.filter(m => m && m.digimonSkill); if (!custom.length) return vanilla.tick(dt, pl, now); pl.activeGroup = function() { return original.call(this).filter(m => !m.digimonSkill); }; }
+    const group=original?.call(pl)||[];
+    custom=[...new Set([...group.filter(m=>m&&m.digimonSkill),...(pl.moves||[]).filter(m=>m.autoCast&&m.digimonSkill)])];
+    if(!custom.length)return vanilla.tick(dt,pl,now);
+    if(original)pl.activeGroup=function(){return original.call(this).filter(m=>!m.digimonSkill)};
     try { vanilla.tick(dt, pl, now); } finally { if (original) pl.activeGroup = original; }
     for(const m of custom) {
-      if(m.passive||G.NarutoGaara?.maintains(pl,m))continue;
+      if((m.passive&&!m.autoCast)||G.NarutoGaara?.maintains(pl,m))continue;
+      if(m.autoCast&&!(dt>0))continue;
       if(m.digiMode==='kusanagi-orbit'&&G.NarutoKusanagi?.active(pl))continue;
       m.t-=dt;if(m.t>0)continue;
+      if(m.autoCast&&rasenganFor(pl)){m.t=0;continue;}
       if(m.id==='naruto-lee'&&(whirlwindFor(pl)||G.NarutoLee?.activeFor(pl))){m.t=.05;continue;}
-      const target=pl.target,handler=techniqueFor(m.digiMode);
+      const reach=m.id==='naruto-naruto'&&pl!==G.Game.player?(m.cloneDashRange||m.range):(m.range||m.radius||520),handler=techniqueFor(m.digiMode);
+      let target=pl.target;
+      if(m.autoCast&&(!target||target.dead||G.U.dist(pl.x,pl.y,target.x,target.y)>reach))
+        target=G.Projectiles.nearest(targets(pl.x,pl.y,reach),pl.x,pl.y,reach+1e-6);
       if(handler?.canCast&&!handler.canCast(pl,m)){m.t=.15;continue;}
       if(m.digiMode==='shadow-clones'&&!G.NarutoClones?.canCast(pl,m)){m.t=.15;continue;}
-      if(['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode)&&(!target||target.dead||G.U.dist(pl.x,pl.y,target.x,target.y)>(m.range||m.radius||520))){m.t=.05;continue;}
+      if(['shot','beam','melee','dash','slam','gate','blizzard','dual','sand-wave'].includes(m.digiMode)&&(!target||target.dead||G.U.dist(pl.x,pl.y,target.x,target.y)>reach)){m.t=.05;continue;}
       m.t=Math.max(m.minCooldown||.05,m.cd*pl.cdMul/(G.NarutoGates?.attackSpeedMultiplier(pl)??1));const snapshot=cloneMove(m);
-      pl.cast(m);if(G.Coop.active&&!G.SelfClones?.isActor(pl))G.Coop.cast(pl,m);m.castAt=performance.now();
-      if(!cast(pl,snapshot))m.t=.25;
+      const previousAim=pl.aim;
+      if(m.autoCast&&target)pl.aim=Math.atan2(target.y-pl.y,target.x-pl.x);
+      try{
+        pl.cast(m);if(G.Coop.active&&!G.SelfClones?.isActor(pl))G.Coop.cast(pl,m);m.castAt=performance.now();
+        if(!cast(pl,snapshot))m.t=.25;
+      }finally{if(m.autoCast)pl.aim=previousAim;}
     }
   };
   C.updateFields = update;
   C.drawGroundFields = ctx => { vanilla.ground(ctx); draw(ctx, ['gate','frost','charge']);
     for(const f of fields)if(f.kind==='sand-wave'&&valid(f))G.NarutoSandVFX?.drawGround(ctx,f);
     for(const f of fields)if(f.kind==='rasengan'&&valid(f)&&f.phase==='impact') {
+      if(G.NarutoRasenganVFX){G.NarutoRasenganVFX.drawGround(ctx,f);continue;}
       const progress=Math.min(1,f.phaseAge/.28),r=f.m.radius*.75*progress;
       ctx.save();ctx.globalAlpha=1-progress;ctx.strokeStyle='#b9f5ff';ctx.lineWidth=3;
       ctx.beginPath();ctx.ellipse(f.x,f.y,r,r*.87,0,0,TAU);ctx.stroke();
@@ -375,6 +398,7 @@
     for(const f of fields) {
       if(!valid(f))continue;
       if(f.kind==='rasengan') {
+        if(G.NarutoRasenganVFX){G.NarutoRasenganVFX.drawAir(ctx,f);G.NarutoRasenganVFX.drawImpact(ctx,f);continue;}
         if(f.phase==='charge') {
           const progress=Math.min(1,f.phaseAge/Math.max(.01,f.m.charge)),pl=f.owner;
           const x=pl.x+Math.cos(f.aim)*20,y=pl.y-G.LIFT+Math.sin(f.aim)*16;
@@ -409,7 +433,7 @@
     }
   };
   C.clearFields = clear;
-  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); const live=new Set(G.Projectiles.all()); for (const p of [...bombs]) { const b = p.digiBomb, alive = live.has(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || !controlled(b.owner) || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; if(m.id==='naruto-fireball')G.FX.sp('naruto-great-fireball-burst','naruto-fireball',p.x,p.y-G.LIFT,{life:.24,scale:b.r/51,frameRate:12}); G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
+  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); const live=new Set(G.Projectiles.all()); for (const p of [...bombs]) { const b = p.digiBomb, alive = live.has(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || !controlled(b.owner) || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; if(m.id==='naruto-fireball')G.FX.sp('naruto-great-fireball-burst','naruto-fireball',p.x,p.y-G.LIFT,{life:.24,scale:b.r/51,frameRate:12}); if(m.id==='naruto-rasenshuriken'&&G.NarutoRasenshurikenVFX)G.NarutoRasenshurikenVFX.impact(b.owner,p.x,p.y,b.r);else G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
   // Native pixel additions; VFX's public tables are the same used by the cache.
   G.VFX.PAL.holy = ['#786022','#b38a32','#e2c56b','#fff0b0','#fffdf0'];
   G.VFX.PAL.blueflame = ['#133e70','#267ed1','#58c5ff','#b3f1ff','#fff'];

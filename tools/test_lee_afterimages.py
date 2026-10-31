@@ -20,16 +20,21 @@ HELPERS = r"""() => {
  };
  A.trailStep=(dt=.02)=>{const p=A.p();A.resume();try{p.update(dt);G.Combat.updateFields(dt)}finally{A.pause()}};
  A.trailState=()=>G.NarutoGates.afterimagesFor(A.p());
+ A.readyGates=()=>{const g=G.NarutoGates,p=A.p();
+   g.update(0);
+   if(!g.active(p))A.advance(g.status(p).cooldownRemaining||g.config.cooldown);
+   if(g.performing(p))A.advance(g.config.openingDuration+g.config.openingBurstDuration+.1);
+ };
  A.trailPixels=canvas=>{
    const data=canvas.getContext('2d',{willReadFrequently:true}).getImageData(0,0,canvas.width,canvas.height).data;
-   let blue=0,red=0,x0=canvas.width,x1=-1,y0=canvas.height,y1=-1,maxAlpha=0,checksum=0;
+   let green=0,red=0,x0=canvas.width,x1=-1,y0=canvas.height,y1=-1,maxAlpha=0,checksum=0;
    for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++){
      const k=(y*canvas.width+x)*4,r=data[k],g=data[k+1],b=data[k+2],a=data[k+3];
-     const isBlue=a>8&&b>100&&b>r*1.3&&b>g*1.12,isRed=a>8&&r>100&&r>g*1.5&&r>b*1.3;
-     if(isBlue)blue++;if(isRed)red++;
-     if(isBlue||isRed){maxAlpha=Math.max(maxAlpha,a);checksum=(checksum+(k+1)*a)%2147483647;x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y)}
+     const isGreen=a>8&&g>100&&g>r*1.3&&g>b*1.12,isRed=a>8&&r>100&&r>g*1.5&&r>b*1.3;
+     if(isGreen)green++;if(isRed)red++;
+     if(isGreen||isRed){maxAlpha=Math.max(maxAlpha,a);checksum=(checksum+(k+1)*a)%2147483647;x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y)}
    }
-   return {blue,red,pixels:blue+red,width:x1-x0+1,height:y1-y0+1,maxAlpha,checksum,bounds:[x0,y0,x1,y1]};
+   return {green,red,pixels:green+red,width:x1-x0+1,height:y1-y0+1,maxAlpha,checksum,bounds:[x0,y0,x1,y1]};
  };
  A.trailCapture=()=>{
    const p=A.p(),level=G.NarutoGates.stage(p),style=G.NarutoGates.config.trails[level-1];
@@ -37,7 +42,11 @@ HELPERS = r"""() => {
    const ctx=canvas.getContext('2d',{willReadFrequently:true}),calls=[],original=ctx.drawImage.bind(ctx);
    ctx.drawImage=function(image,...args){calls.push({sources:sourceOf(image),width:image.width,height:image.height,args});return original(image,...args)};
    ctx.save();ctx.translate(760-p.x,250-p.y);G.Combat.drawGroundFields(ctx);ctx.restore();
-   const footprint=A.trailPixels(canvas),expected=level<5?'blue':'red',opposite=level<5?'red':'blue';
+   const air=document.createElement('canvas');air.width=900;air.height=340;
+   const airCtx=air.getContext('2d');airCtx.translate(760-p.x,250-p.y);G.Combat.drawAirFields(airCtx);
+   const particles=A.trailPixels(air),expectedColor=level<5?'green':'red',otherColor=level<5?'red':'green';
+   A.assert(particles[expectedColor]>0&&particles[otherColor]===0,'air aura RGB did not match stage '+level);
+   const footprint=A.trailPixels(canvas),expected=level<5?'green':'red',opposite=level<5?'red':'green';
    A.assert(footprint[expected]>500&&footprint[opposite]===0,'native trail RGB did not match stage '+level+' '+JSON.stringify(footprint));
    A.assert(calls.some(c=>c.sources.some(src=>/lee-gates-(common|skills)-v1[.]png/.test(src))),'historical sprite did not originate in native Lee Gates art');
    A.assert(footprint.maxAlpha<255&&footprint.maxAlpha>=style.opacity*255*.75,'trail alpha is opaque or too faint');
@@ -71,7 +80,7 @@ def comparison(stages, label):
     font = ImageFont.truetype(r'C:\Windows\Fonts\msjh.ttc', 21)
     for index, name in enumerate(['開門', '休門', '生門', '傷門', '杜門']):
         level = index + 1
-        color = '藍色' if level < 5 else '紅色'
+        color = '綠色' if level < 5 else '紅色'
         draw.text((index * width + 12, 8), f'{name} · {color}', font=font, fill='#edf4ee')
         shot = Image.open(OUT / f'{label}-stage{level}.png').convert('RGB').crop(box)
         board.paste(shot, (index * width, 44))
@@ -103,7 +112,7 @@ def main():
                 for level in range(1,6):
                     page.evaluate(r"""level=>{const A=Acceptance,p=A.p();A.leeArena();
                       const m=p.moves.find(m=>m.id==='naruto-gates');while(m.lvl<level){const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:naruto-gates');A.assert(card&&card.apply(p)!==false,'upgrade trail stage')}
-                      A.advance(1.1);A.trailBaseline={hp:p.hp,atk:p.atk,spd:p.spd,damage:p.dmgDealt};
+                      A.readyGates();A.trailBaseline={hp:p.hp,atk:p.atk,spd:p.spd,damage:p.dmgDealt};
                     }""",level)
                     if mobile:
                         page.evaluate('Acceptance.resume()')
@@ -116,7 +125,7 @@ def main():
                       for(let n=0;n<80;n++){A.trailStep(.02);A.assert(A.trailState().length<=G.NarutoGates.config.trails[G.NarutoGates.stage(p)-1].count,'history count exceeded stage cap');}
                       A.assert(p.x>x+10,'actual Player.update did not move');
                       const shots=A.trailState();A.assert(shots.length>0,'moving gates emitted no afterimages');
-                      const level=G.NarutoGates.stage(p),style=G.NarutoGates.config.trails[level-1],expected=level<5?'#349dff':'#ff315b';
+                      const level=G.NarutoGates.stage(p),style=G.NarutoGates.config.trails[level-1],expected=level<5?'#70f5aa':'#ff315b';
                       A.assert(style.color===expected&&style.count===level+5,'stage color/count spec mismatch');
                       A.assert(shots.every(s=>s.color===expected&&s.opacity===style.opacity&&s.life===style.life&&s.scale===style.scale),'snapshots lost their own color/opacity/lifetime');
                       A.assert(shots.every(s=>s.x<p.x+.001)&&shots.some(s=>s.x<p.x-2),'afterimages did not trail real historical positions');
@@ -147,21 +156,21 @@ def main():
                   A.assert(big.pixels>small.pixels,'higher gate did not increase colored footprint');return {small,big};
                 }""",result['stages'])
                 comparison(result['stages'],label)
-                # A paused stage change must hide old blue history before any tick.
+                # A paused stage change must hide old green history before any tick.
                 page.keyboard.down('KeyD')
                 page.evaluate(r"""() => {
                   const A=Acceptance,p=A.p();A.leeArena();
                   Object.assign(p.moves.find(m=>m.id==='naruto-gates'),G.Moves.instance('naruto-gates',4));
-                  A.advance(1.1);for(let n=0;n<40;n++)A.trailStep(.02);
-                  A.assert(A.trailState().length&&A.trailState().every(s=>s.color==='#349dff'),'blue transition fixture missing');
+                  A.readyGates();for(let n=0;n<40;n++)A.trailStep(.02);
+                  A.assert(A.trailState().length&&A.trailState().every(s=>s.color==='#70f5aa'),'green transition fixture missing');
                 }""")
                 page.keyboard.up('KeyD')
                 result['pausedStageChange']=page.evaluate(r"""() => {
                   const A=Acceptance,p=A.p(),position=[p.x,p.y];A.pause();
                   const card=G.LevelUp.offer(p,100).find(c=>c.key==='up:naruto-gates');
                   A.assert(card&&card.apply(p)!==false,'native stage-five upgrade card missing');
-                  A.assert(!G.NarutoGates.afterimagesFor(p).length,'paused upgrade exposed old blue snapshots');
-                  A.assert(A.trailEmptyDraw().pixels===0,'paused upgrade rendered old blue snapshots');
+                  A.assert(!G.NarutoGates.afterimagesFor(p).length,'paused upgrade exposed old green snapshots');
+                  A.assert(A.trailEmptyDraw().green===0,'paused upgrade rendered old green snapshots');
                   A.trailStep(.02);
                   A.assert(p.x===position[0]&&p.y===position[1]&&!A.trailState().length,'stationary upgrade emitted a phantom snapshot');
                   return {immediateHidden:true,stationaryNoPhantom:true};
@@ -170,7 +179,7 @@ def main():
                 page.keyboard.down('KeyD')
                 result['cleanup']=page.evaluate(r"""async () => {
                   const A=Acceptance,p=A.p(),g=G.NarutoGates,out=[];
-                  const refill=()=>{A.leeArena();A.advance(1.1);for(let n=0;n<20;n++)A.trailStep(.02);A.assert(g.afterimages.length,'cleanup fixture did not emit')};
+                  const refill=()=>{A.leeArena();A.readyGates();for(let n=0;n<20;n++)A.trailStep(.02);A.assert(g.afterimages.length,'cleanup fixture did not emit')};
                   for(const reason of ['clear','death','world']){
                     refill();const world=G.World;
                     if(reason==='clear')G.Combat.clearFields(p);

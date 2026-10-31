@@ -1,0 +1,192 @@
+{
+  "scope": "existing game sprites reused only in independent art preview",
+  "source": "js/data/sprites-meta.js and assets/pokemon; code-painted tile props reused",
+  "pixelScale": 2,
+  "normalIds": [
+    "19",
+    "43"
+  ],
+  "bossId": "217",
+  "sprites": [
+    {
+      "id": "19",
+      "shadow": 1,
+      "idle": {
+        "w": 32,
+        "h": 32,
+        "n": 8,
+        "r": 8,
+        "d": [
+          40,
+          2,
+          2,
+          2,
+          4,
+          2,
+          2,
+          2
+        ],
+        "ax": 15.5,
+        "ay": 19.5,
+        "image": "stage/19-idle.png",
+        "source": "assets/pokemon/19/Idle.png",
+        "bytes": 3732,
+        "sha256": "902a6f025ab7c5b51744235913cd9478233d4d8de2edcf360457b545d310d932"
+      },
+      "hurt": {
+        "w": 56,
+        "h": 56,
+        "n": 2,
+        "r": 8,
+        "d": [
+          2,
+          8
+        ],
+        "ax": 27.5,
+        "ay": 29.5,
+        "image": "stage/19-hurt.png",
+        "source": "assets/pokemon/19/Hurt.png",
+        "bytes": 2838,
+        "sha256": "8420426d6b2ed7f23453c7ad0cbd289f29dc4ff2c0922afe59c9d6ab50cf2360"
+      }
+    },
+    {
+      "id": "43",
+      "shadow": 0,
+      "idle": {
+        "w": 24,
+        "h": 40,
+        "n": 5,
+        "r": 8,
+        "d": [
+          30,
+          4,
+          4,
+          4,
+          4
+        ],
+        "ax": 11.5,
+        "ay": 23.5,
+        "image": "stage/43-idle.png",
+        "source": "assets/pokemon/43/Idle.png",
+        "bytes": 3381,
+        "sha256": "7a550a5b1fbdc129ae81b0bae8a6884b17a3a00b2bd36897762e482419ff641a"
+      },
+      "hurt": {
+        "w": 56,
+        "h": 48,
+        "n": 2,
+        "r": 8,
+        "d": [
+          2,
+          8
+        ],
+        "ax": 27.5,
+        "ay": 25.5,
+        "image": "stage/43-hurt.png",
+        "source": "assets/pokemon/43/Hurt.png",
+        "bytes": 2501,
+        "sha256": "261203295cda0f5acd46d78c70bd5f762833be377083852cef9b3e2a24e9b743"
+      }
+    },
+    {
+      "id": "217",
+      "shadow": 2,
+      "idle": {
+        "w": 40,
+        "h": 56,
+        "n": 14,
+        "r": 8,
+        "d": [
+          60,
+          10,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          2,
+          10
+        ],
+        "ax": 19.5,
+        "ay": 31.5,
+        "image": "stage/217-idle.png",
+        "source": "assets/pokemon/217/Idle.png",
+        "bytes": 6252,
+        "sha256": "ec6415f4ef3427b27e6bbf3a11b411bcf0bc22f1ff1007f40805359072c6a082"
+      },
+      "hurt": {
+        "w": 48,
+        "h": 56,
+        "n": 2,
+        "r": 8,
+        "d": [
+          2,
+          8
+        ],
+        "ax": 23.5,
+        "ay": 29.5,
+        "image": "stage/217-hurt.png",
+        "source": "assets/pokemon/217/Hurt.png",
+        "bytes": 3388,
+        "sha256": "1f56a6974351cd3a0435e2ce307aace3801bdce6082feaf792d691bde873dd26"
+      }
+    }
+  ],
+  "props": {
+    "tree": {
+      "image": "stage/tree.png",
+      "width": 30,
+      "height": 40,
+      "source": "js/world/tiles.js::propSprite(0,tree,0)",
+      "bytes": 879,
+      "sha256": "8e10251369b5652670922eddddc9de8319c1337f43d9c8f69f5c3cfc48009179"
+    },
+    "rock": {
+      "image": "stage/rock.png",
+      "width": 22,
+      "height": 17,
+      "source": "js/world/tiles.js::propSprite(0,rock,0)",
+      "bytes": 354,
+      "sha256": "1ae7c1fbc52ea602cc506867838817a411a1650b48272cd10538fea2e5def2d1"
+    },
+    "grass": {
+      "image": "stage/grass.png",
+      "width": 20,
+      "height": 17,
+      "source": "js/world/tiles.js::propSprite(0,grass,0)",
+      "bytes": 367,
+      "sha256": "2cb7086e7589399ac736255575f25775f3f41caa67f2b9b2b4a605ae8a3b06bd"
+    }
+  },
+  "sourceTransferBytes": 23692,
+  "palette": {
+    "floor": [
+      "#3e7a39",
+      "#44813d",
+      "#397134"
+    ],
+    "dirt": [
+      "#7d6742",
+      "#735e3b",
+      "#86704a"
+    ],
+    "speck": "#2f5f2b",
+    "light": "#5f9d50",
+    "grass": [
+      "#2f6b2c",
+      "#4c9a3f",
+      "#7cc45a"
+    ],
+    "rock": [
+      "#5e6670",
+      "#7f8893",
+      "#a1aab4"
+    ]
+  }
+}

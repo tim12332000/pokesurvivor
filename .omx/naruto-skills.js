@@ -122,8 +122,8 @@
     [30001, 'naruto', '多重影分身之術', 'Multi Shadow Clone Jutsu', '01_1423', {
       mode: 'shadow-clones', icon:'shadowClones', passive: true, type: 'fighting', cd: clones.cooldown, dmg: clones.punchDamage, range: 240,
       cloneDuration: clones.duration, punchCd: clones.punchCooldown, vis: { pal: 'naruto-blue' },
-      desc:`學會後自動召喚，不占主動槽；冷卻 ${clones.cooldown} 秒。結印 ${clones.sealDuration} 秒後召喚基礎 ${clones.counts.join('／')} 隻分身，持續 ${clones.duration} 秒；數量卡每張使分身數 ×1.25，累乘後取整。分身模仿螺旋丸、螺旋手裏劍與忍具，各自造成完整傷害；每隻受擊 ${clones.hitsToDismiss} 次後消散。`,
-      ups: clones.counts.slice(1).map(count=>({t:`分身基礎數量 → ${count} 隻；每隻完整傷害`,m:{}}))
+      desc:`學會後自動召喚，不占主動槽；冷卻 ${clones.cooldown} 秒。結印 ${clones.sealDuration} 秒後召喚基礎 ${clones.counts.join('／')} 隻分身，持續 ${clones.duration} 秒；數量卡每張使分身數 ×1.25，累乘後取整。分身拳擊與模仿螺旋丸、螺旋手裏劍及忍具的傷害均為原本的 ${clones.damageMultiplier*100}%；每隻受擊 ${clones.hitsToDismiss} 次後消散。`,
+      ups: clones.counts.slice(1).map(count=>({t:`分身基礎數量 → ${count} 隻；每隻傷害 ${clones.damageMultiplier*100}%`,m:{}}))
     }],
     [30002, 'sasuke', '千鳥', 'Chidori', '01_1296', {
       mode: 'chidori-chain', icon:'chidori', type: 'electric', cd: 1.05, dmg: 44, charge: .3,
@@ -236,18 +236,29 @@
   ];
   const extra = [
     ['naruto-naruto', [30001], {
-      icon:'rasengan', name: '螺旋丸', mode: 'dash', type: 'fighting', cd: 2, dmg: 48, charge: .6,
-      range: 125, radius: 125, width: 56, knock: 100,
+      icon:'rasengan', name: '螺旋丸', mode: 'dash', passive:true, autoCast:true, learnLevel:3, type: 'fighting', cd: 5, dmg: 48, charge: .6,
+      range: 80, cloneDashRange:125, radius: 125, width: 56, knock: 100,
       vis: { proj: 'wind', melee: 'impact', pal: 'naruto-blue' },
-      desc:'原地集氣 0.6 秒後向前突進，突進中免傷；收招衝擊推開周圍一般敵人，並獲得 0.5 秒保護。每個沿途目標只受一次傷害；選用時，現存影分身各自接近敵人並施放完整傷害的螺旋丸。',
+      desc:`學會後常駐自動施放，不需選招、不占主動槽，基礎冷卻 5 秒。敵人進入近身範圍 80 時集氣 0.6 秒後向前出掌，本體不自動位移、不鎖走位；出掌中免傷，收招推開周圍一般敵人並獲得 0.5 秒保護，每個前方目標只受一次傷害。影分身保留接近與突進，傷害為本體 ${clones.damageMultiplier*100}%；冷卻縮減有效。`,
       source_url: 'https://naruto-official.com/en/news/01_1423'
     }],
     ['naruto-rasenshuriken', [30001], {
-      icon:'rasenshuriken', name: '風遁・螺旋手裏劍', mode: 'shot', type: 'flying', cd: 2.5, dmg: 58,
+      icon:'rasenshuriken', name: '風遁・螺旋手裏劍', mode: 'shot', passive:true, autoCast:true, learnLevel:6, type: 'flying', cd: 6, dmg: 58,
       speed: 350, life: 1.3, size: 15, range: 455, blastRadius: 110, knock: 65,
       vis: { proj: 'naruto-wind-shuriken', trail: 'wind', pal: 'naruto-blue' },
-      desc:'投擲旋轉手裏劍，命中後爆發風刃，傷害周圍敵人。',
+      desc:'學會後常駐自動施放，不需選招、不占主動槽，基礎冷卻 6 秒。投擲旋轉手裏劍，命中後爆發風刃，傷害周圍敵人。影分身各自按冷卻模仿施放；冷卻縮減有效。',
       source_url: 'https://naruto-official.com/en/news/01_1423'
+    }],
+    ['naruto-toad-summon', [30001], {
+      icon:'toadSummon', name:'通靈之術・蛤蟆文太', mode:'toad-summon', passive:true, autoCast:true, type:'normal', learnLevel:12,
+      cd:12, dmg:160, range:320, radius:115, windup:.65, duration:2.6, knock:90,
+      vis:{pal:'naruto-sand'},
+      ups:[{t:'加入短刀斬、傷害 +20%、支援3秒',m:{dmg:1.2,duration:3}},
+        {t:'登場升為屋台重壓、範圍 +12%、冷卻 -10%',m:{cd:.9,radius:1.12,windup:.9}},
+        {t:'加入蛤蟆油＋起爆符點燃、支援7.2秒',m:{duration:7.2}},
+        {t:'加入組合變化・巨狐突襲、傷害 +25%、支援8.8秒',m:{dmg:1.25,duration:8.8}}],
+      desc:'五階連段：①登場震擊＋3發鐵砲玉；②追加短刀斬；③登場升為屋台重壓；④吐油後由鳴人的起爆符苦無點燃；⑤組合變化成巨狐突襲。震擊／重壓、每發水彈、刀斬、油炎、巨狐分別為當階基傷50%／75%、1/6、35%、50%、65%。基礎冷卻12秒，最高階支援8.8秒，切招保留；每次一隻且不吃數量卡，水／油彈只射嘴前方左右側目標。',
+      source_url:'https://naruto-official.com/en/news/01_1287'
     }],
     ['naruto-nine-tails-cloak', [30001], {
       icon:'nineTailsCloak', name:'九尾查克拉外衣', mode:'nine-tails-cloak', type:'fighting', cd:18, dmg:0, learnLevel:9,
@@ -343,6 +354,16 @@
       ],
       desc:'常駐普攻，不占主動槽。自動對附近敵人快速連打，末擊擊退；五階每擊傷害18／22／22／28／34，連打3／3／4／4／5次，基礎冷卻1.4／1.3／1.2／1.1／1秒，最低0.5秒。數量卡使連打數×1.25，累乘取整、最多12擊。停住時可短距離追身，追身期間短暫護身；移動輸入不強制追身。蓮華或木葉旋風施放時讓出動作。招名與機制為本作體術改編。',
       source_url:'https://naruto-official.com/en/news/01_1652'
+    }],
+    ['naruto-lee-drunken', [30006], {
+      icon:'leeDrunken',name:'醉拳',mode:'lee-drunken',passive:true,type:'fighting',learnLevel:4,
+      cd:0,dmg:40,dodgeChance:.10,radius:120,knock:35,vis:{pal:'grass',melee:'impact'},
+      ups:[{t:'閃避率15%・反擊傷害48',m:{dodgeChance:.15,dmg:1.2}},
+        {t:'閃避率20%・反擊傷害60',m:{dodgeChance:.20,dmg:1.25}},
+        {t:'閃避率25%・反擊傷害72',m:{dodgeChance:.25,dmg:1.2}},
+        {t:'閃避率30%・反擊傷害90',m:{dodgeChance:.30,dmg:1.25}}],
+      desc:'常駐被動，不占主動槽。受到敵人接觸或飛行攻擊時，有10／15／20／25／30%機率閃避並短暫護身，成功後立即反擊120範圍內最近可達敵人一次，五階基傷40／48／60／72／90。無近身目標仍可閃避；不閃避地形或純粹傷害，不穿牆、不打斷八門與蓮華演出。機率與數值為本作改編。',
+      source_url:'https://naruto-official.com/en/anime/naruto1/list/01_348'
     }],
     ['naruto-lotus', [30006], {
       icon:'frontLotus', name:'表蓮華', mode:'lee-lotus', type:'fighting', learnLevel:3, cd:13, dmg:220,
@@ -460,7 +481,7 @@
   );
   const kinds = { 'gaara-sand-burst':'projectile', 'gaara-coffin':'meteor', 'gaara-tsunami':'cone', 'gaara-shield':'buff', 'gaara-sand-prison':'buff', 'gaara-sand-armor':'buff', 'chidori-chain': 'dash', dash: 'dash', melee: 'melee', slam: 'melee', beam: 'beam', shot: 'projectile', aura: 'aura', nova: 'nova', 'sand-wave': 'cone', 'shadow-clones': 'buff',
     sharingan:'buff', 'sharingan-evolution':'buff', 'medical-heal':'buff', regeneration:'buff', 'earth-wall':'buff', byakugan:'buff', gates:'buff', 'gates-passive':'buff', 'sand-shield':'buff', 'nine-tails-cloak':'buff',
-    'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
+    'lee-drunken':'buff', 'lee-lotus':'melee', 'lee-reverse-lotus':'melee', lotus:'melee', 'sand-coffin':'meteor', 'single-illusion':'meteor', 'black-flames':'meteor', 'kusanagi-orbit':'orbit' };
   extra.push(
     ['naruto-tenten-bounce',[30009],{
       name:'忍具連彈',mode:'tenten-bounce',icon:'tentenBounce',passive:true,type:'steel',learnLevel:2,
@@ -636,6 +657,7 @@
   kinds['lee-pursuit']='melee';
   Object.assign(kinds,{'pain-basic':'projectile','pain-gravity':'aura','pain-missiles':'projectile','pain-summon':'dash','pain-soul':'melee','pain-absorb':'buff','pain-repair':'buff','pain-planet':'meteor'});
   kinds['gaara-sand-guard'] = 'buff';
+  kinds['toad-summon'] = 'meteor';
   Object.assign(kinds,{'tenten-kunai':'projectile','tenten-fuma':'projectile','tenten-mastery':'buff','tenten-bounce':'buff','tenten-guard':'buff','tenten-tags':'meteor','tenten-twin':'projectile'});
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
@@ -667,6 +689,7 @@
           radius: 1.12, width: 1.12, life: 1.12,
           // The base upgrade system assigns unknown fields instead of multiplying them.
           ...(design.range != null ? { range: design.range * 1.12 } : {}),
+          ...(design.cloneDashRange != null ? {cloneDashRange:design.cloneDashRange*1.12} : {}),
           ...(design.blastRadius != null ? { blastRadius: design.blastRadius * 1.12 } : {}),
           ...(design.fieldDuration != null ? {fieldDuration:design.fieldDuration*1.12} : {})
         } },
@@ -731,9 +754,10 @@
   function activationLabel(move) {
     if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari','naruto-lee-pursuit','naruto-kimimaro'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
     if (move.id==='naruto-gates') return '自動開門 · 維持15秒（5+10） · 演出5秒後CD25秒 · 週期30秒 · 不占主動槽';
+    if (move.autoCast) return '常駐自動施放 · 不需選招 · 不占主動槽';
     if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';
     if (['naruto-kusanagi', 'naruto-sand-prison'].includes(move.id)) return '主動 · 需保持選中';
-    if (['naruto-shadow-clones', 'naruto-nine-tails-cloak'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';
+    if (['naruto-shadow-clones', 'naruto-nine-tails-cloak', 'naruto-toad-summon'].includes(move.id)) return '主動 · 選中施放 · 切招後保留至到期';
     return '主動 · 選中後自動施放';
   }
   for (const [dex, definition] of byDex) {
@@ -753,6 +777,20 @@
     source.rel = 'noopener noreferrer';
     source.textContent = dex===30009?'官方動畫參考 · 忍具機制為本作改編':`官方參考 · ${reference.name}`;
     item.append(title, description, stats, source);
+    if(dex===30001){
+      const story=document.createElement('details'),summary=document.createElement('summary');
+      summary.textContent='通靈典故：鳴人與蛤蟆文太';story.append(summary);
+      for(const text of ['自來也指導鳴人修練通靈術；初次召喚出文太後，鳴人還得證明自己值得他認可。木葉崩潰之戰中，兩人再度並肩對抗我愛羅與守鶴。',
+        '文太是會自行戰鬥的通靈夥伴。他的水遁曾與守鶴的風遁正面交鋒，鳴人也曾與他使用組合變化。這次技能以文太的躍落與口吐水彈呈現支援作戰；遊戲數值為本作改編。']){
+        const p=document.createElement('p');p.textContent=text;story.append(p);
+      }
+      for(const [label,url] of [['第57集：初次召喚文太','https://naruto-official.com/en/anime/naruto1/list/01_281'],
+        ['第79集：與文太的組合變化（日文）','https://naruto-official.com/anime/naruto1/list/01_303'],
+        ['官方回顧：文太與守鶴之戰','https://naruto-official.com/en/news/01_1287']]){
+        const a=document.createElement('a');a.textContent=label;a.href=url;a.target='_blank';a.rel='noopener noreferrer';story.append(a,document.createElement('br'));
+      }
+      item.append(story);
+    }
     for (const id of extraPools.get(dex) || []) {
       const move = definitions.get(id);
       const heading = document.createElement('h4');

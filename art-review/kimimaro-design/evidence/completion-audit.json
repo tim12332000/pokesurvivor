@@ -1,0 +1,114 @@
+{
+  "status": "pass",
+  "scope": "complete design package and isolated preview, not game integration",
+  "requirements": {
+    "eight_attacks_and_curse": {
+      "status": "pass",
+      "evidence": [
+        "final-spec.md",
+        "design-data.js"
+      ]
+    },
+    "five_rank_numbers_and_quantity": {
+      "status": "pass",
+      "evidence": [
+        "calculation-results-v3.json"
+      ]
+    },
+    "materials_and_game_video_research": {
+      "status": "pass",
+      "evidence": [
+        "research-assets.md",
+        "research-video.md",
+        "research-mobile-games.md",
+        "research-console-games.md",
+        "research-community-games.md",
+        "research-gacha-games.md",
+        "research-official-motion-samples.md",
+        "game-fit-review.md"
+      ]
+    },
+    "game_fit": {
+      "status": "pass",
+      "evidence": [
+        "game-fit-review.md",
+        "final-spec.md"
+      ]
+    },
+    "images_and_two_forms": {
+      "status": "pass",
+      "physical_key_poses": 32,
+      "evidence": [
+        "actors.json",
+        "provenance-final.json"
+      ]
+    },
+    "animated_performance_and_controls": {
+      "status": "pass",
+      "evidence": [
+        "evidence/verification.json",
+        "evidence/kimimaro-motion-reel.webm"
+      ]
+    },
+    "desktop_and_mobile": {
+      "status": "pass",
+      "viewports": [
+        "desktop",
+        "mobile",
+        "mobile-landscape"
+      ]
+    },
+    "visual_review": {
+      "status": "pass",
+      "criteria": [
+        "consistency",
+        "readability",
+        "peak_hit"
+      ],
+      "evidence": [
+        "evidence/art-verdict.json",
+        "evidence/art-phases.png",
+        "evidence/game-reference.png"
+      ]
+    },
+    "source_evidence_still_current": {
+      "status": "pass",
+      "files": {
+        "index.html": "5b76a9e32ef5c4ecdc9917e8ad6c1d6ebcc5634a5ad6c061c4ed76592ebf6cdf",
+        "preview.css": "6e36ae132910495f362b12a5cc176c322e55e902af625e54f2673cc01a304e21",
+        "preview-app.js": "d6d92736104adebb2af91e22a366c6e517b67279a0b8263b2da224cb4aa7a993",
+        "preview-scene.js": "0223be37c192cccc1713aff92993e88ff14b957ddc904d4a9f59e12dfcff51c0",
+        "design-data.js": "fbdb9eaf48238092fc7e8ae81485fdf15e95c71721afe07ab4bc29bbc9bf8ce7",
+        "actors.json": "e1d972ba3152c44658c08089de5df70c526f75603cce857f8f89ff62a4caf8d9",
+        "effects.json": "6dc687afabe6ad09b4aa47500ae664188e06e307e135eeabe8589a9347d9ae8b",
+        "stage-assets.json": "546d2965cdd1b425cfd74152daf766dd99987168a2fddceba1ff6b3e2ccb369f"
+      }
+    },
+    "bounded_bone_effect_revision": {
+      "status": "pass",
+      "evidence": [
+        "vfx-revision.md",
+        "effects.json",
+        "visual-review-vfx-after.json"
+      ],
+      "runtimeBytes": 145972,
+      "decodedRgbaBytes": 1228800,
+      "maxPillars": 36,
+      "maxSecondaryParticles": 20
+    },
+    "coherent_game_art_context": {
+      "status": "pass",
+      "evidence": [
+        "art-direction.md",
+        "stage-assets.json"
+      ],
+      "existingStageBytes": 23692,
+      "pixelScale": 2
+    }
+  },
+  "limits": [
+    "Preview enemies are demonstration targets, not actual game AI.",
+    "Actual play balance, complete directional frame animation and game integration are future implementation work.",
+    "Sound is procedural preview audio; exported reel is silent."
+  ]
+}

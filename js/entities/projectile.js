@@ -175,6 +175,7 @@ G.Projectiles = (() => {
     }
     for (const p of list) {
       if (p.temariReflected && G.TemariCycloneVFX?.drawReflection) continue;
+      if (G.NarutoRasenshurikenVFX?.drawProjectile(ctx, p)) continue;
       const v = p.vis || G.VFX.forType('normal');
       const shape = v.proj;
       const a = p.orb ? 1 : Math.min(1, (p.life - p.t) * 4);

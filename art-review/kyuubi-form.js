@@ -29,7 +29,7 @@
       let animation='idle',age=action.age;
       if(action.state==='hurt')animation='hurt';
       else if(action.state==='skill'){
-        if(action.id==='naruto-naruto')animation=action.phase==='windup'?'rasenganCharge':action.phase==='release'?'rasenganDash':'rasenganRecover';
+        if(action.id==='naruto-naruto')animation=['windup','charge'].includes(action.phase)?'rasenganCharge':['release','dash','strike'].includes(action.phase)?'rasenganDash':'rasenganRecover';
         else if(['naruto-kunai','naruto-shuriken','naruto-rasenshuriken'].includes(action.id))animation='throw';
         else animation='activation';
       }else if(buff.age<.22){animation='activation';age=buff.age;}

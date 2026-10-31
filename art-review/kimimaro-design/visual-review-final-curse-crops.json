@@ -1,0 +1,1 @@
+{"score":81,"verdict":"revise","category_match":true,"differences":["二階花與按地姿勢的矩形裁切含鄰格尾部或足部，預覽出現多餘碎片"],"suggestions":["用imagegen重新排開所有二階姿勢，增加格間透明距離，再登記真實alpha與錨點"],"reasoning":"功能與數值測試通過仍不足以證明視覺完成；已在實際二階預覽看到鄰格污染，需修正素材間距後重驗。"}

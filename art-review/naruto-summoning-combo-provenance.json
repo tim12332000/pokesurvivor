@@ -1,0 +1,132 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "referenceStyle": [
+    "art-review/redrawn/naruto-common-v1.png",
+    "art-review/redrawn/gamabunta-summon-v2.png"
+  ],
+  "jobs": [
+    {
+      "key": "sword",
+      "file": "gamabunta-sword-v1.png",
+      "prompt": "Create original pixel-art sprite sheet for this exact Gamabunta identity (reference toad image), matching dark outlines/chunky pixel density/palette of reference Naruto sprites. Four FULL BODY sprites in one row, large transparent gaps between cells, no overlap, transparent background. Same 3/4 down-right facing and same ground-foot baseline. Gamabunta orange-red giant toad, scar on left eye, navy sleeveless vest, white wrap belt, tobacco pipe at mouth. Giant short sword MUST visibly be unsheathed in attacking right hand: frame1 hand gripping sword hilt and starting draw; frame2 blade raised backwards over right shoulder preparing a powerful horizontal slash; frame3 fully extended cutting blade to his front-right at ground enemy height, body twisting and front arm following through; frame4 recovery lowering sword into guard. The sword is huge relative to ordinary Naruto but short relative to giant toad. Real distinct poses, same head/body proportions as reference. No magic arcs, no captions, no grid, no shadows, no background, no duplicated detached weapons. Keep every pipe, foot, blade and hilt entirely within its cell with wide empty transparent margins."
+    },
+    {
+      "key": "oil",
+      "file": "gamabunta-oil-v1.png",
+      "prompt": "Edit reference Gamabunta water sheet into a new TWO pose oil-spitting sheet. Keep exact toad identity, proportions, chunky pixelart, navy vest, scar, white wrap belt, sword sheathed at waist, same 3/4 facing down-right and feet baseline. Frame1 cheeks swelling to prepare oil, frame2 mouth wide open FORCEFULLY SPITTING thick amber-brown OIL with one SMALL amber droplet touching lips. Remove all cyan/blue water beads and bubbles completely. There must be NO FIRE, no flames, no glowing magic. Tobacco pipe tucked away. TWO separate fullbody toads only, wide transparent gaps and generous transparent outer margins, transparent PNG background. Crisp black outlines and limited cel pixel shading matching reference, not smooth illustration. No text or grid."
+    },
+    {
+      "key": "fox",
+      "file": "gamabunta-combo-fox-v1.png",
+      "prompt": "Create an original transparent pixel-art sprite sheet for Naruto and Gamabunta's COMBINATION TRANSFORMATION from the Shukaku battle: a giant orange FOX with NINE clearly separated flowing tails, pointed fox ears, long snout, sharp fangs, claws, red-orange fur, dark eye markings. It is transformed Gamabunta, NOT Naruto's humanoid one-tail cloak. NO toad clothing or pipe in fox form, NO human rider, NO Naruto clone, NO blue energy. Match reference Naruto and Gamabunta game's dark thick outlines, chunky discrete pixels, limited cel shades and 3/4 top-down JRPG view. FOUR distinct fullbody poses in ONE horizontal row, facing down-right, same body/head scale: frame1 crouch with all nine tails fanned behind and paws planted; frame2 springing forward low body and extended forepaws; frame3 gripping/clawing at an unseen enemy in front-right with open fanged jaw, active hind legs; frame4 landing and recovering stance with tails settling. All nine tails, legs and ears fully within each cell, large transparent gaps, generous outer margins, real alpha transparency. No smoke, no background, no text, no frame grid. Do not draw a standing humanoid fox."
+    }
+  ],
+  "foxRevision": {
+    "prompt": "Production sprite-sheet spacing correction. Preserve this exact giant nine-tailed fox character, pixel-art style, four action poses and colors. Make all FOUR foxes MUCH SMALLER on the canvas. Each fox and ALL tails must fit ONLY within central 60% width of its own equal cell, leaving WIDE completely transparent gaps on BOTH sides. Four cells in one horizontal row. It is essential neighboring sprites' RECTANGULAR bounding boxes do not overlap at all. Shrink all foxes by 45% at same common body scale rather than filling image. All tails fully visible, no tail cropped by edges. Same foot baseline, 3/4 facing right/down. Actual transparent alpha. No labels, no grid, no shadow, no background.",
+    "reference": "art-review/redrawn/gamabunta-combo-fox-v1.png",
+    "source": "art-review/redrawn/gamabunta-combo-fox-v2.png",
+    "reason": "V1 bounding rectangles overlapped; regenerated with wide transparent gaps"
+  },
+  "selected": [
+    "art-review/redrawn/gamabunta-sword-v1.png",
+    "art-review/redrawn/gamabunta-oil-v1.png",
+    "art-review/redrawn/gamabunta-combo-fox-v2.png"
+  ],
+  "frames": {
+    "sword": [
+      [
+        40,
+        239,
+        433,
+        335,
+        230,
+        331
+      ],
+      [
+        526,
+        122,
+        516,
+        455,
+        238,
+        451
+      ],
+      [
+        1057,
+        256,
+        680,
+        319,
+        228,
+        315
+      ],
+      [
+        1739,
+        221,
+        392,
+        359,
+        186,
+        355
+      ]
+    ],
+    "oil": [
+      [
+        120,
+        112,
+        706,
+        522,
+        355,
+        518
+      ],
+      [
+        1084,
+        139,
+        1042,
+        497,
+        390,
+        493
+      ]
+    ],
+    "fox": [
+      [
+        111,
+        221,
+        385,
+        305,
+        239,
+        301
+      ],
+      [
+        656,
+        220,
+        401,
+        306,
+        244,
+        302
+      ],
+      [
+        1172,
+        220,
+        386,
+        280,
+        213,
+        302
+      ],
+      [
+        1715,
+        221,
+        371,
+        305,
+        245,
+        301
+      ]
+    ]
+  },
+  "frameFormat": "sx,sy,width,height,local anchor x,local anchor y",
+  "sha256": {
+    "art-review/redrawn/naruto-common-v1.png": "1c562132eb25249f859ec3e071ac90ad8e0e24cdcc08abc89a873e0ff662c391",
+    "art-review/redrawn/gamabunta-summon-v2.png": "7bc9021def1376a73da5bc11fdc01ab1a5d8dd85f8bfada09c51432c737eb836",
+    "art-review/redrawn/gamabunta-sword-v1.png": "383f9056e6dacd8fb988ba036177135ddb5c8ad4a3a25ee20ec40ff33d946dd6",
+    "art-review/redrawn/gamabunta-oil-v1.png": "68c1d84b07901ef75d53692c8a5a0232e698d1a405482ca44fbf0f95636c5cf3",
+    "art-review/redrawn/gamabunta-combo-fox-v2.png": "e5d83277478260186da86cbfbbba5c93d0bf8ea61031f66b6be8411c151883e4",
+    "art-review/redrawn/gamabunta-combo-fox-v1.png": "e2229eea0a5ad758418a568791b9926cb31e3bed2aa41a157a202d51360e463c"
+  }
+}

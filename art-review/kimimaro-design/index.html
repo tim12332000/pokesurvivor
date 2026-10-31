@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11131c">
+  <link rel="icon" href="data:,">
+  <title>君麻呂・演出設計</title>
+  <link rel="stylesheet" href="preview.css">
+  <script defer src="design-data.js"></script>
+  <script defer src="preview-scene.js"></script>
+  <script defer src="preview-app.js"></script>
+</head>
+<body>
+  <main class="studio">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">POKÉSURVIVOR / CHARACTER STUDY</p>
+        <h1>君麻呂<span>・演出設計</span></h1>
+        <p class="subtitle">獨立分鏡預覽，尚未接入遊戲</p>
+      </div>
+      <a class="document-link" href="final-spec.md" target="_blank" rel="noopener">完整設計 <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <nav class="skill-nav" aria-label="選擇招式" id="skill-nav"></nav>
+
+    <section class="preview-layout" aria-label="演出工作台">
+      <div class="stage-panel">
+        <div class="stage-topline">
+          <span><span class="status-dot"></span><span id="scene-caption">蔓接花・羈絆銜接</span></span>
+          <div class="stage-toggles">
+            <label class="range-toggle"><input type="checkbox" id="range-toggle"><span>範圍</span></label>
+            <button class="quiet-button sound-button" id="sound-button" type="button" aria-pressed="false" title="開啟設計音效">音效：關</button>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="preview-canvas" width="900" height="560" aria-label="君麻呂招式動態演出預覽">你的瀏覽器無法顯示此預覽。</canvas>
+          <div class="stage-watermark" aria-hidden="true">屍骨脈<span>SHIKOTSUMYAKU</span></div>
+          <div class="load-message" id="load-message" role="status">準備演出中…</div>
+        </div>
+
+        <div class="playback-panel">
+          <div class="timeline-row">
+            <span class="timecode" id="time-current">0.00</span>
+            <div class="timeline-track">
+              <div class="timeline-marks" id="timeline-marks" aria-hidden="true"></div>
+              <input id="timeline" type="range" min="0" max="2.4" step="0.001" value="0" aria-label="演出時間軸，秒">
+            </div>
+            <span class="timecode end-time" id="time-total">2.40 s</span>
+          </div>
+          <div class="transport-row">
+            <div class="transport-main">
+              <button class="play-button" id="play-button" type="button" aria-label="暫停演出">暫停</button>
+              <button class="icon-button" id="replay-button" type="button" aria-label="從頭播放" title="從頭播放">↺</button>
+              <label class="loop-control"><input id="loop-toggle" type="checkbox" checked><span>循環</span></label>
+            </div>
+            <label class="speed-control">速度
+              <select id="speed-select" aria-label="播放速度">
+                <option value="0.25">0.25×</option>
+                <option value="0.5">0.5×</option>
+                <option value="1" selected>1×</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <aside class="detail-panel" aria-label="招式與預覽設定">
+        <div class="skill-heading">
+          <p class="eyebrow" id="skill-category">BONE WHIP → DRILL</p>
+          <h2 id="skill-name">蔓接花</h2>
+          <p id="skill-description" class="skill-description"></p>
+        </div>
+        <dl class="skill-stats">
+          <div><dt id="damage-label">基礎總傷害</dt><dd id="skill-damage">240</dd></div>
+          <div><dt>冷卻</dt><dd id="skill-cd">各 8<span>s</span></dd></div>
+          <div><dt>演出</dt><dd id="skill-duration">1.40<span>s</span></dd></div>
+        </dl>
+
+        <div class="setting-row">
+          <label for="rank-select">技能階級</label>
+          <select id="rank-select"><option value="1">一階</option><option value="2">二階</option><option value="3">三階</option><option value="4">四階</option><option value="5">五階</option></select>
+        </div>
+        <div class="setting-row quantity-row">
+          <label for="quantity-input">數量卡 <output id="quantity-value">0</output></label>
+          <input id="quantity-input" type="range" min="0" max="5" step="1" value="0" aria-label="數量卡張數">
+        </div>
+        <p class="setting-hint" id="quantity-hint">柳與穿彈可看見連擊／彈數成長。</p>
+
+        <fieldset class="segment-field"><legend>角色形態</legend><div class="segments" id="form-options"><button type="button" data-form="normal" aria-pressed="true">普通</button><button type="button" data-form="curse" aria-pressed="false">咒印二</button></div></fieldset>
+        <fieldset class="segment-field"><legend>演出對象</legend><div class="segments" id="scenario-options"><button type="button" data-scenario="crowd" aria-pressed="true">怪群</button><button type="button" data-scenario="boss" aria-pressed="false">首領</button></div></fieldset>
+
+        <div class="motion-section">
+          <p class="eyebrow">MOTION BEATS</p>
+          <ol class="motion-beats" id="motion-beats"></ol>
+        </div>
+        <p class="feel-note" id="feel-note"></p>
+      </aside>
+    </section>
+
+    <section class="notes-row" aria-label="預覽說明"><p id="preview-note">選一招，拖曳時間軸看接觸、收勢與骨質變化。</p><p>空白鍵播放／暫停 · ← → 逐段檢視</p></section>
+
+    <details class="reference-section">
+      <summary><span>造型、分鏡與研究</span><span class="summary-plus" aria-hidden="true">＋</span></summary>
+      <div class="reference-content">
+        <div class="concept-grid">
+          <a href="concept-five-dances-v1.png" target="_blank" rel="noopener"><img src="concept-five-dances-v1.png" alt="君麻呂普通造型與五舞概念板" loading="lazy"><span>普通造型・五舞</span></a>
+          <a href="concept-extra-skills-v3.png" target="_blank" rel="noopener"><img src="concept-extra-skills-v3.png" alt="十指穿彈、蔓、花與鬼百合的三拍分鏡" loading="lazy"><span>穿彈・蔓・花・鬼百合</span></a>
+          <a href="concept-transformation-storyboard-v1.png" target="_blank" rel="noopener"><img src="concept-transformation-storyboard-v1.png" alt="咒印二與骨林成長概念板" loading="lazy"><span>咒印形態・骨林</span></a>
+        </div>
+        <div class="reference-links"><a href="final-spec.md" target="_blank" rel="noopener">最終設計規格 ↗</a><a href="balance-v3.md" target="_blank" rel="noopener">八招數值 ↗</a><a href="presentation-v3.md" target="_blank" rel="noopener">演出分鏡 ↗</a><a href="README.md" target="_blank" rel="noopener">素材與各遊戲研究 ↗</a></div>
+        <p>這是演出設計原型；命中與敵人反應供檢查節奏，並非正式遊戲的戰鬥驗收。音效為本頁即時合成的設計示意。</p>
+      </div>
+    </details>
+    <footer>君麻呂 / KIMIMARO <span>CHARACTER & MOTION DESIGN</span></footer>
+  </main>
+</body>
+</html>

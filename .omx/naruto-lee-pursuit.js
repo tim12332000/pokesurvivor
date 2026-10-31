@@ -9,7 +9,7 @@
   const hitRange=(move,target)=>move.radius+(target.r||0);
   const contactRange=(owner,move,target)=>Math.max(move.radius*.65,(owner.r||12)+(target.r||10)+8);
   const learned=owner=>owner?.mon?.dex===30006&&owner.moves?.find(move=>move.id===id);
-  const heavy=owner=>G.NarutoGates?.performing(owner)||G.NarutoLee?.activeFor(owner)||G.DigimonSkills?.whirlwindFor(owner);
+  const heavy=owner=>G.NarutoGates?.performing(owner)||G.NarutoDrunkenFist?.activeFor(owner)||G.NarutoLee?.activeFor(owner)||G.DigimonSkills?.whirlwindFor(owner);
   const moving=owner=>owner===G.Game.player&&Math.hypot(...G.Input.axis())>.2;
   function clear(owner){if(owner)states.delete(owner);else states.clear();}
   function activeFor(owner){const state=states.get(owner);return state?.world===G.World&&alive(owner)&&controlled(owner)&&learned(owner)?state.active:null;}

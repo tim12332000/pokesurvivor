@@ -72,6 +72,7 @@
     // passive transitions that never invoke the exported DigimonSkills.cast.
     for (const [api, method, id, duration] of [
       [G.NarutoClones, 'beginCast', 'naruto-shadow-clones', .62],
+      [G.NarutoSummoning, 'cast', 'naruto-toad-summon', .65],
       [G.NarutoChidori, 'cast', 'naruto-sasuke', .38],
       [G.NarutoFireball, 'cast', 'naruto-fireball', .68],
       [G.NarutoLee, 'cast', null, 1.8],
@@ -151,7 +152,7 @@
         this.comboT = 0; this.attackFace = 0;
       }
       const cast = states.get(this.anim)?.cast;
-      if (cast && !this.activeGroup().some(m => m.id === cast.id)) entry(this.anim).cast = null;
+      if (cast && !this.activeGroup().some(m => m.id === cast.id) && !this.moves.some(m=>m.autoCast&&m.id===cast.id)) entry(this.anim).cast = null;
       return result;
     };
     function baseStateFor(anim) {
@@ -165,7 +166,9 @@
       const gatesOpening = G.NarutoGates?.presentationFor(pl);
       if (gatesOpening && pl?.anim === anim) return { ...base, ...gatesOpening };
       const rasengan=G.DigimonSkills?.rasenganFor?.(pl);
-      if(rasengan?.owner?.anim===anim)return {...base,state:'skill',id:'naruto-naruto',phase:rasengan.phase,key:'naruto-rasengan',frame:rasengan.phase==='charge'?(rasengan.phaseAge/Math.max(.01,rasengan.m.charge)<.4?0:1):rasengan.phase==='dash'?2:3,mirror:Math.cos(rasengan.aim)<0};
+      if(rasengan?.owner?.anim===anim)return {...base,state:'skill',id:'naruto-naruto',phase:rasengan.phase,age:rasengan.t,aim:rasengan.aim,key:'naruto-rasengan',frame:rasengan.phase==='charge'?(rasengan.phaseAge/Math.max(.01,rasengan.m.charge)<.4?0:1):['dash','strike'].includes(rasengan.phase)?2:3,mirror:Math.cos(rasengan.aim)<0};
+      const summonPose=G.NarutoSummoning?.poseFor(pl);
+      if(name==='naruto'&&summonPose)return {...base,state:'skill',id:'naruto-toad-summon',phase:summonPose.kind,key:summonPose.kind==='tag'?'naruto-throw':'naruto-clones',frame:summonPose.kind==='tag'?2:Math.min(3,Math.floor(summonPose.age/.4*4)),mirror:!!summonPose.mirror,aim:summonPose.aim??pl.aim};
       const chidori = G.NarutoChidori?.activeFor?.(pl) || G.NarutoChidori?.active;
       if (chidori?.owner?.anim === anim) {
         if (chidori.phase === 'charge') {
@@ -194,6 +197,8 @@
         return {...base,state:'skill',id:lee.move.id,phase:lee.phase,key:reverse?'lee-reverse':'lee-lotus',frame,mirror:Math.cos(pl.aim)<0,visualLift:lee.visualLift||0,
           ...(G.NarutoLee.presentationFor?.(pl) || {})};
       }
+      const drunken=G.NarutoDrunkenFist?.presentationFor(pl);
+      if(drunken&&pl?.anim===anim)return {...base,...drunken};
       const pursuit=G.NarutoPursuit?.activeFor(pl);
       if(pursuit?.owner?.anim===anim)return {...base,state:'skill',id:'naruto-lee-pursuit',phase:pursuit.phase,
         key:pursuit.phase==='rush'?'lee-movement':'lee-attack',
@@ -246,6 +251,7 @@
       if (cast) {
         const phase = cast.age < cast.charge ? 'windup' : cast.age < cast.charge + .09 ? 'release' : 'recovery';
         const action = { ...base, state: 'skill', phase, id: cast.id, age: cast.age, treatment: 'redrawn', aim: cast.aim, mirror: Math.cos(cast.aim) < 0 };
+        if (cast.id === 'naruto-toad-summon') return { ...action, phase: 'seal', key: 'naruto-clones', frame: Math.min(3, Math.floor(cast.age / .65 * 4)) };
         if (cast.id === 'naruto-shadow-clones') return { ...action, phase: cast.age < .4 ? 'seal' : 'recovery', key: 'naruto-clones', frame: cast.age < .4 ? Math.min(2, Math.floor(cast.age / .4 * 3)) : 3 };
         if (cast.id === 'naruto-sasuke') return { ...action, key: 'sasuke-chidori', frame: 3, phase: 'recovery' };
         if (cast.id === 'naruto-fireball') return { ...action, key: 'sasuke-fireball', frame: 3, phase: 'recovery' };
@@ -320,6 +326,7 @@
         for (let i = 0; i < level; i++) { const a = i * Math.PI * 2 / level + pose.age * 5; ctx.beginPath(); ctx.arc(8 + Math.cos(a) * 12, -51 + Math.sin(a) * 8, 1.5, 0, Math.PI * 2); ctx.stroke(); }
       }
       ctx.restore();
+      if(pose.id==='naruto-naruto')G.NarutoRasenganVFX?.drawOrb(ctx,anim,pose,x,y,opts);
       if (pose.id === 'naruto-fuma-shuriken' && pose.phase === 'windup') {
         const pl=actor(anim),hand=handFor(pl,pose.frame);
         // The held weapon follows the new windup hand; release uses frame 2.

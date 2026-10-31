@@ -1,0 +1,8 @@
+{
+  "scope": "static concept boards, not production sprites",
+  "reference_images": ["../redrawn/gaara-common-v1.png", "concept-five-dances-v1.png"],
+  "reviews": [
+    {"file":"concept-five-dances-v1.png","score":91,"verdict":"pass","category_match":true,"differences":["平滑概念插畫而非正式像素圖集","柳的視覺弧線大於提案近身範圍"],"suggestions":["正式素材重繪時校準像素與弧形範圍"],"reasoning":"通過角色與五舞的概念方向審查，未通過遊戲素材驗收。"},
+    {"file":"concept-transformation-storyboard-v1.png","score":90,"verdict":"pass","category_match":true,"differences":["尾巴外露白骨過多，正式稿需灰褐肉身尾","骨林分鏡人物位置有偏移","平滑插畫未呈現最終像素密度"],"suggestions":["正式動作固定腳底與鏡頭","重繪肉身尾部和骨節","製作素材前於實際顯示尺寸比對"],"reasoning":"咒印輪廓、背骨與逐圈骨林可用於設計討論；保留事項已列入演出稿，不是逐幀動畫驗收。"}
+  ]
+}

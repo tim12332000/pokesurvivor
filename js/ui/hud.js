@@ -277,6 +277,7 @@ G.HUD = (() => {
         return status&&!status.active?G.U.clamp(status.cooldownRemaining/status.cooldown,0,1):0;
       }
       if(autoPain){const status=G.PainUI.skillState(pl,m);return G.U.clamp(status.remaining/status.duration,0,1);}
+      if(m.autoCast)return G.U.clamp(m.t/Math.max(m.minCooldown||.05,m.cd*pl.cdMul/(G.NarutoGates?.attackSpeedMultiplier(pl)??1)),0,1);
       return m.passive || m.kind === 'orbit' || (m.id !== 'naruto-sand-armor' && G.NarutoGaara?.maintains(pl, m)) ? 0 : G.U.clamp(m.t / Math.max(m.minCooldown || 0, m.cd * pl.cdMul / (G.NarutoGates?.attackSpeedMultiplier(pl) ?? 1)), 0, 1);
     };
     const tentenState = pl.dex === 30009 ? G.NarutoTenten?.stateFor(pl) : null;
@@ -361,11 +362,21 @@ G.HUD = (() => {
       ctx.font = F(800, 9);
       ctx.fillStyle = fused ? BOND : on ? col : 'rgba(180,200,230,.6)';
       ctx.textAlign = 'left';
-      ctx.fillText(displayPassive ? '∞' : String(i + 1), x + 3, y + 10);
+      ctx.fillText(m.autoCast ? (G.I18n.lang==='en'?'AUTO':'自動') : displayPassive ? '∞' : String(i + 1), x + 3, y + 10);
+      if(m.autoCast){
+        ctx.font=F(800,9);ctx.textAlign='center';ctx.fillStyle='#b9eaff';
+        ctx.fillText(m.t>0?m.t.toFixed(1)+'s':G.I18n.lang==='en'?'READY':'就緒',x+S/2,y-4,S+GAP-2);
+      }
       if(autoPain){
         const status=G.PainUI.skillState(pl,m);
         ctx.font=F(800,9);ctx.textAlign='center';ctx.fillStyle=status.label==='倒下'?'#f3b69c':'#d9cbef';
         ctx.fillText(status.label,x+S/2,y-4,S+GAP-2);
+        const projectiles=G.NarutoPain?.projectileCount(pl,m)||0;
+        if(projectiles){
+          ctx.fillStyle='rgba(10,16,28,.88)';ctx.fillRect(x+3,y+S-26,S-6,12);
+          ctx.font=F(800,8);ctx.fillStyle='#eee4c7';
+          ctx.fillText(projectiles+' 發',x+S/2,y+S-17,S-8);
+        }
       }
       if (m.id === 'naruto-sand-shield') {
         const shield = G.NarutoGaara?.shieldState(pl);
@@ -469,9 +480,9 @@ G.HUD = (() => {
           ctx.fillText('蓄勢 +30% ' + Math.ceil(state.chargeRemaining) + 's', x + S / 2, y + 10, S - 6);
         }
       }
-      if(m.id==='naruto-gates'){
-        const status=G.NarutoGates?.status(pl);
-        const label=
+      if(m.id==='naruto-gates'||m.id==='naruto-lee-drunken'){
+        const status=m.id==='naruto-gates'?G.NarutoGates?.status(pl):null;
+        const label=m.id==='naruto-lee-drunken'?'閃避 '+Math.round(m.dodgeChance*100)+'%':
           status?(status.active?'八門 ':'冷卻 ')+Math.ceil(status.active?status.activeRemaining:status.cooldownRemaining)+'s':'';
         ctx.fillStyle='rgba(10,16,28,.88)';ctx.fillRect(x+3,y+S-26,S-6,12);
         ctx.font=F(800,8);ctx.textAlign='center';ctx.fillStyle='#b9efab';

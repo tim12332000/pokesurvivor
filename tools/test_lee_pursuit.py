@@ -47,7 +47,7 @@ CHECK = r"""() => {
  function advance(dt){A.resume();try{G.Combat.updateFields(dt);p.anim.update(dt)}finally{A.pause()}}
  function fixture(level=1,gates=false,quantity=0){
    A.leeArena();P.clear(p);p.quantityPicks=p.quantityBonus=quantity;p.cdMul=1;
-   p.moves=p.moves.filter(m=>m.id!=='naruto-gates');if(gates)p.addMove('naruto-gates');
+   p.moves=p.moves.filter(m=>m.id!=='naruto-gates');if(gates){p.addMove('naruto-gates');advance(6.1);}
    const m=p.moves.find(m=>m.id===id);Object.assign(m,G.Moves.instance(id,level));m.t=0;
    for(const other of p.moves)if(other!==m&&!other.passive)other.t=999;
    p.aim=0;p.attackFace=0;p.walking=false;

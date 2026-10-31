@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>鳴人・螺旋丸演出預覽</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0c131c;color:#edf5f4;font:15px/1.6 system-ui,sans-serif}main{max-width:1040px;margin:auto;padding:24px}.eyebrow{color:#9edfe9;font-size:12px;letter-spacing:.18em}h1{font-size:28px;margin:5px 0}p{color:#a5b7bf;margin:6px 0 18px}.panel{max-width:540px;margin:auto;overflow:hidden;border:1px solid #33494e;border-radius:12px}iframe{display:block;width:100%;height:min(72vh,720px);min-height:480px;border:0}nav,.cuts{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin:15px 0}button,select{border:1px solid #405b63;border-radius:6px;background:#1a2b35;color:#edf5f4;padding:9px 13px;font:inherit;cursor:pointer}button:hover{border-color:#95e8ee}input{width:100%;accent-color:#a2edf5}.time{display:flex;justify-content:space-between;color:#aac5cf;font-size:13px;font-variant-numeric:tabular-nums}.note{font-size:13px}#error{color:#ffb2a5}@media(max-width:600px){main{padding:18px 14px}h1{font-size:23px}}
+</style>
+<main>
+<div class="eyebrow">NARUTO / RASENGAN</div>
+<h1>螺旋丸</h1>
+<p>本體近身出掌、不自動位移、不鎖走位 · 分身保留突進</p>
+<div class="panel"><iframe id="game" title="螺旋丸・正式遊戲視角預覽" src="../../.omx/digimon.html?lang=zh-TW&amp;layout=portrait&amp;rasenganPreview=1"></iframe></div>
+<nav><button id="play">暫停</button><button id="replay">重播</button><label>速度 <select id="speed"><option value="1">正常 1×</option><option value="0.5">慢放 0.5×</option><option value="0.25">慢放 0.25×</option></select></label><label>方向 <select id="direction"><option value="0">右</option><option value="3.14159">左</option><option value="-0.65">右上</option></select></label></nav>
+<input id="seek" type="range" min="0" max="1500" value="0" aria-label="動畫時間">
+<div class="time"><span id="phase">載入中</span><span id="clock">0.00 s</span></div>
+<div class="cuts"><button data-time="0.18">開始集氣</button><button data-time="0.5">集氣完成前</button><button data-time="0.68">近身出掌</button><button data-time="0.84">命中</button></div>
+<p class="note">本體不被技能帶著移動，蓄力與出掌時可自由走位；分身保留突進。沿用現有角色圖與 0.6 秒蓄力。此頁循環重播單次演出；正式遊戲基礎 CD 5 秒，學會後常駐自動。可暫停、慢放與逐段查看。</p>
+<p id="error" role="alert"></p>
+</main>
+<script src="preview.js"></script>
+</html>

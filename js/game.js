@@ -78,7 +78,7 @@ G.Game = (() => {
 
   /** @param coop  { seed, host, members } para una partida en grupo */
   function startRun(coop = null) {
-    speedK = 1; autoPickUpgrades = false;
+    speedK = 2; autoPickUpgrades = false;
     holdBy = []; awayBy = null;
     const save = G.DB.save;
     const mon = G.DEX_BY[save.partner];
@@ -625,7 +625,7 @@ G.Game = (() => {
 
   let deathT = 0;
 
-  let frameDt = 0, speedK = 1, autoPickUpgrades = false;
+  let frameDt = 0, speedK = 2, autoPickUpgrades = false;
   let fpsShown = 60, fpsAcc = 0, fpsN = 0;
   // El siguiente fotograma se pide ANTES de nada: si algo falla a mitad, el
   // juego sigue (antes se quedaba congelado para siempre y había que recargar;

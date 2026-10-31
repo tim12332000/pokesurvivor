@@ -23,8 +23,8 @@
     const items=Object.entries(labels).filter(([id])=>(pl.statsTaken?.[id]||0)>0)
       .map(([id,label])=>({id,text:label(pl.statsTaken[id],pl)}));
     const growth=G.NarutoPain?.durabilityState(pl);
-    if(growth?.healthBonus>0)items.unshift({id:'painHealthGrowth',text:`天道生命成長 +${growth.healthBonus}`},
-      {id:'painDefenseGrowth',text:`實際減傷 ${percent(pl.reduction)}%`});
+    if(growth?.healthBonus>0)items.unshift({id:'painHealthGrowth',text:`${growth.supportOnly?'五道':'天道'}生命成長 +${growth.healthBonus}`},
+      {id:'painDefenseGrowth',text:growth.supportOnly?`五道額外減傷 ${percent(growth.reductionBonus)}%`:`實際減傷 ${percent(pl.reduction)}%`});
     return items;
   };
   const draw = G.HUD.draw;

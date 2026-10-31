@@ -1,0 +1,37 @@
+{
+  "tool": "image_gen.imagegen (built-in)",
+  "prompt": "Use the attached Gamabunta sprite sheet as exact character identity, body proportions, palette and pixel-art outline reference. Create ONE transparent PNG containing TWO completely separated full-body Gamabunta sprites, horizontal row. Pose 1: seated giant toad cheeks puffed inflating, his pipe tucked in belt, one hand on ground for balance, preparing water bullet. Pose 2: same body scale and direction, leaning forward mouth WIDE open, forcefully SPITTING, one tiny cyan bead immediately outside mouth, no long water stream, no giant special effects. Subject orange-red chief toad Gamabunta, scar left eye, navy sleeveless haori, white wrap belt, sword sheathed at waist. Facing down-right 3/4 RPG view. Crisp chunky pixel art consistent with reference. All fingers and feet visible, same baseline, lots of transparent padding between two bodies and all outer edges. No other character. No text. No grid. No background. No detached pipe. Actual transparent alpha.",
+  "reference": "art-review/redrawn/gamabunta-summon-v2.png",
+  "source": "art-review/redrawn/gamabunta-water-v1.png",
+  "frames": [
+    [
+      265,
+      114,
+      690,
+      515,
+      345,
+      511
+    ],
+    [
+      1206,
+      143,
+      786,
+      487,
+      373,
+      483
+    ]
+  ],
+  "frameFormat": "source x,y,width,height,anchorX,anchorY",
+  "mouth": {
+    "x": 1885,
+    "y": 345,
+    "relativeToAnchor": [
+      306,
+      -281
+    ]
+  },
+  "scale": "Shared 720px body reference width for both poses; no height normalization",
+  "directions": "down-right authored, mirrored for left targets",
+  "sha256": "114d782665133884678f5532755ac6157e3e2c5d256516d709d1cc7ff318a6d1",
+  "referenceSHA256": "7bc9021def1376a73da5bc11fdc01ab1a5d8dd85f8bfada09c51432c737eb836"
+}

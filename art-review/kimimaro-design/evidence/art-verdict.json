@@ -1,0 +1,38 @@
+{
+  "verdict": "pass",
+  "scope": "獨立設計預覽的共同美術、桌機與手機可讀性，以及八招準備／命中／收勢共24格；不是正式遊戲或全方向動畫驗收",
+  "references": [
+    ".omx/state/desktop-portrait/desktop-1366-game.png",
+    ".omx/state/gaara/desktop-effect-tsunami-impact.png",
+    "js/world/tiles.js",
+    "js/core/sprites.js"
+  ],
+  "reviewed_outputs": [
+    ".omx/state/kimimaro-art/final-review/all8-three-phases-final.png",
+    ".omx/state/kimimaro-art/final-review/desktop-proof.png",
+    ".omx/state/kimimaro-art/final-review/mobile-proof.png",
+    ".omx/state/kimimaro-art/battle/flower-ready.png",
+    ".omx/state/kimimaro-art/battle/bracken-ready.png",
+    ".omx/state/kimimaro-art/battle/lily-ready.png"
+  ],
+  "criteria": {
+    "consistency": {
+      "verdict": "pass",
+      "evidence": "原遊戲的明亮硬邊草地、樹石草束及寶可夢與君麻呂共處；骨質統一為冷白主面、灰紫側面、深色輪廓。土徑接出畫面、草束侵入邊界，已不再是完整土島或深青空場。"
+    },
+    "readability": {
+      "verdict": "pass",
+      "evidence": "桌機與390px手機的骨林高峰仍可辨識君麻呂、近處寶可夢與血條。大主柱與短骨群形成高低空隙；減淡腳底陰影、縮小星芒及半透明白閃後，花命中不再只剩白色團塊。"
+    },
+    "peak_hit": {
+      "verdict": "pass",
+      "evidence": "24格呈現各招準備、執行與收勢差異：柳短刃、椿細刺、穿彈小梭形、唐松近身展骨、蔓繃緊、花螺旋重刺、鬼百合大掃、早蕨高低骨林。花與椿的重量可從形狀區分；收勢畫面能回到乾淨場地，不留下常駐光圈。"
+    }
+  },
+  "blocking_issues": [],
+  "limits": [
+    "此為實際瀏覽器逐影格視覺審查，未將24張靜態圖冒稱為連續影片完整觀看。",
+    "不以功能測試或素材大小單獨證明美感；本結論依實際畫面與原遊戲參照作判斷。",
+    "角色仍使用關鍵姿勢與插值，正式遊戲接線、全方向中間格與實戰效能不屬此美術審查的完成宣稱。"
+  ]
+}

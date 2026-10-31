@@ -1,0 +1,517 @@
+{
+  "scope": "paper arithmetic; full hits, A=1, no switching, no four-move queue simulation",
+  "attack_multiplier": 1.32,
+  "skills": [
+    {
+      "name": "柳",
+      "rank_base_damage": [
+        30,
+        36.0,
+        42.0,
+        51.0,
+        60
+      ],
+      "single_dps": [
+        33.333333,
+        40.0,
+        46.666667,
+        56.666667,
+        66.666667
+      ],
+      "three_enemy_total_dps": [
+        33.333333,
+        40.0,
+        46.666667,
+        56.666667,
+        66.666667
+      ],
+      "cast_duration": 0.64,
+      "base_cd": 0.9,
+      "interval_10_cdr_cards": 0.64
+    },
+    {
+      "name": "椿",
+      "rank_base_damage": [
+        120,
+        144.0,
+        168.0,
+        204.0,
+        240
+      ],
+      "single_dps": [
+        24.0,
+        28.8,
+        33.6,
+        40.8,
+        48.0
+      ],
+      "three_enemy_total_dps": [
+        72.0,
+        86.4,
+        100.8,
+        122.4,
+        144.0
+      ],
+      "cast_duration": 0.74,
+      "base_cd": 5,
+      "interval_10_cdr_cards": 2.1719422711181617
+    },
+    {
+      "name": "十指穿彈",
+      "rank_base_damage": [
+        45,
+        54.0,
+        62.99999999999999,
+        76.5,
+        90
+      ],
+      "single_dps": [
+        18.75,
+        22.5,
+        26.25,
+        31.875,
+        37.5
+      ],
+      "three_enemy_total_dps": [
+        18.75,
+        22.5,
+        26.25,
+        31.875,
+        37.5
+      ],
+      "cast_duration": 0.6,
+      "base_cd": 2.4,
+      "interval_10_cdr_cards": 1.0425322901367176
+    },
+    {
+      "name": "唐松",
+      "rank_base_damage": [
+        96,
+        115.19999999999999,
+        134.39999999999998,
+        163.2,
+        192
+      ],
+      "single_dps": [
+        16.0,
+        19.2,
+        22.4,
+        27.2,
+        32.0
+      ],
+      "three_enemy_total_dps": [
+        48.0,
+        57.6,
+        67.2,
+        81.6,
+        96.0
+      ],
+      "cast_duration": 0.7,
+      "base_cd": 6,
+      "interval_10_cdr_cards": 2.606330725341794
+    },
+    {
+      "name": "鐵線花・蔓",
+      "rank_base_damage": [
+        48,
+        57.599999999999994,
+        67.19999999999999,
+        81.6,
+        96
+      ],
+      "single_dps": [
+        6.0,
+        7.2,
+        8.4,
+        10.2,
+        12.0
+      ],
+      "three_enemy_total_dps": [
+        6.0,
+        7.2,
+        8.4,
+        10.2,
+        12.0
+      ],
+      "cast_duration": 0.7,
+      "base_cd": 8,
+      "interval_10_cdr_cards": 3.4751076337890585
+    },
+    {
+      "name": "鐵線花・花",
+      "rank_base_damage": [
+        192,
+        230.39999999999998,
+        268.79999999999995,
+        326.4,
+        384
+      ],
+      "single_dps": [
+        24.0,
+        28.8,
+        33.6,
+        40.8,
+        48.0
+      ],
+      "three_enemy_total_dps": [
+        48.0,
+        57.6,
+        67.2,
+        81.6,
+        96.0
+      ],
+      "cast_duration": 0.86,
+      "base_cd": 8,
+      "interval_10_cdr_cards": 3.4751076337890585
+    },
+    {
+      "name": "早蕨",
+      "rank_base_damage": [
+        300,
+        360.0,
+        420.0,
+        510.0,
+        600
+      ],
+      "single_dps": [
+        25.0,
+        30.0,
+        35.0,
+        42.5,
+        50.0
+      ],
+      "three_enemy_total_dps": [
+        75.0,
+        90.0,
+        105.0,
+        127.5,
+        150.0
+      ],
+      "cast_duration": 1.48,
+      "base_cd": 12,
+      "interval_10_cdr_cards": 5.212661450683588
+    },
+    {
+      "name": "鬼百合",
+      "rank_base_damage": [
+        100,
+        120.0,
+        140.0,
+        170.0,
+        200
+      ],
+      "single_dps": [
+        16.666667,
+        20.0,
+        23.333333,
+        28.333333,
+        33.333333
+      ],
+      "three_enemy_total_dps": [
+        50.0,
+        60.0,
+        70.0,
+        85.0,
+        100.0
+      ],
+      "cast_duration": 0.9,
+      "base_cd": 6,
+      "interval_10_cdr_cards": 2.606330725341794
+    }
+  ],
+  "quantity": [
+    {
+      "cards": 0,
+      "willow_hits": 4,
+      "willow_rank1_dps": 33.333333333333336,
+      "bullet_count": 5,
+      "bullet_rank1_damage": 45,
+      "bullets_rank1_dps": 18.75,
+      "bullets_rank1_dps_10_cdr_cards": 43.164130670809925,
+      "three_target_round_robin_shot_counts": [
+        2,
+        2,
+        1
+      ],
+      "three_target_rank1_damage_each": [
+        18,
+        18,
+        9
+      ]
+    },
+    {
+      "cards": 1,
+      "willow_hits": 5,
+      "willow_rank1_dps": 41.666666666666664,
+      "bullet_count": 6,
+      "bullet_rank1_damage": 54,
+      "bullets_rank1_dps": 22.5,
+      "bullets_rank1_dps_10_cdr_cards": 51.796956804971906,
+      "three_target_round_robin_shot_counts": [
+        2,
+        2,
+        2
+      ],
+      "three_target_rank1_damage_each": [
+        18,
+        18,
+        18
+      ]
+    },
+    {
+      "cards": 2,
+      "willow_hits": 6,
+      "willow_rank1_dps": 50.0,
+      "bullet_count": 7,
+      "bullet_rank1_damage": 63,
+      "bullets_rank1_dps": 26.25,
+      "bullets_rank1_dps_10_cdr_cards": 60.429782939133894,
+      "three_target_round_robin_shot_counts": [
+        3,
+        2,
+        2
+      ],
+      "three_target_rank1_damage_each": [
+        27,
+        18,
+        18
+      ]
+    },
+    {
+      "cards": 3,
+      "willow_hits": 7,
+      "willow_rank1_dps": 58.33333333333333,
+      "bullet_count": 9,
+      "bullet_rank1_damage": 81,
+      "bullets_rank1_dps": 33.75,
+      "bullets_rank1_dps_10_cdr_cards": 77.69543520745786,
+      "three_target_round_robin_shot_counts": [
+        3,
+        3,
+        3
+      ],
+      "three_target_rank1_damage_each": [
+        27,
+        27,
+        27
+      ]
+    },
+    {
+      "cards": 4,
+      "willow_hits": 8,
+      "willow_rank1_dps": 66.66666666666667,
+      "bullet_count": 12,
+      "bullet_rank1_damage": 108,
+      "bullets_rank1_dps": 45.0,
+      "bullets_rank1_dps_10_cdr_cards": 103.59391360994381,
+      "three_target_round_robin_shot_counts": [
+        4,
+        4,
+        4
+      ],
+      "three_target_rank1_damage_each": [
+        36,
+        36,
+        36
+      ]
+    },
+    {
+      "cards": 5,
+      "willow_hits": 8,
+      "willow_rank1_dps": 66.66666666666667,
+      "bullet_count": 15,
+      "bullet_rank1_damage": 135,
+      "bullets_rank1_dps": 56.25,
+      "bullets_rank1_dps_10_cdr_cards": 129.49239201242978,
+      "three_target_round_robin_shot_counts": [
+        5,
+        5,
+        5
+      ],
+      "three_target_rank1_damage_each": [
+        45,
+        45,
+        45
+      ]
+    },
+    {
+      "cards": 10,
+      "willow_hits": 8,
+      "willow_rank1_dps": 66.66666666666667,
+      "bullet_count": 15,
+      "bullet_rank1_damage": 135,
+      "bullets_rank1_dps": 56.25,
+      "bullets_rank1_dps_10_cdr_cards": 129.49239201242978,
+      "three_target_round_robin_shot_counts": [
+        5,
+        5,
+        5
+      ],
+      "three_target_rank1_damage_each": [
+        45,
+        45,
+        45
+      ]
+    },
+    {
+      "cards": 20,
+      "willow_hits": 8,
+      "willow_rank1_dps": 66.66666666666667,
+      "bullet_count": 15,
+      "bullet_rank1_damage": 135,
+      "bullets_rank1_dps": 56.25,
+      "bullets_rank1_dps_10_cdr_cards": 129.49239201242978,
+      "three_target_round_robin_shot_counts": [
+        5,
+        5,
+        5
+      ],
+      "three_target_rank1_damage_each": [
+        45,
+        45,
+        45
+      ]
+    }
+  ],
+  "clematis_combo": [
+    {
+      "scale": 1,
+      "main_damage": 240,
+      "three_enemy_total_damage": 432.0,
+      "steady_interval": 8.54,
+      "single_dps": 28.103044496487122,
+      "three_enemy_total_dps": 50.58548009367682,
+      "normal_duration": 1.4,
+      "standalone_duration_sum": 1.56,
+      "vine_cd_start": 0,
+      "flower_cd_start": 0.54,
+      "with_willow_rank1_q0_continuous_dps_at_scale": 55.97189695550352
+    },
+    {
+      "scale": 1.2,
+      "main_damage": 288.0,
+      "three_enemy_total_damage": 518.4,
+      "steady_interval": 8.54,
+      "single_dps": 33.723653395784545,
+      "three_enemy_total_dps": 60.70257611241218,
+      "normal_duration": 1.4,
+      "standalone_duration_sum": 1.56,
+      "vine_cd_start": 0,
+      "flower_cd_start": 0.54,
+      "with_willow_rank1_q0_continuous_dps_at_scale": 67.16627634660422
+    },
+    {
+      "scale": 1.4,
+      "main_damage": 335.99999999999994,
+      "three_enemy_total_damage": 604.8,
+      "steady_interval": 8.54,
+      "single_dps": 39.34426229508196,
+      "three_enemy_total_dps": 70.81967213114754,
+      "normal_duration": 1.4,
+      "standalone_duration_sum": 1.56,
+      "vine_cd_start": 0,
+      "flower_cd_start": 0.54,
+      "with_willow_rank1_q0_continuous_dps_at_scale": 78.36065573770492
+    },
+    {
+      "scale": 1.7,
+      "main_damage": 408.0,
+      "three_enemy_total_damage": 734.4,
+      "steady_interval": 8.54,
+      "single_dps": 47.77517564402811,
+      "three_enemy_total_dps": 85.99531615925059,
+      "normal_duration": 1.4,
+      "standalone_duration_sum": 1.56,
+      "vine_cd_start": 0,
+      "flower_cd_start": 0.54,
+      "with_willow_rank1_q0_continuous_dps_at_scale": 95.15222482435598
+    },
+    {
+      "scale": 2,
+      "main_damage": 480,
+      "three_enemy_total_damage": 864.0,
+      "steady_interval": 8.54,
+      "single_dps": 56.206088992974244,
+      "three_enemy_total_dps": 101.17096018735364,
+      "normal_duration": 1.4,
+      "standalone_duration_sum": 1.56,
+      "vine_cd_start": 0,
+      "flower_cd_start": 0.54,
+      "with_willow_rank1_q0_continuous_dps_at_scale": 111.94379391100703
+    }
+  ],
+  "curse_average_bonus_percent": [
+    2.6666666666666665,
+    3.3333333333333335,
+    4.0,
+    4.666666666666667,
+    5.333333333333333
+  ],
+  "combo_reservation_policy": "same group by skill IDs, bounded wait <=.54 seconds, no older eligible queued action, no filler animation crossing reservation",
+  "combo_start_schedule": [
+    {
+      "vine": 0.0,
+      "flower": 0.54
+    },
+    {
+      "vine": 8.54,
+      "flower": 9.08
+    },
+    {
+      "vine": 17.08,
+      "flower": 17.62
+    },
+    {
+      "vine": 25.62,
+      "flower": 26.16
+    }
+  ],
+  "combo_interval_10_cdr_cards_both_ready_reservation": 4.015107633789059,
+  "willow_accelerating_hit_times": {
+    "4": [
+      0.12,
+      0.3065889212827988,
+      0.4651895043731778,
+      0.6
+    ],
+    "5": [
+      0.12,
+      0.2706295845918487,
+      0.39866473149492015,
+      0.5074946063625309,
+      0.6
+    ],
+    "6": [
+      0.12,
+      0.24942780439548956,
+      0.3594414381316557,
+      0.4529530268073969,
+      0.5324378771817769,
+      0.6
+    ],
+    "7": [
+      0.12,
+      0.23559756603906068,
+      0.33385549717226226,
+      0.4173747386354836,
+      0.4883660938792217,
+      0.5487087458363991,
+      0.5999999999999999
+    ],
+    "8": [
+      0.12,
+      0.2259722873016751,
+      0.3160487315080989,
+      0.3926137090835592,
+      0.45769394002270036,
+      0.5130121363209704,
+      0.5600326031745,
+      0.6000000000000001
+    ]
+  },
+  "guard": {
+    "uptime_no_cards": 0.11666666666666665,
+    "uptime_10_cdr_cards": 0.2685768130628173,
+    "damage_received_with_melee_discount": 0.6000000000000001
+  }
+}

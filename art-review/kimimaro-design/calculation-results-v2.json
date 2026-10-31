@@ -1,0 +1,278 @@
+{
+  "scope": "paper arithmetic, one active, no switching or bond queue",
+  "skills": [
+    {
+      "name": "柳",
+      "rank_damage": [
+        30,
+        36.0,
+        42.0,
+        51.0,
+        60
+      ],
+      "single_dps": [
+        33.333333,
+        40.0,
+        46.666667,
+        56.666667,
+        66.666667
+      ],
+      "three_enemy_dps": [
+        33.333333,
+        40.0,
+        46.666667,
+        56.666667,
+        66.666667
+      ],
+      "interval_10_cdr_cards": 0.64
+    },
+    {
+      "name": "椿",
+      "rank_damage": [
+        120,
+        144.0,
+        168.0,
+        204.0,
+        240
+      ],
+      "single_dps": [
+        24.0,
+        28.8,
+        33.6,
+        40.8,
+        48.0
+      ],
+      "three_enemy_dps": [
+        72.0,
+        86.4,
+        100.8,
+        122.4,
+        144.0
+      ],
+      "interval_10_cdr_cards": 2.1719422711181617
+    },
+    {
+      "name": "唐松",
+      "rank_damage": [
+        96,
+        115.19999999999999,
+        134.39999999999998,
+        163.2,
+        192
+      ],
+      "single_dps": [
+        16.0,
+        19.2,
+        22.4,
+        27.2,
+        32.0
+      ],
+      "three_enemy_dps": [
+        48.0,
+        57.6,
+        67.2,
+        81.6,
+        96.0
+      ],
+      "interval_10_cdr_cards": 2.606330725341794
+    },
+    {
+      "name": "鐵線花",
+      "rank_damage": [
+        240,
+        288.0,
+        336.0,
+        408.0,
+        480
+      ],
+      "single_dps": [
+        30.0,
+        36.0,
+        42.0,
+        51.0,
+        60.0
+      ],
+      "three_enemy_dps": [
+        54.0,
+        64.8,
+        75.6,
+        91.8,
+        108.0
+      ],
+      "interval_10_cdr_cards": 3.4751076337890585
+    },
+    {
+      "name": "早蕨",
+      "rank_damage": [
+        300,
+        360.0,
+        420.0,
+        510.0,
+        600
+      ],
+      "single_dps": [
+        25.0,
+        30.0,
+        35.0,
+        42.5,
+        50.0
+      ],
+      "three_enemy_dps": [
+        75.0,
+        90.0,
+        105.0,
+        127.5,
+        150.0
+      ],
+      "interval_10_cdr_cards": 5.212661450683588
+    }
+  ],
+  "quantity": [
+    {
+      "cards": 0,
+      "hits": 4,
+      "rank1_damage": 30.0,
+      "dps": 33.333333333333336,
+      "dps_10_cdr_cards": 46.875,
+      "hit_times": [
+        0.12,
+        0.28,
+        0.44,
+        0.6
+      ],
+      "willow_clematis_continuous_dps_at_1_32": 75.9
+    },
+    {
+      "cards": 1,
+      "hits": 5,
+      "rank1_damage": 37.5,
+      "dps": 41.666666666666664,
+      "dps_10_cdr_cards": 58.59375,
+      "hit_times": [
+        0.12,
+        0.24,
+        0.36,
+        0.48,
+        0.6
+      ],
+      "willow_clematis_continuous_dps_at_1_32": 84.97500000000001
+    },
+    {
+      "cards": 2,
+      "hits": 6,
+      "rank1_damage": 45.0,
+      "dps": 50.0,
+      "dps_10_cdr_cards": 70.3125,
+      "hit_times": [
+        0.12,
+        0.216,
+        0.312,
+        0.408,
+        0.504,
+        0.6
+      ],
+      "willow_clematis_continuous_dps_at_1_32": 94.05000000000001
+    },
+    {
+      "cards": 3,
+      "hits": 7,
+      "rank1_damage": 52.5,
+      "dps": 58.33333333333333,
+      "dps_10_cdr_cards": 82.03125,
+      "hit_times": [
+        0.12,
+        0.2,
+        0.28,
+        0.36,
+        0.44,
+        0.52,
+        0.6
+      ],
+      "willow_clematis_continuous_dps_at_1_32": 103.125
+    },
+    {
+      "cards": 4,
+      "hits": 8,
+      "rank1_damage": 60.0,
+      "dps": 66.66666666666667,
+      "dps_10_cdr_cards": 93.75,
+      "hit_times": [
+        0.12,
+        0.188571,
+        0.257143,
+        0.325714,
+        0.394286,
+        0.462857,
+        0.531429,
+        0.6
+      ],
+      "willow_clematis_continuous_dps_at_1_32": 112.2
+    },
+    {
+      "cards": 5,
+      "hits": 8,
+      "rank1_damage": 60.0,
+      "dps": 66.66666666666667,
+      "dps_10_cdr_cards": 93.75,
+      "hit_times": [
+        0.12,
+        0.188571,
+        0.257143,
+        0.325714,
+        0.394286,
+        0.462857,
+        0.531429,
+        0.6
+      ],
+      "willow_clematis_continuous_dps_at_1_32": 112.2
+    },
+    {
+      "cards": 10,
+      "hits": 8,
+      "rank1_damage": 60.0,
+      "dps": 66.66666666666667,
+      "dps_10_cdr_cards": 93.75,
+      "hit_times": [
+        0.12,
+        0.188571,
+        0.257143,
+        0.325714,
+        0.394286,
+        0.462857,
+        0.531429,
+        0.6
+      ],
+      "willow_clematis_continuous_dps_at_1_32": 112.2
+    },
+    {
+      "cards": 20,
+      "hits": 8,
+      "rank1_damage": 60.0,
+      "dps": 66.66666666666667,
+      "dps_10_cdr_cards": 93.75,
+      "hit_times": [
+        0.12,
+        0.188571,
+        0.257143,
+        0.325714,
+        0.394286,
+        0.462857,
+        0.531429,
+        0.6
+      ],
+      "willow_clematis_continuous_dps_at_1_32": 112.2
+    }
+  ],
+  "curse_average_bonus_percent": [
+    2.6666666666666665,
+    3.3333333333333335,
+    4.0,
+    4.666666666666667,
+    5.333333333333333
+  ],
+  "guard": {
+    "uptime_no_cards": 0.11666666666666665,
+    "uptime_10_cdr_cards": 0.2685768130628173,
+    "received_with_melee_discount": 0.6000000000000001
+  }
+}
