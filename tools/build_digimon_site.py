@@ -111,7 +111,7 @@ html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',
 html = re.sub(r'(<link\b(?=[^>]*\brel="stylesheet")[^>]*\bhref=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',
               version_asset, html)
 html = re.sub(r'<!-- seo:begin -->.*?<!-- seo:end -->', '', html, flags=re.S)
-html = re.sub(r'<title>.*?</title>', '<title>PokéSurvivor 寶可夢 × 數碼寶貝 × 火影忍者</title>', html, flags=re.S)
+html = re.sub(r'<title>.*?</title>', '<title>Naruto Survivor</title>', html, flags=re.S)
 html = html.replace('<html lang="es">', '<html lang="zh-TW">')
 html = re.sub(r'<meta name="description" content="[^"]*">', '<meta name="description" content="免費遊玩、非營利、無廣告、無付費內容。原作由 JPTER78 開發，感謝原作者；本網站為非官方跨界修改版。">', html)
 for source in re.findall(r'<(?:script|link)\b[^>]*(?:src|href)="([^"]+)"', html):

@@ -1,4 +1,4 @@
-// Personal sandbox: separate save key; never initialize cloud services.
+// Personal sandbox: normal currency consumption, separate save key, no cloud services.
 (() => {
   const local = ['127.0.0.1', 'localhost'].includes(location.hostname);
   const personalSite = location.hostname === 'tim12332000.github.io' && location.pathname.startsWith('/pokesurvivor/');
@@ -13,22 +13,17 @@
     const result = playAsGuest();
     if (session !== null) localStorage.setItem('ps.session', session);
     const save = G.DB.save;
+    const initialCoins = save.coins;
     try {
       const stored = JSON.parse(localStorage.getItem(KEY) || 'null');
       if (stored && typeof stored === 'object') Object.assign(save, stored);
     } catch (_) { /* Start fresh if sandbox storage is unavailable or corrupt. */ }
-    Object.defineProperty(save, 'coins', {
-      enumerable: true, configurable: true,
-      get: () => 1000000000,
-      set: () => {} // Purchases and rewards retain an inexhaustible balance.
-    });
-    save.tickets = save.tickets || {};
+    // Migrate only the exact balances written by the former unlimited mode.
+    // Keep all collection/progression fields and any ordinary currency balances.
+    if (save.coins === 1000000000) save.coins = initialCoins;
+    save.tickets = save.tickets || { t1: 0, t10: 0 };
     for (const ticket of ['t1', 't10']) {
-      Object.defineProperty(save.tickets, ticket, {
-        enumerable: true, configurable: true,
-        get: () => 1000000000,
-        set: () => {}
-      });
+      if (save.tickets[ticket] === 1000000000) save.tickets[ticket] = 0;
     }
     return result;
   };
@@ -40,30 +35,4 @@
     } catch (_) { return false; }
   };
   addEventListener('pagehide', () => G.DB.commit());
-  const coins = document.getElementById('coins');
-  const ticketDisplays = ['tickets-pill', 'gacha-tickets'].map(id => document.getElementById(id));
-  const showInfinity = () => {
-    if (coins.textContent !== '∞') coins.textContent = '∞';
-    for (const display of ticketDisplays) {
-      const text = document.createTreeWalker(display, NodeFilter.SHOW_TEXT);
-      let node;
-      while ((node = text.nextNode())) {
-        const value = node.nodeValue.replace(/\b1000000000\b/g, '∞');
-        if (value !== node.nodeValue) node.nodeValue = value;
-      }
-    }
-  };
-  const observer = new MutationObserver(showInfinity);
-  for (const display of [coins, ...ticketDisplays]) {
-    observer.observe(display, { childList: true, characterData: true, subtree: true });
-  }
-  showInfinity();
-  const badge = document.createElement('div');
-  badge.id = 'sandbox-badge';
-  badge.textContent = window.PS_SANDBOX_KEY === 'ps.sandbox.digimon.v1'
-    ? '數碼寶貝本地版 · 金幣與抽卡券無限 · 獨立存檔'
-    : '本地測試版 · 金幣與抽卡券無限 · 獨立存檔';
-  badge.translate = true;
-  badge.style.cssText = 'position:fixed;bottom:8px;right:8px;z-index:9999;padding:6px 10px;background:#122342;color:#ffd23f;border:1px solid #ffd23f;border-radius:6px;font:13px sans-serif;pointer-events:none';
-  document.body.appendChild(badge);
 })();

@@ -19,7 +19,7 @@
     ['temari','Temari','手鞠','砂隱村',['flying'],3,125,118],
     ['kimimaro','Kimimaro','君麻呂','音隱村',['fighting','steel'],4,160,122]
   ];
-  const records = new Map(), dictionary = {Naruto:'火影忍者'};
+  const records = new Map(), dictionary = {};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
     const dex = 30001 + index, start = slug==='naruto'?'naruto-shadow-clones':'naruto-' + slug;
     const mon = {dex,name,types,hp,spd,atk:1.32,rarity,bst:400+rarity*38,starter:true,gen:11,naruto:true,start};
@@ -66,13 +66,19 @@
   const featured=G.Gacha.featured;
   G.Gacha.featured=gen=>gen===11?[...availableDexes]:gen===10&&!G.Digimon.enabled?[]:featured(gen);
 
-  const selectable=dex=>available(dex)&&(G.Digimon.enabled||!G.Digimon.records.has(+dex));
+  const selectable=dex=>availableDexes.includes(+dex);
   // Filter discovery lists, retaining DEX_BY and records for save data and battle assets.
   G.DEX.splice(0,G.DEX.length,...G.DEX.filter(mon=>selectable(mon.dex)));
   G.STARTERS.splice(0,G.STARTERS.length,...G.STARTERS.filter(mon=>selectable(mon.dex)));
-  if(!G.Digimon.enabled){delete G.MenuUI.GEN_NAMES[9];delete G.Gacha.BANNERS[9];}
-  const pull=G.Gacha.pull;
-  G.Gacha.pull=(save,n,gen=1,use='t1')=>gen===10&&!G.Digimon.enabled?null:pull(save,n,gen,use);
+  for(let gen=0;gen<10;gen++)delete G.MenuUI.GEN_NAMES[gen];
+  // Gacha is temporarily closed; keep balances and collection data for later.
+  G.Gacha.pull=()=>null;
+  G.GachaUI.open=()=>false;
+  const show=G.UI.show;
+  G.UI.show=function(id,...args){
+    if(id==='scr-dex'||id==='scr-gacha')return false;
+    return show.call(this,id,...args);
+  };
   const upgradePicker=document.getElementById('upg-mon');
   new MutationObserver(()=>{
     for(const option of [...upgradePicker.options])if(!selectable(option.value))option.remove();
@@ -272,7 +278,7 @@
     }
   };
   const menuOpen=G.MenuUI.open;
-  G.MenuUI.open=function(...args){const result=menuOpen.apply(this,args);syncQuickPick();return result;};
+  G.MenuUI.open=function(...args){const result=menuOpen.apply(this,args);syncQuickPick();menu.scrollTop=0;return result;};
   const digimonOpen=G.Digimon.openPicker;
   G.Digimon.openPicker=()=>{hideOverlays();digimonOpen();};
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
@@ -325,7 +331,7 @@
   }).observe(document.getElementById('scr-gacha'),{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['class']});
   document.querySelector('#scr-menu .logo .t2').textContent='寶可夢 × 數碼寶貝 × 火影忍者';
   document.querySelector('#scr-menu [data-go="gacha"] small').textContent='9 大世代＋數碼寶貝＋火影忍者';
-  document.title=version+' · PokéSurvivor';
+  document.title='Naruto Survivor · '+version;
   const badge=document.querySelector('body>div[style*="pointer-events: none"]');
   if(badge)badge.remove();
   const style=document.createElement('style');style.textContent=`
@@ -345,6 +351,17 @@
     document.querySelector('#scr-menu .logo .t2').textContent='寶可夢 × 火影忍者';
     document.querySelector('#scr-menu [data-go="gacha"] small').textContent=`9 大世代與 ${availableDexes.length} 位火影忍者`;
   }
+  for(const go of ['dex','gacha']){
+    const button=document.querySelector(`#scr-menu [data-go="${go}"]`);
+    button.hidden=true;button.disabled=true;button.style.display='none';
+  }
+  document.getElementById('tickets-pill').hidden=true;
+  document.getElementById('tickets-pill').style.display='none';
+  document.querySelector('#scr-menu .logo .t2').textContent='火影忍者';
+  for(const logo of document.querySelectorAll('.logo .t1')){
+    logo.textContent='Naruto Survivor';logo.setAttribute('translate','no');
+  }
+  G.TestUI.start=openPicker;
   const startRun=G.Game.startRun;
   G.Game.startRun=function(...args){restoreAvailablePartner();return startRun.apply(this,args);};
   G.Naruto={version,records,availableDexes,choose,openPicker,frameFor,refreshSelection:syncQuickPick,isPreview:canvas=>previews.has(canvas)};
