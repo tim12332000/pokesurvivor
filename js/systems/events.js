@@ -130,7 +130,7 @@ G.Events = (() => {
   function spawnLost(players) {
     const alive = players.filter(p => !p.dead);
     const pl = G.U.pick(alive.length ? alive : players);
-    const pool = G.DEX.filter(p => p.rarity <= 3 && !p.leg && G.SPRITE_META[p.dex] && !G.Sprites.hovers(p.dex));
+    const pool = Object.values(G.DEX_BY).filter(p => p.rarity <= 3 && !p.leg && G.SPRITE_META[p.dex] && !G.Sprites.hovers(p.dex));
     const mon = G.U.pick(pool);
     let at = null, to = null;
     for (let i = 0; i < 20 && !at; i++) {
