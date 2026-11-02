@@ -33,14 +33,24 @@ G.Progress = (() => {
     return () => { h += 0x6D2B79F5; let t = h; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
   }
 
+  function typesFor(def) {
+    return def.id === 'playType' ? TYPES.filter(type => G.DEX.some(mon => mon.types.includes(type))) : TYPES;
+  }
+
+  function available(def) {
+    if (def.id === 'playType') return typesFor(def).length > 0;
+    return def.ev !== 'evolve' || G.DEX.some(mon => G.Moves.poolFor(mon).some(id => G.Moves.EVO[id]));
+  }
+
   function make(def, r) {
     const goal = def.goals[Math.floor(r() * def.goals.length)];
-    const param = def.param === 'type' ? TYPES[Math.floor(r() * TYPES.length)] : null;
+    const types = typesFor(def);
+    const param = def.param === 'type' ? types[Math.floor(r() * types.length)] : null;
     return { id: def.id, goal, param, prog: 0, claimed: false, told: false };
   }
 
   function pickSet(defs, n, r, avoid = []) {
-    const pool = defs.filter(d => !avoid.includes(d.id));
+    const pool = defs.filter(d => !avoid.includes(d.id) && available(d));
     const out = [];
     while (out.length < n && pool.length) out.push(make(pool.splice(Math.floor(r() * pool.length), 1)[0], r));
     return out;
@@ -60,6 +70,21 @@ G.Progress = (() => {
     if (M.week !== ids.w) {
       M.week = ids.w;
       M.weekly = pickSet(G.MissionDefs.weekly, 2, rng(ids.w + key));
+    }
+    // Repair unavailable objectives without spending a reroll or changing earned rewards.
+    for (const [list, defs, period] of [[M.daily, G.MissionDefs.daily, M.day], [M.weekly, G.MissionDefs.weekly, M.week]]) {
+      for (let i = 0; i < list.length; i++) {
+        const m = list[i], def = G.MissionDefs.BY[m.id];
+        if (!def || m.claimed || done(m)) continue;
+        const r = rng(period + key + ':repair:' + i + ':' + m.id);
+        if (!available(def)) {
+          const [replacement] = pickSet(defs, 1, r, list.map(mission => mission.id));
+          if (replacement) list[i] = replacement;
+        } else if (m.id === 'playType') {
+          const types = typesFor(def);
+          if (!types.includes(m.param)) m.param = types[Math.floor(r() * types.length)];
+        }
+      }
     }
   }
 

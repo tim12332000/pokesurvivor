@@ -9,12 +9,16 @@ from test_animation_complete import CHROME
 URL = os.environ.get('NARUTO_RIFT_URL', 'http://127.0.0.1:8004/.omx/digimon.html?lang=zh-TW')
 OUT = Path(__file__).resolve().parents[1] / '.omx/state/naruto-rift'
 
-CHECK = '''() => {
+CHECK = '''dex => {
   const assert=(ok,message)=>{if(!ok)throw Error(message)},p=G.Game.player;
-  assert(p.dex===30001,'fixture must use Naruto');
+  assert(p.dex===dex,'fixture selected the wrong ninja');
   assert(G.DEX.every(mon=>mon.naruto),'picker must remain Naruto-only');
   G.Game.togglePause();G.UI.hide('scr-pause');
   const back={x:p.x,y:p.y,hp:p.hp},clone=G.SelfClones.summon(p),cloneHp=clone.hp;
+  G.Events.debugStart('gold');assert(G.Events.golden,'gold event failed');G.Events.reset();
+  G.Events.debugStart('horde');assert(G.Events.bag()?.length>0,'horde event has no enemies');G.Events.reset();
+  for(let i=0;i<3 && !G.EnemyMgr.all().some(e=>e.behavior==='thief');i++)G.Events.debugThief();
+  assert(G.EnemyMgr.all().some(e=>e.behavior==='thief'),'treasure thief missing');
   const enter=()=>{
     G.Rift.onEvent(['rift',p.x,p.y+10,45]);
     G.Rift.update(.01,p,G.Game.st.time);
@@ -43,8 +47,10 @@ CHECK = '''() => {
   assert(G.Events.current==='lost','lost-Pokemon event could not select a target');
   G.Events.reset();G.Judgment.debugStart();
   assert(G.Judgment.cinematic,'judgment could not select its legendary queue');
+  G.Judgment.cineTick(10.2);G.Judgment.update(1.3,p,G.Judgment.AT);
+  assert(!G.Judgment.cinematic && G.EnemyMgr.all().some(e=>e.boss),'judgment fight did not spawn opponent');
   return {dex:p.dex,firstLegend:first.dex,secondLegend:second.dex,lossReturn:true,victoryReturn:true,
-    bondAwarded:true,clonePreserved:true,lostEvent:true,judgment:true};
+    bondAwarded:true,clonePreserved:true,lostEvent:true,gold:true,horde:true,thief:true,judgmentFight:true};
 }'''
 
 
@@ -61,14 +67,19 @@ if __name__ == '__main__':
             page.goto(URL + ('' if mobile else '&layout=wide'))
             page.wait_for_function("window.G?.NarutoAssets && document.getElementById('boot').classList.contains('hidden')")
             if page.locator('#tap-start').is_visible(): page.locator('#tap-start').click()
-            page.locator('#scr-menu [data-go="play"]').click()
-            page.wait_for_function("G.Game.state==='playing' && G.Game.player?.dex===30001", timeout=60000)
-            result = page.evaluate(CHECK)
-            assert not errors, errors
-            report['mobile' if mobile else 'desktop'] = result
-            print(json.dumps(result), flush=True)
+            results = []
+            for dex in page.evaluate('G.Naruto.availableDexes'):
+                page.locator(f'[data-quick-naruto="{dex}"]').click()
+                page.locator('#scr-menu [data-go="play"]').click()
+                page.wait_for_function("dex=>G.Game.state==='playing' && G.Game.player?.dex===dex", arg=dex, timeout=60000)
+                result = page.evaluate(CHECK, dex)
+                assert not errors, errors
+                results.append(result)
+                print(json.dumps(result), flush=True)
+                page.evaluate('G.Flow.goMenu()')
+            report['mobile' if mobile else 'desktop'] = results
             context.close()
         browser.close()
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / 'report.json').write_text(json.dumps(report, indent=2), encoding='utf-8')
-    print('Naruto portal entry, loss/win return, clone continuity and progression passed on desktop/mobile.')
+    print('All eight ninjas passed portal entry/return, clone continuity, events and judgment on desktop/mobile.')
