@@ -5,7 +5,7 @@
  *   (se van guardando según se usan: no se descarga todo de golpe).
  * - Firebase y demás servicios de fuera no se tocan.
  */
-const CODE = 'ps-code-v2', ART = 'ps-art-v1';
+const CODE = 'ps-code-v3', ART = 'ps-art-v1';
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CODE).then(c => c.addAll(['./', './index.html', './css/style.css', './manifest.webmanifest'])).catch(() => {}));
@@ -33,7 +33,9 @@ self.addEventListener('fetch', e => {
     }));
     return;
   }
-  e.respondWith(fetch(req).then(res => {
+  // Network-first must also revalidate HTML in the browser's HTTP cache.
+  // Otherwise an unchanged game URL can keep loading a previous release.
+  e.respondWith(fetch(req, req.mode === 'navigate' ? { cache: 'no-cache' } : undefined).then(res => {
     if (res.ok) { const copy = res.clone(); caches.open(CODE).then(c => c.put(req, copy)); }
     return res;
   }).catch(async () => {
