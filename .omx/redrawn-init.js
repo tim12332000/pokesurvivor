@@ -57,7 +57,7 @@
       return ensure(dex).then(()=>{
         if(ticket!==request||+G.DB.save.partner!==dex||G.Game.state!=='ui'||!valid())return;
         return original.apply(context,args);
-      }).catch(()=>{
+      },()=>{
         if(ticket===request)G.UI.toast('角色素材載入失敗，請再按開始重試。');
       }).finally(()=>{if(ticket===request)setBusy(false);});
     }
