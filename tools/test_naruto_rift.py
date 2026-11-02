@@ -12,7 +12,7 @@ OUT = Path(__file__).resolve().parents[1] / '.omx/state/naruto-rift'
 CHECK = '''dex => {
   const assert=(ok,message)=>{if(!ok)throw Error(message)},p=G.Game.player;
   assert(p.dex===dex,'fixture selected the wrong ninja');
-  assert(G.DEX.every(mon=>mon.naruto),'picker must remain Naruto-only');
+  assert(G.Catalog.playable().every(mon=>mon.naruto),'picker must remain Naruto-only');
   G.Game.togglePause();G.UI.hide('scr-pause');
   const back={x:p.x,y:p.y,hp:p.hp},clone=G.SelfClones.summon(p),cloneHp=clone.hp;
   G.Events.debugStart('gold');assert(G.Events.golden,'gold event failed');G.Events.reset();

@@ -9,8 +9,9 @@ URL = os.environ.get('MISSION_ROSTER_URL', 'http://127.0.0.1:8004/.omx/digimon.h
 OUT = Path(__file__).resolve().parents[1] / '.omx/state/mission-roster'
 SETUP = '''()=>{
   const assert=(ok,message)=>{if(!ok)throw Error(message)},s=G.DB.save;
-  const types=new Set(G.DEX.flatMap(mon=>mon.types));
-  assert(G.DEX.length===8 && G.DEX.every(mon=>mon.naruto),'wrong picker roster');
+  const roster=G.Catalog.playable(),types=new Set(roster.flatMap(mon=>mon.types));
+  assert(roster.length===8 && roster.every(mon=>mon.naruto),'wrong picker roster');
+  assert(G.Catalog.all().length===G.DEX.length && G.DEX.length>roster.length,'complete catalog was filtered');
   for(let created=0;created<500;created++){
     const fresh={created};G.Progress.ensure(fresh);
     for(const m of [...fresh.missions.daily,...fresh.missions.weekly]){
@@ -55,7 +56,7 @@ if __name__ == '__main__':
             page.evaluate('G.DB.commit()');page.reload()
             page.wait_for_function("window.G?.NarutoAssets && document.getElementById('boot').classList.contains('hidden')")
             saved=page.evaluate('''()=>({claimed:G.DB.save.missions.daily[2].claimed,rerolled:G.DB.save.missions.rerolled,
-              owned:G.DB.save.owned[25].at,shiny:G.DB.save.shiny[25].at,types:G.DEX.flatMap(mon=>mon.types),
+              owned:G.DB.save.owned[25].at,shiny:G.DB.save.shiny[25].at,types:G.Catalog.playable().flatMap(mon=>mon.types),
               repairedType:G.DB.save.missions.daily[0].param})''')
             assert saved['claimed'] and saved['rerolled'] and saved['owned']==1 and saved['shiny']==2,saved
             assert saved['repairedType'] in saved['types'],saved

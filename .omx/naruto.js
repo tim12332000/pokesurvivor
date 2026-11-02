@@ -2,7 +2,7 @@
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
   const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011,30012]);
-  const available=dex=>!records.has(+dex)||availableDexes.includes(+dex);
+  const available=G.Catalog.isPlayable;
   const t=text=>G.I18n.t(text);
   const version=t('火影 beta 0.01');
   const roster = [
@@ -66,10 +66,8 @@
   const featured=G.Gacha.featured;
   G.Gacha.featured=gen=>gen===11?[...availableDexes]:gen===10&&!G.Digimon.enabled?[]:featured(gen);
 
-  const selectable=dex=>availableDexes.includes(+dex);
-  // Filter discovery lists, retaining DEX_BY and records for save data and battle assets.
-  G.DEX.splice(0,G.DEX.length,...G.DEX.filter(mon=>selectable(mon.dex)));
-  G.STARTERS.splice(0,G.STARTERS.length,...G.STARTERS.filter(mon=>selectable(mon.dex)));
+  // Selection policy never removes combat records or legacy collection entries.
+  G.Catalog.restrictTo(availableDexes);
   for(let gen=0;gen<10;gen++)delete G.MenuUI.GEN_NAMES[gen];
   // Gacha is temporarily closed; keep balances and collection data for later.
   G.Gacha.pull=()=>null;
@@ -81,13 +79,13 @@
   };
   const upgradePicker=document.getElementById('upg-mon');
   new MutationObserver(()=>{
-    for(const option of [...upgradePicker.options])if(!selectable(option.value))option.remove();
+    for(const option of [...upgradePicker.options])if(!available(option.value))option.remove();
   }).observe(upgradePicker,{childList:true});
   const restoreAvailablePartner=()=>{
     const save=G.DB.save;
-    if(save.partner&&!selectable(save.partner)){
+    if(save.partner&&!available(save.partner)){
       save.partner=save.starter=30001;save.partnerShiny=false;
-    }else if(save.starter&&!selectable(save.starter))save.starter=save.partner||30001;
+    }else if(save.starter&&!available(save.starter))save.starter=save.partner||30001;
   };
 
   const previews=new WeakSet(),Animator=G.Sprites.Animator;
@@ -256,8 +254,8 @@
   let previewDex;
   const syncQuickPick=()=>{
     const selected=G.DB.save.partner;
-    partnerCard.classList.toggle('hidden',availableDexes.includes(+selected));
-    const record=records.get(+selected),isNaruto=availableDexes.includes(+selected);
+    const record=records.get(+selected),isNaruto=!!record&&available(selected);
+    partnerCard.classList.toggle('hidden',isNaruto);
     detail.dataset.selectedHero=selected;
     action.dataset.heroName=isNaruto?t(record.chinese):G.I18n.t(G.DEX_BY[selected]?.name||'');
     detail.classList.toggle('launch-fallback',!isNaruto);
@@ -314,9 +312,9 @@
   const starterGrid=document.getElementById('starter-grid');
   new MutationObserver(()=>{
     const cells=starterGrid.querySelectorAll('.cell');
-    if(cells.length!==G.STARTERS.length||starterGrid.querySelector('.naruto-group-label'))return;
+    if(cells.length!==G.Catalog.starters().length||starterGrid.querySelector('.naruto-group-label'))return;
     const heading=document.createElement('h3');heading.className='naruto-group-label digimon-group-label';heading.textContent='火影忍者';
-    starterGrid.insertBefore(heading,cells[G.STARTERS.findIndex(s=>s.dex===30001)]);
+    starterGrid.insertBefore(heading,cells[G.Catalog.starters().findIndex(s=>s.dex===30001)]);
   }).observe(starterGrid,{childList:true});
   new MutationObserver(()=>{
     const tab=document.querySelector('#gacha-gens [data-gen="11"]');if(!tab)return;

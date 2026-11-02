@@ -6,7 +6,7 @@ const vm = require('node:vm');
 
 const G = { Ranking: { periodIds: () => ({ d: '2026-11-02', w: '2026-W45' }) } };
 const context = vm.createContext({ G, window: { G } });
-for (const file of ['js/core/util.js', 'js/data/pokedex.js', 'js/data/moves.js', 'js/data/missions.js', 'js/systems/progress.js']) {
+for (const file of ['js/core/util.js', 'js/data/pokedex.js', 'js/core/catalog.js', 'js/data/moves.js', 'js/data/missions.js', 'js/systems/progress.js']) {
   vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
 }
 const fresh = created => ({ created, coins: 123, tickets: { t1: 4, t10: 2 }, stats: {} });
@@ -19,7 +19,10 @@ for (let i = 0; i < 300; i++) {
 assert(normal.has('evolve') && normal.has('wevolve'));
 
 const types = ['fighting', 'flying', 'electric', 'fire', 'ground', 'steel', 'psychic'];
-G.DEX = types.map((type, i) => ({ dex: 30001 + i, types: [type], naruto: true }));
+const ninjas = types.map((type, i) => ({ dex: 30001 + i, types: [type], naruto: true }));
+G.DEX.push(...ninjas);
+for (const mon of ninjas) G.DEX_BY[mon.dex] = mon;
+G.Catalog.restrictTo(ninjas.map(mon => mon.dex));
 const poolFor = G.Moves.poolFor;
 G.Moves.poolFor = mon => mon.naruto ? ['naruto-shadow-clones'] : poolFor(mon);
 let playTypes = 0, enemyOnlyTypes = 0;

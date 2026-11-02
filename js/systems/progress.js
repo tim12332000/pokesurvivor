@@ -34,12 +34,14 @@ G.Progress = (() => {
   }
 
   function typesFor(def) {
-    return def.id === 'playType' ? TYPES.filter(type => G.DEX.some(mon => mon.types.includes(type))) : TYPES;
+    if (def.id !== 'playType') return TYPES;
+    const playable = G.Catalog.playable();
+    return TYPES.filter(type => playable.some(mon => mon.types.includes(type)));
   }
 
   function available(def) {
     if (def.id === 'playType') return typesFor(def).length > 0;
-    return def.ev !== 'evolve' || G.DEX.some(mon => G.Moves.poolFor(mon).some(id => G.Moves.EVO[id]));
+    return def.ev !== 'evolve' || G.Catalog.playable().some(mon => G.Moves.poolFor(mon).some(id => G.Moves.EVO[id]));
   }
 
   function make(def, r) {

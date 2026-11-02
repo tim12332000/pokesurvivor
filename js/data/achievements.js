@@ -75,14 +75,14 @@ G.AchDefs = (() => {
   ];
 
   // Un logro por legendario: "Vence a Mewtwo"...
-  for (const p of G.DEX.filter(p => p.leg && G.SPRITE_META[p.dex])) {
+  for (const p of G.Catalog.all().filter(p => p.leg && G.SPRITE_META[p.dex])) {
     LIST.push({ id: 'leg_' + p.dex, cat: 'legendarios', tier: 2, dex: p.dex, name: 'Vence a ' + p.name,
                 desc: 'Derrota a ' + p.name + ' en una grieta.', value: s => (s.legends && s.legends[p.dex] ? 1 : 0), goal: 1, reward: { t1: 1 } });
   }
   const totalLegends = LIST.filter(a => a.dex).length;
   for (const a of LIST) if (a.id === 'legAll') { a.goal = totalLegends; a.desc = `Vence a los ${totalLegends} legendarios.`; }
   // Metas que dependen de los datos del juego.
-  for (const a of LIST) if (a.id === 'ownAll') { a.goal = G.DEX.length; a.desc = `Ten los ${G.DEX.length} Pokémon del juego.`; }
+  for (const a of LIST) if (a.id === 'ownAll') { a.goal = G.Catalog.all().length; a.desc = `Ten los ${G.Catalog.all().length} Pokémon del juego.`; }
   const evoTotal = Object.keys(G.Moves.EVO).length;
   for (const a of LIST) if (a.id === 'evoAll') { a.goal = evoTotal; a.desc = `Evoluciona los ${evoTotal} movimientos distintos.`; }
 

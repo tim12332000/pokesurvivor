@@ -112,7 +112,7 @@ G.PERSONALITY_TEST = [
 G.personalityResult = scores => {
   const trait = Object.keys(scores).sort((a, b) => scores[b] - scores[a])[0];
   let best = [], bestScore = -1;
-  for (const s of G.STARTERS) {
+  for (const s of G.Catalog.starters()) {
     // El rasgo principal pesa el doble.
     const v = (scores[s.traits[0]] || 0) * 2 + (scores[s.traits[1]] || 0);
     if (v > bestScore) { bestScore = v; best = [s]; }

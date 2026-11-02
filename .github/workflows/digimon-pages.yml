@@ -26,6 +26,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+      - name: Verify catalog boundaries and behavior
+        run: |
+          node tools/test_catalog.js
+          node tools/test_catalog_boundary.js
+          node tools/test_catalog_baseline.js
+          node tools/test_enemy_catalog.js
+          node tools/test_mission_roster.js
       - run: python tools/build_digimon_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

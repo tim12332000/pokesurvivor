@@ -45,7 +45,7 @@ G.Gacha = (() => {
   function inBanner(p, gen) { return p.gen === gen && !!G.SPRITE_META[p.dex]; }
 
   /** Pokémon de una rareza en un banner. */
-  function pool(rarity, gen) { return G.DEX.filter(p => inBanner(p, gen) && p.rarity === rarity); }
+  function pool(rarity, gen) { return G.Catalog.playable().filter(p => inBanner(p, gen) && p.rarity === rarity); }
 
   /** Pool no vacío más cercano (algunas generaciones tienen rarezas casi vacías). */
   function poolNear(rarity, gen) {
@@ -55,7 +55,7 @@ G.Gacha = (() => {
       const p = pool(r, gen);
       if (p.length) return { rarity: r, list: p };
     }
-    return { rarity, list: G.DEX.filter(p => inBanner(p, gen)) };
+    return { rarity, list: G.Catalog.playable().filter(p => inBanner(p, gen)) };
   }
 
   function rollRarity(min = 1) {
@@ -68,7 +68,7 @@ G.Gacha = (() => {
 
   /** Los 3 más fuertes de la generación, para el cartel del banner. */
   function featured(gen) {
-    return G.DEX.filter(p => inBanner(p, gen) && p.rarity === 5)
+    return G.Catalog.playable().filter(p => inBanner(p, gen) && p.rarity === 5)
       .sort((a, b) => b.bst - a.bst).slice(0, 3).map(p => p.dex);
   }
 

@@ -6,7 +6,7 @@ const vm = require('node:vm');
 
 const G = {};
 const context = vm.createContext({ G, window: { G } });
-for (const file of ['js/core/util.js', 'js/data/pokedex.js', 'js/data/sprites-meta.js', 'js/data/enemies.js']) {
+for (const file of ['js/core/util.js', 'js/data/pokedex.js', 'js/core/catalog.js', 'js/data/sprites-meta.js', 'js/data/enemies.js']) {
   vm.runInContext(fs.readFileSync(path.join(__dirname, '..', file), 'utf8'), context);
 }
 function encounters() {
@@ -20,8 +20,10 @@ function encounters() {
 const expected = encounters();
 assert(expected.run.cast.every(tier => tier.list.length > 0));
 assert.equal(new Set(expected.run.bosses.map(boss => boss.dex)).size, 5);
-// Naruto's picker removes the original Pokemon from DEX, retaining DEX_BY.
-G.DEX.splice(0, G.DEX.length);
+// Selection policy can even admit nobody without removing encounter records.
+const fullCount = G.DEX.length;
+G.Catalog.restrictTo([]);
 assert.deepEqual(encounters(), expected);
-assert.equal(G.DEX.length, 0, 'combat must not restore hidden picker entries');
+assert.equal(G.Catalog.playable().length, 0);
+assert.equal(G.DEX.length, fullCount, 'selection mutated the complete catalog');
 console.log('Enemy tiers, bosses, hordes and preload roster survive picker filtering.');

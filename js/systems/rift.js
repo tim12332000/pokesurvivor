@@ -89,7 +89,7 @@ G.Rift = (() => {
   function start(forceType) {
     if (arena) return;
     forceType = forceType || nextType; nextType = null;
-    let pool = Object.values(G.DEX_BY).filter(p => p.leg && G.SPRITE_META[p.dex]);
+    let pool = G.Catalog.all().filter(p => p.leg && G.SPRITE_META[p.dex]);
     if (forceType && pool.some(p => p.types.includes(forceType))) pool = pool.filter(p => p.types.includes(forceType));
     // Los legendarios que aún no has vencido salen 4 veces más (menos repetidos).
     const beaten = (G.DB.save && G.DB.save.legends) || {};

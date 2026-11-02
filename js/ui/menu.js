@@ -60,7 +60,7 @@ G.MenuUI = (() => {
 
     const owned = Object.keys(s.owned).filter(d => G.DEX_BY[d]).length;
     const shinies = Object.keys(s.shiny || {}).length;
-    $('menu-dex-count').textContent = `${owned} / ${G.DEX.length}` + (shinies ? ` · ${shinies} shiny` : '');
+    $('menu-dex-count').textContent = `${owned} / ${G.Catalog.playable().length}` + (shinies ? ` · ${shinies} shiny` : '');
 
     const st = s.stats;
     $('menu-stats').innerHTML =
@@ -106,15 +106,15 @@ G.MenuUI = (() => {
     const s = G.DB.save;
     if (dexSel == null) { dexSel = s.partner; dexGen = G.DEX_BY[s.partner].gen; }
     const owned = Object.keys(s.owned).filter(d => G.DEX_BY[d]).length;
-    $('dex-total').textContent = `${owned} / ${G.DEX.length}`;
+    $('dex-total').textContent = `${owned} / ${G.Catalog.playable().length}`;
 
     // Pestañas de generación, con cuántos tienes de cada una.
     const tabs = $('dex-gens');
     tabs.innerHTML = '';
     GEN_NAMES.forEach((name, i) => {
       const g = i + 1;
-      const total = G.DEX.filter(p => p.gen === g).length;
-      const have = G.DEX.filter(p => p.gen === g && s.owned[p.dex]).length;
+      const total = G.Catalog.playable().filter(p => p.gen === g).length;
+      const have = G.Catalog.playable().filter(p => p.gen === g && s.owned[p.dex]).length;
       const b = document.createElement('button');
       b.className = 'gen-tab' + (g === dexGen ? ' on' : '');
       b.innerHTML = `<b>${name}</b><small>${have}/${total}</small>`;
@@ -142,7 +142,7 @@ G.MenuUI = (() => {
     const s = G.DB.save;
     const grid = $('dex-grid');
     grid.innerHTML = '';
-    for (const p of G.DEX) {
+    for (const p of G.Catalog.playable()) {
       if (p.gen !== dexGen) continue;
       const own = !!s.owned[p.dex], sh = !!(s.shiny && s.shiny[p.dex]);
       if (dexFilter === 'own' && !own) continue;
@@ -235,11 +235,11 @@ G.MenuUI = (() => {
   function openUpgrades() {
     G.UI.show('scr-upgrades', true);
     const s = G.DB.save;
-    if (!upgDex || !s.owned[upgDex] || !G.DEX.includes(G.DEX_BY[upgDex])) upgDex = s.partner;
+    if (!upgDex || !s.owned[upgDex] || !G.Catalog.isPlayable(upgDex)) upgDex = s.partner;
     // Selector con tus Pokémon: el compañero primero, luego los que ya tienen mejoras.
     const sel = $('upg-mon');
     const lv = d => Object.values(s.pupg[d] || {}).reduce((a, b) => a + b, 0);
-    const mons = Object.keys(s.owned).map(Number).filter(d => G.DEX.includes(G.DEX_BY[d]))
+    const mons = Object.keys(s.owned).map(Number).filter(d => G.Catalog.isPlayable(d))
       .sort((a, b) => (b === s.partner) - (a === s.partner) || lv(b) - lv(a) || a - b);
     sel.innerHTML = mons.map(d => `<option value="${d}">${G.DEX_BY[d].name}${d === s.partner ? ' (compañero)' : ''}${lv(d) ? ' · ' + lv(d) + ' niveles' : ''}</option>`).join('');
     sel.value = upgDex;

@@ -75,7 +75,7 @@ def main():
         load()
         assert page.evaluate('G.DB.save.partner') == 30001
         assert page.evaluate('G.DB.owns(1) && G.DB.save.pupg[1].hp===2')
-        assert page.evaluate('G.DEX.every(p=>p.naruto) && G.STARTERS.every(p=>G.Naruto.availableDexes.includes(p.dex))')
+        assert page.evaluate('G.Catalog.playable().every(p=>p.naruto) && G.Catalog.starters().every(p=>G.Naruto.availableDexes.includes(p.dex))')
         assert page.locator('#scr-menu [data-go="dex"]').is_hidden()
         assert page.locator('#scr-menu [data-go="gacha"]').is_hidden()
         page.evaluate("G.UI.show('scr-dex');G.UI.show('scr-gacha')")
