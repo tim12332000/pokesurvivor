@@ -61,8 +61,10 @@ html = html.replace('<script defer src=".omx/naruto-rasenshuriken-vfx.js"></scri
 html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src=".omx/jujutsu-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
 html = html.replace('<script defer src=".omx/naruto-training.js"></script>', '<script defer src=".omx/naruto-training.js"></script>\n<script defer src=".omx/jujutsu.js"></script>\n<script defer src=".omx/jjk-yuta.js"></script>\n<script defer src=".omx/jjk-ryu.js"></script>\n<script defer src=".omx/jjk-uro.js"></script>', 1)
 # English crossover dictionaries share the base game's locale selection.
+html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src="art-review/madara/runtime.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
 html = html.replace('<script defer src=".omx/damage-splash.js"></script>', '<script defer src=".omx/damage-splash.js"></script>\n<script defer src=".omx/combat-pulse.js"></script>', 1)
 html = html.replace(main, ''.join('<script defer src=".omx/'+name+'.js"></script>\n' for name in ['jujutsu-growth','jujutsu-vfx','trial-build','run-insights']) + main, 1)
+html = html.replace(main, '<script defer src=".omx/naruto-madara.js"></script>\n' + main, 1)
 html = html.replace('<script defer src=".omx/unlimited.js"></script>', '<script defer src=".omx/naruto-en.js"></script>\n<script defer src=".omx/unlimited.js"></script>', 1)
 html = html.replace(main, '<script defer src=".omx/naruto-skills-en.js"></script>\n' + main, 1)
 # Local previews need the same cache separation as deployed builds. A version

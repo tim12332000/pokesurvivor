@@ -25,29 +25,34 @@
     cast.pulses.add(contactPulseIndex);
     const primary=new Map();
     for(const hit of hits){
-      if(!alive(hit.target)||hit.target.friendly||!Number.isFinite(hit.primaryDirectDamage)||hit.primaryDirectDamage<=0)continue;
+      if(!alive(hit.target)||hit.target.friendly||cast.targetIsLegal&&!cast.targetIsLegal(hit.target)||!Number.isFinite(hit.primaryDirectDamage)||hit.primaryDirectDamage<=0)continue;
       const previous=primary.get(hit.target);
       if(!previous||previous.primaryDirectDamage<hit.primaryDirectDamage)primary.set(hit.target,{...hit,x:hit.target.x,y:hit.target.y});
     }
     const owner=cast.owner,rate=G.DamageSplash.rate(owner),radius=G.DamageSplash.radius,outer=new Map();
     if(rate>0)for(const hit of primary.values())for(const target of new Set(G.EnemyMgr.queryCircle(hit.x,hit.y,radius))){
-      if(primary.has(target)||!alive(target)||target.friendly||Math.hypot(target.x-hit.x,target.y-hit.y)>radius||!clearPath(hit.x,hit.y,target.x,target.y))continue;
+      if(primary.has(target)||!alive(target)||target.friendly||cast.targetIsLegal&&!cast.targetIsLegal(target)||Math.hypot(target.x-hit.x,target.y-hit.y)>radius||!clearPath(hit.x,hit.y,target.x,target.y))continue;
       const amount=hit.primaryDirectDamage*rate,previous=outer.get(target);
-      if(!previous||previous.amount<amount)outer.set(target,{amount,color:hit.color||'#fff'});
+      if(cast.targetIsLegal){const entry=previous||{sources:[]};entry.sources.push({amount,color:hit.color||'#fff',source:hit.target});outer.set(target,entry);}
+      else if(!previous||previous.amount<amount)outer.set(target,{amount,color:hit.color||'#fff'});
     }
+    const landed=new Set();
     let primaryHits=0,primaryDamage=0,secondaryHits=0,secondaryDamage=0;
     for(const hit of primary.values()){
       if(!legal(cast))break;
-      if(!alive(hit.target))continue;
+      if(!alive(hit.target)||cast.targetIsLegal&&!cast.targetIsLegal(hit.target))continue;
       const amount=hit.primaryDirectDamage;
       hit.target.hurt(amount,hit.color||'#fff',hit.dx||0,hit.dy||0,hit.knock||0,hit.eff??null,owner,cast.moveId);
-      owner.onDealt?.(amount);owner.dmgDealt=(owner.dmgDealt||0)+amount;primaryHits++;primaryDamage+=amount;
+      landed.add(hit.target);owner.onDealt?.(amount);owner.dmgDealt=(owner.dmgDealt||0)+amount;primaryHits++;primaryDamage+=amount;
       hit.onHit?.(hit.target);
     }
     if(legal(cast))G.DamageSplash.withSecondary(()=>{
-      for(const [target,hit] of outer){
+      for(const [target,entry] of outer){
         if(!legal(cast))break;
-        if(!alive(target))continue;
+        if(!alive(target)||cast.targetIsLegal&&!cast.targetIsLegal(target))continue;
+        // Guarded casts cannot emit splash from a skipped stale primary.
+        const hit=entry.sources?entry.sources.filter(source=>landed.has(source.source)).sort((a,b)=>b.amount-a.amount)[0]:entry;
+        if(!hit)continue;
         target.hurt(hit.amount,hit.color,0,0,0,null,owner,cast.moveId);
         owner.dmgDealt=(owner.dmgDealt||0)+hit.amount;secondaryHits++;secondaryDamage+=hit.amount;
       }

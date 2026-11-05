@@ -23,4 +23,28 @@ owner.dead=true;assert.equal(P.apply(P.create(owner,'test'),0,batch),false);owne
 const oldScope=G.DamageSplash.isSecondary();assert.throws(()=>G.DamageSplash.withSecondary(()=>{throw Error('fixture')}));assert.equal(G.DamageSplash.isSecondary(),oldScope);
 for(let i=0;i<120;i++)P.apply(P.create(owner,'test'),0,[]);
 assert.equal(P.telemetry.length,96);assert(hits.filter(h=>h.secondary).every(h=>h.amount%10===0||h.owner===clone));
+// Guarded callers can reject actors removed from an otherwise stale grid.
+// All preexisting assertions above omit the guard and preserve legacy behavior.
+owner.damageSplashPicks=1;
+let registered=new Set([a,b,outer]);
+const guarded=()=>P.create(owner,'test',{targetIsLegal:target=>registered.has(target)});
+const beforeB=b.hp,beforeOuter=outer.hp;
+const conditional=P.apply(guarded(),0,[
+ {target:a,primaryDirectDamage:100,onHit(){registered.delete(b);}},
+ {target:b,primaryDirectDamage:200}
+]);
+assert.equal(conditional.primaryHits,1);assert.equal(b.hp,beforeB);
+assert.equal(conditional.secondaryDamage,10,'skipped primary must not supply the larger splash');
+assert.equal(beforeOuter-outer.hp,10);
+registered=new Set([a,b]);
+const staleOuterHp=outer.hp;
+const guardedOuter=P.apply(guarded(),0,[{target:a,primaryDirectDamage:100}]);
+assert.equal(guardedOuter.secondaryHits,1);assert.equal(outer.hp,staleOuterHp);
+registered=new Set([a,b,outer]);const nativeBHurt=b.hurt;
+b.hurt=function(...args){registered.delete(outer);return nativeBHurt.apply(this,args);};
+try{const before=outer.hp,secondaryRemoval=P.apply(guarded(),0,[{target:a,primaryDirectDamage:100}]);
+ assert.equal(secondaryRemoval.secondaryHits,1);assert.equal(outer.hp,before,'secondary callback removal must be rechecked');
+}finally{b.hurt=nativeBHurt;}
+registered=new Set([outer]);const rejected=P.apply(guarded(),0,[{target:a,primaryDirectDamage:100}]);
+assert.equal(rejected.primaryHits,0);assert.equal(rejected.secondaryHits,0);
 console.log('PASS: primary batch/max outer, percent/lifesteal isolation, duplicate/second pulse, clone attribution, epoch/pause/death, occlusion and secondary scope.');

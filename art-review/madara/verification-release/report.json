@@ -1,0 +1,2310 @@
+{
+  "url": "http://127.0.0.1:8347/.omx/digimon.html?lang=zh-TW",
+  "sourceHashes": {
+    ".omx/naruto.js": "aa2dc433a40e11ef6dd2bcaf8a5d0ab7f4cd7db8391de1a4023a5a0a7d42ed0c",
+    ".omx/naruto-skills.js": "79e5c2c4304aec9ce586601a35d444bcd91a4eff13194ed3f1562e47681dbd43",
+    ".omx/naruto-training.js": "d5f710e4be0a3675cbe4594ae6e0200ae755f4ec3c15687b59e1b81c4a0bd4e6",
+    ".omx/digimon.html": "5de403379bbb217987f9f4b393eb70d24d1cfd57fa6f7a8962913bbbb081499a",
+    ".omx/combat-pulse.js": "9570100a9eb0de13a9092aa80538949201cc5fe06c3d053f5928e84ec4790b55",
+    "art-review/madara/runtime.js": "bfd75a32138ca0bdeaac5c8c598e4fa1a42324417283b89e3cb936678af9482d",
+    "art-review/madara/madara-actions-v1.png": "8ae1d43e099ced737b3cf3fca8184b066a8bb06eff572cb731ecee5ef69adace",
+    ".omx/naruto-madara.js": "02853c81e0255f496c161a63dcb33d29a97d1765ae104aefee2085fd2ab6fc77",
+    "art-review/madara/frames.json": "6b05eee745db5e18f829699d4055c39af8725b4f638912831667e26020e1c4c7"
+  },
+  "cases": {
+    "desktop": {
+      "quality": {
+        "setting": "auto",
+        "fx": 2
+      },
+      "progression": {
+        "starter": "naruto-madara",
+        "ids": [
+          "naruto-madara",
+          "naruto-madara-fire",
+          "naruto-madara-susanoo",
+          "naruto-madara-meteor",
+          "naruto-madara-clones"
+        ],
+        "levels": [
+          {
+            "level": 1,
+            "pool": [
+              "naruto-madara"
+            ]
+          },
+          {
+            "level": 2,
+            "pool": [
+              "naruto-madara"
+            ]
+          },
+          {
+            "level": 3,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire"
+            ]
+          },
+          {
+            "level": 5,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire"
+            ]
+          },
+          {
+            "level": 6,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo"
+            ]
+          },
+          {
+            "level": 8,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo"
+            ]
+          },
+          {
+            "level": 9,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor"
+            ]
+          },
+          {
+            "level": 11,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor"
+            ]
+          },
+          {
+            "level": 12,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor",
+              "naruto-madara-clones"
+            ]
+          },
+          {
+            "level": 15,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor",
+              "naruto-madara-clones"
+            ]
+          }
+        ],
+        "learned": [
+          {
+            "id": "naruto-madara",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-fire",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-susanoo",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-meteor",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-clones",
+            "rank": 1,
+            "passive": true
+          }
+        ]
+      },
+      "starterGates": [
+        {
+          "run": 0,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 1,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 2,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 3,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        }
+      ],
+      "inputAndBody": {
+        "right": {
+          "dx": 11.7056,
+          "dy": 0,
+          "dir": 2,
+          "pose": {
+            "pixels": 1392,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  377,
+                  8,
+                  161,
+                  281,
+                  -18,
+                  -64,
+                  37,
+                  64
+                ]
+              }
+            ],
+            "dir": 2,
+            "animation": "Walk"
+          }
+        },
+        "left": {
+          "dx": -11.7056,
+          "dy": 0,
+          "dir": 6,
+          "pose": {
+            "pixels": 1387,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  59,
+                  5,
+                  146,
+                  283,
+                  -21,
+                  -64,
+                  33,
+                  64
+                ]
+              }
+            ],
+            "dir": 6,
+            "animation": "Walk"
+          }
+        },
+        "down": {
+          "dx": 0,
+          "dy": 11.7056,
+          "dir": 0,
+          "pose": {
+            "pixels": 1383,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  703,
+                  8,
+                  156,
+                  280,
+                  -20,
+                  -63,
+                  36,
+                  64
+                ]
+              }
+            ],
+            "dir": 0,
+            "animation": "Walk"
+          }
+        },
+        "up": {
+          "dx": 0,
+          "dy": -11.7056,
+          "dir": 4,
+          "pose": {
+            "pixels": 1387,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  59,
+                  5,
+                  146,
+                  283,
+                  -21,
+                  -64,
+                  33,
+                  64
+                ]
+              }
+            ],
+            "dir": 4,
+            "animation": "Walk"
+          }
+        },
+        "viewport": {
+          "width": 1280,
+          "height": 900,
+          "scrollWidth": 1280
+        }
+      },
+      "mechanics": {
+        "failures": [],
+        "aoe-naruto-madara": {
+          "inside": [
+            [
+              45,
+              0
+            ],
+            [
+              65,
+              25
+            ],
+            [
+              85,
+              -25
+            ]
+          ],
+          "outside": [
+            -200,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              71,
+              71,
+              71,
+              117
+            ],
+            [
+              71,
+              71,
+              71,
+              117
+            ],
+            [
+              71,
+              71,
+              71,
+              117
+            ]
+          ],
+          "profile": {
+            "kind": "basic",
+            "pulses": 4,
+            "interval": 0.14,
+            "charge": 0.1,
+            "range": 105,
+            "radius": 90,
+            "arc": 2.5,
+            "damage": 44.352,
+            "cloneDamageMultiplier": 1,
+            "duration": 0.77,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-fire": {
+          "inside": [
+            [
+              160,
+              0
+            ],
+            [
+              210,
+              100
+            ],
+            [
+              300,
+              -120
+            ]
+          ],
+          "outside": [
+            -450,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              78,
+              78,
+              78,
+              128
+            ],
+            [
+              78,
+              78,
+              78,
+              128
+            ],
+            [
+              78,
+              78,
+              78,
+              128
+            ]
+          ],
+          "profile": {
+            "kind": "fire",
+            "pulses": 4,
+            "interval": 0.19,
+            "charge": 0.35,
+            "range": 430,
+            "radius": 210,
+            "arc": 2.3,
+            "damage": 77.616,
+            "cloneDamageMultiplier": 1,
+            "duration": 1.17,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-susanoo": {
+          "inside": [
+            [
+              180,
+              0
+            ],
+            [
+              220,
+              130
+            ],
+            [
+              260,
+              -120
+            ]
+          ],
+          "outside": [
+            -550,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              144,
+              144,
+              144,
+              238
+            ],
+            [
+              144,
+              144,
+              144,
+              238
+            ],
+            [
+              144,
+              144,
+              144,
+              238
+            ]
+          ],
+          "profile": {
+            "kind": "susanoo",
+            "pulses": 4,
+            "interval": 0.27,
+            "charge": 0.32,
+            "range": 460,
+            "radius": 240,
+            "arc": 3.7,
+            "damage": 144.14399999999998,
+            "cloneDamageMultiplier": 1,
+            "duration": 1.3800000000000001,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-meteor": {
+          "inside": [
+            [
+              400,
+              0
+            ],
+            [
+              460,
+              100
+            ],
+            [
+              500,
+              -100
+            ]
+          ],
+          "outside": [
+            400,
+            400
+          ],
+          "hits": [
+            6,
+            6,
+            6
+          ],
+          "damage": [
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ],
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ],
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ]
+          ],
+          "profile": {
+            "kind": "meteor",
+            "pulses": 4,
+            "interval": 0.26,
+            "charge": 0.6,
+            "range": 700,
+            "radius": 250,
+            "arc": 3.7,
+            "damage": 286.44,
+            "cloneDamageMultiplier": 1,
+            "duration": 3.8,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "wall-naruto-madara": true,
+        "wall-naruto-madara-fire": true,
+        "wall-naruto-madara-susanoo": true,
+        "wall-naruto-madara-meteor": true,
+        "no-enemy-prop-naruto-madara": {
+          "hp": -43.352,
+          "events": [
+            {
+              "same": true,
+              "amount": 44.352
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-fire": {
+          "hp": -76.616,
+          "events": [
+            {
+              "same": true,
+              "amount": 77.616
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-susanoo": {
+          "hp": -143.14399999999998,
+          "events": [
+            {
+              "same": true,
+              "amount": 144.14399999999998
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-meteor": {
+          "hp": -285.44,
+          "events": [
+            {
+              "same": true,
+              "amount": 286.44
+            }
+          ]
+        },
+        "legal-quantity-growth": {
+          "counts": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "previews": [
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 4→5",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 5→6",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 6→7"
+          ],
+          "upgradePreviews": [
+            "傷害 78→93；射程 430→470；火幕波次 7→9",
+            "傷害 93→113；射程 470→510；火幕波次 9→11",
+            "傷害 113→136；射程 510→550；火幕波次 11→13",
+            "傷害 136→163；射程 550→590；火幕波次 13→15"
+          ],
+          "finalProfile": {
+            "kind": "fire",
+            "pulses": 16,
+            "interval": 0.19,
+            "charge": 0.35,
+            "range": 590,
+            "radius": 310,
+            "arc": 2.3,
+            "damage": 162.99359999999993,
+            "cloneDamageMultiplier": 1,
+            "duration": 3.45,
+            "cloneCount": 6,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          }
+        },
+        "wood-clone-every-legal-rank-deals-more": {
+          "fixture": "legal clone rank cards; same rank1 Susanoo, enemy, quantity=0",
+          "samples": [
+            {
+              "rank": 1,
+              "raw": 144.14399999999998,
+              "loss": 144,
+              "quantity": 0,
+              "cloneCount": 2
+            },
+            {
+              "rank": 2,
+              "raw": 172.97279999999998,
+              "loss": 173,
+              "quantity": 0,
+              "cloneCount": 2
+            },
+            {
+              "rank": 3,
+              "raw": 209.00879999999995,
+              "loss": 209,
+              "quantity": 0,
+              "cloneCount": 3
+            },
+            {
+              "rank": 4,
+              "raw": 252.25199999999995,
+              "loss": 252,
+              "quantity": 0,
+              "cloneCount": 3
+            },
+            {
+              "rank": 5,
+              "raw": 302.70239999999995,
+              "loss": 303,
+              "quantity": 0,
+              "cloneCount": 4
+            }
+          ],
+          "previews": [
+            "分身火力 100%→120%",
+            "分身火力 120%→145%；木分身 2→3",
+            "分身火力 145%→175%",
+            "分身火力 175%→210%；木分身 3→4"
+          ]
+        },
+        "cancel-clear": {
+          "hits": 1
+        },
+        "cancel-unlearn": {
+          "hits": 1
+        },
+        "cancel-death": {
+          "hits": 1
+        },
+        "cancel-world": {
+          "hits": 1
+        },
+        "cancel-epoch": {
+          "hits": 1
+        },
+        "same-wave-hurt-clear": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-hurt-unlearn": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-onDealt-clear": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-onDealt-unlearn": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-removal-skips-next-live-victim": {
+          "first": 4,
+          "removedSecond": 0
+        },
+        "splash-outer-already-stale": {
+          "primary": 4,
+          "removedOuter": 0
+        },
+        "splash-outer-removed-during-primary": {
+          "primary": 4,
+          "removedOuter": 0
+        },
+        "prop-callback-cancels-same-wave": {
+          "calls": [
+            0
+          ],
+          "hp": [
+            9922.384,
+            10000
+          ]
+        },
+        "pause-and-live-origin": {
+          "oldHits": 1,
+          "movedDamage": 78,
+          "frozenMark": [
+            0,
+            0
+          ]
+        },
+        "moving-enemy-and-removed-grid-actor": {
+          "movedContacts": 2,
+          "removedActorDamage": 156,
+          "replacementDamage": 78
+        },
+        "meteor-fixed-center-and-two-impacts": {
+          "center": [
+            400,
+            0
+          ],
+          "damage": [
+            286.44,
+            458.30400000000003,
+            100.25399999999999,
+            100.25399999999999,
+            100.25399999999999,
+            100.25399999999999
+          ]
+        },
+        "large-dt-cap": {
+          "hits": 16
+        },
+        "meteor-paused-levelup-readonly-render": {
+          "playingPixels": 48883,
+          "pausedPixels": 48883,
+          "levelupPixels": 48883,
+          "drawReadOnly": true,
+          "levelupFixture": "render-state override, no battle advance"
+        },
+        "wood-clone-sources-and-unlearn": {
+          "sources": 2,
+          "damage": 1340
+        },
+        "self-clone-owner-isolation": {
+          "clearedOwner": true,
+          "cloneHits": 4
+        }
+      }
+    },
+    "mobile390": {
+      "quality": {
+        "setting": "auto",
+        "fx": 1
+      },
+      "progression": {
+        "starter": "naruto-madara",
+        "ids": [
+          "naruto-madara",
+          "naruto-madara-fire",
+          "naruto-madara-susanoo",
+          "naruto-madara-meteor",
+          "naruto-madara-clones"
+        ],
+        "levels": [
+          {
+            "level": 1,
+            "pool": [
+              "naruto-madara"
+            ]
+          },
+          {
+            "level": 2,
+            "pool": [
+              "naruto-madara"
+            ]
+          },
+          {
+            "level": 3,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire"
+            ]
+          },
+          {
+            "level": 5,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire"
+            ]
+          },
+          {
+            "level": 6,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo"
+            ]
+          },
+          {
+            "level": 8,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo"
+            ]
+          },
+          {
+            "level": 9,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor"
+            ]
+          },
+          {
+            "level": 11,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor"
+            ]
+          },
+          {
+            "level": 12,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor",
+              "naruto-madara-clones"
+            ]
+          },
+          {
+            "level": 15,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor",
+              "naruto-madara-clones"
+            ]
+          }
+        ],
+        "learned": [
+          {
+            "id": "naruto-madara",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-fire",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-susanoo",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-meteor",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-clones",
+            "rank": 1,
+            "passive": true
+          }
+        ]
+      },
+      "starterGates": [
+        {
+          "run": 0,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 1,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 2,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 3,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        }
+      ],
+      "inputAndBody": {
+        "right": {
+          "dx": 11.7056,
+          "dy": 0,
+          "dir": 2,
+          "pose": {
+            "pixels": 1392,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  377,
+                  8,
+                  161,
+                  281,
+                  -18,
+                  -64,
+                  37,
+                  64
+                ]
+              }
+            ],
+            "dir": 2,
+            "animation": "Walk"
+          }
+        },
+        "left": {
+          "dx": -11.7056,
+          "dy": 0,
+          "dir": 6,
+          "pose": {
+            "pixels": 1387,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  59,
+                  5,
+                  146,
+                  283,
+                  -21,
+                  -64,
+                  33,
+                  64
+                ]
+              }
+            ],
+            "dir": 6,
+            "animation": "Walk"
+          }
+        },
+        "down": {
+          "dx": 0,
+          "dy": 11.7056,
+          "dir": 0,
+          "pose": {
+            "pixels": 1383,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  703,
+                  8,
+                  156,
+                  280,
+                  -20,
+                  -63,
+                  36,
+                  64
+                ]
+              }
+            ],
+            "dir": 0,
+            "animation": "Walk"
+          }
+        },
+        "up": {
+          "dx": 0,
+          "dy": -11.7056,
+          "dir": 4,
+          "pose": {
+            "pixels": 1387,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  59,
+                  5,
+                  146,
+                  283,
+                  -21,
+                  -64,
+                  33,
+                  64
+                ]
+              }
+            ],
+            "dir": 4,
+            "animation": "Walk"
+          }
+        },
+        "touch": 11.7056,
+        "viewport": {
+          "width": 390,
+          "height": 844,
+          "scrollWidth": 390
+        }
+      },
+      "mechanics": {
+        "failures": [],
+        "aoe-naruto-madara": {
+          "inside": [
+            [
+              45,
+              0
+            ],
+            [
+              65,
+              25
+            ],
+            [
+              85,
+              -25
+            ]
+          ],
+          "outside": [
+            -200,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              71,
+              71,
+              71,
+              117
+            ],
+            [
+              71,
+              71,
+              71,
+              117
+            ],
+            [
+              71,
+              71,
+              71,
+              117
+            ]
+          ],
+          "profile": {
+            "kind": "basic",
+            "pulses": 4,
+            "interval": 0.14,
+            "charge": 0.1,
+            "range": 105,
+            "radius": 90,
+            "arc": 2.5,
+            "damage": 44.352,
+            "cloneDamageMultiplier": 1,
+            "duration": 0.77,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-fire": {
+          "inside": [
+            [
+              160,
+              0
+            ],
+            [
+              210,
+              100
+            ],
+            [
+              300,
+              -120
+            ]
+          ],
+          "outside": [
+            -450,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              78,
+              78,
+              78,
+              128
+            ],
+            [
+              78,
+              78,
+              78,
+              128
+            ],
+            [
+              78,
+              78,
+              78,
+              128
+            ]
+          ],
+          "profile": {
+            "kind": "fire",
+            "pulses": 4,
+            "interval": 0.19,
+            "charge": 0.35,
+            "range": 430,
+            "radius": 210,
+            "arc": 2.3,
+            "damage": 77.616,
+            "cloneDamageMultiplier": 1,
+            "duration": 1.17,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-susanoo": {
+          "inside": [
+            [
+              180,
+              0
+            ],
+            [
+              220,
+              130
+            ],
+            [
+              260,
+              -120
+            ]
+          ],
+          "outside": [
+            -550,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              144,
+              144,
+              144,
+              238
+            ],
+            [
+              144,
+              144,
+              144,
+              238
+            ],
+            [
+              144,
+              144,
+              144,
+              238
+            ]
+          ],
+          "profile": {
+            "kind": "susanoo",
+            "pulses": 4,
+            "interval": 0.27,
+            "charge": 0.32,
+            "range": 460,
+            "radius": 240,
+            "arc": 3.7,
+            "damage": 144.14399999999998,
+            "cloneDamageMultiplier": 1,
+            "duration": 1.3800000000000001,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-meteor": {
+          "inside": [
+            [
+              400,
+              0
+            ],
+            [
+              460,
+              100
+            ],
+            [
+              500,
+              -100
+            ]
+          ],
+          "outside": [
+            400,
+            400
+          ],
+          "hits": [
+            6,
+            6,
+            6
+          ],
+          "damage": [
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ],
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ],
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ]
+          ],
+          "profile": {
+            "kind": "meteor",
+            "pulses": 4,
+            "interval": 0.26,
+            "charge": 0.6,
+            "range": 700,
+            "radius": 250,
+            "arc": 3.7,
+            "damage": 286.44,
+            "cloneDamageMultiplier": 1,
+            "duration": 3.8,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "wall-naruto-madara": true,
+        "wall-naruto-madara-fire": true,
+        "wall-naruto-madara-susanoo": true,
+        "wall-naruto-madara-meteor": true,
+        "no-enemy-prop-naruto-madara": {
+          "hp": -43.352,
+          "events": [
+            {
+              "same": true,
+              "amount": 44.352
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-fire": {
+          "hp": -76.616,
+          "events": [
+            {
+              "same": true,
+              "amount": 77.616
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-susanoo": {
+          "hp": -143.14399999999998,
+          "events": [
+            {
+              "same": true,
+              "amount": 144.14399999999998
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-meteor": {
+          "hp": -285.44,
+          "events": [
+            {
+              "same": true,
+              "amount": 286.44
+            }
+          ]
+        },
+        "legal-quantity-growth": {
+          "counts": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "previews": [
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 4→5",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 5→6",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 6→7"
+          ],
+          "upgradePreviews": [
+            "傷害 78→93；射程 430→470；火幕波次 7→9",
+            "傷害 93→113；射程 470→510；火幕波次 9→11",
+            "傷害 113→136；射程 510→550；火幕波次 11→13",
+            "傷害 136→163；射程 550→590；火幕波次 13→15"
+          ],
+          "finalProfile": {
+            "kind": "fire",
+            "pulses": 16,
+            "interval": 0.19,
+            "charge": 0.35,
+            "range": 590,
+            "radius": 310,
+            "arc": 2.3,
+            "damage": 162.99359999999993,
+            "cloneDamageMultiplier": 1,
+            "duration": 3.45,
+            "cloneCount": 6,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          }
+        },
+        "wood-clone-every-legal-rank-deals-more": {
+          "fixture": "legal clone rank cards; same rank1 Susanoo, enemy, quantity=0",
+          "samples": [
+            {
+              "rank": 1,
+              "raw": 144.14399999999998,
+              "loss": 144,
+              "quantity": 0,
+              "cloneCount": 2
+            },
+            {
+              "rank": 2,
+              "raw": 172.97279999999998,
+              "loss": 173,
+              "quantity": 0,
+              "cloneCount": 2
+            },
+            {
+              "rank": 3,
+              "raw": 209.00879999999995,
+              "loss": 209,
+              "quantity": 0,
+              "cloneCount": 3
+            },
+            {
+              "rank": 4,
+              "raw": 252.25199999999995,
+              "loss": 252,
+              "quantity": 0,
+              "cloneCount": 3
+            },
+            {
+              "rank": 5,
+              "raw": 302.70239999999995,
+              "loss": 303,
+              "quantity": 0,
+              "cloneCount": 4
+            }
+          ],
+          "previews": [
+            "分身火力 100%→120%",
+            "分身火力 120%→145%；木分身 2→3",
+            "分身火力 145%→175%",
+            "分身火力 175%→210%；木分身 3→4"
+          ]
+        },
+        "cancel-clear": {
+          "hits": 1
+        },
+        "cancel-unlearn": {
+          "hits": 1
+        },
+        "cancel-death": {
+          "hits": 1
+        },
+        "cancel-world": {
+          "hits": 1
+        },
+        "cancel-epoch": {
+          "hits": 1
+        },
+        "same-wave-hurt-clear": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-hurt-unlearn": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-onDealt-clear": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-onDealt-unlearn": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-removal-skips-next-live-victim": {
+          "first": 4,
+          "removedSecond": 0
+        },
+        "splash-outer-already-stale": {
+          "primary": 4,
+          "removedOuter": 0
+        },
+        "splash-outer-removed-during-primary": {
+          "primary": 4,
+          "removedOuter": 0
+        },
+        "prop-callback-cancels-same-wave": {
+          "calls": [
+            0
+          ],
+          "hp": [
+            9922.384,
+            10000
+          ]
+        },
+        "pause-and-live-origin": {
+          "oldHits": 1,
+          "movedDamage": 78,
+          "frozenMark": [
+            0,
+            0
+          ]
+        },
+        "moving-enemy-and-removed-grid-actor": {
+          "movedContacts": 2,
+          "removedActorDamage": 156,
+          "replacementDamage": 78
+        },
+        "meteor-fixed-center-and-two-impacts": {
+          "center": [
+            400,
+            0
+          ],
+          "damage": [
+            286.44,
+            458.30400000000003,
+            100.25399999999999,
+            100.25399999999999,
+            100.25399999999999,
+            100.25399999999999
+          ]
+        },
+        "large-dt-cap": {
+          "hits": 16
+        },
+        "meteor-paused-levelup-readonly-render": {
+          "playingPixels": 48883,
+          "pausedPixels": 48883,
+          "levelupPixels": 48883,
+          "drawReadOnly": true,
+          "levelupFixture": "render-state override, no battle advance"
+        },
+        "wood-clone-sources-and-unlearn": {
+          "sources": 2,
+          "damage": 1340
+        },
+        "self-clone-owner-isolation": {
+          "clearedOwner": true,
+          "cloneHits": 4
+        }
+      }
+    },
+    "mobile360": {
+      "quality": {
+        "setting": "auto",
+        "fx": 1
+      },
+      "progression": {
+        "starter": "naruto-madara",
+        "ids": [
+          "naruto-madara",
+          "naruto-madara-fire",
+          "naruto-madara-susanoo",
+          "naruto-madara-meteor",
+          "naruto-madara-clones"
+        ],
+        "levels": [
+          {
+            "level": 1,
+            "pool": [
+              "naruto-madara"
+            ]
+          },
+          {
+            "level": 2,
+            "pool": [
+              "naruto-madara"
+            ]
+          },
+          {
+            "level": 3,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire"
+            ]
+          },
+          {
+            "level": 5,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire"
+            ]
+          },
+          {
+            "level": 6,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo"
+            ]
+          },
+          {
+            "level": 8,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo"
+            ]
+          },
+          {
+            "level": 9,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor"
+            ]
+          },
+          {
+            "level": 11,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor"
+            ]
+          },
+          {
+            "level": 12,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor",
+              "naruto-madara-clones"
+            ]
+          },
+          {
+            "level": 15,
+            "pool": [
+              "naruto-madara",
+              "naruto-madara-fire",
+              "naruto-madara-susanoo",
+              "naruto-madara-meteor",
+              "naruto-madara-clones"
+            ]
+          }
+        ],
+        "learned": [
+          {
+            "id": "naruto-madara",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-fire",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-susanoo",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-meteor",
+            "rank": 1,
+            "passive": true
+          },
+          {
+            "id": "naruto-madara-clones",
+            "rank": 1,
+            "passive": true
+          }
+        ]
+      },
+      "starterGates": [
+        {
+          "run": 0,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 1,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 2,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        },
+        {
+          "run": 3,
+          "level": 1,
+          "skills": [
+            "naruto-madara"
+          ]
+        }
+      ],
+      "inputAndBody": {
+        "right": {
+          "dx": 11.7056,
+          "dy": 0,
+          "dir": 2,
+          "pose": {
+            "pixels": 1392,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  377,
+                  8,
+                  161,
+                  281,
+                  -18,
+                  -64,
+                  37,
+                  64
+                ]
+              }
+            ],
+            "dir": 2,
+            "animation": "Walk"
+          }
+        },
+        "left": {
+          "dx": -11.7056,
+          "dy": 0,
+          "dir": 6,
+          "pose": {
+            "pixels": 1387,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  59,
+                  5,
+                  146,
+                  283,
+                  -21,
+                  -64,
+                  33,
+                  64
+                ]
+              }
+            ],
+            "dir": 6,
+            "animation": "Walk"
+          }
+        },
+        "down": {
+          "dx": 0,
+          "dy": 11.7056,
+          "dir": 0,
+          "pose": {
+            "pixels": 1383,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  703,
+                  8,
+                  156,
+                  280,
+                  -20,
+                  -63,
+                  36,
+                  64
+                ]
+              }
+            ],
+            "dir": 0,
+            "animation": "Walk"
+          }
+        },
+        "up": {
+          "dx": 0,
+          "dy": -11.7056,
+          "dir": 4,
+          "pose": {
+            "pixels": 1387,
+            "sources": [
+              {
+                "source": "http://127.0.0.1:8347/art-review/madara/madara-actions-v1.png",
+                "rect": [
+                  59,
+                  5,
+                  146,
+                  283,
+                  -21,
+                  -64,
+                  33,
+                  64
+                ]
+              }
+            ],
+            "dir": 4,
+            "animation": "Walk"
+          }
+        },
+        "touch": 11.705600000000002,
+        "viewport": {
+          "width": 360,
+          "height": 800,
+          "scrollWidth": 360
+        }
+      },
+      "mechanics": {
+        "failures": [],
+        "aoe-naruto-madara": {
+          "inside": [
+            [
+              45,
+              0
+            ],
+            [
+              65,
+              25
+            ],
+            [
+              85,
+              -25
+            ]
+          ],
+          "outside": [
+            -200,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              71,
+              71,
+              71,
+              117
+            ],
+            [
+              71,
+              71,
+              71,
+              117
+            ],
+            [
+              71,
+              71,
+              71,
+              117
+            ]
+          ],
+          "profile": {
+            "kind": "basic",
+            "pulses": 4,
+            "interval": 0.14,
+            "charge": 0.1,
+            "range": 105,
+            "radius": 90,
+            "arc": 2.5,
+            "damage": 44.352,
+            "cloneDamageMultiplier": 1,
+            "duration": 0.77,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-fire": {
+          "inside": [
+            [
+              160,
+              0
+            ],
+            [
+              210,
+              100
+            ],
+            [
+              300,
+              -120
+            ]
+          ],
+          "outside": [
+            -450,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              78,
+              78,
+              78,
+              128
+            ],
+            [
+              78,
+              78,
+              78,
+              128
+            ],
+            [
+              78,
+              78,
+              78,
+              128
+            ]
+          ],
+          "profile": {
+            "kind": "fire",
+            "pulses": 4,
+            "interval": 0.19,
+            "charge": 0.35,
+            "range": 430,
+            "radius": 210,
+            "arc": 2.3,
+            "damage": 77.616,
+            "cloneDamageMultiplier": 1,
+            "duration": 1.17,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-susanoo": {
+          "inside": [
+            [
+              180,
+              0
+            ],
+            [
+              220,
+              130
+            ],
+            [
+              260,
+              -120
+            ]
+          ],
+          "outside": [
+            -550,
+            0
+          ],
+          "hits": [
+            4,
+            4,
+            4
+          ],
+          "damage": [
+            [
+              144,
+              144,
+              144,
+              238
+            ],
+            [
+              144,
+              144,
+              144,
+              238
+            ],
+            [
+              144,
+              144,
+              144,
+              238
+            ]
+          ],
+          "profile": {
+            "kind": "susanoo",
+            "pulses": 4,
+            "interval": 0.27,
+            "charge": 0.32,
+            "range": 460,
+            "radius": 240,
+            "arc": 3.7,
+            "damage": 144.14399999999998,
+            "cloneDamageMultiplier": 1,
+            "duration": 1.3800000000000001,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "aoe-naruto-madara-meteor": {
+          "inside": [
+            [
+              400,
+              0
+            ],
+            [
+              460,
+              100
+            ],
+            [
+              500,
+              -100
+            ]
+          ],
+          "outside": [
+            400,
+            400
+          ],
+          "hits": [
+            6,
+            6,
+            6
+          ],
+          "damage": [
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ],
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ],
+            [
+              286,
+              458,
+              100,
+              100,
+              100,
+              100
+            ]
+          ],
+          "profile": {
+            "kind": "meteor",
+            "pulses": 4,
+            "interval": 0.26,
+            "charge": 0.6,
+            "range": 700,
+            "radius": 250,
+            "arc": 3.7,
+            "damage": 286.44,
+            "cloneDamageMultiplier": 1,
+            "duration": 3.8,
+            "cloneCount": 2,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          },
+          "pulses": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ]
+        },
+        "wall-naruto-madara": true,
+        "wall-naruto-madara-fire": true,
+        "wall-naruto-madara-susanoo": true,
+        "wall-naruto-madara-meteor": true,
+        "no-enemy-prop-naruto-madara": {
+          "hp": -43.352,
+          "events": [
+            {
+              "same": true,
+              "amount": 44.352
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-fire": {
+          "hp": -76.616,
+          "events": [
+            {
+              "same": true,
+              "amount": 77.616
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-susanoo": {
+          "hp": -143.14399999999998,
+          "events": [
+            {
+              "same": true,
+              "amount": 144.14399999999998
+            }
+          ]
+        },
+        "no-enemy-prop-naruto-madara-meteor": {
+          "hp": -285.44,
+          "events": [
+            {
+              "same": true,
+              "amount": 286.44
+            }
+          ]
+        },
+        "legal-quantity-growth": {
+          "counts": [
+            4,
+            5,
+            6,
+            7
+          ],
+          "previews": [
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 4→5",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 5→6",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n火遁・豪火滅卻：火幕波次 6→7"
+          ],
+          "upgradePreviews": [
+            "傷害 78→93；射程 430→470；火幕波次 7→9",
+            "傷害 93→113；射程 470→510；火幕波次 9→11",
+            "傷害 113→136；射程 510→550；火幕波次 11→13",
+            "傷害 136→163；射程 550→590；火幕波次 13→15"
+          ],
+          "finalProfile": {
+            "kind": "fire",
+            "pulses": 16,
+            "interval": 0.19,
+            "charge": 0.35,
+            "range": 590,
+            "radius": 310,
+            "arc": 2.3,
+            "damage": 162.99359999999993,
+            "cloneDamageMultiplier": 1,
+            "duration": 3.45,
+            "cloneCount": 6,
+            "cloneDuration": 12,
+            "meteorCount": 2,
+            "meteorDelay": 0.85
+          }
+        },
+        "wood-clone-every-legal-rank-deals-more": {
+          "fixture": "legal clone rank cards; same rank1 Susanoo, enemy, quantity=0",
+          "samples": [
+            {
+              "rank": 1,
+              "raw": 144.14399999999998,
+              "loss": 144,
+              "quantity": 0,
+              "cloneCount": 2
+            },
+            {
+              "rank": 2,
+              "raw": 172.97279999999998,
+              "loss": 173,
+              "quantity": 0,
+              "cloneCount": 2
+            },
+            {
+              "rank": 3,
+              "raw": 209.00879999999995,
+              "loss": 209,
+              "quantity": 0,
+              "cloneCount": 3
+            },
+            {
+              "rank": 4,
+              "raw": 252.25199999999995,
+              "loss": 252,
+              "quantity": 0,
+              "cloneCount": 3
+            },
+            {
+              "rank": 5,
+              "raw": 302.70239999999995,
+              "loss": 303,
+              "quantity": 0,
+              "cloneCount": 4
+            }
+          ],
+          "previews": [
+            "分身火力 100%→120%",
+            "分身火力 120%→145%；木分身 2→3",
+            "分身火力 145%→175%",
+            "分身火力 175%→210%；木分身 3→4"
+          ]
+        },
+        "cancel-clear": {
+          "hits": 1
+        },
+        "cancel-unlearn": {
+          "hits": 1
+        },
+        "cancel-death": {
+          "hits": 1
+        },
+        "cancel-world": {
+          "hits": 1
+        },
+        "cancel-epoch": {
+          "hits": 1
+        },
+        "same-wave-hurt-clear": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-hurt-unlearn": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-onDealt-clear": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-onDealt-unlearn": {
+          "first": 1,
+          "second": 0
+        },
+        "same-wave-removal-skips-next-live-victim": {
+          "first": 4,
+          "removedSecond": 0
+        },
+        "splash-outer-already-stale": {
+          "primary": 4,
+          "removedOuter": 0
+        },
+        "splash-outer-removed-during-primary": {
+          "primary": 4,
+          "removedOuter": 0
+        },
+        "prop-callback-cancels-same-wave": {
+          "calls": [
+            0
+          ],
+          "hp": [
+            9922.384,
+            10000
+          ]
+        },
+        "pause-and-live-origin": {
+          "oldHits": 1,
+          "movedDamage": 78,
+          "frozenMark": [
+            0,
+            0
+          ]
+        },
+        "moving-enemy-and-removed-grid-actor": {
+          "movedContacts": 2,
+          "removedActorDamage": 156,
+          "replacementDamage": 78
+        },
+        "meteor-fixed-center-and-two-impacts": {
+          "center": [
+            400,
+            0
+          ],
+          "damage": [
+            286.44,
+            458.30400000000003,
+            100.25399999999999,
+            100.25399999999999,
+            100.25399999999999,
+            100.25399999999999
+          ]
+        },
+        "large-dt-cap": {
+          "hits": 16
+        },
+        "meteor-paused-levelup-readonly-render": {
+          "playingPixels": 48883,
+          "pausedPixels": 48883,
+          "levelupPixels": 48883,
+          "drawReadOnly": true,
+          "levelupFixture": "render-state override, no battle advance"
+        },
+        "wood-clone-sources-and-unlearn": {
+          "sources": 2,
+          "damage": 1340
+        },
+        "self-clone-owner-isolation": {
+          "clearedOwner": true,
+          "cloneHits": 4
+        }
+      }
+    }
+  },
+  "errors": [],
+  "missing": [],
+  "failures": [],
+  "sourceHashesAfter": {
+    ".omx/naruto.js": "aa2dc433a40e11ef6dd2bcaf8a5d0ab7f4cd7db8391de1a4023a5a0a7d42ed0c",
+    ".omx/naruto-skills.js": "79e5c2c4304aec9ce586601a35d444bcd91a4eff13194ed3f1562e47681dbd43",
+    ".omx/naruto-training.js": "d5f710e4be0a3675cbe4594ae6e0200ae755f4ec3c15687b59e1b81c4a0bd4e6",
+    ".omx/digimon.html": "5de403379bbb217987f9f4b393eb70d24d1cfd57fa6f7a8962913bbbb081499a",
+    ".omx/combat-pulse.js": "9570100a9eb0de13a9092aa80538949201cc5fe06c3d053f5928e84ec4790b55",
+    "art-review/madara/runtime.js": "bfd75a32138ca0bdeaac5c8c598e4fa1a42324417283b89e3cb936678af9482d",
+    "art-review/madara/madara-actions-v1.png": "8ae1d43e099ced737b3cf3fca8184b066a8bb06eff572cb731ecee5ef69adace",
+    ".omx/naruto-madara.js": "02853c81e0255f496c161a63dcb33d29a97d1765ae104aefee2085fd2ab6fc77",
+    "art-review/madara/frames.json": "6b05eee745db5e18f829699d4055c39af8725b4f638912831667e26020e1c4c7"
+  },
+  "ok": true
+}

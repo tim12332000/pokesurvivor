@@ -44,6 +44,13 @@ review_runtime.extend(['.omx/naruto-summoning.js', 'art-review/redrawn/gamabunta
 review_runtime.extend('art-review/redrawn/'+name for name in ['gamabunta-sword-v1.png','gamabunta-oil-v1.png','gamabunta-combo-fox-v2.png'])
 review_runtime.extend('art-review/redrawn/'+name for name in ['gamabunta-breath-actor-v1.png','gamabunta-oil-flame-v1.png'])
 review_runtime.append('.omx/naruto-rasengan-vfx.js')
+review_runtime.extend(['.omx/naruto-madara.js', 'art-review/madara/runtime.js',
+                       'art-review/madara/frames.json'])
+madara = json.loads((ROOT / 'art-review/madara/frames.json').read_text('utf-8'))
+madara_atlas = Path('art-review/madara') / madara['source']
+assert madara_atlas.suffix == '.png' and (ROOT / madara_atlas).resolve().is_relative_to((ROOT / 'art-review/madara').resolve())
+assert hashlib.sha256((ROOT / madara_atlas).read_bytes()).hexdigest() == madara['sha256'], 'Madara atlas differs from reviewed metadata'
+review_runtime.append(madara_atlas.as_posix())
 review_runtime.extend(['.omx/naruto/portraits/pain.png', '.omx/naruto/portraits/temari.png'])
 assert sources == {
     'redrawn/naruto-common-v1.png', 'redrawn/naruto-skills-v2.png',
