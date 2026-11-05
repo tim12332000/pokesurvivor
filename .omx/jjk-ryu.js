@@ -103,7 +103,7 @@
     if(!canCast(owner,m))return false;
     const s=state(owner),target=targetFor(owner,m),p=settings(m),mode=m.digiMode;
     if(mode==='jjk-ryu-maximum')s.coreCharge=0;
-    const count=G.Quantity.count(owner,m.baseCount??3);
+    const count=G.Quantity.count(owner,m.baseCount??4);
     s.action={owner,mode,m:{...m},...p,age:0,released:false,aim:Math.atan2(target.y-owner.y,target.x-owner.x),
       tx:target.x,ty:target.y,targetObject:target,x:owner.x,y:owner.y,count:mode==='jjk-ryu-spread'?Math.min(9,count):1,
       damage:p.damage*(owner.atk??1)*(G.NarutoSupport?.takeAttackBonus(owner)||1),crit:owner.critChance||0,
@@ -124,13 +124,19 @@
   function hitFor(s,f,e,ratio=1){
     const type=f.m.type||'psychic',mult=G.Types.mult(type,e.types),crit=Math.random()<f.crit;
     const dmg=f.damage*ratio*mult*G.Weather.mult(type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(s.owner,e)||1);
-    return {target:e,primaryDirectDamage:dmg,color:'#bff7ff',dx:Math.cos(f.aim),dy:Math.sin(f.aim),knock:0,eff:crit?'crit':G.Types.label(mult)};
+    return {target:e,primaryDirectDamage:dmg,color:'#bff7ff',dx:Math.cos(f.aim),dy:Math.sin(f.aim),knock:0,eff:crit?'crit':G.Types.label(mult),onHit(){
+      // A victim's hurt/onDealt callback can clear this owner or unlearn the
+      // attack. Stop the current pulse before it reaches the next victim.
+      if(!actionLegal(s,f))f.cast.runEpoch=-1;
+    }};
   }
   function contact(s,f,hits,pulseIndex=0){
     const result=G.CombatPulse.apply(f.cast,pulseIndex,hits);
     if(result){
       s.hits+=result.primaryHits;s.damage+=result.primaryDamage;
-      if(f.mode==='jjk-ryu'&&result.primaryHits>0&&!f.charged&&s.owner.moves?.some(m=>m.id==='jjk-ryu-maximum')){
+      // Each real cannon cast contributes once, including spread's separate
+      // projectiles. The maximum never fuels itself, nor does a cancelled hit.
+      if(f.mode!=='jjk-ryu-maximum'&&result.primaryHits>0&&!f.charged&&actionLegal(s,f)&&s.owner.moves?.some(m=>m.id==='jjk-ryu-maximum')){
         f.charged=true;s.coreCharge=Math.min(3,s.coreCharge+1);
       }
     }
@@ -152,12 +158,26 @@
   }
   function scatter(s,f){
     const spacing=Math.min(f.m.spreadStep??.65,f.count>1?2.6/(f.count-1):0);
+    const registered=new Set(G.EnemyMgr.all());
+    const candidates=[...new Set(G.EnemyMgr.queryCircle(f.x,f.y,f.range+80))].filter(e=>
+      registered.has(e)&&alive(e)&&!e.friendly&&Math.hypot(e.x-f.x,e.y-f.y)<=f.range+(e.r||0)&&
+      Math.abs(Math.atan2(Math.sin(Math.atan2(e.y-f.y,e.x-f.x)-f.aim),Math.cos(Math.atan2(e.y-f.y,e.x-f.x)-f.aim)))<=1.5&&
+      clearPath(f.x,f.y,e.x,e.y));
+    const aims=Array.from({length:f.count},(_,i)=>f.aim+(i-(f.count-1)/2)*spacing),pairs=[],assigned=new Map(),used=new Set();
+    // Allocate the closest launch directions globally. Iterating from the
+    // outermost branch would give a lone nearby enemy an impossible U-turn.
+    for(let i=0;i<aims.length;i++)for(const target of candidates){
+      const delta=Math.atan2(target.y-f.y,target.x-f.x)-aims[i];
+      pairs.push({i,target,gap:Math.abs(Math.atan2(Math.sin(delta),Math.cos(delta)))});
+    }
+    pairs.sort((a,b)=>a.gap-b.gap||a.i-b.i);
+    for(const {i,target} of pairs)if(!assigned.has(i)&&!used.has(target)){assigned.set(i,target);used.add(target);}
     f.scatterHits=new Set();
     for(let i=0;i<f.count;i++){
-      const aim=f.aim+(i-(f.count-1)/2)*spacing,start=f.visualStart||{x:f.x,y:f.y-HEAD_HEIGHT};
+      const aim=aims[i],start=f.visualStart||{x:f.x,y:f.y-HEAD_HEIGHT},target=assigned.get(i)||null;
       const shot={kind:'scatter',serial:++effectSequence,x:f.x,y:f.y,px:f.x,py:f.y,aim,radius:f.radius,
         speed:500,range:f.range,distance:0,age:0,life:f.range/500,dead:false,
-        renderOffsetX:start.x-f.x,renderOffsetY:start.y-f.y,pulseIndex:i,action:f};
+        target,trail:[{x:f.x,y:f.y}],renderOffsetX:start.x-f.x,renderOffsetY:start.y-f.y,pulseIndex:i,action:f};
       s.scatter.push(shot);
     }
   }
@@ -171,16 +191,24 @@
   function updateScatter(s,dt){
     for(const shot of s.scatter){
       if(shot.dead)continue;
-      if(!s.owner.moves?.some(m=>m.id===shot.action.m.id)){shot.dead=true;shot.age=shot.life;continue;}
+      if(!actionLegal(s,shot.action)){shot.dead=true;shot.age=shot.life;continue;}
+      const registered=new Set(G.EnemyMgr.all());
       shot.age+=dt;
       shot.px=shot.x;shot.py=shot.y;
       let left=Math.min(shot.range-shot.distance,shot.speed*dt);
       // Swept four-unit segments prevent fast bolts tunnelling through enemies or walls.
       for(let n=0;n<64&&left>EPS&&!shot.dead;n++){
-        const distance=Math.min(4,left),c=Math.cos(shot.aim),sn=Math.sin(shot.aim);
+        const distance=Math.min(4,left),target=shot.target;
+        // Branch outward before bending toward the separately assigned enemy.
+        // Turn and collision use the same short segments and finite path budget.
+        if(shot.distance>=20&&registered.has(target)&&alive(target)&&!target.friendly&&clearPath(shot.x,shot.y,target.x,target.y)){
+          const desired=Math.atan2(target.y-shot.y,target.x-shot.x),delta=Math.atan2(Math.sin(desired-shot.aim),Math.cos(desired-shot.aim));
+          shot.aim+=Math.max(-8*distance/shot.speed,Math.min(8*distance/shot.speed,delta));
+        }
+        const c=Math.cos(shot.aim),sn=Math.sin(shot.aim);
         const candidates=[];
         for(const enemy of new Set(G.EnemyMgr.queryCircle(shot.x,shot.y,distance+shot.radius+80))){
-          if(!alive(enemy)||enemy.friendly)continue;
+          if(!registered.has(enemy)||!alive(enemy)||enemy.friendly)continue;
           const at=circleContact(shot,enemy,distance);
           if(at!=null&&clearPath(shot.x,shot.y,enemy.x,enemy.y))candidates.push({target:enemy,at,prop:false});
         }
@@ -194,6 +222,7 @@
         const blocked=length+EPS<travel;
         shot.x+=c*(blocked?length:travel);shot.y+=sn*(blocked?length:travel);
         shot.distance+=blocked?length:travel;left-=travel;
+        shot.trail.push({x:shot.x,y:shot.y});if(shot.trail.length>28)shot.trail.shift();
         if(blocked||first){
           if(first&&!blocked){
             if(first.prop){
@@ -204,6 +233,7 @@
             // Even a previously struck enemy consumes a later bolt: this attack never pierces.
             shot.action.scatterHits.add(first.target);
           }
+          if(!actionLegal(s,shot.action)){shot.dead=true;break;}
           effect(s,{kind:'impact',x:shot.x,y:shot.y,aim:shot.aim,radius:shot.radius,age:0,life:.18});
           shot.dead=true;shot.age=shot.life;
         }
@@ -386,6 +416,10 @@
     ctx.restore();
   }
   function scatterArt(ctx,e){
+    if(e.trail?.length>1){
+      ctx.save();ctx.translate(e.renderOffsetX,e.renderOffsetY);ctx.globalAlpha=.65;ctx.strokeStyle='#63dded';ctx.lineWidth=Math.max(2,e.radius*.5);
+      ctx.beginPath();e.trail.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();ctx.restore();
+    }
     ctx.save();ctx.translate(e.x+e.renderOffsetX,e.y+e.renderOffsetY);ctx.rotate(e.aim);
     ctx.globalAlpha=.9;ctx.fillStyle='#63dded';ctx.beginPath();ctx.ellipse(-8,0,20,e.radius*.75,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#f2ffff';ctx.beginPath();ctx.ellipse(-3,0,10,e.radius*.35,0,0,Math.PI*2);ctx.fill();ctx.restore();

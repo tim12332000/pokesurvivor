@@ -108,6 +108,14 @@
       if(!record)return super.draw(ctx,x,y,opts);
       const pixel=record.pixel;
       const ui=previews.has(ctx.canvas);
+      if(ui&&this.dex===30015){
+        if(!record.ready){void record.loaded;return;}
+        const frame=G.JujutsuArt?.sample(this.dex,'idle',0,this.dir);if(!frame)return;
+        const height=Math.min(ctx.canvas.height*.78*frame.bodyHeight/frame.rect[3],ctx.canvas.width*.88*frame.bodyHeight/frame.rect[2]);
+        G.JujutsuArt.drawPreviewBackground?.(ctx);
+        G.JujutsuArt.draw(ctx,{}, {dex:this.dex,x,y,height,state:'idle',time:0,dir:this.dir,alpha:opts.alpha??1});
+        return;
+      }
       if(ui&&pixel.preview){
         if(!record.previewImage){
           if(Date.now()<(record.previewRetryAt||0))return;

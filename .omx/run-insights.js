@@ -69,7 +69,11 @@
     const api=player.dex===30013?G.JujutsuYuta:player.dex===30014?G.JjkRyu:G.JjkUro;
     if(player.dex===30013){
       const s=api?.stateFor?.(player);
-      if(move.id==='jjk-yuta-manifest'&&s?.manifestUntil>s.clock){const left=s.manifestUntil-s.clock;return {label:'顯現 '+left.toFixed(1)+'s',fraction:left/G.Jujutsu.power.yuta.manifestDuration};}
+      if(move.id==='jjk-yuta-manifest'&&s?.release){
+        const f=s.release,label=f.phase==='approach'?'放出就位':f.phase==='charge'?'雙源蓄力':'咒力放出';
+        return {label,fraction:f.phase==='charge'?Math.max(0,1-f.phaseAge/G.Jujutsu.power.yuta.releaseCharge):0};
+      }
+      if(move.id==='jjk-yuta-manifest'&&s&&s.manifestUntil>s.clock){const left=s.manifestUntil-s.clock;return {label:'顯現 '+left.toFixed(1)+'s',fraction:left/G.Jujutsu.power.yuta.manifestDuration};}
       if(move.id==='jjk-yuta-rika'&&s?.rika){const r=s.rika;return {label:r.phase==='strike'?(r.full?'雙人 ':'協擊 ')+r.strikeIndex+'/'+r.strikeCount:r.phase==='return'?'回身中':'追擊中',fraction:r.phase==='strike'?1-r.strikeIndex/r.strikeCount:0};}
       if(move.id==='jjk-yuta-resonance')return {label:s?.action?.kind==='resonance'?'共鳴終擊':s?.pendingResonance?.length?'待共鳴':'終擊連動',fraction:0};
     }
@@ -86,7 +90,7 @@
         {label:'巨砲蓄力',fraction:Math.max(0,1-barrage.age/barrage.charge)};
     }
     const status=api?.statusFor?.(player,move);
-    if(status){const remaining=Math.max(0,(status.state==='recovering'?status.recoveryRemaining:status.remaining)||0),labels={casting:'施放中',queued:'待出手',ready:'就緒'},waiting={pressure:'等近敵',encounter:'等敵群',projectile:'等敵彈'};
+    if(status){const remaining=Math.max(0,(status.state==='recovering'?status.recoveryRemaining:status.remaining)||0),labels={casting:'施放中',queued:'待出手',ready:'就緒'},waiting={pressure:'等近敵',encounter:'等敵群',projectile:'等敵彈',threat:'等來襲'};
       const label=status.state==='active'?(move.id==='jjk-yuta-manifest'?'顯現 ':'作用 ')+remaining.toFixed(1)+'s':
         ['recovery','recovering'].includes(status.state)?'恢復 '+remaining.toFixed(1)+'s':status.state==='charging'?'蓄能 '+(status.coreCharge||0)+'/'+(status.chargeRequired||3):
         status.state==='waiting'?(waiting[status.reason]||'等待時機'):status.state==='cooldown'?remaining.toFixed(1)+'s':

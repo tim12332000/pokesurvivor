@@ -153,6 +153,29 @@ def main():
   except Exception as e:
    report['failures'].append('barrage-budget: '+str(e));page.screenshot(path=str(OUT/'barrage-budget-failure.png'))
   finally:context.close()
+  context,page,f=boot(browser,30014,low=True)
+  try:
+   ordinary=f.evaluate("""()=>{
+    const A=JAcceptance,V=G.JujutsuVFX;A.reset();V.setQuality('low');A.fixture('jjk-ryu',5);A.spawn(240,0);A.cast('jjk-ryu');A.advance(.25);
+    const beam=G.JjkRyu.stateFor(A.p()).effects.find(e=>e.kind==='beam'),damage=A.p().dmgDealt;
+    const budget=V.limits.low.beamProfiles,widths={};
+    try{for(const [label,limit]of [['detailed',6],['exhausted',0]]){
+      V.limits.low.beamProfiles=limit;
+      const canvas=document.createElement('canvas');canvas.width=1200;canvas.height=400;const ctx=canvas.getContext('2d');
+      ctx.translate(60,200);ctx.rotate(-(beam.renderAim??beam.aim));ctx.translate(-(beam.renderX??beam.x),-(beam.renderY??beam.y-48));V.drawAir(ctx);
+      const x=Math.floor(60+(beam.renderLength??beam.length)*.5),pixels=ctx.getImageData(x,0,1,400).data;
+      const ys=[];for(let y=0;y<400;y++)if(pixels[y*4+3]>30)ys.push(y);
+      widths[label]=ys.length?ys.at(-1)-ys[0]+1:0;
+    }}finally{V.limits.low.beamProfiles=budget}
+    A.assert(widths.exhausted>=beam.radius*1.3,'ordinary fallback painted as a thin line '+JSON.stringify(widths));
+    A.assert(widths.exhausted<=beam.radius*2.2,'ordinary fallback exaggerates actual contact width');
+    A.assert(A.p().dmgDealt===damage,'rendering changed damage');
+    return {widths,radius:beam.radius,damage,scope:'same real ordinary beam, isolated transparent canvas, forced profile budget 6 versus 0'};
+   }""")
+   report['cases']['ordinary-budget-width']=ordinary
+  except Exception as e:
+   report['failures'].append('ordinary-budget: '+str(e))
+  finally:context.close()
   context,page,f=boot(browser,30015)
   try:
    f.evaluate("""()=>{const A=JAcceptance,p=A.p();A.reset();G.JujutsuVFX.setQuality('high');A.fixture('jjk-uro-thin-ice');A.spawn(100,0);
@@ -167,7 +190,8 @@ def main():
    assert lowered['snapshots']==1 and lowered['triangles']==12 and lowered['fallbacks']>=3,lowered
    assert lowered['bufferBytes']<=256*256*4,lowered
    f.evaluate('JAcceptance.advance(.2)');wait_render(page)
-   contact=f.evaluate('G.JujutsuVFX.inspect()');assert contact['shards']==24,('four actual contact effects must share the24-shard budget',contact)
+   contact=f.evaluate('G.JujutsuVFX.inspect()')
+   assert contact['shards']<=24 and len({d['castId'] for d in contact['draws'] if d['kind']=='sky-fracture'})==4,('four real fracture contacts must remain visible within the decoration budget',contact)
    f.evaluate('G.Game.player.dead=true');wait_render(page)
    dead=f.evaluate('G.JujutsuVFX.inspect()');assert dead['snapshots']==0 and not dead['folds'],dead
    changed=f.evaluate("""()=>{const old=G.Game.player,before=G.JujutsuVFX.inspect().epoch;G.Game.startRun();G.Combat.clearFields();JAcceptance.pause();return {before,after:G.JujutsuVFX.inspect().epoch,newOwner:G.Game.player!==old}}""")

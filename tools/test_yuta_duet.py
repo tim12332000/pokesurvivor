@@ -45,14 +45,15 @@ CHECK = r"""() => {
  assert(Math.hypot(actor.x-old.x,actor.y-old.y)<=7.21,'idle follow teleported');
  out.persistentFollow={old,next:{x:actor.x,y:actor.y}};
 
- // Ring-only builds retain their full companion without receiving free attacks.
+ // Ring-only builds use manifestation's own release, never free Rika punches.
  for(const [rank,height] of [[1,156],[5,180]]){
    m=setup(['manifest'],rank);e=A.spawn(100,0);const ringHits=A.watch(e);cast(m.manifest);const ringState=Y.stateFor(p),ringActor=ringState.companion;
    A.advance(.1,true);
    assert(ringActor.visible&&ringActor.full&&ringActor.height===height&&Y.drawables(null).length===1,'ring-only full companion missing or wrong rank');
-   A.advance(1,true);assert(!p.hasMove(ids.rika)&&!ringState.rika&&!(ringState.casts.rika>0)&&!ringHits.length,'ring-only build gained free Rika damage/learning');
+   A.advance(2,true);assert(!p.hasMove(ids.rika)&&!ringState.rika&&!(ringState.casts.rika>0)&&!hits(ringHits,ids.rika).length,'ring-only build gained free Rika damage/learning');
+   assert(hits(ringHits,ids.manifest).length===2&&ringState.casts.release===1,'ring-only manifestation lacks its two-source release');
    A.advance(7.01,true);assert(ringState.companion===ringActor&&!ringActor.visible&&!ringActor.full&&!Y.drawables(null).length,'ring-only expiry left a companion');
-   out['ringOnly'+rank]={height,visibleDuringForm:true,freeAttacks:0,hiddenOnExpiry:true};
+   out['ringOnly'+rank]={height,visibleDuringForm:true,freeRikaPunches:0,manifestReleaseHits:2,hiddenOnExpiry:true};
  }
 
  // Legal card application changes a real consumer on the first quantity pick.
@@ -89,6 +90,65 @@ CHECK = r"""() => {
  const burst=hits(watched,ids.resonance);assert(burst.length===1&&Y.inspect(p).casts.resonance===1,'finisher resonance missing or recursive');
  const burstPulse=G.CombatPulse.telemetry.filter(t=>t.moveId===ids.resonance);assert(burstPulse.length===1&&burstPulse[0].channel==='resonance','burst missing independent ledger');
  out.resonance={punches:hits(watched,ids.rika).length,bursts:burst.length,pulse:burstPulse[0]};
+
+ // Killing an excursion target must transfer the same finite combo, not waste
+ // its remaining quantity investment on the corpse or create a fresh actor.
+ for(const phase of ['travel','strike']){
+   m=setup(['rika','resonance']);e=A.spawn(phase==='travel'?300:100,0);watched=A.watch(e);
+   cast(m.rika);s=Y.stateFor(p);r=s.rika;const actor=r,record=r.cast;
+   if(phase==='travel')A.advance(.04);else while(r.strikeIndex<1)A.advance(.01);
+   const next=A.spawn(phase==='travel'?330:360,40),nextHits=A.watch(next);
+   e.dead=true;e.hp=0;A.advance(3);
+   const contacts=G.CombatPulse.telemetry.filter(t=>t.castId===record.castId),nextPunches=hits(nextHits,ids.rika);
+   assert(nextPunches.length>0,'dead '+phase+' target did not transfer remaining punches');
+   assert(s.companion===actor&&contacts.length===4&&new Set(contacts.map(t=>t.contactPulseIndex)).size===4,'retarget reset actor or combo budget '+phase);
+   assert(r.travelDistance<=r.travelBudget+1e-8,'retarget exceeded original travel budget '+phase);
+   assert(hits(nextHits,ids.resonance).length<=1&&s.casts.resonance===1,'retarget duplicated or lost finisher '+phase);
+   out['retarget-'+phase]={punches:nextPunches.length,contacts:contacts.length,actorPreserved:true,resonance:s.casts.resonance};
+ }
+ // A removed live actor can remain in the spatial grid until its next rebuild.
+ // It must not be selected again or receive another contact from that cache.
+ m=setup(['rika','resonance']);e=A.spawn(100,0);watched=A.watch(e);cast(m.rika);s=Y.stateFor(p);r=s.rika;
+ while(r.strikeIndex<1)A.advance(.01);
+ const next=A.spawn(360,40),nextHits=A.watch(next),ghostBefore=watched.length;
+ G.EnemyMgr.removeRemote(e.id,false);
+ assert(!G.EnemyMgr.all().includes(e)&&G.EnemyMgr.queryCircle(e.x,e.y,200).includes(e),'stale grid fixture did not retain removed target');
+ A.advance(3);
+ assert(watched.length===ghostBefore&&hits(nextHits,ids.rika).length===3,'removed live target stole retarget or received ghost damage');
+ assert(s.casts.resonance===1,'stale-grid transfer lost or repeated finisher');
+ out.retargetStaleGrid={ghostHitsAfterRemoval:watched.length-ghostBefore,nextPunches:hits(nextHits,ids.rika).length,resonance:s.casts.resonance};
+ for(const boundary of ['wall','range','budget','empty']){
+   m=setup(['rika']);e=A.spawn(100,0);cast(m.rika);s=Y.stateFor(p);r=s.rika;
+   while(r.strikeIndex<1)A.advance(.01);
+   const origin={x:r.x,y:r.y},before=r.strikeIndex;
+   const next=boundary==='empty'?null:A.spawn(boundary==='range'?800:400,0),events=next?A.watch(next):[];
+   e.dead=true;e.hp=0;
+   if(boundary==='wall')G.World.projectilePathClear=(x,y,tx,ty)=>Math.max(x,tx)<250;
+   if(boundary==='budget')r.travelBudget=r.travelDistance+5;
+   A.advance(3);
+   assert(!events.length&&!s.rika,'invalid retarget hit or failed to return '+boundary);
+   assert(r.strikeIndex===before,'empty combo kept punching '+boundary);
+   out['retargetBoundary-'+boundary]={origin,punches:r.strikeIndex,returned:true};
+ }
+ for(const cancel of ['clear','unlearn','dead']){
+   m=setup(['rika','resonance']);e=A.spawn(100,0);cast(m.rika);s=Y.stateFor(p);r=s.rika;
+   while(r.strikeIndex<1)A.advance(.01);
+   const next=A.spawn(400,0),events=A.watch(next);e.dead=true;e.hp=0;
+   A.advance(.07);assert(r.phase==='travel'&&r.pursuitTarget===next,'retarget travel not reached '+cancel);
+   if(cancel==='clear')G.Combat.clearFields(p);
+   if(cancel==='unlearn')p.moves=p.moves.filter(move=>move.id!==ids.rika);
+   if(cancel==='dead'){p.dead=true;p.hp=0;}
+   A.advance(2);
+   assert(!events.length&&!Y.stateFor(p)?.rika&&!s.pendingResonance.length,'cancelled retarget retained attacks '+cancel);
+   out['retargetCancel-'+cancel]=true;
+ }
+ m=setup(['rika','manifest','blade'],5,20);e=A.spawn(300,0);full(m);s=Y.stateFor(p);r=s.rika;
+ while(r.strikeIndex<1)A.advance(.01);
+ const pursuing={x:r.x,y:r.y};
+ for(let i=0;i<35;i++){e.x+=2;G.EnemyMgr.rebuildGrid();A.advance(.01);}
+ assert(r.x>pursuing.x+1,'24-punch recovery has no physical pursuit window');
+ out.highQuantityPursuit={before:pursuing,after:{x:r.x,y:r.y},interval:r.interval};
+
  m=setup(['rika','resonance']);e=A.spawn(100,0);cast(m.rika);s=Y.stateFor(p);
  while(!s.action)A.advance(.01);assert(s.action.kind==='resonance'&&!s.action.released,'burst skipped windup');
  watched=A.watch(e);p.moves=p.moves.filter(move=>move.id!==ids.resonance);A.advance(.2);assert(!hits(watched,ids.resonance).length,'unlearned burst still hit');out.unlearnedBurst=true;

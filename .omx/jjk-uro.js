@@ -32,11 +32,12 @@
   function state(owner){
     let s=states.get(owner);
     if(s&&(s.world!==G.World||s.runEpoch!==G.CombatPulse.epoch)){clear(owner);s=null;}
-    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,cooldowns:{},ready:new Map(),clock:0,pose:null,screen:null,castCounts:{},hits:0,intercepted:0,counterChains:0,echoChains:0};states.set(owner,s);}
+    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,cooldowns:{},ready:new Map(),clock:0,pose:null,screen:null,castCounts:{},hits:0,intercepted:0,deflected:0,counterChains:0,echoChains:0};states.set(owner,s);}
     return s;
   }
   function targets(x,y,r){
-    return [...new Set(G.EnemyMgr.queryCircle(x,y,r+60))].filter(e=>alive(e)&&!e.friendly&&Math.hypot(e.x-x,e.y-y)<=r+(e.r||0)&&clearPath(x,y,e.x,e.y));
+    const registered=new Set(G.EnemyMgr.all());
+    return [...new Set(G.EnemyMgr.queryCircle(x,y,r+60))].filter(e=>registered.has(e)&&alive(e)&&!e.friendly&&Math.hypot(e.x-x,e.y-y)<=r+(e.r||0)&&clearPath(x,y,e.x,e.y));
   }
   function props(x,y,r){
     return [...new Set(G.World.propsInCircle?.(x,y,r)||[])].filter(p=>!p.dead&&p.destructible!==false&&p.hp>0&&Math.hypot(p.x-x,p.y-y)<=r+(p.r||0)&&clearPath(x,y,p.x,p.y,p));
@@ -63,6 +64,8 @@
   }
   function threatened(owner,m){
     const radius=fractureProfile(owner,m).radius,horizon=m.threatHorizon??.8;
+    if(targets(owner.x,owner.y,(owner.r||14)+60).some(e=>e.behavior!=='thief'&&
+      Math.hypot(e.x-owner.x,e.y-owner.y)<=(owner.r||14)+(e.r||10)+((e.touchCd||0)<=.15?20:0)))return true;
     return G.Projectiles.all().some(p=>{
       if(p.friendly||p.uroReturned)return false;
       const x=p.x-owner.x,y=p.y-owner.y,vx=p.vx||0,vy=p.vy||0,speed2=vx*vx+vy*vy;
@@ -78,7 +81,7 @@
     const s=state(owner),spec=specs[m.digiMode],profile=fractureProfile(owner,m),e=target(owner,m),aim=e?Math.atan2(e.y-owner.y,e.x-owner.x):(owner.aim||0);
     const duration=m.digiMode==='uro-screen'?profile.duration:spec.release+(profile.count-1)*profile.interval+.30;
     const b={owner,world:G.World,runEpoch:G.CombatPulse.epoch,id:m.id,mode:m.digiMode,m:{...m},age:0,aim,x:owner.x,y:owner.y,tx:e?.x??owner.x,ty:e?.y??owner.y,
-      state:s,shape:profile.shape,duration,bodyDuration:m.digiMode==='uro-screen'?.42:m.digiMode==='uro-collapse'?.85:duration,release:spec.release,
+      state:s,shape:profile.shape,duration,bodyDuration:m.digiMode==='uro-screen'?.42:m.digiMode==='uro-collapse'?.85:duration,release:spec.release,followTarget:e,
       range:profile.range,radius:profile.radius,arc:profile.arc,currentRange:profile.range,currentArc:profile.arc,currentRadius:profile.radius,
       sourceX:owner.x,sourceY:owner.y,pulseCount:profile.count,pulseIndex:-1,nextPulse:0,pulseAge:0,interval:profile.interval,contactMarks:[],
       damage:(m.dmg??spec.dmg)*(owner.atk??1),type:m.type||'psychic',crit:owner.critChance||0,done:false};
@@ -93,7 +96,7 @@
       s.pose=b;owner.aim=aim;
     }
     s.ready.delete(m.id);owner.cast?.(m);
-    if(b.mode==='uro-screen'){b.budget=b.initialBudget=profile.budget;b.flashes=[];b.counterTriggered=false;s.screen=b;}else effects.push(b);
+    if(b.mode==='uro-screen'){b.budget=b.initialBudget=profile.budget;b.flashes=[];b.meleeReady=new Map();b.counterTriggered=false;s.screen=b;}else effects.push(b);
     return true;
   }
   function hitFor(b,e,multiplier=1,control=false){
@@ -139,6 +142,14 @@
     if(!active(b))return;
     const final=index===b.pulseCount-1,body=b.mode==='uro-sky'||b.mode==='uro-thin-ice';
     if(body){b.x=b.owner.x;b.y=b.owner.y;b.tx=b.x;b.ty=b.y;}
+    if(b.mode==='uro-thin-ice'&&index>0){
+      // Keep the opening telegraph, then aim each new contact at the same live
+      // enemy. When that enemy is gone, remaining waves can clear a new group.
+      const enemies=targets(b.x,b.y,b.range),candidates=enemies.length?enemies:props(b.x,b.y,b.range);
+      b.followTarget=candidates.includes(b.followTarget)?b.followTarget:candidates.sort((a,c)=>
+        Math.hypot(a.x-b.x,a.y-b.y)-Math.hypot(c.x-b.x,c.y-b.y))[0];
+      if(b.followTarget)b.owner.aim=b.aim=Math.atan2(b.followTarget.y-b.y,b.followTarget.x-b.x);
+    }
     if(b.mode==='uro-counter'){
       const candidates=targets(b.owner.x,b.owner.y,b.range),source=b.counterTarget;
       const chosen=candidates.includes(source)&&G.EnemyMgr.all().includes(source)?source:candidates.sort((a,c)=>Math.hypot(a.x-b.owner.x,a.y-b.owner.y)-Math.hypot(c.x-b.owner.x,c.y-b.owner.y))[0];
@@ -197,6 +208,29 @@
     const a=dx*dx+dy*dy;if(a<1e-10)return null;
     const b=2*(ox*dx+oy*dy),disc=b*b-4*a*c;if(disc<0)return null;
     const t=(-b-Math.sqrt(disc))/(2*a);return t>=0&&t<=1?t:null;
+  }
+  const contactSourceValid=(owner,source)=>alive(source)&&!source.friendly&&source.behavior!=='thief'&&G.EnemyMgr.all().includes(source)&&
+    Math.hypot(source.x-owner.x,source.y-owner.y)<=(owner.r||14)+(source.r||10)+.01&&clearPath(owner.x,owner.y,source.x,source.y);
+  function deflectContact(owner,amount,type,pure,context){
+    const source=context?.sourceEnemy,m=learned(owner,'jjk-uro-screen');
+    if(!playing()||!valid(owner)||owner.frozen||owner.invuln>0||!m||pure||!Number.isFinite(amount)||amount<=0||context?.cause!=='contact'||
+      !contactSourceValid(owner,source))return false;
+    let s=state(owner);
+    if(!s.screen&&!cast(owner,m))return false;
+    s=states.get(owner);const w=s?.screen,cost=source.boss||source.elite||source.legend||source.judge?2:1;
+    // owner.cast is extensible: its callback may remove or move the attacker,
+    // cancel the owner, or change geometry after the initial contact check.
+    if(!w||!active(w)||owner.invuln>0||!contactSourceValid(owner,source)||w.age>=w.duration||w.budget<cost||(w.meleeReady.get(source)??-1)>w.age)return false;
+    const aim=Math.atan2(source.y-owner.y,source.x-owner.x),nx=Math.cos(aim),ny=Math.sin(aim),tx=-ny,ty=nx;
+    w.budget-=cost;w.meleeReady.set(source,w.age+.5);s.deflected++;
+    // Only the intercepted attack is diverted. No player invulnerability or
+    // global enemy stun is granted; strong attackers resist the sideways move.
+    if(cost===1){source.kx=(source.kx||0)+tx*180;source.ky=(source.ky||0)+ty*180;}
+    const distance=Math.min(Math.hypot(source.x-owner.x,source.y-owner.y),(owner.r||14)+6);
+    w.flashes.push({kind:'contact',source,x:owner.x+nx*distance,y:owner.y+ny*distance,age:0,
+      incoming:{x:-nx,y:-ny},outgoing:{x:tx,y:ty}});
+    if(!w.counterTriggered){w.counterTriggered=true;counter(s,w,source);}
+    return true;
   }
   function intercept(){
     if(!playing())return;
@@ -284,12 +318,12 @@
     if(m.digiMode==='uro-screen'){
       if(s?.screen&&legal(s.screen))return {state:'active',remaining:Math.max(0,s.screen.duration-s.screen.age)};
       if(m.t>1e-8)return {state:'cooldown',remaining:m.t};
-      return threatened(owner,m)?{state:'ready',remaining:0}:{state:'waiting',reason:'projectile',remaining:0};
+      return threatened(owner,m)?{state:'ready',remaining:0}:{state:'waiting',reason:'threat',remaining:0};
     }
     if(m.digiMode==='uro-echo')return {state:'passive',remaining:0};
     return {state:s?.pose?.id===m.id?'casting':m.t>1e-8?'cooldown':s?.pose?'queued':'ready',remaining:m.t||0};
   }
-  G.JjkUro={dex:DEX,supports,canCast,cast,update,draw,clear,intercept,specs,threatened,statusFor,fractureProfile,
+  G.JjkUro={dex:DEX,supports,canCast,cast,update,draw,clear,intercept,deflectContact,specs,threatened,statusFor,fractureProfile,
     poseFor:owner=>{const b=states.get(owner)?.pose;if(!b||!legal(b))return null;
       const until=b.release+b.nextPulse*b.interval-b.age,phase=b.mode==='uro-screen'?(b.age<.08?'windup':b.age<.22?'pull':b.age<.3?'shatter':'recovery'):
         b.pulseIndex>=0&&b.pulseAge<.13?'shatter':b.done?'recovery':until<.14?'pull':'windup';return {...b,phase,frameName:phase};},

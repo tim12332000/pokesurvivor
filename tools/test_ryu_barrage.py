@@ -59,6 +59,16 @@ CHECK=r"""() => {
  p.onDealt=function(...args){G.Combat.clearFields(p);return onDealt.apply(this,args)};
  try{A.resume();try{R.update(3)}finally{A.pause()}}finally{p.onDealt=onDealt}
  assert(hits.length===1&&!R.stateFor(p),'clear during main hit allowed catch-up followups');out.clearDuringMain={hits:hits.length};
+ // Cancellation inside the first victim also stops other victims in that pulse.
+ for(const mode of ['clear','unlearn']){
+  m=setup();const first=A.spawn(100,0),second=A.spawn(180,0),firstHits=A.watch(first),secondHits=A.watch(second);f=cast(m);
+  const previous=p.onDealt;
+  p.onDealt=function(...args){if(mode==='clear')G.Combat.clearFields(p);else p.moves=[];return previous.apply(this,args)};
+  try{A.resume();try{R.update(3)}finally{A.pause()}}finally{p.onDealt=previous}
+  assert(firstHits.length===1&&secondHits.length===0,'same-wave '+mode+' damaged the next victim');
+  A.advance(3);assert(firstHits.length===1&&secondHits.length===0,'same-wave '+mode+' retained future damage');
+  out['sameWave'+mode]={first:firstHits.length,second:secondHits.length};
+ }
  m=setup();A.spawn(90,0);e=A.spawn(300,0);f=cast(m);const damageProp=G.World.damageProp;
  const prop={x:150,y:0,r:15,hp:1,destructible:true};let propCalls=0;
  G.World.projectileBlock=(x,y,r)=>prop.hp>0&&Math.hypot(x-prop.x,y-prop.y)<=prop.r+r?prop:false;
@@ -104,6 +114,85 @@ CHECK=r"""() => {
  const capCard=G.LevelUp.offer(p,1000).find(c=>c.key==='stat:quantity');assert(capCard&&capCard.apply(p)!==false,'missing final useful quantity card');
  assert(R.barrageFor(p,m).count===16&&!G.LevelUp.offer(p,1000).some(c=>c.key==='stat:quantity'),'max-only capped build offered useless quantity');
  out.legalGrowth={growthCounts,previews,final:{rank:m.lvl,quantity:p.quantityPicks,radius:m.radius,range:m.range,count:R.barrageFor(p,m).count}};
+ // Every learned support cannon feeds the same earned burst, once per cast.
+ out.supportCharge={};
+ for(const id of ['jjk-ryu','jjk-ryu-spread','jjk-ryu-impact']){
+  A.reset();const support=A.fixture(id);assert(p.addMove('jjk-ryu-maximum'),'maximum learn failed');
+  const victims=[A.spawn(70,0),A.spawn(85,35),A.spawn(85,-35)];
+  const action=cast(support);A.advance(1);const s=R.stateFor(p);
+  assert(s.coreCharge===1,'support cast did not earn exactly one charge '+id+':'+s.coreCharge);
+  if(id!=='jjk-ryu')assert(s.hits>=2,'support fixture did not exercise multi-target charge dedup '+id);
+  assert(R.statusFor(p,p.moves.find(m=>m.id==='jjk-ryu-maximum')).coreCharge===1,'HUD charge source differs '+id);
+  out.supportCharge[id]={charge:s.coreCharge,hits:s.hits};
+  for(const cancel of ['clear','unlearn']){
+   A.reset();const move=A.fixture(id);p.addMove('jjk-ryu-maximum');A.spawn(70,0);A.spawn(85,0);
+   cast(move);const before=R.stateFor(p),previous=p.onDealt;
+   p.onDealt=function(...args){if(cancel==='clear')G.Combat.clearFields(p);else p.moves=p.moves.filter(m=>m.id!==id);return previous.apply(this,args)};
+   try{A.advance(1)}finally{p.onDealt=previous}
+   assert(before.coreCharge===0,'cancelled contact granted charge '+id+'/'+cancel);
+  }
+  for(const miss of ['empty','wall','prop']){
+   A.reset();const move=A.fixture(id);p.addMove('jjk-ryu-maximum');const enemy=A.spawn(70,0);cast(move);
+   if(miss==='empty'){G.EnemyMgr.clear();G.EnemyMgr.rebuildGrid()}
+   if(miss==='wall'){G.World.isWall=(x,y)=>x>=30&&x<=45;G.World.projectileBlock=(x,y)=>G.World.isWall(x,y)?'wall':false;}
+   if(miss==='prop'){
+    G.EnemyMgr.clear();G.EnemyMgr.rebuildGrid();const prop={x:70,y:0,r:15,hp:100000,destructible:true};
+    G.World.propsInCircle=()=>[prop];
+    G.World.projectileBlock=(x,y,r)=>Math.hypot(x-prop.x,y-prop.y)<=prop.r+r?prop:false;
+   }
+   A.advance(1);assert(R.stateFor(p).coreCharge===0,'miss/prop granted charge '+id+'/'+miss);
+  }
+ }
+ m=setup();A.spawn(100,0);cast(m);A.advance(2.3);assert(R.stateFor(p).coreCharge===0,'maximum fueled itself');
+ A.reset();const core=A.fixture('jjk-ryu');p.addMove('jjk-ryu-spread');p.addMove('jjk-ryu-impact');p.addMove('jjk-ryu-maximum');
+ for(const move of p.moves)move.t=0;
+ for(const [x,y]of [[70,0],[100,35],[100,-35]])A.spawn(x,y);
+ A.advance(3.5,true);const earned=R.stats(p);
+ assert(earned.casts['jjk-ryu']===1&&earned.casts['jjk-ryu-spread']===1&&earned.casts['jjk-ryu-impact']===1&&earned.casts['jjk-ryu-maximum']===1,
+  'native support rotation did not cash earned burst '+JSON.stringify(earned));
+ assert(G.CombatPulse.telemetry.some(hit=>hit.moveId==='jjk-ryu-maximum'&&hit.primaryHits>0),'earned maximum did not land through native scheduling');
+ out.supportRotation=earned;
+ // Branches use their actual curved flight path, and a first quantity pick
+ // covers a fifth distinct approach instead of repainting the same hit.
+ out.closeSpread=[];
+ for(const distance of [60,100,140]){
+  A.reset();const spread=A.fixture('jjk-ryu-spread'),enemy=A.spawn(distance,0),events=A.watch(enemy);
+  cast(spread);A.advance(1);
+  assert(events.length===1&&enemy.hp<enemy.maxHp,'single close target was allocated to an unreachable outer branch '+distance);
+  out.closeSpread.push({distance,hits:events.length});
+ }
+ A.reset();const plain=A.fixture('jjk-ryu');
+ const plainGroup=[A.spawn(130,0),...[-1.2,-.6,.6,1.2].map(a=>A.spawn(Math.cos(a)*180,Math.sin(a)*180))];
+ cast(plain);A.advance(.8);out.withoutSpread=plainGroup.filter(enemy=>enemy.hp<enemy.maxHp).length;
+ assert(out.withoutSpread===1,'ordinary cannon counterfactual covered the side approaches');
+ out.curvedSpread=[];
+ for(const q of [0,1]){
+  A.reset();const spread=A.fixture('jjk-ryu-spread');p.quantityPicks=p.quantityBonus=q;
+  const group=[A.spawn(130,0),...[-1.2,-.6,.6,1.2].map(a=>A.spawn(Math.cos(a)*180,Math.sin(a)*180))],outside=A.spawn(-220,0);
+  const branches=cast(spread);A.advance(.36);const shots=[...R.stateFor(p).scatter];
+  assert(shots.length===4+q,'first quantity pick did not add a real branch');
+  assert(new Set(shots.map(shot=>shot.target)).size===4+q,'branches duplicated assigned enemy instead of covering another approach');
+  const initial=shots.map(shot=>shot.aim);A.advance(.12);
+  assert(shots.some((shot,i)=>Math.abs(shot.aim-initial[i])>.05&&shot.trail?.length>2),'scatter only changed decoration, no curved movement');
+  A.advance(.5);const damaged=group.filter(enemy=>enemy.hp<enemy.maxHp).length;
+  assert(damaged===4+q&&outside.hp===outside.maxHp,'curved spread did not create distinct within-range coverage '+q+':'+damaged);
+  out.curvedSpread.push({q,branches:shots.length,damaged,curved:true});
+ }
+ for(const invalid of ['wall','removed','cancel']){
+  A.reset();const spread=A.fixture('jjk-ryu-spread');p.addMove('jjk-ryu-maximum');
+  const victims=[A.spawn(140,0),A.spawn(150,70),A.spawn(150,-70)],events=victims.map(A.watch);
+  cast(spread);A.advance(.36);const original=p.onDealt;
+  if(invalid==='wall'){G.World.isWall=(x,y)=>x>=40&&x<=60;G.World.projectileBlock=(x,y)=>G.World.isWall(x,y)?'wall':false;}
+  if(invalid==='removed')for(const enemy of victims)G.EnemyMgr.removeRemote(enemy.id,false);
+  if(invalid==='cancel')p.onDealt=function(...args){G.Combat.clearFields(p);return original.apply(this,args)};
+  try{A.advance(.6)}finally{p.onDealt=original}
+  const contacts=events.reduce((n,list)=>n+list.length,0);
+  assert(contacts===(invalid==='cancel'?1:0),'curved scatter violated wall/removal/callback cleanup '+invalid+':'+contacts);
+  if(invalid==='cancel')assert(!R.stateFor(p),'cancelled curved cast retained state');
+  out['curved-'+invalid]={contacts};
+ }
+ A.reset();const capped=A.fixture('jjk-ryu-spread',5);p.quantityPicks=p.quantityBonus=20;A.spawn(150,0);cast(capped);A.advance(.36);
+ assert(R.stateFor(p).scatter.length===9,'curved spread exceeded branch cap');out.curvedCap=9;
  return out;
 }"""
 
@@ -141,6 +230,25 @@ def presentation(page,frame,label):
   const data=await done;for(const track of stream.getTracks())track.stop();return data;
  }""")
  (OUT/f'{label}-rank5-native-barrage.webm').write_bytes(base64.b64decode(clip.split(';base64,',1)[1]))
+ # Normal RAF scatter flights expose real branching and steering at starter
+ # rank and after the first quantity investment, with the same enemy layout.
+ for quantity in [0,1]:
+  frame.evaluate("""q=>{
+   const A=JAcceptance;A.reset();const m=A.fixture('jjk-ryu-spread'),p=A.p();p.quantityPicks=p.quantityBonus=q;p.invuln=999;
+   A.spawn(130,0);for(const a of [-1.2,-.6,.6,1.2])A.spawn(Math.cos(a)*180,Math.sin(a)*180);
+   G.Game.debugSpeed(1);const stream=document.getElementById('game').captureStream(30),chunks=[];
+   const recorder=new MediaRecorder(stream,{mimeType:'video/webm',videoBitsPerSecond:2200000});
+   recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
+   const done=new Promise(resolve=>recorder.onstop=()=>{const reader=new FileReader;reader.onload=()=>resolve(reader.result);reader.readAsDataURL(new Blob(chunks,{type:'video/webm'}))});
+   window.RyuCurveClip={stream,recorder,done};recorder.start();A.resume();G.JjkRyu.cast(p,m);
+  }""",quantity)
+  page.wait_for_timeout(490)
+  page.screenshot(path=str(OUT/f'{label}-curve-q{quantity}-native-flight.png'))
+  results[f'{label}-curve-q{quantity}']=frame.evaluate("""()=>{const s=G.JjkRyu.stateFor(JAcceptance.p());return {fixture:'native RAF; same five approaches; rank 1',quantity:JAcceptance.p().quantityPicks,
+    branches:s.scatter.map(e=>({x:e.x,y:e.y,aim:e.aim,trail:e.trail.length})),hits:s.hits};}""")
+  page.wait_for_timeout(600)
+  curve_clip=frame.evaluate("""async()=>{JAcceptance.pause();const clip=window.RyuCurveClip;clip.recorder.stop();const data=await clip.done;for(const track of clip.stream.getTracks())track.stop();return data;}""")
+  (OUT/f'{label}-rank1-q{quantity}-native-curve.webm').write_bytes(base64.b64decode(curve_clip.split(';base64,',1)[1]))
  return results
 
 def main():

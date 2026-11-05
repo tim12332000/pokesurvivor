@@ -47,8 +47,10 @@ SETUP = r"""() => {
   // Deliberate isolated casts exercise production geometry; identity suites
   // separately drive Combat.tick to verify conditional automatic decisions.
   const module=a.dex===30013?G.JujutsuYuta:a.dex===30014?G.JjkRyu:G.JjkUro;
+  const reactionBefore=id==='jjk-yuta-speech'?(module.stateFor(a)?.casts?.speech||0):0;
   resume();try{module.cast(a,m)}finally{a.cast=original;pause()}
-  assert(calls===1,'native cast count '+id+': '+calls);return m}
+  if(id==='jjk-yuta-speech')assert(calls===0&&module.stateFor(a)?.casts?.speech===reactionBefore+1,'independent speech cast missing or replaced body');
+  else assert(calls===1,'native cast count '+id+': '+calls);return m}
  function pose(){const c=document.createElement('canvas');c.width=340;c.height=280;const ctx=c.getContext('2d',{willReadFrequently:true}),calls=[],draw=ctx.drawImage.bind(ctx);
   ctx.drawImage=(im,...rect)=>{calls.push({source:im.src||im.dataset?.source||'',rect});return draw(im,...rect)};
   p().anim.draw(ctx,170,220);const rgba=ctx.getImageData(0,0,c.width,c.height).data;let pixels=0;
@@ -245,15 +247,17 @@ def special(frame,slug,label):
           const A=JAcceptance,p=A.p(),Y=G.JujutsuYuta,out={forms:[]};
           function blade(rank){A.reset();const m=A.fixture('jjk-yuta'),e=A.spawn(70,0);p.target=e;
             if(rank){p.addMove('jjk-yuta-manifest');Object.assign(p.moves.find(m=>m.id==='jjk-yuta-manifest'),G.Moves.instance('jjk-yuta-manifest',rank));
-              A.cast('jjk-yuta-manifest');A.advance(.6);}
-            A.cast('jjk-yuta');A.advance(.3);return e.maxHp-e.hp;}
+              A.cast('jjk-yuta-manifest');A.advance(3);}
+            const before=e.hp;A.cast('jjk-yuta');A.advance(.3);return before-e.hp;}
           const base=blade(0),rank1=blade(1),rank5=blade(5);A.assert(rank1>base&&rank5>rank1,'manifest rank damage did not scale');out.damage={base,rank1,rank5};
           A.reset();A.fixture('jjk-yuta-manifest');const e=A.spawn(150,0);p.target=e;const before={atk:p.atk,maxHp:p.maxHp};
           A.cast('jjk-yuta-manifest');A.assert(Y.manifested(p),'manifest never entered');A.advance(8.1);
           A.assert(!Y.manifested(p)&&p.atk===before.atk&&p.maxHp===before.maxHp,'manifest expiration/stat drift');out.expiry={before,after:{atk:p.atk,maxHp:p.maxHp}};
           A.reset();A.fixture('jjk-yuta-speech');const normal=A.spawn(100,0),boss=A.spawn(120,30,'boss');normal.spd=boss.spd=60;p.target=normal;
           A.cast('jjk-yuta-speech');A.advance(.3);const x=[normal.x,boss.x];A.resume();try{normal.update(.1,p,0);boss.update(.1,p,0)}finally{A.pause()}
-          A.assert(normal.x===x[0]&&boss.x<x[1],'speech normal/boss movement resistance failed');out.speech={normal:normal.x-x[0],boss:boss.x-x[1]};
+          A.assert(normal.x===x[0]&&boss.x===x[1],'speech did not stop both enemy classes');
+          A.advance(.8);A.resume();try{normal.update(.1,p,0);boss.update(.1,p,0)}finally{A.pause()}
+          A.assert(normal.x===x[0]&&boss.x<x[1],'strong enemy did not recover before normal enemy');out.speech={normal:normal.x-x[0],boss:boss.x-x[1]};
           A.reset();A.fixture('jjk-yuta-rika');p.target=A.spawn(130,0);A.cast('jjk-yuta-rika');A.advance(.25);
           const c=document.createElement('canvas');c.width=700;c.height=400;const ctx=c.getContext('2d'),calls=[],draw=ctx.drawImage.bind(ctx);
           ctx.drawImage=(im,...rect)=>{calls.push({source:im.src||'',rect});return draw(im,...rect)};ctx.translate(250,250);

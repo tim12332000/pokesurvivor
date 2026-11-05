@@ -682,10 +682,10 @@ G.Combat = (() => {
     if (pl.dead) return;
     for (const e of G.EnemyMgr.queryCircle(pl.x, pl.y, pl.r + 40)) {
       if (G.U.dist2(e.x, e.y, pl.x, pl.y) > (e.r + pl.r) * (e.r + pl.r)) continue;
-      if (e.touchCd > 0 || e.behavior === 'thief' || G.NarutoLee?.bound?.(e) || G.NarutoKimimaro?.held?.(e)) continue;
+      if (e.touchCd > 0 || e.behavior === 'thief' || G.NarutoLee?.bound?.(e) || G.NarutoKimimaro?.held?.(e) || G.JujutsuYuta?.stopped?.(e)) continue;
       e.touchCd = 0.55;
       e.strike(pl);
-      pl.hurt(e.dmg, e.atkType, false, { cause: 'contact', fromX: e.x, fromY: e.y });
+      pl.hurt(e.dmg, e.atkType, false, { cause: 'contact', sourceEnemy: e, fromX: e.x, fromY: e.y });
       if (pl.hasItem('rockyhelmet')) e.hurt(15 + pl.level * 4, '#9aa6b5', e.x - pl.x, e.y - pl.y, 80, null, pl);
       const [nx, ny] = G.U.norm(e.x - pl.x, e.y - pl.y);
       e.kx += nx * 150; e.ky += ny * 150;

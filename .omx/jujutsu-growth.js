@@ -15,11 +15,16 @@
   function vector(p,m){
     const mode=m.digiMode||'',i=rank(m)-1;
     if(customConsumers.has(mode))return customConsumers.get(mode)(p,m);
-    if(mode==='jjk-ryu-spread')return {砲道:count(p,m.baseCount||3,9)};
+    if(mode==='jjk-ryu-spread')return {砲道:count(p,m.baseCount||4,9)};
     if(mode==='jjk-ryu-maximum')return {追加重砲:count(p,m.barrageBase??[4,5,6,7,8][i],16)};
     if(mode==='yuta-rika'){
       const config=G.Jujutsu.power.yuta,base=config.rikaBases[i];
-      return {協擊拳數:count(p,base,config.rikaCap),顯現拳數:count(p,base*2,config.fullCap)};
+      return {協擊拳數:count(p,base,config.rikaCap),
+        ...(p.moves?.some(move=>move.digiMode==='yuta-manifest')?{顯現拳數:count(p,base*2,config.fullCap)}:{})};
+    }
+    if(mode==='yuta-manifest'){
+      const config=G.Jujutsu.power.yuta;
+      return {放出射程:config.releaseRanges[i],每路半徑:config.releaseRadii[i],每路基傷:config.releaseDamage[i]};
     }
     if(mode==='uro-thin-ice'||mode==='uro-collapse')return {裂面波次:count(p,G.Jujutsu.power.uro.waveBases[i],G.Jujutsu.power.uro.waveCap)};
     if(mode==='uro-screen'){
@@ -114,6 +119,10 @@
         if(m.dmg!==next.dmg)parts.push(`傷害 ${fmt(m.dmg)}→${fmt(next.dmg)}`);
         if(m.range!==next.range)parts.push(`射程 ${fmt(m.range)}→${fmt(next.range)}`);
         if(m.radius!==next.radius)parts.push(`半徑 ${fmt(m.radius)}→${fmt(next.radius)}`);
+        const before=vector(p,m),after=vector(p,next);
+        for(const key of Object.keys(before||{}))if(before[key]!==after?.[key])parts.push(`${key} ${fmt(before[key])}→${fmt(after[key])}`);
+        for(const [key,label]of [['duration','持續秒數'],['recovery','恢復秒數']])
+          if(Number.isFinite(m[key])&&Number.isFinite(next[key])&&m[key]!==next[key])parts.push(`${label} ${fmt(m[key])}→${fmt(next[key])}`);
         return {...card,desc:card.desc+(parts.length?'\n'+parts.join('；'):''),growthMove:m};
       }
     }

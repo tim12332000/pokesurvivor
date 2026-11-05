@@ -26,7 +26,7 @@
   function state(owner) {
     let s=states.get(owner);
     if(s&&!legal(s)){clear(owner);s=null;}
-    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,clock:0,action:null,rika:null,duetPose:null,pendingResonance:[],marks:[],manifestUntil:0,manifestReadyAt:0,manifestPower:1.5,relay:null,
+    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,clock:0,action:null,speech:null,rika:null,release:null,releaseQueued:false,releaseUsed:false,duetPose:null,pendingResonance:[],marks:[],manifestUntil:0,manifestReadyAt:0,manifestPower:1.5,relay:null,
       companion:{owner,x:owner.x-40,y:owner.y-18,age:0,phase:'idle',visualPhase:'idle',full:false,aim:0,alpha:1,visible:false},
       casts:{},hits:0,damage:0,rikaHits:0};
       s.drawables={strike:makeDrawable(s,false),companion:makeDrawable(s,true)};
@@ -44,7 +44,8 @@
     return true;
   }
   function nearby(x,y,r) {
-    return [...new Set(G.EnemyMgr.queryCircle(x,y,r+80))].filter(e=>alive(e)&&!e.friendly&&
+    const registered=new Set(G.EnemyMgr.all());
+    return [...new Set(G.EnemyMgr.queryCircle(x,y,r+80))].filter(e=>registered.has(e)&&alive(e)&&!e.friendly&&
       Math.hypot(e.x-x,e.y-y)<=r+(e.r||0)&&path(x,y,e.x,e.y));
   }
   function geometry(m) {
@@ -98,6 +99,9 @@
     if(!valid(owner)||owner.frozen||G.Game.state!=='playing'||!supports(m?.digiMode)||!learned(owner,m.id)||(m.t||0)>EPS)return false;
     const s=state(owner);
     if(m.digiMode==='yuta-resonance')return false;
+    if(m.digiMode==='yuta-speech')return !s.speech&&!!target(owner,m);
+    if(s.release)return false;
+    if(s.releaseQueued&&s.action?.kind!=='manifest')return false;
     if(m.digiMode==='yuta-rika'&&s.rika)return false;
     if(m.digiMode!=='yuta-rika'&&duetActive(s))return false;
     if(m.digiMode!=='yuta-rika'&&s.action)return false;
@@ -122,7 +126,7 @@
     const f={owner,m,kind,age:0,aim,x:owner.x,y:owner.y,...g,full,
       damage:(m.dmg??({blade:30,rika:100,speech:35,manifest:0}[kind]))*(owner.atk??1)*(full?s.manifestPower:1),
       critChance:owner.critChance||0,released:false,hits:new Set()};
-    f.cast=G.CombatPulse.create(owner,m.id,{channel:kind==='rika'?'companion':'body'});
+    f.cast=G.CombatPulse.create(owner,m.id,{channel:kind==='rika'?'companion':kind==='speech'?'reaction':'body'});
     Object.assign(f,{castId:f.cast.castId,runEpoch:f.cast.runEpoch,channel:f.cast.channel});
     if(kind==='rika') {
       // One persistent companion owns every excursion; neither form changes
@@ -135,10 +139,13 @@
       a.bladeCast=a.blade?G.CombatPulse.create(owner,blade.id,{channel:'duet'}):null;
       a.bladeDamage=a.blade?(a.blade.dmg||30)*(owner.atk??1)*s.manifestPower*.6:0;
       rikaPhase(a);s.rika=a;
+    }else if(kind==='speech'){
+      s.speech=f;bodyPhase(f);
     }else {
       s.action=f;
       if(kind==='manifest'){
         s.manifestUntil=s.clock+power().manifestDuration;s.manifestReadyAt=s.manifestUntil+power().recoveries[rank(m)-1]*(owner.cdMul??1);
+        s.releaseQueued=true;s.releaseUsed=false;
         s.manifestPower=[1.5,1.6,1.7,1.8,2][rank(m)-1];f.full=true;
         // One refresh at activation makes the companion part of the burst.
         // An existing strike still owns the sole Rika actor until it returns.
@@ -147,7 +154,8 @@
       }
       bodyPhase(f);
     }
-    owner.aim=aim;owner.cast?.(move);
+    // A short spoken reaction leaves the sword/duet's physical pose intact.
+    if(kind!=='speech'){owner.aim=aim;owner.cast?.(move);}
     move.t=kind==='manifest'?s.manifestReadyAt-s.clock:Math.max(.05,(kind==='rika'?(full?power().fullRikaCd:power().rikaCd):(move.cd??({blade:1,speech:8}[kind])))*(owner.cdMul??1));
     move.castAt=performance.now();
     s.casts[kind]=(s.casts[kind]||0)+1;
@@ -160,7 +168,7 @@
     return {target:e,primaryDirectDamage:damage,color:'#c9e5eb',dx:dx/d,dy:dy/d,knock:0,eff:crit?'crit':G.Types.label(mult),onHit(){
       // Native hurt/onDealt callbacks may clear the scene or remove this skill.
       // Invalidate the ledger before CombatPulse reaches the next direct hit.
-      if(!legal(s)||!learned(s.owner,f.m.id))f.cast.runEpoch=-1;
+      if(!legal(s)||!learned(s.owner,f.m.id)||f.releaseToken&&!releaseLegal(s,f.releaseToken))f.cast.runEpoch=-1;
     }};
   }
   function contact(s,f,enemies,pulse=0){
@@ -171,14 +179,22 @@
   }
   function lease(s,e,duration) {
     let list=leases.get(e);if(!list)leases.set(e,list=[]);
-    const old=list.find(l=>l.s===s),until=s.clock+duration,factor=strong(e)?.65:0;
-    if(old){old.until=Math.max(old.until,until);old.factor=factor;}
-    else list.push({s,until,factor});
+    const old=list.find(l=>l.s===s),until=s.clock+duration;
+    if(old){old.until=Math.max(old.until,until);old.duration=duration;}
+    else list.push({s,until,duration});
   }
+  function stopStatus(e){
+    if(!alive(e)||!G.EnemyMgr.all().includes(e))return null;
+    const active=(leases.get(e)||[]).filter(l=>legal(l.s)&&!l.s.owner.frozen&&l.until>l.s.clock&&
+      l.s.owner.moves?.some(m=>m.digiMode==='yuta-speech'));
+    const lease=active.sort((a,b)=>(b.until-b.s.clock)-(a.until-a.s.clock))[0];
+    return lease?{remaining:lease.until-lease.s.clock,duration:lease.duration}:null;
+  }
+  const stopped=e=>!!stopStatus(e);
   function circle(s,f,r,pulse=0) {
     const enemies=nearby(f.x,f.y,r),result=contact(s,f,enemies,pulse);
     if(!legal(s)||!learned(s.owner,f.m.id))return false;
-    if(result&&f.kind==='speech')for(const e of enemies)if(alive(e))lease(s,e,strong(e)?.6:(f.m.speechDuration??1.2));
+    if(result&&f.kind==='speech')for(const e of enemies)if(alive(e))lease(s,e,strong(e)?f.m.speechBossDuration:f.m.speechDuration);
     if(f.kind!=='speech')for(const p of G.World.propsInCircle?.(f.x,f.y,r)||[])if(legal(s)&&learned(s.owner,f.m.id)&&p.hp>0&&p.destructible!==false&&
       Math.hypot(p.x-f.x,p.y-f.y)<=r+(p.r||0)&&path(f.x,f.y,p.x,p.y,p))G.World.damageProp?.(p,f.damage,'#c9e5eb');
     if(legal(s)&&learned(s.owner,f.m.id))s.marks.push({x:f.x,y:f.y,radius:r,age:0,born:s.clock,kind:f.kind,aim:f.aim,full:f.full,finisher:f.finisher,strikeIndex:f.strikeIndex,castId:f.castId});
@@ -213,6 +229,12 @@
   function returnRika(s,r){r.phase='return';r.phaseAge=0;s.duetPose=null;}
   function companionHome(s){const p=s.owner,aim=s.action?.aim??p.aim??0;return {x:p.x+(Math.cos(aim)<0?40:-40),y:p.y-18};}
   function tracked(r){const e=r.pursuitTarget;return alive(e)&&!e.friendly&&G.EnemyMgr.all().includes(e)&&path(r.x,r.y,e.x,e.y)?e:null;}
+  function replacementTarget(s,r){
+    const remaining=Math.max(0,r.travelBudget-r.travelDistance);
+    return nearby(s.owner.x,s.owner.y,r.range).filter(e=>path(r.x,r.y,e.x,e.y)&&
+      Math.max(0,Math.hypot(e.x-r.x,e.y-r.y)-35)<=remaining+EPS)
+      .sort((a,b)=>Math.hypot(a.x-r.x,a.y-r.y)-Math.hypot(b.x-r.x,b.y-r.y))[0]||null;
+  }
   function approach(r,e,amount){
     const dx=e.x-r.x,dy=e.y-r.y,d=Math.hypot(dx,dy),distance=Math.max(0,d-35);
     if(d>EPS)r.aim=Math.atan2(dy,dx);
@@ -246,18 +268,30 @@
     if(r.phase==='strike'&&r.full&&s.action){rikaPhase(r);return;}
     r.phaseAge+=dt;
     if(r.phase==='travel'){
-      const e=tracked(r);
+      const e=tracked(r)||replacementTarget(s,r);r.pursuitTarget=e;
       if(!e||r.phaseAge>1.4||r.travelDistance>=r.travelBudget-EPS){returnRika(s,r);}
       else{
         const before=r.travelDistance,arrived=approach(r,e,r.speed*dt);
-        if(arrived){r.phase='strike';r.phaseAge=0;}
+        if(arrived){r.phase='strike';r.phaseAge=r.strikeIndex*r.interval;}
         else if(r.travelDistance-before<EPS)returnRika(s,r);
       }
     }else if(r.phase==='strike'){
       // Reposition only in the recovery between real beats. Windup/contact has
       // a fixed origin; the same target can still escape behind an obstacle.
-      const since=r.strikeIndex?r.phaseAge-(.22+(r.strikeIndex-1)*r.interval):0,e=tracked(r);
-      if(r.strikeIndex&&r.strikeIndex<r.strikeCount&&since>.055&&since<r.interval-.035&&e&&r.travelDistance<r.travelBudget)
+      const since=r.strikeIndex?r.phaseAge-(.22+(r.strikeIndex-1)*r.interval):0;
+      const contact=Math.min(.055,r.interval*.35),prepare=Math.min(.035,r.interval*.25);
+      let e=tracked(r);
+      if(!e&&r.strikeIndex<r.strikeCount&&(!r.strikeIndex||since>contact)){
+        e=replacementTarget(s,r);r.pursuitTarget=e;
+        if(!e)returnRika(s,r);
+        else if(Math.hypot(e.x-r.x,e.y-r.y)>r.radius+(e.r||0)){
+          // The existing actor travels to the next group; spent beats and
+          // travel budget survive the transfer. No remote replacement hit.
+          r.phase='travel';r.phaseAge=0;
+        }
+      }
+      if(r.phase!=='strike'){rikaPhase(r);return;}
+      if(r.strikeIndex&&r.strikeIndex<r.strikeCount&&since>contact&&since<r.interval-prepare&&e&&r.travelDistance<r.travelBudget)
         approach(r,e,r.speed*dt);
       while(legal(s)&&s.rika===r&&r.strikeIndex<r.strikeCount&&r.phaseAge+EPS>=.22+r.strikeIndex*r.interval){
         const pulse=r.strikeIndex;r.finisher=pulse===r.strikeCount-1;
@@ -291,7 +325,8 @@
     // visual actor until the attack skill is learned, never a free excursion.
     if(!m&&!full){a.visible=false;a.full=false;return;}
     a.visible=true;a.alpha=1;
-    if(s.rika)return;
+    if(s.rika||s.release)return;
+    delete a.releasePose;
     const source=m||s.owner.moves.find(move=>move.digiMode==='yuta-manifest'),home=companionHome(s),before=Math.hypot(a.x-home.x,a.y-home.y);
     travel(a,home.x,home.y,720*dt);
     a.age=s.clock;a.phase=before>3?'follow':'idle';a.visualPhase=a.phase;a.full=full;
@@ -306,6 +341,84 @@
       critChance:s.owner.critChance||0,released:false};
     s.action=f;bodyPhase(f);s.owner.cast?.(q.m);s.casts.resonance=(s.casts.resonance||0)+1;
   }
+  function releaseTarget(s,range,radius){
+    const enemies=nearby(s.owner.x,s.owner.y,range);
+    return enemies.sort((a,b)=>enemies.filter(e=>Math.hypot(e.x-b.x,e.y-b.y)<radius*4).length-
+      enemies.filter(e=>Math.hypot(e.x-a.x,e.y-a.y)<radius*4).length||
+      Math.hypot(a.x-s.owner.x,a.y-s.owner.y)-Math.hypot(b.x-s.owner.x,b.y-s.owner.y))[0]||null;
+  }
+  function releaseLegal(s,f){return legal(s)&&s.release===f&&!s.owner.frozen&&learned(s.owner,f.m.id)&&manifested(s.owner);}
+  function releasePose(f){
+    const preparing=f.phase!=='release';
+    f.pose={owner:f.owner,m:f.m,mode:'yuta-manifest',kind:'release',aim:f.aim,age:f.age,full:true,
+      visualPhase:preparing?'windup':'release',phaseProgress:preparing?clamp(f.phaseAge/power().releaseCharge):clamp(f.phaseAge/.35),
+      frameName:preparing?'ringRaise':'ringGlow'};
+  }
+  function releaseSources(s,f){
+    const a=f.actor,p=s.owner,hand=G.JujutsuArt?.pointFor?.(p,f.pose,'ring')||{x:p.x+Math.cos(f.aim)*8,y:p.y-(p.bodyH||48)*.58};
+    // Measured on the existing manifestRoar frame: rect-local mouth (192,229),
+    // foot anchor (196,435), bodyHeight 350. Mirror only the horizontal offset.
+    const sign=Math.cos(f.aim)<0?-1:1;
+    const mouth={x:a.x-4/350*a.height*sign,y:a.y-206/350*a.height};
+    return [hand,mouth].map((point,i)=>({...point,aim:Math.atan2(f.target.y-point.y,f.target.x-point.x),
+      length:f.range,radius:f.radius,castId:f.casts[i].castId,channel:f.casts[i].channel,anchor:i?'manifestRoar-mouth':'ring'}));
+  }
+  function startRelease(s){
+    if(!s.releaseQueued||s.releaseUsed||s.release||s.action||s.rika||!manifested(s.owner))return;
+    const m=s.owner.moves?.find(move=>move.digiMode==='yuta-manifest');if(!m)return;
+    const c=power(),i=rank(m)-1,range=c.releaseRanges[i],radius=c.releaseRadii[i],e=releaseTarget(s,range,radius);
+    if(!e||s.manifestUntil-s.clock<c.releaseCharge+.1)return;
+    const aim=Math.atan2(e.y-s.owner.y,e.x-s.owner.x),a=s.companion;
+    const f=s.release={owner:s.owner,m:{...m},actor:a,target:e,aim,age:0,phase:'approach',phaseAge:0,range,radius,
+      damage:c.releaseDamage[i]*(s.owner.atk??1)*s.manifestPower,critChance:s.owner.critChance||0,
+      casts:['release-owner','release-rika'].map(channel=>G.CombatPulse.create(s.owner,m.id,{channel}))};
+    s.releaseQueued=false;s.releaseUsed=true;a.full=true;a.visible=true;a.height=c.fullHeights[i];
+    a.phase='manifest';a.aim=aim;releasePose(f);f.sources=releaseSources(s,f);s.owner.cast?.(m);
+  }
+  function releaseLength(source){
+    const c=Math.cos(source.aim),sn=Math.sin(source.aim),step=6;
+    for(let d=step;d<=source.length+step;d+=step){
+      const next=Math.min(d,source.length),before=Math.max(0,next-step);
+      for(const side of [-source.radius,0,source.radius])if(!path(source.x+c*before-sn*side,source.y+sn*before+c*side,
+        source.x+c*next-sn*side,source.y+sn*next+c*side))return before;
+      if(next===source.length)break;
+    }
+    return source.length;
+  }
+  function fireRelease(s,f){
+    f.sources=releaseSources(s,f).map(source=>({...source,length:releaseLength(source)}));
+    for(let i=0;i<f.sources.length;i++){
+      if(!releaseLegal(s,f))return;
+      const source=f.sources[i],c=Math.cos(source.aim),sn=Math.sin(source.aim);
+      const inside=e=>{const dx=e.x-source.x,dy=e.y-source.y,along=Math.max(0,Math.min(source.length,dx*c+dy*sn));
+        return Math.hypot(dx-c*along,dy-sn*along)<=source.radius+(e.r||0);};
+      const hit={...f,...source,kind:'release',cast:f.casts[i],releaseToken:f};
+      contact(s,hit,nearby(source.x,source.y,source.length+source.radius).filter(inside));
+      if(!releaseLegal(s,f))return;
+      for(const p of G.World.propsInCircle?.(source.x,source.y,source.length+source.radius)||[])
+        if(releaseLegal(s,f)&&p.hp>0&&p.destructible!==false&&inside(p)&&path(source.x,source.y,p.x,p.y,p))G.World.damageProp?.(p,f.damage,'#b9f6ff');
+      if(releaseLegal(s,f))s.marks.push({...source,kind:'release',age:0,born:s.clock,life:.5});
+    }
+    if(releaseLegal(s,f))s.casts.release=(s.casts.release||0)+1;
+  }
+  function advanceRelease(s,dt){
+    const f=s.release;if(!f)return;
+    if(!manifested(s.owner)||!learned(s.owner,f.m.id)){s.release=null;return;}
+    f.age+=dt;f.phaseAge+=dt;
+    if(f.phase==='approach'){
+      const p=s.owner,a=f.actor,desired={x:p.x-Math.cos(f.aim)*48-Math.sin(f.aim)*100,y:p.y-Math.sin(f.aim)*48+Math.cos(f.aim)*100};
+      // A blocked side step keeps the actual companion in place; neither a
+      // second actor nor a teleport is substituted for the existing body.
+      if(!path(a.x,a.y,desired.x,desired.y)||travel(a,desired.x,desired.y,720*dt)||f.phaseAge>.7){f.phase='charge';f.phaseAge=0;}
+    }else if(f.phase==='charge'&&f.phaseAge+EPS>=power().releaseCharge){
+      const e=releaseTarget(s,f.range,f.radius);
+      if(!e){s.release=null;return;}
+      f.target=e;f.aim=Math.atan2(e.y-s.owner.y,e.x-s.owner.x);f.phase='release';f.phaseAge=0;releasePose(f);fireRelease(s,f);
+    }else if(f.phase==='release'&&f.phaseAge>=.35){s.release=null;return;}
+    releasePose(f);f.actor.aim=f.aim;f.actor.phaseAge=f.phaseAge;
+    f.actor.releasePose={frameName:f.phase==='approach'?'manifestLoom1':'manifestRoar'};
+    if(f.phase!=='release')f.sources=releaseSources(s,f);
+  }
   function update(dt) {
     for(const [owner,s] of states)if(!legal(s))clear(owner);
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
@@ -313,6 +426,18 @@
       if(s.owner.frozen)continue;
       s.clock+=dt;
       if(!s.owner.moves?.some(m=>m.digiMode==='yuta-manifest'))s.manifestUntil=0;
+      const speech=s.speech;
+      if(speech){
+        if(!learned(s.owner,speech.m.id))s.speech=null;
+        else{
+          speech.age+=dt;
+          if(!speech.released){speech.x=s.owner.x;speech.y=s.owner.y;}
+          bodyPhase(speech);
+          if(!speech.released&&speech.age+EPS>=.24){speech.released=true;circle(s,speech,speech.radius);}
+          if(!legal(s))continue;
+          if(speech.age>=.48)s.speech=null;
+        }
+      }
       const f=s.action;
       if(f){
         if(!learned(s.owner,f.m.id))s.action=null;
@@ -336,8 +461,11 @@
       advanceRika(s,dt);
       if(!legal(s))continue;
       startResonance(s);
+      if(!manifested(s.owner))s.releaseQueued=false;
+      startRelease(s);advanceRelease(s,dt);
+      if(!legal(s))continue;
       updateCompanion(s,dt);
-      for(const m of s.marks)m.age=s.clock-m.born;s.marks=s.marks.filter(m=>m.age<.32);
+      for(const m of s.marks)m.age=s.clock-m.born;s.marks=s.marks.filter(m=>m.age<(m.life||.32));
     }
     for(const [e,list] of leases){
       const next=list.filter(l=>alive(e)&&legal(l.s)&&l.until>l.s.clock&&l.s.owner.moves?.some(m=>m.digiMode==='yuta-speech'));
@@ -393,13 +521,22 @@
     for(const s of renderStates()){
       ctx.save();
       const action=s.action;
-      if(!ground&&action?.kind==='speech')drawMouthSeal(ctx,s,action);
+      if(!ground&&s.speech)drawMouthSeal(ctx,s,s.speech);
+      if(!ground&&!G.JujutsuVFX?.enabled&&s.release?.phase==='charge')for(const source of s.release.sources){
+        ctx.globalAlpha=.6;ctx.strokeStyle='#bff5ff';ctx.lineWidth=3;ctx.beginPath();
+        ctx.arc(source.x,source.y-(G.LIFT||0),6+10*clamp(s.release.phaseAge/power().releaseCharge),0,TAU);ctx.stroke();
+      }
       if(!ground&&action?.kind==='manifest')drawRingGlint(ctx,s,action);
       if(!G.JujutsuVFX?.enabled&&ground&&s.rika?.phase==='strike'){
         const r=s.rika;ctx.globalAlpha=r.visualPhase==='windup'?.18:.1;ctx.strokeStyle='#c8dce5';ctx.lineWidth=1;
         ctx.beginPath();ctx.arc(r.x,r.y-(G.LIFT||0),r.radius,0,TAU);ctx.stroke();
       }
       for(const f of s.marks){
+        if(f.kind==='release'){
+          if(!ground&&!G.JujutsuVFX?.enabled){const y=f.y-(G.LIFT||0);ctx.globalAlpha=(1-f.age/f.life)*.7;
+            ctx.strokeStyle='#9ce9ff';ctx.lineWidth=f.radius*2;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(f.x,y);ctx.lineTo(f.x+Math.cos(f.aim)*f.length,y+Math.sin(f.aim)*f.length);ctx.stroke();}
+          continue;
+        }
         if(G.JujutsuVFX?.enabled&&(f.kind==='blade'||f.kind==='rika'))continue;
         ctx.globalAlpha=(1-f.age/.32)*.65;ctx.strokeStyle=f.kind==='speech'?'#d4b5ff':'#d1f6ff';ctx.lineWidth=f.kind==='blade'?5:3;
         const y=f.y-(ground?0:12)-(G.LIFT||0);
@@ -430,6 +567,14 @@
       }
       ctx.restore();
     }
+    if(!ground)for(const e of leases.keys()){
+      const status=stopStatus(e);if(!status)continue;
+      const x=e.x,y=e.y-(e.bodyH||40)-(G.LIFT||0)-12;
+      ctx.save();ctx.textAlign='center';ctx.font='bold 15px sans-serif';
+      ctx.lineWidth=3;ctx.strokeStyle='#231831';ctx.strokeText('止',x,y);ctx.fillStyle='#f5dcff';ctx.fillText('止',x,y);
+      ctx.fillStyle='#251a35';ctx.fillRect(x-15,y+5,30,4);
+      ctx.fillStyle='#e8baff';ctx.fillRect(x-15,y+5,30*clamp(status.remaining/status.duration),4);ctx.restore();
+    }
   }
   const oldTick=C.tick,oldUpdate=C.updateFields,oldClear=C.clearFields,oldAir=C.drawAirFields,oldGround=C.drawGroundFields;
   C.tick=function(dt,owner,now){
@@ -447,31 +592,22 @@
   C.clearFields=function(owner){const result=oldClear.call(this,owner);clear(owner);return result;};
   C.drawAirFields=function(ctx){oldAir.call(this,ctx);draw(ctx);};
   C.drawGroundFields=function(ctx){oldGround.call(this,ctx);draw(ctx,true);};
-  const enemyUpdate=G.Enemy?.prototype.update;
-  if(enemyUpdate)G.Enemy.prototype.update=function(...args){
-    const x=this.x,y=this.y,result=enemyUpdate.apply(this,args),list=leases.get(this);
-    if(G.Game.state==='playing'&&alive(this)&&list){
-      const factors=list.filter(l=>legal(l.s)&&l.until>l.s.clock&&!l.s.owner.frozen).map(l=>l.factor);
-      if(factors.length){const factor=Math.min(...factors);this.x=x+(this.x-x)*factor;this.y=y+(this.y-y)*factor;}
-    }
-    return result;
-  };
   for(const method of ['toUI','quit'])if(typeof G.Game[method]==='function'){
     const previous=G.Game[method];G.Game[method]=function(...args){const result=previous.apply(this,args);if(terminal())clear();return result;};
   }
   const stateFor=(owner=G.Game.player)=>{const s=states.get(owner);return legal(s)?s:null;};
   function inspect(owner=G.Game.player){
     const s=stateFor(owner);return s?{clock:s.clock,casts:{...s.casts},hits:s.hits,damage:s.damage,rikaHits:s.rikaHits,
-      manifestRemaining:Math.max(0,s.manifestUntil-s.clock),recoveryRemaining:Math.max(0,s.manifestReadyAt-Math.max(s.clock,s.manifestUntil)),manifestPower:s.manifestPower,relay:s.relay?.until>s.clock?s.relay:null,rika:s.rika,companion:s.companion,action:s.action,duetPose:s.duetPose,pendingResonance:s.pendingResonance.length,controls:[...leases.values()].flat().filter(l=>l.s===s).length}:null;
+      manifestRemaining:Math.max(0,s.manifestUntil-s.clock),recoveryRemaining:Math.max(0,s.manifestReadyAt-Math.max(s.clock,s.manifestUntil)),manifestPower:s.manifestPower,relay:s.relay?.until>s.clock?s.relay:null,rika:s.rika,companion:s.companion,action:s.action,speech:s.speech,release:s.release,releasePending:s.releaseQueued,duetPose:s.duetPose,pendingResonance:s.pendingResonance.length,controls:[...leases.values()].flat().filter(l=>l.s===s).length}:null;
   }
   function statusFor(owner,m){
     const s=stateFor(owner),active=m.digiMode==='yuta-manifest'&&s&&s.manifestUntil>s.clock;
-    const casting=s&&(s.action?.m.id===m.id||s.rika?.m.id===m.id);
+    const casting=s&&(s.action?.m.id===m.id||s.rika?.m.id===m.id||s.speech?.m.id===m.id);
     if(m.digiMode==='yuta-resonance')return {state:casting?'casting':s?.pendingResonance.length?'queued':'ready',remaining:0,reason:'finisher'};
     const reason=autoPolicy(owner,m);
-    return {state:active?'active':casting?'casting':m.t>EPS?(m.digiMode==='yuta-manifest'?'recovery':'cooldown'):s?.action&&m.digiMode!=='yuta-rika'?'queued':reason?'waiting':'ready',remaining:m.t||0,reason};
+    return {state:active?'active':casting?'casting':m.t>EPS?(m.digiMode==='yuta-manifest'?'recovery':'cooldown'):s?.action&&!['yuta-rika','yuta-speech'].includes(m.digiMode)?'queued':reason?'waiting':'ready',remaining:m.t||0,reason};
   }
-  G.JujutsuYuta={dex:DEX,supports,canCast,cast,autoPolicy,update,clear,draw,drawables,inspect,stateFor,statusFor,renderStates,rikaProfile,
-    pose:(owner=G.Game.player)=>stateFor(owner)?.duetPose||stateFor(owner)?.action||null,activeFor:(owner=G.Game.player)=>stateFor(owner)?.duetPose||stateFor(owner)?.action||null,
+  G.JujutsuYuta={dex:DEX,supports,canCast,cast,autoPolicy,update,clear,draw,drawables,inspect,stateFor,statusFor,renderStates,rikaProfile,stopped,stopStatus,
+    pose:(owner=G.Game.player)=>stateFor(owner)?.duetPose||stateFor(owner)?.action||stateFor(owner)?.release?.pose||stateFor(owner)?.speech||null,activeFor:(owner=G.Game.player)=>stateFor(owner)?.duetPose||stateFor(owner)?.action||stateFor(owner)?.release?.pose||stateFor(owner)?.speech||null,
     formFor:(owner=G.Game.player)=>manifested(owner)?'manifest':'normal',manifested,geometry};
 })();

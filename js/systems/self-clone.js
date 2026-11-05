@@ -79,6 +79,7 @@
       if (!isActor(this) || this.invuln > 0 || this.frozen || !(amount > 0)) return;
       const chidori = G.NarutoChidori?.activeFor?.(this);
       if (G.NarutoLee?.isInvulnerable(this) || ['dash', 'retarget', 'return'].includes(chidori?.phase)) return;
+      if (G.JjkUro?.deflectContact?.(this, amount, type, pure, context)) return;
       const armor = cloak(this);
       if (armor) amount *= Math.max(.5, Math.min(1, armor.m.damageTakenMul ?? .75));
       if (this.mon.dex === 30012 && G.NarutoKimimaro?.hurtClone) {
@@ -339,8 +340,8 @@
       }
       for (const actor of live) for (const enemy of G.EnemyMgr.queryCircle(actor.x, actor.y, actor.r + 40)) {
         if (!isActor(actor)) break;
-        if (enemy.dead || enemy.touchCd > 0 || enemy.behavior === 'thief' || G.NarutoLee?.bound?.(enemy) || G.NarutoKimimaro?.held?.(enemy) || Math.hypot(enemy.x - actor.x, enemy.y - actor.y) > actor.r + enemy.r) continue;
-        enemy.touchCd = .55; enemy.strike(actor); actor.hurt(enemy.dmg, enemy.atkType);
+        if (enemy.dead || enemy.touchCd > 0 || enemy.behavior === 'thief' || G.NarutoLee?.bound?.(enemy) || G.NarutoKimimaro?.held?.(enemy) || G.JujutsuYuta?.stopped?.(enemy) || Math.hypot(enemy.x - actor.x, enemy.y - actor.y) > actor.r + enemy.r) continue;
+        enemy.touchCd = .55; enemy.strike(actor); actor.hurt(enemy.dmg, enemy.atkType, false, { cause: 'contact', sourceEnemy: enemy, fromX: enemy.x, fromY: enemy.y });
       }
     }
     return resolve.call(this, dt, owner, now);

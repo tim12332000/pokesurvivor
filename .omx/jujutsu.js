@@ -24,21 +24,21 @@
   const kits=[
     [30013,[
       ['jjk-yuta','yuta-blade','咒力刀斬','fighting',1,1,30,125,90,'向前揮刀，命中前跟隨走位，斬擊近身扇形內敵人。'],
-      ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,4,100,440,160,'學會後里香常駐協戰，每次追擊連打4→8拳，數量卡至16拳；終擊更重。完全顯現時巨大化、基礎拳數加倍至24拳，逐拳接乙骨刀斬。'],
-      ['jjk-yuta-speech','yuta-speech','咒言・別動','psychic',6,8,35,160,160,'90內有敵人，或範圍內至少三名敵人時，咒言震懾周圍；首領僅短暫受控。'],
-      ['jjk-yuta-manifest','yuta-manifest','里香完全顯現','psychic',9,16,0,600,160,'遇敵群或強敵顯現8秒，刷新里香一次；傷害+50／60／70／80／100%，里香與乙骨逐拳雙人連打。結束後恢復8→6秒，冷卻卡有效。'],
+      ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,4,100,440,160,'學會後里香常駐協戰，每次追擊連打4→8拳，數量卡至16拳；擊倒目標後接續追打可達敵人，終擊更重。完全顯現時巨大化、基礎拳數加倍至24拳，逐拳接乙骨刀斬。'],
+      ['jjk-yuta-speech','yuta-speech','咒言・別動','psychic',6,8,35,240,240,'近身壓力或敵群來襲時喝停240→320範圍內敵人：普通敵人2→2.8秒停止移動、新攻擊、施法與接觸傷害，強敵0.7→1秒；已飛出的敵彈仍危險。可與里香連拳並行。'],
+      ['jjk-yuta-manifest','yuta-manifest','里香完全顯現','psychic',9,16,0,600,160,'遇敵群或強敵顯現8秒，刷新里香一次，傷害+50→100%，刀拳雙人連打。每次顯現待連段收勢後，乙骨與同一里香短蓄0.55秒，從兩個起點各放出一道寬幅貫穿咒力，射程600→840；未學協擊也可放出，沒有免費拳擊。結束後恢復8→6秒，冷卻卡有效。'],
       ['jjk-yuta-resonance','yuta-resonance','協戰共鳴','fighting',12,0,80,240,240,'被動：里香終結重擊真正命中後，乙骨接一記寬幅共鳴終擊；半徑240→360。等待當前身體動作結束，不遞迴觸發。']
     ]],
     [30014,[
       ['jjk-ryu','jjk-ryu','花崗岩砲','psychic',1,1.8,42,360,14,'蓄力0.22秒，射出長距窄幅貫穿砲；學會全力砲後，每次真正命中蓄一格能量。'],
-      ['jjk-ryu-spread','jjk-ryu-spread','散射咒力砲','psychic',3,5,30,200,12,'蓄力0.35秒，向短距廣角發射三顆砲彈；有飛行時間，碰到首個敵人或障礙即停止。數量強化增加砲彈，同次不重複直擊同一敵人。'],
-      ['jjk-ryu-impact','jjk-ryu-impact','咒力爆破','psychic',6,7,100,300,90,'優先鎖定最密集的可達敵群，預告0.45秒後在固定爆點範圍引爆；敵人可離開爆點。'],
-      ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,5.4,200,760,72,'三次普通砲命中蓄滿後，蓄力0.75秒轟出巨型貫穿主砲（基傷×1.5），再連射4／5／6／7／8輪重砲（每輪×0.55）。數量卡增加連轟，最多16輪追加；射程760→1040、主砲半徑72→128，連轟時仍可移動。']
+      ['jjk-ryu-spread','jjk-ryu-spread','散射咒力砲','psychic',3,5,30,200,12,'蓄力0.35秒，四道咒力分岔後沿彎曲路徑追擊不同可達敵群，碰到首個敵人或障礙即停止；五階基礎五道。第一張數量卡四→五道，最多九道，同次不重複直擊同一敵人。學會全力砲後，每次施放真正命中最多蓄一格。'],
+      ['jjk-ryu-impact','jjk-ryu-impact','咒力爆破','psychic',6,7,100,300,90,'優先鎖定最密集的可達敵群，預告0.45秒後在固定爆點範圍引爆；敵人可離開爆點。學會全力砲後，每次施放真正命中最多蓄一格。'],
+      ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,5.4,200,760,72,'普通砲、散射或爆破共三次施放命中蓄滿後，蓄力0.75秒轟出巨型貫穿主砲（基傷×1.5），再連射4／5／6／7／8輪重砲（每輪×0.55）。數量卡增加連轟，最多16輪追加；射程760→1040、主砲半徑72→128，連轟時仍可移動。'],
     ]],
     [30015,[
       ['jjk-uro','uro-sky','空面打擊','psychic',1,1.25,20,180,90,'近身掌擊扭曲空面，推開前方180→260內普通敵人；強敵不被搬動。'],
-      ['jjk-uro-thin-ice','uro-thin-ice','宇守羅彈','psychic',3,4.8,72,340,110,'抓裂大片天空，連續4→8波真實扇形碎面；數量卡至16波，射程340→540。首波與末波更強，隨走位逐波出手。'],
-      ['jjk-uro-screen','uro-screen','天空幕','psychic',6,9,0,600,110,'敵彈來襲才展開3.5→4.5秒空面，可反射12→28顆，數量卡至64顆。首次真反射接4→8波獨立反擊、數量至16波，不打斷身體攻擊；不擋近戰。'],
+      ['jjk-uro-thin-ice','uro-thin-ice','宇守羅彈','psychic',3,4.8,72,340,110,'抓裂大片天空，連續4→8波真實扇形碎面；數量卡至16波，射程340→540。首波與末波更強，隨走位逐波追蹤目標，目標倒下後轉向可達敵潮。'],
+      ['jjk-uro-screen','uro-screen','天空幕','psychic',6,9,0,600,110,'敵彈或近身攻擊來襲時展開3.5→4.5秒空面，偏折接觸攻擊或反射敵彈；容量12→28，數量卡至64，強敵近身攻擊消耗兩份且不被搬動。首次真攔截接4→8波獨立反擊、數量至16波，不打斷身體攻擊。'],
       ['jjk-uro-collapse','uro-collapse','空面震落','psychic',9,8,112,600,210,'鎖定敵群後連續4→8波巨型破裂、數量至16波，半徑210→340。首末波減速，首領較弱；手勢結束後裂區繼續。'],
       ['jjk-uro-echo','uro-echo','裂面殘響','psychic',12,0,40,180,90,'被動：身體招式末波真正命中後，在該處追加2→4次固定裂面殘響，數量卡至8次。獨立持續，不再觸發殘響或反擊。']
     ]]
@@ -49,15 +49,17 @@
     yuta:{rikaBases:[4,5,6,7,8],rikaCap:16,fullCap:24,rikaRanges:[440,480,520,560,600],rikaRadii:[160,180,200,220,250],rikaSpeeds:[640,700,760,820,880],normalHeights:[88,91,94,97,100],fullHeights:[156,162,168,174,180],rikaCd:4,fullRikaCd:2.4,manifestDuration:8,recoveries:[8,7.5,7,6.5,6],duetRanges:[180,200,220,240,260],resonanceRadii:[240,270,300,330,360]},
     uro:{palmRanges:[180,200,220,240,260],palmArcs:[1.6,1.7,1.8,1.9,2],waveBases:[4,5,6,7,8],waveCap:16,thinRanges:[340,380,430,480,540],thinArcs:[2.5,2.7,2.9,3.1,3.3],collapseRange:600,collapseRadii:[210,240,270,300,340],screenRadii:[110,120,130,140,150],screenBudgets:[12,16,20,24,28],screenCap:64,screenDurations:[3.5,3.75,4,4.25,4.5],counterRange:600,counterRadii:[130,150,170,190,210],echoBases:[2,2,3,3,4],echoCap:8}
   };
+  Object.assign(power.yuta,{speechRadii:[240,260,280,300,320],speechDurations:[2,2.2,2.4,2.6,2.8],speechBossDurations:[.7,.775,.85,.925,1]});
+  Object.assign(power.yuta,{releaseRanges:[600,660,720,780,840],releaseRadii:[38,46,54,62,70],releaseDamage:[150,190,230,270,320],releaseCharge:.55});
   // Functional ranks spend the existing upgrade choice; they are not free talents.
   const functional={
     'jjk-yuta':{base:{bladeArc:Math.PI*2/3},third:{relayMarkDuration:1.2},fifth:{bladeArc:2.5},text3:'刀斬標記1.2秒，里香優先追擊該目標',text5:'近身斬擊角擴至約143度'},
     'jjk-yuta-rika':{base:{rikaSpeed:640,rikaReturnSpeed:800,comboBase:4},third:{rikaSpeed:760},fifth:{rikaReturnSpeed:960},text3:'普通6拳／顯現12拳基數，重擊半徑200',text5:'普通8拳／顯現16拳基數，重擊半徑250，數量上限16／24拳'},
-    'jjk-yuta-speech':{base:{speechDuration:1.2},third:{speechDuration:1.5},fifth:{radius:1.15,range:184},text3:'普通敵人移動限制1.2→1.5秒，首領抗性不變',text5:'咒言半徑160→184'},
+    'jjk-yuta-speech':{base:{speechDuration:2,speechBossDuration:.7},third:{},fifth:{},text3:'喝停半徑280，普通敵人2.4秒／強敵0.85秒',text5:'喝停半徑320，普通敵人2.8秒／強敵1秒'},
     'jjk-yuta-manifest':{base:{recovery:8},third:{recovery:7},fifth:{recovery:6},text3:'顯現後基礎恢復7秒',text5:'顯現後基礎恢復6秒'},
     'jjk-yuta-resonance':{third:{radius:1.25,range:300},fifth:{radius:1.2,range:360},text3:'共鳴終擊半徑300',text5:'共鳴終擊半徑360'},
     'jjk-ryu':{third:{targetPolicy:'elite'},fifth:{range:414},text3:'優先可達精英，無精英才選最近敵人',text5:'穿線射程360→414'},
-    'jjk-ryu-spread':{base:{baseCount:3,spreadStep:.65},third:{spreadStep:.8},fifth:{baseCount:4},text3:'相鄰砲彈角度0.65→0.80弧度',text5:'基礎砲彈3→4，數量乘算後最多9顆'},
+    'jjk-ryu-spread':{base:{baseCount:4,spreadStep:.65},third:{spreadStep:.8},fifth:{baseCount:5},text3:'分岔角度0.65→0.80弧度，彎曲追擊不同敵人',text5:'基礎砲道4→5，數量乘算後最多9道'},
     'jjk-ryu-impact':{base:{impactTargetPolicy:'cluster'},third:{radius:1.2},fifth:{range:330},text3:'爆心半徑90→108',text5:'群聚索敵射程300→330，爆點仍於起手鎖定'},
     'jjk-ryu-maximum':{base:{barrageBase:4},third:{firstTargetBonus:.15},fifth:{range:1040},text3:'追加6輪重砲；主砲半徑96、射程880，首個目標傷害+15%',text5:'追加8輪重砲；主砲半徑128、射程1040，數量可強化至16輪'},
     'jjk-uro':{base:{skyKnock:30},third:{},fifth:{skyKnock:44},text3:'掌擊射程220、扇角1.8',text5:'掌擊射程260，普通敵人推退44'},
@@ -67,6 +69,7 @@
     'jjk-uro-echo':{base:{echoBase:2},third:{echoBase:3},fifth:{echoBase:4},text3:'基礎3次殘響',text5:'基礎4次殘響，數量卡最多8次'}
   };
   const ladders={
+    'yuta-speech':{range:power.yuta.speechRadii,radius:power.yuta.speechRadii,speechDuration:power.yuta.speechDurations,speechBossDuration:power.yuta.speechBossDurations},
     'yuta-rika':{range:power.yuta.rikaRanges,radius:power.yuta.rikaRadii,rikaSpeed:power.yuta.rikaSpeeds,comboBase:power.yuta.rikaBases},
     'yuta-manifest':{duration:[8,8,8,8,8],recovery:power.yuta.recoveries},
     'yuta-resonance':{range:power.yuta.resonanceRadii,radius:power.yuta.resonanceRadii},

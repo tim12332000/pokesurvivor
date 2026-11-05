@@ -29,19 +29,24 @@ p.hp=80;assert(growth.legalOffers(p,100).some(c=>c.key==='stat:heal'),'injured p
 G.SelfClones.actors=()=>[{sourceOwner:p}];assert.equal(growth.quantityBenefit(p).eligible,false);G.SelfClones.actors=()=>[];
 p.addMove('jjk-yuta-rika');let yutaBenefit=growth.quantityBenefit(p);
 assert.equal(yutaBenefit.consumers[0].before['協擊拳數'],4);assert.equal(yutaBenefit.consumers[0].after['協擊拳數'],5);
-assert.equal(yutaBenefit.consumers[0].before['顯現拳數'],8);assert.equal(yutaBenefit.consumers[0].after['顯現拳數'],10);
+assert.equal(yutaBenefit.consumers[0].before['顯現拳數'],undefined,'unlearned manifestation promised full punches');
 assert(growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'),'Rika real combos did not enable quantity');
+p.quantityPicks=p.quantityBonus=7;assert.equal(growth.quantityBenefit(p).eligible,false,'normal Rika cap offered a card for an unlearned form');
+assert(!growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'),'normal-only capped Rika offered quantity');
+p.addMove('jjk-yuta-manifest');assert.equal(growth.quantityBenefit(p).eligible,false,'learning manifestation re-enabled a capped count card');
+p.quantityPicks=p.quantityBonus=0;yutaBenefit=growth.quantityBenefit(p);
+assert.equal(yutaBenefit.consumers[0].before['顯現拳數'],8);assert.equal(yutaBenefit.consumers[0].after['顯現拳數'],10);
 p.quantityPicks=p.quantityBonus=7;assert.equal(growth.quantityBenefit(p).eligible,false,'Rika count card offered after both caps');
 p=hero(30014,['jjk-ryu','jjk-ryu-spread']);
-let b=growth.quantityBenefit(p);assert(b.eligible);assert.equal(b.consumers[0].before['砲道'],3);assert.equal(b.consumers[0].after['砲道'],3);assert.equal(b.consumers[0].nextChangeAt,2);
-p.quantityPicks=p.quantityBonus=1;b=growth.quantityBenefit(p);assert.equal(b.consumers[0].after['砲道'],4);
+let b=growth.quantityBenefit(p);assert(b.eligible);assert.equal(b.consumers[0].before['砲道'],4);assert.equal(b.consumers[0].after['砲道'],5);assert.equal(b.consumers[0].nextChangeAt,1);
+p.quantityPicks=p.quantityBonus=1;b=growth.quantityBenefit(p);assert.equal(b.consumers[0].after['砲道'],6);
 p.quantityPicks=p.quantityBonus=6;assert.equal(growth.quantityBenefit(p).eligible,false,'all Ryu count consumers capped at9');
 assert(!growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'));
 const rankCases=[
  ['jjk-yuta',3,'relayMarkDuration',1.2],['jjk-yuta',5,'bladeArc',2.5],['jjk-yuta-rika',3,'rikaSpeed',760],['jjk-yuta-rika',5,'radius',250],
- ['jjk-yuta-rika',5,'range',600],['jjk-yuta-rika',3,'comboBase',6],['jjk-yuta-speech',5,'range',184],['jjk-yuta-manifest',3,'recovery',7],['jjk-yuta-manifest',5,'recovery',6],
+ ['jjk-yuta-rika',5,'range',600],['jjk-yuta-rika',3,'comboBase',6],['jjk-yuta-speech',5,'range',320],['jjk-yuta-speech',3,'speechDuration',2.4],['jjk-yuta-speech',5,'speechBossDuration',1],['jjk-yuta-manifest',3,'recovery',7],['jjk-yuta-manifest',5,'recovery',6],
  ['jjk-yuta-manifest',1,'duration',8],['jjk-yuta-resonance',3,'radius',300],['jjk-yuta-resonance',5,'radius',360],
- ['jjk-ryu',3,'targetPolicy','elite'],['jjk-ryu',5,'range',414],['jjk-ryu-spread',3,'spreadStep',.8],['jjk-ryu-spread',5,'baseCount',4],
+ ['jjk-ryu',3,'targetPolicy','elite'],['jjk-ryu',5,'range',414],['jjk-ryu-spread',3,'spreadStep',.8],['jjk-ryu-spread',5,'baseCount',5],
  ['jjk-ryu-impact',3,'radius',108],['jjk-ryu-impact',5,'range',330],['jjk-ryu-maximum',3,'firstTargetBonus',.15],
  ['jjk-ryu-maximum',1,'barrageBase',4],['jjk-ryu-maximum',3,'barrageBase',6],['jjk-ryu-maximum',5,'barrageBase',8],
  ['jjk-ryu-maximum',1,'radius',72],['jjk-ryu-maximum',3,'radius',96],['jjk-ryu-maximum',5,'radius',128],
@@ -61,6 +66,31 @@ p=hero(30015,['jjk-uro-thin-ice','jjk-uro-screen']);b=growth.quantityBenefit(p);
 assert.equal(b.consumers.find(c=>c.id==='jjk-uro-thin-ice').after['裂面波次'],5);
 const screen=b.consumers.find(c=>c.id==='jjk-uro-screen');assert.equal(screen.before['反射容量'],12);assert.equal(screen.after['反射容量'],15);assert.equal(screen.after['反擊波次'],5);
 p.quantityPicks=p.quantityBonus=8;assert.equal(growth.quantityBenefit(p).eligible,false,'all fracture/screen consumers at cap still offered quantity');
+// Upgrade previews use the current build's real count, including quantity rounding and caps.
+const previewCases=[
+ [30013,'jjk-yuta-rika',0,/協擊拳數 4→5/],
+ [30014,'jjk-ryu-maximum',1,/追加重砲 5→6/],
+ [30015,'jjk-uro-thin-ice',0,/裂面波次 4→5/],
+ [30015,'jjk-uro-collapse',0,/裂面波次 4→5/],
+ [30015,'jjk-uro-screen',0,/反射容量 12→16.*反擊波次 4→5.*持續秒數 3.5→3.75/],
+ [30013,'jjk-yuta-manifest',0,/恢復秒數 8→7.5/]
+];
+for(const [dex,id,q,text]of previewCases){
+ p=hero(dex,[id]);p.quantityPicks=p.quantityBonus=q;
+ const card=growth.legalOffers(p,100).find(c=>c.key==='up:'+id);assert(card,'upgrade missing '+id);assert.match(card.desc,text,id);
+ const before=growth.quantityBenefit(p),rankBefore=p.moves[0].lvl;assert.equal(rankBefore,1,'preview upgraded live move');
+ card.apply(p);assert.equal(p.moves[0].lvl,2,'native upgrade failed '+id);
+ if(before.eligible){const after=growth.quantityBenefit(p);assert(after.consumers.length,'upgrade lost count consumer '+id);}
+}
+p=hero(30013,['jjk-yuta-rika','jjk-yuta-manifest']);
+assert.match(growth.legalOffers(p,100).find(c=>c.key==='up:jjk-yuta-rika').desc,/顯現拳數 8→10/);
+p.quantityPicks=p.quantityBonus=20;
+let capped=growth.legalOffers(p,100).find(c=>c.key==='up:jjk-yuta-rika');
+assert(!/協擊拳數|顯現拳數/.test(capped.desc),'capped punches presented as rank gains');
+p=hero(30015,['jjk-uro-echo']);p.moves[0]=G.Moves.instance('jjk-uro-echo',2);
+assert.match(growth.legalOffers(p,100).find(c=>c.key==='up:jjk-uro-echo').desc,/殘響次數 2→3/);
+p.quantityPicks=p.quantityBonus=20;
+assert(!/殘響次數/.test(growth.legalOffers(p,100).find(c=>c.key==='up:jjk-uro-echo').desc),'capped echoes presented as rank gains');
 for(const [dex,id] of [[30013,'jjk-yuta-resonance'],[30015,'jjk-uro-echo']]){
  p=hero(dex,[]);p.level=11;assert(!G.Moves.poolFor(p.mon).includes(id),'fifth skill leaked before level12');
  p.level=12;const learn=growth.legalOffers(p,100).find(c=>c.key==='new:'+id);assert(learn,'level12 linked skill missing');
@@ -68,7 +98,7 @@ for(const [dex,id] of [[30013,'jjk-yuta-resonance'],[30015,'jjk-uro-echo']]){
 }
 // Native upgrade application must install the same functional rank, not only instance previews.
 const live=G.Moves.instance('jjk-ryu-spread');G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.spreadStep,.8);
-G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.baseCount,4);
+G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.baseCount,5);
 p=hero(30013,['jjk-yuta']);const beforeStats=JSON.stringify(p.statsTaken);
 const cards=growth.legalOffers(p,3);assert(cards.some(c=>c.type==='stat'));assert.equal(JSON.stringify(p.statsTaken),beforeStats,'preview spent growth');assert(!p.narutoMilestonesShown,'offer consumed first-display milestone');
 const up=growth.legalOffers(p,100).find(c=>c.key==='up:jjk-yuta');assert.match(up.desc,/30→36/);assert.equal(p.moves[0].lvl,1);up.apply(p);assert.equal(p.moves[0].lvl,2);

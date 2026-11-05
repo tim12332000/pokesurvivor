@@ -39,6 +39,33 @@ CHECK=r"""() => {
  assert(hits.length===4&&Math.abs(hits[1].raw/(m.dmg*p.atk)-.55)<1e-8&&Math.abs(hits[3].raw/(m.dmg*p.atk)-1)<1e-8,'middle/final thin multipliers');out.thinDamage=hits.map(e=>e.raw);
  m=setup();e=A.spawn(150,0);let b=cast(m);A.advance(.35);const mark={...b.contactMarks[0]};p.y=400;
  const moved=A.spawn(160,400);A.advance(.34);assert(moved.hp<moved.maxHp&&b.contactMarks.at(-1).y===400&&mark.y===0,'fan did not follow each contact or old mark moved');out.liveFan=true;
+ // The first telegraph stays readable; later contacts turn with the same live
+ // target, then use remaining quantity waves on the next reachable enemy wave.
+ m=setup();e=A.spawn(150,0);hits=A.watch(e);b=cast(m);e.x=-150;G.EnemyMgr.rebuildGrid();A.advance(.35);
+ assert(hits.length===0&&b.aim===0,'first thin wave changed its telegraphed direction');
+ const firstMark=b.contactMarks[0];A.advance(.33);
+ assert(hits.length===1&&Math.abs(Math.abs(b.aim)-Math.PI)<1e-8&&p.aim===b.aim,'later thin wave did not track enemy circling behind');
+ assert(firstMark.aim===0&&firstMark.x===0&&firstMark.y===0,'turning thin wave rotated old contact');out.turningThin=true;
+ m=setup('jjk-uro-thin-ice',1,1);e=A.spawn(120,0);e.hp=1;b=cast(m);A.advance(.35);assert(e.dead,'first wave did not clear initial enemy');
+ const nextWave=[A.spawn(-140,-30),A.spawn(-160,0),A.spawn(-180,30)],nextHits=nextWave.map(A.watch),outside=A.spawn(0,600);
+ A.advance(1.3);assert(nextHits.every(events=>events.length===4)&&outside.hp===outside.maxHp,'quantity waves did not turn into the next enemy group');
+ out.turningQuantity={count:b.pulseCount,nextHits:nextHits.map(events=>events.length)};
+ m=setup();e=A.spawn(150,0);b=cast(m);A.advance(.35);const closer=A.spawn(-70,0);A.advance(.34);
+ assert(e.hp<e.maxHp&&closer.hp===closer.maxHp&&b.aim===0,'thin abandoned a valid original target for a closer enemy');
+ for(const invalid of ['range','wall','removed']){
+  m=setup();e=A.spawn(150,0);b=cast(m);A.advance(.35);const fallback=A.spawn(-160,0),blocked=A.spawn(0,180),far=A.spawn(0,600),path=G.World.projectilePathClear;
+  if(invalid==='range')e.x=700;
+  if(invalid==='removed'){G.EnemyMgr.clear();for(const enemy of [fallback,blocked,far])G.EnemyMgr.add(enemy)}
+  G.World.projectilePathClear=(x,y,tx,ty,...rest)=>ty>100?false:invalid==='wall'&&tx===e.x&&ty===e.y?false:path(x,y,tx,ty,...rest);
+  G.EnemyMgr.rebuildGrid();try{A.advance(.34)}finally{G.World.projectilePathClear=path}
+  assert(fallback.hp<fallback.maxHp&&blocked.hp===blocked.maxHp&&far.hp===far.maxHp,'thin retarget ignored reachable range/visibility '+invalid);
+  out['thinRetarget-'+invalid]=true;
+ }
+ m=setup();e=A.spawn(150,0);b=cast(m);A.advance(.35);const replacement=A.spawn(-160,0),hp=e.hp;
+ // Remote removal deliberately leaves an alive actor in the spatial grid.
+ G.EnemyMgr.removeRemote(e.id,false);
+ assert(!e.dead&&e.hp>0&&!G.EnemyMgr.all().includes(e)&&G.EnemyMgr.queryCircle(0,0,400).includes(e),'stale-grid removal fixture not established');
+ A.advance(.34);assert(replacement.hp<replacement.maxHp&&e.hp===hp&&b.followTarget===replacement,'thin followed or hit an alive removed actor from stale grid');out.thinStaleGrid=true;
  m=setup('jjk-uro-collapse');e=A.spawn(450,0);b=cast(m);const center=[b.tx,b.ty];p.y=600;A.advance(.9);
  assert(!U.activeFor(p)&&U.effects.includes(b)&&b.tx===center[0]&&b.ty===center[1],'remote field kept body locked or followed caster');
  assert(p.addMove('jjk-uro'),'learn palm during field');const palm=p.moves.find(m=>m.id==='jjk-uro');palm.t=0;A.spawn(80,600);cast(palm);A.advance(1.2);assert(e.hp<e.maxHp&&b.done,'independent collapse failed');out.independentCollapse=true;
@@ -85,6 +112,11 @@ CHECK=r"""() => {
  m=setup();assert(p.addMove('jjk-uro-echo'),'learn echo for miss');e=A.spawn(100,0);b=cast(m);e.x=-600;G.EnemyMgr.rebuildGrid();A.advance(3);assert(U.stateFor(p).echoChains===0,'missed final hit created fake echo');out.noFakeEcho=true;
  m=setup();assert(p.addMove('jjk-uro-echo'),'learn fixed echo');e=A.spawn(100,0);b=cast(m);A.advance(1.35);const echo=U.effects.find(f=>f.mode==='uro-echo'),locked=[echo.x,echo.y,echo.aim];
  p.y=500;A.advance(.4);assert(echo.x===locked[0]&&echo.y===locked[1]&&echo.aim===locked[2],'echo moved with caster');out.fixedEcho=true;
+ m=setup();assert(p.addMove('jjk-uro-echo'),'learn turning echo');e=A.spawn(150,0);b=cast(m);A.advance(.35);
+ e.x=-150;G.EnemyMgr.rebuildGrid();A.advance(1);const turnedEcho=U.effects.find(f=>f.mode==='uro-echo');
+ assert(turnedEcho&&Math.abs(Math.abs(turnedEcho.aim)-Math.PI)<1e-8,'final turned contact did not pass its geometry to echo');
+ const back=A.spawn(-170,0),backHits=A.watch(back);e.x=150;G.EnemyMgr.rebuildGrid();A.advance(.4);
+ assert(backHits.length===2&&Math.abs(Math.abs(turnedEcho.aim)-Math.PI)<1e-8,'echo followed the live target instead of the final fracture');out.turnedEchoFixed=true;
  m=setup();const growth=G.JujutsuGrowth.quantityBenefit(p),card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:quantity');assert(card&&growth.eligible,'legal quantity card missing');
  assert(U.fractureProfile(p,m).count===4&&card.apply(p)!==false&&U.fractureProfile(p,m).count===5,'first quantity card not real 4to5 waves');out.legalQuantity=growth.text;
  for(const cancel of ['pause','frozen','death','clear','unlearn','world','epoch']){

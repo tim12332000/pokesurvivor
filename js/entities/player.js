@@ -229,8 +229,9 @@ G.Player = class Player {
    * @param type  tipo del ataque (tabla de tipos y clima); sin tipo, daño tal cual
    * @param pure  daño que no baja con la defensa ni el cuerpo a cuerpo (Arceus)
    */
-  hurt(amount, type = null, pure = false) {
+  hurt(amount, type = null, pure = false, context = null) {
     if (this.invuln > 0 || this.dead) return;
+    if (G.JjkUro?.deflectContact?.(this, amount, type, pure, context)) return;
     let eff = null;
     if (type) {
       const k = G.Types.mult(type, this.mon.types);
