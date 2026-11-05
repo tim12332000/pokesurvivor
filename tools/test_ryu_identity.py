@@ -52,13 +52,14 @@ CHECK = r"""() => {
   assert(events[3].clock-events[2].clock>=core.cd-.02,'maximum added an independent attack before the next core opportunity');
   assert(R.stats(p).coreCharge===0&&core.t>core.cd-.02,'maximum failed to consume charge and core cooldown');
   A.advance(.76,true);const recovering=R.stats(p).recoveryRemaining;
-  assert(recovering>.65,'maximum lacks its .7 second release recovery');
+  assert(recovering>1.4&&R.pose(p)?.volleyCount===5,'maximum lacks the four follow-up barrage window');
   const frozen=JSON.stringify(R.stats(p));G.Combat.tick(5,p,0);G.Combat.updateFields(5);
   assert(JSON.stringify(R.stats(p))===frozen,'pause advanced charge/recovery');
   p.x=7;A.advance(.2,true);
-  assert(p.x===7&&!R.pose(p)&&R.statusFor(p,core).state==='recovering','recovery locked movement or kept the recoil pose');
+  assert(p.x===7&&R.pose(p)?.volleyIndex>=1&&R.statusFor(p,core).state==='recovering','barrage locked movement or dropped follow-up pose');
   assert(R.stats(p).casts['jjk-ryu']===3,'core fired through maximum recovery');
-  A.advance(.4,true);assert(R.stats(p).casts['jjk-ryu']===3,'maximum did not replace a full core cooldown');
+  A.advance(1,true);assert(R.stats(p).casts['jjk-ryu']===3&&R.pose(p)?.volleyIndex===4,'other body action interrupted the full barrage');
+  assert(R.stats(p).recoveryRemaining>.2,'last shot lacks final quarter-second recovery');
   out.cadence={events,releaseRecovery:recovering,charge:R.stats(p).coreCharge};
  }finally{p.cast=nativeCast}
  checks.push('three hit casts charge once per cast','maximum replaces next scheduled core','recovery blocks only casting','pause freezes recovery');

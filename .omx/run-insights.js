@@ -67,6 +67,12 @@
   function skillState(player,move){
     if(!move?.id?.startsWith('jjk-'))return null;
     const api=player.dex===30013?G.JujutsuYuta:player.dex===30014?G.JjkRyu:G.JjkUro;
+    if(move.id==='jjk-ryu-maximum'){
+      const barrage=api?.pose?.(player);
+      if(barrage?.mode==='jjk-ryu-maximum')return barrage.released?
+        {label:'連轟 '+(barrage.volleyIndex+1)+'/'+barrage.volleyCount,fraction:1-(barrage.volleyIndex+1)/barrage.volleyCount}:
+        {label:'巨砲蓄力',fraction:Math.max(0,1-barrage.age/barrage.charge)};
+    }
     const status=api?.statusFor?.(player,move);
     if(status){const remaining=Math.max(0,(status.state==='recovering'?status.recoveryRemaining:status.remaining)||0),labels={casting:'施放中',queued:'待出手',ready:'就緒'},waiting={pressure:'等近敵',encounter:'等敵群',projectile:'等敵彈'};
       const label=status.state==='active'?(move.id==='jjk-yuta-manifest'?'顯現 ':'作用 ')+remaining.toFixed(1)+'s':

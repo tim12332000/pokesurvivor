@@ -149,11 +149,45 @@
     }
     return cached.points;
   }
+  function drawMaximumBeam(ctx,e,length){
+    const main=(e.volleyIndex||0)===0,life=Math.max(.01,e.life),t=clamp(e.age/life);
+    const fade=Math.pow(1-t,main?.75:.6),width=e.radius*(1-.48*ease(t));
+    const detailed=frame.beamProfiles<budget().beamProfiles;
+    // A real broad contact keeps its broad silhouette even when other actors
+    // spend the profile budget. Only edge detail and pressure ribs degrade.
+    if(detailed){
+      const points=beamProfile(e);
+      for(const [scale,color,alpha]of [[1,'#258ba9',.48],[.72,'#70ddeb',.54],[.34,'#c4faff',.62],[.12,'#ffffff',.94]]){
+        ctx.globalAlpha=fade*alpha;ctx.fillStyle=color;ctx.beginPath();
+        for(let i=0;i<points.length;i++){const p=points[i],y=p.width/e.radius*width*scale;i?ctx.lineTo(p.x,y):ctx.moveTo(p.x,y);}
+        for(let i=points.length-1;i>=0;i--){const p=points[i];ctx.lineTo(p.x,-p.width/e.radius*width*scale);}ctx.closePath();ctx.fill();
+      }
+      frame.beamProfiles++;
+    }else{
+      const throat=Math.min(16,length*.08),shoulder=Math.min(length*.25,Math.max(throat,width*.8));
+      ctx.globalAlpha=fade*.46;ctx.fillStyle='#56c7dc';ctx.beginPath();ctx.moveTo(0,-width*.12);
+      ctx.lineTo(shoulder,-width*.86);ctx.lineTo(length,-width*.18);ctx.lineTo(length,width*.18);
+      ctx.lineTo(shoulder,width*.86);ctx.lineTo(0,width*.12);ctx.closePath();ctx.fill();
+      ctx.globalAlpha=fade*.85;ctx.strokeStyle='#d9ffff';ctx.lineWidth=Math.max(2,width*.19);
+      ctx.beginPath();ctx.moveTo(throat,0);ctx.lineTo(length,0);ctx.stroke();
+    }
+    // These moving pressure ribs are inside the already resolved beam. Each
+    // volley effect has its own age; no decorative rib becomes a damage pulse.
+    const ribs=detailed&&!low()?3:1;
+    ctx.strokeStyle='#e2ffff';ctx.lineWidth=main?2.5:1.5;
+    for(let i=0;i<ribs;i++){
+      const progress=e.age/(main?.25:Math.max(.06,life*.65))-i*.2;
+      if(progress<=0||progress>=1)continue;
+      const x=length*progress,envelope=.16+.84*Math.sin(Math.PI*progress)**.35;
+      ctx.globalAlpha=fade*(main?.8:.65);ctx.beginPath();ctx.ellipse(x,0,Math.min(7,length*.015),width*envelope*.76,0,0,TAU);ctx.stroke();
+    }
+  }
   function drawBeam(ctx,e,owner){
     const length=e.renderLength??e.length;if(length<=EPS)return;
     const fade=clamp(1-e.age/e.life),tail=1-.6*ease((e.age-.06)/(e.life-.06));
     ctx.save();ctx.translate(e.renderX??e.x,e.renderY??e.y-48);ctx.rotate(e.renderAim??e.aim);ctx.globalAlpha=fade;
-    if(frame.beamProfiles<budget().beamProfiles){
+    if(e.maximum)drawMaximumBeam(ctx,e,length);
+    else if(frame.beamProfiles<budget().beamProfiles){
       const points=beamProfile(e);
       for(const [scale,color]of [[1,e.maximum?'#319fc4':'#55cfdf'],[.66,'#b5f8ff'],[.25,'#fff']]){
         ctx.fillStyle=color;ctx.beginPath();
@@ -163,20 +197,47 @@
       frame.beamProfiles++;
     }else{ctx.strokeStyle='#d5fcff';ctx.lineWidth=Math.min(3,e.radius*.25);ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(length,0);ctx.stroke();}
     ctx.restore();
-    frame.draws.push({kind:'beam',owner:id(owner),castId:e.castId??e.serial,length,renderX:e.renderX??e.x,renderY:e.renderY??e.y-48,radius:e.radius});
+    frame.draws.push({kind:'beam',owner:id(owner),castId:e.castId??e.serial,length,renderX:e.renderX??e.x,renderY:e.renderY??e.y-48,radius:e.radius,
+      maximum:!!e.maximum,volleyIndex:e.volleyIndex??null,volleyCount:e.volleyCount??null,age:e.age});
+  }
+  function drawMaximumCharge(ctx,owner,f,p,t){
+    const radius=Math.min(78,Math.max(42,(f.mainRadius||f.radius||72)*.72));
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(f.barrageAim??f.aim);
+    // Three short inward streams compress into the actual forehead anchor;
+    // the large tell is a loaded artillery chamber, not an orbiting summon.
+    for(let i=0;i<3;i++){
+      const side=i-1,cycle=(t*1.7+i*.28)%1,d=radius*(1-cycle),y=side*d*.75;
+      ctx.globalAlpha=.3+.5*cycle;ctx.strokeStyle=i===1?'#e5ffff':'#6bd9e9';ctx.lineWidth=2+cycle*2;
+      ctx.beginPath();ctx.moveTo(-d*.5,y);ctx.quadraticCurveTo(-d*.18,y*.6,4,0);ctx.stroke();
+    }
+    const compressed=10+(1-ease(t))*radius*.42;
+    ctx.globalAlpha=.16+.3*t;ctx.fillStyle='#47bfdc';ctx.beginPath();ctx.ellipse(7,0,compressed,compressed*.7,0,0,TAU);ctx.fill();
+    ctx.globalAlpha=.55+.4*t;ctx.fillStyle='#e8ffff';ctx.beginPath();ctx.ellipse(7,0,4+7*t,3+5*t,0,0,TAU);ctx.fill();
+    for(const side of [-1,1]){
+      ctx.strokeStyle='#9bedf8';ctx.lineWidth=1.5;ctx.globalAlpha=.35+.5*t;ctx.beginPath();
+      ctx.moveTo(12+radius*.4,side*radius*.54*(1-t*.5));ctx.lineTo(17+radius*.24,side*radius*.19);ctx.lineTo(16,side*4);ctx.stroke();
+    }
+    // A short guide communicates commitment while leaving the far field clear.
+    ctx.globalAlpha=.25+.4*t;ctx.strokeStyle='#d5fcff';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(12,0);ctx.lineTo(52,0);ctx.moveTo(44,-5);ctx.lineTo(52,0);ctx.lineTo(44,5);ctx.stroke();ctx.restore();
+    frame.draws.push({kind:'aim-guide',owner:id(owner),castId:f.castId,aim:f.barrageAim??f.aim,x:p.x,y:p.y,length:52});
+    frame.draws.push({kind:'artillery-compression',owner:id(owner),castId:f.castId,radius,progress:t});
   }
   function drawCharge(ctx,owner,f){
     const p=G.JujutsuArt?.pointFor?.(owner,f,'muzzle')||{x:owner.x+Math.cos(f.aim)*8,y:owner.y+Math.sin(f.aim)*8-48};
-    const t=clamp(f.age/f.charge);ctx.save();ctx.translate(p.x,p.y);ctx.strokeStyle='#9cebf6';ctx.lineWidth=1;
-    for(let i=0;i<2;i++){const cycle=(t*1.8+i*.5)%1,r=5+(1-cycle)*(f.mode==='jjk-ryu-maximum'?22:14);ctx.globalAlpha=.2+.6*cycle;ctx.beginPath();ctx.ellipse(0,0,r,r*.6,f.aim,0,TAU);ctx.stroke();}
-    if(f.mode==='jjk-ryu-maximum'){
-      // A short direction cue shows the committed aim, not a guaranteed hit
-      // or a full-range laser. Strafing can still move the eventual shot line.
-      ctx.rotate(f.aim);ctx.globalAlpha=.25+.4*t;ctx.strokeStyle='#d5fcff';ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.moveTo(12,0);ctx.lineTo(52,0);ctx.moveTo(44,-5);ctx.lineTo(52,0);ctx.lineTo(44,5);ctx.stroke();
-      frame.draws.push({kind:'aim-guide',owner:id(owner),castId:f.castId,aim:f.aim,x:p.x,y:p.y,length:52});
-    }
+    const t=clamp(f.age/f.charge);
+    if(f.mode==='jjk-ryu-maximum'){drawMaximumCharge(ctx,owner,f,p,t);return;}
+    ctx.save();ctx.translate(p.x,p.y);ctx.strokeStyle='#9cebf6';ctx.lineWidth=1;
+    for(let i=0;i<2;i++){const cycle=(t*1.8+i*.5)%1,r=5+(1-cycle)*14;ctx.globalAlpha=.2+.6*cycle;ctx.beginPath();ctx.ellipse(0,0,r,r*.6,f.aim,0,TAU);ctx.stroke();}
     ctx.restore();
+  }
+  function drawBarrageMuzzle(ctx,owner,f){
+    if(f.mode!=='jjk-ryu-maximum'||!f.released||!Number.isFinite(f.pulseAge)||f.pulseAge>.14)return;
+    const p=G.JujutsuArt?.pointFor?.(owner,f,'muzzle');if(!p)return;
+    const t=clamp(f.pulseAge/.14),r=Math.min(48,(f.mainRadius||f.radius||72)*.35)*(1-.45*t);
+    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(f.aim);ctx.globalAlpha=(1-t)*.7;ctx.strokeStyle='#ceffff';ctx.lineWidth=2.5;
+    ctx.beginPath();ctx.ellipse(13+t*12,0,4,r,0,0,TAU);ctx.stroke();ctx.restore();
+    frame.draws.push({kind:'barrage-muzzle',owner:id(owner),castId:f.castId,volleyIndex:f.volleyIndex,volleyCount:f.volleyCount,age:f.pulseAge});
   }
   function drawScatter(ctx,e,owner){
     if(e.dead)return;
@@ -199,6 +260,7 @@
   function drawRyu(ctx,owner,s,ground){
     if(!s)return;
     if(!ground&&s.action&&!s.action.released)drawCharge(ctx,owner,s.action);
+    if(!ground&&s.action?.released)drawBarrageMuzzle(ctx,owner,s.action);
     if(!ground){
       for(const pellet of s.scatter||[])drawScatter(ctx,pellet,owner);
       if(owner.moves?.some(m=>m.id==='jjk-ryu-maximum')){

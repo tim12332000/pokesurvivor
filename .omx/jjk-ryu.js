@@ -8,7 +8,7 @@
     'jjk-ryu':{charge:.22,cd:1.8,damage:42,range:360,radius:14},
     'jjk-ryu-spread':{charge:.35,cd:5,damage:30,range:200,radius:12},
     'jjk-ryu-impact':{charge:.45,cd:7,damage:100,range:300,radius:90},
-    'jjk-ryu-maximum':{charge:.75,cd:5.4,damage:200,range:450,radius:26}
+    'jjk-ryu-maximum':{charge:.75,cd:5.4,damage:200,range:760,radius:72}
   };
   const alive=a=>!!a&&!a.dead&&a.hp>0;
   const controlled=a=>G.SelfClones?.isControlled?.(a)??(a===G.Game.player||!!G.SelfClones?.isActor?.(a));
@@ -37,7 +37,7 @@
     s.effects.push(e);return e;
   }
   function choreography(f){
-    const elapsed=Math.max(0,f.age-f.charge),maximum=f.mode==='jjk-ryu-maximum';
+    const maximum=f.mode==='jjk-ryu-maximum',elapsed=maximum&&f.released?f.pulseAge:Math.max(0,f.age-f.charge);
     f.chargeProgress=clamp(f.age/f.charge);
     f.phase=!f.released?'windup':elapsed<.055?'fire':'recoil';
     f.phaseAge=f.phase==='windup'?f.age:f.phase==='fire'?elapsed:Math.max(0,elapsed-.055);
@@ -68,9 +68,15 @@
   }
   function settings(m){
     const p=specs[m.digiMode]||specs[m.id],L=level(m)-1;
-    return {...p,range:finite(m.range,p.range),radius:finite(m.radius,p.radius),
+    const maximum=m.digiMode==='jjk-ryu-maximum'||m.id==='jjk-ryu-maximum';
+    return {...p,range:maximum?[760,820,880,940,1040][L]:finite(m.range,p.range),radius:maximum?[72,84,96,108,128][L]:finite(m.radius,p.radius),
       damage:finite(m.dmg,p.damage*[1,1.2,1.45,1.75,2.1][L]),cd:finite(m.cd,p.cd)};
   }
+  function barrageFor(owner,m){
+    const L=level(m)-1,count=Math.min(16,G.Quantity.count(owner,[4,5,6,7,8][L]));
+    return {count,radius:[72,84,96,108,128][L],range:[760,820,880,940,1040][L],duration:2.2,interval:1.08/Math.max(1,count-1)};
+  }
+  const actionLegal=(s,f)=>states.get(s.owner)===s&&G.CombatPulse.legal(f.cast)&&s.owner.moves?.some(m=>m.id===f.m.id);
   function targetFor(owner,m){
     const r=settings(m).range;
     const enemies=[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,r+80))].filter(e=>alive(e)&&!e.friendly&&
@@ -103,6 +109,12 @@
       damage:p.damage*(owner.atk??1)*(G.NarutoSupport?.takeAttackBonus(owner)||1),crit:owner.critChance||0,
       sparks:fragments(mode==='jjk-ryu-maximum'?10:6,++effectSequence)};
     s.action.cast=G.CombatPulse.create(owner,m.id,{channel:'body'});
+    if(mode==='jjk-ryu-maximum'){
+      const barrage=barrageFor(owner,m),f=s.action;
+      Object.assign(f,{followupCount:barrage.count,volleyCount:barrage.count+1,volleyIndex:0,interval:barrage.interval,
+        duration:barrage.duration,mainRadius:barrage.radius,barrageAim:f.aim,baseDamage:f.damage,lastShotAt:f.charge,pulseAge:0});
+      f.damage*=1.5;
+    }
     Object.assign(s.action,{castId:s.action.cast.castId,runEpoch:s.action.cast.runEpoch,channel:'body'});
     choreography(s.action);
     owner.aim=s.action.aim;m.t=Math.max(.05,p.cd*(owner.cdMul??1));m.castAt=performance.now();
@@ -124,7 +136,7 @@
     }
     return result;
   }
-  function clippedLength(x,y,aim,range,radius,target=null){
+  function clippedLength(x,y,aim,range,radius,target=null,onBlock=null){
     const steps=Math.ceil(range/4),c=Math.cos(aim),sn=Math.sin(aim);
     for(let i=1;i<=steps;i++){
       const d=Math.min(range,i*4);
@@ -132,7 +144,8 @@
       for(const side of [-radius,0,radius]){
         const px=x+c*d-sn*side,py=y+sn*d+c*side;
         const blocker=G.World.projectileBlock?.(px,py,1);
-        if(G.World.isWall?.(px,py)||(blocker&&blocker!==target))return Math.max(0,d-4);
+        if(G.World.isWall?.(px,py))return Math.max(0,d-4);
+        if(blocker&&blocker!==target&&!onBlock?.(blocker))return Math.max(0,d-4);
       }
     }
     return range;
@@ -199,9 +212,10 @@
     }
     s.scatter=s.scatter.filter(shot=>!shot.dead);
   }
-  function release(s,f){
+  function release(s,f,pulseIndex=0){
+    if(!actionLegal(s,f))return false;
+    if(f.mode==='jjk-ryu-maximum'&&s.owner===G.Game.player)G.Audio?.sfx?.('shot',{kind:'cannon',main:pulseIndex===0,type:f.m.type||'psychic'});
     f.released=true;f.x=s.owner.x+Math.cos(f.aim)*8;f.y=s.owner.y+Math.sin(f.aim)*8;
-    if(f.mode==='jjk-ryu-maximum')s.recoveryUntil=s.clock+.7;
     // Resolve the authored release frame now: choreography still names windup
     // until this release returns, and later recoil has a different head anchor.
     const releasePose={...f,phase:'fire',frameName:f.mode==='jjk-ryu-maximum'?'maxRelease':'lightRelease',age:f.charge};
@@ -220,18 +234,27 @@
       return;
     }
     if(f.mode==='jjk-ryu-spread'){scatter(s,f);return;}
-    const hitOnce=new Set(),candidates=[],propHits=new Set();
+    const hitOnce=new Set(),candidates=[],propHits=new Set(),struckProps=new Set();
     for(let i=0;i<f.count;i++){
       const aim=f.aim+(f.count===1?0:(i-(f.count-1)/2)*(f.m.spreadStep??.20)),c=Math.cos(aim),sn=Math.sin(aim);
-      const length=clippedLength(f.x,f.y,aim,f.range,f.radius);
       const maximum=f.mode==='jjk-ryu-maximum',spread=f.mode==='jjk-ryu-spread';
+      const breakProp=maximum?prop=>{
+        if(!actionLegal(s,f))return false;
+        if(prop.destructible===false||!Number.isFinite(prop.hp))return false;
+        if(!struckProps.has(prop)&&prop.hp>0){struckProps.add(prop);G.World.damageProp?.(prop,f.damage,'#bff7ff');}
+        return prop.hp<=0;
+      }:null;
+      const length=clippedLength(f.x,f.y,aim,f.range,f.radius,null,breakProp);
+      if(!actionLegal(s,f))return false;
       const start=f.visualStart||{x:f.x,y:f.y-HEAD_HEIGHT};
       // Only the visual segment joins the baked stub. Its far tip stays at the
       // original clipped projection; the collision origin and range never move.
       const endX=f.x+c*length,endY=f.y+sn*length-HEAD_HEIGHT,dx=endX-start.x,dy=endY-start.y;
       const renderLength=dx*c+dy*sn>0?Math.hypot(dx,dy):0;
       effect(s,{kind:'beam',x:f.x,y:f.y,aim,length,radius:f.radius,maximum,spread,
-        renderX:start.x,renderY:start.y,renderAim:Math.atan2(dy,dx),renderLength,age:0,life:maximum?.42:spread?.22:.24});
+        volleyIndex:f.volleyIndex,volleyCount:f.volleyCount,
+        renderX:start.x,renderY:start.y,renderAim:Math.atan2(dy,dx),renderLength,age:0,
+        life:maximum?(pulseIndex===0?.55:Math.min(.24,Math.max(.10,f.interval*1.2))):spread?.22:.24});
       if(length<f.range-EPS)effect(s,{kind:'impact',x:f.x+c*length,y:f.y+sn*length,aim,
         radius:f.radius,maximum,age:0,life:maximum?.42:.3});
       for(const e of [...new Set(G.EnemyMgr.queryCircle(f.x,f.y,length+80))]){
@@ -244,29 +267,48 @@
       // envelope as well, otherwise the very chest stopping the ray is omitted.
       for(const p of G.World.propsInCircle?.(f.x,f.y,length+f.radius+8)||[]){
         const dx=p.x-f.x,dy=p.y-f.y,along=dx*c+dy*sn;
-        if(!hitOnce.has(p)&&p.hp>0&&along>=0&&along<=length+(p.r||0)+4&&Math.abs(-dx*sn+dy*c)<=f.radius+(p.r||0)&&clearPath(f.x,f.y,p.x,p.y,p)){
+        if(!struckProps.has(p)&&!hitOnce.has(p)&&p.hp>0&&along>=0&&along<=length+(p.r||0)+4&&Math.abs(-dx*sn+dy*c)<=f.radius+(p.r||0)&&clearPath(f.x,f.y,p.x,p.y,p)){
           hitOnce.add(p);propHits.add(p);
         }
       }
     }
     const first=f.mode==='jjk-ryu-maximum'?candidates.toSorted((a,b)=>a.along-b.along)[0]?.enemy:null;
-    contact(s,f,candidates.map(({enemy,aim})=>hitFor(s,{...f,aim},enemy,enemy===first?1+(f.m.firstTargetBonus||0):1)));
-    for(const prop of propHits)G.World.damageProp?.(prop,f.damage,'#bff7ff');
+    contact(s,f,candidates.map(({enemy,aim})=>hitFor(s,{...f,aim},enemy,enemy===first?1+(f.m.firstTargetBonus||0):1)),pulseIndex);
+    for(const prop of propHits){if(!actionLegal(s,f))break;G.World.damageProp?.(prop,f.damage,'#bff7ff');}
+    return actionLegal(s,f);
   }
   function update(dt){
     if(terminal()){clear();return;}
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
     for(const [owner,s] of states){
       if(!valid(owner)||s.world!==G.World||s.runEpoch!==G.CombatPulse.epoch){clear(owner);continue;}
+      if(owner.frozen)continue;
       s.clock+=dt;
       for(const e of s.effects)e.age+=dt;
       updateScatter(s,dt);s.effects=s.effects.filter(e=>e.age<e.life&&!e.dead);
       const f=s.action;if(!f)continue;
       if(!owner.moves?.some(m=>m.id===f.m.id)){s.action=null;continue;}
       f.age+=dt;
-      if(!f.released&&f.age+EPS>=f.charge)release(s,f);
+      if(!f.released&&f.age+EPS>=f.charge){
+        release(s,f);
+        if(!actionLegal(s,f))continue;
+        if(f.mode==='jjk-ryu-maximum')s.recoveryUntil=s.clock+Math.max(0,f.duration-f.age);
+      }
+      if(f.mode==='jjk-ryu-maximum'&&f.released){
+        while(f.volleyIndex<f.followupCount&&actionLegal(s,f)){
+          const next=f.volleyIndex+1,at=f.charge+.12+(next-1)*f.interval;
+          if(f.age+EPS<at)break;
+          const offset=next===1?0:(next%2===0?1:-1)*Math.min(.22,.22*Math.ceil((next-1)/2)/Math.ceil((f.followupCount-1)/2));
+          const shot={...f,volleyIndex:next,aim:f.barrageAim+offset,radius:f.mainRadius*.7,damage:f.baseDamage*.55};
+          if(!release(s,shot,next))break;
+          Object.assign(f,{volleyIndex:next,lastShotAt:at,aim:shot.aim,x:shot.x,y:shot.y,visualMuzzle:shot.visualMuzzle,visualStart:shot.visualStart});
+          owner.aim=shot.aim;
+        }
+        if(!actionLegal(s,f))continue;
+        f.pulseAge=Math.max(0,f.age-f.lastShotAt);
+      }
       choreography(f);
-      if(f.age>=f.charge+.18)s.action=null;
+      if(f.age>=(f.mode==='jjk-ryu-maximum'?f.duration:f.charge+.18))s.action=null;
     }
   }
   function pose(owner=G.Game.player){
@@ -417,7 +459,7 @@
     return {state:s?.action?.m.id===m.id?'casting':recoveryRemaining>EPS?'recovering':m.t>EPS?'cooldown':charging?'charging':waitingForCore||s?.action?'queued':'ready',
       remaining:m.t||0,coreCharge,chargeRequired:3,recoveryRemaining,coreRemaining,reason:charging?'core-charge':waitingForCore?'core-cadence':null};
   }
-  G.JjkRyu={dex:DEX,supports,handles:supports,canCast,cast,update,clear,pose,activeFor:pose,targetFor,statusFor,
+  G.JjkRyu={dex:DEX,supports,handles:supports,canCast,cast,update,clear,pose,activeFor:pose,targetFor,statusFor,barrageFor,
     stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return s&&drawable(s)?s:null;},
     stats:(owner=G.Game.player)=>{const s=states.get(owner);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,effects:s.effects.length,
       coreCharge:s.coreCharge,chargeRequired:3,recoveryRemaining:Math.max(0,s.recoveryUntil-s.clock)}:null;}};

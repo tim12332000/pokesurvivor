@@ -129,6 +129,22 @@ def main():
    except Exception as e:
     report['failures'].append(label+': '+str(e));page.screenshot(path=str(OUT/(label+'-failure.png')))
    finally:context.close()
+  context,page,f=boot(browser,30014,low=True,dpr=2)
+  try:
+   f.evaluate("""()=>{const A=JAcceptance,p=A.p();A.reset();G.JujutsuVFX.setQuality('low');A.fixture('jjk-ryu-maximum',5);p.invuln=999;
+    const actors=[p,...Array.from({length:3},()=>G.SelfClones.summon(p))];A.assert(actors.every(Boolean),'barrage clones missing');
+    actors.forEach((actor,i)=>{actor.x=0;actor.y=(i-1)*55;actor.invuln=999;A.spawn(240,actor.y)});
+    A.resume();try{for(const actor of actors){const m=actor.moves.find(m=>m.id==='jjk-ryu-maximum');m.t=0;A.assert(G.JjkRyu.cast(actor,m),'barrage clone cast failed')}}finally{A.pause()};A.advance(.83);}""")
+   wait_render(page);page.screenshot(path=str(OUT/'barrage-between-shots-recoil.png'))
+   f.evaluate('JAcceptance.advance(.12)');wait_render(page)
+   barrage=f.evaluate('G.JujutsuVFX.inspect()');beams=[d for d in barrage['draws'] if d['kind']=='beam' and d.get('maximum')]
+   assert len(beams)>6 and barrage['beamProfiles']==6,('low-budget barrage fallback was not exercised',barrage)
+   assert all(d['radius']>=89 for d in beams) and len({d['owner'] for d in beams})==4,('wide legal beams or actor ownership lost in fallback',beams)
+   page.screenshot(path=str(OUT/'barrage-low-budget-wide-fallback.png'))
+   report['cases']['barrage-low-budget']={'beams':beams,'profiles':barrage['beamProfiles']}
+  except Exception as e:
+   report['failures'].append('barrage-budget: '+str(e));page.screenshot(path=str(OUT/'barrage-budget-failure.png'))
+  finally:context.close()
   context,page,f=boot(browser,30015)
   try:
    f.evaluate("""()=>{const A=JAcceptance,p=A.p();A.reset();G.JujutsuVFX.setQuality('high');A.fixture('jjk-uro-thin-ice');A.spawn(100,0);

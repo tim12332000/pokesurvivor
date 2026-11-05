@@ -37,10 +37,19 @@ const rankCases=[
  ['jjk-yuta-speech',5,'range',184],['jjk-yuta-manifest',3,'recovery',10.5],['jjk-yuta-manifest',5,'recovery',9],
  ['jjk-ryu',3,'targetPolicy','elite'],['jjk-ryu',5,'range',414],['jjk-ryu-spread',3,'spreadStep',.8],['jjk-ryu-spread',5,'baseCount',4],
  ['jjk-ryu-impact',3,'radius',108],['jjk-ryu-impact',5,'range',330],['jjk-ryu-maximum',3,'firstTargetBonus',.15],
+ ['jjk-ryu-maximum',1,'barrageBase',4],['jjk-ryu-maximum',3,'barrageBase',6],['jjk-ryu-maximum',5,'barrageBase',8],
+ ['jjk-ryu-maximum',1,'radius',72],['jjk-ryu-maximum',3,'radius',96],['jjk-ryu-maximum',5,'radius',128],
+ ['jjk-ryu-maximum',1,'range',760],['jjk-ryu-maximum',3,'range',880],['jjk-ryu-maximum',5,'range',1040],
  ['jjk-uro',3,'arc',1.3],['jjk-uro',5,'skyKnock',44],['jjk-uro-thin-ice',3,'arc',2.1],['jjk-uro-thin-ice',5,'thinSlow',.25],
  ['jjk-uro-screen',3,'threatHorizon',.8],['jjk-uro-screen',3,'reflectRefresh',true],['jjk-uro-screen',5,'counterBonus',.15],['jjk-uro-collapse',3,'radius',126.5],['jjk-uro-collapse',5,'collapseSlow',.6]
 ];
 for(const [id,r,key,value] of rankCases){const actual=G.Moves.instance(id,r)[key];if(typeof value==='number')assert(Math.abs(actual-value)<1e-9,id+':'+key);else assert.equal(actual,value,id+':'+key);}
+p=hero(30014,['jjk-ryu-maximum']);b=growth.quantityBenefit(p);
+assert.equal(b.consumers[0].before['追加重砲'],4);assert.equal(b.consumers[0].after['追加重砲'],5,'first quantity pick must add a real heavy shot');
+assert(growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'),'maximum-only build lost its quantity card');
+p.moves[0]=G.Moves.instance('jjk-ryu-maximum',5);b=growth.quantityBenefit(p);
+assert.equal(b.consumers[0].before['追加重砲'],8);assert.equal(b.consumers[0].after['追加重砲'],10);
+p.quantityPicks=p.quantityBonus=4;assert.equal(growth.quantityBenefit(p).eligible,false,'barrage-only quantity should stop at sixteen followups');
 // Native upgrade application must install the same functional rank, not only instance previews.
 const live=G.Moves.instance('jjk-ryu-spread');G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.spreadStep,.8);
 G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.baseCount,4);

@@ -16,6 +16,7 @@
     const mode=m.digiMode||'',i=rank(m)-1;
     if(customConsumers.has(mode))return customConsumers.get(mode)(p,m);
     if(mode==='jjk-ryu-spread')return {砲道:count(p,m.baseCount||3,9)};
+    if(mode==='jjk-ryu-maximum')return {追加重砲:count(p,m.barrageBase??[4,5,6,7,8][i],16)};
     if(m.jujutsuSkill)return null;
     if(mode==='shadow-clones')return {影分身:count(p,G.NarutoClones?.config.counts[i]||[8,10,12,14,16][i])};
     if(mode==='chidori-chain')return {追擊:count(p,G.NarutoChidori?.config.counts[i]||[5,10,15,18,22][i])};

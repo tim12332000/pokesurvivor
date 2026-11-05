@@ -30,7 +30,7 @@
       ['jjk-ryu','jjk-ryu','花崗岩砲','psychic',1,1.8,42,360,14,'蓄力0.22秒，射出長距窄幅貫穿砲；學會全力砲後，每次真正命中蓄一格能量。'],
       ['jjk-ryu-spread','jjk-ryu-spread','散射咒力砲','psychic',3,5,30,200,12,'蓄力0.35秒，向短距廣角發射三顆砲彈；有飛行時間，碰到首個敵人或障礙即停止。數量強化增加砲彈，同次不重複直擊同一敵人。'],
       ['jjk-ryu-impact','jjk-ryu-impact','咒力爆破','psychic',6,7,100,300,90,'優先鎖定最密集的可達敵群，預告0.45秒後在固定爆點範圍引爆；敵人可離開爆點。'],
-      ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,5.4,200,450,26,'普通砲命中三次蓄滿且冷卻完成後，接續全力砲；基礎冷卻5.4秒。鎖定方向蓄力0.75秒後長距寬幅貫穿，消耗蓄能並恢復0.7秒；仍可走位調整砲線。']
+      ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,5.4,200,760,72,'三次普通砲命中蓄滿後，蓄力0.75秒轟出巨型貫穿主砲（基傷×1.5），再連射4／5／6／7／8輪重砲（每輪×0.55）。數量卡增加連轟，最多16輪追加；射程760→1040、主砲半徑72→128，連轟時仍可移動。']
     ]],
     [30015,[
       ['jjk-uro','uro-sky','空面打擊','psychic',1,1.25,20,125,90,'近身掌擊扭曲空面，推開前方125內普通敵人；強敵不被搬動。'],
@@ -48,7 +48,7 @@
     'jjk-ryu':{third:{targetPolicy:'elite'},fifth:{range:414},text3:'優先可達精英，無精英才選最近敵人',text5:'穿線射程360→414'},
     'jjk-ryu-spread':{base:{baseCount:3,spreadStep:.65},third:{spreadStep:.8},fifth:{baseCount:4},text3:'相鄰砲彈角度0.65→0.80弧度',text5:'基礎砲彈3→4，數量乘算後最多9顆'},
     'jjk-ryu-impact':{base:{impactTargetPolicy:'cluster'},third:{radius:1.2},fifth:{range:330},text3:'爆心半徑90→108',text5:'群聚索敵射程300→330，爆點仍於起手鎖定'},
-    'jjk-ryu-maximum':{third:{firstTargetBonus:.15},fifth:{range:495},text3:'砲線上最近的首個有效目標傷害+15%',text5:'全力砲射程450→495，砲幅不變'},
+    'jjk-ryu-maximum':{base:{barrageBase:4},third:{firstTargetBonus:.15},fifth:{range:1040},text3:'追加6輪重砲；主砲半徑96、射程880，首個目標傷害+15%',text5:'追加8輪重砲；主砲半徑128、射程1040，數量可強化至16輪'},
     'jjk-uro':{base:{skyKnock:30},third:{arc:1.3/1.1},fifth:{skyKnock:44},text3:'近身掌擊角1.10→1.30弧度',text5:'普通敵人推退30→44，特殊敵人不搬動'},
     'jjk-uro-thin-ice':{third:{arc:2.1/1.9},fifth:{thinSlow:.25,thinSlowDuration:.45},text3:'碎面扇角1.9→2.1弧度',text5:'普通敵人減速25%持續0.45秒，首領僅弱減速'},
     'jjk-uro-screen':{base:{threatOnly:true,threatHorizon:.55},third:{threatHorizon:.8,reflectRefresh:true},fifth:{counterBonus:.15,counterDuration:3},text3:'預測0.80秒敵彈；首次反射刷新宇守羅彈，三秒內優先反擊射程內可達的原射手',text5:'真正反射後3秒內，下次宇守羅彈傷害+15%；每幕一次'},
@@ -63,6 +63,13 @@
       const growth=functional[id];
       for(const [index,changes,text] of [[1,growth.third,growth.text3],[3,growth.fifth,growth.text5]]){
         Object.assign(ups[index].m,changes);ups[index].t+='；'+text;
+      }
+      if(mode==='jjk-ryu-maximum'){
+        const radii=[72,84,96,108,128],ranges=[760,820,880,940,1040];
+        for(let i=0;i<ups.length;i++){
+          Object.assign(ups[i].m,{radius:radii[i+1]/radii[i],width:radii[i+1]/radii[i],range:ranges[i+1],barrageBase:5+i});
+          ups[i].t+=`；追加${5+i}輪重砲，主砲半徑${radii[i+1]}、射程${ranges[i+1]}`;
+        }
       }
       const def={id,name,icon:id,type,kind:dmg?'melee':'buff',digiMode:mode,digimonSkill:true,narutoSkill:true,jujutsuSkill:true,
         passive:true,autoCast:true,learnLevel,cd,dmg,range,radius,width:radius*2,speed:520,life:1,count:1,arc:1.6,pierce:0,

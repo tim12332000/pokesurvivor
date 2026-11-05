@@ -97,7 +97,10 @@ def phase_checks(frame,out,slug):
         data=frame.evaluate("""({skill,release})=>{const A=JAcceptance,p=A.p();A.reset();const m=A.fixture(skill),e=A.spawn(80,0);p.target=e;A.cast(skill);
           A.advance(release-.01);const before={loss:e.maxHp-e.hp,pose:A.pose()};A.assert(before.loss===0,'damage before hit frame '+skill);
           A.advance(.02);const hit={loss:e.maxHp-e.hp,pose:A.pose()};A.assert(hit.loss>0,'missing release-frame damage '+skill);
-          A.advance(.13);const recover={loss:e.maxHp-e.hp,pose:A.pose()};A.assert(recover.loss===hit.loss,'recoil dealt duplicate damage '+skill);
+          // Maximum now has a real follow-up at +.12; sample its first recoil
+          // before that separate contact rather than treating a legal volley
+          // as duplicate damage.
+          A.advance(skill==='jjk-ryu-maximum'?.06:.13);const recover={loss:e.maxHp-e.hp,pose:A.pose()};A.assert(recover.loss===hit.loss,'recoil dealt duplicate damage '+skill);
           A.assert(JSON.stringify(before.pose.calls)!==JSON.stringify(hit.pose.calls),'windup and hit reuse exact physical frame '+skill);
           if(skill!=='jjk-uro')A.assert(JSON.stringify(hit.pose.calls)!==JSON.stringify(recover.pose.calls),'hit and recovery reuse exact physical frame '+skill);
           return {skill,release,before,hit,recover};}""",{'skill':skill,'release':release})

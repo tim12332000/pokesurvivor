@@ -90,7 +90,7 @@ def main():
                     frame = base.boot(page, dex, 'mobile' if mobile else 'desktop')
                     fixture = frame.evaluate(SETUP)
                     phase = {'yuta': "G.JujutsuYuta.inspect(G.Game.player)?.rika?.phase==='strike'",
-                             'ryu': 'G.JjkRyu.stateFor(G.Game.player)?.scatter.some(s=>s.distance>25)',
+                             'ryu': "G.JjkRyu.stateFor(G.Game.player)?.action?.mode==='jjk-ryu-maximum'&&G.JjkRyu.stateFor(G.Game.player)?.action?.released",
                              'uro': "G.JjkUro.stateFor(G.Game.player)?.screen&&G.JjkUro.stateFor(G.Game.player)?.pose?.mode!=='uro-screen'&&G.JjkUro.stateFor(G.Game.player)?.pose"}[slug]
                     frame.wait_for_function(phase, polling=10, timeout=25000)
                     frame.evaluate('JAcceptance.pause()')

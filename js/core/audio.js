@@ -417,6 +417,12 @@ G.Audio = (() => {
     shot(o) {
       const f = SHOT_PITCH[o.type] || 600;
       if (o.kind === 'melee') hiss(0.12, 0.13, 'bandpass', 600, 2800, 0, 1.4);
+      else if (o.kind === 'cannon') {
+        const main=!!o.main;
+        tone('sine',main?150:130,main?32:48,main?.40:.16,main?.14:.07);
+        hiss(main?.38:.16,main?.10:.055,'lowpass',main?2200:1800,main?220:300);
+        if(main)tone('sawtooth',700,80,.055,.04);
+      }
       else if (o.kind === 'beam') { tone('sawtooth', f * 0.6, f * 0.35, 0.3, 0.05); hiss(0.25, 0.04, 'bandpass', f * 2, f, 0, 3); }
       else if (o.kind === 'nova') { hiss(0.2, 0.1, 'lowpass', 2400, 300); tone('sine', 140, 60, 0.16, 0.12); }
       else if (o.kind === 'aura') { tone('sine', f * 0.5, f * 0.55, 0.25, 0.04); tone('sine', f * 0.75, f * 0.8, 0.25, 0.03); }
