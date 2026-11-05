@@ -26,7 +26,7 @@ CHECK = r"""() => {
  function casts(kind){return Y.inspect(p)?.casts[kind]||0;}
  function crowd(){return [A.spawn(125,0),A.spawn(110,65),A.spawn(100,-65)];}
 
- let m=setup(['blade','rika']),near=A.spawn(70,0),far=A.spawn(240,0);
+ let m=setup(['blade','rika']),near=A.spawn(70,0),far=A.spawn(360,0);
  const nearHits=A.watch(near),farHits=A.watch(far);m.blade.t=m.rika.t=0;tick();
  assert(Y.inspect(p).rika.tx>150,'Rika copied the blade nearest-target job');
  A.advance(.85,true);

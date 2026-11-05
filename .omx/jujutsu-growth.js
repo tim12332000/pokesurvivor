@@ -17,6 +17,16 @@
     if(customConsumers.has(mode))return customConsumers.get(mode)(p,m);
     if(mode==='jjk-ryu-spread')return {砲道:count(p,m.baseCount||3,9)};
     if(mode==='jjk-ryu-maximum')return {追加重砲:count(p,m.barrageBase??[4,5,6,7,8][i],16)};
+    if(mode==='yuta-rika'){
+      const config=G.Jujutsu.power.yuta,base=config.rikaBases[i];
+      return {協擊拳數:count(p,base,config.rikaCap),顯現拳數:count(p,base*2,config.fullCap)};
+    }
+    if(mode==='uro-thin-ice'||mode==='uro-collapse')return {裂面波次:count(p,G.Jujutsu.power.uro.waveBases[i],G.Jujutsu.power.uro.waveCap)};
+    if(mode==='uro-screen'){
+      const config=G.Jujutsu.power.uro;
+      return {反射容量:count(p,config.screenBudgets[i],config.screenCap),反擊波次:count(p,config.waveBases[i],config.waveCap)};
+    }
+    if(mode==='uro-echo')return {殘響次數:count(p,G.Jujutsu.power.uro.echoBases[i],G.Jujutsu.power.uro.echoCap)};
     if(m.jujutsuSkill)return null;
     if(mode==='shadow-clones')return {影分身:count(p,G.NarutoClones?.config.counts[i]||[8,10,12,14,16][i])};
     if(mode==='chidori-chain')return {追擊:count(p,G.NarutoChidori?.config.counts[i]||[5,10,15,18,22][i])};
@@ -90,7 +100,7 @@
     else return {id,eligible:true,text:''};
     const eligible=Number.isFinite(before)&&Number.isFinite(after)&&after>before;
     // CD benefits are a reduction, not an increase.
-    const extra=id==='cd'?'；就緒仍可能等待動作'+(p.moves?.some(m=>m.id==='jjk-yuta-manifest')?'；完全顯現僅縮恢復段，有效期仍6秒':''):'';
+    const extra=id==='cd'?'；就緒仍可能等待動作'+(p.moves?.some(m=>m.id==='jjk-yuta-manifest')?'；完全顯現僅縮恢復段，有效期仍8秒':''):'';
     return {id,eligible:id==='cd'?after<before:eligible,before,after,text:`${label} ${fmt(before)}→${fmt(after)}${extra}`};
   }
   function preview(p,card){

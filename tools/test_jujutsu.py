@@ -62,7 +62,7 @@ PROGRESSION = r"""slug => {
  const A=JAcceptance,p=A.p(),prefix='jjk-'+slug,ids=Object.keys(G.Moves.BY_ID).filter(id=>id===prefix||id.startsWith(prefix+'-'));
  A.assert(ids.length>=3,'fewer than three skills '+ids);A.assert(p.moves.length===1&&p.moves[0].id===prefix,'unexpected starter '+p.moves.map(m=>m.id));
  const out={starter:p.moves[0].id,skills:ids,levels:[]};
- for(const level of [1,2,3,5,6,8,9]){p.level=level;const pool=G.Moves.poolFor(p.mon),cards=G.LevelUp.offer(p,100);
+ for(const level of [1,2,3,5,6,8,9,11,12]){p.level=level;const pool=G.Moves.poolFor(p.mon),cards=G.LevelUp.offer(p,100);
   for(const id of ids){const expected=level>=G.Moves.BY_ID[id].learnLevel;A.assert(pool.includes(id)===expected,'wrong level gate '+id+' at '+level);
     if(id!==prefix)A.assert(cards.some(c=>c.key==='new:'+id)===expected,'wrong learn card gate '+id+' at '+level);}
   A.assert(!pool.some(id=>id.startsWith('jjk-')&&!ids.includes(id)),'foreign JJK pool');
@@ -195,7 +195,7 @@ def combat(page,frame,label,slug):
                 ('jjk-ryu-maximum', [[100,0],[200,0],[320,0]], [170,300], 1)],
         'uro': [('jjk-uro', [[70,0],[100,25],[115,-25]], [-250,0], .6),
                 ('jjk-uro-thin-ice', [[90,0],[145,55],[145,-55]], [-250,0], .7),
-                ('jjk-uro-collapse', [[180,0],[210,35],[210,-35]], [410,0], .9)]}
+                 ('jjk-uro-collapse', [[180,0],[210,35],[210,-35]], [1000,400], .9)]}
     results=[]
     for skill,inside,outside,seconds in cases[slug]:
         print(label,slug,skill,flush=True)
@@ -249,7 +249,7 @@ def special(frame,slug,label):
             A.cast('jjk-yuta');A.advance(.3);return e.maxHp-e.hp;}
           const base=blade(0),rank1=blade(1),rank5=blade(5);A.assert(rank1>base&&rank5>rank1,'manifest rank damage did not scale');out.damage={base,rank1,rank5};
           A.reset();A.fixture('jjk-yuta-manifest');const e=A.spawn(150,0);p.target=e;const before={atk:p.atk,maxHp:p.maxHp};
-          A.cast('jjk-yuta-manifest');A.assert(Y.manifested(p),'manifest never entered');A.advance(6.1);
+          A.cast('jjk-yuta-manifest');A.assert(Y.manifested(p),'manifest never entered');A.advance(8.1);
           A.assert(!Y.manifested(p)&&p.atk===before.atk&&p.maxHp===before.maxHp,'manifest expiration/stat drift');out.expiry={before,after:{atk:p.atk,maxHp:p.maxHp}};
           A.reset();A.fixture('jjk-yuta-speech');const normal=A.spawn(100,0),boss=A.spawn(120,30,'boss');normal.spd=boss.spd=60;p.target=normal;
           A.cast('jjk-yuta-speech');A.advance(.3);const x=[normal.x,boss.x];A.resume();try{normal.update(.1,p,0);boss.update(.1,p,0)}finally{A.pause()}

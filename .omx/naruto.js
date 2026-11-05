@@ -266,13 +266,13 @@
     30007:['砂術防守','砂盾護身、砂兵協戰，掌控周圍戰場。'],
     30009:['忍具遠攻','連投忍具、鋪設陷阱，以卷軸展開大範圍攻勢。'],
     30010:['六道協同','天道引斥控場，五道分工護衛，以通靈、飛彈與地爆天星壓制敵群。'],
-    30013:['近戰・里香協同','刀守近身，里香優先遠擊；咒言等近敵，遇敵群或強敵才完全顯現。'],
+    30013:['雙人連打・里香共鳴','里香常駐追擊，顯現巨大化接雙人連打；十二級可學協戰共鳴終擊。'],
     30014:['穿線・蓄能爆發','普通砲命中蓄能，接續全力砲；短距散射開路，固定爆破對付敵群。'],
-    30015:['推開・碎面・反射','近掌推開、中距碎面、遠處群爆；天空幕只在敵彈來襲時反應。']
+    30015:['巨幅裂面・反擊連鎖','連續碎面與巨型裂區壓制敵潮，真反射接獨立反擊；十二級可學裂面殘響。']
   };
   const learning=document.createElement('div');learning.className='launch-kit';learning.hidden=true;
   learning.setAttribute('aria-label','特色技能學習進程');detail.querySelector('.launch-description').after(learning);
-  const kitLabels={30013:['刀斬','里香','咒言','顯現'],30014:['額砲','散射','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落']};
+  const kitLabels={30013:['刀斬','里香','咒言','顯現','共鳴'],30014:['額砲','散射','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落','殘響']};
   let learningDex;
   let previewDex;
   const syncQuickPick=()=>{
@@ -293,6 +293,7 @@
     const kit=G.Jujutsu?.kits.find(([dex])=>dex===+selected);
     learning.hidden=!kit;
     if(kit&&learningDex!==selected){
+      learning.dataset.skillCount=String(kit[1].length);learning.style.setProperty('--kit-columns',String(kit[1].length));
       learning.replaceChildren(...kit[1].map(([id,,,,level],index)=>{
         const cell=document.createElement('span'),label=document.createElement('b'),stage=document.createElement('small');
         cell.title=`Lv.${level} ${G.Moves.BY_ID[id].name}`;cell.innerHTML=G.Icons.html('move:'+id,22);

@@ -67,6 +67,18 @@
   function skillState(player,move){
     if(!move?.id?.startsWith('jjk-'))return null;
     const api=player.dex===30013?G.JujutsuYuta:player.dex===30014?G.JjkRyu:G.JjkUro;
+    if(player.dex===30013){
+      const s=api?.stateFor?.(player);
+      if(move.id==='jjk-yuta-manifest'&&s?.manifestUntil>s.clock){const left=s.manifestUntil-s.clock;return {label:'顯現 '+left.toFixed(1)+'s',fraction:left/G.Jujutsu.power.yuta.manifestDuration};}
+      if(move.id==='jjk-yuta-rika'&&s?.rika){const r=s.rika;return {label:r.phase==='strike'?(r.full?'雙人 ':'協擊 ')+r.strikeIndex+'/'+r.strikeCount:r.phase==='return'?'回身中':'追擊中',fraction:r.phase==='strike'?1-r.strikeIndex/r.strikeCount:0};}
+      if(move.id==='jjk-yuta-resonance')return {label:s?.action?.kind==='resonance'?'共鳴終擊':s?.pendingResonance?.length?'待共鳴':'終擊連動',fraction:0};
+    }
+    if(player.dex===30015){
+      const field=api?.effects?.findLast(b=>b.owner===player&&b.id===move.id);
+      if(field&&move.id!=='jjk-uro')return {label:(field.mode==='uro-counter'?'反擊 ':field.mode==='uro-echo'?'殘響 ':'裂波 ')+Math.max(0,field.pulseIndex+1)+'/'+field.pulseCount,fraction:1-Math.max(0,field.pulseIndex+1)/field.pulseCount};
+      if(move.id==='jjk-uro-screen'){const screen=api?.stateFor?.(player)?.screen;if(screen)return {label:'反射 '+screen.budget,fraction:Math.min(1,screen.budget/Math.max(1,screen.initialBudget??api.fractureProfile(player,move).budget))};}
+      if(move.id==='jjk-uro-echo')return {label:'殘響連動',fraction:0};
+    }
     if(move.id==='jjk-ryu-maximum'){
       const barrage=api?.pose?.(player);
       if(barrage?.mode==='jjk-ryu-maximum')return barrage.released?
@@ -82,7 +94,7 @@
       return {label,fraction:status.state==='charging'?1-(status.coreCharge||0)/(status.chargeRequired||3):status.state==='active'?remaining/(move.duration||6):Math.min(1,remaining/Math.max(.05,(move.recovery||move.cd)*player.cdMul))};}
     const s=api?.stateFor(player),action=api?.pose?.(player)||api?.poseFor?.(player)||s?.action;
     const manifest=player.dex===30013?G.JujutsuYuta.inspect(player)?.manifestRemaining||0:0;
-    if(move.id==='jjk-yuta-manifest'&&manifest>0)return {label:'顯現 '+manifest.toFixed(1)+'s',fraction:manifest/6};
+    if(move.id==='jjk-yuta-manifest'&&manifest>0)return {label:'顯現 '+manifest.toFixed(1)+'s',fraction:manifest/8};
     if(move.id==='jjk-yuta-rika'&&s?.rika)return {label:'協擊中',fraction:0};
     if(action&&(action.m?.id||action.id)===move.id)return {label:'施放中',fraction:0};
     if(move.t>0)return {label:(move.id==='jjk-yuta-manifest'?'恢復 ':'')+move.t.toFixed(1)+'s',fraction:Math.min(1,move.t/Math.max(.05,move.cd*player.cdMul))};

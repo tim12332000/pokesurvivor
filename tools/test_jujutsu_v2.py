@@ -146,7 +146,7 @@ def semantic_contacts(frame,out,slug):
 def manifestation(frame,out):
     frame.evaluate("""()=>{const A=JAcceptance,p=A.p();A.reset();A.fixture('jjk-yuta-manifest');p.target=A.spawn(100,0);A.cast('jjk-yuta-manifest');}""")
     frames=[];previous=0
-    for at in [.7,3,5.9]:
+    for at in [.7,4,7.9]:
         frame.evaluate('dt=>JAcceptance.advance(dt)',at-previous);previous=at
         result=frame.evaluate("""()=>{const A=JAcceptance,p=A.p(),Y=G.JujutsuYuta,s=Y.inspect(p);A.assert(s.companion?.visible,'manifested companion vanished between attacks');
           const c=document.createElement('canvas');c.width=600;c.height=400;const ctx=c.getContext('2d'),calls=[],draw=ctx.drawImage.bind(ctx);

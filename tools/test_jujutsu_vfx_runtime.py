@@ -81,9 +81,17 @@ def main():
     page.screenshot(path=str(OUT/(label+'-moving-windup.png')))
     f.evaluate('JAcceptance.advance(.10)');wait_render(page)
     contact=f.evaluate('G.JujutsuVFX.inspect()');page.screenshot(path=str(OUT/(label+'-moving-contact.png')))
+    first_mark=f.evaluate("()=>{const m=G.JjkUro.effects.find(b=>b.mode==='uro-thin-ice').contactMarks[0];return {x:m.x,y:m.y,aim:m.aim,range:m.range}}")
     f.evaluate('JAcceptance.p().x+=55;JAcceptance.p().y-=20;JAcceptance.advance(.17)');wait_render(page)
+    between=f.evaluate('G.JujutsuVFX.inspect()')
+    frozen_mark=f.evaluate("()=>{const m=G.JjkUro.effects.find(b=>b.mode==='uro-thin-ice').contactMarks[0];return {x:m.x,y:m.y,aim:m.aim,range:m.range}}")
+    assert frozen_mark==first_mark,'already resolved fracture contact followed caster'
+    assert abs(between['folds'][0]['rect']['x']-contact['folds'][0]['rect']['x']-55)<1e-6,'next live fracture stopped following body'
+    page.screenshot(path=str(OUT/(label+'-next-wave-windup.png')))
+    f.evaluate('JAcceptance.advance(.96)');wait_render(page);final_contact=f.evaluate('G.JujutsuVFX.inspect()')
+    f.evaluate('JAcceptance.p().x+=20;JAcceptance.p().y+=15;JAcceptance.advance(.03)');wait_render(page)
     settled=f.evaluate('G.JujutsuVFX.inspect()')
-    assert settled['folds'][0]['rect']==contact['folds'][0]['rect'],'contact fold dragged after caster'
+    assert settled['folds'][0]['rect']==final_contact['folds'][0]['rect'],'completed final fracture followed caster'
     page.screenshot(path=str(OUT/(label+'-moving-recovery.png')))
     f.evaluate("G.JujutsuVFX.enabled=false;VFXTrace.captures=[];VFXTrace.composites=[];VFXTrace.proceduralFills=0")
     f.evaluate('()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');wait_render(page)

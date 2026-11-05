@@ -26,7 +26,8 @@ CASE=r"""({route,budget,threat,seed,seconds})=>{
  try{
   const records=G.TrialBuild.apply(p,route,budget);assert(records.length===budget,'recipe omitted investments');assert(p.level===budget+1,'recipe level/budget mismatch');
   assert(records.every((r,i)=>r.level===i+2),'non-native investment levels');
-  const learned=records.filter(r=>r.key.startsWith('new:')).length;assert(learned===3,'missing or free learned skills in recipe '+learned);
+  const learned=records.filter(r=>r.key.startsWith('new:')).length,expectedLearned=G.Jujutsu.kits.find(([dex])=>dex===p.dex)[1].filter(row=>row[4]<=p.level).length-1;
+  assert(learned===expectedLearned,'missing or free learned skills in recipe '+learned);
   const loadout=p.moves.map(m=>({id:m.id,lvl:m.lvl,dmg:m.dmg,range:m.range,radius:m.radius,cd:m.cd}));
   const ignored=new Set(['id','name','desc','source_url','icon','type','kind','digiMode','learnLevel','lvl','dmg','cd','t','dealt','since','castAt','maxLvl']);
   const behavior=p.moves.map(m=>({id:m.id,fields:Object.fromEntries(Object.entries(m).filter(([k,v])=>!ignored.has(k)&&['number','boolean','string'].includes(typeof v)))}));

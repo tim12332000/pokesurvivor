@@ -89,9 +89,9 @@ def main():
                     page.on('response', lambda r: report['missing'].append(r.url) if r.status >= 400 else None)
                     frame = base.boot(page, dex, 'mobile' if mobile else 'desktop')
                     fixture = frame.evaluate(SETUP)
-                    phase = {'yuta': "G.JujutsuYuta.inspect(G.Game.player)?.rika?.phase==='strike'",
+                    phase = {'yuta': "G.JujutsuYuta.inspect(G.Game.player)?.rika?.strikeIndex>0",
                              'ryu': "G.JjkRyu.stateFor(G.Game.player)?.action?.mode==='jjk-ryu-maximum'&&G.JjkRyu.stateFor(G.Game.player)?.action?.released",
-                             'uro': "G.JjkUro.stateFor(G.Game.player)?.screen&&G.JjkUro.stateFor(G.Game.player)?.pose?.mode!=='uro-screen'&&G.JjkUro.stateFor(G.Game.player)?.pose"}[slug]
+                             'uro': "G.JjkUro.stateFor(G.Game.player)?.screen&&G.JjkUro.effects.some(b=>b.owner===G.Game.player&&b.mode==='uro-counter'&&b.pulseIndex>=0)&&G.JjkUro.stateFor(G.Game.player)?.pose?.mode!=='uro-screen'"}[slug]
                     frame.wait_for_function(phase, polling=10, timeout=25000)
                     frame.evaluate('JAcceptance.pause()')
                     page.wait_for_timeout(40)

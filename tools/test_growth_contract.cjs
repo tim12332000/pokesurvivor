@@ -20,28 +20,35 @@ const load=file=>vm.runInContext(fs.readFileSync(path.join(root,file),'utf8'),co
 load('js/core/util.js');load('js/data/moves.js');load('js/systems/levelup.js');load('.omx/naruto-training.js');load('.omx/quantity.js');load('.omx/jujutsu.js');load('.omx/jujutsu-growth.js');
 const growth=G.JujutsuGrowth;
 function hero(dex,ids){const p=G.Game.player=new Player(G.DEX_BY[dex]);p.level=20;for(const id of ids)p.addMove(id);return p;}
-let p=hero(30013,['jjk-yuta','jjk-yuta-rika']);
-assert.equal(growth.quantityBenefit(p).eligible,false,'Yuta cannot use Quantity');
+let p=hero(30013,['jjk-yuta']);
+assert.equal(growth.quantityBenefit(p).eligible,false,'a lone sword is not a count consumer');
 assert(!growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'),'native card pool leaked no-op Quantity');
 assert(!growth.legalOffers(p,100).some(c=>c.key==='stat:heal'),'full-health immediate heal leaked');
 p.hp=80;assert(growth.legalOffers(p,100).some(c=>c.key==='stat:heal'),'injured player cannot choose heal');
 // Having a card-created clone is not a count consumer.
 G.SelfClones.actors=()=>[{sourceOwner:p}];assert.equal(growth.quantityBenefit(p).eligible,false);G.SelfClones.actors=()=>[];
+p.addMove('jjk-yuta-rika');let yutaBenefit=growth.quantityBenefit(p);
+assert.equal(yutaBenefit.consumers[0].before['協擊拳數'],4);assert.equal(yutaBenefit.consumers[0].after['協擊拳數'],5);
+assert.equal(yutaBenefit.consumers[0].before['顯現拳數'],8);assert.equal(yutaBenefit.consumers[0].after['顯現拳數'],10);
+assert(growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'),'Rika real combos did not enable quantity');
+p.quantityPicks=p.quantityBonus=7;assert.equal(growth.quantityBenefit(p).eligible,false,'Rika count card offered after both caps');
 p=hero(30014,['jjk-ryu','jjk-ryu-spread']);
 let b=growth.quantityBenefit(p);assert(b.eligible);assert.equal(b.consumers[0].before['砲道'],3);assert.equal(b.consumers[0].after['砲道'],3);assert.equal(b.consumers[0].nextChangeAt,2);
 p.quantityPicks=p.quantityBonus=1;b=growth.quantityBenefit(p);assert.equal(b.consumers[0].after['砲道'],4);
 p.quantityPicks=p.quantityBonus=6;assert.equal(growth.quantityBenefit(p).eligible,false,'all Ryu count consumers capped at9');
 assert(!growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'));
 const rankCases=[
- ['jjk-yuta',3,'relayMarkDuration',1.2],['jjk-yuta',5,'bladeArc',2.5],['jjk-yuta-rika',3,'rikaSpeed',650],['jjk-yuta-rika',5,'radius',126],
- ['jjk-yuta-speech',5,'range',184],['jjk-yuta-manifest',3,'recovery',10.5],['jjk-yuta-manifest',5,'recovery',9],
+ ['jjk-yuta',3,'relayMarkDuration',1.2],['jjk-yuta',5,'bladeArc',2.5],['jjk-yuta-rika',3,'rikaSpeed',760],['jjk-yuta-rika',5,'radius',250],
+ ['jjk-yuta-rika',5,'range',600],['jjk-yuta-rika',3,'comboBase',6],['jjk-yuta-speech',5,'range',184],['jjk-yuta-manifest',3,'recovery',7],['jjk-yuta-manifest',5,'recovery',6],
+ ['jjk-yuta-manifest',1,'duration',8],['jjk-yuta-resonance',3,'radius',300],['jjk-yuta-resonance',5,'radius',360],
  ['jjk-ryu',3,'targetPolicy','elite'],['jjk-ryu',5,'range',414],['jjk-ryu-spread',3,'spreadStep',.8],['jjk-ryu-spread',5,'baseCount',4],
  ['jjk-ryu-impact',3,'radius',108],['jjk-ryu-impact',5,'range',330],['jjk-ryu-maximum',3,'firstTargetBonus',.15],
  ['jjk-ryu-maximum',1,'barrageBase',4],['jjk-ryu-maximum',3,'barrageBase',6],['jjk-ryu-maximum',5,'barrageBase',8],
  ['jjk-ryu-maximum',1,'radius',72],['jjk-ryu-maximum',3,'radius',96],['jjk-ryu-maximum',5,'radius',128],
  ['jjk-ryu-maximum',1,'range',760],['jjk-ryu-maximum',3,'range',880],['jjk-ryu-maximum',5,'range',1040],
- ['jjk-uro',3,'arc',1.3],['jjk-uro',5,'skyKnock',44],['jjk-uro-thin-ice',3,'arc',2.1],['jjk-uro-thin-ice',5,'thinSlow',.25],
- ['jjk-uro-screen',3,'threatHorizon',.8],['jjk-uro-screen',3,'reflectRefresh',true],['jjk-uro-screen',5,'counterBonus',.15],['jjk-uro-collapse',3,'radius',126.5],['jjk-uro-collapse',5,'collapseSlow',.6]
+ ['jjk-uro',3,'arc',1.8],['jjk-uro',5,'skyKnock',44],['jjk-uro-thin-ice',3,'arc',2.9],['jjk-uro-thin-ice',5,'thinSlow',.25],
+ ['jjk-uro-screen',3,'threatHorizon',.8],['jjk-uro-screen',3,'reflectBudget',20],['jjk-uro-screen',5,'counterBase',8],['jjk-uro-collapse',3,'radius',270],['jjk-uro-collapse',5,'collapseSlow',.6],
+ ['jjk-uro-echo',3,'echoBase',3],['jjk-uro-echo',5,'echoBase',4],['jjk-uro-screen',5,'duration',4.5]
 ];
 for(const [id,r,key,value] of rankCases){const actual=G.Moves.instance(id,r)[key];if(typeof value==='number')assert(Math.abs(actual-value)<1e-9,id+':'+key);else assert.equal(actual,value,id+':'+key);}
 p=hero(30014,['jjk-ryu-maximum']);b=growth.quantityBenefit(p);
@@ -50,6 +57,15 @@ assert(growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'),'maximum-only 
 p.moves[0]=G.Moves.instance('jjk-ryu-maximum',5);b=growth.quantityBenefit(p);
 assert.equal(b.consumers[0].before['追加重砲'],8);assert.equal(b.consumers[0].after['追加重砲'],10);
 p.quantityPicks=p.quantityBonus=4;assert.equal(growth.quantityBenefit(p).eligible,false,'barrage-only quantity should stop at sixteen followups');
+p=hero(30015,['jjk-uro-thin-ice','jjk-uro-screen']);b=growth.quantityBenefit(p);
+assert.equal(b.consumers.find(c=>c.id==='jjk-uro-thin-ice').after['裂面波次'],5);
+const screen=b.consumers.find(c=>c.id==='jjk-uro-screen');assert.equal(screen.before['反射容量'],12);assert.equal(screen.after['反射容量'],15);assert.equal(screen.after['反擊波次'],5);
+p.quantityPicks=p.quantityBonus=8;assert.equal(growth.quantityBenefit(p).eligible,false,'all fracture/screen consumers at cap still offered quantity');
+for(const [dex,id] of [[30013,'jjk-yuta-resonance'],[30015,'jjk-uro-echo']]){
+ p=hero(dex,[]);p.level=11;assert(!G.Moves.poolFor(p.mon).includes(id),'fifth skill leaked before level12');
+ p.level=12;const learn=growth.legalOffers(p,100).find(c=>c.key==='new:'+id);assert(learn,'level12 linked skill missing');
+ assert(learn.apply(p)!==false);const linked=p.moves.find(m=>m.id===id);assert(linked.passive&&!linked.autoCast&&!p.slots.length,'linked effect stole a manual slot');
+}
 // Native upgrade application must install the same functional rank, not only instance previews.
 const live=G.Moves.instance('jjk-ryu-spread');G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.spreadStep,.8);
 G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.baseCount,4);

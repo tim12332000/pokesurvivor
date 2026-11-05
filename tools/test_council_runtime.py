@@ -87,7 +87,7 @@ MANIFEST=r"""() => {
  for(const cd of [1,.76*.92**10]){
   A.reset();const m=A.fixture('jjk-yuta-manifest'),e=A.spawn(100,0);p.cdMul=cd;p.target=e;
   A.cast(m.id);assert(Y.manifested(p),'manifest did not start');const initial=m.t;
-  A.advance(6.02,true);assert(!Y.manifested(p),'manifest active period exceeded six seconds');
+  A.advance(8.02,true);assert(!Y.manifested(p),'manifest active period exceeded eight seconds');
   const gap=m.t;assert(gap>0,'manifest became permanent at high CDR');const casts=Y.inspect(p).casts.manifest;
   A.advance(Math.max(.01,gap-.03),true);assert(Y.inspect(p).casts.manifest===casts,'manifest recast before recovery end');
   A.advance(.08,true);assert(Y.inspect(p).casts.manifest===casts&&Y.statusFor(p,m).reason==='encounter','ready manifest was wasted on a lone ordinary enemy');
@@ -117,7 +117,7 @@ FUNCTIONAL=r"""slug => {
   assert(r&&r.tx>55,'Rika ignored marked target for newly closer enemy');out.relayDestination=r.tx;
   const speed=rank=>{A.reset();A.fixture('jjk-yuta-rika',rank);p.target=A.spawn(250,0);A.cast('jjk-yuta-rika');A.advance(.2);return G.JujutsuYuta.inspect(p).rika.x};
   out.travel=[speed(1),speed(3)];assert(out.travel[1]>out.travel[0]*1.15,'Rika rank3 travel speed not consumed');
-  const radius=rank=>{const r=cast('jjk-yuta-rika',rank,()=>[A.spawn(170,0),A.spawn(135,120)],1.5);return r.objects[1].maxHp-r.objects[1].hp};
+  const radius=rank=>{const r=cast('jjk-yuta-rika',rank,()=>[A.spawn(170,0),A.spawn(170,220)],1.5);return r.objects[1].maxHp-r.objects[1].hp};
   out.rikaRadius=[radius(1),radius(5)];assert(out.rikaRadius[0]===0&&out.rikaRadius[1]>0,'Rika rank5 radius not functional');
   const speech=rank=>{const r=cast('jjk-yuta-speech',rank,()=>[A.spawn(100,0),A.spawn(175,0)],.3);return r.objects[1].maxHp-r.objects[1].hp};
   out.speechRadius=[speech(1),speech(5)];assert(out.speechRadius[0]===0&&out.speechRadius[1]>0,'speech rank5 range not functional');
@@ -129,7 +129,7 @@ FUNCTIONAL=r"""slug => {
   A.reset();let m=A.fixture('jjk-ryu',3),near=A.spawn(70,0),elite=A.spawn(170,70,'elite');p.target=near;A.cast(m.id);
   let f=G.JjkRyu.stateFor(p).action;assert(f.tx===elite.x&&f.ty===elite.y,'rank3 beam did not prefer reachable elite');out.elite={tx:f.tx,ty:f.ty};
   const reach=(id,rank,x)=>{A.reset();const m=A.fixture(id,rank);p.target=A.spawn(x,0);A.resume();try{return G.JjkRyu.canCast(p,m)}finally{A.pause()}};
-  out.range=[reach('jjk-ryu',1,400),reach('jjk-ryu',5,400),reach('jjk-ryu-maximum',1,480),reach('jjk-ryu-maximum',5,480)];
+  out.range=[reach('jjk-ryu',1,400),reach('jjk-ryu',5,400),reach('jjk-ryu-maximum',1,900),reach('jjk-ryu-maximum',5,900)];
   assert(out.range.join(',')==='false,true,false,true','rank5 artillery reach not used '+out.range);
   const fan=rank=>{const r=cast('jjk-ryu-spread',rank,()=>[A.spawn(85,0),A.spawn(160*Math.cos(.85),160*Math.sin(.85))],1);return r.objects[1].maxHp-r.objects[1].hp};
   out.spreadArc=[fan(1),fan(3)];assert(out.spreadArc[0]===0&&out.spreadArc[1]>0,'spread rank3 angular coverage unchanged');
@@ -141,25 +141,27 @@ FUNCTIONAL=r"""slug => {
   const first=cast('jjk-ryu-maximum',3,()=>[A.spawn(100,0),A.spawn(200,0)],1);const losses=first.objects.map(e=>e.maxHp-e.hp);assert(losses[0]>losses[1]*1.1&&losses[0]<losses[1]*1.2,'rank3 maximum first-target bonus absent');out.firstTarget=losses;
  }else{
   const arc=(id,rank,a)=>{const d=id==='jjk-uro'?110:150,r=cast(id,rank,()=>[A.spawn(75,0),A.spawn(d*Math.cos(a),d*Math.sin(a))],.6);return r.objects[1].maxHp-r.objects[1].hp};
-  out.skyArc=[arc('jjk-uro',1,.72),arc('jjk-uro',3,.72)];assert(out.skyArc[0]===0&&out.skyArc[1]>0,'rank3 sky arc unchanged');
-  out.thinArc=[arc('jjk-uro-thin-ice',1,1.05),arc('jjk-uro-thin-ice',3,1.05)];assert(out.thinArc[0]===0&&out.thinArc[1]>0,'rank3 thin-ice arc unchanged');
+  out.skyArc=[arc('jjk-uro',1,.98),arc('jjk-uro',3,.98)];assert(out.skyArc[0]===0&&out.skyArc[1]>0,'rank3 sky arc unchanged');
+  out.thinArc=[arc('jjk-uro-thin-ice',1,1.43),arc('jjk-uro-thin-ice',3,1.43)];assert(out.thinArc[0]===0&&out.thinArc[1]>0,'rank3 thin-ice arc unchanged');
   A.reset();A.fixture('jjk-uro',5);const knocks=[],ordinary=A.spawn(80,0),special=A.spawn(110,20,'boss');
   for(const e of [ordinary,special]){const native=e.hurt;e.hurt=function(...args){knocks.push({boss:!!this.boss,knock:args[4]});return native.apply(this,args)}}p.target=ordinary;A.cast('jjk-uro');A.advance(.3);
   assert(knocks.find(k=>!k.boss)?.knock===44&&knocks.find(k=>k.boss)?.knock===0,'rank5 sky push ignored or moved boss');out.skyKnock=knocks;
   const r=cast('jjk-uro-thin-ice',5,()=>[A.spawn(80,0),A.spawn(110,20,'boss')],.36);
   out.thinSlow=r.objects.map(e=>({slow:e.slow,time:e.slowT}));assert(out.thinSlow[0].slow>=.25&&out.thinSlow[1].slow<out.thinSlow[0].slow,'rank5 thin slow/boss resistance absent');
-  const collapse=rank=>{const r=cast('jjk-uro-collapse',rank,()=>[A.spawn(180,0),A.spawn(185,0),A.spawn(180,130)],.7);return r.objects[2].maxHp-r.objects[2].hp};
+  const collapse=rank=>{const r=cast('jjk-uro-collapse',rank,()=>[A.spawn(180,0),A.spawn(185,0),A.spawn(180,250)],.7);return r.objects[2].maxHp-r.objects[2].hp};
   out.collapseRadius=[collapse(1),collapse(3)];assert(out.collapseRadius[0]===0&&out.collapseRadius[1]>0,'rank3 collapse radius unchanged');
   const fifth=cast('jjk-uro-collapse',5,()=>[A.spawn(100,0),A.spawn(120,30,'boss')],.56);out.collapseSlow=fifth.objects.map(e=>({slow:e.slow,time:e.slowT}));
   assert(out.collapseSlow[0].slow===.6&&out.collapseSlow[0].time===.8&&out.collapseSlow[1].slow===.15&&out.collapseSlow[1].time===.45,'rank5 collapse slow/boss timing contract incorrect');
   A.reset();let m=A.fixture('jjk-uro-screen',3);p.target=A.spawn(70,0);A.resume();let noThreat;try{noThreat=G.JjkUro.canCast(p,m)}finally{A.pause()};assert(!noThreat,'rank3 screen wasted on enemy with no incoming projectile');
   G.Projectiles.spawn({x:180,y:0,vx:-200,vy:0,friendly:false,dmg:8,mtype:'psychic',life:2,r:6});A.resume();let threatened;try{threatened=G.JjkUro.canCast(p,m)}finally{A.pause()};assert(threatened,'rank3 screen failed real incoming threat');out.threatOnly={noThreat,threatened};
-  const baseThin=cast('jjk-uro-thin-ice',1,()=>[A.spawn(100,0)],.5);const baseDamage=baseThin.objects[0].maxHp-baseThin.objects[0].hp;
   A.reset();m=A.fixture('jjk-uro-screen',5);p.addMove('jjk-uro-thin-ice');p.target=A.spawn(100,0);G.Projectiles.spawn({x:180,y:0,vx:-200,vy:0,friendly:false,dmg:8,mtype:'psychic',life:2,r:6});A.cast(m.id);
   G.Projectiles.spawn({x:60,y:0,px:120,py:0,vx:-100,vy:0,friendly:false,dmg:7,mtype:'psychic',life:2});A.resume();try{G.JjkUro.intercept()}finally{A.pause()};
-  let s=G.JjkUro.stateFor(p);assert(s.counterBonus===.15,'rank5 actual intercept did not grant one counter bonus');G.Projectiles.clear();A.advance(.45);A.cast('jjk-uro-thin-ice');
-  s=G.JjkUro.stateFor(p);assert(s.counterBonus===0&&s.counterUntil===0,'counter bonus not consumed by next thin ice');const hp=p.target.hp;A.advance(.5);const boosted=hp-p.target.hp;
-  assert(boosted>baseDamage*1.13&&boosted<baseDamage*1.17,'rank5 counter flag did not strengthen actual next hit');out.counterOnce={baseDamage,boosted};
+  const chain=G.JjkUro.effects.find(b=>b.owner===p&&b.mode==='uro-counter'),thin=p.moves.find(m=>m.id==='jjk-uro-thin-ice');
+  assert(chain&&chain.pulseCount===8&&thin.t===999,'rank5 reflection did not create an independent eight-wave counter or refreshed body attack');
+  G.Projectiles.clear();const hp=p.target.hp;A.advance(.25);assert(p.target.hp<hp,'independent counter has no real damage');
+  G.Projectiles.spawn({x:60,y:0,px:120,py:0,vx:-100,vy:0,friendly:false,dmg:7,mtype:'psychic',life:2});A.resume();try{G.JjkUro.intercept()}finally{A.pause()};
+  assert(G.JjkUro.effects.filter(b=>b.owner===p&&b.mode==='uro-counter').length===1,'same screen created repeated counter chains');
+  out.counterOnce={castId:chain.castId,pulses:chain.pulseCount,bodyTimerUnchanged:thin.t===999,damage:hp-p.target.hp};
  }
  return out;
 }"""

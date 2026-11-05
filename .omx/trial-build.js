@@ -38,7 +38,7 @@
   if(params.get('startLevel')!=='20')return;
   const panel=document.createElement('section');panel.id='trial-build-options';
   panel.style.cssText='grid-column:1/-1;margin:10px 0;padding:10px;font-size:11px;border:1px solid #58716a;border-radius:8px;background:#142725;color:#d6e6df';
-  const description=document.createElement('p');description.textContent='試招：20級／四招一階，未配置19次成長。標準配裝：花19次合法選卡，含學招成本。';panel.append(description);
+  const description=document.createElement('p');description.textContent='試招：20級／可學技能一階，未配置19次成長。標準配裝：花19次合法選卡，含學招成本。';panel.append(description);
   const buttons=document.createElement('div');buttons.style.cssText='display:flex;flex-wrap:wrap;gap:5px';panel.append(buttons);
   document.querySelector('.launch-action')?.before(panel);
   function render(){
@@ -48,7 +48,7 @@
     url.searchParams.set('hero',G.Naruto.records.get(dex).slug);
     if(url.href!==location.href)history.replaceState(null,'',url);
     for(const route of ['',...routes[dex],'balanced']){
-      const button=document.createElement('button');button.className='btn small'+(route===current?' gold':'');button.style.minHeight='44px';button.textContent=names[route]||'四招試招';button.setAttribute('aria-pressed',String(route===current));
+      const button=document.createElement('button');button.className='btn small'+(route===current?' gold':'');button.style.minHeight='44px';button.textContent=names[route]||'技能試招';button.setAttribute('aria-pressed',String(route===current));
       button.onclick=()=>{const url=new URL(location.href);if(route)url.searchParams.set('build',route);else url.searchParams.delete('build');history.replaceState(null,'',url);render();};buttons.append(button);
     }
   }

@@ -8,6 +8,7 @@
     'jjk-yuta-rika':['...wwwww....','..wpppppw...','.wppwwwppw..','wppwkpkwppw.','wppwwwwwppw.','.wppkkkppw..','..wpppppw...','.wpppppppw..','wwpppppppww.','w.ppwwwpp.w.','..ww...ww...','..w.....w...'],
     'jjk-yuta-speech':['...wwwww....','..wpppppw...','.wpppppppw..','wpwppppwpw..','wppppppppw..','.wppppppw...','..wkkkkw....','...wwww.....','.bb....bb...','b..bbbb..b..','.bb....bb...','...bbbb.....'],
     'jjk-yuta-manifest':['.....w......','....bwb.....','.....w......','...ggggg....','..gwwwwwg...','.gww...wwg..','.gw.....wg..','.gw.....wg..','.gww...wwg..','..gwwwwwg...','...ggggg....','............'],
+    'jjk-yuta-resonance':['w.........w.','.w.......w..','..w..p..w...','...wwpww....','....www.....','..ppwwwpp...','.ppwwwwwpp..','..ppwwwpp...','....www.....','...ww.ww....','..w.....w...','.w.......w..'],
     'jjk-ryu':['......www...','.....wwbww..','......www...','......bbb...','......bbb...','.....bwwb...','...kkbwwbkk.','..kppppppppk','..kpkkkkkppk','...kppppppk.','....kppppk..','.....kkkk...'],
     'jjk-ryu-spread':['.w....w...w.','.bw...w..wb.','..bw..w.wb..','...bw.wbw...','....bwww....','.....www....','.....bbb....','....bwwwb...','...kpppppk..','...kpkkkpk..','....kpppk...','.....kkk....'],
     'jjk-ryu-impact':['.....b......','..b..w..b...','...b.w.b....','..bbwwwbb...','.bwwwwwwwb..','bwwwggwwwb..','.bwwwwwwwb..','..bbwwwbb...','...b.w.b....','..b..w..b...','.....b......','............'],
@@ -15,16 +16,18 @@
     'jjk-uro':['.bbbbbbbb...','.bwwwwwwwb..','..bwwwwwwwb.','...bwwwwwwb.','....bwwwbb..','...bwwwb....','..bwwwb.....','.bwwwb......','bwwwb.......','.bwwwbbbb...','..bwwwwwwb..','...bbbbbbb..'],
     'jjk-uro-thin-ice':['...b...b....','..bwb.bwb...','.bwwwbwwwb..','bwwpwwwwwb..','bwwwpwwwb...','.bwwwpwb....','..bwwwp.....','...bwb.p.b..','....b...p...','..b...b.....','...b....b...','............'],
     'jjk-uro-screen':['..bbbbbbb...','.bwwwwwwwb..','bwwwbbbwwwb.','bwwb...bwwb.','.bwb.w..bwb.','..bb.ww..bb.','.....www....','....wwww....','.....ww.....','....ww......','...ww.......','..ww........'],
-    'jjk-uro-collapse':['...bbbbbb...','..bwwwwwwb..','.bwwwbbwwwb.','bwwwb..bwwwb','bwwb....bwwb','.bwwb..bwwb.','..bwwbbwwb..','...bwwwwb...','..bwwbbwwb..','.bwwb..bwwb.','..bb....bb..','............']
+    'jjk-uro-collapse':['...bbbbbb...','..bwwwwwwb..','.bwwwbbwwwb.','bwwwb..bwwwb','bwwb....bwwb','.bwwb..bwwb.','..bwwbbwwb..','...bwwwwb...','..bwwbbwwb..','.bwwb..bwwb.','..bb....bb..','............'],
+    'jjk-uro-echo':['b.........b.','.b.......b..','..b..w..b...','...bw.wb....','....bwb.....','...bw.wb....','..bw...wb...','.bw..w..wb..','..bw...wb...','...bw.wb....','....bwb.....','.....w......']
   };
   const palette={w:'#f5fbff',b:'#67d9ef',p:'#a995d7',g:'#e9c66c'};
   for(const [id,rows] of Object.entries(marks))G.Icons.UI[id]={pal:palette,rows,outline:true};
   const kits=[
     [30013,[
       ['jjk-yuta','yuta-blade','咒力刀斬','fighting',1,1,30,125,90,'向前揮刀，命中前跟隨走位，斬擊近身扇形內敵人。'],
-      ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,6,100,300,105,'里香優先追擊刀斬範圍外的敵人；有限追近移動強敵，起拳後鎖定落點重擊。刀術接力標記優先。'],
+      ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,4,100,440,160,'學會後里香常駐協戰，每次追擊連打4→8拳，數量卡至16拳；終擊更重。完全顯現時巨大化、基礎拳數加倍至24拳，逐拳接乙骨刀斬。'],
       ['jjk-yuta-speech','yuta-speech','咒言・別動','psychic',6,8,35,160,160,'90內有敵人，或範圍內至少三名敵人時，咒言震懾周圍；首領僅短暫受控。'],
-      ['jjk-yuta-manifest','yuta-manifest','里香完全顯現','psychic',9,18,0,300,160,'遇敵群或強敵才顯現6秒，立即刷新里香一次；新施放傷害+50／60／70／80／100%，里香追加一次重擊。結束後恢復12秒，三／五階為10.5／9秒；冷卻卡有效。']
+      ['jjk-yuta-manifest','yuta-manifest','里香完全顯現','psychic',9,16,0,600,160,'遇敵群或強敵顯現8秒，刷新里香一次；傷害+50／60／70／80／100%，里香與乙骨逐拳雙人連打。結束後恢復8→6秒，冷卻卡有效。'],
+      ['jjk-yuta-resonance','yuta-resonance','協戰共鳴','fighting',12,0,80,240,240,'被動：里香終結重擊真正命中後，乙骨接一記寬幅共鳴終擊；半徑240→360。等待當前身體動作結束，不遞迴觸發。']
     ]],
     [30014,[
       ['jjk-ryu','jjk-ryu','花崗岩砲','psychic',1,1.8,42,360,14,'蓄力0.22秒，射出長距窄幅貫穿砲；學會全力砲後，每次真正命中蓄一格能量。'],
@@ -33,26 +36,45 @@
       ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,5.4,200,760,72,'三次普通砲命中蓄滿後，蓄力0.75秒轟出巨型貫穿主砲（基傷×1.5），再連射4／5／6／7／8輪重砲（每輪×0.55）。數量卡增加連轟，最多16輪追加；射程760→1040、主砲半徑72→128，連轟時仍可移動。']
     ]],
     [30015,[
-      ['jjk-uro','uro-sky','空面打擊','psychic',1,1.25,20,125,90,'近身掌擊扭曲空面，推開前方125內普通敵人；強敵不被搬動。'],
-      ['jjk-uro-thin-ice','uro-thin-ice','宇守羅彈','psychic',3,4.8,72,250,110,'擊碎前方空面，造成大範圍扇形傷害。'],
-      ['jjk-uro-screen','uro-screen','天空幕','psychic',6,9,0,90,82,'偵測即將來襲的敵彈才展開2.3秒空面，不打斷正在施放的攻擊。反射5／6／7／8／9顆，不阻擋近戰。'],
-      ['jjk-uro-collapse','uro-collapse','空面震落','psychic',9,8,112,280,110,'鎖定最密集的可達敵群，同密度優先遠處；0.55秒後在固定爆點碎裂並減速，首領減速較弱。']
+      ['jjk-uro','uro-sky','空面打擊','psychic',1,1.25,20,180,90,'近身掌擊扭曲空面，推開前方180→260內普通敵人；強敵不被搬動。'],
+      ['jjk-uro-thin-ice','uro-thin-ice','宇守羅彈','psychic',3,4.8,72,340,110,'抓裂大片天空，連續4→8波真實扇形碎面；數量卡至16波，射程340→540。首波與末波更強，隨走位逐波出手。'],
+      ['jjk-uro-screen','uro-screen','天空幕','psychic',6,9,0,600,110,'敵彈來襲才展開3.5→4.5秒空面，可反射12→28顆，數量卡至64顆。首次真反射接4→8波獨立反擊、數量至16波，不打斷身體攻擊；不擋近戰。'],
+      ['jjk-uro-collapse','uro-collapse','空面震落','psychic',9,8,112,600,210,'鎖定敵群後連續4→8波巨型破裂、數量至16波，半徑210→340。首末波減速，首領較弱；手勢結束後裂區繼續。'],
+      ['jjk-uro-echo','uro-echo','裂面殘響','psychic',12,0,40,180,90,'被動：身體招式末波真正命中後，在該處追加2→4次固定裂面殘響，數量卡至8次。獨立持續，不再觸發殘響或反擊。']
     ]]
   ];
+  // Shared combat profiles also drive card previews; new power is real geometry
+  // and contact count, not a separate decorative progression.
+  const power={
+    yuta:{rikaBases:[4,5,6,7,8],rikaCap:16,fullCap:24,rikaRanges:[440,480,520,560,600],rikaRadii:[160,180,200,220,250],rikaSpeeds:[640,700,760,820,880],normalHeights:[88,91,94,97,100],fullHeights:[156,162,168,174,180],rikaCd:4,fullRikaCd:2.4,manifestDuration:8,recoveries:[8,7.5,7,6.5,6],duetRanges:[180,200,220,240,260],resonanceRadii:[240,270,300,330,360]},
+    uro:{palmRanges:[180,200,220,240,260],palmArcs:[1.6,1.7,1.8,1.9,2],waveBases:[4,5,6,7,8],waveCap:16,thinRanges:[340,380,430,480,540],thinArcs:[2.5,2.7,2.9,3.1,3.3],collapseRange:600,collapseRadii:[210,240,270,300,340],screenRadii:[110,120,130,140,150],screenBudgets:[12,16,20,24,28],screenCap:64,screenDurations:[3.5,3.75,4,4.25,4.5],counterRange:600,counterRadii:[130,150,170,190,210],echoBases:[2,2,3,3,4],echoCap:8}
+  };
   // Functional ranks spend the existing upgrade choice; they are not free talents.
   const functional={
     'jjk-yuta':{base:{bladeArc:Math.PI*2/3},third:{relayMarkDuration:1.2},fifth:{bladeArc:2.5},text3:'刀斬標記1.2秒，里香優先追擊該目標',text5:'近身斬擊角擴至約143度'},
-    'jjk-yuta-rika':{base:{rikaSpeed:520,rikaReturnSpeed:600},third:{rikaSpeed:650},fifth:{radius:1.2,rikaReturnSpeed:720},text3:'里香接近速度520→650',text5:'重擊半徑105→126，返回速度600→720'},
+    'jjk-yuta-rika':{base:{rikaSpeed:640,rikaReturnSpeed:800,comboBase:4},third:{rikaSpeed:760},fifth:{rikaReturnSpeed:960},text3:'普通6拳／顯現12拳基數，重擊半徑200',text5:'普通8拳／顯現16拳基數，重擊半徑250，數量上限16／24拳'},
     'jjk-yuta-speech':{base:{speechDuration:1.2},third:{speechDuration:1.5},fifth:{radius:1.15,range:184},text3:'普通敵人移動限制1.2→1.5秒，首領抗性不變',text5:'咒言半徑160→184'},
-    'jjk-yuta-manifest':{base:{recovery:12},third:{recovery:10.5},fifth:{recovery:9},text3:'顯現結束後基礎恢復12→10.5秒',text5:'顯現結束後基礎恢復10.5→9秒'},
+    'jjk-yuta-manifest':{base:{recovery:8},third:{recovery:7},fifth:{recovery:6},text3:'顯現後基礎恢復7秒',text5:'顯現後基礎恢復6秒'},
+    'jjk-yuta-resonance':{third:{radius:1.25,range:300},fifth:{radius:1.2,range:360},text3:'共鳴終擊半徑300',text5:'共鳴終擊半徑360'},
     'jjk-ryu':{third:{targetPolicy:'elite'},fifth:{range:414},text3:'優先可達精英，無精英才選最近敵人',text5:'穿線射程360→414'},
     'jjk-ryu-spread':{base:{baseCount:3,spreadStep:.65},third:{spreadStep:.8},fifth:{baseCount:4},text3:'相鄰砲彈角度0.65→0.80弧度',text5:'基礎砲彈3→4，數量乘算後最多9顆'},
     'jjk-ryu-impact':{base:{impactTargetPolicy:'cluster'},third:{radius:1.2},fifth:{range:330},text3:'爆心半徑90→108',text5:'群聚索敵射程300→330，爆點仍於起手鎖定'},
     'jjk-ryu-maximum':{base:{barrageBase:4},third:{firstTargetBonus:.15},fifth:{range:1040},text3:'追加6輪重砲；主砲半徑96、射程880，首個目標傷害+15%',text5:'追加8輪重砲；主砲半徑128、射程1040，數量可強化至16輪'},
-    'jjk-uro':{base:{skyKnock:30},third:{arc:1.3/1.1},fifth:{skyKnock:44},text3:'近身掌擊角1.10→1.30弧度',text5:'普通敵人推退30→44，特殊敵人不搬動'},
-    'jjk-uro-thin-ice':{third:{arc:2.1/1.9},fifth:{thinSlow:.25,thinSlowDuration:.45},text3:'碎面扇角1.9→2.1弧度',text5:'普通敵人減速25%持續0.45秒，首領僅弱減速'},
-    'jjk-uro-screen':{base:{threatOnly:true,threatHorizon:.55},third:{threatHorizon:.8,reflectRefresh:true},fifth:{counterBonus:.15,counterDuration:3},text3:'預測0.80秒敵彈；首次反射刷新宇守羅彈，三秒內優先反擊射程內可達的原射手',text5:'真正反射後3秒內，下次宇守羅彈傷害+15%；每幕一次'},
-    'jjk-uro-collapse':{third:{radius:1.15},fifth:{collapseSlow:.60,slowDuration:.8},text3:'震落半徑110→126.5',text5:'普通敵人減速60%持續0.8秒，首領效果較弱'}
+    'jjk-uro':{base:{skyKnock:30},third:{},fifth:{skyKnock:44},text3:'掌擊射程220、扇角1.8',text5:'掌擊射程260，普通敵人推退44'},
+    'jjk-uro-thin-ice':{base:{waveBase:4},third:{},fifth:{thinSlow:.25,thinSlowDuration:.45},text3:'6波碎面，射程430、扇角2.9',text5:'8波碎面，射程540、扇角3.3，首末波弱減速'},
+    'jjk-uro-screen':{base:{threatOnly:true,threatHorizon:.55,counterBase:4,reflectBudget:12},third:{threatHorizon:.8},fifth:{},text3:'6波反擊、反射20顆，預測0.8秒敵彈',text5:'8波反擊、反射28顆，空面持續4.5秒'},
+    'jjk-uro-collapse':{base:{waveBase:4},third:{},fifth:{collapseSlow:.60,slowDuration:.8},text3:'6波巨裂，半徑270',text5:'8波巨裂，半徑340，普通敵人首末波減速60%'},
+    'jjk-uro-echo':{base:{echoBase:2},third:{echoBase:3},fifth:{echoBase:4},text3:'基礎3次殘響',text5:'基礎4次殘響，數量卡最多8次'}
+  };
+  const ladders={
+    'yuta-rika':{range:power.yuta.rikaRanges,radius:power.yuta.rikaRadii,rikaSpeed:power.yuta.rikaSpeeds,comboBase:power.yuta.rikaBases},
+    'yuta-manifest':{duration:[8,8,8,8,8],recovery:power.yuta.recoveries},
+    'yuta-resonance':{range:power.yuta.resonanceRadii,radius:power.yuta.resonanceRadii},
+    'uro-sky':{range:power.uro.palmRanges,arc:power.uro.palmArcs},
+    'uro-thin-ice':{range:power.uro.thinRanges,arc:power.uro.thinArcs,waveBase:power.uro.waveBases},
+    'uro-screen':{range:[600,600,600,600,600],radius:power.uro.screenRadii,reflectBudget:power.uro.screenBudgets,counterBase:power.uro.waveBases,duration:power.uro.screenDurations},
+    'uro-collapse':{range:[600,600,600,600,600],radius:power.uro.collapseRadii,waveBase:power.uro.waveBases},
+    'uro-echo':{echoBase:power.uro.echoBases}
   };
   const owners=new Map(),catalog=G.NarutoSkillCatalog;
   for(const [dex,rows] of kits){
@@ -71,12 +93,19 @@
           ups[i].t+=`；追加${5+i}輪重砲，主砲半徑${radii[i+1]}、射程${ranges[i+1]}`;
         }
       }
+      const ladder=ladders[mode];
+      if(ladder)for(const [key,values]of Object.entries(ladder))for(let i=0;i<ups.length;i++){
+        ups[i].m[key]=['radius','arc'].includes(key)?values[i+1]/values[i]:values[i+1];
+        if(key==='radius')ups[i].m.width=values[i+1]/values[i];
+      }
+      const linked=mode==='yuta-resonance'||mode==='uro-echo';
       const def={id,name,icon:id,type,kind:dmg?'melee':'buff',digiMode:mode,digimonSkill:true,narutoSkill:true,jujutsuSkill:true,
-        passive:true,autoCast:true,learnLevel,cd,dmg,range,radius,width:radius*2,speed:520,life:1,count:1,arc:1.6,pierce:0,
-        duration:mode==='yuta-manifest'?6:mode==='uro-screen'?2.3:0,maxLvl:5,ups,...growth.base,
-        desc:desc+' 自動施放，不占主動槽。',source_url:source};
-      if(mode==='uro-sky')def.arc=1.1;
-      if(mode==='uro-thin-ice'){def.arc=1.9;def.source_url='https://kotodaman.jp/info/detail/081584KEuwsxffR4nq.html';}
+        passive:true,autoCast:!linked,learnLevel,cd,dmg,range,radius,width:radius*2,speed:520,life:1,count:1,arc:1.6,pierce:0,
+        duration:0,maxLvl:5,ups,...growth.base,
+        desc:desc+(linked?' 本作改編被動，不占主動槽。':' 自動施放，不占主動槽。'),source_url:source};
+      if(ladder)for(const [key,values]of Object.entries(ladder))def[key]=values[0];
+      def.width=def.radius*2;
+      if(mode==='uro-thin-ice')def.source_url='https://kotodaman.jp/info/detail/081584KEuwsxffR4nq.html';
       G.Moves.BY_ID[id]=def;G.Moves.ALL.push(def);catalog.definitions.set(id,def);owners.set(id,dex);ids.push(id);
     }
     catalog.byDex.set(dex,G.Moves.BY_ID[ids[0]]);catalog.extraPools.set(dex,ids.slice(1));
@@ -92,7 +121,7 @@
       for(const [id] of rows){
         const def=G.Moves.BY_ID[id],heading=document.createElement('h4'),description=document.createElement('p'),stats=document.createElement('small');
         heading.textContent=def.name;description.textContent=def.desc;
-        stats.textContent=`Lv.${def.learnLevel} 可學 · ${id==='jjk-yuta-manifest'?'顯現6秒・結束後恢復12／10.5／9秒（冷卻卡只縮恢復）':`冷卻 ${def.cd} 秒`} · 可升至 Lv.${def.maxLvl}`;
+        stats.textContent=`Lv.${def.learnLevel} 可學 · ${!def.autoCast?'被動連動':id==='jjk-yuta-manifest'?'顯現8秒・結束後恢復8→6秒（冷卻卡縮恢復）':`冷卻 ${def.cd} 秒`} · 可升至 Lv.${def.maxLvl}`;
         article.append(heading,description,stats);
         const growth=document.createElement('p');growth.textContent=`三階：${functional[id].text3}。五階：${functional[id].text5}。`;article.append(growth);
       }
@@ -122,5 +151,5 @@
     if(kits.some(([dex])=>dex===this.mon?.dex))return false;
     return addMove.call(this,id,...args);
   };
-  G.Jujutsu={kits,owners,source,functional};
+  G.Jujutsu={kits,owners,source,functional,power};
 })();

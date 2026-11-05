@@ -42,17 +42,17 @@ CHECK = r"""baseline => {
  }
  const locked={x:r.x,y:r.y,tx:r.tx,ty:r.ty,aim:r.aim,phase:r.phase};
  if(!baseline){A.assert(r.phase==='strike'&&r.y>20,'Rika did not pursue the moving strong target');
-   A.assert(r.travelDistance<=r.travelBudget+.001&&r.age<=1.21,'Rika exceeded pursuit budget');}
+   A.assert(r.travelDistance<=r.travelBudget+.001&&r.age<=1.41,'Rika exceeded pursuit budget');}
  boss.x+=50;boss.y+=30;G.EnemyMgr.rebuildGrid();A.advance(.23);
  if(!baseline){A.assert(r.x===locked.x&&r.y===locked.y&&r.aim===locked.aim,'Rika homed after punch windup');
    A.assert(boss.hp<boss.maxHp,'bounded pursuit missed the controlled moving boss');}
  out.movingBoss={steps,locked,loss:boss.maxHp-boss.hp};
  if(baseline)return out;
 
- // Ordinary enemies still use the original captured point.
+ // The new multi-beat excursion can also approach the same ordinary enemy.
  m=setup('jjk-yuta-rika');let e=A.spawn(230,0);cast(m);let actor=Y.stateFor(p).rika;
- const destination={x:actor.tx,y:actor.ty};e.y=150;G.EnemyMgr.rebuildGrid();A.advance(.12);
- A.assert(actor.tx===destination.x&&actor.ty===destination.y,'ordinary target gained pursuit');out.ordinaryFixed=true;
+ e.y=150;G.EnemyMgr.rebuildGrid();A.advance(.12);
+ A.assert(actor.pursuitTarget===e&&actor.y>0,'ordinary combo failed its bounded same-target approach');out.ordinaryPursuit=true;
 
  // A blocked/dead target cannot be replaced by another target or hit through a wall.
  for(const mode of ['wall','dead','budget']){

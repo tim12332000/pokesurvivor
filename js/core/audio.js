@@ -423,6 +423,14 @@ G.Audio = (() => {
         hiss(main?.38:.16,main?.10:.055,'lowpass',main?2200:1800,main?220:300);
         if(main)tone('sawtooth',700,80,.055,.04);
       }
+      else if (o.kind === 'rika') {
+        hiss(o.finisher?.22:.10,o.finisher?.10:.065,'lowpass',o.finisher?2600:1800,350);
+        tone('sine',o.finisher?180:120,45,o.finisher?.28:.13,o.finisher?.12:.06);
+      }
+      else if (o.kind === 'fracture') {
+        hiss(o.finisher?.24:.14,o.finisher?.10:.065,'bandpass',2800,700,0,2);
+        tone('triangle',480,180,.12,.045);
+      }
       else if (o.kind === 'beam') { tone('sawtooth', f * 0.6, f * 0.35, 0.3, 0.05); hiss(0.25, 0.04, 'bandpass', f * 2, f, 0, 3); }
       else if (o.kind === 'nova') { hiss(0.2, 0.1, 'lowpass', 2400, 300); tone('sine', 140, 60, 0.16, 0.12); }
       else if (o.kind === 'aura') { tone('sine', f * 0.5, f * 0.55, 0.25, 0.04); tone('sine', f * 0.75, f * 0.8, 0.25, 0.03); }

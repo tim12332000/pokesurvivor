@@ -23,7 +23,7 @@
           Object.assign(move,G.Moves.instance(move.id,rank));
         }
         player.arrange();
-        player.trialBuild={mode:allSkills?'max':'skills',name:allSkills?'全技能五階':'20級／四招一階／未配置19次成長',picks:[]};
+        player.trialBuild={mode:allSkills?'max':'skills',name:allSkills?'全技能五階':'20級／可學技能一階／未配置19次成長',picks:[]};
         G.Game.debugTime(0);
         G.UI.toast(allSkills?'本機測試：全技能五階已開啟':'20級試玩：招式已解鎖',3000);
       }
