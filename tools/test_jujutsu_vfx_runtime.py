@@ -56,7 +56,7 @@ def main():
    page.on('pageerror',lambda e:report['errors'].append(str(e)))
    try:
     f.evaluate(TRACE)
-    f.evaluate("""low=>{const A=JAcceptance;A.reset();G.JujutsuVFX.setQuality(low?'low':'high');A.fixture('jjk-uro-thin-ice');A.spawn(100,0);A.cast('jjk-uro-thin-ice');A.advance(.2);}""",low)
+    f.evaluate("""low=>{const A=JAcceptance;A.reset();G.JujutsuVFX.setQuality(low?'low':'high');A.fixture('jjk-uro-thin-ice');A.p().invuln=1000;A.spawn(100,0);A.cast('jjk-uro-thin-ice');A.advance(.2);}""",low)
     wait_render(page);first=f.evaluate('G.JujutsuVFX.inspect()')
     page.screenshot(path=str(OUT/(label+'-sky-fold.png')))
     assert first['triangles']>0,('no actual texture triangles',first)
@@ -70,6 +70,21 @@ def main():
     assert trace['composites'] and all(x['phase']=='background' for x in trace['composites']),'composite did not occur before hazards'
     pixels=[spot for capture in trace['captures'] for spot in capture['spots']]
     assert pixels and max(p['error'] for p in pixels)<=3,('world/device transform copied wrong actual background pixels',pixels)
+    # A moving body fan must carry its visible fold until contact, while the
+    # captured texture remains a single source region and old impacts stay put.
+    f.evaluate('JAcceptance.p().x+=45;JAcceptance.p().y+=30;JAcceptance.advance(.05)');wait_render(page)
+    follow=f.evaluate('G.JujutsuVFX.inspect()')
+    original=first['folds'][0];live=follow['folds'][0]
+    assert abs(live['rect']['x']-original['rect']['x']-45)<1e-6,('fold did not follow moving fan',original,live)
+    assert abs(live['rect']['y']-original['rect']['y']-30)<1e-6,('fold did not follow moving fan vertically',original,live)
+    assert follow['capturesTotal']==first['capturesTotal'] and live['capture']['rect']==original['capture']['rect'],'moving fan recaptured background'
+    page.screenshot(path=str(OUT/(label+'-moving-windup.png')))
+    f.evaluate('JAcceptance.advance(.10)');wait_render(page)
+    contact=f.evaluate('G.JujutsuVFX.inspect()');page.screenshot(path=str(OUT/(label+'-moving-contact.png')))
+    f.evaluate('JAcceptance.p().x+=55;JAcceptance.p().y-=20;JAcceptance.advance(.17)');wait_render(page)
+    settled=f.evaluate('G.JujutsuVFX.inspect()')
+    assert settled['folds'][0]['rect']==contact['folds'][0]['rect'],'contact fold dragged after caster'
+    page.screenshot(path=str(OUT/(label+'-moving-recovery.png')))
     f.evaluate("G.JujutsuVFX.enabled=false;VFXTrace.captures=[];VFXTrace.composites=[];VFXTrace.proceduralFills=0")
     f.evaluate('()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');wait_render(page)
     disabled=f.evaluate('({stats:G.JujutsuVFX.inspect(),trace:VFXTrace})');page.screenshot(path=str(OUT/(label+'-vfx-disabled.png')))
@@ -78,7 +93,7 @@ def main():
     f.evaluate('G.JujutsuVFX.enabled=true')
     f.evaluate('G.Combat.clearFields()');wait_render(page)
     cleared=f.evaluate('G.JujutsuVFX.inspect()');assert cleared['snapshots']==0 and not cleared['folds'],cleared
-    report['cases'][label]={'first':first,'moved':moved,'trace':trace,'disabled':disabled,'cleared':cleared}
+    report['cases'][label]={'first':first,'moved':moved,'trace':trace,'following':follow,'contact':contact,'settled':settled,'disabled':disabled,'cleared':cleared}
    except Exception as e:
     report['failures'].append(label+': '+str(e));page.screenshot(path=str(OUT/(label+'-failure.png')))
    finally:context.close()
@@ -86,6 +101,17 @@ def main():
    context,page,f=boot(browser,dex);page.on('pageerror',lambda e:report['errors'].append(str(e)))
    try:
     f.evaluate(TRACE)
+    aim_guide=None
+    if label=='beam':
+     f.evaluate("""()=>{const A=JAcceptance;A.reset();A.fixture('jjk-ryu-maximum');A.spawn(200,0);A.cast('jjk-ryu-maximum');A.advance(.2)}""")
+     wait_render(page);guide_before=f.evaluate("G.JujutsuVFX.inspect().draws.find(d=>d.kind==='aim-guide')")
+     assert guide_before and guide_before['length']==52,'missing bounded committed-direction cue'
+     f.evaluate('JAcceptance.p().x+=15;JAcceptance.p().y+=10;JAcceptance.advance(.05)');wait_render(page)
+     guide_after=f.evaluate("G.JujutsuVFX.inspect().draws.find(d=>d.kind==='aim-guide')")
+     assert guide_after and guide_after['aim']==guide_before['aim'],'aim cue changed committed direction'
+     assert abs(guide_after['x']-guide_before['x']-15)<1e-6 and abs(guide_after['y']-guide_before['y']-10)<1e-6,'aim cue did not follow actual emitter'
+     page.screenshot(path=str(OUT/'maximum-locked-direction.png'))
+     aim_guide={'before':guide_before,'after':guide_after}
     damage=f.evaluate("""({skill,at})=>{const A=JAcceptance;A.reset();A.fixture(skill);window.VFXTarget=A.spawn(100,0);A.cast(skill);A.advance(at);return VFXTarget.maxHp-VFXTarget.hp}""",{'skill':skill,'at':at})
     wait_render(page);data=f.evaluate('G.JujutsuVFX.inspect()');page.screenshot(path=str(OUT/(label+'-production.png')))
     kind='beam' if label=='beam' else 'arc-length-trail'
@@ -96,6 +122,7 @@ def main():
     assert not off['stats']['draws'] and off['stats']['triangles']==0 and off['stats']['shards']==0 and off['stats']['beamProfiles']==0,off
     assert off['trace']['proceduralFills']==0 and not off['trace']['composites'] and not off['trace']['captures'],off
     f.evaluate('G.JujutsuVFX.enabled=true');data['disabledNativeRender']=off
+    if aim_guide:data['aimGuide']=aim_guide
     assert damage>0 and damage==without,('procedural VFX changed actual native damage',damage,without)
     data['damageWithVfx']=damage;data['damageWithoutVfx']=without
     report['cases'][label]=data

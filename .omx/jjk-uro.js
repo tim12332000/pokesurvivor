@@ -22,7 +22,7 @@
   function state(owner){
     let s=states.get(owner);
     if(s&&(s.world!==G.World||s.runEpoch!==G.CombatPulse.epoch)){clear(owner);s=null;}
-    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,cooldowns:{},ready:new Map(),clock:0,pose:null,screen:null,counterUntil:0,counterBonus:0,castCounts:{},hits:0,intercepted:0};states.set(owner,s);}
+    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,cooldowns:{},ready:new Map(),clock:0,pose:null,screen:null,counterUntil:0,counterBonus:0,counterTarget:null,castCounts:{},hits:0,intercepted:0};states.set(owner,s);}
     return s;
   }
   function targets(x,y,r){
@@ -35,6 +35,8 @@
     const r=m.range||specs[m.digiMode].range;
     const enemies=targets(owner.x,owner.y,r),candidates=enemies.length||m.digiMode==='uro-screen'?enemies:props(owner.x,owner.y,r);
     if(!choose)return candidates[0];
+    const s=states.get(owner);
+    if(m.digiMode==='uro-thin-ice'&&s?.counterUntil>s.clock&&enemies.includes(s.counterTarget)&&G.EnemyMgr.all().includes(s.counterTarget))return s.counterTarget;
     if(m.digiMode==='uro-collapse'&&enemies.length){
       const radius=m.radius||specs[m.digiMode].radius;
       const counts=new Map(enemies.map(e=>[e,enemies.filter(other=>
@@ -72,7 +74,7 @@
       damage:(m.dmg??spec.dmg)*(owner.atk??1)*(1+counter),counterEmpowered:counter>0,riposte,type:m.type||'psychic',crit:owner.critChance||0,done:false};
     b.cast=G.CombatPulse.create(owner,m.id,{channel:m.digiMode==='uro-screen'?'reaction':'body'});
     Object.assign(b,{castId:b.cast.castId,channel:b.cast.channel});
-    if(riposte){s.counterBonus=0;s.counterUntil=0;}
+    if(riposte){s.counterBonus=0;s.counterUntil=0;s.counterTarget=null;}
     const native=learned(owner,m.id),cooldown=Math.max(.05,(m.cd||spec.cd)*(owner.cdMul??1));
     native.t=m.t=cooldown;native.castAt=m.castAt=performance.now();s.cooldowns[m.id]=cooldown;
     s.castCounts[b.mode]=(s.castCounts[b.mode]||0)+1;
@@ -114,12 +116,16 @@
     for(const [owner,s] of states){
       if(!valid(owner)||s.world!==G.World||s.runEpoch!==G.CombatPulse.epoch){clear(owner);continue;}
       s.clock+=dt;
-      if(s.counterUntil<=s.clock){s.counterBonus=0;s.counterUntil=0;}
+      if(s.counterUntil<=s.clock||!learned(owner,'jjk-uro-thin-ice')){s.counterBonus=0;s.counterUntil=0;s.counterTarget=null;}
       if(s.pose?.mode==='uro-screen')s.pose.age+=dt;
       if(s.screen){s.screen.age+=dt;for(const flash of s.screen.flashes)flash.age+=dt;s.screen.flashes=s.screen.flashes.filter(f=>f.age<.22);if(!legal(s.screen)||s.screen.budget<=0||s.screen.age>=s.screen.duration)s.screen=null;}
     }
     for(let i=effects.length-1;i>=0;i--){
       const b=effects[i];if(!legal(b)){effects.splice(i,1);continue;}
+      // A hand-driven fan travels with the body during preparation, then its
+      // contact and shatter stay at the actual release position. Remote collapse
+      // keeps its captured destination throughout the cast.
+      if(!b.done&&(b.mode==='uro-sky'||b.mode==='uro-thin-ice')){b.x=b.owner.x;b.y=b.owner.y;}
       b.age+=dt;
       if(!b.done&&b.age+1e-8>=b.release)release(b);
       if(b.age>=b.duration)effects.splice(i,1);
@@ -151,6 +157,9 @@
         if(thin){
           if(w.m.reflectRefresh){thin.t=0;s.cooldowns[thin.id]=0;s.ready.set(thin.id,s.clock);}
           s.counterBonus=w.m.counterBonus||0;s.counterUntil=s.clock+(w.m.counterDuration??3);
+          // Unknown/network shots have no trusted actor identity. They retain
+          // the ordinary target policy rather than guessing who fired them.
+          s.counterTarget=alive(p.sourceEnemy)&&G.EnemyMgr.all().includes(p.sourceEnemy)?p.sourceEnemy:null;
         }
       }
       G.Projectiles.spawn({x,y,vx:-(p.vx||0),vy:-(p.vy||0),r:Math.max(4,p.r||6),dmg:(p.dmg||10)*(owner.atk??1),life:Math.min(3,p.life||2),

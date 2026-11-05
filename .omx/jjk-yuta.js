@@ -111,9 +111,11 @@
     f.cast=G.CombatPulse.create(owner,m.id,{channel:kind==='rika'?'companion':'body'});
     Object.assign(f,{castId:f.cast.castId,runEpoch:f.cast.runEpoch,channel:f.cast.channel});
     if(kind==='rika') {
-      // Rika travels to a captured, reachable destination; she never tracks through walls.
+      // Ordinary targets keep a captured destination. A strong target may be
+      // followed only during this bounded approach, never after punch windup.
       const d=Math.max(0,Math.hypot(e.x-owner.x,e.y-owner.y)-Math.min(35,g.radius*.4));
-      Object.assign(f,{tx:owner.x+Math.cos(aim)*d,ty:owner.y+Math.sin(aim)*d,phase:'travel',phaseAge:0,strikes:0});
+      Object.assign(f,{tx:owner.x+Math.cos(aim)*d,ty:owner.y+Math.sin(aim)*d,phase:'travel',phaseAge:0,strikes:0,
+        pursuitTarget:strong(e)?e:null,travelDistance:0,travelBudget:g.range+g.radius});
       rikaPhase(f);s.rika=f;
     }else {
       s.action=f;
@@ -188,8 +190,20 @@
     r.age+=dt;r.phaseAge+=dt;r.full=manifested(s.owner);
     if(r.age>3.5){s.rika=null;return;}
     if(r.phase==='travel') {
+      if(r.pursuitTarget){
+        const e=r.pursuitTarget;
+        if(!alive(e)||e.friendly||!G.EnemyMgr.all().includes(e)||r.phaseAge>1.2||r.travelDistance>=r.travelBudget-EPS||!path(r.x,r.y,e.x,e.y)){
+          r.phase='return';r.phaseAge=0;rikaPhase(r);return;
+        }
+        const dx=e.x-r.x,dy=e.y-r.y,d=Math.hypot(dx,dy),distance=Math.max(0,d-Math.min(35,r.radius*.4));
+        if(d>EPS)r.aim=Math.atan2(dy,dx);
+        r.tx=r.x+Math.cos(r.aim)*distance;r.ty=r.y+Math.sin(r.aim)*distance;
+      }
       const previous=Math.hypot(r.tx-r.x,r.ty-r.y);
-      if(travel(r,r.tx,r.ty,(r.m.rikaSpeed??520)*dt)){r.phase='strike';r.phaseAge=0;}
+      const x=r.x,y=r.y,amount=Math.min((r.m.rikaSpeed??520)*dt,r.pursuitTarget?r.travelBudget-r.travelDistance:Infinity);
+      const arrived=travel(r,r.tx,r.ty,amount);
+      r.travelDistance+=Math.hypot(r.x-x,r.y-y);
+      if(arrived){r.phase='strike';r.phaseAge=0;}
       else if(Math.abs(previous-Math.hypot(r.tx-r.x,r.ty-r.y))<EPS){r.phase='return';r.phaseAge=0;}
     }else if(r.phase==='strike') {
       const times=r.full?[.22,.48]:[.22];
@@ -220,6 +234,9 @@
         if(!learned(s.owner,f.m.id))s.action=null;
         else {
           f.age+=dt;
+          // Body attacks leave the moving caster at contact; the released hit
+          // and its marks keep that exact position through recovery.
+          if(!f.released&&(f.kind==='blade'||f.kind==='speech')){f.x=s.owner.x;f.y=s.owner.y;}
           bodyPhase(f);
           if(!f.released&&f.age+EPS>=(f.kind==='blade'?.14:f.kind==='speech'?.24:.3)){
             f.released=true;

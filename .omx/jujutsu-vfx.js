@@ -72,8 +72,10 @@
       if(local<0||local>.45)continue;
       let entry=folds.get(source);
       if(!entry){entry={source,owner:source.owner,epoch,castId:source.castId??id(source),rect:foldRect(source),start,captured:false,slot:null};folds.set(source,entry);}
-      // A screen follows its owner. Captured texture keeps its original world region.
-      entry.local=local;eligible.push(entry);
+      // Move the destination with the live attack. capture.rect keeps the
+      // original sampled terrain; no extra snapshots are needed while moving.
+      // Body attack coordinates freeze at contact, whereas a screen follows.
+      entry.rect=foldRect(source);entry.local=local;eligible.push(entry);
     }
     const cam=G.Camera||{x:0,y:0};
     eligible.sort((a,b)=>Number(b.owner===G.Game.player)-Number(a.owner===G.Game.player)||
@@ -167,6 +169,13 @@
     const p=G.JujutsuArt?.pointFor?.(owner,f,'muzzle')||{x:owner.x+Math.cos(f.aim)*8,y:owner.y+Math.sin(f.aim)*8-48};
     const t=clamp(f.age/f.charge);ctx.save();ctx.translate(p.x,p.y);ctx.strokeStyle='#9cebf6';ctx.lineWidth=1;
     for(let i=0;i<2;i++){const cycle=(t*1.8+i*.5)%1,r=5+(1-cycle)*(f.mode==='jjk-ryu-maximum'?22:14);ctx.globalAlpha=.2+.6*cycle;ctx.beginPath();ctx.ellipse(0,0,r,r*.6,f.aim,0,TAU);ctx.stroke();}
+    if(f.mode==='jjk-ryu-maximum'){
+      // A short direction cue shows the committed aim, not a guaranteed hit
+      // or a full-range laser. Strafing can still move the eventual shot line.
+      ctx.rotate(f.aim);ctx.globalAlpha=.25+.4*t;ctx.strokeStyle='#d5fcff';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(12,0);ctx.lineTo(52,0);ctx.moveTo(44,-5);ctx.lineTo(52,0);ctx.lineTo(44,5);ctx.stroke();
+      frame.draws.push({kind:'aim-guide',owner:id(owner),castId:f.castId,aim:f.aim,x:p.x,y:p.y,length:52});
+    }
     ctx.restore();
   }
   function drawScatter(ctx,e,owner){

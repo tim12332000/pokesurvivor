@@ -21,8 +21,8 @@
   for(const [id,rows] of Object.entries(marks))G.Icons.UI[id]={pal:palette,rows,outline:true};
   const kits=[
     [30013,[
-      ['jjk-yuta','yuta-blade','咒力刀斬','fighting',1,1,30,125,90,'向前揮刀，斬擊近身扇形內敵人。'],
-      ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,6,100,300,105,'里香優先追擊刀斬範圍外的敵人，在目標旁範圍重擊；刀術接力標記優先。'],
+      ['jjk-yuta','yuta-blade','咒力刀斬','fighting',1,1,30,125,90,'向前揮刀，命中前跟隨走位，斬擊近身扇形內敵人。'],
+      ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,6,100,300,105,'里香優先追擊刀斬範圍外的敵人；有限追近移動強敵，起拳後鎖定落點重擊。刀術接力標記優先。'],
       ['jjk-yuta-speech','yuta-speech','咒言・別動','psychic',6,8,35,160,160,'90內有敵人，或範圍內至少三名敵人時，咒言震懾周圍；首領僅短暫受控。'],
       ['jjk-yuta-manifest','yuta-manifest','里香完全顯現','psychic',9,18,0,300,160,'遇敵群或強敵才顯現6秒，立即刷新里香一次；新施放傷害+50／60／70／80／100%，里香追加一次重擊。結束後恢復12秒，三／五階為10.5／9秒；冷卻卡有效。']
     ]],
@@ -30,7 +30,7 @@
       ['jjk-ryu','jjk-ryu','花崗岩砲','psychic',1,1.8,42,360,14,'蓄力0.22秒，射出長距窄幅貫穿砲；學會全力砲後，每次真正命中蓄一格能量。'],
       ['jjk-ryu-spread','jjk-ryu-spread','散射咒力砲','psychic',3,5,30,200,12,'蓄力0.35秒，向短距廣角發射三顆砲彈；有飛行時間，碰到首個敵人或障礙即停止。數量強化增加砲彈，同次不重複直擊同一敵人。'],
       ['jjk-ryu-impact','jjk-ryu-impact','咒力爆破','psychic',6,7,100,300,90,'優先鎖定最密集的可達敵群，預告0.45秒後在固定爆點範圍引爆；敵人可離開爆點。'],
-      ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,11,200,450,26,'普通砲命中三次蓄滿且冷卻完成後，接續全力砲。蓄力0.75秒後長距寬幅貫穿，消耗蓄能並恢復0.7秒；恢復時仍可走位。']
+      ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,5.4,200,450,26,'普通砲命中三次蓄滿且冷卻完成後，接續全力砲；基礎冷卻5.4秒。鎖定方向蓄力0.75秒後長距寬幅貫穿，消耗蓄能並恢復0.7秒；仍可走位調整砲線。']
     ]],
     [30015,[
       ['jjk-uro','uro-sky','空面打擊','psychic',1,1.25,20,125,90,'近身掌擊扭曲空面，推開前方125內普通敵人；強敵不被搬動。'],
@@ -51,7 +51,7 @@
     'jjk-ryu-maximum':{third:{firstTargetBonus:.15},fifth:{range:495},text3:'砲線上最近的首個有效目標傷害+15%',text5:'全力砲射程450→495，砲幅不變'},
     'jjk-uro':{base:{skyKnock:30},third:{arc:1.3/1.1},fifth:{skyKnock:44},text3:'近身掌擊角1.10→1.30弧度',text5:'普通敵人推退30→44，特殊敵人不搬動'},
     'jjk-uro-thin-ice':{third:{arc:2.1/1.9},fifth:{thinSlow:.25,thinSlowDuration:.45},text3:'碎面扇角1.9→2.1弧度',text5:'普通敵人減速25%持續0.45秒，首領僅弱減速'},
-    'jjk-uro-screen':{base:{threatOnly:true,threatHorizon:.55},third:{threatHorizon:.8,reflectRefresh:true},fifth:{counterBonus:.15,counterDuration:3},text3:'預測0.80秒敵彈；首次真正反射刷新宇守羅彈，三秒內優先反擊',text5:'真正反射後3秒內，下次宇守羅彈傷害+15%；每幕一次'},
+    'jjk-uro-screen':{base:{threatOnly:true,threatHorizon:.55},third:{threatHorizon:.8,reflectRefresh:true},fifth:{counterBonus:.15,counterDuration:3},text3:'預測0.80秒敵彈；首次反射刷新宇守羅彈，三秒內優先反擊射程內可達的原射手',text5:'真正反射後3秒內，下次宇守羅彈傷害+15%；每幕一次'},
     'jjk-uro-collapse':{third:{radius:1.15},fifth:{collapseSlow:.60,slowDuration:.8},text3:'震落半徑110→126.5',text5:'普通敵人減速60%持續0.8秒，首領效果較弱'}
   };
   const owners=new Map(),catalog=G.NarutoSkillCatalog;

@@ -8,7 +8,7 @@
     'jjk-ryu':{charge:.22,cd:1.8,damage:42,range:360,radius:14},
     'jjk-ryu-spread':{charge:.35,cd:5,damage:30,range:200,radius:12},
     'jjk-ryu-impact':{charge:.45,cd:7,damage:100,range:300,radius:90},
-    'jjk-ryu-maximum':{charge:.75,cd:11,damage:200,range:450,radius:26}
+    'jjk-ryu-maximum':{charge:.75,cd:5.4,damage:200,range:450,radius:26}
   };
   const alive=a=>!!a&&!a.dead&&a.hp>0;
   const controlled=a=>G.SelfClones?.isControlled?.(a)??(a===G.Game.player||!!G.SelfClones?.isActor?.(a));
