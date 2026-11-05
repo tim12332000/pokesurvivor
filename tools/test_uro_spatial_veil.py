@@ -9,13 +9,13 @@ OUT=Path(os.environ.get('URO_VEIL_OUT',ROOT/'.omx/state/uro-space-body/after'))
 CHECK=r"""() => {
  const art=G.JujutsuArt,A=JAcceptance,assert=A.assert,p=A.p(),out={};
  const keys=['uro-common','uro-skills'];
- function draw(frame,left,bg,scene,alpha=1,flash=false){
+ function draw(frame,left,bg,scene,alpha=1,flash=false,height=120){
   const c=document.createElement('canvas');c.width=300;c.height=260;const ctx=c.getContext('2d');
   ctx.fillStyle=bg;ctx.fillRect(0,0,c.width,c.height);
   ctx.fillStyle=bg==='#325923'?'#8eae4c':'#baa28b';
   for(let x=0;x<300;x+=16)ctx.fillRect(x,0,6,260);
   if(scene)art.captureUroBackground(ctx);
-  art.draw(ctx,p,{state:'idle',height:120,x:150,y:235,pose:null,alpha,flash});
+  art.draw(ctx,p,{state:'idle',height,x:150,y:235,pose:null,alpha,flash});
   return c;
  }
  // Exercise each exact native frame using public sample's registered semantic.
@@ -38,11 +38,23 @@ CHECK=r"""() => {
  assert(changed>500,'cover does not follow background');
  const alphaSamples=[];
  for(const [alpha,flash]of [[.45,false],[.45,true],[1,true]]){
-  const c=draw(null,false,'#725342',true,alpha,flash),pixel=[...c.getContext('2d').getImageData(150,170,1,1).data];
-  assert(pixel[3]===255&&pixel[0]>pixel[2],'old cyan cloth leaked through flash/clone alpha '+pixel);
+  const c=draw(null,false,'#725342',true,alpha,flash),pixel=[...c.getContext('2d').getImageData(150,160,1,1).data];
+  assert(pixel[3]===255&&pixel[2]<=pixel[0]+8,'old cyan cloth leaked through flash/clone alpha '+pixel);
   alphaSamples.push({alpha,flash,pixel});
  }
  out.alphaSamples=alphaSamples;
+ const bellyA=[...first.getContext('2d').getImageData(150,173,1,1).data],bellyB=[...second.getContext('2d').getImageData(150,173,1,1).data];
+ assert(bellyA[0]>bellyA[1]+20&&bellyA[1]>bellyA[2],'generated normal abdomen is not visible');
+ assert(bellyA.slice(0,3).every((value,i)=>Math.abs(value-bellyB[i])<=4),'abdomen was replaced by scene sampling');
+ out.midriff={grass:bellyA,earth:bellyB,source:'authored safe v3 atlas pixels; no synthesized runtime skin'};
+ const hemGrass=draw(null,false,'#325923',true,1,false,235),hemEarth=draw(null,false,'#725342',true,1,false,235),hemSamples=[];
+ const front=art.metadata.sheets['uro-common'].frames[0];
+ for(const sourceY of [221,242]){
+  const y=Math.round(235+sourceY-front.anchor[1]),a=[...hemGrass.getContext('2d').getImageData(150,y,1,1).data],b=[...hemEarth.getContext('2d').getImageData(150,y,1,1).data];
+  assert(a.slice(0,3).some((v,i)=>Math.abs(v-b[i])>12),'source costume hem was restored at '+sourceY);
+  hemSamples.push({sourceY,grass:a,earth:b});
+ }
+ out.hemSamples=hemSamples;
  out.coverage=coverage;out.sceneChangedPixels=changed;out.inspect=art.spatialVeil.inspect();
  assert(out.inspect.bytes<=1024*1024*4,'snapshot exceeds cap');
  out.images={atlas:atlas.toDataURL(),grass:first.toDataURL(),earth:second.toDataURL(),fallback:fallback.toDataURL()};return out;
@@ -86,7 +98,9 @@ def main():
    for name,png in data.pop('images').items():(OUT/f'{label}-{name}.png').write_bytes(base64.b64decode(png.split(',',1)[1]))
    assert data['inspect']['bytes']<=(512 if mobile else 1024)**2*4
    before=frame.evaluate('G.JujutsuArt.spatialVeil.inspect().captures');page.wait_for_timeout(150);after=frame.evaluate('G.JujutsuArt.spatialVeil.inspect().captures');assert after<=before+1,'paused optical background recaptured continuously'
-   page.screenshot(path=str(OUT/f'{label}-normal-paused.png'));data['native']=native_clip(page,frame,context,mobile,label);assert not errors,errors;report[label]=data;context.close()
+   page.screenshot(path=str(OUT/f'{label}-normal-paused.png'))
+   if os.environ.get('URO_VEIL_CHECK_ONLY')!='1':data['native']=native_clip(page,frame,context,mobile,label)
+   assert not errors,errors;report[label]=data;context.close()
   browser.close()
  report['ok']=True;(OUT/'report.json').write_text(json.dumps(report,indent=2),encoding='utf8');print(json.dumps({'ok':True,'evidence':str(OUT)}))
 

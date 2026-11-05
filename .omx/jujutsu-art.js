@@ -38,11 +38,11 @@
     const [sx,sy,w,h]=frame.rect,source=document.createElement('canvas');source.width=w;source.height=h;
     const scan=source.getContext('2d',{willReadFrequently:true});scan.drawImage(images[frame.sheet],sx,sy,w,h,0,0,w,h);
     const pixels=scan.getImageData(0,0,w,h).data,mask=document.createElement('canvas');mask.width=w;mask.height=h;
-    const ctx=mask.getContext('2d'),rows=[],spans=[];ctx.fillStyle='#fff';
+    const ctx=mask.getContext('2d'),rows=[],spans=[],materialPixels=new Uint8Array(w*h);ctx.fillStyle='#fff';
     for(let y=0;y<h;y++){
       const columns=[];
       for(let x=0;x<w;x++){const i=(y*w+x)*4,r=pixels[i],g=pixels[i+1],b=pixels[i+2];
-        if(pixels[i+3]>100&&g>r*1.08&&b>r*1.08&&b>100)columns.push(x);}
+        if(pixels[i+3]>100&&g>r*1.08&&b>r*1.08&&b>100){columns.push(x);materialPixels[y*w+x]=1;}}
       const runs=[];for(const x of columns){const last=runs.at(-1);if(last&&x-last.right<=12)last.right=x;else runs.push({left:x,right:x});}
       for(const {left,right}of runs){
         // Cover the entire old material, including its black seam/highlight
@@ -60,10 +60,17 @@
       if(pixels[i+3]>80&&r>120&&r>g*1.035&&r>b*1.04&&g>65)protectedPixels[y*w+x]=1;
     }
     for(let y=0;y<h;y++)for(let x=0;x<w;x++){
-      const i=(y*w+x)*4;let protect=protectedPixels[y*w+x];
-      if(!protect&&pixels[i]<100&&pixels[i+1]<100&&pixels[i+2]<100)
-        for(let dy=-2;dy<=2&&!protect;dy++)for(let dx=-2;dx<=2;dx++)if(x+dx>=0&&x+dx<w&&y+dy>=0&&y+dy<h&&protectedPixels[(y+dy)*w+x+dx]){protect=1;break;}
-      if(protect)coverage.data[i+3]=0;
+      const i=(y*w+x)*4;let protect=protectedPixels[y*w+x],clothingEdge=false;
+      // Warm antialiased hem pixels can resemble skin. Material adjacency
+      // wins for dark ink/shadow, before skin protection restores any pixels.
+      if(pixels[i+3]>80&&pixels[i]<210&&pixels[i+1]<190&&pixels[i+2]<180)
+        for(let dy=-6;dy<=6&&!clothingEdge;dy++)for(let dx=-6;dx<=6;dx++)if(x+dx>=0&&x+dx<w&&y+dy>=0&&y+dy<h&&materialPixels[(y+dy)*w+x+dx]){clothingEdge=true;break;}
+      if(clothingEdge)coverage.data[i+3]=255;
+      else{
+        if(!protect&&pixels[i]<100&&pixels[i+1]<100&&pixels[i+2]<100)
+          for(let dy=-2;dy<=2&&!protect;dy++)for(let dx=-2;dx<=2;dx++)if(x+dx>=0&&x+dx<w&&y+dy>=0&&y+dy<h&&protectedPixels[(y+dy)*w+x+dx]){protect=1;break;}
+        if(protect)coverage.data[i+3]=0;
+      }
     }
     ctx.putImageData(coverage,0,0);
     const cutout=document.createElement('canvas');cutout.width=w;cutout.height=h;cutout.dataset.source='jjk-uro-spatial-base:'+key;
@@ -114,7 +121,7 @@
   function loadMetadata(){
     if(metadata)return Promise.resolve(metadata);
     if(!pending)pending=(async()=>{
-      const response=await fetch(new URL('jjk-skills-v2.json',base));
+      const response=await fetch(new URL('jjk-skills-v2.json?v=uro-midriff-v8',base));
       if(!response.ok)throw Error('咒術角色動畫資料載入失敗');
       metadata=await response.json();
       return metadata;

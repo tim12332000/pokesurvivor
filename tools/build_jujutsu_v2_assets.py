@@ -19,7 +19,8 @@ NAMES={
  'ryu-skills':['idleFront','idleBack','idleSide','walkSideA','walkSideB','hurt','lightCharge','lightRelease','lightRecoil','maxCharge','maxRelease','maxRecoil'],
  'uro-skills':['idleFront','idleBack','screenHold','walkSideA','walkSideB','hurt','skyGrab','skyPull','skyRelease','iceWindup','iceContact','iceRecovery'],
  'rika-skills':['travelA','travelB','return','strikeWindup','strikeContact','strikeRecoil','manifestLoom1','manifestLoom2','manifestRoar']}
-SOURCE_VERSIONS={'yuta-skills':3,'rika-skills':3}
+SOURCE_VERSIONS={'yuta-skills':3,'rika-skills':3,'uro-common':3,'uro-skills':3}
+RUNTIME_VERSIONS={'uro-common':3,'uro-skills':3}
 # Inspected anatomical crown-to-feet height excludes Uro's floating tendrils
 # and Ryu's tall pompadour extension. Crouched/down frames keep this denominator.
 BODY_HEIGHTS={'yuta':330,'ryu':300,'uro':235,'rika':350}
@@ -59,8 +60,8 @@ def gutter_cuts(mask,count,vertical):
 
 def register(key):
     version=SOURCE_VERSIONS.get(key,2)
-    source=DESIGN/f'{key}-source-v{version}.png'
-    target=ART/'redrawn'/f'jjk-{key}-v2.png'
+    source=(ART/'uro-space-v8' if key.startswith('uro-') else DESIGN)/f'{key}-source-v{version}.png'
+    target=ART/'redrawn'/f'jjk-{key}-v{RUNTIME_VERSIONS.get(key,2)}.png'
     shutil.copyfile(source,target)
     image=Image.open(source).convert('RGBA');alpha=image.getchannel('A')
     if alpha.getextrema()!=(0,255):raise ValueError(f'{key} has no true transparency')
@@ -112,7 +113,7 @@ def build():
         im.crop((x,y,x+w,y+h)).save(ROOT/'.omx/naruto/portraits'/f'jjk-{slug}.png')
     for slug,name,frames in [('yuta','blade',[3,4,5]),('yuta','speech',[6,7,8]),('yuta','manifest',[9,10,11]),('ryu','light',[6,7,8]),('ryu','maximum',[9,10,11]),('uro','sky',[6,7,8]),('uro','thinIce',[9,10,11]),('uro','screen',[2]),('uro','collapse',[6,7,10,11]),('rika','travel',[0,1]),('rika','return',[2]),('rika','strike',[3,4,5]),('rika','manifest',[6,7,8])]:
         anim(slug,name,f'{slug}-skills',frames,8,slug=='rika' and name in ['travel','manifest'])
-    metadata={'version':2,'sheets':sheets,'animations':animations,'limitations':['Front/back/right common directions are authored; left mirrors right.','Rika tail/muscular anatomy and opaque Uro sky wrapping are explicit stylized game adaptations.','Skill contact timing comes from combat phase/phaseAge, not sequence fps alone.'],'sourceResearch':['jjk-research-v2/sources.json','jjk-anime-references-v2/']}
+    metadata={'version':2,'sheets':sheets,'animations':animations,'limitations':['Front/back/right common directions are authored; left mirrors right.','Rika tail/muscular anatomy is stylized. Uro v3 uses a modest opaque two-piece safety base with ordinary abdomen pixels; runtime optical concealment replaces the clothing while preserving the abdomen. This safety base is not an original costume claim.','Skill contact timing comes from combat phase/phaseAge, not sequence fps alone.'],'sourceResearch':['jjk-research-v2/sources.json','jjk-anime-references-v2/']}
     (ART/'jjk-skills-v2.json').write_text(json.dumps(metadata,ensure_ascii=False,indent=2),encoding='utf-8')
     prompts_path=DESIGN/'prompts-v2.json'
     references={}

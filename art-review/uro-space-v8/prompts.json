@@ -1,0 +1,9 @@
+{
+  "common": {
+    "prompt": "Edit this transparent game sprite atlas as a modest costume redesign for an adult fantasy heroine. Preserve the existing 3-column by 4-row layout, all twelve original poses in the same order and positions, floating lavender hair, face, gold earrings, black wrist cuffs, hands and feet, chibi proportions, crisp cartoon game-art style, transparent gutters and background. Replace the current pale-blue wrapped one-piece outfit with two separate OPAQUE garments: a simple pale-blue sleeveless cropped athletic top covering the upper torso completely, and opaque pale-blue high-waisted shorts covering the hips and upper thighs completely. The ordinary waist/midriff between top and shorts should be visibly present and anatomically natural, with a small belly button on front-facing poses. This is neutral nonsexual adventure-game character clothing, with no suggestive pose or emphasis. Keep top and shorts as flat pale blue so game code can use their color as an optical-effect mask; no garment extends across the visible abdomen. Preserve coverage in back, side, walking, hurt, crouching and lying-down poses. Do not change the character's identity or add props, text, panels or backgrounds. All twelve sprite cells must remain fully separated and fit within the same grid.",
+    "input": "art-review/redrawn/jjk-uro-common-v2.png",
+    "output": "art-review/uro-space-v8/uro-common-source-v3.png",
+    "generator": "built-in image_gen",
+    "referencePolicy": "Only the fully clothed original atlas was supplied. No unclothed official reference."
+  }
+}

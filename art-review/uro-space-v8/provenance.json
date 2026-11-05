@@ -1,0 +1,16 @@
+{
+  "uro-common": {
+    "source": "art-review/uro-space-v8/uro-common-source-v3.png",
+    "sha256": "bb22ed977f5d3b675983d6d64f941b7d0e77395631875e01add336091a8bbb18",
+    "runtimeSha256": "bb22ed977f5d3b675983d6d64f941b7d0e77395631875e01add336091a8bbb18",
+    "physicalFrames": 12,
+    "transparent": true
+  },
+  "uro-skills": {
+    "source": "art-review/uro-space-v8/uro-skills-source-v3.png",
+    "sha256": "24b4e31f7eec4e0386b46b0511ca7c14c8d56543c8a6b8c2f346b6a3c38cedbc",
+    "runtimeSha256": "24b4e31f7eec4e0386b46b0511ca7c14c8d56543c8a6b8c2f346b6a3c38cedbc",
+    "physicalFrames": 12,
+    "transparent": true
+  }
+}

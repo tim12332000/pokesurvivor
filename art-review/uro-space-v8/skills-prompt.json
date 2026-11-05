@@ -1,0 +1,10 @@
+{
+  "prompt": "Edit the FIRST transparent 3-column by 4-row action sprite atlas. Preserve all twelve original poses, positions and action order, transparent gutters, chibi game-art proportions, face, floating lavender hair, gold earrings, wrist cuffs, hands, feet and action gestures. The SECOND image is the approved clothed costume reference for this adult fantasy heroine. Match its modest opaque pale-blue sleeveless cropped athletic top and opaque pale-blue high-waisted shorts covering hips and upper thighs. A normal natural waist/midriff is visible between the two separate garments in poses where the torso is visible; keep a small ordinary belly button on front-facing views. Both garments provide full coverage. This is a neutral, nonsexual adventure-game character sprite atlas. Do not add any suggestive posing or emphasis. Keep the existing pale-blue magical sky sheets in her hands and existing action effects and their locations; they are in-game magic, not costume. Do not let the top or shorts extend across the ordinary abdomen. Preserve each of the twelve action cells: front, back, holding a sky sheet, two side walking poses, crouched hurt, three grasp/pull/release sky actions, and three side punch/recovery actions. Exact same grid, no text or added panels, true transparent background.",
+  "inputs": [
+    "art-review/redrawn/jjk-uro-skills-v2.png",
+    "art-review/uro-space-v8/uro-common-source-v3.png"
+  ],
+  "output": "art-review/uro-space-v8/uro-skills-source-v3.png",
+  "generator": "built-in image_gen",
+  "referencePolicy": "Only fully clothed atlases supplied; common v3 is a safe costume consistency reference."
+}
