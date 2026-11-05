@@ -1,0 +1,31 @@
+{
+  "url": "http://127.0.0.1:8337/art-review/design-council/combat-vfx/prototype.html",
+  "states": [
+    {
+      "demo": "beam",
+      "time": 0.7,
+      "playing": false,
+      "frames": 16,
+      "hitLog": [],
+      "events": 1
+    },
+    {
+      "demo": "sky",
+      "time": 0.85,
+      "playing": false,
+      "frames": 35,
+      "hitLog": [],
+      "events": 1
+    },
+    {
+      "demo": "slash",
+      "time": 0.5,
+      "playing": false,
+      "frames": 56,
+      "hitLog": [],
+      "events": 1
+    }
+  ],
+  "errors": [],
+  "scope": "Actually opened, selected all three modes and scrubbed contact times; visual review follows screenshots. Not game integration."
+}

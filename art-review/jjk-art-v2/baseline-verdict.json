@@ -1,0 +1,20 @@
+{
+  "score": 61,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "Ryu's release illustration emits a hand spell instead of a forehead cannon; retaining his charge frame suppresses an actual release/recoil animation.",
+    "Yuta has only one katana windup and contact, with no authored follow-through; ring manifestation lacks a sequence.",
+    "Uro has only one side walking pose and her sky actions have no readable grab/pull/shatter progression.",
+    "Rika lacks a distinct fully manifested looming silhouette and her strike has no contact-to-recoil progression.",
+    "The initial style match was accepted without sufficient animation-specific and actual gameplay review."
+  ],
+  "suggestions": [
+    "Use official episode visuals to specify source points, silhouettes and action stages.",
+    "Generate separate character-specific skill sheets and semantic frame sequences.",
+    "Verify source/body scale, hand/head anchors and staged poses at the actual game display size."
+  ],
+  "reasoning": "The common sprites share a coherent style but several signatures of the three fighters are missing or contradicted. Consistent outlines alone do not establish animation quality.",
+  "next_actions": ["Inspect official stills", "Generate bespoke skill atlases", "Validate crop metadata", "Review integrated game screenshots"],
+  "reference": "art-review/jjk-art/matched-height-preview.png"
+}

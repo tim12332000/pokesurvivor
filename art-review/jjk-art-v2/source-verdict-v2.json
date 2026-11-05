@@ -1,0 +1,16 @@
+{
+  "score": 88,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "Source assets now satisfy the targeted identity and staged-action corrections, but final integrated-game occlusion, beam joining and Rika actor positioning still require actual gameplay screenshots.",
+    "Left-facing movement mirrors the separately authored right side; only front/back/right are independent directions.",
+    "Rika tail/muscular proportions and Uro opaque sky wrapping remain explicit stylized gameplay adaptations."
+  ],
+  "suggestions": ["Review actual gameplay shots at skill windup/contact/recovery", "Use inspected Ryu frame.points.beamEnd to join external cannon beams without duplicate emitter glows", "Keep Uro anatomical body scaling and taller floating hair in every game state"],
+  "reasoning": "All seven transparent sheets, eighty-one crops and thirty-seven semantic sequences have passed source validation. A separate anime specialist inspected corrected identity and game-sized source rendering; release-level visual acceptance is deliberately pending integrated gameplay review.",
+  "next_actions": ["Root integrates seven-sheet renderer", "QA captures real desktop/mobile skill phases", "Review actual game screenshots before final visual pass"],
+  "source_review": "Anime specialist confirmed corrected common/skill/hurt/down identity, cyan ring, forehead firing, sky folds and elongated Rika jaw at game-sized source display.",
+  "generated_screenshot": "art-review/jjk-art-v2/game-size-all-poses.png",
+  "reference_images": ["art-review/jjk-research-v2/contact-sheet.jpg", "art-review/jjk-anime-references-v2/sendai-pv-sampled-contact.jpg", "art-review/jjk-anime-references-v2/rika-call-sampled-contact.jpg"]
+}

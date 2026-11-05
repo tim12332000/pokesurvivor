@@ -1,0 +1,22 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Uro uses stylized transparent folding lines, not literal world-background refraction.",
+    "Chibi proportions, Rika tail and mirrored directions remain declared game adaptations.",
+    "Official footage and native gameplay were sampled visually; no audio or frame-perfect reproduction claim."
+  ],
+  "suggestions": [
+    "Retain original-versus-adapted distinctions in release documentation."
+  ],
+  "reasoning": "Corrected identities remain consistent across common and skill states. Fresh native screenshots and27 decoded gameplay-video samples show a visible Yuta with looming Rika, connected forehead artillery, and distinct Uro surface-grab/contact/recovery.",
+  "next_actions": [],
+  "evidence": [
+    ".omx/state/jujutsu-v2/final/yuta-manifest-native-draw-order.png",
+    ".omx/state/jujutsu-v2/final/ryu-measured-jjk-ryu-0.png",
+    ".omx/state/jujutsu-v2/final/ryu-measured-jjk-ryu-maximum-0.9.png",
+    ".omx/state/jujutsu-v2/final/mobile-uro-level9-0.6s.png",
+    "art-review/jjk-anime-references-v2/native-video-review.json"
+  ]
+}

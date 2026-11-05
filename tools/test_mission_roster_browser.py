@@ -10,7 +10,8 @@ OUT = Path(__file__).resolve().parents[1] / '.omx/state/mission-roster'
 SETUP = '''()=>{
   const assert=(ok,message)=>{if(!ok)throw Error(message)},s=G.DB.save;
   const roster=G.Catalog.playable(),types=new Set(roster.flatMap(mon=>mon.types));
-  assert(roster.length===8 && roster.every(mon=>mon.naruto),'wrong picker roster');
+  assert(roster.length===11 && roster.every(mon=>mon.naruto),'wrong picker roster');
+  assert([30013,30014,30015].every(dex=>roster.some(mon=>mon.dex===dex)),'Sendai trio missing from playable roster');
   assert(G.Catalog.all().length===G.DEX.length && G.DEX.length>roster.length,'complete catalog was filtered');
   for(let created=0;created<500;created++){
     const fresh={created};G.Progress.ensure(fresh);

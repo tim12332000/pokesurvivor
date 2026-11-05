@@ -1,0 +1,1551 @@
+{
+  "version": 2,
+  "sheets": {
+    "yuta-common": {
+      "source": "redrawn/jjk-yuta-common-v2.png",
+      "bodyHeight": 330,
+      "frames": [
+        {
+          "name": "idleFront",
+          "rect": [
+            94,
+            16,
+            159,
+            331
+          ],
+          "anchor": [
+            84.0,
+            330
+          ]
+        },
+        {
+          "name": "idleBack",
+          "rect": [
+            464,
+            18,
+            157,
+            329
+          ],
+          "anchor": [
+            78.0,
+            328
+          ]
+        },
+        {
+          "name": "idleSide",
+          "rect": [
+            811,
+            16,
+            158,
+            332
+          ],
+          "anchor": [
+            80.5,
+            331
+          ]
+        },
+        {
+          "name": "walkFrontA",
+          "rect": [
+            97,
+            380,
+            161,
+            330
+          ],
+          "anchor": [
+            92.5,
+            329
+          ]
+        },
+        {
+          "name": "walkFrontB",
+          "rect": [
+            454,
+            380,
+            157,
+            331
+          ],
+          "anchor": [
+            80.0,
+            330
+          ]
+        },
+        {
+          "name": "walkBackA",
+          "rect": [
+            807,
+            382,
+            165,
+            328
+          ],
+          "anchor": [
+            91.0,
+            327
+          ]
+        },
+        {
+          "name": "walkBackB",
+          "rect": [
+            100,
+            744,
+            160,
+            330
+          ],
+          "anchor": [
+            89.0,
+            329
+          ]
+        },
+        {
+          "name": "walkSideA",
+          "rect": [
+            450,
+            740,
+            170,
+            332
+          ],
+          "anchor": [
+            82.5,
+            331
+          ]
+        },
+        {
+          "name": "walkSideB",
+          "rect": [
+            804,
+            740,
+            177,
+            332
+          ],
+          "anchor": [
+            82.5,
+            331
+          ]
+        },
+        {
+          "name": "hurt",
+          "rect": [
+            91,
+            1113,
+            177,
+            307
+          ],
+          "anchor": [
+            74.0,
+            306
+          ]
+        },
+        {
+          "name": "fall",
+          "rect": [
+            402,
+            1172,
+            233,
+            242
+          ],
+          "anchor": [
+            116.5,
+            241
+          ]
+        },
+        {
+          "name": "down",
+          "rect": [
+            710,
+            1254,
+            347,
+            148
+          ],
+          "anchor": [
+            173.5,
+            147
+          ]
+        }
+      ],
+      "dimensions": [
+        1086,
+        1448
+      ]
+    },
+    "ryu-common": {
+      "source": "redrawn/jjk-ryu-common-v2.png",
+      "bodyHeight": 300,
+      "frames": [
+        {
+          "name": "idleFront",
+          "rect": [
+            75,
+            8,
+            209,
+            346
+          ],
+          "anchor": [
+            108.0,
+            345
+          ]
+        },
+        {
+          "name": "idleBack",
+          "rect": [
+            441,
+            8,
+            204,
+            346
+          ],
+          "anchor": [
+            102.0,
+            345
+          ]
+        },
+        {
+          "name": "idleSide",
+          "rect": [
+            807,
+            9,
+            185,
+            345
+          ],
+          "anchor": [
+            94.5,
+            344
+          ]
+        },
+        {
+          "name": "walkFrontA",
+          "rect": [
+            81,
+            370,
+            213,
+            351
+          ],
+          "anchor": [
+            95.5,
+            350
+          ]
+        },
+        {
+          "name": "walkFrontB",
+          "rect": [
+            435,
+            370,
+            209,
+            349
+          ],
+          "anchor": [
+            126.0,
+            348
+          ]
+        },
+        {
+          "name": "walkBackA",
+          "rect": [
+            793,
+            373,
+            216,
+            347
+          ],
+          "anchor": [
+            83.5,
+            346
+          ]
+        },
+        {
+          "name": "walkBackB",
+          "rect": [
+            80,
+            734,
+            198,
+            348
+          ],
+          "anchor": [
+            109.0,
+            347
+          ]
+        },
+        {
+          "name": "walkSideA",
+          "rect": [
+            437,
+            731,
+            181,
+            351
+          ],
+          "anchor": [
+            81.5,
+            350
+          ]
+        },
+        {
+          "name": "walkSideB",
+          "rect": [
+            791,
+            729,
+            199,
+            351
+          ],
+          "anchor": [
+            100.0,
+            350
+          ]
+        },
+        {
+          "name": "hurt",
+          "rect": [
+            58,
+            1103,
+            234,
+            326
+          ],
+          "anchor": [
+            99.5,
+            325
+          ]
+        },
+        {
+          "name": "fall",
+          "rect": [
+            361,
+            1144,
+            297,
+            286
+          ],
+          "anchor": [
+            148.5,
+            285
+          ]
+        },
+        {
+          "name": "down",
+          "rect": [
+            675,
+            1276,
+            385,
+            152
+          ],
+          "anchor": [
+            192.5,
+            151
+          ]
+        }
+      ],
+      "dimensions": [
+        1086,
+        1448
+      ]
+    },
+    "uro-common": {
+      "source": "redrawn/jjk-uro-common-v2.png",
+      "bodyHeight": 235,
+      "frames": [
+        {
+          "name": "idleFront",
+          "rect": [
+            102,
+            4,
+            182,
+            354
+          ],
+          "anchor": [
+            71.0,
+            353
+          ]
+        },
+        {
+          "name": "idleBack",
+          "rect": [
+            470,
+            4,
+            165,
+            353
+          ],
+          "anchor": [
+            74.0,
+            352
+          ]
+        },
+        {
+          "name": "idleSide",
+          "rect": [
+            818,
+            4,
+            161,
+            354
+          ],
+          "anchor": [
+            79.0,
+            353
+          ]
+        },
+        {
+          "name": "walkFrontA",
+          "rect": [
+            99,
+            372,
+            171,
+            345
+          ],
+          "anchor": [
+            85.0,
+            344
+          ]
+        },
+        {
+          "name": "walkFrontB",
+          "rect": [
+            460,
+            372,
+            167,
+            345
+          ],
+          "anchor": [
+            82.0,
+            344
+          ]
+        },
+        {
+          "name": "walkBackA",
+          "rect": [
+            826,
+            367,
+            161,
+            350
+          ],
+          "anchor": [
+            69.5,
+            349
+          ]
+        },
+        {
+          "name": "walkBackB",
+          "rect": [
+            102,
+            727,
+            162,
+            350
+          ],
+          "anchor": [
+            84.0,
+            349
+          ]
+        },
+        {
+          "name": "walkSideA",
+          "rect": [
+            446,
+            728,
+            175,
+            349
+          ],
+          "anchor": [
+            96.0,
+            348
+          ]
+        },
+        {
+          "name": "walkSideB",
+          "rect": [
+            803,
+            729,
+            183,
+            348
+          ],
+          "anchor": [
+            101.0,
+            347
+          ]
+        },
+        {
+          "name": "hurt",
+          "rect": [
+            78,
+            1090,
+            185,
+            341
+          ],
+          "anchor": [
+            71.0,
+            340
+          ]
+        },
+        {
+          "name": "fall",
+          "rect": [
+            387,
+            1103,
+            222,
+            321
+          ],
+          "anchor": [
+            111.0,
+            320
+          ]
+        },
+        {
+          "name": "down",
+          "rect": [
+            705,
+            1186,
+            365,
+            224
+          ],
+          "anchor": [
+            182.5,
+            223
+          ]
+        }
+      ],
+      "dimensions": [
+        1086,
+        1448
+      ]
+    },
+    "yuta-skills": {
+      "source": "redrawn/jjk-yuta-skills-v2.png",
+      "bodyHeight": 330,
+      "frames": [
+        {
+          "name": "idleFront",
+          "rect": [
+            98,
+            16,
+            151,
+            328
+          ],
+          "anchor": [
+            79.0,
+            327
+          ]
+        },
+        {
+          "name": "walkSideA",
+          "rect": [
+            460,
+            20,
+            167,
+            324
+          ],
+          "anchor": [
+            77.5,
+            323
+          ]
+        },
+        {
+          "name": "walkSideB",
+          "rect": [
+            816,
+            19,
+            169,
+            325
+          ],
+          "anchor": [
+            87.5,
+            324
+          ]
+        },
+        {
+          "name": "bladeWindup",
+          "rect": [
+            74,
+            388,
+            214,
+            318
+          ],
+          "anchor": [
+            107.0,
+            317
+          ]
+        },
+        {
+          "name": "bladeSlash",
+          "rect": [
+            359,
+            394,
+            395,
+            313
+          ],
+          "anchor": [
+            125.5,
+            312
+          ],
+          "points": {
+            "bladeTip": [
+              392,
+              137
+            ]
+          }
+        },
+        {
+          "name": "bladeRecovery",
+          "rect": [
+            762,
+            399,
+            287,
+            308
+          ],
+          "anchor": [
+            119.0,
+            307
+          ]
+        },
+        {
+          "name": "speechWindup",
+          "rect": [
+            92,
+            740,
+            183,
+            330
+          ],
+          "anchor": [
+            88.5,
+            329
+          ],
+          "points": {
+            "mouth": [
+              91,
+              122
+            ]
+          }
+        },
+        {
+          "name": "speechRelease",
+          "rect": [
+            402,
+            742,
+            254,
+            327
+          ],
+          "anchor": [
+            110.0,
+            326
+          ],
+          "points": {
+            "mouth": [
+              132,
+              125
+            ]
+          }
+        },
+        {
+          "name": "speechRecovery",
+          "rect": [
+            788,
+            748,
+            201,
+            321
+          ],
+          "anchor": [
+            92.0,
+            320
+          ]
+        },
+        {
+          "name": "ringRaise",
+          "rect": [
+            100,
+            1102,
+            156,
+            333
+          ],
+          "anchor": [
+            78.5,
+            332
+          ],
+          "points": {
+            "ring": [
+              65,
+              143
+            ]
+          }
+        },
+        {
+          "name": "ringGlow",
+          "rect": [
+            463,
+            1102,
+            156,
+            333
+          ],
+          "anchor": [
+            79.5,
+            332
+          ],
+          "points": {
+            "ring": [
+              65,
+              143
+            ]
+          }
+        },
+        {
+          "name": "ringRecovery",
+          "rect": [
+            822,
+            1102,
+            157,
+            333
+          ],
+          "anchor": [
+            80.0,
+            332
+          ]
+        }
+      ],
+      "dimensions": [
+        1086,
+        1448
+      ]
+    },
+    "ryu-skills": {
+      "source": "redrawn/jjk-ryu-skills-v2.png",
+      "bodyHeight": 300,
+      "frames": [
+        {
+          "name": "idleFront",
+          "rect": [
+            72,
+            9,
+            217,
+            343
+          ],
+          "anchor": [
+            112.0,
+            342
+          ]
+        },
+        {
+          "name": "idleBack",
+          "rect": [
+            438,
+            9,
+            205,
+            343
+          ],
+          "anchor": [
+            105.0,
+            342
+          ]
+        },
+        {
+          "name": "idleSide",
+          "rect": [
+            803,
+            9,
+            187,
+            345
+          ],
+          "anchor": [
+            98.5,
+            344
+          ]
+        },
+        {
+          "name": "walkSideA",
+          "rect": [
+            75,
+            370,
+            202,
+            349
+          ],
+          "anchor": [
+            96.5,
+            348
+          ]
+        },
+        {
+          "name": "walkSideB",
+          "rect": [
+            438,
+            372,
+            197,
+            347
+          ],
+          "anchor": [
+            82.5,
+            346
+          ]
+        },
+        {
+          "name": "hurt",
+          "rect": [
+            777,
+            401,
+            250,
+            317
+          ],
+          "anchor": [
+            102.5,
+            316
+          ]
+        },
+        {
+          "name": "lightCharge",
+          "rect": [
+            51,
+            758,
+            239,
+            323
+          ],
+          "anchor": [
+            107.5,
+            322
+          ],
+          "points": {
+            "muzzle": [
+              198,
+              114
+            ]
+          }
+        },
+        {
+          "name": "lightRelease",
+          "rect": [
+            385,
+            762,
+            298,
+            319
+          ],
+          "anchor": [
+            114.0,
+            318
+          ],
+          "points": {
+            "muzzle": [
+              218,
+              78
+            ],
+            "beamEnd": [
+              295,
+              78
+            ]
+          }
+        },
+        {
+          "name": "lightRecoil",
+          "rect": [
+            796,
+            737,
+            226,
+            344
+          ],
+          "anchor": [
+            115.0,
+            343
+          ],
+          "points": {
+            "muzzle": [
+              136,
+              60
+            ]
+          }
+        },
+        {
+          "name": "maxCharge",
+          "rect": [
+            23,
+            1143,
+            264,
+            295
+          ],
+          "anchor": [
+            125.5,
+            294
+          ],
+          "points": {
+            "muzzle": [
+              215,
+              114
+            ]
+          }
+        },
+        {
+          "name": "maxRelease",
+          "rect": [
+            365,
+            1137,
+            365,
+            301
+          ],
+          "anchor": [
+            126.0,
+            300
+          ],
+          "points": {
+            "muzzle": [
+              235,
+              88
+            ],
+            "beamEnd": [
+              363,
+              88
+            ]
+          }
+        },
+        {
+          "name": "maxRecoil",
+          "rect": [
+            764,
+            1100,
+            281,
+            339
+          ],
+          "anchor": [
+            148.5,
+            338
+          ],
+          "points": {
+            "muzzle": [
+              164,
+              49
+            ]
+          }
+        }
+      ],
+      "dimensions": [
+        1086,
+        1448
+      ]
+    },
+    "uro-skills": {
+      "source": "redrawn/jjk-uro-skills-v2.png",
+      "bodyHeight": 235,
+      "frames": [
+        {
+          "name": "idleFront",
+          "rect": [
+            89,
+            9,
+            183,
+            343
+          ],
+          "anchor": [
+            87.0,
+            342
+          ]
+        },
+        {
+          "name": "idleBack",
+          "rect": [
+            450,
+            9,
+            185,
+            344
+          ],
+          "anchor": [
+            94.0,
+            343
+          ]
+        },
+        {
+          "name": "screenHold",
+          "rect": [
+            770,
+            9,
+            196,
+            344
+          ],
+          "anchor": [
+            100.0,
+            343
+          ]
+        },
+        {
+          "name": "walkSideA",
+          "rect": [
+            71,
+            365,
+            201,
+            349
+          ],
+          "anchor": [
+            123.0,
+            348
+          ]
+        },
+        {
+          "name": "walkSideB",
+          "rect": [
+            434,
+            365,
+            193,
+            347
+          ],
+          "anchor": [
+            114.5,
+            346
+          ]
+        },
+        {
+          "name": "hurt",
+          "rect": [
+            801,
+            421,
+            212,
+            289
+          ],
+          "anchor": [
+            81.5,
+            288
+          ]
+        },
+        {
+          "name": "skyGrab",
+          "rect": [
+            42,
+            730,
+            238,
+            337
+          ],
+          "anchor": [
+            125.0,
+            336
+          ]
+        },
+        {
+          "name": "skyPull",
+          "rect": [
+            377,
+            730,
+            244,
+            335
+          ],
+          "anchor": [
+            124.0,
+            334
+          ]
+        },
+        {
+          "name": "skyRelease",
+          "rect": [
+            708,
+            732,
+            366,
+            332
+          ],
+          "anchor": [
+            122.5,
+            331
+          ]
+        },
+        {
+          "name": "iceWindup",
+          "rect": [
+            26,
+            1091,
+            244,
+            338
+          ],
+          "anchor": [
+            117.0,
+            337
+          ]
+        },
+        {
+          "name": "iceContact",
+          "rect": [
+            367,
+            1089,
+            270,
+            339
+          ],
+          "anchor": [
+            109.5,
+            338
+          ]
+        },
+        {
+          "name": "iceRecovery",
+          "rect": [
+            718,
+            1088,
+            285,
+            340
+          ],
+          "anchor": [
+            112.0,
+            339
+          ]
+        }
+      ],
+      "dimensions": [
+        1086,
+        1448
+      ]
+    },
+    "rika-skills": {
+      "source": "redrawn/jjk-rika-skills-v2.png",
+      "bodyHeight": 350,
+      "frames": [
+        {
+          "name": "travelA",
+          "rect": [
+            56,
+            14,
+            299,
+            346
+          ],
+          "anchor": [
+            149.5,
+            345
+          ]
+        },
+        {
+          "name": "travelB",
+          "rect": [
+            400,
+            12,
+            378,
+            329
+          ],
+          "anchor": [
+            189.0,
+            328
+          ]
+        },
+        {
+          "name": "return",
+          "rect": [
+            866,
+            9,
+            269,
+            347
+          ],
+          "anchor": [
+            134.5,
+            346
+          ]
+        },
+        {
+          "name": "strikeWindup",
+          "rect": [
+            38,
+            384,
+            362,
+            379
+          ],
+          "anchor": [
+            181.0,
+            378
+          ]
+        },
+        {
+          "name": "strikeContact",
+          "rect": [
+            400,
+            428,
+            376,
+            359
+          ],
+          "anchor": [
+            188.0,
+            358
+          ]
+        },
+        {
+          "name": "strikeRecoil",
+          "rect": [
+            803,
+            415,
+            355,
+            349
+          ],
+          "anchor": [
+            177.5,
+            348
+          ]
+        },
+        {
+          "name": "manifestLoom1",
+          "rect": [
+            11,
+            798,
+            389,
+            414
+          ],
+          "anchor": [
+            194.5,
+            413
+          ]
+        },
+        {
+          "name": "manifestLoom2",
+          "rect": [
+            400,
+            800,
+            399,
+            416
+          ],
+          "anchor": [
+            199.5,
+            415
+          ]
+        },
+        {
+          "name": "manifestRoar",
+          "rect": [
+            799,
+            786,
+            392,
+            436
+          ],
+          "anchor": [
+            196.0,
+            435
+          ]
+        }
+      ],
+      "dimensions": [
+        1199,
+        1312
+      ]
+    }
+  },
+  "animations": {
+    "yuta": {
+      "idleFront": {
+        "sheet": "yuta-common",
+        "frames": [
+          0
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "idleBack": {
+        "sheet": "yuta-common",
+        "frames": [
+          1
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "idleSide": {
+        "sheet": "yuta-common",
+        "frames": [
+          2
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkFront": {
+        "sheet": "yuta-common",
+        "frames": [
+          3,
+          4
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkBack": {
+        "sheet": "yuta-common",
+        "frames": [
+          5,
+          6
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkSide": {
+        "sheet": "yuta-common",
+        "frames": [
+          7,
+          8
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "hurt": {
+        "sheet": "yuta-common",
+        "frames": [
+          9
+        ],
+        "fps": 9,
+        "loop": false
+      },
+      "faint": {
+        "sheet": "yuta-common",
+        "frames": [
+          10,
+          11
+        ],
+        "fps": 9,
+        "loop": false
+      },
+      "blade": {
+        "sheet": "yuta-skills",
+        "frames": [
+          3,
+          4,
+          5
+        ],
+        "fps": 8,
+        "loop": false
+      },
+      "speech": {
+        "sheet": "yuta-skills",
+        "frames": [
+          6,
+          7,
+          8
+        ],
+        "fps": 8,
+        "loop": false
+      },
+      "manifest": {
+        "sheet": "yuta-skills",
+        "frames": [
+          9,
+          10,
+          11
+        ],
+        "fps": 8,
+        "loop": false
+      }
+    },
+    "ryu": {
+      "idleFront": {
+        "sheet": "ryu-common",
+        "frames": [
+          0
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "idleBack": {
+        "sheet": "ryu-common",
+        "frames": [
+          1
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "idleSide": {
+        "sheet": "ryu-common",
+        "frames": [
+          2
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkFront": {
+        "sheet": "ryu-common",
+        "frames": [
+          3,
+          4
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkBack": {
+        "sheet": "ryu-common",
+        "frames": [
+          5,
+          6
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkSide": {
+        "sheet": "ryu-common",
+        "frames": [
+          7,
+          8
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "hurt": {
+        "sheet": "ryu-common",
+        "frames": [
+          9
+        ],
+        "fps": 9,
+        "loop": false
+      },
+      "faint": {
+        "sheet": "ryu-common",
+        "frames": [
+          10,
+          11
+        ],
+        "fps": 9,
+        "loop": false
+      },
+      "light": {
+        "sheet": "ryu-skills",
+        "frames": [
+          6,
+          7,
+          8
+        ],
+        "fps": 8,
+        "loop": false
+      },
+      "maximum": {
+        "sheet": "ryu-skills",
+        "frames": [
+          9,
+          10,
+          11
+        ],
+        "fps": 8,
+        "loop": false
+      }
+    },
+    "uro": {
+      "idleFront": {
+        "sheet": "uro-common",
+        "frames": [
+          0
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "idleBack": {
+        "sheet": "uro-common",
+        "frames": [
+          1
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "idleSide": {
+        "sheet": "uro-common",
+        "frames": [
+          2
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkFront": {
+        "sheet": "uro-common",
+        "frames": [
+          3,
+          4
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkBack": {
+        "sheet": "uro-common",
+        "frames": [
+          5,
+          6
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "walkSide": {
+        "sheet": "uro-common",
+        "frames": [
+          7,
+          8
+        ],
+        "fps": 9,
+        "loop": true
+      },
+      "hurt": {
+        "sheet": "uro-common",
+        "frames": [
+          9
+        ],
+        "fps": 9,
+        "loop": false
+      },
+      "faint": {
+        "sheet": "uro-common",
+        "frames": [
+          10,
+          11
+        ],
+        "fps": 9,
+        "loop": false
+      },
+      "sky": {
+        "sheet": "uro-skills",
+        "frames": [
+          6,
+          7,
+          8
+        ],
+        "fps": 8,
+        "loop": false
+      },
+      "thinIce": {
+        "sheet": "uro-skills",
+        "frames": [
+          9,
+          10,
+          11
+        ],
+        "fps": 8,
+        "loop": false
+      },
+      "screen": {
+        "sheet": "uro-skills",
+        "frames": [
+          2
+        ],
+        "fps": 8,
+        "loop": false
+      },
+      "collapse": {
+        "sheet": "uro-skills",
+        "frames": [
+          6,
+          7,
+          10,
+          11
+        ],
+        "fps": 8,
+        "loop": false
+      }
+    },
+    "rika": {
+      "travel": {
+        "sheet": "rika-skills",
+        "frames": [
+          0,
+          1
+        ],
+        "fps": 8,
+        "loop": true
+      },
+      "return": {
+        "sheet": "rika-skills",
+        "frames": [
+          2
+        ],
+        "fps": 8,
+        "loop": false
+      },
+      "strike": {
+        "sheet": "rika-skills",
+        "frames": [
+          3,
+          4,
+          5
+        ],
+        "fps": 8,
+        "loop": false
+      },
+      "manifest": {
+        "sheet": "rika-skills",
+        "frames": [
+          6,
+          7,
+          8
+        ],
+        "fps": 8,
+        "loop": true
+      }
+    }
+  },
+  "limitations": [
+    "Front/back/right common directions are authored; left mirrors right.",
+    "Rika tail/muscular anatomy and opaque Uro sky wrapping are explicit stylized game adaptations.",
+    "Skill contact timing comes from combat phase/phaseAge, not sequence fps alone."
+  ],
+  "sourceResearch": [
+    "jjk-research-v2/sources.json",
+    "jjk-anime-references-v2/"
+  ]
+}

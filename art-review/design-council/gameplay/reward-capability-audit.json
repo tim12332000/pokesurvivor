@@ -1,0 +1,287 @@
+[
+  {
+    "dex": 30001,
+    "level": 20,
+    "slots": [
+      [
+        "naruto-nine-tails-cloak"
+      ]
+    ],
+    "moves": [
+      {
+        "id": "naruto-shadow-clones",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-naruto",
+        "passive": true,
+        "autoCast": true
+      },
+      {
+        "id": "naruto-rasenshuriken",
+        "passive": true,
+        "autoCast": true
+      },
+      {
+        "id": "naruto-toad-summon",
+        "passive": true,
+        "autoCast": true
+      },
+      {
+        "id": "naruto-nine-tails-cloak",
+        "passive": null,
+        "autoCast": null
+      }
+    ],
+    "fusionOption": null,
+    "hero": "naruto"
+  },
+  {
+    "dex": 30010,
+    "level": 20,
+    "slots": [],
+    "moves": [
+      {
+        "id": "naruto-pain",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-pain-gravity",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-pain-missiles",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-pain-absorb",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-pain-summon",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-pain-soul",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-pain-repair",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-pain-planet",
+        "passive": true,
+        "autoCast": null
+      }
+    ],
+    "fusionOption": null,
+    "hero": "pain"
+  },
+  {
+    "dex": 30012,
+    "level": 20,
+    "slots": [],
+    "moves": [
+      {
+        "id": "naruto-kimimaro",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-boomerang",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-bone-guard",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-camellia",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-bullets",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-larch",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-vine",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-flower",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-lily",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-bracken",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-kimimaro-curse",
+        "passive": true,
+        "autoCast": null
+      }
+    ],
+    "fusionOption": null,
+    "hero": "kimimaro"
+  },
+  {
+    "dex": 30011,
+    "level": 20,
+    "slots": [
+      [
+        "naruto-temari-great-scythe"
+      ],
+      [
+        "naruto-temari-typhoon"
+      ]
+    ],
+    "moves": [
+      {
+        "id": "naruto-temari",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-temari-three-stars",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-temari-great-scythe",
+        "passive": null,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-temari-blade-dance",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-temari-typhoon",
+        "passive": null,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-temari-reflect",
+        "passive": true,
+        "autoCast": null
+      }
+    ],
+    "fusionOption": {
+      "mode": "pair",
+      "loose": [
+        "naruto-temari-great-scythe",
+        "naruto-temari-typhoon"
+      ],
+      "group": null
+    },
+    "hero": "temari"
+  },
+  {
+    "dex": 30007,
+    "level": 20,
+    "slots": [
+      [
+        "naruto-sand-coffin"
+      ],
+      [
+        "naruto-sand-tsunami"
+      ],
+      [
+        "naruto-sand-prison"
+      ]
+    ],
+    "moves": [
+      {
+        "id": "naruto-gaara",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-sand-coffin",
+        "passive": null,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-sand-shield",
+        "passive": true,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-sand-tsunami",
+        "passive": null,
+        "autoCast": null
+      },
+      {
+        "id": "naruto-sand-prison",
+        "passive": false,
+        "autoCast": null
+      }
+    ],
+    "fusionOption": {
+      "mode": "pair",
+      "loose": [
+        "naruto-sand-coffin",
+        "naruto-sand-tsunami",
+        "naruto-sand-prison"
+      ],
+      "group": null
+    },
+    "hero": "gaara"
+  },
+  {
+    "dex": 30013,
+    "level": 20,
+    "slots": [],
+    "moves": [
+      {
+        "id": "jjk-yuta",
+        "passive": true,
+        "autoCast": true
+      },
+      {
+        "id": "jjk-yuta-rika",
+        "passive": true,
+        "autoCast": true
+      },
+      {
+        "id": "jjk-yuta-speech",
+        "passive": true,
+        "autoCast": true
+      },
+      {
+        "id": "jjk-yuta-manifest",
+        "passive": true,
+        "autoCast": true
+      }
+    ],
+    "fusionOption": null,
+    "hero": "jjk-yuta"
+  }
+]

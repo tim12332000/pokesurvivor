@@ -122,3 +122,17 @@ body:has(#scr-menu.launch-menu:not(.hidden)) #credits-line {display:none}
 }
 
 html[lang="en"] body #scr-menu.launch-menu .launch-action::before {content:attr(data-hero-name) " · Ready for battle"}
+body #scr-menu.launch-menu .launch-detail>#trial-build-options {display:block;grid-column:1/-1;min-width:0}
+body #scr-menu.launch-menu .launch-detail>#trial-build-options[hidden] {display:none}
+
+body #scr-menu.launch-menu .launch-kit {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px 0 16px}
+body #scr-menu.launch-menu .launch-kit[hidden] {display:none}
+body #scr-menu.launch-menu .launch-kit>span {display:grid;justify-items:center;gap:3px;padding:7px 2px;border:1px solid #536b66;border-radius:6px;background:#13242180}
+body #scr-menu.launch-menu .launch-kit b {font-size:11px;line-height:1.2;color:#e1ece5}
+body #scr-menu.launch-menu .launch-kit small {font-size:9px;line-height:1.2;color:#a5c8c6}
+@media (max-width:700px) {
+  body #scr-menu.launch-menu .launch-kit {grid-column:1 / -1;gap:6px;margin:10px 0 0}
+  body #scr-menu.launch-menu .launch-kit>span {grid-template-columns:22px auto;column-gap:4px;row-gap:1px;padding:6px 3px}
+  body #scr-menu.launch-menu .launch-kit img {grid-row:1 / 3}
+  body #scr-menu.launch-menu .launch-kit b {font-size:10px}
+}

@@ -33,6 +33,9 @@ jobs:
           node tools/test_catalog_baseline.js
           node tools/test_enemy_catalog.js
           node tools/test_mission_roster.js
+          node tools/test_growth_contract.cjs
+          node tools/test_combat_pulse.cjs
+          node tools/test_trial_build_scope.cjs
       - run: python tools/build_digimon_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

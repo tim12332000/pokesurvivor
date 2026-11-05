@@ -99,3 +99,15 @@
 !/naruto-rasengan-vfx.js
 
 !/naruto-rasenshuriken-vfx.js
+
+# Public Sendai characters and their shared gameplay runtime.
+!/jujutsu.js
+!/jujutsu-art.js
+!/jjk-yuta.js
+!/jjk-ryu.js
+!/jjk-uro.js
+!/combat-pulse.js
+!/jujutsu-growth.js
+!/jujutsu-vfx.js
+!/trial-build.js
+!/run-insights.js

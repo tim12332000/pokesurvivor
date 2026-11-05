@@ -1,0 +1,31 @@
+{
+  "phase": "four independent drafts completed before peerdiscussion",
+  "agents": [
+    "design_gameplay",
+    "design_combat_vfx",
+    "design_anime_art",
+    "design_player_balance"
+  ],
+  "drafts": {
+    "gameplay": {
+      "path": "art-review\\design-council\\gameplay\\proposal.md",
+      "bytes": 13098,
+      "sha256": "6703f201578f3821da75f3524b67320ebabb04db6b365ca18e76d0bdb2e893df"
+    },
+    "combat-vfx": {
+      "path": "art-review\\design-council\\combat-vfx\\proposal.md",
+      "bytes": 16141,
+      "sha256": "755c76141138e19f4b6e3de1bafb539e59086a57aba2ffec6c70c2f8d5f29985"
+    },
+    "anime-art": {
+      "path": "art-review\\design-council\\anime-art\\proposal.md",
+      "bytes": 16805,
+      "sha256": "4a2b35d966206dfd30123f3f9ca0a0f60b1d87d3f4723449b718155ed6e1b82f"
+    },
+    "player-balance": {
+      "path": "art-review\\design-council\\player-balance\\proposal.md",
+      "bytes": 14625,
+      "sha256": "8bd5ddeb5830240a7c8fcf419d1a8112c9cbd269a8429be956b79ce523bd3b54"
+    }
+  }
+}

@@ -140,7 +140,7 @@ G.Spawner = (() => {
 
     // --- jefes ---
     const b = G.Enemies.BOSSES[bossIdx];
-    if (b && t >= b.at) { spawnBoss(anchor(), t, b); bossIdx++; }
+    if (b && t >= b.at) { const mainBoss=spawnBoss(anchor(), t, b);mainBoss.mainBossSlot=bossIdx;bossIdx++; }
 
     // Combate de jefe: las oleadas bajan al 25% y no hay mareas, para que el
     // jefe sea un momento propio y se le pueda apuntar entre la multitud.

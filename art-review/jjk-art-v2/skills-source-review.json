@@ -1,0 +1,14 @@
+{
+  "score": 84,
+  "verdict": "revise",
+  "category_match": true,
+  "differences": [
+    "New skill sheets correct Yuta hair/shoes, Ryu bare torso/cuffs/forehead release, and Uro tendrils/earrings; old common states still contradict them until new common sheets are installed.",
+    "Uro floating hair adds substantial height; scale must use anatomical skull-to-feet height so her body does not shrink compared with other heroes.",
+    "Ring glow is a tiny authored finger effect and must not be duplicated by a whole-body aura.",
+    "New skill crops and game integration remain unverified; no release pass is claimed."
+  ],
+  "suggestions": ["Generate dedicated matching common sheets", "Use body anatomy rather than hair/effect bounds for scale", "Inspect official sampled Rika footage before accepting its full silhouette", "Review actual game-sized stages after integration"],
+  "reasoning": "The new authored skill stages fix major signature errors, but consistency across movement, injury and death must be established before acceptance.",
+  "next_actions": ["Generate matching common12 for each hero", "Register semantic frame metadata", "Run source and actual gameplay visual review"]
+}

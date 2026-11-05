@@ -1,6 +1,35 @@
 /* Personal test controls: the public IP is checked in memory and never saved. */
 (() => {
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+  const params=new URLSearchParams(location.search),allSkills=params.get('allSkills')==='1';
+  const startLevel=params.get('startLevel')==='20'?20:allSkills?30:null;
+  if(local&&startLevel){
+    const startRun=G.Game.startRun;
+    G.Game.startRun=function(...args){
+      const result=startRun.apply(this,args),player=G.Game.player;
+      if(player?.mon?.naruto){
+        const route=new URLSearchParams(location.search).get('build');
+        if(startLevel===20&&route&&G.TrialBuild?.routes[player.dex]){
+          G.TrialBuild.apply(player,route,19);G.Game.debugTime(0);
+          G.UI.toast('20級標準配裝：19次合法選卡已配置',3000);return result;
+        }
+        player.level=startLevel;player.xp=0;player.xpNext=G.Player.xpFor(startLevel);
+        const ids=G.Moves.poolFor(player.mon);
+        if(allSkills)player.maxMoves=Math.max(player.maxMoves,ids.length);
+        player.narutoMilestonesShown??=new Set();
+        for(const id of ids){player.addMove(id);player.narutoMilestonesShown.add(id);}
+        if(allSkills)for(const move of player.moves){
+          const rank=Math.min(5,1+(G.Moves.BY_ID[move.id]?.ups?.length||0));
+          Object.assign(move,G.Moves.instance(move.id,rank));
+        }
+        player.arrange();
+        player.trialBuild={mode:allSkills?'max':'skills',name:allSkills?'全技能五階':'20級／四招一階／未配置19次成長',picks:[]};
+        G.Game.debugTime(0);
+        G.UI.toast(allSkills?'本機測試：全技能五階已開啟':'20級試玩：招式已解鎖',3000);
+      }
+      return result;
+    };
+  }
   const button=document.createElement('button');
   button.id='dev-level-up';button.className='btn small gold hidden';button.translate=true;
   button.textContent='升一等（測試）';button.title='測試用：升一等並選擇升級';

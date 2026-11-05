@@ -1,0 +1,2247 @@
+{
+  "cases": [
+    {
+      "route": "control",
+      "budget": 19,
+      "threat": "ranged",
+      "seed": 17,
+      "seconds": 20,
+      "baselineCd": 0.76,
+      "records": [
+        {
+          "level": 2,
+          "key": "stat:atk",
+          "description": "+10% de daño con todos los movimientos.\n攻擊 1.85→2.03",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1
+            }
+          }
+        },
+        {
+          "level": 3,
+          "key": "new:jjk-uro-thin-ice",
+          "description": "擊碎前方空面，造成大範圍扇形傷害。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 1
+            }
+          }
+        },
+        {
+          "level": 4,
+          "key": "up:jjk-uro-thin-ice",
+          "description": "傷害提高\n傷害 72→86.4",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 2
+            }
+          }
+        },
+        {
+          "level": 5,
+          "key": "up:jjk-uro-thin-ice",
+          "description": "傷害提高；碎面扇角1.9→2.1弧度\n傷害 86.4→104.4",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 2
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 3
+            }
+          }
+        },
+        {
+          "level": 6,
+          "key": "new:jjk-uro-screen",
+          "description": "展開空面2.3秒，反射5／6／7／8／9顆來襲飛彈；不阻擋近戰。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 3
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 1
+            }
+          }
+        },
+        {
+          "level": 7,
+          "key": "up:jjk-uro-thin-ice",
+          "description": "傷害提高\n傷害 104.4→126",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 1
+            }
+          }
+        },
+        {
+          "level": 8,
+          "key": "up:jjk-uro-thin-ice",
+          "description": "傷害提高；普通敵人減速25%持續0.45秒，首領僅弱減速\n傷害 126→151.2",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1
+            }
+          }
+        },
+        {
+          "level": 9,
+          "key": "new:jjk-uro-collapse",
+          "description": "扭曲目標周圍空間，造成範圍傷害並短暫減速；首領減速較弱。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 10,
+          "key": "up:jjk-uro-collapse",
+          "description": "傷害提高\n傷害 112→134.4",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 2
+            }
+          }
+        },
+        {
+          "level": 11,
+          "key": "up:jjk-uro-collapse",
+          "description": "傷害提高；震落半徑110→126.5\n傷害 134.4→162.4；半徑 110→126.5",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 2
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 3
+            }
+          }
+        },
+        {
+          "level": 12,
+          "key": "up:jjk-uro-collapse",
+          "description": "傷害提高\n傷害 162.4→196",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 3
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 4
+            }
+          }
+        },
+        {
+          "level": 13,
+          "key": "up:jjk-uro-collapse",
+          "description": "傷害提高；普通敵人減速60%持續0.8秒，首領效果較弱\n傷害 196→235.2",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 4
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 14,
+          "key": "stat:atk",
+          "description": "+10% de daño con todos los movimientos.\n攻擊 2.03→2.24",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 15,
+          "key": "stat:cd",
+          "description": "-8% de recarga en todos los movimientos.\n冷卻倍率 0.76→0.7；就緒仍可能等待動作",
+          "before": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 16,
+          "key": "stat:def",
+          "description": "+6% de reducción de daño recibido.\n基礎減傷 0.16→0.22",
+          "before": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 17,
+          "key": "stat:atk",
+          "description": "+10% de daño con todos los movimientos.\n攻擊 2.24→2.46",
+          "before": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 18,
+          "key": "stat:cd",
+          "description": "-8% de recarga en todos los movimientos.\n冷卻倍率 0.7→0.64；就緒仍可能等待動作",
+          "before": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 19,
+          "key": "stat:def",
+          "description": "+6% de reducción de daño recibido.\n基礎減傷 0.22→0.28",
+          "before": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 20,
+          "key": "stat:atk",
+          "description": "+10% de daño con todos los movimientos.\n攻擊 2.46→2.71",
+          "before": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 2.705656800000001,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 1,
+              "jjk-uro-collapse": 5
+            }
+          }
+        }
+      ],
+      "loadout": [
+        {
+          "id": "jjk-uro",
+          "lvl": 1,
+          "dmg": 20,
+          "range": 210,
+          "radius": 90,
+          "cd": 1.25
+        },
+        {
+          "id": "jjk-uro-thin-ice",
+          "lvl": 5,
+          "dmg": 151.19999999999996,
+          "range": 250,
+          "radius": 110,
+          "cd": 4.8
+        },
+        {
+          "id": "jjk-uro-screen",
+          "lvl": 1,
+          "dmg": 0,
+          "range": 90,
+          "radius": 82,
+          "cd": 9
+        },
+        {
+          "id": "jjk-uro-collapse",
+          "lvl": 5,
+          "dmg": 235.2,
+          "range": 280,
+          "radius": 126.49999999999999,
+          "cd": 8
+        }
+      ],
+      "behavior": [
+        {
+          "id": "jjk-uro",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 210,
+            "radius": 90,
+            "width": 180,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 0.95,
+            "pierce": 0,
+            "duration": 0
+          }
+        },
+        {
+          "id": "jjk-uro-thin-ice",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 250,
+            "radius": 110,
+            "width": 220,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 2.1,
+            "pierce": 0,
+            "duration": 0,
+            "thinSlow": 0.25,
+            "thinSlowDuration": 0.45
+          }
+        },
+        {
+          "id": "jjk-uro-screen",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 90,
+            "radius": 82,
+            "width": 164,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.6,
+            "pierce": 0,
+            "duration": 2.3
+          }
+        },
+        {
+          "id": "jjk-uro-collapse",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 280,
+            "radius": 126.49999999999999,
+            "width": 220,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.6,
+            "pierce": 0,
+            "duration": 0,
+            "collapseSlow": 0.6,
+            "slowDuration": 0.8
+          }
+        }
+      ],
+      "initialEnemies": [
+        {
+          "x": 199.70625456422567,
+          "y": 0,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 1.2025840079644694,
+          "skillCd": 1.8914353547152132
+        },
+        {
+          "x": 176.81887573753542,
+          "y": 128.46643297741477,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.6661814504535868,
+          "skillCd": 1.6439078773837537
+        },
+        {
+          "x": 60.6406961098964,
+          "y": 186.63287210027556,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9142641302431,
+          "skillCd": 2.1381174528505653
+        },
+        {
+          "x": -61.43838802497936,
+          "y": 189.08791537506428,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 0.3726171835558489,
+          "skillCd": 2.315108650131151
+        },
+        {
+          "x": -163.78887190867988,
+          "y": 118.99958105567855,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9270885365316643,
+          "skillCd": 3.1598522772546858
+        },
+        {
+          "x": -200.93335032463074,
+          "y": 2.4607238431701282e-14,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.42077518452424556,
+          "skillCd": 2.398694111732766
+        },
+        {
+          "x": -153.97789507538752,
+          "y": -111.87148914501623,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 1.153846190148033,
+          "skillCd": 2.9575458185281605
+        },
+        {
+          "x": -61.43995164704846,
+          "y": -189.09272770896456,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9906899000750853,
+          "skillCd": 2.9776930555235595
+        },
+        {
+          "x": 67.94850782283898,
+          "y": -209.12400390197558,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 1.0540728805819526,
+          "skillCd": 1.9360957664903253
+        },
+        {
+          "x": 159.2568423533825,
+          "y": -115.7068688455778,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 0.46099807184655217,
+          "skillCd": 1.1670556615572423
+        }
+      ],
+      "fixture": {
+        "flatWalkable": true,
+        "independentEncounterRng": true
+      },
+      "stats": {
+        "atk": 4,
+        "cd": 2,
+        "def": 2
+      },
+      "metrics": {
+        "alive": true,
+        "survivalSeconds": 13.549999999999999,
+        "kills": 10,
+        "remainingEnemies": 0,
+        "hp": 141.37266666667637,
+        "maxHp": 205,
+        "taken": 75.74399999999994,
+        "enemyHpLoss": 6380,
+        "killTime": 13.549999999999999,
+        "firstHit": 0.3333333333333333,
+        "meanNearestDistance": 121.53607808120626,
+        "castCounts": {
+          "uro-thin-ice": 5,
+          "uro-screen": 2,
+          "uro-collapse": 3
+        },
+        "intercepted": 10,
+        "counterUsed": 0,
+        "counterExpired": 0,
+        "wallMs": 76.30000007152557
+      }
+    },
+    {
+      "route": "counter",
+      "budget": 19,
+      "threat": "ranged",
+      "seed": 17,
+      "seconds": 20,
+      "baselineCd": 0.76,
+      "records": [
+        {
+          "level": 2,
+          "key": "up:jjk-uro",
+          "description": "傷害提高\n傷害 20→24",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2
+            }
+          }
+        },
+        {
+          "level": 3,
+          "key": "new:jjk-uro-thin-ice",
+          "description": "擊碎前方空面，造成大範圍扇形傷害。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 1
+            }
+          }
+        },
+        {
+          "level": 4,
+          "key": "up:jjk-uro",
+          "description": "傷害提高；空面打擊角0.95→1.15弧度\n傷害 24→29",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 1
+            }
+          }
+        },
+        {
+          "level": 5,
+          "key": "up:jjk-uro",
+          "description": "傷害提高\n傷害 29→35",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1
+            }
+          }
+        },
+        {
+          "level": 6,
+          "key": "new:jjk-uro-screen",
+          "description": "展開空面2.3秒，反射5／6／7／8／9顆來襲飛彈；不阻擋近戰。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 1
+            }
+          }
+        },
+        {
+          "level": 7,
+          "key": "up:jjk-uro-screen",
+          "description": "可反射飛彈 +1",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 2
+            }
+          }
+        },
+        {
+          "level": 8,
+          "key": "up:jjk-uro-screen",
+          "description": "可反射飛彈 +1；預測0.55秒內入界的敵彈才部署天空幕",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 2
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 3
+            }
+          }
+        },
+        {
+          "level": 9,
+          "key": "new:jjk-uro-collapse",
+          "description": "扭曲目標周圍空間，造成範圍傷害並短暫減速；首領減速較弱。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 3
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 10,
+          "key": "up:jjk-uro-screen",
+          "description": "可反射飛彈 +1",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 11,
+          "key": "up:jjk-uro-screen",
+          "description": "可反射飛彈 +1；真正反射後3秒內，下次宇守羅彈傷害+15%；每幕一次",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 12,
+          "key": "up:jjk-uro",
+          "description": "傷害提高；普通敵人推退8→18，特殊敵人不搬動\n傷害 35→42",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 13,
+          "key": "stat:atk",
+          "description": "+10% de daño con todos los movimientos.\n攻擊 1.85→2.03",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 14,
+          "key": "stat:cd",
+          "description": "-8% de recarga en todos los movimientos.\n冷卻倍率 0.76→0.7；就緒仍可能等待動作",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 15,
+          "key": "stat:def",
+          "description": "+6% de reducción de daño recibido.\n基礎減傷 0.16→0.22",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.0328,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 16,
+          "key": "stat:atk",
+          "description": "+10% de daño con todos los movimientos.\n攻擊 2.03→2.24",
+          "before": {
+            "atk": 2.0328,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 17,
+          "key": "stat:cd",
+          "description": "-8% de recarga en todos los movimientos.\n冷卻倍率 0.7→0.64；就緒仍可能等待動作",
+          "before": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6992,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 18,
+          "key": "stat:def",
+          "description": "+6% de reducción de daño recibido.\n基礎減傷 0.22→0.28",
+          "before": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 19,
+          "key": "stat:atk",
+          "description": "+10% de daño con todos los movimientos.\n攻擊 2.24→2.46",
+          "before": {
+            "atk": 2.2360800000000003,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 20,
+          "key": "stat:cd",
+          "description": "-8% de recarga en todos los movimientos.\n冷卻倍率 0.64→0.59；就緒仍可能等待動作",
+          "before": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.6432640000000001,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 2.4596880000000008,
+            "cdMul": 0.59180288,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 1,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 1
+            }
+          }
+        }
+      ],
+      "loadout": [
+        {
+          "id": "jjk-uro",
+          "lvl": 5,
+          "dmg": 42,
+          "range": 210,
+          "radius": 90,
+          "cd": 1.25
+        },
+        {
+          "id": "jjk-uro-thin-ice",
+          "lvl": 1,
+          "dmg": 72,
+          "range": 250,
+          "radius": 110,
+          "cd": 4.8
+        },
+        {
+          "id": "jjk-uro-screen",
+          "lvl": 5,
+          "dmg": 0,
+          "range": 90,
+          "radius": 82,
+          "cd": 9
+        },
+        {
+          "id": "jjk-uro-collapse",
+          "lvl": 1,
+          "dmg": 112,
+          "range": 280,
+          "radius": 110,
+          "cd": 8
+        }
+      ],
+      "behavior": [
+        {
+          "id": "jjk-uro",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 210,
+            "radius": 90,
+            "width": 180,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.15,
+            "pierce": 0,
+            "duration": 0,
+            "skyKnock": 18
+          }
+        },
+        {
+          "id": "jjk-uro-thin-ice",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 250,
+            "radius": 110,
+            "width": 220,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.9,
+            "pierce": 0,
+            "duration": 0
+          }
+        },
+        {
+          "id": "jjk-uro-screen",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 90,
+            "radius": 82,
+            "width": 164,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.6,
+            "pierce": 0,
+            "duration": 2.3,
+            "threatOnly": true,
+            "threatHorizon": 0.55,
+            "counterBonus": 0.15,
+            "counterDuration": 3
+          }
+        },
+        {
+          "id": "jjk-uro-collapse",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 280,
+            "radius": 110,
+            "width": 220,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.6,
+            "pierce": 0,
+            "duration": 0
+          }
+        }
+      ],
+      "initialEnemies": [
+        {
+          "x": 199.70625456422567,
+          "y": 0,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 1.2025840079644694,
+          "skillCd": 1.8914353547152132
+        },
+        {
+          "x": 176.81887573753542,
+          "y": 128.46643297741477,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.6661814504535868,
+          "skillCd": 1.6439078773837537
+        },
+        {
+          "x": 60.6406961098964,
+          "y": 186.63287210027556,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9142641302431,
+          "skillCd": 2.1381174528505653
+        },
+        {
+          "x": -61.43838802497936,
+          "y": 189.08791537506428,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 0.3726171835558489,
+          "skillCd": 2.315108650131151
+        },
+        {
+          "x": -163.78887190867988,
+          "y": 118.99958105567855,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9270885365316643,
+          "skillCd": 3.1598522772546858
+        },
+        {
+          "x": -200.93335032463074,
+          "y": 2.4607238431701282e-14,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.42077518452424556,
+          "skillCd": 2.398694111732766
+        },
+        {
+          "x": -153.97789507538752,
+          "y": -111.87148914501623,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 1.153846190148033,
+          "skillCd": 2.9575458185281605
+        },
+        {
+          "x": -61.43995164704846,
+          "y": -189.09272770896456,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9906899000750853,
+          "skillCd": 2.9776930555235595
+        },
+        {
+          "x": 67.94850782283898,
+          "y": -209.12400390197558,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 1.0540728805819526,
+          "skillCd": 1.9360957664903253
+        },
+        {
+          "x": 159.2568423533825,
+          "y": -115.7068688455778,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 0.46099807184655217,
+          "skillCd": 1.1670556615572423
+        }
+      ],
+      "fixture": {
+        "flatWalkable": true,
+        "independentEncounterRng": true
+      },
+      "stats": {
+        "atk": 3,
+        "cd": 3,
+        "def": 2
+      },
+      "metrics": {
+        "alive": true,
+        "survivalSeconds": 20,
+        "kills": 9,
+        "remainingEnemies": 1,
+        "hp": 115.73800000001164,
+        "maxHp": 205,
+        "taken": 107.71199999999995,
+        "enemyHpLoss": 6058,
+        "killTime": null,
+        "firstHit": 0.3333333333333333,
+        "meanNearestDistance": 114.86546981134906,
+        "castCounts": {
+          "uro-thin-ice": 7,
+          "uro-screen": 4,
+          "uro-collapse": 4
+        },
+        "intercepted": 28,
+        "counterUsed": 3,
+        "counterExpired": 3,
+        "wallMs": 73.40000009536743
+      }
+    },
+    {
+      "route": "balanced",
+      "budget": 19,
+      "threat": "ranged",
+      "seed": 17,
+      "seconds": 20,
+      "baselineCd": 0.76,
+      "records": [
+        {
+          "level": 2,
+          "key": "up:jjk-uro",
+          "description": "傷害提高\n傷害 20→24",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2
+            }
+          }
+        },
+        {
+          "level": 3,
+          "key": "new:jjk-uro-thin-ice",
+          "description": "擊碎前方空面，造成大範圍扇形傷害。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 1
+            }
+          }
+        },
+        {
+          "level": 4,
+          "key": "up:jjk-uro-thin-ice",
+          "description": "傷害提高\n傷害 72→86.4",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 2
+            }
+          }
+        },
+        {
+          "level": 5,
+          "key": "up:jjk-uro-thin-ice",
+          "description": "傷害提高；碎面扇角1.9→2.1弧度\n傷害 86.4→104.4",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 2
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 3
+            }
+          }
+        },
+        {
+          "level": 6,
+          "key": "new:jjk-uro-screen",
+          "description": "展開空面2.3秒，反射5／6／7／8／9顆來襲飛彈；不阻擋近戰。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 3
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 1
+            }
+          }
+        },
+        {
+          "level": 7,
+          "key": "up:jjk-uro-screen",
+          "description": "可反射飛彈 +1",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 2
+            }
+          }
+        },
+        {
+          "level": 8,
+          "key": "up:jjk-uro",
+          "description": "傷害提高；空面打擊角0.95→1.15弧度\n傷害 24→29",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 2,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 2
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 2
+            }
+          }
+        },
+        {
+          "level": 9,
+          "key": "new:jjk-uro-collapse",
+          "description": "扭曲目標周圍空間，造成範圍傷害並短暫減速；首領減速較弱。 自動施放，不占主動槽。",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 2
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 2,
+              "jjk-uro-collapse": 1
+            }
+          }
+        },
+        {
+          "level": 10,
+          "key": "up:jjk-uro-collapse",
+          "description": "傷害提高\n傷害 112→134.4",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 2,
+              "jjk-uro-collapse": 1
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 2,
+              "jjk-uro-collapse": 2
+            }
+          }
+        },
+        {
+          "level": 11,
+          "key": "up:jjk-uro-screen",
+          "description": "可反射飛彈 +1；預測0.55秒內入界的敵彈才部署天空幕",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 2,
+              "jjk-uro-collapse": 2
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 2
+            }
+          }
+        },
+        {
+          "level": 12,
+          "key": "up:jjk-uro-collapse",
+          "description": "傷害提高；震落半徑110→126.5\n傷害 134.4→162.4；半徑 110→126.5",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 2
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 3
+            }
+          }
+        },
+        {
+          "level": 13,
+          "key": "up:jjk-uro",
+          "description": "傷害提高\n傷害 29→35",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 3,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 3
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 3
+            }
+          }
+        },
+        {
+          "level": 14,
+          "key": "up:jjk-uro-thin-ice",
+          "description": "傷害提高\n傷害 104.4→126",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 3,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 3
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 3
+            }
+          }
+        },
+        {
+          "level": 15,
+          "key": "up:jjk-uro-screen",
+          "description": "可反射飛彈 +1",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 3,
+              "jjk-uro-collapse": 3
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 3
+            }
+          }
+        },
+        {
+          "level": 16,
+          "key": "up:jjk-uro-collapse",
+          "description": "傷害提高\n傷害 162.4→196",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 3
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 4
+            }
+          }
+        },
+        {
+          "level": 17,
+          "key": "up:jjk-uro-collapse",
+          "description": "傷害提高；普通敵人減速60%持續0.8秒，首領效果較弱\n傷害 196→235.2",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 4
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 18,
+          "key": "up:jjk-uro",
+          "description": "傷害提高；普通敵人推退8→18，特殊敵人不搬動\n傷害 35→42",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 4,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 19,
+          "key": "up:jjk-uro-screen",
+          "description": "可反射飛彈 +1；真正反射後3秒內，下次宇守羅彈傷害+15%；每幕一次",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 4,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 5
+            }
+          }
+        },
+        {
+          "level": 20,
+          "key": "up:jjk-uro-thin-ice",
+          "description": "傷害提高；普通敵人減速25%持續0.45秒，首領僅弱減速\n傷害 126→151.2",
+          "before": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 4,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 5
+            }
+          },
+          "after": {
+            "atk": 1.8479999999999999,
+            "cdMul": 0.76,
+            "maxHp": 205,
+            "ranks": {
+              "jjk-uro": 5,
+              "jjk-uro-thin-ice": 5,
+              "jjk-uro-screen": 5,
+              "jjk-uro-collapse": 5
+            }
+          }
+        }
+      ],
+      "loadout": [
+        {
+          "id": "jjk-uro",
+          "lvl": 5,
+          "dmg": 42,
+          "range": 210,
+          "radius": 90,
+          "cd": 1.25
+        },
+        {
+          "id": "jjk-uro-thin-ice",
+          "lvl": 5,
+          "dmg": 151.19999999999996,
+          "range": 250,
+          "radius": 110,
+          "cd": 4.8
+        },
+        {
+          "id": "jjk-uro-screen",
+          "lvl": 5,
+          "dmg": 0,
+          "range": 90,
+          "radius": 82,
+          "cd": 9
+        },
+        {
+          "id": "jjk-uro-collapse",
+          "lvl": 5,
+          "dmg": 235.2,
+          "range": 280,
+          "radius": 126.49999999999999,
+          "cd": 8
+        }
+      ],
+      "behavior": [
+        {
+          "id": "jjk-uro",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 210,
+            "radius": 90,
+            "width": 180,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.15,
+            "pierce": 0,
+            "duration": 0,
+            "skyKnock": 18
+          }
+        },
+        {
+          "id": "jjk-uro-thin-ice",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 250,
+            "radius": 110,
+            "width": 220,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 2.1,
+            "pierce": 0,
+            "duration": 0,
+            "thinSlow": 0.25,
+            "thinSlowDuration": 0.45
+          }
+        },
+        {
+          "id": "jjk-uro-screen",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 90,
+            "radius": 82,
+            "width": 164,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.6,
+            "pierce": 0,
+            "duration": 2.3,
+            "threatOnly": true,
+            "threatHorizon": 0.55,
+            "counterBonus": 0.15,
+            "counterDuration": 3
+          }
+        },
+        {
+          "id": "jjk-uro-collapse",
+          "fields": {
+            "digimonSkill": true,
+            "narutoSkill": true,
+            "jujutsuSkill": true,
+            "passive": true,
+            "autoCast": true,
+            "range": 280,
+            "radius": 126.49999999999999,
+            "width": 220,
+            "speed": 520,
+            "life": 1,
+            "count": 1,
+            "arc": 1.6,
+            "pierce": 0,
+            "duration": 0,
+            "collapseSlow": 0.6,
+            "slowDuration": 0.8
+          }
+        }
+      ],
+      "initialEnemies": [
+        {
+          "x": 199.70625456422567,
+          "y": 0,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 1.2025840079644694,
+          "skillCd": 1.8914353547152132
+        },
+        {
+          "x": 176.81887573753542,
+          "y": 128.46643297741477,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.6661814504535868,
+          "skillCd": 1.6439078773837537
+        },
+        {
+          "x": 60.6406961098964,
+          "y": 186.63287210027556,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9142641302431,
+          "skillCd": 2.1381174528505653
+        },
+        {
+          "x": -61.43838802497936,
+          "y": 189.08791537506428,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 0.3726171835558489,
+          "skillCd": 2.315108650131151
+        },
+        {
+          "x": -163.78887190867988,
+          "y": 118.99958105567855,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9270885365316643,
+          "skillCd": 3.1598522772546858
+        },
+        {
+          "x": -200.93335032463074,
+          "y": 2.4607238431701282e-14,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.42077518452424556,
+          "skillCd": 2.398694111732766
+        },
+        {
+          "x": -153.97789507538752,
+          "y": -111.87148914501623,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 1.153846190148033,
+          "skillCd": 2.9575458185281605
+        },
+        {
+          "x": -61.43995164704846,
+          "y": -189.09272770896456,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 0.9906899000750853,
+          "skillCd": 2.9776930555235595
+        },
+        {
+          "x": 67.94850782283898,
+          "y": -209.12400390197558,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "ranged",
+          "shotCd": 1.0540728805819526,
+          "skillCd": 1.9360957664903253
+        },
+        {
+          "x": 159.2568423533825,
+          "y": -115.7068688455778,
+          "hp": 638,
+          "spd": 25,
+          "dmg": 10,
+          "behavior": "fan",
+          "shotCd": 0.46099807184655217,
+          "skillCd": 1.1670556615572423
+        }
+      ],
+      "fixture": {
+        "flatWalkable": true,
+        "independentEncounterRng": true
+      },
+      "stats": {},
+      "metrics": {
+        "alive": true,
+        "survivalSeconds": 15.583333333333334,
+        "kills": 10,
+        "remainingEnemies": 0,
+        "hp": 132.68133333334455,
+        "maxHp": 205,
+        "taken": 86.35199999999995,
+        "enemyHpLoss": 6380,
+        "killTime": 15.583333333333334,
+        "firstHit": 0.3333333333333333,
+        "meanNearestDistance": 127.83794223488573,
+        "castCounts": {
+          "uro-thin-ice": 5,
+          "uro-screen": 2,
+          "uro-collapse": 3
+        },
+        "intercepted": 18,
+        "counterUsed": 2,
+        "counterExpired": 2,
+        "wallMs": 58.299999952316284
+      }
+    }
+  ],
+  "errors": [],
+  "missing": [],
+  "classification": "Superseded/confounded for route comparison. This diagnostic reused the old comparison fixture: recipe RNG consumption and non-flat World.walkable/Path state could alter matched starting conditions. Do not use control/counter metrics as balance evidence or a hard-fork trigger.",
+  "validScope": "The observed native counter route did intercept projectiles and consume real conditional counter casts. This is a mechanism observation only, not fair cross-route strength evidence.",
+  "counterExpiredWarning": "Diagnostic counterExpired also counts consumed conditions and is not a reliable expiry metric.",
+  "implementationDecision": "No runtime changes or Uro hard form were implemented. Product code remains frozen pending authoritative corrected matched-fixture matrix."
+}

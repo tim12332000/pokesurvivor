@@ -1,0 +1,44 @@
+{
+  "states": [
+    {
+      "canvas": [
+        1720,
+        980
+      ],
+      "state": {
+        "demo": "sky",
+        "time": 0.85,
+        "playing": false,
+        "frames": 27,
+        "hitLog": [],
+        "events": 1,
+        "lastStats": {
+          "texturedTriangles": 48,
+          "fallbackPanels": 0,
+          "folds": 2
+        }
+      }
+    },
+    {
+      "canvas": [
+        1720,
+        980
+      ],
+      "state": {
+        "demo": "sky",
+        "time": 0.85,
+        "playing": false,
+        "frames": 64,
+        "hitLog": [],
+        "events": 1,
+        "lastStats": {
+          "texturedTriangles": 12,
+          "fallbackPanels": 2,
+          "folds": 2
+        }
+      }
+    }
+  ],
+  "errors": [],
+  "scope": "Actual controls DPR2, camera, twofold toggled at paused contact .85, both quality settings. Still standalone procedural background."
+}

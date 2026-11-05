@@ -36,5 +36,6 @@
     } finally { secondary--; }
     return dealt;
   }
-  G.DamageSplash = { hit, rate, radius, perPick, isSecondary: () => secondary > 0 };
+  function withSecondary(fn){secondary++;try{return fn();}finally{secondary--;}}
+  G.DamageSplash = { hit, rate, radius, perPick, withSecondary, isSecondary: () => secondary > 0 };
 })();

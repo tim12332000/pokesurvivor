@@ -1,0 +1,1350 @@
+{
+  "scope": "native world/input/cards; read-only state sampling; no HP/XP/world/spawn overrides",
+  "cases": [
+    {
+      "label": "yuta-normal",
+      "hero": "jjk-yuta",
+      "wallTarget": 70,
+      "cards": [
+        {
+          "gameTime": 12.04793333333323,
+          "level": 2,
+          "offered": [
+            {
+              "title": "生命成長 +10% 強化",
+              "desc": "最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。"
+            },
+            {
+              "title": "傷害擴散 +10% 強化",
+              "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。"
+            },
+            {
+              "title": "倍化之術 強化",
+              "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 25.01813333333305,
+          "level": 3,
+          "offered": [
+            {
+              "title": "里香協擊 全新 · Yuta Okkotsu特色招式・首次解鎖",
+              "desc": "里香移至目標旁重擊，傷及周圍敵人。 自動施放，不占主動槽。"
+            },
+            {
+              "title": "分身之術 強化",
+              "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。"
+            },
+            {
+              "title": "咒力刀斬 Nv.1 > 2",
+              "desc": "傷害提高"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 31.812533333333022,
+          "level": 4,
+          "offered": [
+            {
+              "title": "生命成長 +10% 強化",
+              "desc": "最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。"
+            },
+            {
+              "title": "咒力刀斬 Nv.1 > 2",
+              "desc": "傷害提高"
+            },
+            {
+              "title": "軍糧丸 強化",
+              "desc": "立即回復 45% 體力。"
+            }
+          ],
+          "pickedIndex": 1
+        },
+        {
+          "gameTime": 40.305733333334146,
+          "level": 5,
+          "offered": [
+            {
+              "title": "學習 強化",
+              "desc": "獲得的經驗值 +12%。"
+            },
+            {
+              "title": "軍糧丸 強化",
+              "desc": "立即回復 45% 體力。"
+            },
+            {
+              "title": "分身之術 強化",
+              "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 45.013333333334785,
+          "level": 6,
+          "offered": [
+            {
+              "title": "咒言・別動 全新 · Yuta Okkotsu特色招式・首次解鎖",
+              "desc": "咒言震懾周圍敵人；首領僅受短暫控制。 自動施放，不占主動槽。"
+            },
+            {
+              "title": "威力 強化",
+              "desc": "所有招式傷害 +10%。"
+            },
+            {
+              "title": "咒力刀斬 Nv.2 > 3",
+              "desc": "傷害提高"
+            }
+          ],
+          "pickedIndex": 2
+        },
+        {
+          "gameTime": 55.86013333333618,
+          "level": 7,
+          "offered": [
+            {
+              "title": "咒力刀斬 Nv.3 > 4",
+              "desc": "傷害提高"
+            },
+            {
+              "title": "數量 ×1.25 強化",
+              "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。"
+            },
+            {
+              "title": "吸血 +1% 強化",
+              "desc": "造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 69.20673333333643,
+          "level": 8,
+          "offered": [
+            {
+              "title": "倍化之術 強化",
+              "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。"
+            },
+            {
+              "title": "護甲 強化",
+              "desc": "受到的傷害減少 6%。"
+            },
+            {
+              "title": "軍糧丸 強化",
+              "desc": "立即回復 45% 體力。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 85.17393333333403,
+          "level": 9,
+          "offered": [
+            {
+              "title": "里香完全顯現 全新 · Yuta Okkotsu特色招式・首次解鎖",
+              "desc": "完全顯現6秒，新施放傷害+50／60／70／80／100%，里香協擊追加一次打擊。冷卻18秒。 自動施放，不占主動槽。"
+            },
+            {
+              "title": "分身之術 強化",
+              "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。"
+            },
+            {
+              "title": "疾跑 強化",
+              "desc": "移動速度 +7%。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 92.76933333333278,
+          "level": 10,
+          "offered": [
+            {
+              "title": "反應 強化",
+              "desc": "所有招式冷卻時間 -8%。"
+            },
+            {
+              "title": "學習 強化",
+              "desc": "獲得的經驗值 +12%。"
+            },
+            {
+              "title": "威力 強化",
+              "desc": "所有招式傷害 +10%。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 108.99133333333027,
+          "level": 11,
+          "offered": [
+            {
+              "title": "咒力刀斬 Nv.4 > 5",
+              "desc": "傷害提高"
+            },
+            {
+              "title": "威力 強化",
+              "desc": "所有招式傷害 +10%。"
+            },
+            {
+              "title": "疾跑 強化",
+              "desc": "移動速度 +7%。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 120.02013333332856,
+          "level": 12,
+          "offered": [
+            {
+              "title": "咒言・別動 全新 · Yuta Okkotsu特色招式",
+              "desc": "咒言震懾周圍敵人；首領僅受短暫控制。 自動施放，不占主動槽。"
+            },
+            {
+              "title": "傷害擴散 +10% 強化",
+              "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。"
+            },
+            {
+              "title": "學習 強化",
+              "desc": "獲得的經驗值 +12%。"
+            }
+          ],
+          "pickedIndex": 0
+        }
+      ],
+      "snapshots": [
+        {
+          "state": "playing",
+          "time": 0.09086666666666693,
+          "level": 1,
+          "hp": 230,
+          "maxHp": 230,
+          "kills": 0,
+          "x": 0,
+          "y": 0,
+          "xp": 0,
+          "xpNext": 62,
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0
+            }
+          ],
+          "slots": 0,
+          "stats": {}
+        },
+        {
+          "state": "playing",
+          "time": 29.07053333333305,
+          "level": 3,
+          "hp": 252.0914817920065,
+          "maxHp": 253,
+          "kills": 8,
+          "x": -180.92491670058115,
+          "y": -222.067671928812,
+          "xp": 91.79999999999998,
+          "xpNext": 147,
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1,
+              "dealt": 727,
+              "t": 0.28679999999999906
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0.5195999999999977
+            }
+          ],
+          "slots": 0,
+          "stats": {
+            "maxHealthPercent": 1
+          }
+        },
+        {
+          "state": "playing",
+          "time": 56.721533333336296,
+          "level": 7,
+          "hp": 214.40367558400132,
+          "maxHp": 253,
+          "kills": 36,
+          "x": -544.712092119682,
+          "y": 127.03361894192082,
+          "xp": 27.432000000000016,
+          "xpNext": 392,
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 4,
+              "dealt": 3461,
+              "t": 0.6145999999999986
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 1,
+              "dealt": 2663,
+              "t": 0.24060000000000925
+            }
+          ],
+          "slots": 0,
+          "stats": {
+            "maxHealthPercent": 1,
+            "xp": 1
+          }
+        },
+        {
+          "state": "playing",
+          "time": 85.61073333333394,
+          "level": 9,
+          "hp": 316.25,
+          "maxHp": 316.25,
+          "kills": 60,
+          "x": 265.5518294957406,
+          "y": 147.96374967729014,
+          "xp": 24.559999999999945,
+          "xpNext": 547,
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 4,
+              "dealt": 6544,
+              "t": 0.40764444444444115
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 1,
+              "dealt": 3366,
+              "t": 0.2494666666666986
+            },
+            {
+              "id": "jjk-yuta-manifest",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0
+            }
+          ],
+          "slots": 0,
+          "stats": {
+            "maxHealthPercent": 1,
+            "xp": 1,
+            "giant": 1
+          }
+        },
+        {
+          "state": "playing",
+          "time": 114.68173333332933,
+          "level": 11,
+          "hp": 249.8960957760042,
+          "maxHp": 316.25,
+          "kills": 97,
+          "x": 480.05918556953526,
+          "y": 377.6464517343453,
+          "xp": 279.7119999999999,
+          "xpNext": 721,
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 5,
+              "dealt": 11809,
+              "t": 0.631288888888883
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 1,
+              "dealt": 6160,
+              "t": 0.002333333333356849
+            },
+            {
+              "id": "jjk-yuta-manifest",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0.3706000000000659
+            }
+          ],
+          "slots": 0,
+          "stats": {
+            "maxHealthPercent": 1,
+            "xp": 1,
+            "giant": 1,
+            "cd": 1
+          }
+        }
+      ],
+      "errors": [],
+      "start": {
+        "level": 1,
+        "hp": 230,
+        "atk": 1.8479999999999999,
+        "spd": 148.8,
+        "cdMul": 0.76,
+        "xpMul": 1.4,
+        "crit": 0.3,
+        "regen": 1,
+        "magnet": 134.16,
+        "maxHp": 230,
+        "slots": 0,
+        "moves": [
+          {
+            "id": "jjk-yuta",
+            "lvl": 1,
+            "passive": true,
+            "autoCast": true
+          }
+        ],
+        "stats": [
+          {
+            "id": "atk",
+            "title": "Potencia",
+            "max": 40,
+            "eligible": true
+          },
+          {
+            "id": "spd",
+            "title": "Carrera",
+            "max": 8,
+            "eligible": true
+          },
+          {
+            "id": "cd",
+            "title": "Reflejos",
+            "max": 10,
+            "eligible": true
+          },
+          {
+            "id": "def",
+            "title": "Coraza",
+            "max": 12,
+            "eligible": true
+          },
+          {
+            "id": "mag",
+            "title": "Imán",
+            "max": 6,
+            "eligible": true
+          },
+          {
+            "id": "xp",
+            "title": "Aprendizaje",
+            "max": 8,
+            "eligible": true
+          },
+          {
+            "id": "heal",
+            "title": "軍糧丸",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "quantity",
+            "title": "數量 ×1.25",
+            "max": 20,
+            "eligible": true
+          },
+          {
+            "id": "ninjaToolBounce",
+            "title": "忍具連彈 +1",
+            "max": null,
+            "eligible": false
+          },
+          {
+            "id": "lifesteal",
+            "title": "吸血 +1%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "damageSplash",
+            "title": "傷害擴散 +10%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "percentHealthDamage",
+            "title": "生命剝奪 +1%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "maxHealthPercent",
+            "title": "生命成長 +10%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "giant",
+            "title": "倍化之術",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "selfClone",
+            "title": "分身之術",
+            "max": null,
+            "eligible": true
+          }
+        ]
+      },
+      "end": {
+        "state": "levelup",
+        "time": 133.985333333326,
+        "level": 13,
+        "hp": 171.43190041600457,
+        "maxHp": 316.25,
+        "kills": 137,
+        "xp": 82.78399999999965,
+        "xpNext": 913,
+        "moves": [
+          {
+            "id": "jjk-yuta",
+            "lvl": 5,
+            "dealt": 16017
+          },
+          {
+            "id": "jjk-yuta-rika",
+            "lvl": 1,
+            "dealt": 9798
+          },
+          {
+            "id": "jjk-yuta-manifest",
+            "lvl": 1,
+            "dealt": 0
+          },
+          {
+            "id": "jjk-yuta-speech",
+            "lvl": 1,
+            "dealt": 1034
+          }
+        ],
+        "stats": {
+          "maxHealthPercent": 1,
+          "xp": 1,
+          "giant": 1,
+          "cd": 1
+        }
+      }
+    },
+    {
+      "label": "temari-normal",
+      "hero": "temari",
+      "wallTarget": 70,
+      "cards": [
+        {
+          "gameTime": 8.70566666666664,
+          "level": 2,
+          "offered": [
+            {
+              "title": "倍化之術 強化",
+              "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。"
+            },
+            {
+              "title": "磁力 強化",
+              "desc": "經驗值拾取半徑 +30%。"
+            },
+            {
+              "title": "數量 ×1.25 強化",
+              "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 16.786266666666492,
+          "level": 3,
+          "offered": [
+            {
+              "title": "三星扇精通 全新 · Temari特色招式・首次解鎖",
+              "desc": "常駐被動，不占主動槽。普攻每波總斬擊＝1＋精通等級＋數量卡；大鐮鼬仍只重擊一次，精通改加推距18／36／54／72／90。風浪速度×1.15／1.25／1.4／1.6／1.85、射程+40／70／110／160／220。每第三輪普攻傷害×1.15／1.20／1.25／1.30／1.35；前方短暫掃開實體飛彈，額度floor([1,1,2,2,3]×1.25^數量卡)。本作改編。"
+            },
+            {
+              "title": "反應 強化",
+              "desc": "所有招式冷卻時間 -8%。"
+            },
+            {
+              "title": "傷害擴散 +10% 強化",
+              "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 24.903266666666347,
+          "level": 4,
+          "offered": [
+            {
+              "title": "生命剝奪 +1% 強化",
+              "desc": "每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。"
+            },
+            {
+              "title": "分身之術 強化",
+              "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。"
+            },
+            {
+              "title": "鐮鼬之術 Nv.1 > 2",
+              "desc": "每次傷害 9.6・射程 250・角度75°"
+            }
+          ],
+          "pickedIndex": 2
+        },
+        {
+          "gameTime": 35.83506666666677,
+          "level": 5,
+          "offered": [
+            {
+              "title": "軍糧丸 強化",
+              "desc": "立即回復 45% 體力。"
+            },
+            {
+              "title": "吸血 +1% 強化",
+              "desc": "造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。"
+            },
+            {
+              "title": "疾跑 強化",
+              "desc": "移動速度 +7%。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 43.296866666667796,
+          "level": 6,
+          "offered": [
+            {
+              "title": "風遁・大鐮鼬之術 全新 · Temari特色招式・首次解鎖",
+              "desc": "主動解圍技，冷卻5秒。一次強力揮扇，每敵只受一次重擊56／67.2／80.64／100.8／126，並在0.35秒內將普通怪群推遠。升階增加傷害、範圍與推距；數量卡擴大扇角／射程，精通強化速度／射程／推距。此招不連切、不因數量重複傷害；遇牆停止，特殊敵人只受傷不搬動。本作改編。"
+            },
+            {
+              "title": "數量 ×1.25 強化",
+              "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。"
+            },
+            {
+              "title": "威力 強化",
+              "desc": "所有招式傷害 +10%。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 60.950466666670145,
+          "level": 7,
+          "offered": [
+            {
+              "title": "三星扇精通 Nv.1 > 2",
+              "desc": "普攻總斬擊 3＋數量・大鐮鼬推距 +36・速度 ×1.25・射程 +70"
+            },
+            {
+              "title": "學習 強化",
+              "desc": "獲得的經驗值 +12%。"
+            },
+            {
+              "title": "護甲 強化",
+              "desc": "受到的傷害減少 6%。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 87.84946666666688,
+          "level": 8,
+          "offered": [
+            {
+              "title": "軍糧丸 強化",
+              "desc": "立即回復 45% 體力。"
+            },
+            {
+              "title": "數量 ×1.25 強化",
+              "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。"
+            },
+            {
+              "title": "鐮鼬之術 Nv.2 > 3",
+              "desc": "每次傷害 11.52・射程 270・角度105°"
+            }
+          ],
+          "pickedIndex": 2
+        },
+        {
+          "gameTime": 97.11926666666538,
+          "level": 9,
+          "offered": [
+            {
+              "title": "通靈・斬斬舞 全新 · Temari特色招式・首次解鎖",
+              "desc": "常駐被動，不占主動欄。學會後floor(1.25^數量卡)隻鐮多利在附近自主遊走、停留，走遠會自行回到附近。自動接敵、斬擊後繼續閒逛，每隻獨立冷卻10秒。基礎斬擊4／4／5／5／6次；精通另加精通等級＋數量卡。每斬間隔0.12秒，傷害25.6／31.2／37.6／45.6／55.2，不分攤傷害；敵人可離開範圍。"
+            },
+            {
+              "title": "反應 強化",
+              "desc": "所有招式冷卻時間 -8%。"
+            },
+            {
+              "title": "倍化之術 強化",
+              "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 112.51626666666348,
+          "level": 10,
+          "offered": [
+            {
+              "title": "鐮鼬之術 Nv.3 > 4",
+              "desc": "每次傷害 14.4・射程 290・角度135°"
+            },
+            {
+              "title": "疾跑 強化",
+              "desc": "移動速度 +7%。"
+            },
+            {
+              "title": "磁力 強化",
+              "desc": "經驗值拾取半徑 +30%。"
+            }
+          ],
+          "pickedIndex": 0
+        },
+        {
+          "gameTime": 114.55466666666315,
+          "level": 11,
+          "offered": [
+            {
+              "title": "學習 強化",
+              "desc": "獲得的經驗值 +12%。"
+            },
+            {
+              "title": "傷害擴散 +10% 強化",
+              "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。"
+            },
+            {
+              "title": "三星扇精通 Nv.2 > 3",
+              "desc": "普攻總斬擊 4＋數量・大鐮鼬推距 +54・速度 ×1.4・射程 +110"
+            }
+          ],
+          "pickedIndex": 2
+        },
+        {
+          "gameTime": 126.3360666666615,
+          "level": 12,
+          "offered": [
+            {
+              "title": "風遁・颱風迴旋 全新 · Temari特色招式・首次解鎖",
+              "desc": "選中後每 8 秒以起手位置為風眼，揮出 floor(1.25^數量卡) 道風流，各掃滿 360°。掃到的普通敵人沿真實弧線繞風眼一圈，最後掃到者也繞完整一圈；遇牆中止，強敵不搬動。每股對各目標基礎切割 3／4／5／6／8 次，精通另加技能階＋數量卡，每次基傷 24／28.8／35.2／43.2／52.8。半徑 240／270／300／330／360，不同風流與分身各自傷害；同敵不重設位移。本作改編。"
+            },
+            {
+              "title": "磁力 強化",
+              "desc": "經驗值拾取半徑 +30%。"
+            },
+            {
+              "title": "生命剝奪 +1% 強化",
+              "desc": "每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。"
+            }
+          ],
+          "pickedIndex": 0
+        }
+      ],
+      "snapshots": [
+        {
+          "state": "playing",
+          "time": 0.13966666666666688,
+          "level": 1,
+          "hp": 205,
+          "maxHp": 205,
+          "kills": 0,
+          "x": 0,
+          "y": 0,
+          "xp": 0,
+          "xpNext": 62,
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0
+            }
+          ],
+          "slots": 0,
+          "stats": {}
+        },
+        {
+          "state": "playing",
+          "time": 28.78586666666628,
+          "level": 4,
+          "hp": 256.25,
+          "maxHp": 256.25,
+          "kills": 11,
+          "x": -65.23928289058144,
+          "y": -270.3536980033593,
+          "xp": 70.79999999999998,
+          "xpNext": 200,
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 2,
+              "dealt": 681,
+              "t": 0
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0
+            }
+          ],
+          "slots": 0,
+          "stats": {
+            "giant": 1
+          }
+        },
+        {
+          "state": "playing",
+          "time": 57.39566666666968,
+          "level": 6,
+          "hp": 256.25,
+          "maxHp": 256.25,
+          "kills": 36,
+          "x": 321.63236067414704,
+          "y": -663.1072591740478,
+          "xp": 259.6000000000001,
+          "xpNext": 323,
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 2,
+              "dealt": 2115,
+              "t": 0
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0
+            },
+            {
+              "id": "naruto-temari-great-scythe",
+              "lvl": 1,
+              "dealt": 475,
+              "t": 0.8006222222222348
+            }
+          ],
+          "slots": 1,
+          "stats": {
+            "giant": 1,
+            "heal": 1
+          }
+        },
+        {
+          "state": "playing",
+          "time": 86.81826666666706,
+          "level": 7,
+          "hp": 256.25,
+          "maxHp": 256.25,
+          "kills": 62,
+          "x": 691.3638476543514,
+          "y": -1129.3226086445536,
+          "xp": 331.40000000000015,
+          "xpNext": 392,
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 2,
+              "dealt": 4289,
+              "t": 0
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 2,
+              "dealt": 0,
+              "t": 0
+            },
+            {
+              "id": "naruto-temari-great-scythe",
+              "lvl": 1,
+              "dealt": 939,
+              "t": 0.9706222222222518
+            }
+          ],
+          "slots": 1,
+          "stats": {
+            "giant": 1,
+            "heal": 1
+          }
+        },
+        {
+          "state": "playing",
+          "time": 114.56686666666316,
+          "level": 11,
+          "hp": 256.25,
+          "maxHp": 256.25,
+          "kills": 120,
+          "x": 764.4770784749641,
+          "y": -1187.9366847824024,
+          "xp": 27.59999999999991,
+          "xpNext": 721,
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 4,
+              "dealt": 10210,
+              "t": 0
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 3,
+              "dealt": 0,
+              "t": 0
+            },
+            {
+              "id": "naruto-temari-great-scythe",
+              "lvl": 1,
+              "dealt": 2914,
+              "t": 2.839022222222221
+            },
+            {
+              "id": "naruto-temari-blade-dance",
+              "lvl": 1,
+              "dealt": 597,
+              "t": 0
+            }
+          ],
+          "slots": 1,
+          "stats": {
+            "giant": 1,
+            "heal": 1
+          }
+        }
+      ],
+      "errors": [],
+      "start": {
+        "level": 1,
+        "hp": 205,
+        "atk": 1.8479999999999999,
+        "spd": 146.32,
+        "cdMul": 0.76,
+        "xpMul": 1.4,
+        "crit": 0.3,
+        "regen": 1,
+        "magnet": 134.16,
+        "maxHp": 205,
+        "slots": 0,
+        "moves": [
+          {
+            "id": "naruto-temari",
+            "lvl": 1,
+            "passive": true,
+            "autoCast": null
+          }
+        ],
+        "stats": [
+          {
+            "id": "atk",
+            "title": "Potencia",
+            "max": 40,
+            "eligible": true
+          },
+          {
+            "id": "spd",
+            "title": "Carrera",
+            "max": 8,
+            "eligible": true
+          },
+          {
+            "id": "cd",
+            "title": "Reflejos",
+            "max": 10,
+            "eligible": true
+          },
+          {
+            "id": "def",
+            "title": "Coraza",
+            "max": 12,
+            "eligible": true
+          },
+          {
+            "id": "mag",
+            "title": "Imán",
+            "max": 6,
+            "eligible": true
+          },
+          {
+            "id": "xp",
+            "title": "Aprendizaje",
+            "max": 8,
+            "eligible": true
+          },
+          {
+            "id": "heal",
+            "title": "軍糧丸",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "quantity",
+            "title": "數量 ×1.25",
+            "max": 20,
+            "eligible": true
+          },
+          {
+            "id": "ninjaToolBounce",
+            "title": "忍具連彈 +1",
+            "max": null,
+            "eligible": false
+          },
+          {
+            "id": "lifesteal",
+            "title": "吸血 +1%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "damageSplash",
+            "title": "傷害擴散 +10%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "percentHealthDamage",
+            "title": "生命剝奪 +1%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "maxHealthPercent",
+            "title": "生命成長 +10%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "giant",
+            "title": "倍化之術",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "selfClone",
+            "title": "分身之術",
+            "max": null,
+            "eligible": true
+          }
+        ]
+      },
+      "end": {
+        "state": "playing",
+        "time": 133.98006666665995,
+        "level": 12,
+        "hp": 256.25,
+        "maxHp": 256.25,
+        "kills": 158,
+        "xp": 384.6000000000001,
+        "xpNext": 815,
+        "moves": [
+          {
+            "id": "naruto-temari",
+            "lvl": 4,
+            "dealt": 15932
+          },
+          {
+            "id": "naruto-temari-three-stars",
+            "lvl": 3,
+            "dealt": 0
+          },
+          {
+            "id": "naruto-temari-great-scythe",
+            "lvl": 1,
+            "dealt": 3069
+          },
+          {
+            "id": "naruto-temari-blade-dance",
+            "lvl": 1,
+            "dealt": 597
+          },
+          {
+            "id": "naruto-temari-typhoon",
+            "lvl": 1,
+            "dealt": 0
+          }
+        ],
+        "stats": {
+          "giant": 1,
+          "heal": 1
+        }
+      }
+    },
+    {
+      "label": "yuta20-trial",
+      "hero": "jjk-yuta",
+      "wallTarget": 20,
+      "cards": [
+        {
+          "gameTime": 6.885266666666657,
+          "level": 21,
+          "offered": [
+            {
+              "title": "疾跑 強化",
+              "desc": "移動速度 +7%。"
+            },
+            {
+              "title": "咒力刀斬 Nv.1 > 2",
+              "desc": "傷害提高"
+            },
+            {
+              "title": "數量 ×1.25 強化",
+              "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。"
+            }
+          ],
+          "pickedIndex": 1
+        }
+      ],
+      "snapshots": [
+        {
+          "state": "playing",
+          "time": 0.12726666666666656,
+          "level": 20,
+          "hp": 230,
+          "maxHp": 230,
+          "kills": 0,
+          "x": 0,
+          "y": 0,
+          "xp": 0,
+          "xpNext": 1722,
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 4.4447333333333345
+            },
+            {
+              "id": "jjk-yuta-speech",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0
+            },
+            {
+              "id": "jjk-yuta-manifest",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 0
+            }
+          ],
+          "slots": 0,
+          "stats": {}
+        },
+        {
+          "state": "playing",
+          "time": 29.574266666666333,
+          "level": 21,
+          "hp": 230,
+          "maxHp": 230,
+          "kills": 10,
+          "x": 495.73899062713645,
+          "y": 337.92,
+          "xp": 132.99999999999986,
+          "xpNext": 1854,
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 2,
+              "dealt": 257,
+              "t": 0
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 1,
+              "dealt": 1302,
+              "t": 2.376000000000003
+            },
+            {
+              "id": "jjk-yuta-speech",
+              "lvl": 1,
+              "dealt": 162,
+              "t": 0
+            },
+            {
+              "id": "jjk-yuta-manifest",
+              "lvl": 1,
+              "dealt": 0,
+              "t": 1.7772000000001387
+            }
+          ],
+          "slots": 0,
+          "stats": {}
+        }
+      ],
+      "errors": [],
+      "start": {
+        "level": 20,
+        "hp": 230,
+        "atk": 1.8479999999999999,
+        "spd": 148.8,
+        "cdMul": 0.76,
+        "xpMul": 1.4,
+        "crit": 0.3,
+        "regen": 1,
+        "magnet": 134.16,
+        "maxHp": 230,
+        "slots": 0,
+        "moves": [
+          {
+            "id": "jjk-yuta",
+            "lvl": 1,
+            "passive": true,
+            "autoCast": true
+          },
+          {
+            "id": "jjk-yuta-rika",
+            "lvl": 1,
+            "passive": true,
+            "autoCast": true
+          },
+          {
+            "id": "jjk-yuta-speech",
+            "lvl": 1,
+            "passive": true,
+            "autoCast": true
+          },
+          {
+            "id": "jjk-yuta-manifest",
+            "lvl": 1,
+            "passive": true,
+            "autoCast": true
+          }
+        ],
+        "stats": [
+          {
+            "id": "atk",
+            "title": "Potencia",
+            "max": 40,
+            "eligible": true
+          },
+          {
+            "id": "spd",
+            "title": "Carrera",
+            "max": 8,
+            "eligible": true
+          },
+          {
+            "id": "cd",
+            "title": "Reflejos",
+            "max": 10,
+            "eligible": true
+          },
+          {
+            "id": "def",
+            "title": "Coraza",
+            "max": 12,
+            "eligible": true
+          },
+          {
+            "id": "mag",
+            "title": "Imán",
+            "max": 6,
+            "eligible": true
+          },
+          {
+            "id": "xp",
+            "title": "Aprendizaje",
+            "max": 8,
+            "eligible": true
+          },
+          {
+            "id": "heal",
+            "title": "軍糧丸",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "quantity",
+            "title": "數量 ×1.25",
+            "max": 20,
+            "eligible": true
+          },
+          {
+            "id": "ninjaToolBounce",
+            "title": "忍具連彈 +1",
+            "max": null,
+            "eligible": false
+          },
+          {
+            "id": "lifesteal",
+            "title": "吸血 +1%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "damageSplash",
+            "title": "傷害擴散 +10%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "percentHealthDamage",
+            "title": "生命剝奪 +1%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "maxHealthPercent",
+            "title": "生命成長 +10%",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "giant",
+            "title": "倍化之術",
+            "max": null,
+            "eligible": true
+          },
+          {
+            "id": "selfClone",
+            "title": "分身之術",
+            "max": null,
+            "eligible": true
+          }
+        ]
+      },
+      "end": {
+        "state": "playing",
+        "time": 39.75386666666738,
+        "level": 21,
+        "hp": 211.10621120000107,
+        "maxHp": 230,
+        "kills": 17,
+        "xp": 194.59999999999985,
+        "xpNext": 1854,
+        "moves": [
+          {
+            "id": "jjk-yuta",
+            "lvl": 2,
+            "dealt": 457
+          },
+          {
+            "id": "jjk-yuta-rika",
+            "lvl": 1,
+            "dealt": 1994
+          },
+          {
+            "id": "jjk-yuta-speech",
+            "lvl": 1,
+            "dealt": 382
+          },
+          {
+            "id": "jjk-yuta-manifest",
+            "lvl": 1,
+            "dealt": 0
+          }
+        ],
+        "stats": {}
+      }
+    }
+  ]
+}

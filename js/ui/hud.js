@@ -97,6 +97,8 @@ G.HUD = (() => {
       () => G.Game.cyclePlaybackSpeed(), !G.Coop.active);
     runButton(124, 124, '自動選卡：' + (G.Game.autoPickUpgrades ? '開' : '關'), G.Game.autoPickUpgrades,
       () => G.Game.toggleAutoPickUpgrades());
+    if(pl.trialBuild){ctx.font=F(600,9);ctx.textAlign='left';ctx.fillStyle='#aedbd8';
+      ctx.fillText(pl.trialBuild.mode==='preset'?`${pl.trialBuild.name}・${pl.trialBuild.picks.length}次選卡`:pl.trialBuild.name,16,runButtonY+49,w-32);}
 
     // ---------- reloj / bioma / kills ----------
     ctx.textAlign = 'center';
@@ -272,6 +274,7 @@ G.HUD = (() => {
     const sy = controls ? controls.slots[0].y : h - S - 18;
     const BOND = '#ff8ad8';
     const cdOf = m => {
+      const council=G.RunInsights?.skillState(pl,m);if(council)return council.fraction;
       if(m.id==='naruto-gates'){
         const status=G.NarutoGates?.status(pl);
         return status&&!status.active?G.U.clamp(status.cooldownRemaining/status.cooldown,0,1):0;
@@ -365,7 +368,7 @@ G.HUD = (() => {
       ctx.fillText(m.autoCast ? (G.I18n.lang==='en'?'AUTO':'自動') : displayPassive ? '∞' : String(i + 1), x + 3, y + 10);
       if(m.autoCast){
         ctx.font=F(800,9);ctx.textAlign='center';ctx.fillStyle='#b9eaff';
-        ctx.fillText(m.t>0?m.t.toFixed(1)+'s':G.I18n.lang==='en'?'READY':'就緒',x+S/2,y-4,S+GAP-2);
+        ctx.fillText(G.RunInsights?.skillState(pl,m)?.label||(m.t>0?m.t.toFixed(1)+'s':G.I18n.lang==='en'?'READY':'就緒'),x+S/2,y-4,S+GAP-2);
       }
       if(autoPain){
         const status=G.PainUI.skillState(pl,m);

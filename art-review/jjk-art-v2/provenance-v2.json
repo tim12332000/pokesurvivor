@@ -1,0 +1,89 @@
+{
+  "generator": "built-in image_gen",
+  "prompts": "art-review/jjk-art-v2/prompts-v2.json",
+  "promptSha256": "317335d09d4952a35d16730f01d2ef55a13aa27c75129e0101de230a1eb6682c",
+  "references": {
+    "art-review/jjk-art/yuta-source-v1.png": "7f84dc5cab839c6e3ddb5a8e9541d1d9907d6a5cb77b45c35f0426947e816cca",
+    "art-review/jjk-research-v2/character-yuta.png": "1530262c826edacfaa083887bfde7d7ba95f7cdfe8bdff0177e19d7c2b75b190",
+    "art-review/jjk-research-v2/episode59-01.jpg": "e0ef7d1970a39d9efe3bbb240294d4d33cc0f279ea07e9d53db7443602c0ee68",
+    "art-review/jjk-art/ryu-source-v1.png": "180b2a3a7d370e43e323d57d0d3876043e0cb2061b02b5ff4cbb94057a416dc8",
+    "art-review/jjk-research-v2/character-ryu.png": "fb3787f21dc6a79d812e3f9102d5cb03971418ecd4d7a99fd9365d635acf4496",
+    "art-review/jjk-research-v2/episode59-02.jpg": "7e2568cd19858e5dfb20ecee1133c108d8178d30d98492e4dde45af9724dc869",
+    "art-review/jjk-art/uro-source-v1.png": "f1d9d8aebef2aa7269b3eb07a0d800fcd6907d11153978b10e43e0beddcd2959",
+    "art-review/jjk-research-v2/character-uro.png": "7143330582ff0e4d160eec9fa3220728decc7a85c9a22d515f9dda463d811c8a",
+    "art-review/jjk-research-v2/episode59-08.jpg": "03f6049da4092d19d487ac9841778003919f1fcac7f6d2bf908b705d46f2a060",
+    "art-review/jjk-art/rika-source-v1.png": "89eb0e36c096fca5f15aab25ed21900bb9fe6e78376c72ce55446f804b9b75fa",
+    "art-review/jjk-research-v2/episode59-05.jpg": "d0147cbb802171286ac548c638c015bdb1ac77c282c7302cdc1e18a3594563b9",
+    "art-review/jjk-art-v2/yuta-skills-source-v2.png": "cef33daa36a72b620658a877ad00dccdb40a94e777e63fda2ab17d82e6f2293f",
+    "art-review/jjk-art-v2/ryu-skills-source-v2.png": "2cca0932467542e51404dbd29e959fa105b91766273dd1d757a6efdde2ba97e3",
+    "art-review/jjk-art-v2/uro-skills-source-v2.png": "a3845ab3a9f4c102947bbb318bbd181046f960c4aa8effd84f96bad35f2dfa13",
+    "art-review/jjk-art-v2/rika-skills-source-v2.png": "96d3db36d17585ee210676bf2c6112ce17cbe1d8b21ae718cd17b00e75e4d117",
+    "art-review/jjk-anime-references-v2/rika-call-sample-22.png": "ed85d2417654de380c635c8e1953705071288bd807abc3733f1d1a6c17216deb",
+    "art-review/jjk-anime-references-v2/sendai-pv-sample-29.png": "ef43def028950984e158363a7a304a3aa8613e25d2fa3c2d12ab5afc644bc174",
+    "art-review/jjk-anime-references-v2/sendai-pv-sample-38.png": "57dc2ea5fff686239b6308ad3c860a12680f4c7f5fc27cdef0fb40dee15851ae"
+  },
+  "sources": {
+    "yuta-common": {
+      "source": "art-review/jjk-art-v2/yuta-common-source-v2.png",
+      "sha256": "a083cbc52305369a2f7f25ceab061fa484a850f25b7b52e7eb446f8bc4d6a565",
+      "runtimeSha256": "a083cbc52305369a2f7f25ceab061fa484a850f25b7b52e7eb446f8bc4d6a565",
+      "physicalFrames": 12,
+      "transparent": true
+    },
+    "ryu-common": {
+      "source": "art-review/jjk-art-v2/ryu-common-source-v2.png",
+      "sha256": "80ae149cd47a855b160d57da7a8093e17ca585f2681eb6be9a05f238f60ade87",
+      "runtimeSha256": "80ae149cd47a855b160d57da7a8093e17ca585f2681eb6be9a05f238f60ade87",
+      "physicalFrames": 12,
+      "transparent": true
+    },
+    "uro-common": {
+      "source": "art-review/jjk-art-v2/uro-common-source-v2.png",
+      "sha256": "b9154328bcf03269d9c36de28fb2f385331483a37f38926e7985dcfd9eee2d7c",
+      "runtimeSha256": "b9154328bcf03269d9c36de28fb2f385331483a37f38926e7985dcfd9eee2d7c",
+      "physicalFrames": 12,
+      "transparent": true
+    },
+    "yuta-skills": {
+      "source": "art-review/jjk-art-v2/yuta-skills-source-v3.png",
+      "sha256": "7c6936af765325c991084ade8a820670a5c65fac45f1555f0a9b3029120598b4",
+      "runtimeSha256": "7c6936af765325c991084ade8a820670a5c65fac45f1555f0a9b3029120598b4",
+      "physicalFrames": 12,
+      "transparent": true
+    },
+    "ryu-skills": {
+      "source": "art-review/jjk-art-v2/ryu-skills-source-v2.png",
+      "sha256": "2cca0932467542e51404dbd29e959fa105b91766273dd1d757a6efdde2ba97e3",
+      "runtimeSha256": "2cca0932467542e51404dbd29e959fa105b91766273dd1d757a6efdde2ba97e3",
+      "physicalFrames": 12,
+      "transparent": true
+    },
+    "uro-skills": {
+      "source": "art-review/jjk-art-v2/uro-skills-source-v2.png",
+      "sha256": "a3845ab3a9f4c102947bbb318bbd181046f960c4aa8effd84f96bad35f2dfa13",
+      "runtimeSha256": "a3845ab3a9f4c102947bbb318bbd181046f960c4aa8effd84f96bad35f2dfa13",
+      "physicalFrames": 12,
+      "transparent": true
+    },
+    "rika-skills": {
+      "source": "art-review/jjk-art-v2/rika-skills-source-v3.png",
+      "sha256": "bd2b6fe6769c4d8d65dde4f8e4b286f133fecad3a32b03db18a94f54b47f77b8",
+      "runtimeSha256": "bd2b6fe6769c4d8d65dde4f8e4b286f133fecad3a32b03db18a94f54b47f77b8",
+      "physicalFrames": 9,
+      "transparent": true
+    }
+  },
+  "archivedGeneratedSources": {
+    "rika-skills-source-v2.png": "96d3db36d17585ee210676bf2c6112ce17cbe1d8b21ae718cd17b00e75e4d117",
+    "rika-skills-source-v3.png": "bd2b6fe6769c4d8d65dde4f8e4b286f133fecad3a32b03db18a94f54b47f77b8",
+    "ryu-common-source-v2.png": "80ae149cd47a855b160d57da7a8093e17ca585f2681eb6be9a05f238f60ade87",
+    "ryu-skills-source-v2.png": "2cca0932467542e51404dbd29e959fa105b91766273dd1d757a6efdde2ba97e3",
+    "uro-common-source-v2.png": "b9154328bcf03269d9c36de28fb2f385331483a37f38926e7985dcfd9eee2d7c",
+    "uro-skills-source-v2.png": "a3845ab3a9f4c102947bbb318bbd181046f960c4aa8effd84f96bad35f2dfa13",
+    "yuta-common-source-v2.png": "a083cbc52305369a2f7f25ceab061fa484a850f25b7b52e7eb446f8bc4d6a565",
+    "yuta-skills-source-v2.png": "cef33daa36a72b620658a877ad00dccdb40a94e777e63fda2ab17d82e6f2293f",
+    "yuta-skills-source-v3.png": "7c6936af765325c991084ade8a820670a5c65fac45f1555f0a9b3029120598b4"
+  },
+  "processing": "Original alpha preserved; transparent-gutter crop metadata, no source repainting/resampling.",
+  "physicalFrames": 81
+}

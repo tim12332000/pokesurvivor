@@ -80,6 +80,19 @@ for sheet in kimimaro['sheets'].values():
     assert path.resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
     assert path.is_file(), f'Missing Kimimaro runtime atlas: {source}'
     review_runtime.append('art-review/' + source)
+review_runtime.extend(['.omx/jujutsu.js', '.omx/jujutsu-art.js', '.omx/jjk-yuta.js', '.omx/jjk-ryu.js', '.omx/jjk-uro.js', 'art-review/jjk-skills-v2.json'])
+review_runtime.extend('.omx/'+name+'.js' for name in ['combat-pulse','jujutsu-growth','jujutsu-vfx','trial-build','run-insights'])
+review_runtime.extend('.omx/naruto/portraits/jjk-'+hero+'.png' for hero in ('yuta','ryu','uro'))
+jujutsu = json.loads((ROOT / 'art-review/jjk-skills-v2.json').read_text('utf-8'))
+assert set(jujutsu['sheets']) == {'yuta-common','ryu-common','uro-common','yuta-skills','ryu-skills','uro-skills','rika-skills'}, 'Corrected common and skill sheets for all three Sendai characters and Rika are required'
+assert set(jujutsu['animations']) == {'yuta','ryu','uro','rika'}, 'Semantic animation registration is incomplete'
+for sheet in jujutsu['sheets'].values():
+    source = sheet['source']
+    assert source.startswith('redrawn/jjk-') and Path(source).suffix == '.png'
+    path = ROOT / 'art-review' / source
+    assert path.resolve().is_relative_to((ROOT / 'art-review/redrawn').resolve())
+    assert path.is_file(), f'Missing Jujutsu runtime atlas: {source}'
+    review_runtime.append('art-review/' + source)
 for source in ('temari-common-v1.png', 'temari-skills-v1.png', 'temari-kamatari-v2.png', 'temari-spin-v1.png'):
     review_runtime.append('art-review/redrawn/' + source)
 for name in review_runtime + ['.omx/redrawn-init.js', '.omx/naruto-lee-pursuit.js', '.omx/naruto-lee-drunken.js', '.omx/naruto-sand-guard.js', '.omx/damage-splash.js', '.omx/naruto-tenten.js', '.omx/naruto-pain.js', '.omx/naruto-temari.js', '.omx/naruto-temari-reflect.js', '.omx/temari-cyclone-vfx.js', '.omx/temari-coop.js', '.omx/naruto-pain-ui.js', '.omx/pain-beta.js', '.omx/menu-layout.css', '.omx/desktop-portrait.js', '.omx/portrait.html']:

@@ -1,0 +1,809 @@
+{
+  "normal": {
+    "before": {
+      "state": "playing",
+      "time": 0.012200000000000046,
+      "level": 1,
+      "hp": 230,
+      "maxHp": 230,
+      "x": 0,
+      "y": 0,
+      "xp": 0,
+      "xpNext": 62,
+      "kills": 0,
+      "slots": [],
+      "maxMoves": 4,
+      "quantity": 0,
+      "moves": [
+        {
+          "id": "jjk-yuta",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 1,
+          "t": 0,
+          "dealt": 0
+        }
+      ],
+      "cards": [
+        {
+          "key": "stat:lifesteal",
+          "title": "吸血 +1%",
+          "desc": "造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:selfClone",
+          "title": "分身之術",
+          "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:maxHealthPercent",
+          "title": "生命成長 +10%",
+          "desc": "最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:giant",
+          "title": "倍化之術",
+          "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:damageSplash",
+          "title": "傷害擴散 +10%",
+          "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:atk",
+          "title": "Potencia",
+          "desc": "+10% de daño con todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-yuta",
+          "title": "咒力刀斬",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:spd",
+          "title": "Carrera",
+          "desc": "+7% de velocidad de movimiento.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:heal",
+          "title": "軍糧丸",
+          "desc": "Recupera el 45% de tu vida ahora mismo.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:quantity",
+          "title": "數量 ×1.25",
+          "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:xp",
+          "title": "Aprendizaje",
+          "desc": "+12% de experiencia ganada.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:def",
+          "title": "Coraza",
+          "desc": "+6% de reducción de daño recibido.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:percentHealthDamage",
+          "title": "生命剝奪 +1%",
+          "desc": "每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:cd",
+          "title": "Reflejos",
+          "desc": "-8% de recarga en todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:mag",
+          "title": "Imán",
+          "desc": "+30% de radio de recogida de experiencia.",
+          "guaranteed": false
+        }
+      ]
+    },
+    "after": {
+      "state": "levelup",
+      "time": 103.07053333333145,
+      "level": 9,
+      "hp": 48.26950210559842,
+      "maxHp": 230,
+      "x": 148.92815249428327,
+      "y": -704.2749940653711,
+      "xp": 15.600000000000023,
+      "xpNext": 547,
+      "kills": 75,
+      "slots": [],
+      "maxMoves": 4,
+      "quantity": 1,
+      "moves": [
+        {
+          "id": "jjk-yuta",
+          "lvl": 3,
+          "passive": true,
+          "autoCast": true,
+          "cd": 1,
+          "t": 0.5779999999999883,
+          "dealt": 5624
+        },
+        {
+          "id": "jjk-yuta-rika",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 6,
+          "t": 2.581600000000007,
+          "dealt": 5093
+        },
+        {
+          "id": "jjk-yuta-speech",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 8,
+          "t": 4.987000000000001,
+          "dealt": 1136
+        }
+      ],
+      "cards": [
+        {
+          "key": "up:jjk-yuta-rika",
+          "title": "里香協擊",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "new:jjk-yuta-manifest",
+          "title": "里香完全顯現",
+          "desc": "完全顯現6秒，新施放傷害+50／60／70／80／100%，里香協擊追加一次打擊。冷卻18秒。 自動施放，不占主動槽。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:spd",
+          "title": "Carrera",
+          "desc": "+7% de velocidad de movimiento.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:atk",
+          "title": "Potencia",
+          "desc": "+10% de daño con todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:mag",
+          "title": "Imán",
+          "desc": "+30% de radio de recogida de experiencia.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:def",
+          "title": "Coraza",
+          "desc": "+6% de reducción de daño recibido.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:cd",
+          "title": "Reflejos",
+          "desc": "-8% de recarga en todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:giant",
+          "title": "倍化之術",
+          "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:lifesteal",
+          "title": "吸血 +1%",
+          "desc": "造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-yuta",
+          "title": "咒力刀斬",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-yuta-speech",
+          "title": "咒言・別動",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:xp",
+          "title": "Aprendizaje",
+          "desc": "+12% de experiencia ganada.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:selfClone",
+          "title": "分身之術",
+          "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:heal",
+          "title": "軍糧丸",
+          "desc": "Recupera el 45% de tu vida ahora mismo.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:quantity",
+          "title": "數量 ×1.25",
+          "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:percentHealthDamage",
+          "title": "生命剝奪 +1%",
+          "desc": "每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:damageSplash",
+          "title": "傷害擴散 +10%",
+          "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:maxHealthPercent",
+          "title": "生命成長 +10%",
+          "desc": "最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。",
+          "guaranteed": false
+        }
+      ]
+    },
+    "wallSeconds": 55.875,
+    "choices": [
+      [
+        "\n         反應 強化所有招式冷卻時間 -8%。\n         1",
+        "\n         咒力刀斬 Nv.1 > 2傷害提高\n         2",
+        "\n         分身之術 強化召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。\n         3"
+      ],
+      [
+        "\n         里香協擊 全新 · Yuta Okkotsu特色招式・首次解鎖里香移至目標旁重擊，傷及周圍敵人。 自動施放，不占主動槽。\n         1",
+        "\n         生命成長 +10% 強化最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。\n         2",
+        "\n         威力 強化所有招式傷害 +10%。\n         3"
+      ],
+      [
+        "\n         反應 強化所有招式冷卻時間 -8%。\n         1",
+        "\n         生命成長 +10% 強化最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。\n         2",
+        "\n         學習 強化獲得的經驗值 +12%。\n         3"
+      ],
+      [
+        "\n         數量 ×1.25 強化每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n         1",
+        "\n         威力 強化所有招式傷害 +10%。\n         2",
+        "\n         反應 強化所有招式冷卻時間 -8%。\n         3"
+      ],
+      [
+        "\n         咒言・別動 全新 · Yuta Okkotsu特色招式・首次解鎖咒言震懾周圍敵人；首領僅受短暫控制。 自動施放，不占主動槽。\n         1",
+        "\n         數量 ×1.25 強化每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n         2",
+        "\n         疾跑 強化移動速度 +7%。\n         3"
+      ],
+      [
+        "\n         疾跑 強化移動速度 +7%。\n         1",
+        "\n         咒力刀斬 Nv.2 > 3傷害提高\n         2",
+        "\n         倍化之術 強化體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。\n         3"
+      ],
+      [
+        "\n         傷害擴散 +10% 強化單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。\n         1",
+        "\n         咒言・別動 Nv.1 > 2傷害提高\n         2",
+        "\n         軍糧丸 強化立即回復 45% 體力。\n         3"
+      ]
+    ]
+  },
+  "trial": {
+    "jjk-yuta": {
+      "state": "playing",
+      "time": 0.012200000000000046,
+      "level": 20,
+      "hp": 230,
+      "maxHp": 230,
+      "x": 0,
+      "y": 0,
+      "xp": 0,
+      "xpNext": 1722,
+      "kills": 0,
+      "slots": [],
+      "maxMoves": 4,
+      "quantity": 0,
+      "moves": [
+        {
+          "id": "jjk-yuta",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 1,
+          "t": 0,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-yuta-rika",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 6,
+          "t": 4.5600000000000005,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-yuta-speech",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 8,
+          "t": 0,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-yuta-manifest",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 18,
+          "t": 0,
+          "dealt": 0
+        }
+      ],
+      "cards": [
+        {
+          "key": "stat:lifesteal",
+          "title": "吸血 +1%",
+          "desc": "造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-yuta-manifest",
+          "title": "里香完全顯現",
+          "desc": "完全顯現傷害加成 60%",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:heal",
+          "title": "軍糧丸",
+          "desc": "Recupera el 45% de tu vida ahora mismo.",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-yuta-rika",
+          "title": "里香協擊",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:damageSplash",
+          "title": "傷害擴散 +10%",
+          "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:maxHealthPercent",
+          "title": "生命成長 +10%",
+          "desc": "最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:xp",
+          "title": "Aprendizaje",
+          "desc": "+12% de experiencia ganada.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:atk",
+          "title": "Potencia",
+          "desc": "+10% de daño con todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:spd",
+          "title": "Carrera",
+          "desc": "+7% de velocidad de movimiento.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:selfClone",
+          "title": "分身之術",
+          "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:quantity",
+          "title": "數量 ×1.25",
+          "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-yuta",
+          "title": "咒力刀斬",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-yuta-speech",
+          "title": "咒言・別動",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:mag",
+          "title": "Imán",
+          "desc": "+30% de radio de recogida de experiencia.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:giant",
+          "title": "倍化之術",
+          "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:def",
+          "title": "Coraza",
+          "desc": "+6% de reducción de daño recibido.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:cd",
+          "title": "Reflejos",
+          "desc": "-8% de recarga en todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:percentHealthDamage",
+          "title": "生命剝奪 +1%",
+          "desc": "每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。",
+          "guaranteed": false
+        }
+      ]
+    },
+    "jjk-ryu": {
+      "state": "playing",
+      "time": 0.012200000000000046,
+      "level": 20,
+      "hp": 245,
+      "maxHp": 245,
+      "x": 0,
+      "y": 0,
+      "xp": 0,
+      "xpNext": 1722,
+      "kills": 0,
+      "slots": [],
+      "maxMoves": 4,
+      "quantity": 0,
+      "moves": [
+        {
+          "id": "jjk-ryu",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 1.8,
+          "t": 1.368,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-ryu-spread",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 5,
+          "t": 0,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-ryu-impact",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 7,
+          "t": 0,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-ryu-maximum",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 11,
+          "t": 0,
+          "dealt": 0
+        }
+      ],
+      "cards": [
+        {
+          "key": "up:jjk-ryu-impact",
+          "title": "咒力爆破",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:selfClone",
+          "title": "分身之術",
+          "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:quantity",
+          "title": "數量 ×1.25",
+          "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:damageSplash",
+          "title": "傷害擴散 +10%",
+          "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-ryu-spread",
+          "title": "散射咒力砲",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:mag",
+          "title": "Imán",
+          "desc": "+30% de radio de recogida de experiencia.",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-ryu-maximum",
+          "title": "全力咒力砲",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:cd",
+          "title": "Reflejos",
+          "desc": "-8% de recarga en todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:spd",
+          "title": "Carrera",
+          "desc": "+7% de velocidad de movimiento.",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-ryu",
+          "title": "花崗岩砲",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:xp",
+          "title": "Aprendizaje",
+          "desc": "+12% de experiencia ganada.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:heal",
+          "title": "軍糧丸",
+          "desc": "Recupera el 45% de tu vida ahora mismo.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:maxHealthPercent",
+          "title": "生命成長 +10%",
+          "desc": "最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:percentHealthDamage",
+          "title": "生命剝奪 +1%",
+          "desc": "每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:giant",
+          "title": "倍化之術",
+          "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:atk",
+          "title": "Potencia",
+          "desc": "+10% de daño con todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:def",
+          "title": "Coraza",
+          "desc": "+6% de reducción de daño recibido.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:lifesteal",
+          "title": "吸血 +1%",
+          "desc": "造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。",
+          "guaranteed": false
+        }
+      ]
+    },
+    "jjk-uro": {
+      "state": "playing",
+      "time": 0.012200000000000046,
+      "level": 20,
+      "hp": 205,
+      "maxHp": 205,
+      "x": 0,
+      "y": 0,
+      "xp": 0,
+      "xpNext": 1722,
+      "kills": 0,
+      "slots": [],
+      "maxMoves": 4,
+      "quantity": 0,
+      "moves": [
+        {
+          "id": "jjk-uro",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 1.25,
+          "t": 0.95,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-uro-thin-ice",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 4.8,
+          "t": 0,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-uro-screen",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 9,
+          "t": 0,
+          "dealt": 0
+        },
+        {
+          "id": "jjk-uro-collapse",
+          "lvl": 1,
+          "passive": true,
+          "autoCast": true,
+          "cd": 8,
+          "t": 0,
+          "dealt": 0
+        }
+      ],
+      "cards": [
+        {
+          "key": "stat:quantity",
+          "title": "數量 ×1.25",
+          "desc": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-uro",
+          "title": "空面打擊",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:giant",
+          "title": "倍化之術",
+          "desc": "體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-uro-thin-ice",
+          "title": "宇守羅彈",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-uro-screen",
+          "title": "天空幕",
+          "desc": "可反射飛彈 +1",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:damageSplash",
+          "title": "傷害擴散 +10%",
+          "desc": "單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:maxHealthPercent",
+          "title": "生命成長 +10%",
+          "desc": "最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:spd",
+          "title": "Carrera",
+          "desc": "+7% de velocidad de movimiento.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:mag",
+          "title": "Imán",
+          "desc": "+30% de radio de recogida de experiencia.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:atk",
+          "title": "Potencia",
+          "desc": "+10% de daño con todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:cd",
+          "title": "Reflejos",
+          "desc": "-8% de recarga en todos los movimientos.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:heal",
+          "title": "軍糧丸",
+          "desc": "Recupera el 45% de tu vida ahora mismo.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:selfClone",
+          "title": "分身之術",
+          "desc": "召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:xp",
+          "title": "Aprendizaje",
+          "desc": "+12% de experiencia ganada.",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:lifesteal",
+          "title": "吸血 +1%",
+          "desc": "造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:def",
+          "title": "Coraza",
+          "desc": "+6% de reducción de daño recibido.",
+          "guaranteed": false
+        },
+        {
+          "key": "up:jjk-uro-collapse",
+          "title": "空面震落",
+          "desc": "傷害提高",
+          "guaranteed": false
+        },
+        {
+          "key": "stat:percentHealthDamage",
+          "title": "生命剝奪 +1%",
+          "desc": "每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。",
+          "guaranteed": false
+        }
+      ]
+    }
+  },
+  "limits": [
+    "A sixty-second desktop movement sample is not a whole-run balance test.",
+    "The level20 URL grants eligible moves at rank1 without nineteen earned card picks."
+  ]
+}

@@ -1,0 +1,330 @@
+{
+  "purpose": "Local anime visual reference only; exclude from game distribution",
+  "samples": [
+    {
+      "file": "sendai-pv-storyboard-0.jpg",
+      "url": "https://i.ytimg.com/sb/DKNM-3LpfZE/storyboard3_L3/M0.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCIn2_c0G&sigh=rs$AOn4CLCoC-wS7AEW7-CCirmV-zX8oWMpUw",
+      "video": "https://www.youtube.com/watch?v=DKNM-3LpfZE",
+      "sha256": "cca59ac69b8a010cd1fd639ffb0e01ee8bbc3bddc209a80ac5743d5eb2eb8280",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "sheetIndex": 0,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "sendai-pv-storyboard-1.jpg",
+      "url": "https://i.ytimg.com/sb/DKNM-3LpfZE/storyboard3_L3/M1.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCIn2_c0G&sigh=rs$AOn4CLCoC-wS7AEW7-CCirmV-zX8oWMpUw",
+      "video": "https://www.youtube.com/watch?v=DKNM-3LpfZE",
+      "sha256": "a87755d15fbe02a7e5a0c2854e46f2cbf6592af083c45fda2f88f2eedf653215",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "sheetIndex": 1,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "sendai-pv-storyboard-2.jpg",
+      "url": "https://i.ytimg.com/sb/DKNM-3LpfZE/storyboard3_L3/M2.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCIn2_c0G&sigh=rs$AOn4CLCoC-wS7AEW7-CCirmV-zX8oWMpUw",
+      "video": "https://www.youtube.com/watch?v=DKNM-3LpfZE",
+      "sha256": "b2d7bd32a467fa3bcf49e9d0ea63d69b02f82bb5e27a757fe3f437d2169fae2b",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "sheetIndex": 2,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "sendai-pv-storyboard-3.jpg",
+      "url": "https://i.ytimg.com/sb/DKNM-3LpfZE/storyboard3_L3/M3.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCIn2_c0G&sigh=rs$AOn4CLCoC-wS7AEW7-CCirmV-zX8oWMpUw",
+      "video": "https://www.youtube.com/watch?v=DKNM-3LpfZE",
+      "sha256": "8caf5bd0736855e16d7a9d7a63e005518cfb0516bf43edcfd447a1011646ef06",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "sheetIndex": 3,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "sendai-pv-storyboard-4.jpg",
+      "url": "https://i.ytimg.com/sb/DKNM-3LpfZE/storyboard3_L3/M4.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCIn2_c0G&sigh=rs$AOn4CLCoC-wS7AEW7-CCirmV-zX8oWMpUw",
+      "video": "https://www.youtube.com/watch?v=DKNM-3LpfZE",
+      "sha256": "18a4b73e14806bb7aac754cfe016fcbd0f0e4a357fe922044fe5335b68451b05",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "sheetIndex": 4,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "sendai-pv-storyboard-5.jpg",
+      "url": "https://i.ytimg.com/sb/DKNM-3LpfZE/storyboard3_L3/M5.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCIn2_c0G&sigh=rs$AOn4CLCoC-wS7AEW7-CCirmV-zX8oWMpUw",
+      "video": "https://www.youtube.com/watch?v=DKNM-3LpfZE",
+      "sha256": "5078da6d913490181e556c39ed8ddf64a995985e755196f882e2d7d4c76506d3",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 320,
+      "frameHeight": 180,
+      "sheetIndex": 5,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "ryu-highlight-storyboard-0.jpg",
+      "url": "https://i.ytimg.com/sb/b7n2HutQK5M/storyboard3_L3/M0.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCPfPmM4G&sigh=rs$AOn4CLA3GojWAHHSBs5VFJT05Ma5k9lmeg",
+      "video": "https://www.youtube.com/watch?v=b7n2HutQK5M",
+      "sha256": "0ed945cd81eb2115bb083e88e7282bbcd6d8a63bb351191626136c607e84bfa2",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 101,
+      "frameHeight": 180,
+      "sheetIndex": 0,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "ryu-highlight-storyboard-1.jpg",
+      "url": "https://i.ytimg.com/sb/b7n2HutQK5M/storyboard3_L3/M1.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCPfPmM4G&sigh=rs$AOn4CLA3GojWAHHSBs5VFJT05Ma5k9lmeg",
+      "video": "https://www.youtube.com/watch?v=b7n2HutQK5M",
+      "sha256": "2bb33112fdbe089246094b7339c6989785d10162d6123d8e4155db84020d3942",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 101,
+      "frameHeight": 180,
+      "sheetIndex": 1,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "ryu-highlight-storyboard-2.jpg",
+      "url": "https://i.ytimg.com/sb/b7n2HutQK5M/storyboard3_L3/M2.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCPfPmM4G&sigh=rs$AOn4CLA3GojWAHHSBs5VFJT05Ma5k9lmeg",
+      "video": "https://www.youtube.com/watch?v=b7n2HutQK5M",
+      "sha256": "51b76a8ebdaa591bfa00538042caa05c1ea523b367a6d69e42649606e4f49d57",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 101,
+      "frameHeight": 180,
+      "sheetIndex": 2,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "rika-call-storyboard-0.jpg",
+      "url": "https://i.ytimg.com/sb/9E6qYvQpxDI/storyboard3_L3/M0.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCPzVmM4G&sigh=rs$AOn4CLAD-Fz51YT5ft2HpdGmAl57kIlI7Q",
+      "video": "https://www.youtube.com/watch?v=9E6qYvQpxDI",
+      "sha256": "c324d29edaadcdb6b7140b0e0e2425d858caf5eb8ff90f1329bfdfdd5e661134",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 101,
+      "frameHeight": 180,
+      "sheetIndex": 0,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "rika-call-storyboard-1.jpg",
+      "url": "https://i.ytimg.com/sb/9E6qYvQpxDI/storyboard3_L3/M1.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCPzVmM4G&sigh=rs$AOn4CLAD-Fz51YT5ft2HpdGmAl57kIlI7Q",
+      "video": "https://www.youtube.com/watch?v=9E6qYvQpxDI",
+      "sha256": "b598485a02d297428287c7b9280ce518e63aabc24cc85f5617662b5bca532415",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 101,
+      "frameHeight": 180,
+      "sheetIndex": 1,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "rika-call-storyboard-2.jpg",
+      "url": "https://i.ytimg.com/sb/9E6qYvQpxDI/storyboard3_L3/M2.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCPzVmM4G&sigh=rs$AOn4CLAD-Fz51YT5ft2HpdGmAl57kIlI7Q",
+      "video": "https://www.youtube.com/watch?v=9E6qYvQpxDI",
+      "sha256": "375b07d4f2aa81e4ce94b2654ed4e55f369ca7739219cdec02576a4d6a029d52",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 101,
+      "frameHeight": 180,
+      "sheetIndex": 2,
+      "source": "official public YouTube storyboard, not full video playback"
+    },
+    {
+      "file": "rika-call-storyboard-3.jpg",
+      "url": "https://i.ytimg.com/sb/9E6qYvQpxDI/storyboard3_L3/M3.jpg?sqp=-oaymwGhAUg48quKqQOYAYgBAZUBAAAEQpgBMqABPKgBBLIBQBANDBAVHyYtDg4PEhcrLCkPDhAVHyoyKQ8RFBgmPTgtERQeKjFLRzYVHCkuOUdNPyUuNz1HUlFFM0BCQ0xERkO6AUARERUjRENDQxETFi9DQ0NDFRYpQ0NDQ0MjL0NDQ0NDQ0RDQ0NDQ0JCQ0NDQ0NCQkJDQ0NDQkJCQkNDQ0JCQkJCovOX_wMGCPzVmM4G&sigh=rs$AOn4CLAD-Fz51YT5ft2HpdGmAl57kIlI7Q",
+      "video": "https://www.youtube.com/watch?v=9E6qYvQpxDI",
+      "sha256": "64a9e8003700e3a7c0a614ce14eafc5892de7b7ce50578b4b5d0a9641b876fd4",
+      "sampleIntervalMs": 1000,
+      "frameWidth": 101,
+      "frameHeight": 180,
+      "sheetIndex": 3,
+      "source": "official public YouTube storyboard, not full video playback"
+    }
+  ],
+  "notes": [
+    {
+      "video": "DKNM-3LpfZE",
+      "status": "downloaded storyboard samples",
+      "frames": 47,
+      "intervalMs": 1000,
+      "warning": "Time index approximate to storyboard sampling metadata; not frame-accurate choreography or audio verification."
+    },
+    {
+      "video": "b7n2HutQK5M",
+      "status": "downloaded storyboard samples",
+      "frames": 25,
+      "intervalMs": 1000,
+      "warning": "Time index approximate to storyboard sampling metadata; not frame-accurate choreography or audio verification."
+    },
+    {
+      "video": "9E6qYvQpxDI",
+      "status": "downloaded storyboard samples",
+      "frames": 29,
+      "intervalMs": 1000,
+      "warning": "Time index approximate to storyboard sampling metadata; not frame-accurate choreography or audio verification."
+    }
+  ],
+  "derivedCrops": [
+    {
+      "file": "rika-call-sample-19.png",
+      "sha256": "56135887d891e0707afd7335874c3f2b594531cc09ce0f8feed16661cbe92618",
+      "parent": "rika-call-storyboard-2.jpg",
+      "cellIndex": 1,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "rika-call-sample-20.png",
+      "sha256": "5d073cbab75ef7ead0f65b7cde6e6d4f0bdff8c94bc3198ceba87c1cb0b221b6",
+      "parent": "rika-call-storyboard-2.jpg",
+      "cellIndex": 2,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "rika-call-sample-21.png",
+      "sha256": "6c3c81b6c53b886e230e92adce8cea57b6a22d38c6cfb05589ae863ca7c4fa4a",
+      "parent": "rika-call-storyboard-2.jpg",
+      "cellIndex": 3,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "rika-call-sample-22.png",
+      "sha256": "ed85d2417654de380c635c8e1953705071288bd807abc3733f1d1a6c17216deb",
+      "parent": "rika-call-storyboard-2.jpg",
+      "cellIndex": 4,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "rika-call-sample-25.png",
+      "sha256": "c1ee8fee7d7e9f521957d7ed37b6abf8159e4b153fdec264b96c2b7692f3aa3a",
+      "parent": "rika-call-storyboard-2.jpg",
+      "cellIndex": 7,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "ryu-highlight-sample-00.png",
+      "sha256": "42191a827917cd455be5f34caaec7cdd6b77842185ce22f952f33f43c09c5caf",
+      "parent": "ryu-highlight-storyboard-0.jpg",
+      "cellIndex": 0,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "ryu-highlight-sample-01.png",
+      "sha256": "b74992f2ac4d02c918a25a7ddce886713a0462cc1097ebf8cdce131e1a7dbb90",
+      "parent": "ryu-highlight-storyboard-0.jpg",
+      "cellIndex": 1,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "ryu-highlight-sample-02.png",
+      "sha256": "99ceb692cf2536e0846d3a494b9675bef50746930d2b8bb8aca07b6af5103899",
+      "parent": "ryu-highlight-storyboard-0.jpg",
+      "cellIndex": 2,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "ryu-highlight-sample-14.png",
+      "sha256": "89e28b02a46bd700f3537e25780a2e8bd50a956017414adb086404a65073614b",
+      "parent": "ryu-highlight-storyboard-1.jpg",
+      "cellIndex": 5,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "ryu-highlight-sample-15.png",
+      "sha256": "506510856da6250112d4740e72c3d8dd18b8f9c9237953f500feecd926cba7ff",
+      "parent": "ryu-highlight-storyboard-1.jpg",
+      "cellIndex": 6,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "ryu-highlight-sample-16.png",
+      "sha256": "b22a80d05e9eeaa4cbc5089fcd1bc4cbf273b9e8614be4c4678fff05c9852650",
+      "parent": "ryu-highlight-storyboard-1.jpg",
+      "cellIndex": 7,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "sendai-pv-sample-16.png",
+      "sha256": "a30e6b10613a8e07f18a79bb65e8a5fe3852284e06bf566f7ee3bba75581fd05",
+      "parent": "sendai-pv-storyboard-1.jpg",
+      "cellIndex": 7,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "sendai-pv-sample-17.png",
+      "sha256": "e130c71e9f07922faf88e5645f2cf93d8bc05ead7a1932ced230bebcf62f7429",
+      "parent": "sendai-pv-storyboard-1.jpg",
+      "cellIndex": 8,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "sendai-pv-sample-18.png",
+      "sha256": "52d4aae1d1dcdb96146c6fe1f23cd7baf5c8995f041c7685335d339807e7375b",
+      "parent": "sendai-pv-storyboard-2.jpg",
+      "cellIndex": 0,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "sendai-pv-sample-19.png",
+      "sha256": "03bada04cc55658e50b7d330f10cfec35d90eafc7183b3b883e83aaa23ef1aa4",
+      "parent": "sendai-pv-storyboard-2.jpg",
+      "cellIndex": 1,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "sendai-pv-sample-29.png",
+      "sha256": "ef43def028950984e158363a7a304a3aa8613e25d2fa3c2d12ab5afc644bc174",
+      "parent": "sendai-pv-storyboard-3.jpg",
+      "cellIndex": 2,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "sendai-pv-sample-35.png",
+      "sha256": "4a3ee58ff3638d8f077a9d33d18b5b17951e3f137e9212cb29c917dbc92ea768",
+      "parent": "sendai-pv-storyboard-3.jpg",
+      "cellIndex": 8,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    },
+    {
+      "file": "sendai-pv-sample-38.png",
+      "sha256": "57dc2ea5fff686239b6308ad3c860a12680f4c7f5fc27cdef0fb40dee15851ae",
+      "parent": "sendai-pv-storyboard-4.jpg",
+      "cellIndex": 2,
+      "processing": "Unscaled native-resolution rectangular crop from3x3 storyboard; no enhancement"
+    }
+  ],
+  "captionAttempt": {
+    "video": "https://www.youtube.com/watch?v=9E6qYvQpxDI",
+    "type": "auto-generated Japanese caption endpoint",
+    "status": "HTTP200 empty response; not used as evidence"
+  },
+  "namingSource": {
+    "url": "https://kotodaman.jp/info/detail/081584KEuwsxffR4nq.html",
+    "file": "kotodaman-official-collab.html",
+    "sha256": "f00d9e9e1a54ac0a38a95df366de70e7f8254e3ed7f7527852f0f2bb774caddc",
+    "scope": "Official licensed anime-game collaboration; useful name/visual crosscheck, not proof its balance is anime canon"
+  },
+  "licensedGameArt": [
+    {
+      "file": "kotodaman-yuta-rika.jpg",
+      "url": "https://kotodaman.jp/upload_images/b2d70b540568708b1a2cee00d7fa433d02fa70b8.jpg",
+      "sha256": "f60d222a55f5c1e45e65debbc16624495a0705667f1508e3e7ae6e4dd81721b3",
+      "context": "Official licensed Sendai anime collaboration game character illustration; stylized reference, not animation frame"
+    },
+    {
+      "file": "kotodaman-uro.jpg",
+      "url": "https://kotodaman.jp/upload_images/6bf3ea9f9af5d56011b3a53fafc0a781dc8713cc.jpg",
+      "sha256": "865d628d6ea96140edcd8279d648798ae6ed553414b575f6e8ceaf748d3959a4",
+      "context": "Official licensed Sendai anime collaboration game character illustration; stylized reference, not animation frame"
+    },
+    {
+      "file": "kotodaman-ryu.jpg",
+      "url": "https://kotodaman.jp/upload_images/4ea9a97e88bb9e09dba6a89a16410e0b1aaa9aca.jpg",
+      "sha256": "2d8f1ea56390c7105e2c5f33852b52a0c57a04f7004762c3c5a4bd2c8a9d432a",
+      "context": "Official licensed Sendai anime collaboration game character illustration; stylized reference, not animation frame"
+    }
+  ]
+}

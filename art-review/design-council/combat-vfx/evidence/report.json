@@ -1,0 +1,2765 @@
+{
+  "gameplay": [
+    {
+      "hero": "jjk-ryu",
+      "query": "",
+      "wallSeconds": 32.24345860001631,
+      "observation": "Native movement and first displayed upgrade card; no terrain/stat/enemy fixture changes. Level20 URL is a debug skill-unlock trial, not natural progression.",
+      "observations": [
+        {
+          "state": "playing",
+          "t": 0.06060000000000014,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.3407333333333333
+            }
+          ],
+          "enemies": 0
+        },
+        {
+          "state": "playing",
+          "t": 0.8733333333333334,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.528
+            }
+          ],
+          "enemies": 0
+        },
+        {
+          "state": "playing",
+          "t": 1.6011333333333326,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.1742000000000004
+            }
+          ],
+          "enemies": 0
+        },
+        {
+          "state": "playing",
+          "t": 2.329333333333332,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.44600000000000145
+            }
+          ],
+          "enemies": 0
+        },
+        {
+          "state": "playing",
+          "t": 3.057333333333337,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.0888000000000009
+            }
+          ],
+          "enemies": 1
+        },
+        {
+          "state": "playing",
+          "t": 3.797533333333344,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.3486000000000011
+            }
+          ],
+          "enemies": 1
+        },
+        {
+          "state": "playing",
+          "t": 4.525333333333342,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.9918000000000009
+            }
+          ],
+          "enemies": 1
+        },
+        {
+          "state": "playing",
+          "t": 5.253333333333338,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.26380000000000164
+            }
+          ],
+          "enemies": 2
+        },
+        {
+          "state": "playing",
+          "t": 5.993533333333336,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.8948000000000002
+            }
+          ],
+          "enemies": 2
+        },
+        {
+          "state": "playing",
+          "t": 6.721533333333332,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.16679999999999975
+            }
+          ],
+          "enemies": 2
+        },
+        {
+          "state": "playing",
+          "t": 7.4493333333333265,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.8100000000000005
+            }
+          ],
+          "enemies": 3
+        },
+        {
+          "state": "playing",
+          "t": 8.189733333333315,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.06960000000000056
+            }
+          ],
+          "enemies": 3
+        },
+        {
+          "state": "playing",
+          "t": 8.917533333333303,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.7127999999999997
+            }
+          ],
+          "enemies": 3
+        },
+        {
+          "state": "playing",
+          "t": 9.657733333333288,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.3436000000000006
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 10.385533333333285,
+          "level": 1,
+          "hp": 245,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6157999999999993
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 11.12573333333327,
+          "level": 1,
+          "hp": 233.12439360000008,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.2468000000000012
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 11.853733333333258,
+          "level": 1,
+          "hp": 233.85239360000034,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.5188000000000013
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 12.593733333333246,
+          "level": 1,
+          "hp": 234.59239360000063,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.1498000000000013
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 13.321733333333228,
+          "level": 1,
+          "hp": 235.32039360000093,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.4218000000000012
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 14.061933333333211,
+          "level": 1,
+          "hp": 236.06059360000123,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.0526000000000009
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 14.789933333333199,
+          "level": 1,
+          "hp": 236.78859360000146,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.32460000000000017
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 15.530133333333184,
+          "level": 1,
+          "hp": 237.52879360000176,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.9553999999999987
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 16.258133333333173,
+          "level": 1,
+          "hp": 238.25679360000197,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.2273999999999979
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 16.986133333333164,
+          "level": 1,
+          "hp": 238.9847936000022,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.8703999999999986
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 17.714133333333148,
+          "level": 1,
+          "hp": 239.71279360000247,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.14239999999999786
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 18.442133333333135,
+          "level": 1,
+          "hp": 240.44079360000276,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.7855999999999989
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 19.182133333333137,
+          "level": 1,
+          "hp": 241.180793600003,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.04559999999999843
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 19.910133333333132,
+          "level": 1,
+          "hp": 241.90879360000324,
+          "kills": 3,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6885999999999989
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 20.638133333333126,
+          "level": 1,
+          "hp": 242.6367936000035,
+          "kills": 3,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.3315999999999988
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 21.378333333333117,
+          "level": 1,
+          "hp": 243.37699360000374,
+          "kills": 4,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.5913999999999981
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 22.106333333333115,
+          "level": 1,
+          "hp": 244.10499360000398,
+          "kills": 4,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.2343999999999982
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 22.846333333333114,
+          "level": 1,
+          "hp": 244.84499360000424,
+          "kills": 4,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.4943999999999981
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 23.574533333333108,
+          "level": 1,
+          "hp": 245,
+          "kills": 5,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.5900000000000003
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "levelup",
+          "t": 24.096133333333114,
+          "level": 3,
+          "hp": 245,
+          "kills": 5,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.06839999999999798
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "levelup",
+          "t": 24.108333333333114,
+          "level": 3,
+          "hp": 245,
+          "kills": 5,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.05619999999999725
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.28
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 24.84853333333311,
+          "level": 3,
+          "hp": 245,
+          "kills": 6,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.548935999999999
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.5397999999999985
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 25.58853333333311,
+          "level": 3,
+          "hp": 245,
+          "kills": 6,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.5733359999999968
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.7997999999999991
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 26.316533333333112,
+          "level": 3,
+          "hp": 245,
+          "kills": 6,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6097359999999983
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.07179999999999871
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 27.0689333333331,
+          "level": 3,
+          "hp": 245,
+          "kills": 7,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.6000000000000019
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 27.821533333333107,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.03893599999999897
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.8474
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 28.548933333333107,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.07593599999999921
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.12000000000000204
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 29.28913333333311,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.1001359999999996
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.8428000000000009
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 30.029333333333106,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.29413599999999995
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.1026000000000022
+            }
+          ],
+          "enemies": 7
+        },
+        {
+          "state": "playing",
+          "t": 30.75733333333312,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.3305360000000015
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.37460000000000226
+            }
+          ],
+          "enemies": 7
+        },
+        {
+          "state": "playing",
+          "t": 31.509733333333113,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.34233600000000436
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.0851999999999986
+            }
+          ],
+          "enemies": 7
+        },
+        {
+          "state": "playing",
+          "t": 32.23773333333315,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.5485360000000016
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.3571999999999977
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "playing",
+          "t": 32.96553333333324,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.5853359999999972
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.6293999999999945
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "playing",
+          "t": 33.70573333333335,
+          "level": 3,
+          "hp": 245,
+          "kills": 8,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6093360000000044
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 15
+        },
+        {
+          "state": "playing",
+          "t": 34.43353333333346,
+          "level": 3,
+          "hp": 245,
+          "kills": 9,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.6245999999999998
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "playing",
+          "t": 35.17373333333356,
+          "level": 3,
+          "hp": 245,
+          "kills": 9,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.07553600000000128
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.8844000000000014
+            }
+          ],
+          "enemies": 15
+        },
+        {
+          "state": "playing",
+          "t": 35.901733333333645,
+          "level": 3,
+          "hp": 232.10359456000003,
+          "kills": 10,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.11213599999999982
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.15640000000000126
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "playing",
+          "t": 36.64173333333375,
+          "level": 3,
+          "hp": 232.84359456000033,
+          "kills": 11,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.13633600000000418
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.879400000000003
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "playing",
+          "t": 37.36973333333385,
+          "level": 3,
+          "hp": 233.5715945600006,
+          "kills": 13,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.34253600000000145
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.1514000000000015
+            }
+          ],
+          "enemies": 12
+        },
+        {
+          "state": "playing",
+          "t": 38.097733333333956,
+          "level": 3,
+          "hp": 234.29959456000086,
+          "kills": 14,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.379136
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.4234000000000014
+            }
+          ],
+          "enemies": 12
+        },
+        {
+          "state": "playing",
+          "t": 38.82593333333403,
+          "level": 3,
+          "hp": 235.02779456000113,
+          "kills": 14,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.41513600000000006
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 12
+        },
+        {
+          "state": "playing",
+          "t": 39.56573333333411,
+          "level": 3,
+          "hp": 235.76759456000136,
+          "kills": 14,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6097359999999986
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.4181999999999977
+            }
+          ],
+          "enemies": 13
+        },
+        {
+          "state": "playing",
+          "t": 40.293933333334216,
+          "level": 3,
+          "hp": 236.49579456000166,
+          "kills": 15,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6459359999999957
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.6899999999999925
+            }
+          ],
+          "enemies": 12
+        },
+        {
+          "state": "playing",
+          "t": 41.02193333333432,
+          "level": 3,
+          "hp": 237.22379456000192,
+          "kills": 15,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6821360000000001
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 13
+        },
+        {
+          "state": "playing",
+          "t": 41.78633333333442,
+          "level": 3,
+          "hp": 245,
+          "kills": 16,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.660800000000004
+            }
+          ],
+          "enemies": 12
+        },
+        {
+          "state": "playing",
+          "t": 42.5143333333345,
+          "level": 3,
+          "hp": 245,
+          "kills": 16,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.12413599999999982
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.9328000000000026
+            }
+          ],
+          "enemies": 13
+        },
+        {
+          "state": "playing",
+          "t": 43.24213333333461,
+          "level": 3,
+          "hp": 245,
+          "kills": 16,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.16053600000000123
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.20499999999999963
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "playing",
+          "t": 43.982333333334715,
+          "level": 3,
+          "hp": 245,
+          "kills": 17,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.18493600000000276
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.9278000000000046
+            }
+          ],
+          "enemies": 13
+        },
+        {
+          "state": "playing",
+          "t": 44.71033333333483,
+          "level": 3,
+          "hp": 245,
+          "kills": 17,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.39113600000000004
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.199800000000003
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "playing",
+          "t": 45.450333333334946,
+          "level": 3,
+          "hp": 245,
+          "kills": 17,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.4155360000000015
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.4598000000000029
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "playing",
+          "t": 46.16613333333505,
+          "level": 3,
+          "hp": 245,
+          "kills": 17,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.4641360000000001
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 15
+        },
+        {
+          "state": "playing",
+          "t": 46.90633333333516,
+          "level": 3,
+          "hp": 245,
+          "kills": 18,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.658136
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.4668000000000037
+            }
+          ],
+          "enemies": 14
+        },
+        {
+          "state": "levelup",
+          "t": 47.36753333333521,
+          "level": 4,
+          "hp": 245,
+          "kills": 18,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.1969359999999955
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.0055999999999983
+            }
+          ],
+          "enemies": 15
+        },
+        {
+          "state": "playing",
+          "t": 48.107733333335325,
+          "level": 4,
+          "hp": 245,
+          "kills": 18,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.2213360000000042
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.26540000000000114
+            }
+          ],
+          "enemies": 15
+        },
+        {
+          "state": "playing",
+          "t": 48.83573333333544,
+          "level": 4,
+          "hp": 245,
+          "kills": 18,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.7611599999999982
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 3.399000000000001
+            }
+          ],
+          "enemies": 16
+        },
+        {
+          "state": "playing",
+          "t": 49.57593333333556,
+          "level": 4,
+          "hp": 245,
+          "kills": 18,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.020959999999993588
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.6588000000000003
+            }
+          ],
+          "enemies": 16
+        },
+        {
+          "state": "playing",
+          "t": 50.30393333333567,
+          "level": 4,
+          "hp": 245,
+          "kills": 18,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.5547599999999968
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.9308000000000032
+            }
+          ],
+          "enemies": 17
+        },
+        {
+          "state": "playing",
+          "t": 51.03173333333575,
+          "level": 4,
+          "hp": 245,
+          "kills": 18,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.0887600000000042
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.203000000000006
+            }
+          ],
+          "enemies": 18
+        },
+        {
+          "state": "playing",
+          "t": 51.75973333333584,
+          "level": 4,
+          "hp": 245,
+          "kills": 18,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.360760000000004
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.47500000000000575
+            }
+          ],
+          "enemies": 18
+        },
+        {
+          "state": "playing",
+          "t": 52.49993333333595,
+          "level": 4,
+          "hp": 245,
+          "kills": 20,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.8823599999999953
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 17
+        },
+        {
+          "state": "playing",
+          "t": 53.22813333333604,
+          "level": 4,
+          "hp": 203.0232656000001,
+          "kills": 20,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.1541599999999982
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.792000000000004
+            }
+          ],
+          "enemies": 17
+        },
+        {
+          "state": "playing",
+          "t": 53.95593333333612,
+          "level": 4,
+          "hp": 182.4713984000003,
+          "kills": 20,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6883599999999954
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.0642000000000054
+            }
+          ],
+          "enemies": 18
+        },
+        {
+          "state": "playing",
+          "t": 54.732333333336236,
+          "level": 4,
+          "hp": 183.24779840000062,
+          "kills": 20,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.1737600000000044
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.2878000000000103
+            }
+          ],
+          "enemies": 19
+        },
+        {
+          "state": "playing",
+          "t": 55.44833333333634,
+          "level": 4,
+          "hp": 183.9637984000009,
+          "kills": 20,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.4577600000000041
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.5718000000000099
+            }
+          ],
+          "enemies": 19
+        },
+        {
+          "state": "playing",
+          "t": 56.24893333333642,
+          "level": 4,
+          "hp": 164.16875769600117,
+          "kills": 20,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.918959999999994
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 20
+        },
+        {
+          "state": "playing",
+          "t": 57.00133333333648,
+          "level": 4,
+          "hp": 144.73932115200137,
+          "kills": 21,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.16655999999999976
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.804600000000009
+            }
+          ],
+          "enemies": 20
+        },
+        {
+          "state": "playing",
+          "t": 57.741533333336584,
+          "level": 4,
+          "hp": 219.9885291520016,
+          "kills": 23,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.6889600000000012
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.0644000000000085
+            }
+          ],
+          "enemies": 18
+        },
+        {
+          "state": "playing",
+          "t": 58.48153333333667,
+          "level": 4,
+          "hp": 220.72852915200187,
+          "kills": 23,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.2101599999999986
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 1.3244000000000071
+            }
+          ],
+          "enemies": 19
+        },
+        {
+          "state": "playing",
+          "t": 59.20953333333678,
+          "level": 4,
+          "hp": 224.01785715200216,
+          "kills": 27,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.4821599999999983
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0.5964000000000066
+            }
+          ],
+          "enemies": 16
+        },
+        {
+          "state": "playing",
+          "t": 59.94973333333687,
+          "level": 4,
+          "hp": 225.53421715200244,
+          "kills": 28,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 1.003760000000004
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 15
+        },
+        {
+          "state": "playing",
+          "t": 60.67773333333695,
+          "level": 4,
+          "hp": 226.26221715200273,
+          "kills": 28,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.2757600000000042
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.9138000000000064
+            }
+          ],
+          "enemies": 16
+        },
+        {
+          "state": "playing",
+          "t": 61.417933333337054,
+          "level": 4,
+          "hp": 227.00241715200303,
+          "kills": 28,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-ryu",
+              "rank": 1,
+              "t": 0.7975599999999995
+            },
+            {
+              "id": "jjk-ryu-spread",
+              "rank": 1,
+              "t": 2.173600000000006
+            }
+          ],
+          "enemies": 17
+        }
+      ],
+      "displayedChoices": [
+        [
+          "\n         散射咒力砲 全新 · Ryu Ishigori特色招式・首次解鎖蓄力0.35秒，向前扇形發射三道咒力砲；數量強化增加砲道。 自動施放，不占主動槽。\n         1",
+          "\n         反應 強化所有招式冷卻時間 -8%。\n         2",
+          "\n         學習 強化獲得的經驗值 +12%。\n         3"
+        ],
+        [
+          "\n         反應 強化所有招式冷卻時間 -8%。\n         1",
+          "\n         傷害擴散 +10% 強化單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。\n         2",
+          "\n         護甲 強化受到的傷害減少 6%。\n         3"
+        ],
+        [
+          "\n         吸血 +1% 強化造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。\n         1",
+          "\n         生命成長 +10% 強化最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。\n         2",
+          "\n         傷害擴散 +10% 強化單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。\n         3"
+        ]
+      ],
+      "errors": []
+    },
+    {
+      "hero": "jjk-uro",
+      "query": "&startLevel=20",
+      "wallSeconds": 12.172057199990377,
+      "observation": "Native movement and first displayed upgrade card; no terrain/stat/enemy fixture changes. Level20 URL is a debug skill-unlock trial, not natural progression.",
+      "observations": [
+        {
+          "state": "playing",
+          "t": 0.012200000000000046,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0.95
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 0
+        },
+        {
+          "state": "playing",
+          "t": 0.8674666666666665,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0.09473333333333284
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 3.2837999999999963
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 0
+        },
+        {
+          "state": "playing",
+          "t": 1.5952666666666653,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 2.5559999999999903
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 5.788800000000004
+            }
+          ],
+          "enemies": 0
+        },
+        {
+          "state": "playing",
+          "t": 2.3232666666666666,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 1.8279999999999865
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 5.060800000000013
+            }
+          ],
+          "enemies": 0
+        },
+        {
+          "state": "playing",
+          "t": 3.0634666666666734,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0.24639999999999995
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 1.087799999999988
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 4.320600000000017
+            }
+          ],
+          "enemies": 1
+        },
+        {
+          "state": "playing",
+          "t": 3.791466666666679,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0.4770000000000007
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0.359799999999989
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 3.5926000000000156
+            }
+          ],
+          "enemies": 1
+        },
+        {
+          "state": "playing",
+          "t": 4.519466666666675,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 3.2839999999999976
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 2.864600000000011
+            }
+          ],
+          "enemies": 1
+        },
+        {
+          "state": "playing",
+          "t": 5.247466666666673,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 2.5559999999999916
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 2.136600000000005
+            }
+          ],
+          "enemies": 2
+        },
+        {
+          "state": "playing",
+          "t": 5.975466666666671,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 1.8279999999999874
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 1.4086000000000056
+            }
+          ],
+          "enemies": 2
+        },
+        {
+          "state": "playing",
+          "t": 6.7034666666666665,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 1.099999999999988
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0.6806000000000059
+            }
+          ],
+          "enemies": 2
+        },
+        {
+          "state": "playing",
+          "t": 7.443666666666659,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0.35979999999998885
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 3
+        },
+        {
+          "state": "playing",
+          "t": 8.15946666666665,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 3
+        },
+        {
+          "state": "playing",
+          "t": 8.887466666666633,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 3
+        },
+        {
+          "state": "playing",
+          "t": 9.627666666666613,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 10.355466666666596,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 11.083466666666585,
+          "level": 20,
+          "hp": 205,
+          "kills": 0,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 5.776800000000003
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 11.811466666666565,
+          "level": 20,
+          "hp": 205,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 5.048800000000005
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 12.53946666666655,
+          "level": 20,
+          "hp": 205,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 4.32080000000001
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 13.267466666666536,
+          "level": 20,
+          "hp": 205,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 3.592800000000009
+            }
+          ],
+          "enemies": 4
+        },
+        {
+          "state": "playing",
+          "t": 14.007666666666516,
+          "level": 20,
+          "hp": 205,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 2.852600000000004
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 14.723466666666503,
+          "level": 20,
+          "hp": 205,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 2.1367999999999974
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 15.463466666666486,
+          "level": 20,
+          "hp": 205,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 1.3967999999999996
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 16.191466666666475,
+          "level": 20,
+          "hp": 205,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0.6688
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 16.919466666666462,
+          "level": 20,
+          "hp": 205,
+          "kills": 1,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 6.031400000000001
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 17.64746666666646,
+          "level": 20,
+          "hp": 205,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 5.303400000000006
+            }
+          ],
+          "enemies": 5
+        },
+        {
+          "state": "playing",
+          "t": 18.375466666666455,
+          "level": 20,
+          "hp": 205,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 4.575400000000011
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 19.115666666666446,
+          "level": 20,
+          "hp": 205,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 3.8352000000000124
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 19.84346666666644,
+          "level": 20,
+          "hp": 192.72547424,
+          "kills": 2,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0.9138000000000028
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 6.379000000000003
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 3.1074000000000113
+            }
+          ],
+          "enemies": 7
+        },
+        {
+          "state": "playing",
+          "t": 20.571466666666428,
+          "level": 20,
+          "hp": 193.4534742400003,
+          "kills": 3,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0.18580000000000202
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 5.651000000000007
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 2.379400000000009
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 21.299666666666415,
+          "level": 20,
+          "hp": 194.1816742400006,
+          "kills": 3,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 4.922800000000009
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 1.6512000000000076
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 22.0274666666664,
+          "level": 20,
+          "hp": 194.90947424000086,
+          "kills": 3,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 4.195000000000014
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0.9234000000000099
+            }
+          ],
+          "enemies": 7
+        },
+        {
+          "state": "playing",
+          "t": 22.755466666666386,
+          "level": 20,
+          "hp": 195.63747424000115,
+          "kills": 4,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 3.1506000000000007
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 3.4670000000000125
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0.19540000000000912
+            }
+          ],
+          "enemies": 6
+        },
+        {
+          "state": "playing",
+          "t": 23.471466666666373,
+          "level": 20,
+          "hp": 196.35347424000142,
+          "kills": 5,
+          "slots": 0,
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "rank": 1,
+              "t": 0.5371999999999998
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "rank": 1,
+              "t": 2.434599999999998
+            },
+            {
+              "id": "jjk-uro-screen",
+              "rank": 1,
+              "t": 2.7510000000000097
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "rank": 1,
+              "t": 0
+            }
+          ],
+          "enemies": 6
+        }
+      ],
+      "displayedChoices": [],
+      "errors": []
+    }
+  ],
+  "prototype": {
+    "beam": {
+      "draw300Ms": 36.60000002384186,
+      "meanDrawMs": 0.12200000007947286,
+      "opaquePixels": 421400,
+      "state": {
+        "demo": "beam",
+        "time": 0.74,
+        "playing": false,
+        "frames": 40,
+        "hitLog": [],
+        "events": 1
+      },
+      "lowQualityState": {
+        "demo": "beam",
+        "time": 0.74,
+        "playing": false,
+        "frames": 83,
+        "hitLog": [],
+        "events": 1
+      }
+    },
+    "sky": {
+      "draw300Ms": 126.29999995231628,
+      "meanDrawMs": 0.4209999998410543,
+      "opaquePixels": 421400,
+      "state": {
+        "demo": "sky",
+        "time": 0.8,
+        "playing": false,
+        "frames": 112,
+        "hitLog": [],
+        "events": 0
+      },
+      "lowQualityState": {
+        "demo": "sky",
+        "time": 0.8,
+        "playing": false,
+        "frames": 141,
+        "hitLog": [],
+        "events": 0
+      }
+    },
+    "slash": {
+      "draw300Ms": 13,
+      "meanDrawMs": 0.043333333333333335,
+      "opaquePixels": 421400,
+      "state": {
+        "demo": "slash",
+        "time": 0.47,
+        "playing": false,
+        "frames": 168,
+        "hitLog": [],
+        "events": 1
+      },
+      "lowQualityState": {
+        "demo": "slash",
+        "time": 0.47,
+        "playing": false,
+        "frames": 196,
+        "hitLog": [],
+        "events": 1
+      }
+    },
+    "errors": []
+  }
+}

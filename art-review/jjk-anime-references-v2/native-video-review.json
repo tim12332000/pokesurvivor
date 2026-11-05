@@ -1,0 +1,68 @@
+[
+  {
+    "clip": ".omx\\state\\jujutsu-v2\\final\\clips\\yuta-native-level9.webm",
+    "metadata": {
+      "w": 1280,
+      "h": 900,
+      "duration": null,
+      "durationNote": "MediaRecorder stream WebM reported Infinity; reviewed explicit seek samples0.1..6seconds."
+    },
+    "sampleTimesSeconds": [
+      0.1,
+      0.25,
+      0.5,
+      0.8,
+      1.2,
+      2,
+      3,
+      4.5,
+      6
+    ],
+    "contact": "art-review/jjk-anime-references-v2/yuta-native-video-review.jpg",
+    "method": "Native HTMLVideoElement decode and seeked frame sampled through browser; no audio review"
+  },
+  {
+    "clip": ".omx\\state\\jujutsu-v2\\final\\clips\\ryu-native-level9.webm",
+    "metadata": {
+      "w": 1280,
+      "h": 900,
+      "duration": null,
+      "durationNote": "MediaRecorder stream WebM reported Infinity; reviewed explicit seek samples0.1..6seconds."
+    },
+    "sampleTimesSeconds": [
+      0.1,
+      0.25,
+      0.5,
+      0.8,
+      1.2,
+      2,
+      3,
+      4.5,
+      6
+    ],
+    "contact": "art-review/jjk-anime-references-v2/ryu-native-video-review.jpg",
+    "method": "Native HTMLVideoElement decode and seeked frame sampled through browser; no audio review"
+  },
+  {
+    "clip": ".omx\\state\\jujutsu-v2\\final\\clips\\uro-native-level9.webm",
+    "metadata": {
+      "w": 1280,
+      "h": 900,
+      "duration": null,
+      "durationNote": "MediaRecorder stream WebM reported Infinity; reviewed explicit seek samples0.1..6seconds."
+    },
+    "sampleTimesSeconds": [
+      0.1,
+      0.25,
+      0.5,
+      0.8,
+      1.2,
+      2,
+      3,
+      4.5,
+      6
+    ],
+    "contact": "art-review/jjk-anime-references-v2/uro-native-video-review.jpg",
+    "method": "Native HTMLVideoElement decode and seeked frame sampled through browser; no audio review"
+  }
+]

@@ -48,7 +48,7 @@ if __name__ == '__main__':
             if page.locator('#tap-start').is_visible():page.locator('#tap-start').click()
             result=page.evaluate(CHECK)
             page.locator('#scr-menu [data-go="upgrades"]').click()
-            assert page.locator('#upg-mon option').count()==8
+            assert page.locator('#upg-mon option').count()==11
             assert page.locator('#upg-mon').evaluate("el=>[...el.options].every(o=>G.Catalog.isPlayable(o.value))")
             assert not errors,errors
             report['mobile' if mobile else 'desktop']=result

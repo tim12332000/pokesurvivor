@@ -1,0 +1,532 @@
+[
+  {
+    "dex": 30013,
+    "level": 20,
+    "quantity": {
+      "id": "quantity",
+      "eligible": false,
+      "before": 0,
+      "after": 1,
+      "consumers": [],
+      "text": "沒有可增加數量的已學招式，或已達上限"
+    },
+    "hasHeal": false,
+    "bondMode": "growth",
+    "optionKeys": [
+      "stat:damageSplash",
+      "stat:lifesteal",
+      "stat:mag"
+    ],
+    "spent": true,
+    "doubleSpend": false,
+    "bonds": 0,
+    "before": {
+      "moves": 4,
+      "slots": 0
+    },
+    "after": {
+      "moves": 4,
+      "slots": 0
+    },
+    "hero": "jjk-yuta"
+  },
+  {
+    "dex": 30014,
+    "level": 20,
+    "quantity": {
+      "id": "quantity",
+      "eligible": true,
+      "before": 0,
+      "after": 1,
+      "consumers": [
+        {
+          "id": "jjk-ryu-spread",
+          "name": "散射咒力砲",
+          "before": {
+            "砲道": 3
+          },
+          "after": {
+            "砲道": 3
+          },
+          "nextChangeAt": 2,
+          "nextChanged": {
+            "砲道": 4
+          }
+        }
+      ],
+      "text": "散射咒力砲：砲道 3→3（累積；再2張達下一門檻）"
+    },
+    "hasHeal": false,
+    "bondMode": "growth",
+    "optionKeys": [
+      "stat:def",
+      "stat:atk",
+      "stat:mag"
+    ],
+    "spent": true,
+    "doubleSpend": false,
+    "bonds": 0,
+    "before": {
+      "moves": 4,
+      "slots": 0
+    },
+    "after": {
+      "moves": 4,
+      "slots": 0
+    },
+    "hero": "jjk-ryu"
+  },
+  {
+    "dex": 30015,
+    "level": 20,
+    "quantity": {
+      "id": "quantity",
+      "eligible": false,
+      "before": 0,
+      "after": 1,
+      "consumers": [],
+      "text": "沒有可增加數量的已學招式，或已達上限"
+    },
+    "hasHeal": false,
+    "bondMode": "growth",
+    "optionKeys": [
+      "stat:mag",
+      "stat:atk",
+      "up:jjk-uro-screen"
+    ],
+    "spent": true,
+    "doubleSpend": false,
+    "bonds": 0,
+    "before": {
+      "moves": 4,
+      "slots": 0
+    },
+    "after": {
+      "moves": 4,
+      "slots": 0
+    },
+    "hero": "jjk-uro"
+  },
+  {
+    "dex": 30011,
+    "level": 1,
+    "quantity": {
+      "id": "quantity",
+      "eligible": true,
+      "before": 0,
+      "after": 1,
+      "consumers": [
+        {
+          "id": "naruto-temari",
+          "name": "鐮鼬之術",
+          "before": {
+            "風刃": 3,
+            "切擊": 1
+          },
+          "after": {
+            "風刃": 3,
+            "切擊": 1
+          },
+          "nextChangeAt": 2,
+          "nextChanged": {
+            "風刃": 4,
+            "切擊": 1
+          }
+        }
+      ],
+      "text": "鐮鼬之術：風刃 3→3、切擊 1→1（累積；再2張達下一門檻）"
+    },
+    "hasHeal": false,
+    "bondMode": "bank",
+    "optionKeys": [],
+    "spent": false,
+    "doubleSpend": false,
+    "bonds": 1,
+    "before": {
+      "moves": 1,
+      "slots": 0
+    },
+    "after": {
+      "moves": 1,
+      "slots": 0
+    },
+    "hero": "temari"
+  },
+  {
+    "dex": 30011,
+    "level": 20,
+    "quantity": {
+      "id": "quantity",
+      "eligible": true,
+      "before": 0,
+      "after": 1,
+      "consumers": [
+        {
+          "id": "naruto-temari",
+          "name": "鐮鼬之術",
+          "before": {
+            "風刃": 3,
+            "切擊": 2
+          },
+          "after": {
+            "風刃": 3,
+            "切擊": 3
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "風刃": 3,
+            "切擊": 3
+          }
+        },
+        {
+          "id": "naruto-temari-great-scythe",
+          "name": "風遁・大鐮鼬之術",
+          "before": {
+            "射程": 340,
+            "推退": 138
+          },
+          "after": {
+            "射程": 346,
+            "推退": 142
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "射程": 346,
+            "推退": 142
+          }
+        },
+        {
+          "id": "naruto-temari-blade-dance",
+          "name": "通靈・斬斬舞",
+          "before": {
+            "協戰": 1,
+            "切擊": 5
+          },
+          "after": {
+            "協戰": 1,
+            "切擊": 6
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "協戰": 1,
+            "切擊": 6
+          }
+        },
+        {
+          "id": "naruto-temari-typhoon",
+          "name": "風遁・颱風迴旋",
+          "before": {
+            "颱風": 1,
+            "彈數": 4
+          },
+          "after": {
+            "颱風": 1,
+            "彈數": 5
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "颱風": 1,
+            "彈數": 5
+          }
+        },
+        {
+          "id": "naruto-temari-reflect",
+          "name": "風遁・返風壁",
+          "before": {
+            "反射副本": 1
+          },
+          "after": {
+            "反射副本": 1
+          },
+          "nextChangeAt": 4,
+          "nextChanged": {
+            "反射副本": 2
+          }
+        }
+      ],
+      "text": "鐮鼬之術：風刃 3→3、切擊 2→3；風遁・大鐮鼬之術：射程 340→346、推退 138→142；通靈・斬斬舞：協戰 1→1、切擊 5→6"
+    },
+    "hasHeal": false,
+    "bondMode": "fusion",
+    "optionKeys": [],
+    "spent": false,
+    "doubleSpend": false,
+    "bonds": 1,
+    "before": {
+      "moves": 6,
+      "slots": 2
+    },
+    "after": {
+      "moves": 6,
+      "slots": 2
+    },
+    "hero": "temari"
+  },
+  {
+    "dex": 30001,
+    "level": 20,
+    "quantity": {
+      "id": "quantity",
+      "eligible": true,
+      "before": 0,
+      "after": 1,
+      "consumers": [
+        {
+          "id": "naruto-shadow-clones",
+          "name": "多重影分身之術",
+          "before": {
+            "影分身": 8
+          },
+          "after": {
+            "影分身": 10
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "影分身": 10
+          }
+        },
+        {
+          "id": "naruto-rasenshuriken",
+          "name": "風遁・螺旋手裏劍",
+          "before": {
+            "數量": 1
+          },
+          "after": {
+            "數量": 1
+          },
+          "nextChangeAt": 4,
+          "nextChanged": {
+            "數量": 2
+          }
+        }
+      ],
+      "text": "多重影分身之術：影分身 8→10；風遁・螺旋手裏劍：數量 1→1（累積；再4張達下一門檻）"
+    },
+    "hasHeal": false,
+    "bondMode": "growth",
+    "optionKeys": [
+      "stat:def",
+      "up:naruto-shadow-clones",
+      "up:naruto-rasenshuriken"
+    ],
+    "spent": true,
+    "doubleSpend": false,
+    "bonds": 0,
+    "before": {
+      "moves": 5,
+      "slots": 1
+    },
+    "after": {
+      "moves": 5,
+      "slots": 1
+    },
+    "hero": "naruto"
+  },
+  {
+    "dex": 30010,
+    "level": 20,
+    "quantity": {
+      "id": "quantity",
+      "eligible": true,
+      "before": 0,
+      "after": 1,
+      "consumers": [
+        {
+          "id": "naruto-pain",
+          "name": "黑棒連射",
+          "before": {
+            "投射物": 5
+          },
+          "after": {
+            "投射物": 6
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "投射物": 6
+          }
+        },
+        {
+          "id": "naruto-pain-missiles",
+          "name": "修羅道・飛彈齊射",
+          "before": {
+            "投射物": 10
+          },
+          "after": {
+            "投射物": 12
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "投射物": 12
+          }
+        }
+      ],
+      "text": "黑棒連射：投射物 5→6；修羅道・飛彈齊射：投射物 10→12"
+    },
+    "hasHeal": false,
+    "bondMode": "growth",
+    "optionKeys": [
+      "stat:def",
+      "up:naruto-pain-absorb",
+      "up:naruto-pain-repair"
+    ],
+    "spent": true,
+    "doubleSpend": false,
+    "bonds": 0,
+    "before": {
+      "moves": 8,
+      "slots": 0
+    },
+    "after": {
+      "moves": 8,
+      "slots": 0
+    },
+    "hero": "pain"
+  },
+  {
+    "dex": 30012,
+    "level": 20,
+    "quantity": {
+      "id": "quantity",
+      "eligible": true,
+      "before": 0,
+      "after": 1,
+      "consumers": [
+        {
+          "id": "naruto-kimimaro",
+          "name": "柳之舞",
+          "before": {
+            "目標": 4
+          },
+          "after": {
+            "目標": 5
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "目標": 5
+          }
+        },
+        {
+          "id": "naruto-kimimaro-boomerang",
+          "name": "屍骨脈・骨回力鏢",
+          "before": {
+            "骨迴旋": 1,
+            "穿透": 0
+          },
+          "after": {
+            "骨迴旋": 1,
+            "穿透": 1
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "骨迴旋": 1,
+            "穿透": 1
+          }
+        },
+        {
+          "id": "naruto-kimimaro-camellia",
+          "name": "椿之舞",
+          "before": {
+            "目標": 4
+          },
+          "after": {
+            "目標": 5
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "目標": 5
+          }
+        },
+        {
+          "id": "naruto-kimimaro-bullets",
+          "name": "十指穿彈",
+          "before": {
+            "指骨": 5
+          },
+          "after": {
+            "指骨": 6
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "指骨": 6
+          }
+        }
+      ],
+      "text": "柳之舞：目標 4→5；屍骨脈・骨回力鏢：骨迴旋 1→1、穿透 0→1；椿之舞：目標 4→5"
+    },
+    "hasHeal": false,
+    "bondMode": "growth",
+    "optionKeys": [
+      "stat:maxHealthPercent",
+      "up:naruto-kimimaro-larch",
+      "stat:mag"
+    ],
+    "spent": true,
+    "doubleSpend": false,
+    "bonds": 0,
+    "before": {
+      "moves": 11,
+      "slots": 0
+    },
+    "after": {
+      "moves": 11,
+      "slots": 0
+    },
+    "hero": "kimimaro"
+  },
+  {
+    "dex": 30007,
+    "level": 20,
+    "quantity": {
+      "id": "quantity",
+      "eligible": true,
+      "before": 0,
+      "after": 1,
+      "consumers": [
+        {
+          "id": "naruto-gaara",
+          "name": "砂時雨",
+          "before": {
+            "砂彈": 3
+          },
+          "after": {
+            "砂彈": 3
+          },
+          "nextChangeAt": 2,
+          "nextChanged": {
+            "砂彈": 4
+          }
+        },
+        {
+          "id": "naruto-sand-coffin",
+          "name": "砂縛柩・砂瀑送葬",
+          "before": {
+            "束縛目標": 10
+          },
+          "after": {
+            "束縛目標": 12
+          },
+          "nextChangeAt": 1,
+          "nextChanged": {
+            "束縛目標": 12
+          }
+        }
+      ],
+      "text": "砂時雨：砂彈 3→3（累積；再2張達下一門檻）；砂縛柩・砂瀑送葬：束縛目標 10→12"
+    },
+    "hasHeal": false,
+    "bondMode": "fusion",
+    "optionKeys": [],
+    "spent": false,
+    "doubleSpend": false,
+    "bonds": 1,
+    "before": {
+      "moves": 5,
+      "slots": 3
+    },
+    "after": {
+      "moves": 5,
+      "slots": 3
+    },
+    "hero": "gaara"
+  }
+]

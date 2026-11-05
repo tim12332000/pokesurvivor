@@ -1,0 +1,1122 @@
+{
+  "method": "Native keyboard movement toward nearby XP, otherwise orbit near closest enemy; real offered card clicks. No world/stat/time injection. Concurrent browser contexts. Not a human playtest or matched-seed balance experiment.",
+  "cases": {
+    "yuta-normal": {
+      "samples": [
+        {
+          "state": "playing",
+          "time": 4.040133333333345,
+          "level": 1,
+          "xp": 0,
+          "xpNext": 62,
+          "hp": 230,
+          "kills": 0,
+          "damage": 0,
+          "x": 0,
+          "y": 0,
+          "stats": {},
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyD",
+            "KeyW"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 32.56493333333306,
+          "level": 4,
+          "xp": 37.199999999999974,
+          "xpNext": 200,
+          "hp": 253,
+          "kills": 12,
+          "damage": 1100.792,
+          "x": -207.99337901345353,
+          "y": 164.15482322935136,
+          "stats": {
+            "selfClone": 1,
+            "maxHealthPercent": 1
+          },
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyA",
+            "KeyS"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 60.84713333333699,
+          "level": 7,
+          "xp": 218,
+          "xpNext": 392,
+          "hp": 206.15108128000549,
+          "kills": 38,
+          "damage": 3723.104000000001,
+          "x": 644.2771094222054,
+          "y": 91.77423407291296,
+          "stats": {
+            "selfClone": 1,
+            "maxHealthPercent": 1,
+            "mag": 1
+          },
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-yuta-speech",
+              "lvl": 2
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyD",
+            "KeyS"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 88.87453333333342,
+          "level": 9,
+          "xp": 187.8,
+          "xpNext": 547,
+          "hp": 196.62809369600092,
+          "kills": 63,
+          "damage": 9349.340000000002,
+          "x": 967.3264547111525,
+          "y": 735.0816957259093,
+          "stats": {
+            "selfClone": 1,
+            "maxHealthPercent": 1,
+            "mag": 1
+          },
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-yuta-speech",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-yuta-manifest",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyA",
+            "KeyS"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 118.22453333332881,
+          "level": 11,
+          "xp": 418.1999999999999,
+          "xpNext": 721,
+          "hp": 231.61523612672343,
+          "kills": 105,
+          "damage": 17955.660799999998,
+          "x": 1107.3138993628804,
+          "y": -31.43893695593606,
+          "stats": {
+            "selfClone": 3,
+            "maxHealthPercent": 1,
+            "mag": 1
+          },
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-yuta-speech",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-yuta-manifest",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyD",
+            "KeyS"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 145.80293333332318,
+          "level": 13,
+          "xp": 789,
+          "xpNext": 913,
+          "hp": 0,
+          "kills": 158,
+          "damage": 32311.077599999953,
+          "x": 1449.9769549280206,
+          "y": 169.97695492802282,
+          "stats": {
+            "selfClone": 3,
+            "maxHealthPercent": 1,
+            "mag": 1,
+            "percentHealthDamage": 1,
+            "heal": 1
+          },
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-yuta-speech",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-yuta-manifest",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyA"
+          ]
+        },
+        {
+          "state": "over",
+          "time": 145.80293333332318,
+          "level": 13,
+          "xp": 789,
+          "xpNext": 913,
+          "hp": 0,
+          "kills": 158,
+          "damage": 32311.077599999953,
+          "x": 1449.9769549280206,
+          "y": 169.97695492802282,
+          "stats": {
+            "selfClone": 3,
+            "maxHealthPercent": 1,
+            "mag": 1,
+            "percentHealthDamage": 1,
+            "heal": 1
+          },
+          "moves": [
+            {
+              "id": "jjk-yuta",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-yuta-rika",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-yuta-speech",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-yuta-manifest",
+              "lvl": 1
+            }
+          ],
+          "slots": 0
+        }
+      ],
+      "choices": [
+        {
+          "wallSeconds": 2.827999999979511,
+          "level": 2,
+          "offers": [
+            "\n         分身之術 強化召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。\n         1",
+            "\n         生命剝奪 +1% 強化每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。\n         2",
+            "\n         磁力 強化經驗值拾取半徑 +30%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 9.170999999972992,
+          "level": 3,
+          "offers": [
+            "\n         里香協擊 全新 · Yuta Okkotsu特色招式・首次解鎖里香移至目標旁重擊，傷及周圍敵人。 自動施放，不占主動槽。\n         1",
+            "\n         生命剝奪 +1% 強化每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。\n         2",
+            "\n         數量 ×1.25 強化每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 13.64000000001397,
+          "level": 4,
+          "offers": [
+            "\n         生命成長 +10% 強化最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。\n         1",
+            "\n         吸血 +1% 強化造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。\n         2",
+            "\n         反應 強化所有招式冷卻時間 -8%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 17.609000000054948,
+          "level": 5,
+          "offers": [
+            "\n         磁力 強化經驗值拾取半徑 +30%。\n         1",
+            "\n         里香協擊 Nv.1 > 2傷害提高\n         2",
+            "\n         倍化之術 強化體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 23.18700000003446,
+          "level": 6,
+          "offers": [
+            "\n         咒言・別動 全新 · Yuta Okkotsu特色招式・首次解鎖咒言震懾周圍敵人；首領僅受短暫控制。 自動施放，不占主動槽。\n         1",
+            "\n         軍糧丸 強化立即回復 45% 體力。\n         2",
+            "\n         里香協擊 Nv.1 > 2傷害提高\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 26.04599999997299,
+          "level": 7,
+          "offers": [
+            "\n         咒言・別動 Nv.1 > 2傷害提高\n         1",
+            "\n         倍化之術 強化體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。\n         2",
+            "\n         磁力 強化經驗值拾取半徑 +30%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 34.23400000005495,
+          "level": 8,
+          "offers": [
+            "\n         里香協擊 Nv.1 > 2傷害提高\n         1",
+            "\n         軍糧丸 強化立即回復 45% 體力。\n         2",
+            "\n         傷害擴散 +10% 強化單體命中時，對周圍其他敵人造成直接傷害的 10%；每張再加 10 個百分點（10%／20%／30%…）。不連鎖、不複製百分比生命附傷，也不觸發吸血或控制。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 43.65599999995902,
+          "level": 9,
+          "offers": [
+            "\n         里香完全顯現 全新 · Yuta Okkotsu特色招式・首次解鎖完全顯現6秒，新施放傷害+50／60／70／80／100%，里香協擊追加一次打擊。冷卻18秒。 自動施放，不占主動槽。\n         1",
+            "\n         倍化之術 強化體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。\n         2",
+            "\n         咒力刀斬 Nv.1 > 2傷害提高\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 48.375,
+          "level": 10,
+          "offers": [
+            "\n         分身之術 強化召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。\n         1",
+            "\n         生命成長 +10% 強化最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。\n         2",
+            "\n         反應 強化所有招式冷卻時間 -8%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 53.57799999997951,
+          "level": 11,
+          "offers": [
+            "\n         分身之術 強化召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。\n         1",
+            "\n         軍糧丸 強化立即回復 45% 體力。\n         2",
+            "\n         疾跑 強化移動速度 +7%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 65.04599999997299,
+          "level": 12,
+          "offers": [
+            "\n         生命剝奪 +1% 強化每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。\n         1",
+            "\n         反應 強化所有招式冷卻時間 -8%。\n         2",
+            "\n         吸血 +1% 強化造成傷害時回復生命，吸血比例 +1%。可重複選取疊加，僅本局有效。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 68.78099999995902,
+          "level": 13,
+          "offers": [
+            "\n         軍糧丸 強化立即回復 45% 體力。\n         1",
+            "\n         反應 強化所有招式冷卻時間 -8%。\n         2",
+            "\n         咒力刀斬 Nv.1 > 2傷害提高\n         3"
+          ],
+          "chosen": 0
+        }
+      ],
+      "initial": {
+        "level": 1,
+        "hp": 230,
+        "atkMul": 1.4,
+        "cdMul": 0.76,
+        "stats": {},
+        "moves": [
+          {
+            "id": "jjk-yuta",
+            "lvl": 1
+          }
+        ],
+        "speed": null
+      },
+      "final": {
+        "state": "over",
+        "time": 145.80293333332318,
+        "level": 13,
+        "hp": 0,
+        "kills": 158,
+        "stats": {
+          "selfClone": 3,
+          "maxHealthPercent": 1,
+          "mag": 1,
+          "percentHealthDamage": 1,
+          "heal": 1
+        },
+        "moves": [
+          {
+            "id": "jjk-yuta",
+            "lvl": 1
+          },
+          {
+            "id": "jjk-yuta-rika",
+            "lvl": 2
+          },
+          {
+            "id": "jjk-yuta-speech",
+            "lvl": 2
+          },
+          {
+            "id": "jjk-yuta-manifest",
+            "lvl": 1
+          }
+        ],
+        "slots": 0
+      }
+    },
+    "temari-normal": {
+      "samples": [
+        {
+          "state": "playing",
+          "time": 2.135333333333333,
+          "level": 1,
+          "xp": 0,
+          "xpNext": 62,
+          "hp": 205,
+          "kills": 0,
+          "damage": 0,
+          "x": 0,
+          "y": 0,
+          "stats": {},
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": []
+        },
+        {
+          "state": "playing",
+          "time": 31.16359999999968,
+          "level": 3,
+          "xp": 144.99999999999997,
+          "xpNext": 147,
+          "hp": 256.25,
+          "kills": 12,
+          "damage": 904.7808,
+          "x": 1006.3713771312657,
+          "y": 505.5030217201154,
+          "stats": {
+            "giant": 1
+          },
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyA",
+            "KeyW"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 59.615600000003354,
+          "level": 6,
+          "xp": 217.60000000000002,
+          "xpNext": 323,
+          "hp": 256.25,
+          "kills": 36,
+          "damage": 3229.1952000000006,
+          "x": 1590.1294669285653,
+          "y": 739.702128659639,
+          "stats": {
+            "giant": 1,
+            "cd": 1,
+            "def": 1
+          },
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-great-scythe",
+              "lvl": 1
+            }
+          ],
+          "slots": 1,
+          "keys": [
+            "KeyD",
+            "KeyS"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 88.16480000000027,
+          "level": 8,
+          "xp": 230.60000000000002,
+          "xpNext": 467,
+          "hp": 219.45960823040338,
+          "kills": 65,
+          "damage": 8096.01407999999,
+          "x": 1027.6538235472694,
+          "y": 814.4616057741415,
+          "stats": {
+            "giant": 1,
+            "cd": 1,
+            "def": 1,
+            "maxHealthPercent": 1
+          },
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 2
+            },
+            {
+              "id": "naruto-temari-great-scythe",
+              "lvl": 1
+            }
+          ],
+          "slots": 1,
+          "keys": [
+            "KeyD",
+            "KeyS"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 117.10399999999575,
+          "level": 10,
+          "xp": 622.1999999999999,
+          "xpNext": 631,
+          "hp": 159.84965558126152,
+          "kills": 104,
+          "damage": 17574.33215999989,
+          "x": 1015.4989189659981,
+          "y": 543.2397945163839,
+          "stats": {
+            "giant": 1,
+            "cd": 1,
+            "def": 1,
+            "maxHealthPercent": 1
+          },
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 2
+            },
+            {
+              "id": "naruto-temari-great-scythe",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-blade-dance",
+              "lvl": 2
+            }
+          ],
+          "slots": 1,
+          "keys": [
+            "KeyA",
+            "KeyS"
+          ]
+        },
+        {
+          "state": "over",
+          "time": 126.50699999999426,
+          "level": 11,
+          "xp": 372,
+          "xpNext": 721,
+          "hp": 0,
+          "kills": 120,
+          "damage": 20184.595199999836,
+          "x": 1179.4377183483414,
+          "y": 719.529803489036,
+          "stats": {
+            "giant": 1,
+            "cd": 1,
+            "def": 1,
+            "maxHealthPercent": 1
+          },
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 2
+            },
+            {
+              "id": "naruto-temari-great-scythe",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-blade-dance",
+              "lvl": 3
+            }
+          ],
+          "slots": 1
+        },
+        {
+          "state": "over",
+          "time": 126.50699999999426,
+          "level": 11,
+          "xp": 372,
+          "xpNext": 721,
+          "hp": 0,
+          "kills": 120,
+          "damage": 20184.595199999836,
+          "x": 1179.4377183483414,
+          "y": 719.529803489036,
+          "stats": {
+            "giant": 1,
+            "cd": 1,
+            "def": 1,
+            "maxHealthPercent": 1
+          },
+          "moves": [
+            {
+              "id": "naruto-temari",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-three-stars",
+              "lvl": 2
+            },
+            {
+              "id": "naruto-temari-great-scythe",
+              "lvl": 1
+            },
+            {
+              "id": "naruto-temari-blade-dance",
+              "lvl": 3
+            }
+          ],
+          "slots": 1
+        }
+      ],
+      "choices": [
+        {
+          "wallSeconds": 6.295999999972992,
+          "level": 2,
+          "offers": [
+            "\n         倍化之術 強化體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。\n         1",
+            "\n         護甲 強化受到的傷害減少 6%。\n         2",
+            "\n         生命剝奪 +1% 強化每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 10.625,
+          "level": 3,
+          "offers": [
+            "\n         三星扇精通 全新 · Temari特色招式・首次解鎖常駐被動，不占主動槽。普攻每波總斬擊＝1＋精通等級＋數量卡；大鐮鼬仍只重擊一次，精通改加推距18／36／54／72／90。風浪速度×1.15／1.25／1.4／1.6／1.85、射程+40／70／110／160／220。每第三輪普攻傷害×1.15／1.20／1.25／1.30／1.35；前方短暫掃開實體飛彈，額度floor([1,1,2,2,3]×1.25^數量卡)。本作改編。\n         1",
+            "\n         軍糧丸 強化立即回復 45% 體力。\n         2",
+            "\n         護甲 強化受到的傷害減少 6%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 16.030999999959022,
+          "level": 4,
+          "offers": [
+            "\n         反應 強化所有招式冷卻時間 -8%。\n         1",
+            "\n         三星扇精通 Nv.1 > 2普攻總斬擊 3＋數量・大鐮鼬推距 +36・速度 ×1.25・射程 +70\n         2",
+            "\n         生命剝奪 +1% 強化每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 19.79599999997299,
+          "level": 5,
+          "offers": [
+            "\n         護甲 強化受到的傷害減少 6%。\n         1",
+            "\n         鐮鼬之術 Nv.1 > 2每次傷害 9.6・射程 250・角度75°\n         2",
+            "\n         反應 強化所有招式冷卻時間 -8%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 25.09299999999348,
+          "level": 6,
+          "offers": [
+            "\n         風遁・大鐮鼬之術 全新 · Temari特色招式・首次解鎖主動解圍技，冷卻5秒。一次強力揮扇，每敵只受一次重擊56／67.2／80.64／100.8／126，並在0.35秒內將普通怪群推遠。升階增加傷害、範圍與推距；數量卡擴大扇角／射程，精通強化速度／射程／推距。此招不連切、不因數量重複傷害；遇牆停止，特殊敵人只受傷不搬動。本作改編。\n         1",
+            "\n         分身之術 強化召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。\n         2",
+            "\n         生命成長 +10% 強化最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 32.64000000001397,
+          "level": 7,
+          "offers": [
+            "\n         三星扇精通 Nv.1 > 2普攻總斬擊 3＋數量・大鐮鼬推距 +36・速度 ×1.25・射程 +70\n         1",
+            "\n         威力 強化所有招式傷害 +10%。\n         2",
+            "\n         學習 強化獲得的經驗值 +12%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 42.23400000005495,
+          "level": 8,
+          "offers": [
+            "\n         生命成長 +10% 強化最大生命值提高選取當下的 10%，並補回新增的生命值。可重複選取，每次依目前上限計算；僅限本局。\n         1",
+            "\n         分身之術 強化召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。\n         2",
+            "\n         反應 強化所有招式冷卻時間 -8%。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 46.0,
+          "level": 9,
+          "offers": [
+            "\n         通靈・斬斬舞 全新 · Temari特色招式・首次解鎖常駐被動，不占主動欄。學會後floor(1.25^數量卡)隻鐮多利在附近自主遊走、停留，走遠會自行回到附近。自動接敵、斬擊後繼續閒逛，每隻獨立冷卻10秒。基礎斬擊4／4／5／5／6次；精通另加精通等級＋數量卡。每斬間隔0.12秒，傷害25.6／31.2／37.6／45.6／55.2，不分攤傷害；敵人可離開範圍。\n         1",
+            "\n         數量 ×1.25 強化每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n         2",
+            "\n         鐮鼬之術 Nv.1 > 2每次傷害 9.6・射程 250・角度75°\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 54.25,
+          "level": 10,
+          "offers": [
+            "\n         通靈・斬斬舞 Nv.1 > 2每次傷害 31.2\n         1",
+            "\n         分身之術 強化召喚 1 個自身分身，最大生命為召喚時玩家的 1/3、傷害係數 1/3。跟隨玩家，使用目前選中的技能並繼承已學常駐／被動效果；技能升級同步，冷卻與受傷各自計算。死亡即消失，不自動重生。可重複選取，僅限本局。\n         2",
+            "\n         生命剝奪 +1% 強化每次命中額外造成目標最大生命值 1% 的傷害；對首領、傳說與審判者效果為十分之一（每張 0.1%）。可重複疊加、不佔技能欄；不受暴擊與屬性倍率影響。\n         3"
+          ],
+          "chosen": 0
+        },
+        {
+          "wallSeconds": 60.81200000003446,
+          "level": 11,
+          "offers": [
+            "\n         通靈・斬斬舞 Nv.2 > 3每次傷害 37.6\n         1",
+            "\n         學習 強化獲得的經驗值 +12%。\n         2",
+            "\n         疾跑 強化移動速度 +7%。\n         3"
+          ],
+          "chosen": 0
+        }
+      ],
+      "initial": {
+        "level": 1,
+        "hp": 205,
+        "atkMul": 1.4,
+        "cdMul": 0.76,
+        "stats": {},
+        "moves": [
+          {
+            "id": "naruto-temari",
+            "lvl": 1
+          }
+        ],
+        "speed": null
+      },
+      "final": {
+        "state": "over",
+        "time": 126.50699999999426,
+        "level": 11,
+        "hp": 0,
+        "kills": 120,
+        "stats": {
+          "giant": 1,
+          "cd": 1,
+          "def": 1,
+          "maxHealthPercent": 1
+        },
+        "moves": [
+          {
+            "id": "naruto-temari",
+            "lvl": 1
+          },
+          {
+            "id": "naruto-temari-three-stars",
+            "lvl": 2
+          },
+          {
+            "id": "naruto-temari-great-scythe",
+            "lvl": 1
+          },
+          {
+            "id": "naruto-temari-blade-dance",
+            "lvl": 3
+          }
+        ],
+        "slots": 1
+      }
+    },
+    "uro-trial20": {
+      "samples": [
+        {
+          "state": "playing",
+          "time": 0.07886666666666671,
+          "level": 20,
+          "xp": 0,
+          "xpNext": 1722,
+          "hp": 205,
+          "kills": 0,
+          "damage": 0,
+          "x": 0,
+          "y": 0,
+          "stats": {},
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-screen",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": []
+        },
+        {
+          "state": "playing",
+          "time": 29.646999999999675,
+          "level": 21,
+          "xp": 264.59999999999985,
+          "xpNext": 1854,
+          "hp": 161.01621369600375,
+          "kills": 10,
+          "damage": 1441.2182399999997,
+          "x": -840.0203618250123,
+          "y": 541.6431313298407,
+          "stats": {},
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-uro-screen",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyA",
+            "KeyW"
+          ]
+        },
+        {
+          "state": "playing",
+          "time": 60.01600000000348,
+          "level": 21,
+          "xp": 972.9999999999993,
+          "xpNext": 1854,
+          "hp": 113.18249510400682,
+          "kills": 38,
+          "damage": 5487.155519999997,
+          "x": -610.5316828336707,
+          "y": 390.2937465168668,
+          "stats": {},
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-uro-screen",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "lvl": 1
+            }
+          ],
+          "slots": 0,
+          "keys": [
+            "KeyD",
+            "KeyW"
+          ]
+        },
+        {
+          "state": "over",
+          "time": 81.69780000000134,
+          "level": 21,
+          "xp": 1460.199999999999,
+          "xpNext": 1854,
+          "hp": 0,
+          "kills": 53,
+          "damage": 8579.102510668796,
+          "x": -920.6061935180759,
+          "y": 172.2869299255391,
+          "stats": {},
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-uro-screen",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "lvl": 1
+            }
+          ],
+          "slots": 0
+        },
+        {
+          "state": "over",
+          "time": 81.69780000000134,
+          "level": 21,
+          "xp": 1460.199999999999,
+          "xpNext": 1854,
+          "hp": 0,
+          "kills": 53,
+          "damage": 8579.102510668796,
+          "x": -920.6061935180759,
+          "y": 172.2869299255391,
+          "stats": {},
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-uro-screen",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "lvl": 1
+            }
+          ],
+          "slots": 0
+        },
+        {
+          "state": "over",
+          "time": 81.69780000000134,
+          "level": 21,
+          "xp": 1460.199999999999,
+          "xpNext": 1854,
+          "hp": 0,
+          "kills": 53,
+          "damage": 8579.102510668796,
+          "x": -920.6061935180759,
+          "y": 172.2869299255391,
+          "stats": {},
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-uro-screen",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "lvl": 1
+            }
+          ],
+          "slots": 0
+        },
+        {
+          "state": "over",
+          "time": 81.69780000000134,
+          "level": 21,
+          "xp": 1460.199999999999,
+          "xpNext": 1854,
+          "hp": 0,
+          "kills": 53,
+          "damage": 8579.102510668796,
+          "x": -920.6061935180759,
+          "y": 172.2869299255391,
+          "stats": {},
+          "moves": [
+            {
+              "id": "jjk-uro",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-thin-ice",
+              "lvl": 2
+            },
+            {
+              "id": "jjk-uro-screen",
+              "lvl": 1
+            },
+            {
+              "id": "jjk-uro-collapse",
+              "lvl": 1
+            }
+          ],
+          "slots": 0
+        }
+      ],
+      "choices": [
+        {
+          "wallSeconds": 4.342999999993481,
+          "level": 21,
+          "offers": [
+            "\n         宇守羅彈 Nv.1 > 2傷害提高\n         1",
+            "\n         威力 強化所有招式傷害 +10%。\n         2",
+            "\n         倍化之術 強化體積與碰撞範圍 ×1.25、最大生命 ×1.25、移動速度 ×0.9、攻擊速度 ×0.9，並補回新增生命。可重複選取，各效果逐張累乘；僅限本局。\n         3"
+          ],
+          "chosen": 0
+        }
+      ],
+      "initial": {
+        "level": 20,
+        "hp": 205,
+        "atkMul": 1.4,
+        "cdMul": 0.76,
+        "stats": {},
+        "moves": [
+          {
+            "id": "jjk-uro",
+            "lvl": 1
+          },
+          {
+            "id": "jjk-uro-thin-ice",
+            "lvl": 1
+          },
+          {
+            "id": "jjk-uro-screen",
+            "lvl": 1
+          },
+          {
+            "id": "jjk-uro-collapse",
+            "lvl": 1
+          }
+        ],
+        "speed": null
+      },
+      "final": {
+        "state": "over",
+        "time": 81.69780000000134,
+        "level": 21,
+        "hp": 0,
+        "kills": 53,
+        "stats": {},
+        "moves": [
+          {
+            "id": "jjk-uro",
+            "lvl": 1
+          },
+          {
+            "id": "jjk-uro-thin-ice",
+            "lvl": 2
+          },
+          {
+            "id": "jjk-uro-screen",
+            "lvl": 1
+          },
+          {
+            "id": "jjk-uro-collapse",
+            "lvl": 1
+          }
+        ],
+        "slots": 0
+      }
+    }
+  },
+  "wallSeconds": 93.43700000003446
+}

@@ -78,6 +78,7 @@ G.Game = (() => {
 
   /** @param coop  { seed, host, members } para una partida en grupo */
   function startRun(coop = null) {
+    G.CombatPulse?.beginRun();
     speedK = 2; autoPickUpgrades = false;
     holdBy = []; awayBy = null;
     const save = G.DB.save;
@@ -454,6 +455,10 @@ G.Game = (() => {
     if (chestOpening || !pl || pl.bonds <= 0 || pl.dead || (state !== 'playing' && state !== 'held') || G.Rift.inArena) return;
     if (['scr-bond', 'scr-pause', 'scr-item', 'scr-levelup'].some(G.UI.isOpen)) return;
     const opt = pl.bondOptions();
+    if (!opt && G.JujutsuGrowth?.bondState(pl).mode === 'growth') {
+      G.RunInsights?.offerMastery(pl);
+      return;
+    }
     if (!opt) {
       if (!quiet) G.Spawner.say('Guardas el vínculo: aprende otro movimiento para usarlo', 3, true);
       return;
@@ -779,6 +784,7 @@ G.Game = (() => {
     const t = performance.now() / 1000;
     G.World.drawGround(ctx, cam);
     G.World.drawLiquid(ctx, cam, t);
+    G.JujutsuVFX?.drawBackground(ctx);
     G.Hazards.draw(ctx);
     G.Combat.drawGroundFields(ctx);
     G.Pickups.draw(ctx);
@@ -794,6 +800,7 @@ G.Game = (() => {
     for (const e of extra) items.push({ y: e.y, ent: e });
     for (const a of G.SelfClones?.drawables(cam) || []) items.push({ y: a.y, ent: a });
     for (const a of G.NarutoPain?.drawables(cam) || []) items.push({ y: a.y, ent: a });
+    for (const a of G.JujutsuYuta?.drawables(cam) || []) items.push({ y: a.y, ent: a });
     const rift = G.Rift.drawable();
     if (rift) items.push({ y: rift.y, ent: rift });
     const arceus = pl && state !== 'ui' ? G.Judgment.drawable() : null;
@@ -965,6 +972,12 @@ G.Game = (() => {
     get playbackSpeed() { return speedK; },
     get autoPickUpgrades() { return autoPickUpgrades; },
     togglePause,
+    openChoice(render) {
+      if(!pl||pl.dead||!['playing','held'].includes(state)||chestOpening)return false;
+      state='choice';if(G.Coop.active)G.Coop.holdStart();let pending=true;
+      const finish=()=>{if(!pending)return;pending=false;if(state==='choice')state=holdBy.length?'held':'playing';if(G.Coop.active)G.Coop.holdEnd();};
+      try{render(finish);}catch(error){finish();throw error;}return true;
+    },
     /** Abandona la partida en curso (p. ej. al cerrar sesión desde Ajustes). */
     quit() { if (state !== 'ui' && state !== 'over') quitRun(); },
     /** Para grabar vídeos: abre las cartas de subir de nivel. */

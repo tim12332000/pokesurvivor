@@ -48,7 +48,7 @@ G.Hazards = (() => {
         detonate(h);
         for (const target of [pl, ...(G.SelfClones?.actors() || [])]) if (target && !target.dead && inside(h, target.x, target.y, target.r)) {
           target.invuln = 0;
-          target.hurt(h.pct ? Math.max(h.dmg, target.maxHp * h.pct) : h.dmg, h.type, !!h.pure);
+          target.hurt(h.pct ? Math.max(h.dmg, target.maxHp * h.pct) : h.dmg, h.type, !!h.pure, { cause: 'hazard' });
         }
       }
       if (h.hit && h.t >= h.delay + h.end) list.splice(i, 1);

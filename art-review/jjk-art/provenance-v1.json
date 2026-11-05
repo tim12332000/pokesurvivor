@@ -1,0 +1,36 @@
+{
+  "generator": "built-in image_gen",
+  "reference": "art-review/redrawn/gaara-common-v1.png",
+  "prompts": "art-review/jjk-art/prompts-v1.json",
+  "sources": {
+    "yuta": {
+      "source": "art-review/jjk-art/yuta-source-v1.png",
+      "sha256": "7f84dc5cab839c6e3ddb5a8e9541d1d9907d6a5cb77b45c35f0426947e816cca",
+      "runtimeSha256": "7f84dc5cab839c6e3ddb5a8e9541d1d9907d6a5cb77b45c35f0426947e816cca",
+      "physicalFrames": 16,
+      "registeredFrames": 16
+    },
+    "ryu": {
+      "source": "art-review/jjk-art/ryu-source-v1.png",
+      "sha256": "180b2a3a7d370e43e323d57d0d3876043e0cb2061b02b5ff4cbb94057a416dc8",
+      "runtimeSha256": "180b2a3a7d370e43e323d57d0d3876043e0cb2061b02b5ff4cbb94057a416dc8",
+      "physicalFrames": 16,
+      "registeredFrames": 16
+    },
+    "uro": {
+      "source": "art-review/jjk-art/uro-source-v1.png",
+      "sha256": "f1d9d8aebef2aa7269b3eb07a0d800fcd6907d11153978b10e43e0beddcd2959",
+      "runtimeSha256": "f1d9d8aebef2aa7269b3eb07a0d800fcd6907d11153978b10e43e0beddcd2959",
+      "physicalFrames": 15,
+      "registeredFrames": 16
+    },
+    "rika": {
+      "source": "art-review/jjk-art/rika-source-v1.png",
+      "sha256": "89eb0e36c096fca5f15aab25ed21900bb9fe6e78376c72ce55446f804b9b75fa",
+      "runtimeSha256": "89eb0e36c096fca5f15aab25ed21900bb9fe6e78376c72ce55446f804b9b75fa",
+      "physicalFrames": 8,
+      "registeredFrames": 8
+    }
+  },
+  "processing": "Copy original transparent atlas unchanged; inspected cells registered and portrait crops extracted."
+}

@@ -1,0 +1,226 @@
+{
+  "purpose": "Local visual research only; original copyright retained; not bundled in game.",
+  "sources": [
+    {
+      "name": "episode59-01.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-1.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "e0ef7d1970a39d9efe3bbb240294d4d33cc0f279ea07e9d53db7443602c0ee68",
+      "bytes": 92443,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-02.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-2.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "7e2568cd19858e5dfb20ecee1133c108d8178d30d98492e4dde45af9724dc869",
+      "bytes": 127231,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-03.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-3.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "714722aefee49827d25ae899edacf8de808e55d348fafdd07540f724c4f2bccd",
+      "bytes": 121643,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-04.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-4.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "d7b9164758e72731802be4fec8538610ff2a7ae0897ac14c6e18f6b99c748941",
+      "bytes": 82512,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-05.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-5.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "d0147cbb802171286ac548c638c015bdb1ac77c282c7302cdc1e18a3594563b9",
+      "bytes": 117996,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-06.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-6.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "3b1a8f5a91181444aa1548bba98bbd55a84e324624b64b571c60b25a7b8b6f17",
+      "bytes": 108752,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-07.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-7.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "1c1701ee8a4ecea2178b0896a347434607bc76d8ec0a0dcb9fc5a61f2f973a9f",
+      "bytes": 117283,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-08.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-8.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "03f6049da4092d19d487ac9841778003919f1fcac7f6d2bf908b705d46f2a060",
+      "bytes": 104335,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-09.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-9.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "d8387356c69e9b6141658abaa173516475d925dc0e949bd938a802b2b4f76e05",
+      "bytes": 90706,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-10.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-10.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "93edf87b1c3ad038d244b2afc399bad790d12dadbc53c544bd94556e922801ef",
+      "bytes": 89119,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-11.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-11.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "8dfba1bd055453a54678a10969517240168592c3035b4cac9f0e7f9a2fb436b8",
+      "bytes": 34785,
+      "status": "downloaded"
+    },
+    {
+      "name": "episode59-12.jpg",
+      "url": "https://jujutsukaisen.jp/images/episodes/59-12.jpg",
+      "page": "https://jujutsukaisen.jp/episodes/59.php?pubDate=20260325",
+      "kind": "official episode still",
+      "dimensions": [
+        841,
+        467
+      ],
+      "sha256": "46ac03f09c2d393bef1afaaf96baa64972f9e2795a85ca3209c485a1c51c2639",
+      "bytes": 48389,
+      "status": "downloaded"
+    },
+    {
+      "name": "character-yuta.png",
+      "url": "https://jujutsukaisen.jp/images/chara_shimetsu/chara_detail7.png",
+      "page": "https://jujutsukaisen.jp/character/",
+      "kind": "official Sendai-period character art",
+      "dimensions": [
+        750,
+        1094
+      ],
+      "sha256": "1530262c826edacfaa083887bfde7d7ba95f7cdfe8bdff0177e19d7c2b75b190",
+      "bytes": 154756,
+      "status": "downloaded"
+    },
+    {
+      "name": "character-ryu.png",
+      "url": "https://jujutsukaisen.jp/images/chara_shimetsu/chara_detail24.png",
+      "page": "https://jujutsukaisen.jp/character/",
+      "kind": "official Sendai-period character art",
+      "dimensions": [
+        750,
+        1094
+      ],
+      "sha256": "fb3787f21dc6a79d812e3f9102d5cb03971418ecd4d7a99fd9365d635acf4496",
+      "bytes": 210838,
+      "status": "downloaded"
+    },
+    {
+      "name": "character-uro.png",
+      "url": "https://jujutsukaisen.jp/images/chara_shimetsu/chara_detail26.png",
+      "page": "https://jujutsukaisen.jp/character/",
+      "kind": "official Sendai-period character art",
+      "dimensions": [
+        750,
+        1094
+      ],
+      "sha256": "7143330582ff0e4d160eec9fa3220728decc7a85c9a22d515f9dda463d811c8a",
+      "bytes": 164249,
+      "status": "downloaded"
+    },
+    {
+      "name": "sendai-pv-thumbnail.jpg",
+      "url": "https://i.ytimg.com/vi/DKNM-3LpfZE/maxresdefault.jpg",
+      "page": "https://www.youtube.com/watch?v=DKNM-3LpfZE",
+      "kind": "official linked video thumbnail; not watched footage",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "6bbf7f4afdfff1df12328aea49ce296d0446b55e0bdb3e4490a8eaea4b4d7105",
+      "bytes": 156288,
+      "status": "downloaded"
+    },
+    {
+      "name": "toho-highlight-thumbnail.jpg",
+      "url": "https://i.ytimg.com/vi/b7n2HutQK5M/maxresdefault.jpg",
+      "page": "https://www.youtube.com/watch?v=b7n2HutQK5M",
+      "kind": "official linked video thumbnail; not watched footage",
+      "dimensions": [
+        1280,
+        720
+      ],
+      "sha256": "c57ee271a42eded853b82b994ad9e2d0ad0595e41ab26f94a3f8643cec6d03b7",
+      "bytes": 59288,
+      "status": "downloaded"
+    }
+  ]
+}

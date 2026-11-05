@@ -1,0 +1,16 @@
+{
+  "xpLevel1": 62,
+  "xpLevel2": 101,
+  "xpLevel3": 147,
+  "xpToLevel3": 163,
+  "xpToLevel6": 768,
+  "xpToLevel9": 1950,
+  "xpToLevel20": 13365,
+  "cdAtStart": 0.76,
+  "cdAt10Picks": 0.3301352252099606,
+  "manifestIntervalAtStart": 13.68,
+  "manifestInterval10Picks": 5.942434053779291,
+  "uroScreenInterval10Picks": 2.9712170268896454,
+  "ryuQueueUtilizationStart": 0.6615364167995748,
+  "ryuQueueDemand10Picks": 1.5229143647059318
+}

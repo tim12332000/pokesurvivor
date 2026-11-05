@@ -1,0 +1,123 @@
+{
+  "gameplay": [],
+  "prototype": {
+    "beam": {
+      "draw300Ms": 14.700000047683716,
+      "meanDrawMs": 0.04900000015894572,
+      "opaquePixels": 421400,
+      "state": {
+        "demo": "beam",
+        "time": 0.74,
+        "playing": false,
+        "frames": 12,
+        "hitLog": [],
+        "events": 1,
+        "lastStats": {}
+      },
+      "lowQualityState": {
+        "demo": "beam",
+        "time": 0.74,
+        "playing": false,
+        "frames": 44,
+        "hitLog": [],
+        "events": 1,
+        "lastStats": {}
+      }
+    },
+    "sky": {
+      "draw300Ms": 51.5,
+      "meanDrawMs": 0.17166666666666666,
+      "opaquePixels": 421400,
+      "state": {
+        "demo": "sky",
+        "time": 0.8,
+        "playing": false,
+        "frames": 67,
+        "hitLog": [],
+        "events": 0,
+        "lastStats": {
+          "texturedTriangles": 48,
+          "fallbackPanels": 0,
+          "folds": 1
+        }
+      },
+      "lowQualityState": {
+        "demo": "sky",
+        "time": 0.8,
+        "playing": false,
+        "frames": 96,
+        "hitLog": [],
+        "events": 0,
+        "lastStats": {
+          "texturedTriangles": 12,
+          "fallbackPanels": 0,
+          "folds": 1
+        }
+      }
+    },
+    "slash": {
+      "draw300Ms": 10.199999928474426,
+      "meanDrawMs": 0.03399999976158142,
+      "opaquePixels": 421400,
+      "state": {
+        "demo": "slash",
+        "time": 0.47,
+        "playing": false,
+        "frames": 122,
+        "hitLog": [],
+        "events": 1,
+        "lastStats": {
+          "texturedTriangles": 12,
+          "fallbackPanels": 0,
+          "folds": 1
+        }
+      },
+      "lowQualityState": {
+        "demo": "slash",
+        "time": 0.47,
+        "playing": false,
+        "frames": 150,
+        "hitLog": [],
+        "events": 1,
+        "lastStats": {
+          "texturedTriangles": 12,
+          "fallbackPanels": 0,
+          "folds": 1
+        }
+      }
+    },
+    "twoFoldDprCamera": {
+      "high": {
+        "state": {
+          "demo": "sky",
+          "time": 0.8,
+          "playing": false,
+          "frames": 175,
+          "hitLog": [],
+          "events": 0,
+          "lastStats": {
+            "texturedTriangles": 48,
+            "fallbackPanels": 0,
+            "folds": 2
+          }
+        },
+        "w": 1720,
+        "h": 980
+      },
+      "low": {
+        "demo": "sky",
+        "time": 0.8,
+        "playing": false,
+        "frames": 202,
+        "hitLog": [],
+        "events": 0,
+        "lastStats": {
+          "texturedTriangles": 12,
+          "fallbackPanels": 2,
+          "folds": 2
+        }
+      }
+    },
+    "errors": []
+  }
+}

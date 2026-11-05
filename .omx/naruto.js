@@ -1,7 +1,7 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
-  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011,30012]);
+  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011,30012,30013,30014,30015]);
   const available=G.Catalog.isPlayable;
   const t=text=>G.I18n.t(text);
   const version=t('火影 beta 0.01');
@@ -17,22 +17,25 @@
     ['tenten','Tenten','天天','第三班',['steel'],3,150,144],
     ['pain','Pain — Six Paths','沛恩六道','曉',['psychic'],5,120,108],
     ['temari','Temari','手鞠','砂隱村',['flying'],3,125,118],
-    ['kimimaro','Kimimaro','君麻呂','音隱村',['fighting','steel'],4,160,122]
+    ['kimimaro','Kimimaro','君麻呂','音隱村',['fighting','steel'],4,160,122],
+    ['jjk-yuta','Yuta Okkotsu','乙骨憂太','咒術迴戰・里香協戰',['fighting','psychic'],5,150,120],
+    ['jjk-ryu','Ryu Ishigori','石流龍','咒術迴戰・咒力砲擊',['psychic'],5,165,108],
+    ['jjk-uro','Takako Uro','烏鷺亨子','咒術迴戰・天空操術',['psychic','flying'],5,125,132]
   ];
   const records = new Map(), dictionary = {};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
-    const dex = 30001 + index, start = slug==='naruto'?'naruto-shadow-clones':'naruto-' + slug;
+    const dex = 30001 + index, start = slug==='naruto'?'naruto-shadow-clones':slug.startsWith('jjk-')?slug:'naruto-' + slug;
     const mon = {dex,name,types,hp,spd,atk:1.32,rarity,bst:400+rarity*38,starter:true,gen:11,naruto:true,start};
     G.DEX.push(mon);G.DEX_BY[dex]=mon;
     const starter={dex,start,traits:['valiente','leal']};
     G.STARTERS.push(starter);G.STARTER_BY[dex]=starter;
     // Temari has her own on-demand atlas; no legacy pixel sheet is required.
-    const basePixel=['temari','kimimaro'].includes(slug)?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug];
-    const pixel=['pain','temari','kimimaro'].includes(slug)?{...basePixel,preview:{source:'.omx/naruto/portraits/'+slug+'.png'+(slug==='kimimaro'?'?v=full-body-1':''),w:96,h:112,ax:48,ay:110}}:basePixel,image=new Image();
+    const basePixel=(slug.startsWith('jjk-')||['temari','kimimaro'].includes(slug))?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug];
+    const pixel=(slug.startsWith('jjk-')||['pain','temari','kimimaro'].includes(slug))?{...basePixel,preview:{source:'.omx/naruto/portraits/'+slug+'.png'+(slug==='kimimaro'?'?v=full-body-1':''),w:96,h:112,ax:48,ay:110}}:basePixel,image=new Image();
     const geometry={w:32,h:36,ax:16,ay:36,n:1,r:1,d:[24]};
     G.SPRITE_META[dex]={s:1,sh:false,a:Object.fromEntries(G.Sprites.ANIMS.map(anim=>{
       const action=pixel.animations?.[anim];
-      const authored=['temari','kimimaro'].includes(slug);
+      const authored=slug.startsWith('jjk-')||['temari','kimimaro'].includes(slug);
       const count=slug==='kimimaro'?({Idle:2,Walk:3,Hurt:2,Faint:2}[anim]||4):authored?4:anim==='Walk'?4:action?Math.max(...Object.values(action.frames).map(frames=>frames.length)):1;
       const duration=slug==='kimimaro'?({Idle:12,Walk:7,Hurt:6,Faint:9}[anim]||6):authored?(anim==='Idle'?12:anim==='Faint'?9:6):anim==='Walk'?8:action?(action.duration||7):24;
       return [anim,{...geometry,n:count,d:action?.durations||Array(count).fill(duration)}];
@@ -41,6 +44,7 @@
     let loading;
     Object.defineProperty(record,'loaded',{get(){
       if(record.ready)return Promise.resolve(true);
+      if(slug.startsWith('jjk-'))return G.JujutsuArt.load(dex).then(()=>{record.ready=true;return true;});
       if(['pain','temari','kimimaro'].includes(slug))return (slug==='pain'?G.PainArt:slug==='temari'?G.TemariArt:G.KimimaroArt).ready.then(()=>{record.ready=true;return true;});
       if(loading)return loading;
       loading=new Promise(resolve=>{
@@ -111,11 +115,23 @@
           record.previewImage.onerror=()=>{record.previewImage=null;record.previewRetryAt=Date.now()+1000;};
           record.previewImage.src=pixel.preview.source;
         }
-        const image=record.previewImage,frame=pixel.preview;
+        const image=record.previewImage;
         if(!image.complete||!image.naturalWidth)return;
+        const frame=record.slug.startsWith('jjk-')?{w:image.naturalWidth,h:image.naturalHeight,ax:image.naturalWidth/2,ay:image.naturalHeight-1}:pixel.preview;
         const target=Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75),k=Math.min(target/frame.h,ctx.canvas.width*.88/frame.w);
         ctx.save();ctx.translate(Math.round(x),Math.round(y));ctx.imageSmoothingEnabled=false;ctx.globalAlpha*=opts.alpha??1;
         ctx.drawImage(image,-Math.round(frame.ax*k),-Math.round(frame.ay*k),Math.round(frame.w*k),Math.round(frame.h*k));ctx.restore();return;
+      }
+      if(this.dex>=30013&&this.dex<=30015){
+        if(!record.ready){void record.loaded;return;}
+        const actor=G.Game.player?.anim===this?G.Game.player:[...(G.SelfClones?.actors?.()||[]),...(G.Coop?.puppets?.()||[])].find(a=>a.anim===this);
+        const module=this.dex===30013?G.JujutsuYuta:this.dex===30014?G.JjkRyu:G.JjkUro;
+        const pose=actor?(module?.pose?.(actor)||module?.poseFor?.(actor)):null;
+        const dead=actor?.dead||this.cur==='Faint',hurt=actor?.flash>0||this.cur==='Hurt';
+        const state=dead?'faint':hurt?'hurt':pose?'cast':this.cur==='Walk'?'walk':'idle';
+        const time=pose?.age??(this.frame*6+this.t)/60;
+        G.JujutsuArt.draw(ctx,actor||{},{dex:this.dex,x,y,height:ui?Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75):64*this.scale,state,time,dir:this.dir,pose,flash:!dead&&opts.flash,alpha:opts.alpha??1});
+        return;
       }
       if(this.dex===30012){
         if(!record.ready){void record.loaded;return;}
@@ -190,7 +206,7 @@
   G.UI.spriteCanvas=(dex,w,h,opts)=>{const canvas=spriteCanvas(dex,w,h,opts);if(records.has(dex))previews.add(canvas);return canvas;};
 
   const picker=document.createElement('section');picker.id='scr-naruto';picker.className='scr dim hidden';picker.translate=true;
-  picker.innerHTML=`<div class="box"><div class="naruto-heading"><div><h2>火影忍者</h2><p class="naruto-version">${version}</p><p class="sub">選擇忍者，踏上你的忍道。</p></div><button id="naruto-close" class="btn small ghost">返回</button></div>
+  picker.innerHTML=`<div class="box"><div class="naruto-heading"><div><h2>跨界角色</h2><p class="naruto-version">${version}</p><p class="sub">選擇角色，展開生存挑戰。</p></div><button id="naruto-close" class="btn small ghost">返回</button></div>
     <div class="naruto-actions"><button id="naruto-to-digimon" class="btn small">數碼寶貝</button></div>
     <div class="naruto-grid"></div><p class="note">${availableDexes.length} 位忍者・招式為生存玩法改編・存檔保存在此瀏覽器</p>
     <p class="note">角色動畫使用本專案重繪素材；動作研究參考 <a href="https://spritedatabase.net/game/55" target="_blank" rel="noopener noreferrer">Ninja Council 3</a>。角色權利屬原權利人。</p></div>`;
@@ -220,8 +236,8 @@
   // Keep available beta characters visible beside the play button.
   const quickPick=document.createElement('section');quickPick.id='naruto-quick-pick';quickPick.translate=true;
   quickPick.setAttribute('aria-label','選擇出戰角色');
-  quickPick.innerHTML='<div class="launch-roster-heading"><div><span class="launch-eyebrow">忍者集結</span><h2>選擇出戰角色</h2></div><span class="launch-roster-count"></span></div><p>選一位夥伴，展開這次冒險。</p><div class="naruto-grid"></div>';
-  quickPick.querySelector('.launch-roster-count').textContent=`${availableDexes.length} 位忍者`;
+  quickPick.innerHTML='<div class="launch-roster-heading"><div><span class="launch-eyebrow">跨界集結</span><h2>選擇出戰角色</h2></div><span class="launch-roster-count"></span></div><p>選一位夥伴，展開這次冒險。</p><div class="naruto-grid"></div>';
+  quickPick.querySelector('.launch-roster-count').textContent=`${availableDexes.length} 位角色`;
   for(const dex of availableDexes){
     const record=records.get(dex),button=document.createElement('button');
     button.type='button';button.className='naruto-card';button.dataset.quickNaruto=dex;
@@ -249,8 +265,15 @@
     30006:['近身體術','旋風掃開敵群，以繃帶拉近敵人、蓮華重摔。'],
     30007:['砂術防守','砂盾護身、砂兵協戰，掌控周圍戰場。'],
     30009:['忍具遠攻','連投忍具、鋪設陷阱，以卷軸展開大範圍攻勢。'],
-    30010:['六道協同','天道引斥控場，五道分工護衛，以通靈、飛彈與地爆天星壓制敵群。']
+    30010:['六道協同','天道引斥控場，五道分工護衛，以通靈、飛彈與地爆天星壓制敵群。'],
+    30013:['近戰・里香協同','刀術守近身，里香離身重擊。咒言爭取空檔，完全顯現時雙人爆發。'],
+    30014:['遠攻・蓄力貫穿','額頭蓄力後轟開敵群。射程長、火力高，出手方向鎖定，要留意近身包圍。'],
+    30015:['控場・限時反射','抓住空面、碎裂群攻。天空幕有限時與次數，無法阻擋近戰。']
   };
+  const learning=document.createElement('div');learning.className='launch-kit';learning.hidden=true;
+  learning.setAttribute('aria-label','特色技能學習進程');detail.querySelector('.launch-description').after(learning);
+  const kitLabels={30013:['刀斬','里香','咒言','顯現'],30014:['額砲','散射','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落']};
+  let learningDex;
   let previewDex;
   const syncQuickPick=()=>{
     const selected=G.DB.save.partner;
@@ -267,6 +290,16 @@
     detail.querySelector('.launch-name').textContent=isNaruto?record.chinese:'';
     detail.querySelector('.launch-role').textContent=isNaruto?roles[selected]?.[0]||record.team:'';
     detail.querySelector('.launch-description').textContent=isNaruto?roles[selected]?.[1]||'選好角色，準備出發。':'';
+    const kit=G.Jujutsu?.kits.find(([dex])=>dex===+selected);
+    learning.hidden=!kit;
+    if(kit&&learningDex!==selected){
+      learning.replaceChildren(...kit[1].map(([id,,,,level],index)=>{
+        const cell=document.createElement('span'),label=document.createElement('b'),stage=document.createElement('small');
+        cell.title=`Lv.${level} ${G.Moves.BY_ID[id].name}`;cell.innerHTML=G.Icons.html('move:'+id,22);
+        label.textContent=kitLabels[selected][index];stage.textContent=`Lv.${level}`;cell.append(label,stage);return cell;
+      }));
+      learningDex=selected;
+    }
     for(const button of quickPick.querySelectorAll('[data-quick-naruto]')){
       const on=+button.dataset.quickNaruto===selected;
       button.classList.toggle('on',on);button.setAttribute('aria-pressed',String(on));
@@ -282,11 +315,11 @@
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').hidden=!G.Digimon.enabled;
-  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位忍者：鳴人、佐助、小李、我愛羅、天天、沛恩六道、手鞠、君麻呂。`;
+  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位角色：鳴人、佐助、小李、我愛羅、天天、沛恩六道、手鞠、君麻呂、乙骨憂太、石流龍、烏鷺亨子。`;
   document.getElementById('naruto-close').onclick=()=>{hideOverlays();G.Flow.goMenu();};
-  const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='火影忍者';nav.translate=true;nav.onclick=openPicker;
+  const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='跨界角色';nav.translate=true;nav.onclick=openPicker;
   document.getElementById('btn-settings').before(nav);
-  const shortcut=document.createElement('button');shortcut.id='digimon-to-naruto';shortcut.className='btn small';shortcut.textContent='火影忍者 →';shortcut.onclick=openPicker;
+  const shortcut=document.createElement('button');shortcut.id='digimon-to-naruto';shortcut.className='btn small';shortcut.textContent='跨界角色 →';shortcut.onclick=openPicker;
   document.querySelector('#scr-digimon .digimon-heading').after(shortcut);
 
   const ready=G.DB.ready;

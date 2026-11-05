@@ -1,0 +1,30 @@
+{
+  "errors": [],
+  "checks": [
+    {
+      "demo": "beam",
+      "time": 0.68,
+      "playing": false,
+      "frames": 17,
+      "hitLog": [],
+      "events": 1
+    },
+    {
+      "demo": "sky",
+      "time": 0.68,
+      "playing": false,
+      "frames": 31,
+      "hitLog": [],
+      "events": 0
+    },
+    {
+      "demo": "slash",
+      "time": 0.68,
+      "playing": false,
+      "frames": 43,
+      "hitLog": [],
+      "events": 1
+    }
+  ],
+  "scope": "Independent reviewer opened actual demo atDPR2 andseek.68. Not integrated gameplay or realmobile performance."
+}
