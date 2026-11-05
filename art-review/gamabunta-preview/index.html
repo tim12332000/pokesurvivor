@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="../../">
+<title>文太・五階通靈術預覽</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0d161b;color:#eef4ee;font:15px/1.6 system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:26px 24px}.eyebrow{font-size:12px;letter-spacing:.18em;color:#e5b67c}h1{font-size:30px;line-height:1.25;margin:7px 0}p{color:#a9bbb6;margin:10px 0 20px}.tiers{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:20px 0 14px}button,select{font:inherit;color:inherit;border:1px solid #3e514e;background:#1a292c;border-radius:8px;padding:9px 14px;cursor:pointer}button:hover,select:hover{border-color:#e7bf84}button[aria-pressed="true"]{border-color:#efc080;background:#473727;color:#ffe1ac}.tiers button{text-align:left;padding:11px 12px}.tiers small{display:block;color:#b9c6bd;font-size:11px}.stage{border:1px solid #42564c;border-radius:14px;overflow:hidden;background:#172a24;position:relative}canvas{width:100%;height:auto;display:block;image-rendering:pixelated}.badge{position:absolute;left:16px;top:13px;font-size:12px;color:#ccdfc6;background:#14201ddd;padding:5px 10px;border-radius:20px}.controls,.cuts{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin:15px 0}.controls label{color:#b3c4bd}input[type=range]{width:100%;accent-color:#efbf7e}.status{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:#c2d4cb;font-variant-numeric:tabular-nums}.cuts button{font-size:13px;padding:7px 10px}button:disabled{opacity:.35;cursor:default}.note{font-size:13px;max-width:850px}#error{color:#ffb09b}button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid #ffd49b;outline-offset:3px}@media(max-width:620px){main{padding:20px 12px}h1{font-size:25px}.tiers{grid-template-columns:repeat(3,1fr)}.tiers button{font-size:13px;padding:8px}.badge{top:8px;left:8px;font-size:10px}.controls button,.controls select{padding:8px 11px}.status{font-size:12px}}
+</style>
+</head>
+<body><main>
+<div class="eyebrow">GAMABUNTA / SUMMONING SHOWCASE</div>
+<h1>蛤蟆文太・通靈術</h1>
+<p>直接觀看五階演出。切換階級、慢放或拖曳時間，逐段查看文太的招式。</p>
+<div class="tiers" aria-label="技能階級">
+<button data-tier="1" aria-pressed="false"><small>第一階</small>鐵砲玉</button>
+<button data-tier="2" aria-pressed="false"><small>第二階</small>短刀斬</button>
+<button data-tier="3" aria-pressed="false"><small>第三階</small>屋台重壓</button>
+<button data-tier="4" aria-pressed="false"><small>第四階</small>蛤蟆油炎彈</button>
+<button data-tier="5" aria-pressed="true"><small>第五階</small>組合變化</button>
+</div>
+<div class="stage"><canvas id="scene" width="960" height="620" aria-label="文太技能動畫預覽"></canvas><span class="badge">五階連段・循環展示</span></div>
+<div class="controls"><button id="play" disabled>暫停</button><button id="replay" disabled>重播</button><label>速度 <select id="speed"><option value="1">正常 1×</option><option value="2">2×</option><option value="0.5">慢放 0.5×</option><option value="0.25">慢放 0.25×</option></select></label><label>朝向 <select id="direction"><option value="1">右</option><option value="-1">左</option></select></label></div>
+<input id="seek" type="range" min="0" max="8800" value="0" aria-label="動畫時間" disabled>
+<div class="status"><span id="phase" role="status">正在載入文太素材…</span><span id="clock">0.00 / 8.80 s</span></div>
+<div class="cuts"><button data-time="0.35" data-unlock="1">通靈登場</button><button data-time="1.2" data-unlock="1">鐵砲玉</button><button data-time="2.5" data-unlock="2">短刀斬</button><button data-time="3.0" data-unlock="4">噴吐準備</button><button data-time="3.5" data-unlock="4">油炎噴吐</button><button data-time="7.5" data-unlock="5">組合變化</button><button data-time="8.05" data-unlock="5">巨狐突襲</button></div>
+<p class="note">高階保留前面的招式：第三階把普通登場換成重壓，第四階由文太直接噴出油炎，第五階再組合變化為巨狐。遊戲中 Lv.12 學會後自動施放。</p>
+<p id="error" role="alert"></p>
+</main>
+<script src="js/core/util.js"></script>
+<script src="art-review/gamabunta-preview/stage.js"></script>
+<script src="js/entities/vfx.js"></script>
+<script src="js/entities/fx.js"></script>
+<script src="js/entities/projectile.js"></script>
+<script src="art-review/animation-assets.js"></script>
+<script src=".omx/naruto-summoning.js"></script>
+<script src="art-review/gamabunta-preview/preview.js"></script>
+</body></html>

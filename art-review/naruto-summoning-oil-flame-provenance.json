@@ -1,0 +1,43 @@
+{
+  "tool": "built-in image_gen.imagegen",
+  "prompts": "art-review/naruto-summoning-oil-flame-prompts.json",
+  "reference": "art-review/redrawn/gamabunta-oil-v1.png",
+  "assets": [
+    {
+      "source": "art-review/redrawn/gamabunta-oil-v1.png",
+      "sha256": "68c1d84b07901ef75d53692c8a5a0232e698d1a405482ca44fbf0f95636c5cf3",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha": [
+        0,
+        255
+      ]
+    },
+    {
+      "source": "art-review/redrawn/gamabunta-breath-actor-v1.png",
+      "sha256": "1b4566063d0e7b525ed62f9471f5df80efa68aac13aa89f872e8d03cafd28e1b",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha": [
+        0,
+        255
+      ]
+    },
+    {
+      "source": "art-review/redrawn/gamabunta-oil-flame-v1.png",
+      "sha256": "5331fddc1257976b0f128514cbf3c560b6361d47cfc16eea3489ff939437a2c9",
+      "size": [
+        1536,
+        1024
+      ],
+      "alpha": [
+        0,
+        254
+      ]
+    }
+  ]
+}

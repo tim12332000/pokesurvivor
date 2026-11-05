@@ -12,6 +12,29 @@ OUT = ROOT / '.omx/state/naruto-summoning/gameplay'
 CHROME = r'C:\Program Files\Google\Chrome\Application\chrome.exe'
 URL = 'https://tim12332000.github.io/pokesurvivor/.omx/digimon.html?lang=zh-TW&layout=wide'
 
+
+def start_naruto_run(view):
+    # Boot hides its spinner before scheduling the tap/login screen.
+    view.wait_for_function('''() => window.PS_REDRAWN_READY && G.NarutoSummoning &&
+      document.getElementById('boot').classList.contains('hidden') &&
+      ['tap-start','scr-login','scr-menu'].some(id =>
+        !document.getElementById(id).classList.contains('hidden'))''')
+    if view.locator('#tap-start').is_visible():
+        view.locator('#tap-start').click()
+    view.evaluate('''async () => {
+      await PS_REDRAWN_READY;
+      const loaded = await G.NarutoSummoning.ready;
+      if (!loaded.every(Boolean)) throw Error('Missing summon art');
+      G.Naruto.choose(30001);
+      await G.NarutoAssets.ensure(30001);
+      await G.Flow.play();
+      if (!G.Game.player || G.Game.state !== 'playing') throw Error('Run did not start');
+      G.Game.togglePause();
+      G.UI.hideAll();
+      document.querySelector('#tap-start').style.display = 'none';
+      document.querySelectorAll('.toast,#ach-pop').forEach(e => e.style.display = 'none');
+    }''')
+
 CHECK = r"""() => {
  const assert=(v,m)=>{if(!v)throw Error(m)},p=G.Game.player,S=G.NarutoSummoning,id='naruto-toad-summon';
  assert(S&&G.AnimationLab.enabled,'normal entry did not load summon and approved art');
@@ -194,10 +217,7 @@ def main():
             if mobile:
                 page.wait_for_selector('#portrait-game')
                 view = page.locator('#portrait-game').element_handle().content_frame()
-            view.wait_for_function('window.PS_REDRAWN_READY && G.Flow && G.NarutoSummoning && document.getElementById("boot").classList.contains("hidden")')
-            if view.locator('#tap-start').is_visible():
-                view.locator('#tap-start').click()
-            view.evaluate("""async()=>{await PS_REDRAWN_READY;await G.NarutoSummoning.ready;G.Naruto.choose(30001);await G.Flow.play();if(G.Game.state==='playing')G.Game.togglePause();G.UI.hideAll();document.querySelector('#tap-start').style.display='none';document.querySelectorAll('.toast,#ach-pop').forEach(e=>e.style.display='none')}""")
+            start_naruto_run(view)
             report = view.evaluate(CHECK)
             review = view.evaluate('window.summonReviewEvidence')
             report['checks'].extend(review.pop('checks'))

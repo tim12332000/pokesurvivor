@@ -6,7 +6,7 @@ from urllib.parse import unquote, urlsplit
 
 from playwright.sync_api import sync_playwright
 
-from test_naruto_summoning import CHROME, ROOT, URL
+from test_naruto_summoning import CHROME, ROOT, URL, start_naruto_run
 
 OUT = ROOT / '.omx/state/naruto-summoning/combo'
 
@@ -49,47 +49,54 @@ CHECK = r"""() => {
   const arrived=victims.map(e=>e.hp);step(.1);assert(victims.every((e,i)=>e.hp===arrived[i]),'arrival repeated');
   tiers.push({rank,duration:m.duration,windup:m.windup,radius:m.radius,arrivalDamage:damage});
   at(f,rank===1?2.59:2.81);assert((f.events||[]).filter(event=>/sword/i.test(event.kind)).length===(rank>=2?1:0),'sword rank gate or once-only event differs');
-  assert(!(f.events||[]).some(event=>/oil|ignite|fox/i.test(event.kind)),'late stage triggered before its time');
+  assert(!(f.events||[]).some(event=>/fire|fox/i.test(event.kind)),'late stage triggered before its time');
  }
- reports.tiers=tiers;checks.push('all ranks arrival timing and three-target boundary','rank-gated sword events','no early oil or fox');
+ reports.tiers=tiers;checks.push('all ranks arrival timing and three-target boundary','rank-gated sword events','no early fire or fox');
  let {m,f,anchor}=cast(2);at(f,2.16);anchor.dead=true;anchor.hp=0;
  let victims=[enemy(185,0),enemy(185,35),enemy(185,-35),enemy(-50,0),enemy(100,190)];rebuild();let before=victims.map(e=>e.hp);
  at(f,2.44);assert(victims.every((e,i)=>e.hp===before[i]),'sword damaged before contact');reports.swordArt=art(f,'gamabunta-sword-v1.png');
  at(f,2.46);reports.swordDamage=delta(victims,before);assert(reports.swordDamage.slice(0,3).every(value=>value>0)&&reports.swordDamage.slice(3).every(value=>value===0),'sword sector missed inside or hit behind/outside');
  const swordHP=victims.map(e=>e.hp);at(f,2.79);assert(victims.every((e,i)=>e.hp===swordHP[i]),'sword hit repeated');
  assert(hitLog.filter(hit=>hit.age>2.4).every(hit=>hit.owner&&hit.mid===id),'sword lost damage attribution');checks.push('dedicated sword art','sword contact timing','sword sector three inside and two outside','sword once and attribution');
- function oilSetup(rank=4){
+ function fireSetup(rank=4,mirror=false){
   const state=cast(rank);at(state.f,2.85);state.anchor.dead=true;state.anchor.hp=0;for(const shot of projectiles())G.Projectiles.remove(shot);
-  const target=enemy(280,0);rebuild();return {...state,target};
+  const target=enemy(mirror?-80:280,0);rebuild();return {...state,target};
  }
- let setup=oilSetup();({m,f}=setup);at(f,3.09);assert(!projectiles('oil').length&&!f.oil,'oil started early');
- at(f,3.12);const oil=projectiles('oil')[0];assert(oil&&oil.ghost&&oil.dmg===0&&oil.owner===p&&oil.mid===id,'oil did not use native harmless projectile');reports.oilArt=art(f,'gamabunta-oil-v1.png');
- const oilHp=setup.target.hp;assert(!f.oil&&!f.fireAt,'oil pool/fire created before real contact');
- for(let i=0;i<250&&!f.oil;i++)step(.005,true);
- assert(f.oil&&setup.target.hp===oilHp,'real oil contact failed or dealt damage');assert(!f.oil.ignited&&!f.fireAt,'oil ignited before tag contact');
- const tag=projectiles('tag')[0];assert(tag&&tag.owner===p&&tag.mid===id&&Math.hypot(tag.x-p.x,tag.y-p.y)<50,'tag did not originate from Naruto');
- const pool={x:f.oil.x,y:f.oil.y},inside=[setup.target,enemy(pool.x+35,pool.y+35),enemy(pool.x-35,pool.y-35)],outside=enemy(pool.x,pool.y+170);rebuild();
- before=[...inside,outside].map(e=>e.hp);
- for(let i=0;i<350&&!f.oil.ignited;i++)step(.005,true);
- assert(f.oil.ignited&&f.fireAt!=null,'native tag failed to ignite contacted oil: '+JSON.stringify({pool,tag:{x:tag.x,y:tag.y,hits:[...tag.hits]},distance:Math.hypot(tag.x-pool.x,tag.y-pool.y)}));reports.fireDamage=delta([...inside,outside],before);
- assert(reports.fireDamage.slice(0,3).every(value=>value>0)&&reports.fireDamage[3]===0,'fire three inside / one outside failed');
- const fireHP=[...inside,outside].map(e=>e.hp);step(.5,true);assert([...inside,outside].every((e,i)=>e.hp===fireHP[i]),'oil fire damaged repeatedly');
- const oilOrder=['heavy','sword','oil-fired','oil-coated','tag-fired','fire'];
- assert(oilOrder.every((kind,index)=>f.events[index]?.kind===kind)&&f.events.length===oilOrder.length,'oil/fire stage event order or once-only count differs');
- assert(f.events.every((event,index)=>!index||event.age>=f.events[index-1].age),'stage event ages are not monotonic');
- reports.oilEvents=f.events;checks.push('oil native ghost contact before pool','dedicated oil art','tag owner-origin','tag actual contact before ignition','fire single three-target AoE','explicit once-only heavy/sword/oil/tag/fire event order');
- setup=oilSetup();({f}=setup);at(f,3.12);const miss=projectiles('oil')[0];assert(miss,'oil miss setup missing');setup.target.dead=true;setup.target.hp=0;step(1.7,true);assert(!f.oil&&!f.fireAt,'missed oil created pool/fire');checks.push('missed oil never ignites');
- setup=oilSetup();({f}=setup);at(f,3.12);for(let i=0;i<250&&!f.oil;i++)step(.005,true);assert(f.oil,'tag wall setup missing pool');
- G.World.projectileBlock=(x,y,r)=>x>40&&x<60?'wall':false;step(1.7,true);assert(!f.oil.ignited&&!f.fireAt,'blocked tag ignited oil');checks.push('wall-blocked tag never ignites');
- setup=oilSetup();({f}=setup);at(f,3.12);assert(projectiles('oil').length===1,'oil wall setup did not fire');G.World.projectileBlock=(x,y,r)=>x>225&&x<245?'wall':false;
- step(1.7,true);assert(!f.oil&&!f.fireAt,'blocked oil created pool or fire');checks.push('wall-blocked oil never coats');
+ let setup=fireSetup();({m,f}=setup);at(f,3.09);assert(f.fireAt==null,'fire started early');
+ const origin=S.flameMouth(f),aim=Math.atan2(.25,1),c=Math.cos(aim),sn=Math.sin(aim);
+ const point=(along,side)=>enemy(origin.x+c*along-sn*side,origin.y+sn*along+c*side);
+ victims=[setup.target,point(140,20),point(160,-20),point(150,140),point(280,0)];rebuild();before=victims.map(e=>e.hp);
+ at(f,3.12);assert(f.fireAt!=null&&f.fireOrigin&&f.fireHits.size===0,'breath did not start at mouth before reaching targets');
+ assert(!projectiles('oil').length&&!projectiles('tag').length&&!S.poseFor(p),'breath still depends on oil or Naruto tag');
+ assert(Math.hypot(f.fireOrigin.x-origin.x,f.fireOrigin.y-origin.y)<.01,'fire origin missed mouth');
+ reports.fireArt=art(f,'gamabunta-breath-actor-v1.png');at(f,3.5);reports.fireDamage=delta(victims,before);reports.flameAtlas=art(f,'gamabunta-oil-flame-v1.png');
+ const pausedFire=JSON.stringify({age:f.age,hp:victims.map(e=>e.hp),hits:[...f.fireHits]});
+ G.Combat.updateFields(0);art(f,'gamabunta-breath-actor-v1.png');
+ assert(pausedFire===JSON.stringify({age:f.age,hp:victims.map(e=>e.hp),hits:[...f.fireHits]}),'paused fire advanced or rendering changed damage');
+ assert(reports.fireDamage.slice(0,3).every(value=>value>0)&&reports.fireDamage.slice(3).every(value=>value===0),'fire cone three inside / side and range outside: '+JSON.stringify({damage:reports.fireDamage,origin,actual:f.fireOrigin,aim:f.fireAim,targets:victims.map(e=>({x:e.x,y:e.y,r:e.r}))}));
+ const fireHP=victims.map(e=>e.hp);at(f,4.1);assert(victims.every((e,i)=>e.hp===fireHP[i]),'fire repeated damage');
+ assert(f.events.filter(e=>e.kind==='fire').length===1,'fire repeated event');
+ checks.push('direct mouth-origin flame without oil/tag','growing cone three inside and two outside','once-only fire damage');
+ setup=fireSetup(4,true);({f}=setup);at(f,3.5);assert(f.mirror&&f.fireHits.has(setup.target.id),'left breath missed');checks.push('left direct fire');
+ setup=cast(4);({f}=setup);at(f,3.5);assert(f.fireAt!=null&&Math.cos(f.fireAim)>0,'under-body target made breath fire backwards or disappear');
+ checks.push('under-body target still emits forward breath');
+ setup=cast(5);({f}=setup);at(f,2.85);G.EnemyMgr.clear();G.Projectiles.clear();at(f,3.5);
+ assert(f.fireAt!=null&&S.phaseFor(f)==='fire','cleared wave silently cancelled the fire stage');
+ reports.emptyWaveFireArt=art(f,'gamabunta-breath-actor-v1.png');
+ checks.push('fire still plays after other max-rank skills clear the wave');
+ setup=fireSetup();({f}=setup);reports.flameAnimation=[];
+ for(const age of [3.14,3.22,3.29,3.37,3.45,3.76]){
+  at(f,age);art(f,'gamabunta-oil-flame-v1.png');reports.flameAnimation.push(S.flameFrame(f));
+ }
+ assert(JSON.stringify(reports.flameAnimation)==='[0,1,2,3,4,5]','authored ignition/loop/recovery frames missing');
+ checks.push('six dedicated ignition/build/loop/recovery art frames');
+ setup=fireSetup();({f}=setup);at(f,3.12);G.World.projectileBlock=(x,y)=>x>225&&x<245?'wall':false;const wallHP=setup.target.hp;at(f,3.8);assert(setup.target.hp===wallHP,'fire crossed wall');checks.push('wall blocks fire');
  for(const cleanup of ['death','world','owner','skill']){
-  setup=oilSetup();({f}=setup);at(f,3.12);for(let i=0;i<250&&!f.oil;i++)step(.005,true);
-  assert(f.oil&&projectiles('tag').length===1&&!f.oil.ignited,'coated-oil cleanup setup missing live tag');const world=G.World,hp=setup.target.hp;
+  setup=fireSetup();({f}=setup);at(f,3.12);const world=G.World,hp=setup.target.hp;
   if(cleanup==='death'){p.dead=true;p.hp=0}if(cleanup==='world')G.World=Object.create(world);if(cleanup==='owner')G.Combat.clearFields(p);if(cleanup==='skill')G.DigimonSkills.clear(p);
-  try{G.Combat.resolve(0,p,0);step(1,true);assert(!S.effects.length&&!projectiles().length&&!f.oil.ignited&&setup.target.hp===hp,'pending actual tag ignited after '+cleanup)}finally{G.World=world}
+  try{G.Combat.updateFields(.1);assert(!S.effects.length&&setup.target.hp===hp,'fire survived '+cleanup)}finally{G.World=world}
  }
- checks.push('coated oil and in-flight native tag cleanup before ignition');
+ checks.push('active fire cleanup death/world/owner/skill');
  setup=cast(5);({m,f,anchor}=setup);at(f,7.5);reports.transformArt=art(f,'gamabunta-combo-fox-v2.png');
  anchor.dead=true;anchor.hp=0;victims=[enemy(150,0),enemy(205,20),enemy(240,-20),enemy(180,140),enemy(-80,0)];rebuild();before=victims.map(e=>e.hp);
  at(f,7.79);assert(victims.every((e,i)=>e.hp===before[i]),'fox hit before dash');
@@ -116,31 +123,15 @@ CHECK = r"""() => {
  checks.push('every-stage death/world/owner/skill cleanup');
  setup=cast(5);({f}=setup);at(f,2.3);const frozen=JSON.stringify({age:f.age,events:f.events,hp:setup.anchor.hp});G.Combat.updateFields(0);art(f,'gamabunta-sword-v1.png');
  assert(frozen===JSON.stringify({age:f.age,events:f.events,hp:setup.anchor.hp}),'paused combo advanced');checks.push('pause and rendering purity');
- setup=oilSetup();({f}=setup);at(f,3.12);for(let i=0;i<250&&!f.oil;i++)step(.005,true);
- assert(f.oil,'moving coated-target repro missing real oil contact');const fixedPool={x:f.oil.x,y:f.oil.y},remoteTag=projectiles('tag')[0];
- setup.target.x=90;setup.target.y=0;rebuild();step(.4,true);
- const remoteIgnition={tagHitMovedTarget:remoteTag.hits.has(setup.target.id),distanceFromPool:Math.hypot(setup.target.x-fixedPool.x,setup.target.y-fixedPool.y),ignited:f.oil.ignited};
- assert(remoteIgnition.tagHitMovedTarget&&remoteIgnition.distanceFromPool>f.oil.radius+50,'moving target repro did not intercept native tag far outside fixed oil');
- setup=oilSetup();({f}=setup);setup.target.x=-80;rebuild();at(f,3.12);for(let i=0;i<250&&!f.oil;i++)step(.005,true);
- assert(f.oil&&projectiles('tag')[0]?.vx<0,'left oil repro missing actual leftward native tag');
- const ownerPose=S.poseFor(p),authoredPose=G.AnimationLab.stateFor(p.anim);
- const leftTagPose={kind:ownerPose?.kind,mirror:ownerPose?.mirror,aim:ownerPose?.aim,authoredMirror:authoredPose.mirror,authoredAim:authoredPose.aim,tagVx:projectiles('tag')[0].vx};
- reports.remoteIgnition=remoteIgnition;reports.leftTagPose=leftTagPose;
- assert(!remoteIgnition.ignited&&ownerPose?.kind==='tag'&&ownerPose.mirror===true&&Math.cos(ownerPose.aim)<0&&authoredPose.mirror===true,'review regressions: '+JSON.stringify({remoteIgnition,leftTagPose}));
- const leftStationaryHP=setup.target.hp;for(let i=0;i<350&&!f.oil.ignited;i++)step(.005,true);
- assert(f.oil.ignited&&setup.target.hp<leftStationaryHP,'left stationary coated target failed native pool ignition');
- reports.leftStationaryIgnition={radius:setup.target.r,damage:leftStationaryHP-setup.target.hp,ignited:f.oil.ignited};
- checks.push('left and right stationary coated target actual ignition');
  setup=cast(4);({f}=setup);enemy(280,0);rebuild();G.Combat.updateFields(6);G.Combat.updateFields(.01);
- const lateStages=f.events.filter(event=>['sword','oil-fired'].includes(event.kind));
+ const lateStages=f.events.filter(event=>['sword','fire'].includes(event.kind));
  assert(!lateStages.length,'large frame released missed sword/oil phases: '+JSON.stringify(lateStages));
- checks.push('large in-lifetime frame discards missed sword and oil windows');
+ checks.push('large in-lifetime frame discards missed sword and fire windows');
  setup=cast(5);({f}=setup);enemy(280,0);rebuild();G.Combat.updateFields(8.5);G.Combat.updateFields(.01);
- const lateRankFive=f.events.filter(event=>['sword','oil-fired','transform','fox'].includes(event.kind));
+ const lateRankFive=f.events.filter(event=>['sword','fire','transform','fox'].includes(event.kind));
  assert(!lateRankFive.length,'large rank-five frame replayed missed phases: '+JSON.stringify(lateRankFive));
  checks.push('large rank-five in-lifetime frame skips missed transform and fox');
- checks.push('moved coated target cannot remotely ignite fixed oil','left native tag uses left authored throw pose');
- window.summonComboEvidence={reset,cast,at,step,enemy,rebuild,oilSetup,art};
+ window.summonComboEvidence={reset,cast,at,step,enemy,rebuild,fireSetup,art};
  reports.checks=checks;return reports;
 }"""
 
@@ -169,25 +160,15 @@ def main():
             if mobile:
                 page.wait_for_selector('#portrait-game')
                 view = page.locator('#portrait-game').element_handle().content_frame()
-            view.wait_for_function('window.PS_REDRAWN_READY && G.NarutoSummoning?.phaseFor && document.getElementById("boot").classList.contains("hidden")')
-            if view.locator('#tap-start').is_visible():
-                view.locator('#tap-start').click()
-            view.evaluate("""async()=>{await PS_REDRAWN_READY;const loaded=await G.NarutoSummoning.ready;if(!loaded.every(Boolean))throw Error('Missing combo art');G.Naruto.choose(30001);await G.Flow.play();if(G.Game.state==='playing')G.Game.togglePause();G.UI.hideAll();document.querySelector('#tap-start').style.display='none';document.querySelectorAll('.toast,#ach-pop').forEach(e=>e.style.display='none')}""")
+            start_naruto_run(view)
             report = view.evaluate(CHECK)
-            for stage, rank, age in [('sword', 2, 2.46), ('heavy-drop', 3, .91), ('oil', 4, 3.12), ('transform', 5, 7.5), ('fox', 5, 8.05)]:
-                view.evaluate("""([stage,rank,age])=>{const A=summonComboEvidence,state=stage==='oil'?A.oilSetup(rank):A.cast(rank);if(stage==='sword'||stage==='fox'){A.enemy(240,0);A.rebuild()}A.at(state.f,age,true);G.Camera.x=80;}""", [stage, rank, age])
+            for stage, rank, age in [('sword', 2, 2.46), ('heavy-drop', 3, .91), ('fire', 4, 3.5), ('fire-start', 4, 3.14), ('fire-build', 4, 3.22), ('fire-loop-a', 4, 3.29), ('fire-loop-b', 4, 3.37), ('fire-loop-c', 4, 3.45), ('fire-end', 4, 3.76), ('transform', 5, 7.5), ('fox', 5, 8.05)]:
+                view.evaluate("""([stage,rank,age])=>{const A=summonComboEvidence,state=stage.startsWith('fire')?A.fireSetup(rank):A.cast(rank);if(stage==='sword'||stage==='fox'){A.enemy(240,0);A.rebuild()}A.at(state.f,age,true);G.Camera.x=80;}""", [stage, rank, age])
                 page.wait_for_timeout(70)
                 page.screenshot(path=str(OUT / f'{label}-{stage}.png'))
-            view.evaluate("""()=>{const A=summonComboEvidence,state=A.oilSetup();A.at(state.f,3.12);for(let i=0;i<250&&!state.f.oil;i++)A.step(.005,true);if(!state.f.oil)throw Error('tag screenshot missing contacted oil');window.summonCapture=state;}""")
+            view.evaluate("""()=>{const A=summonComboEvidence,state=A.fireSetup(4,true);A.at(state.f,3.5,true);G.Camera.x=-20;}""")
             page.wait_for_timeout(70)
-            page.screenshot(path=str(OUT / f'{label}-tag.png'))
-            view.evaluate("""()=>{const A=summonComboEvidence,state=summonCapture;for(let i=0;i<350&&!state.f.oil.ignited;i++)A.step(.005,true);if(!state.f.oil.ignited)throw Error('fire screenshot missing ignition');A.step(.08,true)}""")
-            view.evaluate('(mobile)=>{G.Camera.x=mobile?summonCapture.f.oil.x:80}', mobile)
-            page.wait_for_timeout(70)
-            page.screenshot(path=str(OUT / f'{label}-fire.png'))
-            view.evaluate("""()=>{const A=summonComboEvidence,state=A.oilSetup();state.target.x=-80;A.rebuild();A.at(state.f,3.12);for(let i=0;i<250&&!state.f.oil;i++)A.step(.005,true);if(!state.f.oil||!G.NarutoSummoning.poseFor(G.Game.player)?.mirror)throw Error('left tag screenshot missing mirrored throw');G.Camera.x=-20;}""")
-            page.wait_for_timeout(70)
-            page.screenshot(path=str(OUT / f'{label}-left-tag.png'))
+            page.screenshot(path=str(OUT / f'{label}-left-fire.png'))
             assert not errors, errors
             if mobile:
                 assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'), 'mobile overflow'

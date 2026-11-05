@@ -2,28 +2,31 @@
 (() => {
   if (G.NarutoSummoning) return;
   const effects = [], shots = new Set(), C = G.Combat, image = new Image(), waterArt = new Image();
-  const swordArt = new Image(), oilArt = new Image(), foxArt = new Image();
+  const swordArt = new Image(), oilArt = new Image(), foxArt = new Image(), flameArt = new Image();
   const loaded = img => new Promise(resolve => { img.onload = () => resolve(true); img.onerror = () => resolve(false); });
-  const ready = Promise.all([image,waterArt,swordArt,oilArt,foxArt].map(loaded));
+  const ready = Promise.all([image,waterArt,swordArt,oilArt,foxArt,flameArt].map(loaded));
   image.src = 'art-review/redrawn/gamabunta-summon-v2.png';
   waterArt.src = 'art-review/redrawn/gamabunta-water-v1.png';
   swordArt.src = 'art-review/redrawn/gamabunta-sword-v1.png';
-  oilArt.src = 'art-review/redrawn/gamabunta-oil-v1.png';
+  oilArt.src = 'art-review/redrawn/gamabunta-breath-actor-v1.png';
+  flameArt.src = 'art-review/redrawn/gamabunta-oil-flame-v1.png';
   foxArt.src = 'art-review/redrawn/gamabunta-combo-fox-v2.png';
-  G.VFX.PAL['toad-oil']=['#2d1e18','#5f3a21','#a26b32','#d9a659','#f3d598'];
-  G.VFX.PAL['toad-tag']=['#1b1b25','#9e2935','#889bad','#f0dbad','#ffffff'];
-  G.VFX.SHAPES['toad-tag']={w:19,h:12,dir:true,frames:1,gen(P){
-    P.line(3,4,16,4,'m',1);P.line(14,2,18,4,'w');P.line(18,4,14,6,'m');
-    for(let y=6;y<11;y++)for(let x=3;x<8;x++)P.set(x,y,'l');
-    P.line(5,7,5,9,'d');P.set(4,8,'d');P.set(6,8,'d');P.outline();
-  }};
   // Authored alpha bounds plus four pixels of padding; one shared body scale.
   const frames = [[69,312,434,279],[585,157,458,383],[1121,297,448,287],[1672,209,408,375]];
   const waterFrames = [[265,114,690,515,345,511],[1206,143,786,487,373,483]];
   const swordFrames=[[40,239,433,335,230,331],[526,122,516,455,238,451],[1057,256,680,319,228,315],[1739,221,392,359,186,355]];
   const oilFrames=[[120,112,706,522,355,518],[1084,139,1042,497,390,493]];
+  // Explicit bounds and emitter anchors; generated frames are not an equal grid.
+  const flameFrames=[
+    [28,215,330,180,18,86,120],[465,150,475,280,15,150,185],
+    [945,110,590,360,16,190,240],[0,590,528,360,2,194,240],
+    [528,590,555,360,7,194,240],[1083,685,453,230,6,99,150]
+  ];
+  const flameWidths=[287,440,567,513,535,360];
   const foxFrames=[[111,221,385,305,239,301],[656,220,401,306,244,302],[1172,220,386,280,213,302],[1715,221,371,305,245,301]];
   const mouth = (f, mirror = f.mirror) => { const scale = f.m.radius * 1.5 / 720; return { x:f.x + 306 * scale * (mirror ? -1 : 1), y:f.y - 281 * scale + G.LIFT }; };
+  // Oil-spit art has a different mouth anchor from the water-spit atlas.
+  const flameMouth = f => { const scale=f.m.radius*1.5/720;return {x:f.x+206*scale*(f.mirror?-1:1),y:f.y-267*scale+G.LIFT}; };
   const alive = actor => actor && !actor.dead && actor.hp > 0;
   const controlled = owner => G.SelfClones?.isControlled(owner) ?? (owner === G.Game.player);
   const valid = f => controlled(f.owner) && alive(f.owner) && f.owner.mon?.dex === 30001 && f.world === G.World;
@@ -36,14 +39,14 @@
       .sort((a, b) => Math.hypot(a.x - owner.x, a.y - owner.y) - Math.hypot(b.x - owner.x, b.y - owner.y))[0];
   }
   function canCast(owner, move) {
-    const art = [image,waterArt,...(tier(move)>=2?[swordArt]:[]),...(tier(move)>=4?[oilArt]:[]),...(tier(move)>=5?[foxArt]:[])];
+    const art = [image,waterArt,...(tier(move)>=2?[swordArt]:[]),...(tier(move)>=4?[oilArt,flameArt]:[]),...(tier(move)>=5?[foxArt]:[])];
     return supports(move.digiMode) && valid({ owner, world: G.World }) && art.every(img=>img.complete&&img.naturalWidth>0) &&
       !effects.some(f => f.owner === owner) && !!targetFor(owner, move);
   }
   function cast(owner, move) {
     if (!canCast(owner, move)) return false;
     const target = targetFor(owner, move);
-    effects.push({ owner, world: G.World, m: { ...move }, rank:tier(move), x: target.x, y: target.y, age: 0, hit: false, atk: owner.atk, volley: 0, spitAt: -Infinity, mirror: false, events:[], swordHit:false, oilAttempted:false, foxHits:new Set() });
+    effects.push({ owner, world: G.World, m: { ...move }, rank:tier(move), x: target.x, y: target.y, age: 0, hit: false, atk: owner.atk, volley: 0, spitAt: -Infinity, mirror: false, events:[], swordHit:false, fireAttempted:false, foxHits:new Set() });
     return true;
   }
   function clear(owner) {
@@ -92,42 +95,44 @@
     shots.add(shot); f.spitAt = f.age;
     event(f,'water');
   }
-  function oil(f) {
-    f.oilAttempted=true;
-    const target=rangedTarget(f);if(!target)return;
-    f.mirror=target.x<f.x;
-    const origin=mouth(f),angle=Math.atan2(target.y-origin.y,target.x-origin.x);
-    const shot=G.Projectiles.spawn({...origin,vx:Math.cos(angle)*300,vy:Math.sin(angle)*300,dmg:0,r:13,life:1.25,pierce:0,hits:new Set(),ghost:true,
-      owner:f.owner,mid:f.m.id,mtype:'normal',damageSplash:false,color:'#a26b32',vis:{proj:'ball',pal:'toad-oil',projScale:1.6},summon:f,summonKind:'oil'});
-    f.oilTarget=target;f.oilShot=shot;shots.add(shot);f.oilSpitAt=f.age;event(f,'oil-fired');
+  function breathe(f) {
+    f.fireAttempted=true;
+    const target=rangedTarget(f)||targetFor(f,f.m);
+    if(target)f.mirror=target.x<f.x;
+    const origin=flameMouth(f);
+    if(G.World.projectileBlock(origin.x,origin.y,10)||!clearPath(f.x,f.y,origin.x,origin.y))return;
+    const side=f.mirror?-1:1;
+    f.fireAt=f.age;f.fireOrigin=origin;
+    // Keep the oil jet and flames on the same axis, including after a wave dies.
+    f.fireAim=Math.atan2(.25,side);
+    f.fireHits=new Set();f.fireProps=new Set();event(f,'fire');
   }
-  function tag(f) {
-    const x=f.owner.x+(f.oil.x<f.owner.x?-16:16),y=f.owner.y-28+G.LIFT;
-    if(!clearPath(f.owner.x,f.owner.y,x,y)||G.World.projectileBlock(x,y,5))return;
-    const angle=Math.atan2(f.oil.y-y,f.oil.x-x);
-    const shot=G.Projectiles.spawn({x,y,vx:Math.cos(angle)*400,vy:Math.sin(angle)*400,dmg:0,r:5,life:1.6,pierce:0,hits:new Set(),ghost:true,
-      owner:f.owner,mid:f.m.id,mtype:'normal',damageSplash:false,color:'#f5dca6',vis:{proj:'toad-tag',pal:'toad-tag'},summon:f,summonKind:'tag'});
-    shots.add(shot);f.tagAt=f.age;f.tagAim=angle;event(f,'tag-fired');
+  // The widening breath grows from the mouth. Visuals and damage share this geometry.
+  function flameFrame(f){
+    const t=f.age-f.fireAt;
+    return t<.08?0:t<.17?1:t<.6?2+Math.floor((t-.17)*14)%3:5;
+  }
+  function flameLength(f){
+    const t=f.age-f.fireAt;
+    return Math.min(flameFrames[flameFrame(f)][6],240*Math.min(1,Math.max(0,t/.25),Math.max(0,(.75-t)/.15)));
+  }
+  function inFlame(f,e){
+    const o=f.fireOrigin,dx=e.x-o.x,dy=e.y-o.y,c=Math.cos(f.fireAim),s=Math.sin(f.fireAim);
+    const along=dx*c+dy*s,width=12+55*Math.max(0,along)/240;
+    return along>=0&&along<=flameLength(f)&&Math.abs(-dx*s+dy*c)<=width+(e.r||0)&&clearPath(o.x,o.y,e.x,e.y,e);
+  }
+  function burn(f){
+    const o=f.fireOrigin;
+    for(const e of new Set(G.EnemyMgr.queryCircle(o.x,o.y,310)))if(alive(e)&&!f.fireHits.has(e.id)&&inFlame(f,e)){
+      f.fireHits.add(e.id);deal(f,e,.5,'fire');
+    }
+    for(const prop of G.World.propsInCircle(o.x,o.y,310))if(!f.fireProps.has(prop)&&inFlame(f,prop)){
+      f.fireProps.add(prop);G.World.damageProp(prop,f.m.dmg*.5*f.atk,'#ffb846');
+    }
   }
   function segmentDistance(x,y,ax,ay,bx,by) {
     const dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy||1)));
     return Math.hypot(x-ax-dx*t,y-ay-dy*t);
-  }
-  function resolveSupport() {
-    const live=new Set(G.Projectiles.all());
-    for(const shot of [...shots]) {
-      const f=shot.summon;if(!valid(f)||!effects.includes(f))continue;
-      if(shot.summonKind==='oil'&&!f.oil&&shot.hits.has(f.oilTarget.id)) {
-        f.oil={x:f.oilTarget.x,y:f.oilTarget.y,radius:80,ignited:false};event(f,'oil-coated');tag(f);
-      }
-      if(shot.summonKind==='tag'&&f.oil&&!f.oil.ignited) {
-        const touched=(live.has(shot)||shot.hits.size>0)&&segmentDistance(f.oil.x,f.oil.y,shot.px??shot.x,shot.py??shot.y,shot.x,shot.y)<=shot.r+f.oil.radius;
-        if(touched&&!G.World.projectileBlock(shot.x,shot.y,shot.r)&&clearPath(shot.px??shot.x,shot.py??shot.y,f.oil.x,f.oil.y)) {
-          f.oil.ignited=true;f.fireAt=f.age;event(f,'fire');area(f,f.oil.x,f.oil.y,110,.5,'fire');
-          G.FX.burst(f.oil.x,f.oil.y-15,'#ffb846',28,100);G.FX.ring(f.oil.x,f.oil.y,8,110,'#ffb846',.35,3);G.Projectiles.remove(shot);shots.delete(shot);
-        }
-      }
-    }
   }
   function sword(f) {
     f.swordHit=true;event(f,'sword');
@@ -170,7 +175,8 @@
       if (due > f.volley) { f.volley = due; spit(f); }
       if(f.rank>=2&&!f.swordPrepared&&f.age>=2.15){f.swordPrepared=true;const target=targetFor(f,f.m);if(target)f.mirror=target.x<f.x;f.swordMirror=f.mirror;}
       if(f.rank>=2&&!f.swordHit&&f.age>=2.45){if(f.age<2.6)sword(f);else f.swordHit=true;}
-      if(f.rank>=4&&!f.oilAttempted&&f.age>=3.1){if(f.age<3.35)oil(f);else f.oilAttempted=true;}
+      if(f.rank>=4&&!f.fireAttempted&&f.age>=3.1){if(f.age<3.35)breathe(f);else f.fireAttempted=true;}
+      if(f.fireAt!=null&&f.age-f.fireAt<.75)burn(f);
       if(f.rank>=5&&f.age>=7.3&&!f.transformed){f.transformed=true;if(f.age<7.7){event(f,'transform');G.FX.burst(f.x,f.y-35,'#ecede9',30,85);}}
       if(f.rank>=5&&f.age>=7.8&&!f.foxDone){if(f.age<=8.25)fox(f);else f.foxDone=true;}
     }
@@ -192,11 +198,6 @@
           ctx.lineTo(f.x + Math.cos(a) * 42, f.y + Math.sin(a) * 42); ctx.stroke();
         }
       }
-      if(f.oil){
-        ctx.globalAlpha=f.oil.ignited?Math.max(0,.5*(1-(f.age-f.fireAt))):.65;
-        ctx.fillStyle=f.oil.ignited?'#ea7d28':'#755027';
-        ctx.beginPath();ctx.arc(f.oil.x,f.oil.y,f.oil.ignited?110:f.oil.radius,0,Math.PI*2);ctx.fill();
-      }
     }
     ctx.restore();
   }
@@ -207,10 +208,6 @@
       const m = f.m, progress = Math.min(1, f.age / m.windup);
       ctx.globalAlpha = Math.min(1, f.age / .12, (m.duration - f.age) / .25);
       const phase=phaseFor(f);
-      if(f.fireAt!=null&&f.age-f.fireAt<1){
-        const t=f.age-f.fireAt;
-        for(let n=0;n<9;n++){const a=n*2.4,r=Math.sqrt(n/9)*85;G.VFX.draw(ctx,'fire','fire',f.oil.x+Math.cos(a)*r,f.oil.y+Math.sin(a)*r-22,{scale:2.2*(1-t),frame:Math.floor(t*12+n)%3});}
-      }
       if(phase==='transform'){
         ctx.strokeStyle='#9cecff';ctx.lineWidth=3;ctx.globalAlpha=.6;
         ctx.beginPath();ctx.moveTo(f.owner.x,f.owner.y-30);ctx.lineTo(f.x,f.y-60);ctx.stroke();
@@ -222,8 +219,9 @@
         const frame=f.age<2.3?0:f.age<2.45?1:f.age<2.6?2:3;
         drawActor(ctx,swordArt,swordFrames[frame],f.x,f.y,m.radius*1.5/460,f.mirror);continue;
       }
-      if(phase==='oil-windup'||phase==='oil-spit'){
-        drawActor(ctx,oilArt,oilFrames[phase==='oil-windup'?0:1],f.x,f.y,m.radius*1.5/720,f.mirror);continue;
+      if(phase==='fire-windup'||phase==='fire'){
+        drawActor(ctx,oilArt,oilFrames[phase==='fire-windup'?0:1],f.x,f.y,m.radius*1.5/720,f.mirror);
+        if(phase==='fire')drawFlame(ctx,f);continue;
       }
       if(f.age >= .95 && f.age < 2.2){
         const pose = f.age - f.spitAt < .16 ? 1 : 0;
@@ -241,6 +239,21 @@
     }
     ctx.restore();
   }
+  function drawFlame(ctx,f){
+    const o=f.fireOrigin,c=Math.cos(f.fireAim),s=Math.sin(f.fireAim),length=flameLength(f),t=f.age-f.fireAt;
+    const frame=flameFrame(f),[sx,sy,sw,sh,ax,ay,reach]=flameFrames[frame],scale=reach/flameWidths[frame];
+    const scaleX=length/flameWidths[frame],scaleY=scale*(.5+.5*Math.min(1,length/reach));
+    ctx.save();ctx.translate(o.x,o.y-G.LIFT);ctx.rotate(f.fireAim);
+    ctx.globalAlpha*=Math.min(1,(.75-t)/.12);ctx.beginPath();
+    // Clip the authored plume against the same world paths used for damage.
+    for(let d=0;d<length;d+=8)for(let offset=-90;offset<90;offset+=12){
+      const x=o.x+c*(d+4)-s*(offset+6),y=o.y+s*(d+4)+c*(offset+6);
+      if(clearPath(o.x,o.y,x,y)&&!G.World.projectileBlock(x,y,2))ctx.rect(d,offset,Math.min(8,length-d),12);
+    }
+    ctx.clip();ctx.imageSmoothingEnabled=true;
+    ctx.drawImage(flameArt,sx,sy,sw,sh,-ax*scaleX,-ay*scaleY,sw*scaleX,sh*scaleY);
+    ctx.restore();
+  }
   function drawActor(ctx,art,frame,x,y,scale,mirror){
     const [sx,sy,sw,sh,ax,ay]=frame;
     ctx.save();ctx.translate(x,y);if(mirror)ctx.scale(-1,1);
@@ -251,7 +264,8 @@
     drawActor(ctx,foxArt,foxFrames[frame],f.foxX??f.x,f.foxY??f.y,f.m.radius*2.1/400,f.mirror);
   }
   const previous = { update: C.updateFields, resolve: C.resolve, ground: C.drawGroundFields, air: C.drawAirFields, clear: C.clearFields, skillClear: G.DigimonSkills.clear };
-  C.resolve = function(...args) { pruneInvalid(); const result=previous.resolve.apply(this,args);resolveSupport();return result; };
+  C.resolve = function(...args) { pruneInvalid(); return previous.resolve.apply(this,args); };
+
   C.updateFields = function(dt) { const result = previous.update.call(this, dt); update(dt); return result; };
   C.drawGroundFields = function(ctx) { previous.ground.call(this, ctx); ground(ctx); };
   C.drawAirFields = function(ctx) { previous.air.call(this, ctx); air(ctx); };
@@ -272,15 +286,14 @@
   };
   function phaseFor(f) {
     if(f.rank>=5&&f.age>=7.3)return f.age<7.7?'transform':f.age<7.8?'fox-ready':f.age<8.25?'fox-dash':'fox-recovery';
-    if(f.rank>=4&&f.age>=2.95)return f.fireAt!=null&&f.age-f.fireAt<1?'fire':f.age<3.1?'oil-windup':f.oilSpitAt!=null&&f.age-f.oilSpitAt<.25?'oil-spit':'oil-wait';
+    if(f.rank>=4&&f.age>=2.95)return f.age<3.1?'fire-windup':f.fireAt!=null&&f.age-f.fireAt<.75?'fire':'rest';
     if(f.rank>=2&&f.age>=2.15&&f.age<2.8)return f.age<2.45?'sword-windup':f.age<2.6?'sword-hit':'sword-recovery';
     return f.age<f.m.windup?(f.rank>=3?'heavy-drop':'arrival'):f.age>=.95&&f.age<2.2?'water':'rest';
   }
   const poseFor=owner=>{
     const f=effects.find(f=>f.owner===owner&&valid(f));if(!f)return null;
     if(f.rank>=5&&f.age>=7.3&&f.age<7.7)return {kind:'seal',age:f.age-7.3};
-    if(f.tagAt!=null&&f.age-f.tagAt<.3)return {kind:'tag',age:f.age-f.tagAt,aim:f.tagAim,mirror:Math.cos(f.tagAim)<0};
     return null;
   };
-  G.NarutoSummoning = { supports, canCast, cast, clear, ready, mouth, phaseFor,poseFor, get effects() { return effects; }, get shots() { return [...shots]; } };
+  G.NarutoSummoning = { supports, canCast, cast, clear, ready, mouth, flameMouth, flameFrame, phaseFor,poseFor, get effects() { return effects; }, get shots() { return [...shots]; } };
 })();
