@@ -4,7 +4,7 @@
   if (G.JjkUro) return;
   const DEX=30015, C=G.Combat, states=new Map(), effects=[];
   const specs={
-    'uro-sky':{cd:1.25,dmg:20,range:210,arc:.95,release:.18,duration:.48},
+    'uro-sky':{cd:1.25,dmg:20,range:125,arc:1.1,release:.18,duration:.48},
     'uro-thin-ice':{cd:4.8,dmg:72,range:250,arc:1.9,release:.34,duration:.8},
     'uro-screen':{cd:9,dmg:0,range:250,radius:82,release:0,duration:2.3},
     'uro-collapse':{cd:8,dmg:112,range:280,radius:110,release:.55,duration:1.05}
@@ -31,17 +31,25 @@
   function props(x,y,r){
     return [...new Set(G.World.propsInCircle?.(x,y,r)||[])].filter(p=>!p.dead&&p.destructible!==false&&p.hp>0&&Math.hypot(p.x-x,p.y-y)<=r+(p.r||0)&&clearPath(x,y,p.x,p.y,p));
   }
-  function target(owner,m){
+  function target(owner,m,choose=true){
     const r=m.range||specs[m.digiMode].range;
     const enemies=targets(owner.x,owner.y,r),candidates=enemies.length||m.digiMode==='uro-screen'?enemies:props(owner.x,owner.y,r);
+    if(!choose)return candidates[0];
+    if(m.digiMode==='uro-collapse'&&enemies.length){
+      const radius=m.radius||specs[m.digiMode].radius;
+      const counts=new Map(enemies.map(e=>[e,enemies.filter(other=>
+        Math.hypot(other.x-e.x,other.y-e.y)<=radius+(other.r||0)&&clearPath(e.x,e.y,other.x,other.y)).length]));
+      return enemies.sort((a,b)=>counts.get(b)-counts.get(a)||
+        Math.hypot(b.x-owner.x,b.y-owner.y)-Math.hypot(a.x-owner.x,a.y-owner.y))[0];
+    }
     return candidates.sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y))[0];
   }
   function canCast(owner,m){
     if(!playing()||!valid(owner)||owner.frozen||!supports(m?.digiMode)||!learned(owner,m.id))return false;
-    if(state(owner).pose)return false;
     if((learned(owner,m.id).t||0)>1e-8)return false;
-    if(m.digiMode==='uro-screen'&&m.threatOnly)return threatened(owner,m);
-    return !!target(owner,m)||(m.digiMode==='uro-screen'&&G.Projectiles.all().some(p=>!p.friendly&&Math.hypot(p.x-owner.x,p.y-owner.y)<260));
+    const s=state(owner);
+    if(m.digiMode==='uro-screen')return !s.screen&&threatened(owner,m);
+    return !s.pose&&!!target(owner,m,false);
   }
   function threatened(owner,m){
     const radius=m.radius||82,horizon=m.threatHorizon??.55;
@@ -58,24 +66,29 @@
   function cast(owner,m){
     if(!canCast(owner,m))return false;
     const s=state(owner),spec=specs[m.digiMode],e=target(owner,m),aim=e?Math.atan2(e.y-owner.y,e.x-owner.x):(owner.aim||0);
-    const counter=m.digiMode==='uro-thin-ice'&&s.counterUntil>s.clock?s.counterBonus:0;
+    const riposte=m.digiMode==='uro-thin-ice'&&s.counterUntil>s.clock,counter=riposte?s.counterBonus:0;
     const b={owner,world:G.World,runEpoch:G.CombatPulse.epoch,id:m.id,mode:m.digiMode,m:{...m},age:0,aim,x:owner.x,y:owner.y,tx:e?.x??owner.x,ty:e?.y??owner.y,
       duration:spec.duration,bodyDuration:m.digiMode==='uro-screen'?.42:spec.duration,release:spec.release,range:m.range||spec.range,radius:m.radius||spec.radius,arc:m.arc??spec.arc,
-      damage:(m.dmg??spec.dmg)*(owner.atk??1)*(1+counter),counterEmpowered:counter>0,type:m.type||'psychic',crit:owner.critChance||0,done:false};
+      damage:(m.dmg??spec.dmg)*(owner.atk??1)*(1+counter),counterEmpowered:counter>0,riposte,type:m.type||'psychic',crit:owner.critChance||0,done:false};
     b.cast=G.CombatPulse.create(owner,m.id,{channel:m.digiMode==='uro-screen'?'reaction':'body'});
     Object.assign(b,{castId:b.cast.castId,channel:b.cast.channel});
-    if(counter){s.counterBonus=0;s.counterUntil=0;}
+    if(riposte){s.counterBonus=0;s.counterUntil=0;}
     const native=learned(owner,m.id),cooldown=Math.max(.05,(m.cd||spec.cd)*(owner.cdMul??1));
     native.t=m.t=cooldown;native.castAt=m.castAt=performance.now();s.cooldowns[m.id]=cooldown;
     s.castCounts[b.mode]=(s.castCounts[b.mode]||0)+1;
-    s.pose=b.mode==='uro-screen'?{...b,duration:.42}:b;s.ready.delete(m.id);owner.aim=aim;owner.cast?.(m);
+    // A defensive reaction must not replace an attack already being prepared.
+    // Its pane and intercept channel can operate while the body finishes that hit.
+    if(b.mode!=='uro-screen'||!s.pose){
+      s.pose=b.mode==='uro-screen'?{...b,duration:.42}:b;owner.aim=aim;
+    }
+    s.ready.delete(m.id);owner.cast?.(m);
     if(b.mode==='uro-screen'){b.budget=4+rank(m);b.flashes=[];b.counterTriggered=false;s.screen=b;}else effects.push(b);
     return true;
   }
   function hitFor(b,e){
     const mult=G.Types.mult(b.type,e.types),crit=Math.random()<b.crit;
     const damage=b.damage*mult*G.Weather.mult(b.type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(b.owner,e)||1);
-    const special=!!(e.boss||e.elite||e.legend||e.judge),knock=b.mode==='uro-sky'?(special?0:(b.m.skyKnock??8)):28;
+    const special=!!(e.boss||e.elite||e.legend||e.judge),knock=b.mode==='uro-sky'?(special?0:(b.m.skyKnock??30)):28;
     return {target:e,primaryDirectDamage:damage,color:'#bfeaff',dx:Math.cos(b.aim),dy:Math.sin(b.aim),knock,eff:crit?'crit':G.Types.label(mult),onHit:target=>{
       if(!alive(target))return;
       if(b.mode==='uro-collapse')target.applySlow?.(special?.15:(b.m.collapseSlow??.5),special&&b.m.collapseSlow!=null?.45:(b.m.slowDuration??.65));
@@ -132,7 +145,14 @@
       if(!first)continue;
       const {owner,s,w,t}=first,ax=p.px??p.x,ay=p.py??p.y,x=ax+(p.x-ax)*t,y=ay+(p.y-ay)*t;
       G.Projectiles.remove(p);w.budget--;s.intercepted++;w.flashes.push({x,y,age:0});
-      if(!w.counterTriggered&&w.m.counterBonus>0){w.counterTriggered=true;s.counterBonus=w.m.counterBonus;s.counterUntil=s.clock+(w.m.counterDuration??3);}
+      if(!w.counterTriggered&&(w.m.reflectRefresh||w.m.counterBonus>0)){
+        w.counterTriggered=true;
+        const thin=learned(owner,'jjk-uro-thin-ice');
+        if(thin){
+          if(w.m.reflectRefresh){thin.t=0;s.cooldowns[thin.id]=0;s.ready.set(thin.id,s.clock);}
+          s.counterBonus=w.m.counterBonus||0;s.counterUntil=s.clock+(w.m.counterDuration??3);
+        }
+      }
       G.Projectiles.spawn({x,y,vx:-(p.vx||0),vy:-(p.vy||0),r:Math.max(4,p.r||6),dmg:(p.dmg||10)*(owner.atk??1),life:Math.min(3,p.life||2),
         friendly:true,owner,mid:w.id,mtype:p.mtype||'psychic',color:'#bfeaff',vis:G.VFX.forType(p.mtype||'psychic'),pierce:0,hits:new Set(),uroReturned:true});
     }
@@ -186,7 +206,10 @@
     if(!playing()||!valid(owner)||owner.frozen||!Number.isFinite(dt)||dt<=0)return;
     const s=state(owner),moves=(owner.moves||[]).filter(m=>supports(m.digiMode));
     for(const m of moves){m.t=Math.max(0,(m.t||0)-dt);s.cooldowns[m.id]=m.t;if(m.t<=1e-8&&!s.ready.has(m.id))s.ready.set(m.id,s.clock);}
-    const candidate=moves.filter(m=>canCast(owner,m)).sort((a,b)=>(s.ready.get(a.id)??s.clock)-(s.ready.get(b.id)??s.clock))[0];
+    const reaction=moves.find(m=>m.digiMode==='uro-screen'&&canCast(owner,m));
+    if(reaction)cast(owner,reaction);
+    const riposte=s.counterUntil>s.clock&&moves.find(m=>m.digiMode==='uro-thin-ice'&&canCast(owner,m));
+    const candidate=riposte||moves.filter(m=>canCast(owner,m)).sort((a,b)=>(s.ready.get(a.id)??s.clock)-(s.ready.get(b.id)??s.clock))[0];
     if(candidate)cast(owner,candidate);
   };
   C.updateFields=function(dt){const result=oldUpdate.call(this,dt);update(dt);return result;};
@@ -196,7 +219,16 @@
   for(const method of ['toUI','quit'])if(typeof G.Game[method]==='function'){
     const previous=G.Game[method];G.Game[method]=function(...args){const result=previous.apply(this,args);if(terminal())clear();return result;};
   }
-  function statusFor(owner,m){const s=states.get(owner);return {state:s?.pose?.id===m.id?'casting':m.t>1e-8?'cooldown':s?.pose?'queued':'ready',remaining:m.t||0};}
+  function statusFor(owner,m){
+    const s=states.get(owner);
+    if(m.digiMode==='uro-screen'){
+      if(s?.screen&&legal(s.screen))return {state:'active',remaining:Math.max(0,s.screen.duration-s.screen.age)};
+      if(m.t>1e-8)return {state:'cooldown',remaining:m.t};
+      return threatened(owner,m)?{state:'ready',remaining:0}:{state:'waiting',reason:'projectile',remaining:0};
+    }
+    if(m.digiMode==='uro-thin-ice'&&s&&s.counterUntil>s.clock&&!(m.t>1e-8)&&s.pose?.id!==m.id)return {state:s.pose?'queued':'ready',reason:'riposte',remaining:0};
+    return {state:s?.pose?.id===m.id?'casting':m.t>1e-8?'cooldown':s?.pose?'queued':'ready',remaining:m.t||0};
+  }
   G.JjkUro={dex:DEX,supports,canCast,cast,update,draw,clear,intercept,specs,threatened,statusFor,
     poseFor:owner=>{const b=states.get(owner)?.pose;if(!b||!legal(b))return null;const phase=b.mode==='uro-screen'?(b.age<.08?'windup':b.age<.22?'pull':b.age<.3?'shatter':'recovery'):(b.age<b.release*.35?'windup':b.age<b.release?'pull':b.age<b.release+.13?'shatter':'recovery');return {...b,phase,frameName:phase};},
     activeFor:owner=>{const b=states.get(owner)?.pose;return b&&legal(b)?b:null;},stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return !terminal()&&s?.world===G.World&&s?.runEpoch===G.CombatPulse.epoch?s:null;},get effects(){return effects;}};

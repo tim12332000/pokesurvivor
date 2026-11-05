@@ -35,14 +35,14 @@ assert(!growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'));
 const rankCases=[
  ['jjk-yuta',3,'relayMarkDuration',1.2],['jjk-yuta',5,'bladeArc',2.5],['jjk-yuta-rika',3,'rikaSpeed',650],['jjk-yuta-rika',5,'radius',126],
  ['jjk-yuta-speech',5,'range',184],['jjk-yuta-manifest',3,'recovery',10.5],['jjk-yuta-manifest',5,'recovery',9],
- ['jjk-ryu',3,'targetPolicy','elite'],['jjk-ryu',5,'range',414],['jjk-ryu-spread',3,'spreadStep',.24],['jjk-ryu-spread',5,'baseCount',4],
- ['jjk-ryu-impact',3,'radius',108],['jjk-ryu-impact',5,'impactTargetPolicy','cluster'],['jjk-ryu-maximum',3,'firstTargetBonus',.15],
- ['jjk-uro',3,'arc',1.15],['jjk-uro',5,'skyKnock',18],['jjk-uro-thin-ice',3,'arc',2.1],['jjk-uro-thin-ice',5,'thinSlow',.25],
- ['jjk-uro-screen',3,'threatOnly',true],['jjk-uro-screen',5,'counterBonus',.15],['jjk-uro-collapse',3,'radius',126.5],['jjk-uro-collapse',5,'collapseSlow',.6]
+ ['jjk-ryu',3,'targetPolicy','elite'],['jjk-ryu',5,'range',414],['jjk-ryu-spread',3,'spreadStep',.8],['jjk-ryu-spread',5,'baseCount',4],
+ ['jjk-ryu-impact',3,'radius',108],['jjk-ryu-impact',5,'range',330],['jjk-ryu-maximum',3,'firstTargetBonus',.15],
+ ['jjk-uro',3,'arc',1.3],['jjk-uro',5,'skyKnock',44],['jjk-uro-thin-ice',3,'arc',2.1],['jjk-uro-thin-ice',5,'thinSlow',.25],
+ ['jjk-uro-screen',3,'threatHorizon',.8],['jjk-uro-screen',3,'reflectRefresh',true],['jjk-uro-screen',5,'counterBonus',.15],['jjk-uro-collapse',3,'radius',126.5],['jjk-uro-collapse',5,'collapseSlow',.6]
 ];
 for(const [id,r,key,value] of rankCases){const actual=G.Moves.instance(id,r)[key];if(typeof value==='number')assert(Math.abs(actual-value)<1e-9,id+':'+key);else assert.equal(actual,value,id+':'+key);}
 // Native upgrade application must install the same functional rank, not only instance previews.
-const live=G.Moves.instance('jjk-ryu-spread');G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.spreadStep,.24);
+const live=G.Moves.instance('jjk-ryu-spread');G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.spreadStep,.8);
 G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.baseCount,4);
 p=hero(30013,['jjk-yuta']);const beforeStats=JSON.stringify(p.statsTaken);
 const cards=growth.legalOffers(p,3);assert(cards.some(c=>c.type==='stat'));assert.equal(JSON.stringify(p.statsTaken),beforeStats,'preview spent growth');assert(!p.narutoMilestonesShown,'offer consumed first-display milestone');

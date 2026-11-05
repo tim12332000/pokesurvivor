@@ -49,7 +49,13 @@
     const nearest=(a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y);
     const enemies=nearby(owner.x,owner.y,range),s=states.get(owner);
     if(m.digiMode==='yuta-rika'&&s?.relay&&s.relay.until>s.clock&&enemies.includes(s.relay.target))return s.relay.target;
-    const enemy=enemies.sort(nearest)[0];
+    enemies.sort(nearest);
+    // The sword handles close pressure; Rika extends the pair's reach instead
+    // of routinely spending her long cooldown on that same nearby enemy.
+    const blade=owner.moves?.find(move=>move.digiMode==='yuta-blade');
+    const bladeRange=blade?geometry(blade).range:125;
+    const remote=m.digiMode==='yuta-rika'?enemies.find(e=>Math.hypot(e.x-owner.x,e.y-owner.y)>bladeRange+(e.r||0)):null;
+    const enemy=remote||enemies[0];
     if(enemy)return enemy;
     if(m.digiMode!=='yuta-blade'&&m.digiMode!=='yuta-rika')return null;
     return (G.World.propsInCircle?.(owner.x,owner.y,range)||[]).filter(p=>!p.dead&&p.hp>0&&p.destructible!==false&&
@@ -84,6 +90,17 @@
     if(m.digiMode==='yuta-manifest'&&(manifested(owner)||s.manifestReadyAt>s.clock))return false;
     return !!target(owner,m);
   }
+  function autoPolicy(owner,m) {
+    if(m.digiMode==='yuta-speech'){
+      const enemies=nearby(owner.x,owner.y,geometry(m).radius);
+      return enemies.length>=3||enemies.some(e=>Math.hypot(e.x-owner.x,e.y-owner.y)<=90+(e.r||0))?null:'pressure';
+    }
+    if(m.digiMode==='yuta-manifest'){
+      const enemies=nearby(owner.x,owner.y,geometry(m).range);
+      return enemies.length>=3||enemies.some(strong)?null:'encounter';
+    }
+    return null;
+  }
   function cast(owner,move) {
     if(!canCast(owner,move))return false;
     const s=state(owner),m={...move},kind=m.digiMode.slice(5),e=target(owner,m),g=geometry(m);
@@ -103,6 +120,10 @@
       if(kind==='manifest'){
         s.manifestUntil=s.clock+6;s.manifestReadyAt=s.manifestUntil+(m.recovery??12)*(owner.cdMul??1);
         s.manifestPower=[1.5,1.6,1.7,1.8,2][rank(m)-1];f.full=true;
+        // One refresh at activation makes the companion part of the burst.
+        // An existing strike still owns the sole Rika actor until it returns.
+        const rika=owner.moves?.find(move=>move.digiMode==='yuta-rika');
+        if(rika)rika.t=0;
       }
       bodyPhase(f);
     }
@@ -313,7 +334,7 @@
     for(const m of moves)m.t=Math.max(0,(m.t||0)-dt);
     // Manifestation and independent Rika do not starve the sword's body-action queue.
     for(const mode of ['yuta-manifest','yuta-rika','yuta-speech','yuta-blade']){
-      const m=moves.find(x=>x.digiMode===mode);if(m&&canCast(owner,m))cast(owner,m);
+      const m=moves.find(x=>x.digiMode===mode);if(m&&canCast(owner,m)&&!autoPolicy(owner,m))cast(owner,m);
     }
   };
   C.updateFields=function(dt){const result=oldUpdate.call(this,dt);update(dt);return result;};
@@ -340,9 +361,10 @@
   function statusFor(owner,m){
     const s=stateFor(owner),active=m.digiMode==='yuta-manifest'&&s&&s.manifestUntil>s.clock;
     const casting=s&&(s.action?.m.id===m.id||s.rika?.m.id===m.id);
-    return {state:active?'active':casting?'casting':m.t>EPS?(m.digiMode==='yuta-manifest'?'recovery':'cooldown'):s?.action&&m.digiMode!=='yuta-rika'?'queued':'ready',remaining:m.t||0};
+    const reason=autoPolicy(owner,m);
+    return {state:active?'active':casting?'casting':m.t>EPS?(m.digiMode==='yuta-manifest'?'recovery':'cooldown'):s?.action&&m.digiMode!=='yuta-rika'?'queued':reason?'waiting':'ready',remaining:m.t||0,reason};
   }
-  G.JujutsuYuta={dex:DEX,supports,canCast,cast,update,clear,draw,drawables,inspect,stateFor,statusFor,renderStates,
+  G.JujutsuYuta={dex:DEX,supports,canCast,cast,autoPolicy,update,clear,draw,drawables,inspect,stateFor,statusFor,renderStates,
     pose:(owner=G.Game.player)=>stateFor(owner)?.action||null,activeFor:(owner=G.Game.player)=>stateFor(owner)?.action||null,
     formFor:(owner=G.Game.player)=>manifested(owner)?'manifest':'normal',manifested,geometry};
 })();

@@ -68,10 +68,12 @@
     if(!move?.id?.startsWith('jjk-'))return null;
     const api=player.dex===30013?G.JujutsuYuta:player.dex===30014?G.JjkRyu:G.JjkUro;
     const status=api?.statusFor?.(player,move);
-    if(status){const remaining=Math.max(0,status.remaining||0),labels={casting:'施放中',queued:'待出手',ready:'就緒'};
+    if(status){const remaining=Math.max(0,(status.state==='recovering'?status.recoveryRemaining:status.remaining)||0),labels={casting:'施放中',queued:'待出手',ready:'就緒'},waiting={pressure:'等近敵',encounter:'等敵群',projectile:'等敵彈'};
       const label=status.state==='active'?(move.id==='jjk-yuta-manifest'?'顯現 ':'作用 ')+remaining.toFixed(1)+'s':
-        status.state==='recovery'?'恢復 '+remaining.toFixed(1)+'s':status.state==='cooldown'?remaining.toFixed(1)+'s':labels[status.state]||'就緒';
-      return {label,fraction:status.state==='active'?remaining/(move.duration||6):Math.min(1,remaining/Math.max(.05,(move.recovery||move.cd)*player.cdMul))};}
+        ['recovery','recovering'].includes(status.state)?'恢復 '+remaining.toFixed(1)+'s':status.state==='charging'?'蓄能 '+(status.coreCharge||0)+'/'+(status.chargeRequired||3):
+        status.state==='waiting'?(waiting[status.reason]||'等待時機'):status.state==='cooldown'?remaining.toFixed(1)+'s':
+        status.reason==='riposte'?(status.state==='queued'?'待反擊':'反擊就緒'):labels[status.state]||'就緒';
+      return {label,fraction:status.state==='charging'?1-(status.coreCharge||0)/(status.chargeRequired||3):status.state==='active'?remaining/(move.duration||6):Math.min(1,remaining/Math.max(.05,(move.recovery||move.cd)*player.cdMul))};}
     const s=api?.stateFor(player),action=api?.pose?.(player)||api?.poseFor?.(player)||s?.action;
     const manifest=player.dex===30013?G.JujutsuYuta.inspect(player)?.manifestRemaining||0:0;
     if(move.id==='jjk-yuta-manifest'&&manifest>0)return {label:'顯現 '+manifest.toFixed(1)+'s',fraction:manifest/6};

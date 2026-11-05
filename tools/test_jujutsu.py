@@ -44,7 +44,10 @@ SETUP = r"""() => {
   const slot=a.slots.findIndex(g=>g.includes(m));if(slot>=0)a.setActive(slot);advance(.11);
   for(const move of a.moves)move.t=move===m?0:999;let calls=0;const original=a.cast;
   a.cast=function(move,...args){if(move.id===id)calls++;return original.call(this,move,...args)};
-  resume();try{G.Combat.tick(.001,a,0)}finally{a.cast=original;pause()}
+  // Deliberate isolated casts exercise production geometry; identity suites
+  // separately drive Combat.tick to verify conditional automatic decisions.
+  const module=a.dex===30013?G.JujutsuYuta:a.dex===30014?G.JjkRyu:G.JjkUro;
+  resume();try{module.cast(a,m)}finally{a.cast=original;pause()}
   assert(calls===1,'native cast count '+id+': '+calls);return m}
  function pose(){const c=document.createElement('canvas');c.width=340;c.height=280;const ctx=c.getContext('2d',{willReadFrequently:true}),calls=[],draw=ctx.drawImage.bind(ctx);
   ctx.drawImage=(im,...rect)=>{calls.push({source:im.src||im.dataset?.source||'',rect});return draw(im,...rect)};
@@ -187,7 +190,7 @@ def combat(page,frame,label,slug):
                  ('jjk-yuta-rika', [[170,0],[205,30],[210,-30]], [410,210], 1.8),
                  ('jjk-yuta-speech', [[70,0],[-75,40],[35,-95]], [390,0], .6)],
         'ryu': [('jjk-ryu', [[90,0],[165,0],[240,0]], [170,100], .6),
-                ('jjk-ryu-spread', [[140,0],[145,29],[145,-29]], [170,160], .6),
+                ('jjk-ryu-spread', [[140,0],[120,91],[120,-91]], [270,0], .85),
                 ('jjk-ryu-impact', [[180,0],[210,35],[210,-35]], [410,0], .7),
                 ('jjk-ryu-maximum', [[100,0],[200,0],[320,0]], [170,100], 1)],
         'uro': [('jjk-uro', [[70,0],[100,25],[115,-25]], [-250,0], .6),
@@ -262,7 +265,8 @@ def special(frame,slug,label):
         return result
     if slug=='uro':
         return frame.evaluate(r"""()=>{
-          const A=JAcceptance,p=A.p(),U=G.JjkUro;A.reset();const m=A.fixture('jjk-uro-screen');p.target=A.spawn(70,0);A.cast(m.id);
+          const A=JAcceptance,p=A.p(),U=G.JjkUro;A.reset();const m=A.fixture('jjk-uro-screen');p.target=A.spawn(70,0);
+          G.Projectiles.spawn({x:150,y:0,vx:-200,vy:0,r:6,friendly:false,dmg:7,mtype:'psychic',life:2});A.cast(m.id);G.Projectiles.clear();
           const first=m.t,s=U.stateFor(p),capacity=s.screen.budget,reflected=[];
           const friendly=G.Projectiles.spawn({x:60,y:30,vx:-100,vy:0,friendly:true,owner:p,mid:'test-friendly'});
           function incoming(){return G.Projectiles.spawn({x:60,y:0,px:120,py:0,vx:-100,vy:0,friendly:false,dmg:7,mtype:'psychic',life:2})}

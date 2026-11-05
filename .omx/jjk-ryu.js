@@ -6,7 +6,7 @@
   let effectSequence=0;
   const specs={
     'jjk-ryu':{charge:.22,cd:1.8,damage:42,range:360,radius:14},
-    'jjk-ryu-spread':{charge:.35,cd:5,damage:30,range:330,radius:12},
+    'jjk-ryu-spread':{charge:.35,cd:5,damage:30,range:200,radius:12},
     'jjk-ryu-impact':{charge:.45,cd:7,damage:100,range:300,radius:90},
     'jjk-ryu-maximum':{charge:.75,cd:11,damage:200,range:450,radius:26}
   };
@@ -53,7 +53,7 @@
   function state(owner){
     let s=states.get(owner);
     if(s&&(s.world!==G.World||s.runEpoch!==G.CombatPulse.epoch)){clear(owner);s=null;}
-    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,clock:0,action:null,effects:[],ready:new Map(),casts:{},hits:0,damage:0};states.set(owner,s);}
+    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,clock:0,action:null,effects:[],scatter:[],ready:new Map(),casts:{},hits:0,damage:0,coreCharge:0,recoveryUntil:0};states.set(owner,s);}
     return s;
   }
   function clearPath(ax,ay,bx,by,target=null){
@@ -76,7 +76,7 @@
     const enemies=[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,r+80))].filter(e=>alive(e)&&!e.friendly&&
       Math.hypot(e.x-owner.x,e.y-owner.y)<=r+(e.r||0)&&clearPath(owner.x,owner.y,e.x,e.y))
       .sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
-    if(m.impactTargetPolicy==='cluster'){
+    if(m.impactTargetPolicy==='cluster'||m.digiMode==='jjk-ryu-impact'){
       const radius=settings(m).radius,score=e=>enemies.reduce((n,other)=>n+Number(Math.hypot(other.x-e.x,other.y-e.y)<=radius+(other.r||0)&&clearPath(e.x,e.y,other.x,other.y)),0);
       const scores=new Map(enemies.map(e=>[e,score(e)]));enemies.sort((a,b)=>scores.get(b)-scores.get(a)||Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
     }else if(m.targetPolicy==='elite'){
@@ -91,11 +91,12 @@
   function canCast(owner,m){
     if(!valid(owner)||owner.frozen||G.Game.state!=='playing'||!supports(m?.digiMode))return false;
     const s=state(owner);
-    return !s.action&&(m.t||0)<=EPS&&!!owner.moves?.some(x=>x.id===m.id)&&!!targetFor(owner,m);
+    return !s.action&&s.clock+EPS>=s.recoveryUntil&&(m.t||0)<=EPS&&!!owner.moves?.some(x=>x.id===m.id)&&!!targetFor(owner,m);
   }
   function cast(owner,m){
     if(!canCast(owner,m))return false;
     const s=state(owner),target=targetFor(owner,m),p=settings(m),mode=m.digiMode;
+    if(mode==='jjk-ryu-maximum')s.coreCharge=0;
     const count=G.Quantity.count(owner,m.baseCount??3);
     s.action={owner,mode,m:{...m},...p,age:0,released:false,aim:Math.atan2(target.y-owner.y,target.x-owner.x),
       tx:target.x,ty:target.y,targetObject:target,x:owner.x,y:owner.y,count:mode==='jjk-ryu-spread'?Math.min(9,count):1,
@@ -113,25 +114,94 @@
     const dmg=f.damage*ratio*mult*G.Weather.mult(type)*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(s.owner,e)||1);
     return {target:e,primaryDirectDamage:dmg,color:'#bff7ff',dx:Math.cos(f.aim),dy:Math.sin(f.aim),knock:0,eff:crit?'crit':G.Types.label(mult)};
   }
-  function contact(s,f,hits){
-    const result=G.CombatPulse.apply(f.cast,0,hits);
-    if(result){s.hits+=result.primaryHits;s.damage+=result.primaryDamage;}
+  function contact(s,f,hits,pulseIndex=0){
+    const result=G.CombatPulse.apply(f.cast,pulseIndex,hits);
+    if(result){
+      s.hits+=result.primaryHits;s.damage+=result.primaryDamage;
+      if(f.mode==='jjk-ryu'&&result.primaryHits>0&&!f.charged&&s.owner.moves?.some(m=>m.id==='jjk-ryu-maximum')){
+        f.charged=true;s.coreCharge=Math.min(3,s.coreCharge+1);
+      }
+    }
     return result;
   }
-  function clippedLength(x,y,aim,range,radius){
+  function clippedLength(x,y,aim,range,radius,target=null){
     const steps=Math.ceil(range/4),c=Math.cos(aim),sn=Math.sin(aim);
     for(let i=1;i<=steps;i++){
       const d=Math.min(range,i*4);
       // Width is physical: a broad beam cannot tunnel past a wall at its edge.
       for(const side of [-radius,0,radius]){
         const px=x+c*d-sn*side,py=y+sn*d+c*side;
-        if(G.World.isWall?.(px,py)||G.World.projectileBlock?.(px,py,1))return Math.max(0,d-4);
+        const blocker=G.World.projectileBlock?.(px,py,1);
+        if(G.World.isWall?.(px,py)||(blocker&&blocker!==target))return Math.max(0,d-4);
       }
     }
     return range;
   }
+  function scatter(s,f){
+    const spacing=Math.min(f.m.spreadStep??.65,f.count>1?2.6/(f.count-1):0);
+    f.scatterHits=new Set();
+    for(let i=0;i<f.count;i++){
+      const aim=f.aim+(i-(f.count-1)/2)*spacing,start=f.visualStart||{x:f.x,y:f.y-HEAD_HEIGHT};
+      const shot={kind:'scatter',serial:++effectSequence,x:f.x,y:f.y,px:f.x,py:f.y,aim,radius:f.radius,
+        speed:500,range:f.range,distance:0,age:0,life:f.range/500,dead:false,
+        renderOffsetX:start.x-f.x,renderOffsetY:start.y-f.y,pulseIndex:i,action:f};
+      s.scatter.push(shot);
+    }
+  }
+  function circleContact(shot,target,distance){
+    const c=Math.cos(shot.aim),sn=Math.sin(shot.aim),dx=target.x-shot.x,dy=target.y-shot.y;
+    const along=dx*c+dy*sn,side=-dx*sn+dy*c,radius=shot.radius+(target.r||0);
+    if(Math.abs(side)>radius)return null;
+    const reach=Math.sqrt(Math.max(0,radius*radius-side*side)),at=Math.max(0,along-reach);
+    return along+reach>=0&&at<=distance+EPS?at:null;
+  }
+  function updateScatter(s,dt){
+    for(const shot of s.scatter){
+      if(shot.dead)continue;
+      if(!s.owner.moves?.some(m=>m.id===shot.action.m.id)){shot.dead=true;shot.age=shot.life;continue;}
+      shot.age+=dt;
+      shot.px=shot.x;shot.py=shot.y;
+      let left=Math.min(shot.range-shot.distance,shot.speed*dt);
+      // Swept four-unit segments prevent fast bolts tunnelling through enemies or walls.
+      for(let n=0;n<64&&left>EPS&&!shot.dead;n++){
+        const distance=Math.min(4,left),c=Math.cos(shot.aim),sn=Math.sin(shot.aim);
+        const candidates=[];
+        for(const enemy of new Set(G.EnemyMgr.queryCircle(shot.x,shot.y,distance+shot.radius+80))){
+          if(!alive(enemy)||enemy.friendly)continue;
+          const at=circleContact(shot,enemy,distance);
+          if(at!=null&&clearPath(shot.x,shot.y,enemy.x,enemy.y))candidates.push({target:enemy,at,prop:false});
+        }
+        for(const prop of G.World.propsInCircle?.(shot.x,shot.y,distance+shot.radius+80)||[]){
+          if(prop.hp<=0||prop.destructible===false)continue;
+          const at=circleContact(shot,prop,distance);
+          if(at!=null&&clearPath(shot.x,shot.y,prop.x,prop.y,prop))candidates.push({target:prop,at,prop:true});
+        }
+        const first=candidates.sort((a,b)=>a.at-b.at)[0];
+        const travel=first?.at??distance,length=clippedLength(shot.x,shot.y,shot.aim,travel,shot.radius,first?.prop?first.target:null);
+        const blocked=length+EPS<travel;
+        shot.x+=c*(blocked?length:travel);shot.y+=sn*(blocked?length:travel);
+        shot.distance+=blocked?length:travel;left-=travel;
+        if(blocked||first){
+          if(first&&!blocked){
+            if(first.prop){
+              if(!shot.action.scatterHits.has(first.target))G.World.damageProp?.(first.target,shot.action.damage,'#bff7ff');
+            }else if(!shot.action.scatterHits.has(first.target)){
+              contact(s,shot.action,[hitFor(s,{...shot.action,aim:shot.aim},first.target)],shot.pulseIndex);
+            }
+            // Even a previously struck enemy consumes a later bolt: this attack never pierces.
+            shot.action.scatterHits.add(first.target);
+          }
+          effect(s,{kind:'impact',x:shot.x,y:shot.y,aim:shot.aim,radius:shot.radius,age:0,life:.18});
+          shot.dead=true;shot.age=shot.life;
+        }
+      }
+      if(shot.distance+EPS>=shot.range){shot.dead=true;shot.age=shot.life;}
+    }
+    s.scatter=s.scatter.filter(shot=>!shot.dead);
+  }
   function release(s,f){
     f.released=true;f.x=s.owner.x+Math.cos(f.aim)*8;f.y=s.owner.y+Math.sin(f.aim)*8;
+    if(f.mode==='jjk-ryu-maximum')s.recoveryUntil=s.clock+.7;
     // Resolve the authored release frame now: choreography still names windup
     // until this release returns, and later recoil has a different head anchor.
     const releasePose={...f,phase:'fire',frameName:f.mode==='jjk-ryu-maximum'?'maxRelease':'lightRelease',age:f.charge};
@@ -149,6 +219,7 @@
       for(const p of G.World.propsInCircle?.(blast.x,blast.y,f.radius)||[])if(p.hp>0&&Math.hypot(p.x-blast.x,p.y-blast.y)<=f.radius+(p.r||0)&&clearPath(blast.x,blast.y,p.x,p.y,p))G.World.damageProp?.(p,f.damage,'#bff7ff');
       return;
     }
+    if(f.mode==='jjk-ryu-spread'){scatter(s,f);return;}
     const hitOnce=new Set(),candidates=[],propHits=new Set();
     for(let i=0;i<f.count;i++){
       const aim=f.aim+(f.count===1?0:(i-(f.count-1)/2)*(f.m.spreadStep??.20)),c=Math.cos(aim),sn=Math.sin(aim);
@@ -188,7 +259,8 @@
     for(const [owner,s] of states){
       if(!valid(owner)||s.world!==G.World||s.runEpoch!==G.CombatPulse.epoch){clear(owner);continue;}
       s.clock+=dt;
-      for(const e of s.effects)e.age+=dt;s.effects=s.effects.filter(e=>e.age<e.life);
+      for(const e of s.effects)e.age+=dt;
+      updateScatter(s,dt);s.effects=s.effects.filter(e=>e.age<e.life&&!e.dead);
       const f=s.action;if(!f)continue;
       if(!owner.moves?.some(m=>m.id===f.m.id)){s.action=null;continue;}
       f.age+=dt;
@@ -271,6 +343,11 @@
     }
     ctx.restore();
   }
+  function scatterArt(ctx,e){
+    ctx.save();ctx.translate(e.x+e.renderOffsetX,e.y+e.renderOffsetY);ctx.rotate(e.aim);
+    ctx.globalAlpha=.9;ctx.fillStyle='#63dded';ctx.beginPath();ctx.ellipse(-8,0,20,e.radius*.75,0,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#f2ffff';ctx.beginPath();ctx.ellipse(-3,0,10,e.radius*.35,0,0,Math.PI*2);ctx.fill();ctx.restore();
+  }
   function draw(ctx){
     if(G.JujutsuVFX?.enabled)return;
     if(terminal())return;
@@ -278,8 +355,9 @@
     for(const s of states.values()){
       if(!drawable(s))continue;
       if(s.action&&!s.action.released)charge(ctx,s,s.action);
+      for(const shot of s.scatter)scatterArt(ctx,shot);
       for(const e of s.effects){
-        if(e.kind==='beam')beam(ctx,e);else if(e.kind==='muzzle')muzzle(ctx,e);else burst(ctx,e);
+        if(e.kind==='beam')beam(ctx,e);else if(e.kind==='scatter')scatterArt(ctx,e);else if(e.kind==='muzzle')muzzle(ctx,e);else burst(ctx,e);
       }
     }
     ctx.restore();
@@ -316,17 +394,31 @@
     if((owner?.mon?.dex??owner?.dex)!==DEX)return oldTick.call(this,dt,owner,now);
     if(!valid(owner)||owner.frozen||G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
     const s=state(owner),moves=(owner.moves||[]).filter(m=>supports(m.digiMode));
+    if(!moves.some(m=>m.digiMode==='jjk-ryu-maximum'))s.coreCharge=0;
     for(const m of moves){m.t=Math.max(0,(m.t||0)-dt);if(m.t<=EPS&&!s.ready.has(m.id))s.ready.set(m.id,s.clock);}
-    if(s.action)return;
-    const ready=moves.filter(m=>canCast(owner,m)).sort((a,b)=>(s.ready.get(a.id)??Infinity)-(s.ready.get(b.id)??Infinity));
-    if(ready[0])cast(owner,ready[0]);
+    if(s.action||s.clock+EPS<s.recoveryUntil)return;
+    const core=moves.find(m=>m.digiMode==='jjk-ryu');
+    const ready=moves.filter(m=>(m.digiMode!=='jjk-ryu-maximum'||(s.coreCharge>=3&&core&&(core.t||0)<=EPS))&&canCast(owner,m))
+      .sort((a,b)=>Number(b.digiMode==='jjk-ryu-maximum')-Number(a.digiMode==='jjk-ryu-maximum')||
+        (s.ready.get(a.id)??Infinity)-(s.ready.get(b.id)??Infinity));
+    if(ready[0]&&cast(owner,ready[0])&&ready[0].digiMode==='jjk-ryu-maximum'){
+      // Maximum replaces this scheduled core shot rather than adding a fifth independent timer.
+      core.t=Math.max(.05,settings(core).cd*(owner.cdMul??1));s.ready.delete(core.id);
+    }
   };
   C.updateFields=function(dt){const result=oldUpdate.call(this,dt);update(dt);return result;};
   C.clearFields=function(owner){const result=oldClear.call(this,owner);clear(owner);return result;};
   C.drawAirFields=function(ctx){oldAir.call(this,ctx);draw(ctx);};
   C.drawGroundFields=function(ctx){oldGround.call(this,ctx);ground(ctx);};
-  function statusFor(owner,m){const s=states.get(owner);return {state:s?.action?.m.id===m.id?'casting':m.t>EPS?'cooldown':s?.action?'queued':'ready',remaining:m.t||0};}
+  function statusFor(owner,m){
+    const s=states.get(owner),coreCharge=s?.coreCharge||0,recoveryRemaining=Math.max(0,(s?.recoveryUntil||0)-(s?.clock||0));
+    const maximum=m.digiMode==='jjk-ryu-maximum',charging=maximum&&coreCharge<3;
+    const coreRemaining=owner.moves?.find(move=>move.digiMode==='jjk-ryu')?.t||0,waitingForCore=maximum&&!charging&&coreRemaining>EPS;
+    return {state:s?.action?.m.id===m.id?'casting':recoveryRemaining>EPS?'recovering':m.t>EPS?'cooldown':charging?'charging':waitingForCore||s?.action?'queued':'ready',
+      remaining:m.t||0,coreCharge,chargeRequired:3,recoveryRemaining,coreRemaining,reason:charging?'core-charge':waitingForCore?'core-cadence':null};
+  }
   G.JjkRyu={dex:DEX,supports,handles:supports,canCast,cast,update,clear,pose,activeFor:pose,targetFor,statusFor,
     stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return s&&drawable(s)?s:null;},
-    stats:(owner=G.Game.player)=>{const s=states.get(owner);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,effects:s.effects.length}:null;}};
+    stats:(owner=G.Game.player)=>{const s=states.get(owner);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,effects:s.effects.length,
+      coreCharge:s.coreCharge,chargeRequired:3,recoveryRemaining:Math.max(0,s.recoveryUntil-s.clock)}:null;}};
 })();

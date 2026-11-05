@@ -22,21 +22,21 @@
   const kits=[
     [30013,[
       ['jjk-yuta','yuta-blade','咒力刀斬','fighting',1,1,30,125,90,'向前揮刀，斬擊近身扇形內敵人。'],
-      ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,6,100,300,105,'里香移至目標旁重擊，傷及周圍敵人。'],
-      ['jjk-yuta-speech','yuta-speech','咒言・別動','psychic',6,8,35,160,160,'咒言震懾周圍敵人；首領僅受短暫控制。'],
-      ['jjk-yuta-manifest','yuta-manifest','里香完全顯現','psychic',9,18,0,300,160,'完全顯現6秒，新施放傷害+50／60／70／80／100%，里香協擊追加一次打擊。結束後恢復12秒；三／五階縮至10.5／9秒，冷卻卡縮短恢復段。']
+      ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,6,100,300,105,'里香優先追擊刀斬範圍外的敵人，在目標旁範圍重擊；刀術接力標記優先。'],
+      ['jjk-yuta-speech','yuta-speech','咒言・別動','psychic',6,8,35,160,160,'90內有敵人，或範圍內至少三名敵人時，咒言震懾周圍；首領僅短暫受控。'],
+      ['jjk-yuta-manifest','yuta-manifest','里香完全顯現','psychic',9,18,0,300,160,'遇敵群或強敵才顯現6秒，立即刷新里香一次；新施放傷害+50／60／70／80／100%，里香追加一次重擊。結束後恢復12秒，三／五階為10.5／9秒；冷卻卡有效。']
     ]],
     [30014,[
-      ['jjk-ryu','jjk-ryu','花崗岩砲','psychic',1,1.8,42,360,14,'蓄力0.22秒，從頭頂射出直線貫穿咒力砲。'],
-      ['jjk-ryu-spread','jjk-ryu-spread','散射咒力砲','psychic',3,5,30,330,12,'蓄力0.35秒，向前扇形發射三道咒力砲；數量強化增加砲道。'],
-      ['jjk-ryu-impact','jjk-ryu-impact','咒力爆破','psychic',6,7,100,300,90,'蓄力0.45秒，在目標處引爆，傷及爆心周圍敵人。'],
-      ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,11,200,450,26,'蓄力0.75秒，射出寬幅高威力貫穿砲。']
+      ['jjk-ryu','jjk-ryu','花崗岩砲','psychic',1,1.8,42,360,14,'蓄力0.22秒，射出長距窄幅貫穿砲；學會全力砲後，每次真正命中蓄一格能量。'],
+      ['jjk-ryu-spread','jjk-ryu-spread','散射咒力砲','psychic',3,5,30,200,12,'蓄力0.35秒，向短距廣角發射三顆砲彈；有飛行時間，碰到首個敵人或障礙即停止。數量強化增加砲彈，同次不重複直擊同一敵人。'],
+      ['jjk-ryu-impact','jjk-ryu-impact','咒力爆破','psychic',6,7,100,300,90,'優先鎖定最密集的可達敵群，預告0.45秒後在固定爆點範圍引爆；敵人可離開爆點。'],
+      ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,11,200,450,26,'普通砲命中三次蓄滿且冷卻完成後，接續全力砲。蓄力0.75秒後長距寬幅貫穿，消耗蓄能並恢復0.7秒；恢復時仍可走位。']
     ]],
     [30015,[
-      ['jjk-uro','uro-sky','空面打擊','psychic',1,1.25,20,210,90,'扭曲前方空間，擊中扇形內敵人。'],
+      ['jjk-uro','uro-sky','空面打擊','psychic',1,1.25,20,125,90,'近身掌擊扭曲空面，推開前方125內普通敵人；強敵不被搬動。'],
       ['jjk-uro-thin-ice','uro-thin-ice','宇守羅彈','psychic',3,4.8,72,250,110,'擊碎前方空面，造成大範圍扇形傷害。'],
-      ['jjk-uro-screen','uro-screen','天空幕','psychic',6,9,0,90,82,'展開空面2.3秒，反射5／6／7／8／9顆來襲飛彈；不阻擋近戰。'],
-      ['jjk-uro-collapse','uro-collapse','空面震落','psychic',9,8,112,280,110,'扭曲目標周圍空間，造成範圍傷害並短暫減速；首領減速較弱。']
+      ['jjk-uro-screen','uro-screen','天空幕','psychic',6,9,0,90,82,'偵測即將來襲的敵彈才展開2.3秒空面，不打斷正在施放的攻擊。反射5／6／7／8／9顆，不阻擋近戰。'],
+      ['jjk-uro-collapse','uro-collapse','空面震落','psychic',9,8,112,280,110,'鎖定最密集的可達敵群，同密度優先遠處；0.55秒後在固定爆點碎裂並減速，首領減速較弱。']
     ]]
   ];
   // Functional ranks spend the existing upgrade choice; they are not free talents.
@@ -46,12 +46,12 @@
     'jjk-yuta-speech':{base:{speechDuration:1.2},third:{speechDuration:1.5},fifth:{radius:1.15,range:184},text3:'普通敵人移動限制1.2→1.5秒，首領抗性不變',text5:'咒言半徑160→184'},
     'jjk-yuta-manifest':{base:{recovery:12},third:{recovery:10.5},fifth:{recovery:9},text3:'顯現結束後基礎恢復12→10.5秒',text5:'顯現結束後基礎恢復10.5→9秒'},
     'jjk-ryu':{third:{targetPolicy:'elite'},fifth:{range:414},text3:'優先可達精英，無精英才選最近敵人',text5:'穿線射程360→414'},
-    'jjk-ryu-spread':{base:{baseCount:3,spreadStep:.20},third:{spreadStep:.24},fifth:{baseCount:4},text3:'相鄰砲道角度0.20→0.24弧度',text5:'基礎砲道3→4，數量乘算後最多9道'},
-    'jjk-ryu-impact':{third:{radius:1.2},fifth:{impactTargetPolicy:'cluster'},text3:'爆心半徑90→108',text5:'優先可達敵群最密集的位置，爆點仍於起手鎖定'},
+    'jjk-ryu-spread':{base:{baseCount:3,spreadStep:.65},third:{spreadStep:.8},fifth:{baseCount:4},text3:'相鄰砲彈角度0.65→0.80弧度',text5:'基礎砲彈3→4，數量乘算後最多9顆'},
+    'jjk-ryu-impact':{base:{impactTargetPolicy:'cluster'},third:{radius:1.2},fifth:{range:330},text3:'爆心半徑90→108',text5:'群聚索敵射程300→330，爆點仍於起手鎖定'},
     'jjk-ryu-maximum':{third:{firstTargetBonus:.15},fifth:{range:495},text3:'砲線上最近的首個有效目標傷害+15%',text5:'全力砲射程450→495，砲幅不變'},
-    'jjk-uro':{third:{arc:1.15/.95},fifth:{skyKnock:18},text3:'空面打擊角0.95→1.15弧度',text5:'普通敵人推退8→18，特殊敵人不搬動'},
+    'jjk-uro':{base:{skyKnock:30},third:{arc:1.3/1.1},fifth:{skyKnock:44},text3:'近身掌擊角1.10→1.30弧度',text5:'普通敵人推退30→44，特殊敵人不搬動'},
     'jjk-uro-thin-ice':{third:{arc:2.1/1.9},fifth:{thinSlow:.25,thinSlowDuration:.45},text3:'碎面扇角1.9→2.1弧度',text5:'普通敵人減速25%持續0.45秒，首領僅弱減速'},
-    'jjk-uro-screen':{third:{threatOnly:true,threatHorizon:.55},fifth:{counterBonus:.15,counterDuration:3},text3:'預測0.55秒內入界的敵彈才部署天空幕',text5:'真正反射後3秒內，下次宇守羅彈傷害+15%；每幕一次'},
+    'jjk-uro-screen':{base:{threatOnly:true,threatHorizon:.55},third:{threatHorizon:.8,reflectRefresh:true},fifth:{counterBonus:.15,counterDuration:3},text3:'預測0.80秒敵彈；首次真正反射刷新宇守羅彈，三秒內優先反擊',text5:'真正反射後3秒內，下次宇守羅彈傷害+15%；每幕一次'},
     'jjk-uro-collapse':{third:{radius:1.15},fifth:{collapseSlow:.60,slowDuration:.8},text3:'震落半徑110→126.5',text5:'普通敵人減速60%持續0.8秒，首領效果較弱'}
   };
   const owners=new Map(),catalog=G.NarutoSkillCatalog;
@@ -68,7 +68,7 @@
         passive:true,autoCast:true,learnLevel,cd,dmg,range,radius,width:radius*2,speed:520,life:1,count:1,arc:1.6,pierce:0,
         duration:mode==='yuta-manifest'?6:mode==='uro-screen'?2.3:0,maxLvl:5,ups,...growth.base,
         desc:desc+' 自動施放，不占主動槽。',source_url:source};
-      if(mode==='uro-sky')def.arc=.95;
+      if(mode==='uro-sky')def.arc=1.1;
       if(mode==='uro-thin-ice'){def.arc=1.9;def.source_url='https://kotodaman.jp/info/detail/081584KEuwsxffR4nq.html';}
       G.Moves.BY_ID[id]=def;G.Moves.ALL.push(def);catalog.definitions.set(id,def);owners.set(id,dex);ids.push(id);
     }

@@ -3,7 +3,7 @@
   const routes={30013:['blade','rika'],30014:['precision','spread'],30015:['control','counter']};
   const focus={blade:['jjk-yuta','jjk-yuta-speech'],rika:['jjk-yuta-rika','jjk-yuta-manifest'],
     precision:['jjk-ryu','jjk-ryu-maximum'],spread:['jjk-ryu-spread','jjk-ryu-impact'],
-    control:['jjk-uro-thin-ice','jjk-uro-collapse'],counter:['jjk-uro-screen','jjk-uro']};
+    control:['jjk-uro-thin-ice','jjk-uro-collapse'],counter:['jjk-uro-screen','jjk-uro-thin-ice']};
   const names={blade:'刀術接力',rika:'里香窗口',precision:'精準直線',spread:'散射清線',control:'碎面控場',counter:'有限反擊',balanced:'均衡配裝'};
   function apply(player,route,budget=19){
     if(!routes[player.dex]||![...routes[player.dex],'balanced'].includes(route))throw Error('無效的角色配裝');
@@ -20,7 +20,10 @@
       upgrades.sort((a,b)=>route==='balanced'?(player.moves.find(m=>m.id===a.key.slice(3))?.lvl||0)-(player.moves.find(m=>m.id===b.key.slice(3))?.lvl||0):wanted.indexOf(a.key.slice(3))-wanted.indexOf(b.key.slice(3)));
       const statKeys=route==='rika'||route==='counter'?['cd','def','atk']:route==='balanced'?['atk','def','cd']:['atk','cd','def'];
       const preferred=statKeys[i%statKeys.length];
-      const card=newMove||upgrades[0]||cards.find(c=>c.key==='stat:'+preferred)||cards.find(c=>c.key==='stat:atk')||cards[0];
+      // Balanced invests equally in functional ranks and general attributes.
+      // Learning a due skill is still a paid pick, outside this allocation ratio.
+      const train=route!=='balanced'||picks.filter(p=>p.key.startsWith('up:')).length<=picks.filter(p=>p.key.startsWith('stat:')).length;
+      const card=newMove||(train?upgrades[0]:null)||cards.find(c=>c.key==='stat:'+preferred)||cards.find(c=>c.key==='stat:atk')||upgrades[0]||cards[0];
       const before=snapshot();
       if(!card||card.apply(player)===false)throw Error('無合法配裝選卡：Lv.'+player.level);
       card.onShown?.(player);picks.push({level:player.level,key:card.key,description:card.desc,before,after:snapshot()});

@@ -80,6 +80,20 @@ def phase_checks(frame,out,slug):
            'uro':[('jjk-uro',.18),('jjk-uro-thin-ice',.34),('jjk-uro-collapse',.55)]}
     results=[]
     for skill,release in cases[slug]:
+        if skill=='jjk-ryu-spread':
+            data=frame.evaluate('''() => {
+              const A=JAcceptance,p=A.p();A.reset();A.fixture('jjk-ryu-spread');const e=A.spawn(100,0);p.target=e;A.cast('jjk-ryu-spread');
+              A.advance(.34);const before={loss:e.maxHp-e.hp,pose:A.pose()};
+              A.advance(.02);const launch={loss:e.maxHp-e.hp,pose:A.pose(),bolts:G.JjkRyu.stateFor(p).scatter.length};
+              A.assert(before.loss===0&&launch.loss===0&&launch.bolts===3,'scatter hit instantly instead of launching three bolts');
+              A.assert(JSON.stringify(before.pose.calls)!==JSON.stringify(launch.pose.calls),'scatter windup and release reuse exact frame');
+              A.advance(.3);const hit={loss:e.maxHp-e.hp,pose:A.pose()};A.assert(hit.loss>0,'travelling scatter never contacted target');
+              A.advance(.3);A.assert(e.maxHp-e.hp===hit.loss,'scatter repeated direct damage');
+              return {skill:'jjk-ryu-spread',release:.35,before,launch,hit};
+            }''')
+            for state in ['before','launch','hit']:data[state]['pose']=base.save_pose(f'{slug}-{skill}-{state}',data[state]['pose'])
+            results.append(data)
+            continue
         data=frame.evaluate("""({skill,release})=>{const A=JAcceptance,p=A.p();A.reset();const m=A.fixture(skill),e=A.spawn(80,0);p.target=e;A.cast(skill);
           A.advance(release-.01);const before={loss:e.maxHp-e.hp,pose:A.pose()};A.assert(before.loss===0,'damage before hit frame '+skill);
           A.advance(.02);const hit={loss:e.maxHp-e.hp,pose:A.pose()};A.assert(hit.loss>0,'missing release-frame damage '+skill);

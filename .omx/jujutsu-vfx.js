@@ -169,6 +169,19 @@
     for(let i=0;i<2;i++){const cycle=(t*1.8+i*.5)%1,r=5+(1-cycle)*(f.mode==='jjk-ryu-maximum'?22:14);ctx.globalAlpha=.2+.6*cycle;ctx.beginPath();ctx.ellipse(0,0,r,r*.6,f.aim,0,TAU);ctx.stroke();}
     ctx.restore();
   }
+  function drawScatter(ctx,e,owner){
+    if(e.dead)return;
+    const x=e.x+(e.renderOffsetX||0),y=e.y+(e.renderOffsetY??-48),r=e.radius;
+    ctx.save();ctx.translate(x,y);ctx.rotate(e.aim);
+    // Short moving pellets have a visible tail, not a full-length artillery ray.
+    ctx.globalAlpha=.7;ctx.strokeStyle='#71dce9';ctx.lineWidth=Math.max(2,r*.4);
+    ctx.beginPath();ctx.moveTo(-r*2.3,0);ctx.lineTo(-r*.5,0);ctx.stroke();
+    ctx.globalAlpha=1;ctx.fillStyle='#71dce9';ctx.beginPath();
+    ctx.moveTo(r,0);ctx.lineTo(-r*.2,-r*.65);ctx.lineTo(-r,-r*.35);
+    ctx.lineTo(-r,r*.35);ctx.lineTo(-r*.2,r*.65);ctx.closePath();ctx.fill();
+    ctx.fillStyle='#f4ffff';ctx.beginPath();ctx.ellipse(r*.05,0,r*.48,r*.24,0,0,TAU);ctx.fill();ctx.restore();
+    frame.draws.push({kind:'scatter',owner:id(owner),castId:e.action?.castId,x,y,distance:e.distance,radius:r});
+  }
   function shards(ctx,x,y,r,age,life,seed){
     const fade=clamp(1-age/life),count=Math.min(8,limits.shards-frame.shards);ctx.save();ctx.strokeStyle='#c5f5f5';ctx.lineWidth=2;ctx.globalAlpha=fade;
     for(let i=0;i<count;i++){const a=i*TAU/8+hash(i,seed)*.25,d=r*(.25+.65*age/life),len=4+7*fade;ctx.beginPath();ctx.moveTo(x+Math.cos(a)*d,y+Math.sin(a)*d*.65);ctx.lineTo(x+Math.cos(a)*(d+len),y+Math.sin(a)*(d+len)*.65);ctx.stroke();frame.shards++;}
@@ -177,7 +190,16 @@
   function drawRyu(ctx,owner,s,ground){
     if(!s)return;
     if(!ground&&s.action&&!s.action.released)drawCharge(ctx,owner,s.action);
+    if(!ground){
+      for(const pellet of s.scatter||[])drawScatter(ctx,pellet,owner);
+      if(owner.moves?.some(m=>m.id==='jjk-ryu-maximum')){
+        ctx.save();ctx.translate(owner.x,owner.y-73);ctx.lineWidth=1;
+        for(let i=0;i<3;i++){const x=(i-1)*7;ctx.beginPath();ctx.moveTo(x,-3);ctx.lineTo(x+2,0);ctx.lineTo(x,3);ctx.lineTo(x-2,0);ctx.closePath();
+          ctx.fillStyle=i<(s.coreCharge||0)?'#c5faff':'#19333e';ctx.strokeStyle='#75a7b4';ctx.fill();ctx.stroke();}ctx.restore();
+      }
+    }
     for(const e of s.effects||[]){
+      if(e.kind==='scatter')continue;
       if(e.kind==='beam'){if(!ground)drawBeam(ctx,e,owner);continue;}
       if(e.kind==='muzzle')continue;
       const t=clamp(e.age/e.life),r=e.kind==='explosion'?e.radius:Math.max(12,e.radius);
