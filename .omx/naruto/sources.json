@@ -1,0 +1,234 @@
+{
+  "techniqueReferences": [
+    {
+      "id": "naruto-sharingan",
+      "owner": "Sasuke Uchiha",
+      "url": "https://naruto-official.com/en/anime/naruto1/list/01_246",
+      "amaterasuSource": "https://naruto-official.com/en/news/01_1316",
+      "persistentFlameSource": "https://naruto-official.com/en/anime/naruto2/list/01_586",
+      "lateGamePullAdaptation": "https://naruto-official.com/en/news/01_1674",
+      "susanooSource": "https://naruto-official.com/en/news/01_1340",
+      "publisher": "NARUTO OFFICIAL SITE / official game announcements",
+      "adaptation": "User-requested cumulative five-level passive: one/two/three tomoe, Amaterasu and Susanoo. Dodge chance, pickup radius, counter shuriken, extra projectiles, pull vortex, run-permanent ground fire and max-HP damage are survival-game mechanics. This is not a claim that young three-tomoe Sasuke has Mangekyo powers or Kamui."
+    },
+    {
+      "id": "naruto-fuma-shuriken",
+      "owner": "Sasuke Uchiha",
+      "url": "https://tamashiiweb.com/item/14256/?wovn=en",
+      "publisher": "TAMASHII NATIONS / Bandai Spirits",
+      "referenceImage": "https://tamashiiweb.com/storage/images/products/imported/item_0000014256_I69HJzJR_05.jpg",
+      "additionalSource": "https://bsp-prize.jp/item/2643350/",
+      "canonBasis": "Official young-Sasuke product description states that he used Fuma Shuriken against Zabuza and depicts a large four-curved-blade weapon with a central grip.",
+      "adaptation": "Level-nine exclusive projectile, delayed outward throw with a curved automatic return following Sasuke, per-leg piercing limits, quantity upgrades and damage are survival-game balance. Automatic return is a user-requested game adaptation, not a canonical claim. No explosion; uses the original generic four-frame Shoot animation, not a newly sourced dedicated throw."
+    },
+    {
+      "id": "naruto-nine-tails-cloak",
+      "owner": "Naruto Uzumaki",
+      "url": "https://naruto-official.com/en/news/01_1296",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "referenceImage": "https://cmsapi-frontend.naruto-official.com/site/api/naruto/Image/get?path=%2Fnaruto%2Fjp%2Fnews%2F2022%2F10%2F17%2FBYOTc1iASab9eSiA%2F071.jpg",
+      "canonBasis": "Final Valley red chakra cloak increases speed, counterattacks with chakra and shields Naruto from Sasuke's fire jutsu.",
+      "adaptation": "Fixed one-tail procedural pixel cloak, temporary attack/speed/defense multipliers and periodic circular counterattack. Numeric balance, level 9 unlock, cooldown and duration are game-specific; not golden Nine-Tails Chakra Mode. Original sprite sheets unchanged."
+    },
+    {
+      "id": "naruto-kusanagi",
+      "owner": "Sasuke Uchiha",
+      "url": "https://naruto-official.com/en/news/01_1710",
+      "visual_reference": "https://tamashiiweb.com/item/13854/?wovn=en",
+      "adaptation": "Official source documents Sasuke sword techniques and lightning-coated blade. Autonomous orbit while the sword skill is selected, multiple flying swords and numerical progression are survival-game adaptations; no claim of canonical autonomous orbit."
+    },
+    {
+      "id": "naruto-lee",
+      "owner": "Rock Lee",
+      "url": "https://naruto-official.com/en/news/01_1489",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "canonBasis": "Official taijutsu demonstration includes Leaf Whirlwind.",
+      "adaptation": "Existing close-range arc attack numerical balance retained; original redrawn sprites, no downloaded game frames."
+    },
+    {
+      "id": "naruto-lotus",
+      "owner": "Rock Lee",
+      "url": "https://naruto-official.com/en/news/01_1652",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "canonBasis": "Young Lee removes training weights and uses Front Lotus; later fourth and fifth gates support Reverse Lotus.",
+      "adaptation": "Level-three real contact approach,0.24s windup,0.36s lift to height40,0.42s suspend/curl,0.22s smooth descent,0.20s slam,0.22s recovery;1.66s after contact (about1.68s with fixed steps). Base110 split20% lift/80% slam; secondaries35% base once. Full landing boundary circle matches base radius60 before inner burst. Cooldown3s from start, basic melee during cooldown but never during chain. Remains vulnerable throughout. After launch, target death no longer truncates animation or landing AOE; prelaunch death and owner/world/wall/distance cancellation still apply. Bosses stay grounded. Damage,extended timings,landing splash and postlaunch continuation are survival-game adaptations."
+    },
+    {
+      "id": "naruto-gates",
+      "owner": "Rock Lee",
+      "url": "https://naruto-official.com/en/news/01_1652",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "adaptation": "Level-six learned passive, first five gates across skill levels1-5. Attack +30/35/40/45/50%; healing received and movement speed each +(10*skillLevel+characterLevel)%. Innate regeneration adds maxHP*skillLevel*0.01 per second (base1/2/3/4/5% maxHP/s), summed with old regeneration and multiplied once by the existing healing multiplier: (oldRegen+maxHP*N*0.01)*(1+(10*N+characterLevel)/100). Stage5 at character level30 contributes9% maxHP/s before other regeneration. Maximum HP, skill stage and character level update dynamically, capped at maxHP; uses the existing game update with no second timer, no paused advancement, no innate healing when dead, unlearned or owned by another character. Misses and afterimages do not trigger lifesteal; innate passive regeneration continues independently of landed attacks. Persistent stats, innate healing and redface from the first gate are survival-game adaptations; no active slot, timer or fatigue. Innate max-HP bonus is characterLevel*skillStage, maintained as a separate replacing component, not multiplied or stacked across updates/clear. Positive bonus deltas fill current HP by exactly the delta without healing multipliers. Fixed HP rewards and percentage growth combine once; example old max260,level30,stage5 gives410,then1% growth gives414.1,and level31 gives419.1. Learned capacity persists through death for revival; a new owner/run establishes its own base. Maximum-HP bonus is another user-requested game adaptation."
+    },
+    {
+      "id": "naruto-reverse-lotus",
+      "owner": "Rock Lee",
+      "url": "https://naruto-official.com/en/anime/naruto1/list/01_273",
+      "additionalSource": "https://naruto-official.com/en/news/01_1652",
+      "publisher": "NARUTO OFFICIAL SITE",
+      "canonBasis": "Official episode summary distinguishes Primary Lotus and Hidden Lotus while showing the danger of the Eight Inner Gates.",
+      "adaptation": "Level-nine standalone contact combo:0.28s windup,0.48s lift to base height60,aerial combo duration D=B/(1+0.025*(C-5))s, B=min(1.65,3.3-A-1.6), A=actual approach elapsed at windup entry,0.32s smooth descent,0.24s slam,0.28s recovery (1.6+D seconds after contact; total including actual approach A is A+1.6+D<=3.3s). Snapshot skill level and existing run quantity bonus Q through G.Quantity at cast; mid-cast upgrades/pickups do not change this chain. Aerial count C=5+2*(skillLevel-1)+Q; total primary hits=C+2. Zero-quantity skill levels1-5 have5/7/9/11/13 aerial hits; existing quantity-card cap20 permits level5 Q20 C33,total35. Aerial hit n uses0.12*base*1.10^n (first1.10,second1.21), reset each cast. Lift0.10,slam0.30 and secondary landing0.35 coefficients are unchanged and not exponential. Total primary factor=0.4+0.12*sum(n=1..C,1.10^n), before attack/type/crit. Existing flat percentage-max-HP proc is unchanged once per actual hit and does not receive exponential scaling; crit and lifesteal also resolve once per actual hit. Lift/combo/descent only are invulnerable including weather/Life Orb direct damage; approach/windup/slam/recovery and Front Lotus remain vulnerable, with no leftover protection. Cooldown5s; landing base radii100/120/140/160/180, each secondary once, primary excluded from extra AOE. Full boundary ring matches actual radius before inner expansion. Launched Front Lotus still completes motion and landing AOE after target death without extra dead-target hits; Reverse Lotus uses a finisher defeat hold for native lethal damage. Owner death,world change,walls,contact distance still cancel. Quantity-added hits,skill-added hits,exponential aerial damage,invulnerability,longer airtime,growing AOE,post-death landing and cooldown melee fallback are user-requested survival-game adaptations,not canonical claims. Includes learned Gates attack buff. Current skill base damage210 at level1 and315 at level5; primary exponential formula and seven-to-thirty-five actual hit contracts remain unchanged. Contact poses distinctly show kick,curl,aerial combo and landing. Cooldown5s counts from start; basic melee only during cooldown outside active chains. Higher base damage and extended contact sequence are user-requested game adaptations. Each scheduled aerial strike adds8 world pixels to base lift60, peak H=60+8*C; C5/15/33 yields H100/180/324. Hit intervals form a geometric sequence with ratio0.90 normalized to D, strictly accelerating; If A<=0.05s,D for C5/15/33 is1.65/1.32/about0.970588s, contact totals3.25/2.92/about2.570588s; longer approaches compress B further. Mid-frame updates catch up all scheduled strikes. A native lethal hit on the local bound Reverse Lotus primary keeps it alive at1HP with pending defeat; all later planned kicks remain real normal damage/proc events. External forced dead flags still allow motion and landing but no fake dead-target hits. Descent0.32s starts at actual peak. Camera tracks excess upward lift to keep the head below HUD and resets on landing/clear or invalid owner/world. Ground coordinates and native jump height are untouched; enemy damage text and hit sparks follow Lotus visual height. Per-kick rising,accelerating intervals and reduced high-count waiting are user-requested game adaptations; damage,air-only invulnerability and landing AOE contracts remain unchanged. At windup entry snapshot usable base B from actual approach time, then scale the already normalized geometric deadlines by B/1.65 once. Exact phase-boundary clipping guarantees the whole cast including chase completes within3.3s without early cancellation or dropping any scheduled hits. Slow maximum-range C5 casts also compress combo time; C33 remains faster and denser. Counts,damage,height,invulnerability and AOE remain unchanged. This entire-cast deadline is a user-requested game rule. Native lethal damage to a bound local Reverse Lotus target postpones actual death/XP/drops until final slam completes primary and AOE damage; pending-defeat AI is anchored/frozen. Each strike continues normal damage,crit,maxHP procs,lifesteal and real numbers without duplicate credit. Only one actual death and reward release occurs; nonlethal targets survive. A local combo HUD sums displayed integer damage and actual hit count, retained about1s after natural completion, frozen on pause, hidden on clear/new world. Same-world cancellation releases one pending defeat; old-world/new-owner pending state is discarded without new-world rewards. This hold excludes Front Lotus and remote owners. Finisher-hold and cumulative display are game adaptations; the3.3s cap,rising/acceleration,quantity/exponential damage,invulnerability and AOE remain unchanged."
+    },
+    {
+      "id": "gaara-four-skill-edition",
+      "owner": "Gaara (young, original redrawn edition)",
+      "url": "https://naruto-official.com/en/news/01_1695",
+      "automaticDefenseSource": "https://naruto-official.com/en/news/01_1555",
+      "spriteStudy": "https://spritedatabase.net/game/55",
+      "publisher": "NARUTO OFFICIAL SITE; Sprite Database studied for broad action grammar only",
+      "adaptation": "Original generated common and skill atlases, not commercial sprite extraction. Four-skill survivor adaptation: sand burst, coffin/burial, learned passive shield, wide sand tsunami/burial. Damage, cooldowns, tiers, automatic follow-ups and shield refresh are game adaptations. See art-review/gaara-skill-design.md and redrawn/provenance.json."
+    }
+  ],
+  "animationReferences": [
+    {
+      "character": "naruto",
+      "technique": "Multi Shadow Clone Jutsu",
+      "reference": "https://www.youtube.com/watch?v=OM-OzWJ2HTc",
+      "publisher": "VIZ official channel",
+      "sourceSheet": "team7.png",
+      "rects": [
+        [
+          95,
+          237,
+          14,
+          32
+        ],
+        [
+          112,
+          239,
+          14,
+          30
+        ],
+        [
+          129,
+          240,
+          14,
+          29
+        ]
+      ],
+      "note": "Hands-together seal row, final-pose hold then smoke release. Frontal fallback; original pixel resolution cannot resolve individual crossed fingers. Previous y364 Charge row was arms-raised turning."
+    },
+    {
+      "id": "naruto-one-tail-lab",
+      "file": "art-review/candidates/naruto-one-tail-source.png",
+      "url": "https://spritecollection.weebly.com/uploads/7/8/7/7/7877225/kyubi_naruto_sheet.png",
+      "credit": "Ripped by Neimad; original credit retained in full source sheet",
+      "sha256": "2b9a12ce74eabaf0fcca2f12d55f62f1eb7cc3d597b00296dfefa106b41f8e2a",
+      "scope": "Dedicated one-tail animation set in isolated playtest; user supplied matching sheet. Side-facing source, left mirrored, vertical movement uses side views. No new balance or skill mechanics.",
+      "runtimeActiveInLab": false,
+      "supersededBy": "art-review/redrawn/provenance.json"
+    },
+    {
+      "id": "original-redrawn-heroes-lab",
+      "provenance": "art-review/redrawn/provenance.json",
+      "runtimeActiveInLab": true,
+      "method": "Built-in image_gen original generation; own generated atlases only used as image references",
+      "scope": "Nine original atlases for Naruto, Sasuke, Lee, skills, clones, one-tail and dedicated opened-gates common/skill forms. NC3 is visual/action reference only; no ripped pixels in current renderer."
+    },
+    {
+      "id": "lee-gates-nc3-reference",
+      "url": "https://spritedatabase.net/files/ds/55/Sprite/RockLee.png",
+      "page": "https://spritedatabase.net/file/1295",
+      "credit": "Original sprites credited to Neimad; used for research only, not in current renderer",
+      "scope": "URA RENGE includes dedicated redface, white eyes, raised hair and persistent transformed combo poses. Clothes and bandages preserve their palette. Current form is an original edit of our own generated Lee atlases.",
+      "runtimeActiveInLab": false,
+      "replacementProvenance": "art-review/redrawn/provenance.json"
+    },
+    {
+      "id": "pain-original-production-v1",
+      "scope": "Six distinct paths, 96 original body poses and 8 summon frames. Right side and explicit horizontal mirror; vertical movement reuses side. Inner-test Tendo powers share two authored special poses.",
+      "runtimeActiveInLab": true,
+      "replacementProvenance": "art-review/pain-production-provenance.json",
+      "manifest": "art-review/pain-frames.json",
+      "researchEntry": "https://spritedatabase.net/game/55",
+      "sourceType": "original built-in image_gen artwork; not extracted commercial sprites"
+    }
+  ],
+  "records": [
+    {
+      "file": "team7.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/NarutoPON2_Team7OW.png",
+      "page": "https://spritedatabase.net/file/6745",
+      "sha256": "73f3c44b030a25578b8b4f391e22b5d4599494942a2a80f892d7e5c748cd356f",
+      "dimensions": [
+        636,
+        466
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "Please give credit"
+    },
+    {
+      "file": "team8.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/NPON2_Team8OW.png",
+      "page": "https://spritedatabase.net/file/8848",
+      "sha256": "ffe94e0e124b6db6c3858661b96b9ce5cedea872a3afc3435607ed1366bf8da1",
+      "dimensions": [
+        390,
+        680
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "Please give credit"
+    },
+    {
+      "file": "team-guy.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/TeamGuy.png",
+      "page": "https://spritedatabase.net/file/9046",
+      "sha256": "c5e4c969a0edb08d20966d626b7d9b5843ead043147667729976584de1f3ea22",
+      "dimensions": [
+        422,
+        544
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "Please give credit"
+    },
+    {
+      "file": "sand-siblings.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/SandSiblingsOW.png",
+      "page": "https://spritedatabase.net/file/9076",
+      "sha256": "65032054354a8063d55d281b3612a46c1b536f379bc49dfc7debcb9fd1e99d70",
+      "dimensions": [
+        628,
+        310
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "Please give credit"
+    },
+    {
+      "file": "itachi.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/Itachi.png",
+      "page": "https://spritedatabase.net/game/59",
+      "sha256": "2fd9c7295510fd4b3664a813c29a3f410c7bb0b29689e1e1dbffd8de720a1979",
+      "dimensions": [
+        606,
+        430
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "No credit needed (printed on original sheet)"
+    },
+    {
+      "file": "sasuke.png",
+      "url": "https://spritedatabase.net/files/ds/59/Sprite/Sasuke.png",
+      "page": "https://spritedatabase.net/game/59",
+      "sha256": "af2af294f54421b6f1dc32c803e1a71108ecaae35d139ef373a89da533a5be36",
+      "dimensions": [
+        487,
+        445
+      ],
+      "game": "Naruto: Path of the Ninja 2 (Nintendo DS)",
+      "copyright": "Original game graphics remain property of their creators and copyright holders; mirror availability is not a separate license grant.",
+      "ripper": "Hwdphg",
+      "sheet_credit": "No credit needed (printed on original sheet)"
+    }
+  ],
+  "direction_limitation": "Six characters use original 4-direction overworld frames. Sasuke and Itachi use original side-facing battle idle poses; mirrored right and reused for vertical movement."
+}

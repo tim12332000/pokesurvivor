@@ -1,0 +1,20 @@
+{
+  "source_kind": "official_ds",
+  "source_variant": "digimon_world_sprite_manager",
+  "direction_source": "reviewed_walk_and_mirror_spec",
+  "source_name": "Agumon",
+  "manager_spec": "009.extract.json",
+  "manager_sheet_id": "48418",
+  "cell_width": 66,
+  "cell_height": 66,
+  "frame_count": 12,
+  "frames_per_direction": 3,
+  "directions": [
+    "down_left",
+    "down_right",
+    "up_left",
+    "up_right"
+  ],
+  "runtime_scale": 0.5,
+  "field_path": "res://assets/characters/agumon/field.png"
+}

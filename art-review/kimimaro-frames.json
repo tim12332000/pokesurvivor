@@ -1,0 +1,1304 @@
+{
+  "version": 1,
+  "scope": "playable Kimimaro original art; up/down common poses, side attacks with explicit left mirror",
+  "bodyHeight": 92,
+  "sheets": {
+    "normal": {
+      "source": "redrawn/kimimaro-normal-throw-v2.png",
+      "width": 560,
+      "height": 660,
+      "bodyHeight": 92,
+      "frames": {
+        "idle": {
+          "rect": [
+            2,
+            2,
+            61,
+            93
+          ],
+          "anchor": [
+            30,
+            93
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "run1": {
+          "rect": [
+            65,
+            2,
+            69,
+            85
+          ],
+          "anchor": [
+            35,
+            85
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "run2": {
+          "rect": [
+            136,
+            2,
+            68,
+            85
+          ],
+          "anchor": [
+            33,
+            85
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "run3": {
+          "rect": [
+            206,
+            2,
+            69,
+            85
+          ],
+          "anchor": [
+            33,
+            85
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "willow1": {
+          "rect": [
+            277,
+            2,
+            78,
+            81
+          ],
+          "anchor": [
+            36,
+            80
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "willow2": {
+          "rect": [
+            357,
+            2,
+            91,
+            84
+          ],
+          "anchor": [
+            40,
+            83
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "camellia1": {
+          "rect": [
+            450,
+            2,
+            67,
+            83
+          ],
+          "anchor": [
+            33,
+            82
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "camellia2": {
+          "rect": [
+            2,
+            97,
+            100,
+            82
+          ],
+          "anchor": [
+            39,
+            81
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "bullets": {
+          "rect": [
+            104,
+            97,
+            79,
+            78
+          ],
+          "anchor": [
+            36,
+            77
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "larch": {
+          "rect": [
+            185,
+            97,
+            86,
+            75
+          ],
+          "anchor": [
+            46,
+            75
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "vine1": {
+          "rect": [
+            273,
+            97,
+            80,
+            80
+          ],
+          "anchor": [
+            38,
+            79
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "vine2": {
+          "rect": [
+            355,
+            97,
+            94,
+            75
+          ],
+          "anchor": [
+            37,
+            74
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "flower1": {
+          "rect": [
+            451,
+            97,
+            75,
+            77
+          ],
+          "anchor": [
+            38,
+            76
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "flower2": {
+          "rect": [
+            2,
+            181,
+            110,
+            78
+          ],
+          "anchor": [
+            40,
+            78
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "bracken": {
+          "rect": [
+            114,
+            181,
+            75,
+            71
+          ],
+          "anchor": [
+            38,
+            70
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "lily": {
+          "rect": [
+            191,
+            181,
+            82,
+            80
+          ],
+          "anchor": [
+            38,
+            80
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "frontIdle": {
+          "rect": [
+            275,
+            181,
+            56,
+            93
+          ],
+          "anchor": [
+            29,
+            93
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 324
+        },
+        "backIdle": {
+          "rect": [
+            333,
+            181,
+            55,
+            89
+          ],
+          "anchor": [
+            27,
+            89
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 324
+        },
+        "frontRun": {
+          "rect": [
+            390,
+            181,
+            62,
+            85
+          ],
+          "anchor": [
+            30,
+            85
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 324
+        },
+        "backRun": {
+          "rect": [
+            454,
+            181,
+            60,
+            86
+          ],
+          "anchor": [
+            27,
+            86
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 324
+        },
+        "hurt1": {
+          "rect": [
+            2,
+            276,
+            69,
+            79
+          ],
+          "anchor": [
+            34,
+            78
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 324
+        },
+        "hurt2": {
+          "rect": [
+            73,
+            276,
+            71,
+            76
+          ],
+          "anchor": [
+            35,
+            76
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 324
+        },
+        "death1": {
+          "rect": [
+            146,
+            276,
+            64,
+            67
+          ],
+          "anchor": [
+            28,
+            67
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 324
+        },
+        "death2": {
+          "rect": [
+            212,
+            276,
+            93,
+            39
+          ],
+          "anchor": [
+            46,
+            38
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 324
+        },
+        "throwWindup": {
+          "rect": [
+            307,
+            276,
+            91,
+            84
+          ],
+          "anchor": [
+            42,
+            84
+          ],
+          "hand": [
+            13,
+            44
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "throwRelease": {
+          "rect": [
+            400,
+            276,
+            102,
+            84
+          ],
+          "anchor": [
+            44,
+            84
+          ],
+          "hand": [
+            94,
+            41
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "throwRecover": {
+          "rect": [
+            2,
+            362,
+            78,
+            84
+          ],
+          "anchor": [
+            38,
+            84
+          ],
+          "hand": [
+            62,
+            67
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        }
+      },
+      "sha256": "658ff217bca62feb50b49a3720748153727c2d5073e454434b31952bef1ea755",
+      "bytes": 248169
+    },
+    "curse": {
+      "source": "redrawn/kimimaro-curse-throw-v2.png",
+      "width": 560,
+      "height": 660,
+      "bodyHeight": 92,
+      "frames": {
+        "idle": {
+          "rect": [
+            2,
+            2,
+            75,
+            93
+          ],
+          "anchor": [
+            36,
+            93
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "run1": {
+          "rect": [
+            79,
+            2,
+            86,
+            88
+          ],
+          "anchor": [
+            48,
+            87
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "run2": {
+          "rect": [
+            167,
+            2,
+            83,
+            88
+          ],
+          "anchor": [
+            46,
+            87
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "run3": {
+          "rect": [
+            252,
+            2,
+            83,
+            87
+          ],
+          "anchor": [
+            45,
+            86
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "willow1": {
+          "rect": [
+            337,
+            2,
+            88,
+            87
+          ],
+          "anchor": [
+            43,
+            86
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "willow2": {
+          "rect": [
+            427,
+            2,
+            106,
+            88
+          ],
+          "anchor": [
+            53,
+            88
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "camellia1": {
+          "rect": [
+            2,
+            97,
+            85,
+            89
+          ],
+          "anchor": [
+            45,
+            88
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "camellia2": {
+          "rect": [
+            89,
+            97,
+            103,
+            88
+          ],
+          "anchor": [
+            43,
+            87
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "bullets": {
+          "rect": [
+            194,
+            97,
+            91,
+            86
+          ],
+          "anchor": [
+            43,
+            86
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "larch": {
+          "rect": [
+            287,
+            97,
+            106,
+            85
+          ],
+          "anchor": [
+            60,
+            85
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "vine1": {
+          "rect": [
+            395,
+            97,
+            87,
+            85
+          ],
+          "anchor": [
+            43,
+            84
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "vine2": {
+          "rect": [
+            2,
+            188,
+            100,
+            82
+          ],
+          "anchor": [
+            43,
+            81
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "flower1": {
+          "rect": [
+            104,
+            188,
+            87,
+            82
+          ],
+          "anchor": [
+            46,
+            81
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "flower2": {
+          "rect": [
+            193,
+            188,
+            123,
+            85
+          ],
+          "anchor": [
+            49,
+            85
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "bracken": {
+          "rect": [
+            318,
+            188,
+            95,
+            79
+          ],
+          "anchor": [
+            53,
+            78
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "lily": {
+          "rect": [
+            415,
+            188,
+            97,
+            85
+          ],
+          "anchor": [
+            48,
+            84
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 266
+        },
+        "frontIdle": {
+          "rect": [
+            2,
+            275,
+            87,
+            93
+          ],
+          "anchor": [
+            44,
+            93
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 277
+        },
+        "backIdle": {
+          "rect": [
+            91,
+            275,
+            83,
+            94
+          ],
+          "anchor": [
+            42,
+            93
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 277
+        },
+        "frontRun": {
+          "rect": [
+            176,
+            275,
+            87,
+            93
+          ],
+          "anchor": [
+            49,
+            92
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 277
+        },
+        "backRun": {
+          "rect": [
+            265,
+            275,
+            88,
+            90
+          ],
+          "anchor": [
+            43,
+            89
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 277
+        },
+        "hurt1": {
+          "rect": [
+            355,
+            275,
+            87,
+            85
+          ],
+          "anchor": [
+            44,
+            84
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 277
+        },
+        "hurt2": {
+          "rect": [
+            444,
+            275,
+            93,
+            80
+          ],
+          "anchor": [
+            50,
+            80
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 277
+        },
+        "death1": {
+          "rect": [
+            2,
+            371,
+            100,
+            72
+          ],
+          "anchor": [
+            45,
+            72
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 277
+        },
+        "death2": {
+          "rect": [
+            104,
+            371,
+            114,
+            51
+          ],
+          "anchor": [
+            57,
+            50
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 277
+        },
+        "throwWindup": {
+          "rect": [
+            220,
+            371,
+            95,
+            84
+          ],
+          "anchor": [
+            43,
+            84
+          ],
+          "hand": [
+            19,
+            41
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "throwRelease": {
+          "rect": [
+            317,
+            371,
+            103,
+            84
+          ],
+          "anchor": [
+            43,
+            84
+          ],
+          "hand": [
+            98,
+            39
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        },
+        "throwRecover": {
+          "rect": [
+            422,
+            371,
+            103,
+            84
+          ],
+          "anchor": [
+            60,
+            84
+          ],
+          "hand": [
+            90,
+            71
+          ],
+          "bodyHeight": 92,
+          "originalBodyHeight": 300
+        }
+      },
+      "sha256": "287b8b305d44b6e88db778c15c26e001b56ce44455cc7cd50b1ce3883dbd4f9c",
+      "bytes": 319001
+    },
+    "effects": {
+      "source": "redrawn/kimimaro-effects-v5.png",
+      "width": 640,
+      "height": 768,
+      "frames": {
+        "pillar1": {
+          "rect": [
+            39,
+            17,
+            100,
+            218
+          ],
+          "anchor": [
+            45.0,
+            217
+          ]
+        },
+        "pillar2": {
+          "rect": [
+            192,
+            25,
+            122,
+            210
+          ],
+          "anchor": [
+            53.0,
+            209
+          ]
+        },
+        "pillar3": {
+          "rect": [
+            369,
+            30,
+            96,
+            205
+          ],
+          "anchor": [
+            49.5,
+            204
+          ]
+        },
+        "pillar4": {
+          "rect": [
+            511,
+            20,
+            115,
+            213
+          ],
+          "anchor": [
+            47.0,
+            212
+          ]
+        },
+        "pillar5": {
+          "rect": [
+            0,
+            244,
+            80,
+            68
+          ],
+          "anchor": [
+            40.0,
+            67
+          ],
+          "sourceSize": [
+            80,
+            204
+          ],
+          "segments": [
+            {
+              "rect": [
+                0,
+                244,
+                80,
+                68
+              ],
+              "offsetY": 0
+            },
+            {
+              "rect": [
+                81,
+                244,
+                80,
+                68
+              ],
+              "offsetY": 68
+            },
+            {
+              "rect": [
+                162,
+                244,
+                80,
+                68
+              ],
+              "offsetY": 136
+            }
+          ]
+        },
+        "pillar6": {
+          "rect": [
+            243,
+            244,
+            94,
+            68
+          ],
+          "anchor": [
+            47.0,
+            67
+          ],
+          "sourceSize": [
+            94,
+            204
+          ],
+          "segments": [
+            {
+              "rect": [
+                243,
+                244,
+                94,
+                68
+              ],
+              "offsetY": 0
+            },
+            {
+              "rect": [
+                338,
+                244,
+                94,
+                68
+              ],
+              "offsetY": 68
+            },
+            {
+              "rect": [
+                433,
+                244,
+                94,
+                68
+              ],
+              "offsetY": 136
+            }
+          ]
+        },
+        "pillar7": {
+          "rect": [
+            528,
+            244,
+            87,
+            68
+          ],
+          "anchor": [
+            43.5,
+            67
+          ],
+          "sourceSize": [
+            87,
+            204
+          ],
+          "segments": [
+            {
+              "rect": [
+                528,
+                244,
+                87,
+                68
+              ],
+              "offsetY": 0
+            },
+            {
+              "rect": [
+                0,
+                312,
+                87,
+                68
+              ],
+              "offsetY": 68
+            },
+            {
+              "rect": [
+                88,
+                312,
+                87,
+                68
+              ],
+              "offsetY": 136
+            }
+          ]
+        },
+        "pillar8": {
+          "rect": [
+            176,
+            312,
+            84,
+            68
+          ],
+          "anchor": [
+            42.0,
+            67
+          ],
+          "sourceSize": [
+            84,
+            204
+          ],
+          "segments": [
+            {
+              "rect": [
+                176,
+                312,
+                84,
+                68
+              ],
+              "offsetY": 0
+            },
+            {
+              "rect": [
+                261,
+                312,
+                84,
+                68
+              ],
+              "offsetY": 68
+            },
+            {
+              "rect": [
+                346,
+                312,
+                84,
+                68
+              ],
+              "offsetY": 136
+            }
+          ]
+        },
+        "drill1": {
+          "rect": [
+            16,
+            677,
+            158,
+            76
+          ],
+          "anchor": [
+            62.0,
+            75
+          ],
+          "origin": [
+            2,
+            42.0
+          ],
+          "tip": [
+            156,
+            42.0
+          ]
+        },
+        "drill2": {
+          "rect": [
+            184,
+            679,
+            198,
+            72
+          ],
+          "anchor": [
+            56.0,
+            71
+          ],
+          "origin": [
+            2,
+            44.0
+          ],
+          "tip": [
+            196,
+            44.0
+          ]
+        },
+        "debris1": {
+          "rect": [
+            399,
+            680,
+            99,
+            77
+          ],
+          "anchor": [
+            37.5,
+            76
+          ]
+        },
+        "debris2": {
+          "rect": [
+            522,
+            686,
+            109,
+            69
+          ],
+          "anchor": [
+            52.5,
+            68
+          ]
+        },
+        "pillar9": {
+          "sourceSize": [
+            164,
+            240
+          ],
+          "segments": [
+            {
+              "rect": [
+                0,
+                384,
+                164,
+                80
+              ],
+              "offsetY": 0
+            },
+            {
+              "rect": [
+                0,
+                464,
+                164,
+                80
+              ],
+              "offsetY": 80
+            },
+            {
+              "rect": [
+                0,
+                544,
+                164,
+                80
+              ],
+              "offsetY": 160
+            }
+          ],
+          "rect": [
+            0,
+            384,
+            164,
+            80
+          ],
+          "anchor": [
+            82.0,
+            79
+          ]
+        },
+        "pillar10": {
+          "sourceSize": [
+            160,
+            240
+          ],
+          "segments": [
+            {
+              "rect": [
+                165,
+                384,
+                160,
+                80
+              ],
+              "offsetY": 0
+            },
+            {
+              "rect": [
+                165,
+                464,
+                160,
+                80
+              ],
+              "offsetY": 80
+            },
+            {
+              "rect": [
+                165,
+                544,
+                160,
+                80
+              ],
+              "offsetY": 160
+            }
+          ],
+          "rect": [
+            165,
+            384,
+            160,
+            80
+          ],
+          "anchor": [
+            80.0,
+            79
+          ]
+        },
+        "pillar11": {
+          "sourceSize": [
+            155,
+            240
+          ],
+          "segments": [
+            {
+              "rect": [
+                326,
+                384,
+                155,
+                80
+              ],
+              "offsetY": 0
+            },
+            {
+              "rect": [
+                326,
+                464,
+                155,
+                80
+              ],
+              "offsetY": 80
+            },
+            {
+              "rect": [
+                326,
+                544,
+                155,
+                80
+              ],
+              "offsetY": 160
+            }
+          ],
+          "rect": [
+            326,
+            384,
+            155,
+            80
+          ],
+          "anchor": [
+            77.5,
+            79
+          ]
+        },
+        "pillar12": {
+          "sourceSize": [
+            152,
+            240
+          ],
+          "segments": [
+            {
+              "rect": [
+                482,
+                384,
+                152,
+                80
+              ],
+              "offsetY": 0
+            },
+            {
+              "rect": [
+                482,
+                464,
+                152,
+                80
+              ],
+              "offsetY": 80
+            },
+            {
+              "rect": [
+                482,
+                544,
+                152,
+                80
+              ],
+              "offsetY": 160
+            }
+          ],
+          "rect": [
+            482,
+            384,
+            152,
+            80
+          ],
+          "anchor": [
+            76.0,
+            79
+          ]
+        }
+      },
+      "sha256": "fae8dc184f470dd81e9ff8d217fd70466358a6a9b7af02868a2272f5ae12e2f4",
+      "bytes": 363025
+    }
+  },
+  "budget": {
+    "decodedSheetBytes": 4922880,
+    "maxDecodedSheetBytes": 5242880,
+    "maxForestColumns": 96,
+    "maxSecondaryParticles": 20
+  },
+  "sources": {
+    "actorMetadata": "kimimaro-design/actors.json",
+    "supplement": "art-review\\kimimaro-design\\actors-game-supplement-v1.png",
+    "supplementSha256": "e336043209850154828f1b9c01437ee32f2469bbfa7b67753d5c39aa01789965",
+    "originalActorProvenance": "kimimaro-design/provenance-final.json",
+    "supplementProvenance": "kimimaro-design/game-supplement-provenance.json",
+    "effectProvenance": "kimimaro-design/provenance-art-v2.json",
+    "forestEffectProvenance": "redrawn/kimimaro-forest-mix-v5-provenance.json",
+    "throwProvenance": "redrawn/kimimaro-throw-provenance.json"
+  }
+}

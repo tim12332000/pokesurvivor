@@ -1,0 +1,9888 @@
+{
+  "naruto-movement": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          61,
+          476,
+          111,
+          169
+        ],
+        "anchor": [
+          56.0,
+          164
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          283,
+          472,
+          112,
+          172
+        ],
+        "anchor": [
+          55.5,
+          168
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          492,
+          468,
+          108,
+          176
+        ],
+        "anchor": [
+          56.0,
+          171
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          702,
+          476,
+          127,
+          168
+        ],
+        "anchor": [
+          68.5,
+          164
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          55,
+          902,
+          118,
+          181
+        ],
+        "anchor": [
+          60.0,
+          176
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          275,
+          900,
+          111,
+          183
+        ],
+        "anchor": [
+          62.5,
+          179
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          498,
+          895,
+          108,
+          188
+        ],
+        "anchor": [
+          50.5,
+          183
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          707,
+          898,
+          121,
+          185
+        ],
+        "anchor": [
+          64.5,
+          180
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          47,
+          679,
+          134,
+          179
+        ],
+        "anchor": [
+          65.5,
+          175
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          247,
+          678,
+          143,
+          180
+        ],
+        "anchor": [
+          105.0,
+          176
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          470,
+          684,
+          146,
+          174
+        ],
+        "anchor": [
+          97.0,
+          170
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          683,
+          679,
+          144,
+          179
+        ],
+        "anchor": [
+          102.0,
+          175
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          47,
+          679,
+          134,
+          179
+        ],
+        "anchor": [
+          65.5,
+          175
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          247,
+          678,
+          143,
+          180
+        ],
+        "anchor": [
+          105.0,
+          176
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          470,
+          684,
+          146,
+          174
+        ],
+        "anchor": [
+          97.0,
+          170
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          683,
+          679,
+          144,
+          179
+        ],
+        "anchor": [
+          102.0,
+          175
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 168.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "naruto-idle": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          77,
+          48,
+          96,
+          172
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          283,
+          48,
+          95,
+          171
+        ],
+        "anchor": [
+          47.5,
+          167
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          77,
+          48,
+          96,
+          172
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          283,
+          48,
+          95,
+          171
+        ],
+        "anchor": [
+          47.5,
+          167
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          509,
+          46,
+          96,
+          173
+        ],
+        "anchor": [
+          47.5,
+          169
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          714,
+          48,
+          97,
+          171
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          509,
+          46,
+          96,
+          173
+        ],
+        "anchor": [
+          47.5,
+          169
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          714,
+          48,
+          97,
+          171
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "naruto-hurt": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          74,
+          1121,
+          97,
+          174
+        ],
+        "anchor": [
+          48.5,
+          169
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          277,
+          1123,
+          117,
+          172
+        ],
+        "anchor": [
+          60.0,
+          168
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          77,
+          48,
+          96,
+          172
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          283,
+          48,
+          95,
+          171
+        ],
+        "anchor": [
+          47.5,
+          167
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          497,
+          1142,
+          107,
+          153
+        ],
+        "anchor": [
+          54.5,
+          149
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          710,
+          1124,
+          107,
+          171
+        ],
+        "anchor": [
+          53.5,
+          167
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          509,
+          46,
+          96,
+          173
+        ],
+        "anchor": [
+          47.5,
+          169
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          714,
+          48,
+          97,
+          171
+        ],
+        "anchor": [
+          48.5,
+          167
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          485,
+          259,
+          132,
+          171
+        ],
+        "anchor": [
+          81.0,
+          166
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          729,
+          251,
+          82,
+          179
+        ],
+        "anchor": [
+          40.5,
+          175
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          485,
+          259,
+          132,
+          171
+        ],
+        "anchor": [
+          81.0,
+          166
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          729,
+          251,
+          82,
+          179
+        ],
+        "anchor": [
+          40.5,
+          175
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          85,
+          250,
+          81,
+          181
+        ],
+        "anchor": [
+          42.5,
+          176
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          297,
+          249,
+          77,
+          181
+        ],
+        "anchor": [
+          38.5,
+          177
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 168.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "naruto-death": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          57,
+          1347,
+          122,
+          155
+        ],
+        "anchor": [
+          55.0,
+          151
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          249,
+          1382,
+          161,
+          118
+        ],
+        "anchor": [
+          67.5,
+          114
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          433,
+          1400,
+          202,
+          100
+        ],
+        "anchor": [
+          86.5,
+          96
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          661,
+          1417,
+          196,
+          73
+        ],
+        "anchor": [
+          98.5,
+          69
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 168.5
+      }
+    ]
+  },
+  "naruto-attack": {
+    "source": "redrawn/naruto-common-v1.png",
+    "bodyHeight": 168.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          46,
+          1543,
+          118,
+          181
+        ],
+        "anchor": [
+          59.0,
+          176
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          252,
+          1547,
+          153,
+          177
+        ],
+        "anchor": [
+          63.5,
+          172
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          475,
+          1546,
+          160,
+          178
+        ],
+        "anchor": [
+          63.0,
+          173
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 168.5
+      },
+      {
+        "rect": [
+          709,
+          1543,
+          112,
+          181
+        ],
+        "anchor": [
+          56.5,
+          176
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 168.5
+      }
+    ]
+  },
+  "sasuke-movement": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          52,
+          472,
+          123,
+          182
+        ],
+        "anchor": [
+          65.5,
+          178
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          272,
+          471,
+          124,
+          183
+        ],
+        "anchor": [
+          67.5,
+          179
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          487,
+          471,
+          120,
+          183
+        ],
+        "anchor": [
+          59.0,
+          179
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          703,
+          471,
+          140,
+          183
+        ],
+        "anchor": [
+          70.5,
+          179
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          53,
+          895,
+          122,
+          196
+        ],
+        "anchor": [
+          63.5,
+          192
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          273,
+          895,
+          115,
+          196
+        ],
+        "anchor": [
+          67.0,
+          192
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          497,
+          894,
+          112,
+          197
+        ],
+        "anchor": [
+          48.0,
+          193
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          708,
+          894,
+          115,
+          197
+        ],
+        "anchor": [
+          65.0,
+          193
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          42,
+          680,
+          145,
+          183
+        ],
+        "anchor": [
+          70.0,
+          180
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          248,
+          679,
+          151,
+          184
+        ],
+        "anchor": [
+          107.5,
+          181
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          463,
+          680,
+          158,
+          181
+        ],
+        "anchor": [
+          107.0,
+          178
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          680,
+          680,
+          153,
+          183
+        ],
+        "anchor": [
+          108.5,
+          180
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          42,
+          680,
+          145,
+          183
+        ],
+        "anchor": [
+          70.0,
+          180
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          248,
+          679,
+          151,
+          184
+        ],
+        "anchor": [
+          107.5,
+          181
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          463,
+          680,
+          158,
+          181
+        ],
+        "anchor": [
+          107.0,
+          178
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          680,
+          680,
+          153,
+          183
+        ],
+        "anchor": [
+          108.5,
+          180
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "sasuke-idle": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          72,
+          39,
+          105,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          279,
+          39,
+          104,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          72,
+          39,
+          105,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          279,
+          39,
+          104,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          503,
+          39,
+          105,
+          186
+        ],
+        "anchor": [
+          52.5,
+          182
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          709,
+          39,
+          107,
+          186
+        ],
+        "anchor": [
+          53.0,
+          182
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          503,
+          39,
+          105,
+          186
+        ],
+        "anchor": [
+          52.5,
+          182
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          709,
+          39,
+          107,
+          186
+        ],
+        "anchor": [
+          53.0,
+          182
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "sasuke-hurt": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          71,
+          1119,
+          106,
+          182
+        ],
+        "anchor": [
+          53.0,
+          178
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          273,
+          1114,
+          121,
+          185
+        ],
+        "anchor": [
+          61.5,
+          181
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          72,
+          39,
+          105,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          279,
+          39,
+          104,
+          187
+        ],
+        "anchor": [
+          52.0,
+          183
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          497,
+          1132,
+          110,
+          166
+        ],
+        "anchor": [
+          56.0,
+          162
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          709,
+          1114,
+          110,
+          184
+        ],
+        "anchor": [
+          55.5,
+          180
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          503,
+          39,
+          105,
+          186
+        ],
+        "anchor": [
+          52.5,
+          182
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          709,
+          39,
+          107,
+          186
+        ],
+        "anchor": [
+          53.0,
+          182
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          474,
+          261,
+          142,
+          177
+        ],
+        "anchor": [
+          89.0,
+          173
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          722,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          46.0,
+          182
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          474,
+          261,
+          142,
+          177
+        ],
+        "anchor": [
+          89.0,
+          173
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          722,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          46.0,
+          182
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          74,
+          252,
+          95,
+          186
+        ],
+        "anchor": [
+          54.0,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          286,
+          252,
+          94,
+          186
+        ],
+        "anchor": [
+          53.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "sasuke-death": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          53,
+          1340,
+          131,
+          166
+        ],
+        "anchor": [
+          60.0,
+          162
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          246,
+          1370,
+          166,
+          136
+        ],
+        "anchor": [
+          67.5,
+          132
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          433,
+          1389,
+          204,
+          115
+        ],
+        "anchor": [
+          97.5,
+          111
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          664,
+          1408,
+          199,
+          83
+        ],
+        "anchor": [
+          97.5,
+          79
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 182.0
+      }
+    ]
+  },
+  "sasuke-attack": {
+    "source": "redrawn/sasuke-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          44,
+          1541,
+          126,
+          189
+        ],
+        "anchor": [
+          62.0,
+          185
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          250,
+          1542,
+          170,
+          188
+        ],
+        "anchor": [
+          66.0,
+          184
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          471,
+          1543,
+          174,
+          187
+        ],
+        "anchor": [
+          66.5,
+          183
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          707,
+          1541,
+          118,
+          189
+        ],
+        "anchor": [
+          59.0,
+          185
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 182.0
+      }
+    ]
+  },
+  "lee-movement": {
+    "source": "redrawn/lee-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          49,
+          480,
+          136,
+          179
+        ],
+        "anchor": [
+          65.5,
+          174
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          271,
+          480,
+          134,
+          178
+        ],
+        "anchor": [
+          73.0,
+          174
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          482,
+          479,
+          130,
+          180
+        ],
+        "anchor": [
+          65.0,
+          175
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          695,
+          481,
+          144,
+          178
+        ],
+        "anchor": [
+          76.5,
+          173
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          52,
+          895,
+          127,
+          203
+        ],
+        "anchor": [
+          63.5,
+          199
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          273,
+          892,
+          118,
+          206
+        ],
+        "anchor": [
+          68.0,
+          202
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          495,
+          894,
+          115,
+          204
+        ],
+        "anchor": [
+          46.0,
+          200
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          704,
+          893,
+          122,
+          205
+        ],
+        "anchor": [
+          69.5,
+          201
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          37,
+          681,
+          159,
+          188
+        ],
+        "anchor": [
+          72.5,
+          184
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          243,
+          680,
+          167,
+          189
+        ],
+        "anchor": [
+          115.0,
+          186
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          461,
+          683,
+          165,
+          187
+        ],
+        "anchor": [
+          111.5,
+          183
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          677,
+          682,
+          161,
+          187
+        ],
+        "anchor": [
+          115.5,
+          184
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          37,
+          681,
+          159,
+          188
+        ],
+        "anchor": [
+          72.5,
+          184
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          243,
+          680,
+          167,
+          189
+        ],
+        "anchor": [
+          115.0,
+          186
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          461,
+          683,
+          165,
+          187
+        ],
+        "anchor": [
+          111.5,
+          183
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          677,
+          682,
+          161,
+          187
+        ],
+        "anchor": [
+          115.5,
+          184
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-idle": {
+    "source": "redrawn/lee-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          68,
+          45,
+          112,
+          184
+        ],
+        "anchor": [
+          56.0,
+          180
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          277,
+          45,
+          112,
+          184
+        ],
+        "anchor": [
+          55.5,
+          180
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          68,
+          45,
+          112,
+          184
+        ],
+        "anchor": [
+          56.0,
+          180
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          277,
+          45,
+          112,
+          184
+        ],
+        "anchor": [
+          55.5,
+          180
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          502,
+          41,
+          106,
+          188
+        ],
+        "anchor": [
+          53.5,
+          184
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          711,
+          41,
+          107,
+          188
+        ],
+        "anchor": [
+          54.0,
+          184
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          502,
+          41,
+          106,
+          188
+        ],
+        "anchor": [
+          53.5,
+          184
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          711,
+          41,
+          107,
+          188
+        ],
+        "anchor": [
+          54.0,
+          184
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          76,
+          257,
+          124,
+          186
+        ],
+        "anchor": [
+          50.5,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          290,
+          257,
+          96,
+          186
+        ],
+        "anchor": [
+          48.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          76,
+          257,
+          124,
+          186
+        ],
+        "anchor": [
+          50.5,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          290,
+          257,
+          96,
+          186
+        ],
+        "anchor": [
+          48.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          76,
+          257,
+          124,
+          186
+        ],
+        "anchor": [
+          50.5,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          290,
+          257,
+          96,
+          186
+        ],
+        "anchor": [
+          48.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          76,
+          257,
+          124,
+          186
+        ],
+        "anchor": [
+          50.5,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          290,
+          257,
+          96,
+          186
+        ],
+        "anchor": [
+          48.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-hurt": {
+    "source": "redrawn/lee-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          66,
+          1126,
+          113,
+          179
+        ],
+        "anchor": [
+          56.0,
+          175
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          272,
+          1124,
+          125,
+          181
+        ],
+        "anchor": [
+          62.5,
+          177
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          68,
+          45,
+          112,
+          184
+        ],
+        "anchor": [
+          56.0,
+          180
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          277,
+          45,
+          112,
+          184
+        ],
+        "anchor": [
+          55.5,
+          180
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          495,
+          1133,
+          114,
+          172
+        ],
+        "anchor": [
+          57.0,
+          168
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          705,
+          1122,
+          117,
+          183
+        ],
+        "anchor": [
+          58.0,
+          179
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          502,
+          41,
+          106,
+          188
+        ],
+        "anchor": [
+          53.5,
+          184
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          711,
+          41,
+          107,
+          188
+        ],
+        "anchor": [
+          54.0,
+          184
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          483,
+          268,
+          139,
+          175
+        ],
+        "anchor": [
+          80.0,
+          171
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          723,
+          257,
+          119,
+          185
+        ],
+        "anchor": [
+          48.0,
+          181
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          76,
+          257,
+          124,
+          186
+        ],
+        "anchor": [
+          50.5,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          290,
+          257,
+          96,
+          186
+        ],
+        "anchor": [
+          48.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          483,
+          268,
+          139,
+          175
+        ],
+        "anchor": [
+          80.0,
+          171
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          723,
+          257,
+          119,
+          185
+        ],
+        "anchor": [
+          48.0,
+          181
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          76,
+          257,
+          124,
+          186
+        ],
+        "anchor": [
+          50.5,
+          182
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          290,
+          257,
+          96,
+          186
+        ],
+        "anchor": [
+          48.5,
+          182
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 182.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-death": {
+    "source": "redrawn/lee-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          48,
+          1341,
+          131,
+          167
+        ],
+        "anchor": [
+          64.5,
+          163
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          234,
+          1370,
+          179,
+          137
+        ],
+        "anchor": [
+          79.0,
+          133
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          425,
+          1393,
+          215,
+          114
+        ],
+        "anchor": [
+          104.5,
+          110
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          661,
+          1412,
+          208,
+          86
+        ],
+        "anchor": [
+          102.0,
+          82
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 182.0
+      }
+    ]
+  },
+  "lee-attack": {
+    "source": "redrawn/lee-common-v1.png",
+    "bodyHeight": 182.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          40,
+          1547,
+          136,
+          186
+        ],
+        "anchor": [
+          68.0,
+          183
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          246,
+          1547,
+          182,
+          186
+        ],
+        "anchor": [
+          70.5,
+          183
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          464,
+          1545,
+          187,
+          189
+        ],
+        "anchor": [
+          72.0,
+          185
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 182.0
+      },
+      {
+        "rect": [
+          703,
+          1544,
+          126,
+          189
+        ],
+        "anchor": [
+          63.0,
+          186
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 182.0
+      }
+    ]
+  },
+  "lee-opened-movement": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          44,
+          469,
+          145,
+          192
+        ],
+        "anchor": [
+          64.5,
+          188
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          260,
+          469,
+          139,
+          192
+        ],
+        "anchor": [
+          78.0,
+          188
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          470,
+          468,
+          138,
+          193
+        ],
+        "anchor": [
+          68.0,
+          189
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          680,
+          469,
+          152,
+          192
+        ],
+        "anchor": [
+          81.0,
+          188
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          45,
+          889,
+          131,
+          217
+        ],
+        "anchor": [
+          67.5,
+          213
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          265,
+          888,
+          125,
+          218
+        ],
+        "anchor": [
+          71.0,
+          214
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          482,
+          888,
+          122,
+          218
+        ],
+        "anchor": [
+          49.0,
+          214
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          690,
+          887,
+          127,
+          219
+        ],
+        "anchor": [
+          73.0,
+          215
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          30,
+          671,
+          159,
+          203
+        ],
+        "anchor": [
+          75.5,
+          200
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          240,
+          674,
+          173,
+          201
+        ],
+        "anchor": [
+          117.5,
+          197
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          450,
+          674,
+          169,
+          201
+        ],
+        "anchor": [
+          116.0,
+          197
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          668,
+          675,
+          167,
+          199
+        ],
+        "anchor": [
+          119.5,
+          196
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          30,
+          671,
+          159,
+          203
+        ],
+        "anchor": [
+          75.5,
+          200
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          240,
+          674,
+          173,
+          201
+        ],
+        "anchor": [
+          117.5,
+          197
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          450,
+          674,
+          169,
+          201
+        ],
+        "anchor": [
+          116.0,
+          197
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          668,
+          675,
+          167,
+          199
+        ],
+        "anchor": [
+          119.5,
+          196
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-opened-idle": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          59,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          62.0,
+          199
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          269,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          60.0,
+          199
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          59,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          62.0,
+          199
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          269,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          60.0,
+          199
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          490,
+          26,
+          114,
+          204
+        ],
+        "anchor": [
+          57.5,
+          200
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          696,
+          25,
+          115,
+          205
+        ],
+        "anchor": [
+          58.0,
+          201
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          490,
+          26,
+          114,
+          204
+        ],
+        "anchor": [
+          57.5,
+          200
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          696,
+          25,
+          115,
+          205
+        ],
+        "anchor": [
+          58.0,
+          201
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-opened-hurt": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          57,
+          1119,
+          121,
+          194
+        ],
+        "anchor": [
+          60.5,
+          190
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          264,
+          1119,
+          132,
+          194
+        ],
+        "anchor": [
+          65.5,
+          190
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          59,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          62.0,
+          199
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          269,
+          27,
+          121,
+          204
+        ],
+        "anchor": [
+          60.0,
+          199
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          485,
+          1120,
+          121,
+          193
+        ],
+        "anchor": [
+          60.5,
+          189
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          690,
+          1118,
+          126,
+          195
+        ],
+        "anchor": [
+          61.5,
+          191
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          490,
+          26,
+          114,
+          204
+        ],
+        "anchor": [
+          57.5,
+          200
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          696,
+          25,
+          115,
+          205
+        ],
+        "anchor": [
+          58.0,
+          201
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          484,
+          251,
+          137,
+          194
+        ],
+        "anchor": [
+          74.5,
+          190
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          706,
+          248,
+          127,
+          197
+        ],
+        "anchor": [
+          51.5,
+          193
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          484,
+          251,
+          137,
+          194
+        ],
+        "anchor": [
+          74.5,
+          190
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          706,
+          248,
+          127,
+          197
+        ],
+        "anchor": [
+          51.5,
+          193
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          69,
+          248,
+          133,
+          197
+        ],
+        "anchor": [
+          54.5,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          279,
+          248,
+          106,
+          197
+        ],
+        "anchor": [
+          53.0,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-opened-death": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          39,
+          1334,
+          143,
+          184
+        ],
+        "anchor": [
+          69.0,
+          180
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          222,
+          1361,
+          193,
+          157
+        ],
+        "anchor": [
+          86.0,
+          153
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          415,
+          1385,
+          220,
+          132
+        ],
+        "anchor": [
+          103.0,
+          128
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          647,
+          1409,
+          217,
+          98
+        ],
+        "anchor": [
+          103.5,
+          94
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 186.21
+      }
+    ]
+  },
+  "lee-opened-attack": {
+    "source": "redrawn/lee-gates-common-v1.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          31,
+          1539,
+          147,
+          202
+        ],
+        "anchor": [
+          72.5,
+          198
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          234,
+          1538,
+          189,
+          203
+        ],
+        "anchor": [
+          73.5,
+          199
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          449,
+          1539,
+          195,
+          202
+        ],
+        "anchor": [
+          76.0,
+          198
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          690,
+          1536,
+          131,
+          205
+        ],
+        "anchor": [
+          65.5,
+          201
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 186.21
+      }
+    ]
+  },
+  "gaara-movement": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          53,
+          472,
+          142,
+          194
+        ],
+        "anchor": [
+          54.5,
+          190
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          272,
+          472,
+          139,
+          194
+        ],
+        "anchor": [
+          75.0,
+          190
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          482,
+          472,
+          142,
+          194
+        ],
+        "anchor": [
+          61.0,
+          190
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          693,
+          472,
+          147,
+          194
+        ],
+        "anchor": [
+          77.5,
+          190
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          57,
+          889,
+          120,
+          208
+        ],
+        "anchor": [
+          57.0,
+          204
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          277,
+          890,
+          117,
+          207
+        ],
+        "anchor": [
+          66.5,
+          203
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          495,
+          889,
+          118,
+          208
+        ],
+        "anchor": [
+          47.5,
+          204
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          707,
+          889,
+          120,
+          208
+        ],
+        "anchor": [
+          71.0,
+          204
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          38,
+          677,
+          161,
+          193
+        ],
+        "anchor": [
+          72.0,
+          189
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          245,
+          679,
+          167,
+          192
+        ],
+        "anchor": [
+          117.0,
+          188
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          468,
+          678,
+          163,
+          193
+        ],
+        "anchor": [
+          73.5,
+          189
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          680,
+          680,
+          162,
+          190
+        ],
+        "anchor": [
+          73.0,
+          187
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          38,
+          677,
+          161,
+          193
+        ],
+        "anchor": [
+          72.0,
+          189
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          245,
+          679,
+          167,
+          192
+        ],
+        "anchor": [
+          117.0,
+          188
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          468,
+          678,
+          163,
+          193
+        ],
+        "anchor": [
+          73.5,
+          189
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          680,
+          680,
+          162,
+          190
+        ],
+        "anchor": [
+          73.0,
+          187
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 194.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "gaara-idle": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          64,
+          31,
+          115,
+          199
+        ],
+        "anchor": [
+          60.0,
+          196
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          277,
+          32,
+          116,
+          198
+        ],
+        "anchor": [
+          60.0,
+          194
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          64,
+          31,
+          115,
+          199
+        ],
+        "anchor": [
+          60.0,
+          196
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          277,
+          32,
+          116,
+          198
+        ],
+        "anchor": [
+          60.0,
+          194
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          502,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          55.0,
+          195
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          712,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          57.0,
+          196
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          502,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          55.0,
+          195
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          712,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          57.0,
+          196
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "gaara-hurt": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          62,
+          1116,
+          122,
+          192
+        ],
+        "anchor": [
+          58.0,
+          188
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          268,
+          1116,
+          132,
+          193
+        ],
+        "anchor": [
+          66.5,
+          189
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          64,
+          31,
+          115,
+          199
+        ],
+        "anchor": [
+          60.0,
+          196
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          277,
+          32,
+          116,
+          198
+        ],
+        "anchor": [
+          60.0,
+          194
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          493,
+          1121,
+          124,
+          188
+        ],
+        "anchor": [
+          59.5,
+          184
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          702,
+          1118,
+          127,
+          191
+        ],
+        "anchor": [
+          63.0,
+          187
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          502,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          55.0,
+          195
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          712,
+          31,
+          113,
+          199
+        ],
+        "anchor": [
+          57.0,
+          196
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          480,
+          254,
+          148,
+          192
+        ],
+        "anchor": [
+          90.5,
+          188
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          707,
+          250,
+          120,
+          196
+        ],
+        "anchor": [
+          65.5,
+          192
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5,
+        "mirror": true
+      },
+      {
+        "rect": [
+          480,
+          254,
+          148,
+          192
+        ],
+        "anchor": [
+          90.5,
+          188
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          707,
+          250,
+          120,
+          196
+        ],
+        "anchor": [
+          65.5,
+          192
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          65,
+          249,
+          116,
+          197
+        ],
+        "anchor": [
+          64.0,
+          193
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          280,
+          249,
+          113,
+          197
+        ],
+        "anchor": [
+          62.5,
+          193
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 194.5
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "gaara-death": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1331,
+          138,
+          179
+        ],
+        "anchor": [
+          68.0,
+          176
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          239,
+          1363,
+          175,
+          148
+        ],
+        "anchor": [
+          78.0,
+          144
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          426,
+          1387,
+          218,
+          124
+        ],
+        "anchor": [
+          85.5,
+          120
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          654,
+          1401,
+          219,
+          102
+        ],
+        "anchor": [
+          103.5,
+          99
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 194.5
+      }
+    ]
+  },
+  "gaara-attack": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1534,
+          133,
+          204
+        ],
+        "anchor": [
+          65.5,
+          200
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          261,
+          1535,
+          159,
+          205
+        ],
+        "anchor": [
+          65.0,
+          201
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          473,
+          1536,
+          183,
+          204
+        ],
+        "anchor": [
+          70.0,
+          200
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          705,
+          1535,
+          129,
+          204
+        ],
+        "anchor": [
+          64.5,
+          201
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 194.5
+      }
+    ]
+  },
+  "naruto-clones": {
+    "source": "redrawn/naruto-skills-v2.png",
+    "bodyHeight": 250.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          66,
+          49,
+          191,
+          256
+        ],
+        "anchor": [
+          95.5,
+          252
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          377,
+          51,
+          190,
+          254
+        ],
+        "anchor": [
+          95.0,
+          250
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          693,
+          51,
+          189,
+          254
+        ],
+        "anchor": [
+          94.5,
+          250
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          1017,
+          53,
+          185,
+          251
+        ],
+        "anchor": [
+          92.5,
+          247
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 250.0
+      }
+    ]
+  },
+  "naruto-rasengan": {
+    "source": "redrawn/naruto-skills-v2.png",
+    "bodyHeight": 250.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          49,
+          353,
+          210,
+          255
+        ],
+        "anchor": [
+          105.0,
+          251
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          381,
+          356,
+          204,
+          252
+        ],
+        "anchor": [
+          102.0,
+          248
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          642,
+          365,
+          321,
+          243
+        ],
+        "anchor": [
+          121.0,
+          239
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          1018,
+          356,
+          194,
+          252
+        ],
+        "anchor": [
+          97.0,
+          248
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 250.0
+      }
+    ]
+  },
+  "naruto-throw": {
+    "source": "redrawn/naruto-skills-v2.png",
+    "bodyHeight": 250.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          55,
+          649,
+          228,
+          256
+        ],
+        "anchor": [
+          105.0,
+          252
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          353,
+          655,
+          232,
+          250
+        ],
+        "anchor": [
+          114.5,
+          246
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          649,
+          658,
+          303,
+          247
+        ],
+        "anchor": [
+          116.5,
+          243
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          1009,
+          658,
+          198,
+          247
+        ],
+        "anchor": [
+          99.0,
+          243
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 250.0
+      }
+    ]
+  },
+  "naruto-cloak": {
+    "source": "redrawn/naruto-skills-v2.png",
+    "bodyHeight": 250.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          62,
+          937,
+          187,
+          268
+        ],
+        "anchor": [
+          93.5,
+          263
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          357,
+          948,
+          224,
+          255
+        ],
+        "anchor": [
+          112.0,
+          251
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          662,
+          992,
+          245,
+          212
+        ],
+        "anchor": [
+          121.0,
+          208
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 250.0
+      },
+      {
+        "rect": [
+          973,
+          1006,
+          252,
+          197
+        ],
+        "anchor": [
+          126.0,
+          193
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 250.0
+      }
+    ]
+  },
+  "sasuke-chidori": {
+    "source": "redrawn/sasuke-skills-v2.png",
+    "bodyHeight": 254.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          50,
+          118,
+          228,
+          221
+        ],
+        "anchor": [
+          104.5,
+          217
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          346,
+          89,
+          220,
+          250
+        ],
+        "anchor": [
+          90.0,
+          246
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          637,
+          90,
+          300,
+          249
+        ],
+        "anchor": [
+          108.5,
+          245
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          990,
+          86,
+          177,
+          253
+        ],
+        "anchor": [
+          77.0,
+          249
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 254.5
+      }
+    ]
+  },
+  "sasuke-fireball": {
+    "source": "redrawn/sasuke-skills-v2.png",
+    "bodyHeight": 254.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          78,
+          388,
+          164,
+          263
+        ],
+        "anchor": [
+          81.5,
+          259
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          385,
+          391,
+          165,
+          260
+        ],
+        "anchor": [
+          83.0,
+          256
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          653,
+          417,
+          207,
+          234
+        ],
+        "anchor": [
+          103.5,
+          230
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          990,
+          389,
+          152,
+          262
+        ],
+        "anchor": [
+          76.0,
+          258
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 254.5
+      }
+    ]
+  },
+  "sasuke-throw": {
+    "source": "redrawn/sasuke-skills-v2.png",
+    "bodyHeight": 254.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          63,
+          690,
+          216,
+          260
+        ],
+        "anchor": [
+          104.0,
+          256
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          337,
+          693,
+          217,
+          257
+        ],
+        "anchor": [
+          105.5,
+          253
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          619,
+          698,
+          293,
+          252
+        ],
+        "anchor": [
+          112.5,
+          248
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          964,
+          695,
+          195,
+          255
+        ],
+        "anchor": [
+          92.0,
+          251
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 254.5
+      }
+    ]
+  },
+  "sasuke-sword": {
+    "source": "redrawn/sasuke-skills-v2.png",
+    "bodyHeight": 254.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          62,
+          990,
+          195,
+          260
+        ],
+        "anchor": [
+          93.0,
+          256
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          325,
+          990,
+          263,
+          260
+        ],
+        "anchor": [
+          105.0,
+          256
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          588,
+          1016,
+          370,
+          234
+        ],
+        "anchor": [
+          122.5,
+          230
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 254.5
+      },
+      {
+        "rect": [
+          968,
+          986,
+          197,
+          264
+        ],
+        "anchor": [
+          89.5,
+          260
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 254.5
+      }
+    ]
+  },
+  "lee-whirlwind": {
+    "source": "redrawn/lee-skills-v1.png",
+    "bodyHeight": 248.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          51,
+          63,
+          222,
+          257
+        ],
+        "anchor": [
+          110.0,
+          253
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          380,
+          38,
+          189,
+          283
+        ],
+        "anchor": [
+          64.0,
+          279
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          629,
+          58,
+          323,
+          263
+        ],
+        "anchor": [
+          101.0,
+          259
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          980,
+          67,
+          233,
+          254
+        ],
+        "anchor": [
+          113.5,
+          250
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 248.0
+      }
+    ]
+  },
+  "lee-lotus": {
+    "source": "redrawn/lee-skills-v1.png",
+    "bodyHeight": 248.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          63,
+          407,
+          190,
+          230
+        ],
+        "anchor": [
+          93.5,
+          226
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          351,
+          336,
+          252,
+          300
+        ],
+        "anchor": [
+          89.0,
+          296
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          700,
+          366,
+          179,
+          272
+        ],
+        "anchor": [
+          86.5,
+          271
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          984,
+          440,
+          243,
+          198
+        ],
+        "anchor": [
+          125.0,
+          193
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 248.0
+      }
+    ]
+  },
+  "lee-gates": {
+    "source": "redrawn/lee-skills-v1.png",
+    "bodyHeight": 248.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          61,
+          673,
+          217,
+          253
+        ],
+        "anchor": [
+          108.0,
+          249
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          345,
+          686,
+          247,
+          240
+        ],
+        "anchor": [
+          123.5,
+          236
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          676,
+          638,
+          215,
+          288
+        ],
+        "anchor": [
+          108.0,
+          284
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          985,
+          677,
+          234,
+          250
+        ],
+        "anchor": [
+          113.5,
+          246
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 248.0
+      }
+    ]
+  },
+  "lee-reverse": {
+    "source": "redrawn/lee-skills-v1.png",
+    "bodyHeight": 248.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          41,
+          1004,
+          268,
+          194
+        ],
+        "anchor": [
+          117.5,
+          190
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          360,
+          954,
+          278,
+          236
+        ],
+        "anchor": [
+          37.5,
+          232
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          680,
+          940,
+          244,
+          211
+        ],
+        "anchor": [
+          70.5,
+          207
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 248.0
+      },
+      {
+        "rect": [
+          992,
+          1009,
+          241,
+          191
+        ],
+        "anchor": [
+          188.0,
+          187
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 248.0
+      }
+    ]
+  },
+  "lee-opened-whirlwind": {
+    "source": "redrawn/lee-gates-skills-v1.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          50,
+          53,
+          226,
+          268
+        ],
+        "anchor": [
+          111.5,
+          264
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          377,
+          28,
+          196,
+          295
+        ],
+        "anchor": [
+          67.0,
+          291
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          628,
+          50,
+          327,
+          273
+        ],
+        "anchor": [
+          103.0,
+          269
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          982,
+          58,
+          238,
+          265
+        ],
+        "anchor": [
+          115.5,
+          261
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-opened-lotus": {
+    "source": "redrawn/lee-gates-skills-v1.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          61,
+          400,
+          195,
+          239
+        ],
+        "anchor": [
+          95.5,
+          235
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          353,
+          336,
+          258,
+          302
+        ],
+        "anchor": [
+          87.0,
+          298
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          700,
+          365,
+          189,
+          274
+        ],
+        "anchor": [
+          77.0,
+          273
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          984,
+          431,
+          248,
+          208
+        ],
+        "anchor": [
+          127.5,
+          205
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-opened-gates": {
+    "source": "redrawn/lee-gates-skills-v1.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          59,
+          664,
+          219,
+          264
+        ],
+        "anchor": [
+          109.5,
+          260
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          343,
+          677,
+          251,
+          251
+        ],
+        "anchor": [
+          126.0,
+          247
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          673,
+          639,
+          223,
+          290
+        ],
+        "anchor": [
+          111.0,
+          286
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          984,
+          667,
+          241,
+          262
+        ],
+        "anchor": [
+          115.0,
+          258
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-opened-reverse": {
+    "source": "redrawn/lee-gates-skills-v1.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          37,
+          997,
+          274,
+          203
+        ],
+        "anchor": [
+          119.5,
+          199
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          355,
+          947,
+          287,
+          244
+        ],
+        "anchor": [
+          39.5,
+          240
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          678,
+          935,
+          249,
+          219
+        ],
+        "anchor": [
+          77.5,
+          215
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          991,
+          1001,
+          244,
+          201
+        ],
+        "anchor": [
+          190.5,
+          197
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "gaara-sand-burst": {
+    "source": "redrawn/gaara-skills-v1.png",
+    "bodyHeight": 290.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          58,
+          10,
+          186,
+          286
+        ],
+        "anchor": [
+          95.5,
+          282
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          349,
+          12,
+          241,
+          286
+        ],
+        "anchor": [
+          101.5,
+          282
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          676,
+          16,
+          266,
+          284
+        ],
+        "anchor": [
+          116.5,
+          280
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          1002,
+          11,
+          187,
+          290
+        ],
+        "anchor": [
+          101.0,
+          285
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 290.0
+      }
+    ]
+  },
+  "gaara-coffin": {
+    "source": "redrawn/gaara-skills-v1.png",
+    "bodyHeight": 290.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          52,
+          319,
+          202,
+          296
+        ],
+        "anchor": [
+          109.0,
+          292
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          354,
+          316,
+          251,
+          297
+        ],
+        "anchor": [
+          113.0,
+          293
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          679,
+          319,
+          210,
+          298
+        ],
+        "anchor": [
+          110.5,
+          294
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          999,
+          317,
+          197,
+          298
+        ],
+        "anchor": [
+          113.0,
+          294
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 290.0
+      }
+    ]
+  },
+  "gaara-shield": {
+    "source": "redrawn/gaara-skills-v1.png",
+    "bodyHeight": 290.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          46,
+          633,
+          227,
+          292
+        ],
+        "anchor": [
+          118.5,
+          288
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          363,
+          634,
+          211,
+          288
+        ],
+        "anchor": [
+          113.5,
+          285
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          686,
+          633,
+          207,
+          290
+        ],
+        "anchor": [
+          104.5,
+          286
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          998,
+          634,
+          197,
+          289
+        ],
+        "anchor": [
+          115.0,
+          285
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 290.0
+      }
+    ]
+  },
+  "gaara-tsunami": {
+    "source": "redrawn/gaara-skills-v1.png",
+    "bodyHeight": 290.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          50,
+          935,
+          206,
+          302
+        ],
+        "anchor": [
+          108.0,
+          298
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          327,
+          937,
+          299,
+          300
+        ],
+        "anchor": [
+          139.0,
+          296
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          680,
+          967,
+          248,
+          270
+        ],
+        "anchor": [
+          110.5,
+          266
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 290.0
+      },
+      {
+        "rect": [
+          997,
+          935,
+          200,
+          302
+        ],
+        "anchor": [
+          114.5,
+          298
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 290.0
+      }
+    ]
+  },
+  "gaara-throw": {
+    "source": "redrawn/gaara-common-v1.png",
+    "bodyHeight": 194.5,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1534,
+          133,
+          204
+        ],
+        "anchor": [
+          65.5,
+          200
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          261,
+          1535,
+          159,
+          205
+        ],
+        "anchor": [
+          65.0,
+          201
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          473,
+          1536,
+          183,
+          204
+        ],
+        "anchor": [
+          70.0,
+          200
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 194.5
+      },
+      {
+        "rect": [
+          705,
+          1535,
+          129,
+          204
+        ],
+        "anchor": [
+          64.5,
+          201
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 194.5
+      }
+    ]
+  },
+  "tenten-movement": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          56,
+          475,
+          132,
+          208
+        ],
+        "anchor": [
+          67.0,
+          204
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          280,
+          472,
+          122,
+          211
+        ],
+        "anchor": [
+          59.5,
+          207
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          478,
+          473,
+          135,
+          210
+        ],
+        "anchor": [
+          67.0,
+          206
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          684,
+          473,
+          143,
+          210
+        ],
+        "anchor": [
+          76.0,
+          206
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          61,
+          901,
+          123,
+          212
+        ],
+        "anchor": [
+          64.0,
+          208
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          271,
+          902,
+          124,
+          215
+        ],
+        "anchor": [
+          69.0,
+          211
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          485,
+          900,
+          119,
+          217
+        ],
+        "anchor": [
+          50.5,
+          213
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          702,
+          903,
+          114,
+          214
+        ],
+        "anchor": [
+          70.5,
+          210
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          34,
+          684,
+          172,
+          203
+        ],
+        "anchor": [
+          73.0,
+          199
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          243,
+          689,
+          171,
+          199
+        ],
+        "anchor": [
+          116.0,
+          195
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          457,
+          688,
+          177,
+          199
+        ],
+        "anchor": [
+          77.0,
+          195
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          671,
+          695,
+          163,
+          192
+        ],
+        "anchor": [
+          75.0,
+          189
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          34,
+          684,
+          172,
+          203
+        ],
+        "anchor": [
+          73.0,
+          199
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          243,
+          689,
+          171,
+          199
+        ],
+        "anchor": [
+          116.0,
+          195
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          457,
+          688,
+          177,
+          199
+        ],
+        "anchor": [
+          77.0,
+          195
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          671,
+          695,
+          163,
+          192
+        ],
+        "anchor": [
+          75.0,
+          189
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 211.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "tenten-idle": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          76,
+          23,
+          114,
+          216
+        ],
+        "anchor": [
+          54.0,
+          212
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          290,
+          23,
+          115,
+          216
+        ],
+        "anchor": [
+          56.5,
+          212
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          76,
+          23,
+          114,
+          216
+        ],
+        "anchor": [
+          54.0,
+          212
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          290,
+          23,
+          115,
+          216
+        ],
+        "anchor": [
+          56.5,
+          212
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          493,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.0,
+          210
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.5,
+          210
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          493,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.0,
+          210
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.5,
+          210
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "tenten-hurt": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          53,
+          1124,
+          133,
+          217
+        ],
+        "anchor": [
+          66.0,
+          213
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          270,
+          1124,
+          137,
+          217
+        ],
+        "anchor": [
+          68.0,
+          213
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          76,
+          23,
+          114,
+          216
+        ],
+        "anchor": [
+          54.0,
+          212
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          290,
+          23,
+          115,
+          216
+        ],
+        "anchor": [
+          56.5,
+          212
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          468,
+          1123,
+          142,
+          218
+        ],
+        "anchor": [
+          62.5,
+          214
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          697,
+          1126,
+          128,
+          215
+        ],
+        "anchor": [
+          64.0,
+          211
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          493,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.0,
+          210
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          25,
+          113,
+          214
+        ],
+        "anchor": [
+          56.5,
+          210
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          475,
+          257,
+          160,
+          207
+        ],
+        "anchor": [
+          94.5,
+          203
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          701,
+          250,
+          121,
+          217
+        ],
+        "anchor": [
+          60.0,
+          213
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0,
+        "mirror": true
+      },
+      {
+        "rect": [
+          475,
+          257,
+          160,
+          207
+        ],
+        "anchor": [
+          94.5,
+          203
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          701,
+          250,
+          121,
+          217
+        ],
+        "anchor": [
+          60.0,
+          213
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          67,
+          248,
+          121,
+          219
+        ],
+        "anchor": [
+          60.5,
+          215
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          284,
+          248,
+          119,
+          214
+        ],
+        "anchor": [
+          55.5,
+          210
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 211.0
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "tenten-death": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          41,
+          1360,
+          164,
+          177
+        ],
+        "anchor": [
+          71.0,
+          173
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          241,
+          1386,
+          176,
+          151
+        ],
+        "anchor": [
+          73.0,
+          147
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          422,
+          1401,
+          223,
+          136
+        ],
+        "anchor": [
+          19.0,
+          132
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          646,
+          1438,
+          224,
+          85
+        ],
+        "anchor": [
+          109.5,
+          82
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 211.0
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-attack": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1553,
+          139,
+          210
+        ],
+        "anchor": [
+          66.0,
+          206
+        ],
+        "atlasIndex": 28,
+        "hand": [
+          126,
+          115
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          257,
+          1554,
+          162,
+          209
+        ],
+        "anchor": [
+          69.5,
+          205
+        ],
+        "atlasIndex": 29,
+        "hand": [
+          141,
+          109
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          465,
+          1556,
+          183,
+          207
+        ],
+        "anchor": [
+          70.0,
+          203
+        ],
+        "atlasIndex": 30,
+        "hand": [
+          168,
+          98
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          1556,
+          130,
+          207
+        ],
+        "anchor": [
+          64.0,
+          203
+        ],
+        "atlasIndex": 31,
+        "hand": [
+          96,
+          111
+        ],
+        "bodyHeight": 211.0
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-fuma": {
+    "source": "redrawn/tenten-skills-v1.png",
+    "bodyHeight": 298,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          35,
+          12,
+          222,
+          299
+        ],
+        "anchor": [
+          111.0,
+          295
+        ],
+        "atlasIndex": 0,
+        "hand": [
+          172,
+          180
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          338,
+          17,
+          294,
+          293
+        ],
+        "anchor": [
+          115.5,
+          289
+        ],
+        "atlasIndex": 1,
+        "hand": [
+          279,
+          129
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          679,
+          13,
+          255,
+          299
+        ],
+        "anchor": [
+          106.0,
+          294
+        ],
+        "atlasIndex": 2,
+        "hand": [
+          154,
+          187
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          1012,
+          12,
+          201,
+          299
+        ],
+        "anchor": [
+          101.0,
+          295
+        ],
+        "atlasIndex": 3,
+        "hand": [
+          127,
+          171
+        ],
+        "bodyHeight": 298
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-tags": {
+    "source": "redrawn/tenten-skills-v1.png",
+    "bodyHeight": 298,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          32,
+          322,
+          270,
+          298
+        ],
+        "anchor": [
+          111.0,
+          295
+        ],
+        "atlasIndex": 4,
+        "hand": [
+          215,
+          148
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          335,
+          327,
+          299,
+          297
+        ],
+        "anchor": [
+          73.0,
+          296
+        ],
+        "atlasIndex": 5,
+        "hand": [
+          281,
+          126
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          672,
+          378,
+          273,
+          246
+        ],
+        "anchor": [
+          136.5,
+          242
+        ],
+        "atlasIndex": 6,
+        "hand": [
+          209,
+          201
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          1011,
+          321,
+          210,
+          303
+        ],
+        "anchor": [
+          105.5,
+          299
+        ],
+        "atlasIndex": 7,
+        "hand": [
+          134,
+          175
+        ],
+        "bodyHeight": 298
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-twin": {
+    "source": "redrawn/tenten-skills-v1.png",
+    "bodyHeight": 298,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          31,
+          635,
+          257,
+          292
+        ],
+        "anchor": [
+          122.5,
+          287
+        ],
+        "atlasIndex": 8,
+        "hand": [
+          232,
+          143
+        ],
+        "scrollLeft": [
+          22,
+          100
+        ],
+        "scrollRight": [
+          232,
+          116
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          350,
+          624,
+          270,
+          309
+        ],
+        "anchor": [
+          111.5,
+          257
+        ],
+        "atlasIndex": 9,
+        "hand": [
+          244,
+          134
+        ],
+        "scrollLeft": [
+          32,
+          84
+        ],
+        "scrollRight": [
+          244,
+          104
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          667,
+          631,
+          282,
+          302
+        ],
+        "anchor": [
+          34.5,
+          289
+        ],
+        "atlasIndex": 10,
+        "hand": [
+          262,
+          149
+        ],
+        "scrollLeft": [
+          29,
+          111
+        ],
+        "scrollRight": [
+          262,
+          119
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          992,
+          676,
+          222,
+          257
+        ],
+        "anchor": [
+          111.0,
+          253
+        ],
+        "atlasIndex": 11,
+        "hand": [
+          183,
+          153
+        ],
+        "scrollLeft": [
+          92,
+          124
+        ],
+        "scrollRight": [
+          183,
+          139
+        ],
+        "bodyHeight": 298
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-mastery": {
+    "source": "redrawn/tenten-skills-v1.png",
+    "bodyHeight": 298,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          51,
+          934,
+          220,
+          308
+        ],
+        "anchor": [
+          101.5,
+          304
+        ],
+        "atlasIndex": 12,
+        "hand": [
+          181,
+          133
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          371,
+          933,
+          206,
+          309
+        ],
+        "anchor": [
+          103.0,
+          305
+        ],
+        "atlasIndex": 13,
+        "hand": [
+          148,
+          173
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          692,
+          933,
+          210,
+          309
+        ],
+        "anchor": [
+          105.0,
+          305
+        ],
+        "atlasIndex": 14,
+        "hand": [
+          143,
+          177
+        ],
+        "bodyHeight": 298
+      },
+      {
+        "rect": [
+          1009,
+          940,
+          212,
+          302
+        ],
+        "anchor": [
+          106.0,
+          298
+        ],
+        "atlasIndex": 15,
+        "hand": [
+          149,
+          183
+        ],
+        "bodyHeight": 298
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "lee-bandage": {
+    "source": "redrawn/lee-bandage-v1.png",
+    "bodyHeight": 376.77,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          67,
+          42,
+          287,
+          388
+        ],
+        "anchor": [
+          138.5,
+          384
+        ],
+        "atlasIndex": 0,
+        "hand": [
+          227,
+          224
+        ],
+        "bodyHeight": 376.77
+      },
+      {
+        "rect": [
+          470,
+          42,
+          405,
+          388
+        ],
+        "anchor": [
+          155.5,
+          384
+        ],
+        "atlasIndex": 1,
+        "hand": [
+          368,
+          188
+        ],
+        "bodyHeight": 376.77
+      },
+      {
+        "rect": [
+          965,
+          42,
+          294,
+          388
+        ],
+        "anchor": [
+          147.5,
+          384
+        ],
+        "atlasIndex": 2,
+        "hand": [
+          205,
+          206
+        ],
+        "bodyHeight": 376.77
+      },
+      {
+        "rect": [
+          1402,
+          42,
+          309,
+          388
+        ],
+        "anchor": [
+          142.0,
+          384
+        ],
+        "atlasIndex": 3,
+        "hand": [
+          233,
+          202
+        ],
+        "bodyHeight": 376.77
+      }
+    ]
+  },
+  "lee-opened-bandage": {
+    "source": "redrawn/lee-bandage-v1.png",
+    "bodyHeight": 382.09,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          66,
+          439,
+          285,
+          424
+        ],
+        "anchor": [
+          139.0,
+          421
+        ],
+        "atlasIndex": 4,
+        "hand": [
+          229,
+          261
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          470,
+          442,
+          413,
+          422
+        ],
+        "anchor": [
+          155.0,
+          418
+        ],
+        "atlasIndex": 5,
+        "hand": [
+          368,
+          218
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          964,
+          441,
+          296,
+          422
+        ],
+        "anchor": [
+          148.0,
+          419
+        ],
+        "atlasIndex": 6,
+        "hand": [
+          206,
+          236
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          1399,
+          439,
+          318,
+          424
+        ],
+        "anchor": [
+          146.0,
+          421
+        ],
+        "atlasIndex": 7,
+        "hand": [
+          238,
+          239
+        ],
+        "bodyHeight": 382.09
+      }
+    ]
+  },
+  "tenten-throw": {
+    "source": "redrawn/tenten-common-v1.png",
+    "bodyHeight": 211.0,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          45,
+          1553,
+          139,
+          210
+        ],
+        "anchor": [
+          66.0,
+          206
+        ],
+        "atlasIndex": 28,
+        "hand": [
+          126,
+          115
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          257,
+          1554,
+          162,
+          209
+        ],
+        "anchor": [
+          69.5,
+          205
+        ],
+        "atlasIndex": 29,
+        "hand": [
+          141,
+          109
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          465,
+          1556,
+          183,
+          207
+        ],
+        "anchor": [
+          70.0,
+          203
+        ],
+        "atlasIndex": 30,
+        "hand": [
+          168,
+          98
+        ],
+        "bodyHeight": 211.0
+      },
+      {
+        "rect": [
+          699,
+          1556,
+          130,
+          207
+        ],
+        "anchor": [
+          64.0,
+          203
+        ],
+        "atlasIndex": 31,
+        "hand": [
+          96,
+          111
+        ],
+        "bodyHeight": 211.0
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "tenten-twin-release": {
+    "source": "redrawn/tenten-twin-release-v1.png",
+    "bodyHeight": 479,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          144,
+          118,
+          476,
+          483
+        ],
+        "anchor": [
+          201.5,
+          479
+        ],
+        "atlasIndex": 0,
+        "scrollLeft": [
+          56,
+          224
+        ],
+        "scrollRight": [
+          418,
+          205
+        ],
+        "hand": [
+          418,
+          205
+        ],
+        "bodyHeight": 479
+      },
+      {
+        "rect": [
+          739,
+          47,
+          415,
+          552
+        ],
+        "anchor": [
+          128.0,
+          549
+        ],
+        "atlasIndex": 1,
+        "scrollLeft": [
+          53,
+          145
+        ],
+        "scrollRight": [
+          371,
+          213
+        ],
+        "hand": [
+          371,
+          213
+        ],
+        "bodyHeight": 479
+      },
+      {
+        "rect": [
+          100,
+          669,
+          510,
+          481
+        ],
+        "anchor": [
+          231.5,
+          477
+        ],
+        "atlasIndex": 2,
+        "scrollLeft": [
+          56,
+          192
+        ],
+        "scrollRight": [
+          458,
+          232
+        ],
+        "hand": [
+          458,
+          232
+        ],
+        "bodyHeight": 479
+      },
+      {
+        "rect": [
+          736,
+          756,
+          454,
+          451
+        ],
+        "anchor": [
+          219.0,
+          447
+        ],
+        "atlasIndex": 3,
+        "scrollLeft": [
+          49,
+          199
+        ],
+        "scrollRight": [
+          402,
+          289
+        ],
+        "hand": [
+          402,
+          289
+        ],
+        "bodyHeight": 479
+      }
+    ],
+    "facing": "right",
+    "directionFallback": {
+      "up": "right",
+      "down": "right"
+    },
+    "mirrorDirections": [
+      "left"
+    ]
+  },
+  "sasuke-chidori-charge": {
+    "source": "redrawn/sasuke-chidori-charge-v3.png",
+    "bodyHeight": 390,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          543,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          1086,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          1629,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 390
+      }
+    ]
+  },
+  "sasuke-chidori-charge-walk": {
+    "source": "redrawn/sasuke-chidori-walk-v1.png",
+    "bodyHeight": 390,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          0,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          543,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          1086,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 390
+      },
+      {
+        "rect": [
+          1629,
+          0,
+          543,
+          724
+        ],
+        "anchor": [
+          240,
+          610
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 390
+      }
+    ]
+  },
+  "lee-lotus-hold": {
+    "source": "redrawn/lee-front-lotus-hold-v1.png",
+    "bodyHeight": 330.67,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          70,
+          45,
+          371,
+          381
+        ],
+        "anchor": [
+          41.5,
+          377
+        ],
+        "atlasIndex": 0,
+        "grip": [
+          333,
+          175
+        ],
+        "hand": [
+          333,
+          175
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          571,
+          60,
+          231,
+          353
+        ],
+        "anchor": [
+          104.0,
+          349
+        ],
+        "atlasIndex": 1,
+        "grip": [
+          198,
+          191
+        ],
+        "hand": [
+          198,
+          191
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          997,
+          37,
+          262,
+          392
+        ],
+        "anchor": [
+          131.0,
+          388
+        ],
+        "atlasIndex": 2,
+        "grip": [
+          180,
+          220
+        ],
+        "hand": [
+          180,
+          220
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          1405,
+          37,
+          298,
+          397
+        ],
+        "anchor": [
+          163.5,
+          393
+        ],
+        "atlasIndex": 3,
+        "grip": [
+          269,
+          169
+        ],
+        "hand": [
+          269,
+          169
+        ],
+        "bodyHeight": 330.67
+      }
+    ]
+  },
+  "lee-opened-lotus-hold": {
+    "source": "redrawn/lee-front-lotus-hold-v1.png",
+    "bodyHeight": 330.67,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          70,
+          477,
+          371,
+          381
+        ],
+        "anchor": [
+          42.5,
+          378
+        ],
+        "atlasIndex": 4,
+        "grip": [
+          333,
+          176
+        ],
+        "hand": [
+          333,
+          176
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          571,
+          490,
+          232,
+          353
+        ],
+        "anchor": [
+          102.5,
+          349
+        ],
+        "atlasIndex": 5,
+        "grip": [
+          197,
+          191
+        ],
+        "hand": [
+          197,
+          191
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          996,
+          466,
+          261,
+          392
+        ],
+        "anchor": [
+          132.0,
+          388
+        ],
+        "atlasIndex": 6,
+        "grip": [
+          179,
+          221
+        ],
+        "hand": [
+          179,
+          221
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          1406,
+          469,
+          297,
+          396
+        ],
+        "anchor": [
+          161.5,
+          392
+        ],
+        "atlasIndex": 7,
+        "grip": [
+          268,
+          170
+        ],
+        "hand": [
+          268,
+          170
+        ],
+        "bodyHeight": 330.67
+      }
+    ]
+  },
+  "lee-whirlwind-air": {
+    "source": "redrawn/lee-whirlwind-air-v1.png",
+    "bodyHeight": 263.12,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "frames": [
+      {
+        "rect": [
+          37,
+          90,
+          253,
+          250
+        ],
+        "anchor": [
+          122.0,
+          246
+        ],
+        "atlasIndex": 0,
+        "foot": [
+          216,
+          235
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          379,
+          46,
+          184,
+          308
+        ],
+        "anchor": [
+          74.0,
+          304
+        ],
+        "atlasIndex": 1,
+        "foot": [
+          148,
+          220
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          581,
+          81,
+          365,
+          235
+        ],
+        "anchor": [
+          182.0,
+          231
+        ],
+        "atlasIndex": 2,
+        "foot": [
+          336,
+          215
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          1019,
+          82,
+          196,
+          260
+        ],
+        "anchor": [
+          87.0,
+          256
+        ],
+        "atlasIndex": 3,
+        "foot": [
+          106,
+          236
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          49,
+          388,
+          276,
+          245
+        ],
+        "anchor": [
+          111.5,
+          241
+        ],
+        "atlasIndex": 4,
+        "foot": [
+          261,
+          114
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          358,
+          374,
+          288,
+          249
+        ],
+        "anchor": [
+          98.0,
+          246
+        ],
+        "atlasIndex": 5,
+        "foot": [
+          267,
+          138
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          673,
+          426,
+          252,
+          205
+        ],
+        "anchor": [
+          127.0,
+          202
+        ],
+        "atlasIndex": 6,
+        "foot": [
+          218,
+          187
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          989,
+          401,
+          229,
+          232
+        ],
+        "anchor": [
+          113.5,
+          228
+        ],
+        "atlasIndex": 7,
+        "foot": [
+          192,
+          215
+        ],
+        "bodyHeight": 263.12
+      }
+    ]
+  },
+  "lee-opened-whirlwind-air": {
+    "source": "redrawn/lee-whirlwind-air-v1.png",
+    "bodyHeight": 263.12,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "frames": [
+      {
+        "rect": [
+          37,
+          676,
+          253,
+          251
+        ],
+        "anchor": [
+          121.5,
+          247
+        ],
+        "atlasIndex": 8,
+        "foot": [
+          216,
+          234
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          380,
+          633,
+          184,
+          306
+        ],
+        "anchor": [
+          74.0,
+          302
+        ],
+        "atlasIndex": 9,
+        "foot": [
+          147,
+          220
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          579,
+          663,
+          370,
+          238
+        ],
+        "anchor": [
+          184.5,
+          234
+        ],
+        "atlasIndex": 10,
+        "foot": [
+          341,
+          216
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          1019,
+          670,
+          197,
+          258
+        ],
+        "anchor": [
+          86.0,
+          254
+        ],
+        "atlasIndex": 11,
+        "foot": [
+          105,
+          233
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          55,
+          954,
+          265,
+          259
+        ],
+        "anchor": [
+          109.5,
+          255
+        ],
+        "atlasIndex": 12,
+        "foot": [
+          254,
+          113
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          358,
+          951,
+          293,
+          251
+        ],
+        "anchor": [
+          100.5,
+          247
+        ],
+        "atlasIndex": 13,
+        "foot": [
+          272,
+          137
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          670,
+          1000,
+          256,
+          208
+        ],
+        "anchor": [
+          129.0,
+          204
+        ],
+        "atlasIndex": 14,
+        "foot": [
+          221,
+          187
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          988,
+          972,
+          235,
+          237
+        ],
+        "anchor": [
+          114.0,
+          233
+        ],
+        "atlasIndex": 15,
+        "foot": [
+          193,
+          215
+        ],
+        "bodyHeight": 263.12
+      }
+    ]
+  },
+  "lee-death-movement": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          43,
+          470,
+          145,
+          204
+        ],
+        "anchor": [
+          64.0,
+          199.0
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          259,
+          470,
+          141,
+          204
+        ],
+        "anchor": [
+          76.5,
+          200.0
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          470,
+          470,
+          137,
+          204
+        ],
+        "anchor": [
+          65.0,
+          200.0
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          686,
+          472,
+          147,
+          202
+        ],
+        "anchor": [
+          75.0,
+          198.0
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          45,
+          909,
+          132,
+          216
+        ],
+        "anchor": [
+          67.0,
+          212.0
+        ],
+        "atlasIndex": 16,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          262,
+          911,
+          127,
+          214
+        ],
+        "anchor": [
+          71.5,
+          210.0
+        ],
+        "atlasIndex": 17,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          480,
+          911,
+          122,
+          214
+        ],
+        "anchor": [
+          47.0,
+          210.0
+        ],
+        "atlasIndex": 18,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          689,
+          912,
+          128,
+          213
+        ],
+        "anchor": [
+          73.5,
+          209.0
+        ],
+        "atlasIndex": 19,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          28,
+          681,
+          157,
+          211
+        ],
+        "anchor": [
+          76.5,
+          207.0
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          237,
+          685,
+          168,
+          207
+        ],
+        "anchor": [
+          118.0,
+          203.0
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          450,
+          687,
+          162,
+          205
+        ],
+        "anchor": [
+          116.0,
+          201.0
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          668,
+          685,
+          164,
+          207
+        ],
+        "anchor": [
+          119.0,
+          203.0
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          28,
+          681,
+          157,
+          211
+        ],
+        "anchor": [
+          76.5,
+          207.0
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          237,
+          685,
+          168,
+          207
+        ],
+        "anchor": [
+          118.0,
+          203.0
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          450,
+          687,
+          162,
+          205
+        ],
+        "anchor": [
+          116.0,
+          201.0
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          668,
+          685,
+          164,
+          207
+        ],
+        "anchor": [
+          119.0,
+          203.0
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-death-idle": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          58,
+          21,
+          122,
+          215
+        ],
+        "anchor": [
+          61.5,
+          211.0
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          266,
+          22,
+          123,
+          214
+        ],
+        "anchor": [
+          60.5,
+          210.0
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          58,
+          21,
+          122,
+          215
+        ],
+        "anchor": [
+          61.5,
+          211.0
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          266,
+          22,
+          123,
+          214
+        ],
+        "anchor": [
+          60.5,
+          210.0
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          487,
+          19,
+          116,
+          217
+        ],
+        "anchor": [
+          59.0,
+          213.0
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          694,
+          18,
+          116,
+          218
+        ],
+        "anchor": [
+          58.0,
+          214.0
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          487,
+          19,
+          116,
+          217
+        ],
+        "anchor": [
+          59.0,
+          213.0
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          694,
+          18,
+          116,
+          218
+        ],
+        "anchor": [
+          58.0,
+          214.0
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-death-hurt": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "frames": [
+      {
+        "rect": [
+          54,
+          1132,
+          125,
+          202
+        ],
+        "anchor": [
+          62.5,
+          198.0
+        ],
+        "atlasIndex": 20,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          260,
+          1134,
+          134,
+          200
+        ],
+        "anchor": [
+          67.0,
+          196.0
+        ],
+        "atlasIndex": 21,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          58,
+          21,
+          122,
+          215
+        ],
+        "anchor": [
+          61.5,
+          211.0
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          266,
+          22,
+          123,
+          214
+        ],
+        "anchor": [
+          60.5,
+          210.0
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          483,
+          1136,
+          121,
+          198
+        ],
+        "anchor": [
+          60.5,
+          194.0
+        ],
+        "atlasIndex": 22,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          689,
+          1136,
+          125,
+          198
+        ],
+        "anchor": [
+          61.0,
+          194.0
+        ],
+        "atlasIndex": 23,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          487,
+          19,
+          116,
+          217
+        ],
+        "anchor": [
+          59.0,
+          213.0
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          694,
+          18,
+          116,
+          218
+        ],
+        "anchor": [
+          58.0,
+          214.0
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          487,
+          255,
+          134,
+          197
+        ],
+        "anchor": [
+          69.5,
+          194.0
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          701,
+          253,
+          132,
+          199
+        ],
+        "anchor": [
+          54.0,
+          195.0
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21,
+        "mirror": true
+      },
+      {
+        "rect": [
+          487,
+          255,
+          134,
+          197
+        ],
+        "anchor": [
+          69.5,
+          194.0
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          701,
+          253,
+          132,
+          199
+        ],
+        "anchor": [
+          54.0,
+          195.0
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          67,
+          252,
+          135,
+          200
+        ],
+        "anchor": [
+          56.5,
+          196.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          274,
+          252,
+          111,
+          200
+        ],
+        "anchor": [
+          55.5,
+          196.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 186.21
+      }
+    ],
+    "directions": {
+      "down": 0,
+      "up": 1,
+      "left": 2,
+      "right": 3
+    }
+  },
+  "lee-death-death": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          38,
+          1351,
+          139,
+          185
+        ],
+        "anchor": [
+          69.0,
+          181.0
+        ],
+        "atlasIndex": 24,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          222,
+          1369,
+          178,
+          166
+        ],
+        "anchor": [
+          83.5,
+          162.0
+        ],
+        "atlasIndex": 25,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          417,
+          1387,
+          212,
+          146
+        ],
+        "anchor": [
+          101.5,
+          142.0
+        ],
+        "atlasIndex": 26,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          648,
+          1401,
+          204,
+          122
+        ],
+        "anchor": [
+          100.0,
+          118.0
+        ],
+        "atlasIndex": 27,
+        "bodyHeight": 186.21
+      }
+    ]
+  },
+  "lee-death-attack": {
+    "source": "redrawn/lee-death-common-v3.png",
+    "bodyHeight": 186.21,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          30,
+          1549,
+          146,
+          208
+        ],
+        "anchor": [
+          73.0,
+          204.0
+        ],
+        "atlasIndex": 28,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          239,
+          1552,
+          182,
+          206
+        ],
+        "anchor": [
+          70.5,
+          202.0
+        ],
+        "atlasIndex": 29,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          457,
+          1552,
+          183,
+          207
+        ],
+        "anchor": [
+          71.0,
+          203.0
+        ],
+        "atlasIndex": 30,
+        "bodyHeight": 186.21
+      },
+      {
+        "rect": [
+          688,
+          1549,
+          134,
+          211
+        ],
+        "anchor": [
+          66.0,
+          207.0
+        ],
+        "atlasIndex": 31,
+        "bodyHeight": 186.21
+      }
+    ]
+  },
+  "lee-death-whirlwind": {
+    "source": "redrawn/lee-death-skills-v3.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          50,
+          39,
+          227,
+          297
+        ],
+        "anchor": [
+          114.5,
+          293.0
+        ],
+        "atlasIndex": 0,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          391,
+          36,
+          195,
+          301
+        ],
+        "anchor": [
+          54.0,
+          297.0
+        ],
+        "atlasIndex": 1,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          669,
+          46,
+          290,
+          290
+        ],
+        "anchor": [
+          69.0,
+          286.0
+        ],
+        "atlasIndex": 2,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          982,
+          47,
+          241,
+          289
+        ],
+        "anchor": [
+          118.0,
+          285.0
+        ],
+        "atlasIndex": 3,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-death-lotus": {
+    "source": "redrawn/lee-death-skills-v3.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          55,
+          393,
+          202,
+          271
+        ],
+        "anchor": [
+          101.0,
+          267.0
+        ],
+        "atlasIndex": 4,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          377,
+          359,
+          252,
+          306
+        ],
+        "anchor": [
+          72.0,
+          302.0
+        ],
+        "atlasIndex": 5,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          714,
+          380,
+          175,
+          238
+        ],
+        "anchor": [
+          71.0,
+          234.0
+        ],
+        "atlasIndex": 6,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          985,
+          439,
+          256,
+          228
+        ],
+        "anchor": [
+          131.5,
+          224.0
+        ],
+        "atlasIndex": 7,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-death-gates": {
+    "source": "redrawn/lee-death-skills-v3.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          58,
+          693,
+          224,
+          271
+        ],
+        "anchor": [
+          112.5,
+          267.0
+        ],
+        "atlasIndex": 8,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          355,
+          695,
+          248,
+          269
+        ],
+        "anchor": [
+          124.5,
+          265.0
+        ],
+        "atlasIndex": 9,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          674,
+          673,
+          229,
+          292
+        ],
+        "anchor": [
+          114.5,
+          289.0
+        ],
+        "atlasIndex": 10,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          989,
+          705,
+          250,
+          262
+        ],
+        "anchor": [
+          117.0,
+          258.0
+        ],
+        "atlasIndex": 11,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-death-reverse": {
+    "source": "redrawn/lee-death-skills-v3.png",
+    "bodyHeight": 251.33,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          30,
+          999,
+          265,
+          221
+        ],
+        "anchor": [
+          121.0,
+          217.0
+        ],
+        "atlasIndex": 12,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          364,
+          980,
+          297,
+          248
+        ],
+        "anchor": [
+          42.0,
+          245.0
+        ],
+        "atlasIndex": 13,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          695,
+          979,
+          235,
+          224
+        ],
+        "anchor": [
+          62.5,
+          221.0
+        ],
+        "atlasIndex": 14,
+        "bodyHeight": 251.33
+      },
+      {
+        "rect": [
+          989,
+          1013,
+          252,
+          213
+        ],
+        "anchor": [
+          196.5,
+          209.0
+        ],
+        "atlasIndex": 15,
+        "bodyHeight": 251.33
+      }
+    ]
+  },
+  "lee-death-bandage": {
+    "source": "redrawn/lee-death-bandage-v3.png",
+    "bodyHeight": 382.09,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          64,
+          456,
+          288,
+          410
+        ],
+        "anchor": [
+          140.5,
+          407.0
+        ],
+        "atlasIndex": 4,
+        "hand": [
+          230.5,
+          247.0
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          467,
+          455,
+          405,
+          412
+        ],
+        "anchor": [
+          157.0,
+          408.0
+        ],
+        "atlasIndex": 5,
+        "hand": [
+          370.0,
+          208.0
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          963,
+          456,
+          298,
+          410
+        ],
+        "anchor": [
+          149.0,
+          406.0
+        ],
+        "atlasIndex": 6,
+        "hand": [
+          207.0,
+          223.0
+        ],
+        "bodyHeight": 382.09
+      },
+      {
+        "rect": [
+          1399,
+          459,
+          317,
+          407
+        ],
+        "anchor": [
+          146.0,
+          404.0
+        ],
+        "atlasIndex": 7,
+        "hand": [
+          238.0,
+          222.0
+        ],
+        "bodyHeight": 382.09
+      }
+    ]
+  },
+  "lee-death-lotus-hold": {
+    "source": "redrawn/lee-death-front-lotus-hold-v3.png",
+    "bodyHeight": 330.67,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "frames": [
+      {
+        "rect": [
+          65,
+          467,
+          386,
+          399
+        ],
+        "anchor": [
+          46.5,
+          395.0
+        ],
+        "atlasIndex": 4,
+        "grip": [
+          337.0,
+          193.0
+        ],
+        "hand": [
+          337.0,
+          193.0
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          568,
+          470,
+          242,
+          386
+        ],
+        "anchor": [
+          107.0,
+          382.0
+        ],
+        "atlasIndex": 5,
+        "grip": [
+          201.5,
+          224.0
+        ],
+        "hand": [
+          201.5,
+          224.0
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          992,
+          465,
+          260,
+          407
+        ],
+        "anchor": [
+          138.0,
+          403.0
+        ],
+        "atlasIndex": 6,
+        "grip": [
+          185.0,
+          236.0
+        ],
+        "hand": [
+          185.0,
+          236.0
+        ],
+        "bodyHeight": 330.67
+      },
+      {
+        "rect": [
+          1417,
+          467,
+          308,
+          408
+        ],
+        "anchor": [
+          161.5,
+          404.0
+        ],
+        "atlasIndex": 7,
+        "grip": [
+          268.0,
+          182.0
+        ],
+        "hand": [
+          268.0,
+          182.0
+        ],
+        "bodyHeight": 330.67
+      }
+    ]
+  },
+  "lee-death-whirlwind-air": {
+    "source": "redrawn/lee-death-whirlwind-air-v3.png",
+    "bodyHeight": 263.12,
+    "safeFrames": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "frames": [
+      {
+        "rect": [
+          37,
+          656,
+          252,
+          274
+        ],
+        "anchor": [
+          122.0,
+          270.0
+        ],
+        "atlasIndex": 8,
+        "foot": [
+          216.5,
+          257.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          381,
+          634,
+          187,
+          304
+        ],
+        "anchor": [
+          73.0,
+          300.0
+        ],
+        "atlasIndex": 9,
+        "foot": [
+          146.0,
+          218.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          580,
+          654,
+          369,
+          250
+        ],
+        "anchor": [
+          184.0,
+          246.0
+        ],
+        "atlasIndex": 10,
+        "foot": [
+          340.5,
+          228.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          1020,
+          666,
+          198,
+          265
+        ],
+        "anchor": [
+          85.5,
+          260.0
+        ],
+        "atlasIndex": 11,
+        "foot": [
+          104.5,
+          239.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          56,
+          946,
+          265,
+          267
+        ],
+        "anchor": [
+          108.0,
+          263.0
+        ],
+        "atlasIndex": 12,
+        "foot": [
+          252.5,
+          121.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          361,
+          938,
+          290,
+          265
+        ],
+        "anchor": [
+          98.5,
+          261.0
+        ],
+        "atlasIndex": 13,
+        "foot": [
+          270.0,
+          151.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          671,
+          978,
+          254,
+          231
+        ],
+        "anchor": [
+          127.5,
+          227.0
+        ],
+        "atlasIndex": 14,
+        "foot": [
+          219.5,
+          210.0
+        ],
+        "bodyHeight": 263.12
+      },
+      {
+        "rect": [
+          988,
+          956,
+          242,
+          253
+        ],
+        "anchor": [
+          114.0,
+          249.0
+        ],
+        "atlasIndex": 15,
+        "foot": [
+          193.0,
+          231.0
+        ],
+        "bodyHeight": 263.12
+      }
+    ]
+  }
+}

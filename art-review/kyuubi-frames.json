@@ -1,0 +1,535 @@
+{
+  "source": "redrawn/one-tail-v2.png",
+  "bodyHeight": 175.76,
+  "facing": "right",
+  "animations": {
+    "idle": {
+      "frames": [
+        {
+          "rect": [
+            24,
+            77,
+            216,
+            177
+          ],
+          "anchor": [
+            116.0,
+            173
+          ],
+          "atlasIndex": 0,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            280,
+            79,
+            218,
+            175
+          ],
+          "anchor": [
+            120.0,
+            171
+          ],
+          "atlasIndex": 1,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            525,
+            82,
+            225,
+            172
+          ],
+          "anchor": [
+            122.5,
+            168
+          ],
+          "atlasIndex": 2,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            796,
+            80,
+            212,
+            174
+          ],
+          "anchor": [
+            107.0,
+            170
+          ],
+          "atlasIndex": 3,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 7,
+      "loop": true
+    },
+    "walk": {
+      "frames": [
+        {
+          "rect": [
+            17,
+            311,
+            246,
+            169
+          ],
+          "anchor": [
+            178.0,
+            165
+          ],
+          "atlasIndex": 4,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            280,
+            307,
+            241,
+            177
+          ],
+          "anchor": [
+            163.5,
+            173
+          ],
+          "atlasIndex": 5,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            524,
+            320,
+            246,
+            165
+          ],
+          "anchor": [
+            184.5,
+            161
+          ],
+          "atlasIndex": 6,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            775,
+            312,
+            237,
+            173
+          ],
+          "anchor": [
+            156.0,
+            169
+          ],
+          "atlasIndex": 7,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 10,
+      "loop": true
+    },
+    "run": {
+      "frames": [
+        {
+          "rect": [
+            17,
+            311,
+            246,
+            169
+          ],
+          "anchor": [
+            178.0,
+            165
+          ],
+          "atlasIndex": 4,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            280,
+            307,
+            241,
+            177
+          ],
+          "anchor": [
+            163.5,
+            173
+          ],
+          "atlasIndex": 5,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            524,
+            320,
+            246,
+            165
+          ],
+          "anchor": [
+            184.5,
+            161
+          ],
+          "atlasIndex": 6,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            775,
+            312,
+            237,
+            173
+          ],
+          "anchor": [
+            156.0,
+            169
+          ],
+          "atlasIndex": 7,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 12,
+      "loop": true
+    },
+    "hurt": {
+      "frames": [
+        {
+          "rect": [
+            19,
+            538,
+            222,
+            193
+          ],
+          "anchor": [
+            125.5,
+            189
+          ],
+          "atlasIndex": 8,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            273,
+            562,
+            231,
+            169
+          ],
+          "anchor": [
+            115.5,
+            165
+          ],
+          "atlasIndex": 9,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            530,
+            569,
+            231,
+            162
+          ],
+          "anchor": [
+            111.0,
+            158
+          ],
+          "atlasIndex": 10,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            792,
+            553,
+            217,
+            178
+          ],
+          "anchor": [
+            124.0,
+            174
+          ],
+          "atlasIndex": 11,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 10,
+      "loop": false
+    },
+    "attack": {
+      "frames": [
+        {
+          "rect": [
+            25,
+            803,
+            207,
+            193
+          ],
+          "anchor": [
+            105.5,
+            189
+          ],
+          "atlasIndex": 12,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            265,
+            796,
+            250,
+            200
+          ],
+          "anchor": [
+            95.0,
+            197
+          ],
+          "atlasIndex": 13,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            522,
+            804,
+            271,
+            192
+          ],
+          "anchor": [
+            101.5,
+            189
+          ],
+          "atlasIndex": 14,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            805,
+            802,
+            187,
+            194
+          ],
+          "anchor": [
+            97.0,
+            191
+          ],
+          "atlasIndex": 15,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 12,
+      "loop": false
+    },
+    "throw": {
+      "frames": [
+        {
+          "rect": [
+            19,
+            1310,
+            216,
+            180
+          ],
+          "anchor": [
+            107.0,
+            176
+          ],
+          "atlasIndex": 20,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            279,
+            1314,
+            224,
+            176
+          ],
+          "anchor": [
+            84.5,
+            172
+          ],
+          "atlasIndex": 21,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            516,
+            1326,
+            258,
+            164
+          ],
+          "anchor": [
+            102.0,
+            160
+          ],
+          "atlasIndex": 22,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            801,
+            1325,
+            208,
+            165
+          ],
+          "anchor": [
+            102.5,
+            161
+          ],
+          "atlasIndex": 23,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 12,
+      "loop": false
+    },
+    "activation": {
+      "frames": [
+        {
+          "rect": [
+            24,
+            77,
+            216,
+            177
+          ],
+          "anchor": [
+            116.0,
+            173
+          ],
+          "atlasIndex": 0,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            280,
+            79,
+            218,
+            175
+          ],
+          "anchor": [
+            120.0,
+            171
+          ],
+          "atlasIndex": 1,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            525,
+            82,
+            225,
+            172
+          ],
+          "anchor": [
+            122.5,
+            168
+          ],
+          "atlasIndex": 2,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            796,
+            80,
+            212,
+            174
+          ],
+          "anchor": [
+            107.0,
+            170
+          ],
+          "atlasIndex": 3,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 9,
+      "loop": false
+    },
+    "rasenganCharge": {
+      "frames": [
+        {
+          "rect": [
+            18,
+            1060,
+            196,
+            188
+          ],
+          "anchor": [
+            105.0,
+            184
+          ],
+          "atlasIndex": 16,
+          "bodyHeight": 175.76
+        },
+        {
+          "rect": [
+            265,
+            1064,
+            207,
+            184
+          ],
+          "anchor": [
+            103.0,
+            180
+          ],
+          "atlasIndex": 17,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 9,
+      "loop": false
+    },
+    "rasenganDash": {
+      "frames": [
+        {
+          "rect": [
+            516,
+            1061,
+            274,
+            187
+          ],
+          "anchor": [
+            83.5,
+            183
+          ],
+          "atlasIndex": 18,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 12,
+      "loop": true
+    },
+    "rasenganRelease": {
+      "frames": [
+        {
+          "rect": [
+            516,
+            1061,
+            274,
+            187
+          ],
+          "anchor": [
+            83.5,
+            183
+          ],
+          "atlasIndex": 18,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 12,
+      "loop": false
+    },
+    "rasenganRecover": {
+      "frames": [
+        {
+          "rect": [
+            801,
+            1060,
+            199,
+            188
+          ],
+          "anchor": [
+            98.5,
+            184
+          ],
+          "atlasIndex": 19,
+          "bodyHeight": 175.76
+        }
+      ],
+      "fps": 10,
+      "loop": false
+    }
+  }
+}

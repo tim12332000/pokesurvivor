@@ -1,0 +1,314 @@
+{
+    "repository":  "https://github.com/EwertonMendes/DigiGame",
+    "commit":  "802e9cde626e759d15e33387bb3b4794d2b1def1",
+    "commit_url":  "https://github.com/EwertonMendes/DigiGame/commit/802e9cde626e759d15e33387bb3b4794d2b1def1",
+    "branch":  "master",
+    "files":  [
+                  {
+                      "name":  "agumon",
+                      "png":  "agumon.png",
+                      "metadata":  "agumon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/agumon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/agumon/field.json",
+                      "sha256":  "9c610ef44b04a2b3def4395960b7ebe683e6a95b8113eb234c7e2728840b5396",
+                      "metadata_sha256":  "d1ac1b6d164bd459958e0e4dd68933b10ff3354a93020b49b9c240c966d7e9fa",
+                      "width":  792,
+                      "height":  66,
+                      "cell_width":  66,
+                      "cell_height":  66,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_kind":  "official_ds",
+                      "source_variant":  "digimon_world_sprite_manager",
+                      "source_name":  "Agumon",
+                      "source_archive_file":  null,
+                      "source_id":  null,
+                      "source_sha256":  null,
+                      "runtime_scale":  0.5,
+                      "source_group_order":  null,
+                      "canonical_runtime_phases":  null,
+                      "manager_sheet_id":  "48418"
+                  },
+                  {
+                      "name":  "gabumon",
+                      "png":  "gabumon.png",
+                      "metadata":  "gabumon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/gabumon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/gabumon/field.json",
+                      "sha256":  "ece667e69974849f37a4fba30d4d37897bafd4193819840f668803b1e982291b",
+                      "metadata_sha256":  "495a2b6bb379baec50cc0f20b492c059d3290966afde477304c749d82e9e7d08",
+                      "width":  384,
+                      "height":  35,
+                      "cell_width":  32,
+                      "cell_height":  35,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_kind":  "official_ds",
+                      "source_variant":  "withthewill_audited_exact_boxes",
+                      "source_name":  null,
+                      "source_archive_file":  "sprite thread/030_Gabumon.png",
+                      "source_id":  30,
+                      "source_sha256":  "fbd0021b8f6e81148e5c741024c04d49df48002e4587241ba3a429b7c111f4f4",
+                      "runtime_scale":  1.0,
+                      "source_group_order":  [
+                                                 "down_left",
+                                                 "up_right",
+                                                 "down_right",
+                                                 "up_left"
+                                             ],
+                      "canonical_runtime_phases":  [
+                                                       "idle",
+                                                       "step_a",
+                                                       "step_b"
+                                                   ],
+                      "manager_sheet_id":  null
+                  },
+                  {
+                      "name":  "biyomon",
+                      "png":  "biyomon.png",
+                      "metadata":  "biyomon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/biyomon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/biyomon/field.json",
+                      "sha256":  "a7e44b4d092d0a4e3b863c018dfa48ced9d8c0600dfff7587966b11c011cf838",
+                      "metadata_sha256":  "d5404a774a827604285c65f6f9ca5c613f74a20f9feef53e549b0d8ced4f5ac0",
+                      "width":  384,
+                      "height":  32,
+                      "cell_width":  32,
+                      "cell_height":  32,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_kind":  "official_ds",
+                      "source_variant":  "withthewill_audited_exact_boxes",
+                      "source_name":  null,
+                      "source_archive_file":  "sprite thread/032_Biyomon.png",
+                      "source_id":  32,
+                      "source_sha256":  "4031345f400569b3da11eec837688305f717275cca756ca6ace4eb51bf9ad332",
+                      "runtime_scale":  1.0,
+                      "source_group_order":  [
+                                                 "down_left",
+                                                 "down_right",
+                                                 "up_right",
+                                                 "up_left"
+                                             ],
+                      "canonical_runtime_phases":  [
+                                                       "idle",
+                                                       "step_a",
+                                                       "step_b"
+                                                   ],
+                      "manager_sheet_id":  null
+                  },
+                  {
+                      "name":  "tentomon",
+                      "png":  "tentomon.png",
+                      "metadata":  "tentomon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/tentomon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/tentomon/field.json",
+                      "sha256":  "bf192144453a3f2ed914af46c1f42616ff1fdbd6d90e72700ca7c8b6f05e7c01",
+                      "metadata_sha256":  "0f7e78b42ed1fb11fee8d49d96f5b08a49de3318af1d4aed718b0b8644a7f91c",
+                      "width":  384,
+                      "height":  32,
+                      "cell_width":  32,
+                      "cell_height":  32,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_kind":  "official_ds",
+                      "source_variant":  "withthewill_audited_exact_boxes",
+                      "source_name":  null,
+                      "source_archive_file":  "sprite thread/034_Tentomon.png",
+                      "source_id":  34,
+                      "source_sha256":  "0f352c395f0707158e942d9e3e973f5d2abd233ed915aedb77acb4f58000117a",
+                      "runtime_scale":  1.0,
+                      "source_group_order":  [
+                                                 "up_left",
+                                                 "up_right",
+                                                 "down_left",
+                                                 "down_right"
+                                             ],
+                      "canonical_runtime_phases":  [
+                                                       "idle",
+                                                       "step_a",
+                                                       "step_b"
+                                                   ],
+                      "manager_sheet_id":  null
+                  },
+                  {
+                      "name":  "palmon",
+                      "png":  "palmon.png",
+                      "metadata":  "palmon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/palmon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/palmon/field.json",
+                      "sha256":  "7a08b543a97343a8b9b61bba5e27420b1e107e5af70f34c5ae3927c69d706cd5",
+                      "metadata_sha256":  "a7ac6eb2e9662a6e4b49a41c637037e723a510886585f2a476ac6d9e4be10160",
+                      "width":  384,
+                      "height":  34,
+                      "cell_width":  32,
+                      "cell_height":  34,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_kind":  "official_ds",
+                      "source_variant":  "withthewill_audited_exact_boxes",
+                      "source_name":  null,
+                      "source_archive_file":  "sprite thread/033_Palmon.png",
+                      "source_id":  33,
+                      "source_sha256":  "5780858e135b4de73662a112aff3a812a61fe42dcae880462f66d7d4400f5881",
+                      "runtime_scale":  1.0,
+                      "source_group_order":  [
+                                                 "down_left",
+                                                 "down_right",
+                                                 "up_left",
+                                                 "up_right"
+                                             ],
+                      "canonical_runtime_phases":  [
+                                                       "idle",
+                                                       "step_a",
+                                                       "step_b"
+                                                   ],
+                      "manager_sheet_id":  null
+                  },
+                  {
+                      "name":  "gomamon",
+                      "png":  "gomamon.png",
+                      "metadata":  "gomamon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/gomamon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/gomamon/field.json",
+                      "sha256":  "1592aa90a310dcd85c6b14cdb812d28d52eff52f2c27ebd7a0315f4cfa02d78b",
+                      "metadata_sha256":  "19043d047868a59f45e5df2f7cae539d87b96b951f0aa4c24a487b314efaaaec",
+                      "width":  384,
+                      "height":  32,
+                      "cell_width":  32,
+                      "cell_height":  32,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_kind":  "official_ds",
+                      "source_variant":  "withthewill_audited_exact_boxes",
+                      "source_name":  null,
+                      "source_archive_file":  "sprite thread/037_Gomamon.png",
+                      "source_id":  37,
+                      "source_sha256":  "a078fe58fd533ec08f583fae9d7aa4cde02f503db450b09999b30c5fe0eeddf2",
+                      "runtime_scale":  1.0,
+                      "source_group_order":  [
+                                                 "down_left",
+                                                 "down_right",
+                                                 "up_left",
+                                                 "up_right"
+                                             ],
+                      "canonical_runtime_phases":  [
+                                                       "idle",
+                                                       "step_a",
+                                                       "step_b"
+                                                   ],
+                      "manager_sheet_id":  null
+                  },
+                  {
+                      "name":  "patamon",
+                      "png":  "patamon.png",
+                      "metadata":  "patamon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/patamon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/patamon/field.json",
+                      "sha256":  "5a214c2b86a554c087822fb7809af7c9d61aa14bfd60f1709aa84600078bb15b",
+                      "metadata_sha256":  "58b94e87b60032f9be0f9739a97293da62efe266e68223583459c263271254e8",
+                      "width":  384,
+                      "height":  32,
+                      "cell_width":  32,
+                      "cell_height":  32,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_kind":  "official_ds",
+                      "source_variant":  "withthewill_audited_exact_boxes",
+                      "source_name":  null,
+                      "source_archive_file":  "sprite thread/031_Patamon.png",
+                      "source_id":  31,
+                      "source_sha256":  "9d6a6fe7b2a9619e90cfd96c8b56af893987976b2345b90dceb93b7a4d892194",
+                      "runtime_scale":  1.0,
+                      "source_group_order":  [
+                                                 "down_left",
+                                                 "down_right",
+                                                 "up_right",
+                                                 "up_left"
+                                             ],
+                      "canonical_runtime_phases":  [
+                                                       "idle",
+                                                       "step_a",
+                                                       "step_b"
+                                                   ],
+                      "manager_sheet_id":  null
+                  },
+                  {
+                      "name":  "gatomon",
+                      "png":  "gatomon.png",
+                      "metadata":  "gatomon.json",
+                      "source_png":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/gatomon/field.png",
+                      "source_metadata":  "https://raw.githubusercontent.com/EwertonMendes/DigiGame/802e9cde626e759d15e33387bb3b4794d2b1def1/assets/characters/gatomon/field.json",
+                      "sha256":  "979788a61e4d41d8321b986da490bf7a61055c826132c8f8b3fc58e6ff6ed427",
+                      "metadata_sha256":  "098d49205850636f4679df05c8e81a4f4e19975151f48bd40aa18e9c1d8ee661",
+                      "width":  432,
+                      "height":  32,
+                      "cell_width":  36,
+                      "cell_height":  32,
+                      "frame_count":  12,
+                      "frames_per_direction":  3,
+                      "direction_order":  [
+                                              "down_left",
+                                              "down_right",
+                                              "up_left",
+                                              "up_right"
+                                          ],
+                      "source_kind":  "official_ds",
+                      "source_variant":  "withthewill_additional_audited",
+                      "source_name":  null,
+                      "source_archive_file":  "sprite thread/104_Tailmon.png",
+                      "source_id":  104,
+                      "source_sha256":  "eaaf1a0382baf1a5b7fa61f1dfd51aabefeaab021e23504aed059238346bdd66",
+                      "runtime_scale":  null,
+                      "source_group_order":  null,
+                      "canonical_runtime_phases":  [
+                                                       "idle",
+                                                       "step_a",
+                                                       "step_b"
+                                                   ],
+                      "manager_sheet_id":  null
+                  }
+              ]
+}
