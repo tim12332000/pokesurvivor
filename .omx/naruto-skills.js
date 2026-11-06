@@ -576,7 +576,7 @@
       name:'通靈・斬斬舞',mode:'temari-blade-dance',icon:'temariSummon',type:'flying',passive:true,learnLevel:9,cd:10,dmg:25.6,
       count:1,range:360,speed:480,radius:65,slashCount:4,
       ups:temariDamageUps([25.6,31.2,37.6,45.6,55.2]).map((up,i)=>({...up,m:{...up.m,slashCount:[4,4,5,5,6][i+1]}})),
-      desc:'常駐被動，不占主動欄。學會後floor(1.25^數量卡)隻鐮多利在附近自主遊走、停留，走遠會自行回到附近。自動接敵、斬擊後繼續閒逛，每隻獨立冷卻10秒。基礎斬擊4／4／5／5／6次；精通另加精通等級＋數量卡。每斬間隔0.12秒，傷害25.6／31.2／37.6／45.6／55.2，不分攤傷害；敵人可離開範圍。',source_url:temariSource
+      desc:'常駐被動，不占主動欄。學會後floor(1.25^數量卡)隻鐮多利在附近自主遊走、停留，走遠會自行回到附近。自動追擊移動目標，貼近後連斬並在刀距內跟進；遇阻、目標死亡或離開索敵範圍便撤回。斬擊後繼續閒逛，每隻獨立冷卻10秒。基礎斬擊4／4／5／5／6次；精通另加精通等級＋數量卡。每斬間隔0.12秒，傷害25.6／31.2／37.6／45.6／55.2，不分攤傷害；敵人可離開範圍。',source_url:temariSource
     }],
     ['naruto-temari-typhoon',[30011],{
       name:'風遁・颱風迴旋',mode:'temari-typhoon',icon:'temariTyphoon',type:'flying',learnLevel:12,cd:8,dmg:24,
