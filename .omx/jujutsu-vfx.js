@@ -358,7 +358,12 @@
     if(release?.phase==='charge'){
       const t=clamp(release.phaseAge/G.Jujutsu.power.yuta.releaseCharge);
       for(const source of release.sources||[]){
-        ctx.save();ctx.translate(source.x,source.y-lift);ctx.rotate(source.aim);
+        if(Number.isFinite(source.anchorX)){
+          ctx.save();ctx.globalAlpha=.25+.4*t;ctx.strokeStyle='#c4a3f3';ctx.lineWidth=2+4*t;
+          ctx.beginPath();ctx.moveTo(source.anchorX,source.anchorY-lift);ctx.lineTo(source.x,source.y-lift);ctx.stroke();
+          ctx.fillStyle='#e8ceff';ctx.beginPath();ctx.arc(source.x,source.y-lift,4+12*t,0,TAU);ctx.fill();ctx.restore();
+        }
+        ctx.save();ctx.translate(source.anchorX??source.x,(source.anchorY??source.y)-lift);ctx.rotate(source.aim);
         const r=Math.min(42,source.radius)*(.3+.7*t);
         ctx.globalAlpha=.35+.45*t;ctx.strokeStyle='#d4b5ff';ctx.lineWidth=2;
         for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(-r,side*r*.65);ctx.quadraticCurveTo(0,side*r*.2,7,0);ctx.stroke();}
@@ -371,6 +376,11 @@
       const t=clamp(mark.age/(mark.life||.5)),fade=1-t,width=mark.radius*(1-.45*t),length=mark.length;
       if(!(length>0))continue;
       ctx.save();ctx.translate(mark.x,mark.y-lift);ctx.rotate(mark.aim);
+      if(Number.isFinite(mark.anchorX)){
+        const dx=mark.anchorX-mark.x,dy=mark.anchorY-mark.y,c=Math.cos(mark.aim),sn=Math.sin(mark.aim);
+        ctx.globalAlpha=fade*.5;ctx.strokeStyle='#c4a3f3';ctx.lineWidth=Math.min(20,mark.radius*.4);
+        ctx.beginPath();ctx.moveTo(dx*c+dy*sn,-dx*sn+dy*c);ctx.lineTo(0,0);ctx.stroke();
+      }
       for(const [scale,color,alpha]of [[1,'#a588e0',.65],[.55,'#ded0ff',.75],[.18,'#fff4d8',.95]]){
         const w=width*scale;ctx.globalAlpha=fade*alpha;ctx.fillStyle=color;ctx.beginPath();
         ctx.moveTo(0,-w*.2);ctx.lineTo(length*.4,-w*.9);ctx.lineTo(length,-w*.2);
