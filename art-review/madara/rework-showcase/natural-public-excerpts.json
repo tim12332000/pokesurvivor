@@ -1,0 +1,21 @@
+{
+  "source": "art-review\\madara\\rework-play\\candidate01\\madara\\attempt-1\\native-play.webm",
+  "sourceSHA256": "1af5263cf96ecb61508cc02877222a0a238502eab649e54276f18005c8d45edc",
+  "method": "Temporal excerpts, uniformly downscaled to 960px width for optional web playback; existing local ffmpeg H264 re-encode. No simulated frames, game-state changes or composition. No audio. The raw complete recording is retained. HUD clock is authoritative.",
+  "clips": [
+    {
+      "file": "assets\\previews\\madara-natural-start.mp4",
+      "sourceStartSeconds": 0,
+      "durationSeconds": 32,
+      "bytes": 8121982,
+      "sha256": "0709ee14efaa3b64a01edd7ec9929de05c10aac9577ec8311b1f8262660c63ac"
+    },
+    {
+      "file": "assets\\previews\\madara-natural-formed.mp4",
+      "sourceStartSeconds": 146,
+      "durationSeconds": 44,
+      "bytes": 11198113,
+      "sha256": "70eca5596b0b0fbaa54bb84190a20098766a6ed628c456d737d53a3f3baf740f"
+    }
+  ]
+}

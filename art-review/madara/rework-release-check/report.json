@@ -1,0 +1,27 @@
+{
+  "cases": {
+    "zh-TW": {
+      "level": 1,
+      "starter": [
+        "naruto-madara"
+      ],
+      "name": "宇智波斑",
+      "description": "須佐投射現身六秒，骨臂接觸成長為甲胄主刀連斬、另一刀護勢；數量增加實際刀線但維持六秒，不佔本體出手。三階後體術末擊與火牆真命中蓄滿三格，顯現六秒完成體巨刀與前推劍壓。本作勢能改編，不給無敵。 自動施放，不占主動槽。",
+      "images": 14,
+      "showcaseRequests": 0
+    },
+    "en": {
+      "level": 1,
+      "starter": [
+        "naruto-madara"
+      ],
+      "name": "Madara Uchiha",
+      "description": "An independent six-second guardian grows from skeletal limbs to armored blades. Quantity adds real blade sweeps without locking the body. Rank 3 unlocks a six-second Perfect Susanoo at three momentum, with gigantic blades and advancing sword pressure. Momentum and timing are game adaptations; no invulnerability. Automatically cast; no active slot required.",
+      "images": 14,
+      "showcaseRequests": 0
+    }
+  },
+  "errors": [],
+  "missing": [],
+  "ok": true
+}

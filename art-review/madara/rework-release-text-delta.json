@@ -1,0 +1,8 @@
+{
+  "scope": "Player-facing skill wording only: remove implication of a defensive shield. No stats, geometry, timing, cards, hooks, sources or rendering changed. English description is generated against the new Chinese key as before.",
+  "candidateEngineSHA256": "14da27cef657835fb2e45e69a6fa7e50aa182af6c189112f12e75f57998ef078",
+  "releaseEngineSHA256": "57977e23cf17568f8e8fcaa4f1f8e4a8b4c37e1f3194feb2e10e2d28c92b5915",
+  "old": "獨立須佐護體六秒",
+  "new": "須佐投射現身六秒",
+  "reverseSubstitutionExactlyMatchesCandidate": true
+}

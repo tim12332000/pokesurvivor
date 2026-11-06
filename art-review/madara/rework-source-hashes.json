@@ -1,0 +1,62 @@
+{
+  "candidateIdentity": "ea303177f57c0868",
+  "scope": "Git-index blob hashes for deployment, separately from Windows worktree/candidate hashes. PNG bytes are recorded in frames.json.",
+  "files": [
+    {
+      "path": ".omx/naruto-madara.js",
+      "worktreeSHA256": "57977e23cf17568f8e8fcaa4f1f8e4a8b4c37e1f3194feb2e10e2d28c92b5915",
+      "commitBlobSHA256": "da313aee3ce4a2436205e357420b5d3e034fb5b4acdbefbec7162319fed4d29f",
+      "sameAfterLineEndingNormalization": true,
+      "rawBytesEqual": false
+    },
+    {
+      "path": ".omx/naruto-madara-camera.js",
+      "worktreeSHA256": "953493e03d849c7bbc94dba04df5e7285de59648c7e7bb3b883a17155d2e078d",
+      "commitBlobSHA256": "953493e03d849c7bbc94dba04df5e7285de59648c7e7bb3b883a17155d2e078d",
+      "sameAfterLineEndingNormalization": true,
+      "rawBytesEqual": true
+    },
+    {
+      "path": "art-review/madara/runtime.js",
+      "worktreeSHA256": "847dd6f37ed6a2b159f6f3c027a5b79249b31c01e2a57b36d20e7d035d8d41ce",
+      "commitBlobSHA256": "847dd6f37ed6a2b159f6f3c027a5b79249b31c01e2a57b36d20e7d035d8d41ce",
+      "sameAfterLineEndingNormalization": true,
+      "rawBytesEqual": true
+    },
+    {
+      "path": "art-review/madara/frames.json",
+      "worktreeSHA256": "3a29565396bdc850a0d3c35ece1df7e2e5b6b805c1f4c8df5f9064c861e88477",
+      "commitBlobSHA256": "5b71e015edbbb9f9d497bbac98f2bb6db7f7b93bd751d162cc87022de42b5898",
+      "sameAfterLineEndingNormalization": true,
+      "rawBytesEqual": false
+    },
+    {
+      "path": "js/game.js",
+      "worktreeSHA256": "165055e3b147b3ef53a21d9d1af895c569f4ad51bf8f84133af57ca26b930d0b",
+      "commitBlobSHA256": "165055e3b147b3ef53a21d9d1af895c569f4ad51bf8f84133af57ca26b930d0b",
+      "sameAfterLineEndingNormalization": true,
+      "rawBytesEqual": true
+    },
+    {
+      "path": "js/core/audio.js",
+      "worktreeSHA256": "319401eaa3547aff554c1b28946ab6205ea39bd25d7b1cfe6ad9ea0ffe2e2127",
+      "commitBlobSHA256": "319401eaa3547aff554c1b28946ab6205ea39bd25d7b1cfe6ad9ea0ffe2e2127",
+      "sameAfterLineEndingNormalization": true,
+      "rawBytesEqual": true
+    },
+    {
+      "path": ".omx/naruto.js",
+      "worktreeSHA256": "3dec1ec335fd4ca9792977b35b1e248edb7550fb9c81677ecee163a617febd96",
+      "commitBlobSHA256": "1fc1870086df5003d61090d2e7bf985895dab19a8ae7c01f272eaed1d01a0293",
+      "sameAfterLineEndingNormalization": true,
+      "rawBytesEqual": false
+    },
+    {
+      "path": ".omx/naruto-en.js",
+      "worktreeSHA256": "cddff18ccf132d7ca2bac7b17b51648dac7ee17ba109b6bd17ed663b0942b8fa",
+      "commitBlobSHA256": "145df02f2af99bebff5e41d271059e2b422019e82732f419f5a718c59e5a8e04",
+      "sameAfterLineEndingNormalization": true,
+      "rawBytesEqual": false
+    }
+  ]
+}

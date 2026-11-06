@@ -1,0 +1,202 @@
+{
+  "natural-first-windows": {
+    "sourceStart": 153,
+    "duration": 22,
+    "method": "Actual 1x playback of accurate seekable transcode; raw video retained; muted visual review",
+    "samples": [
+      {
+        "time": 1.2606,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 154.2606
+      },
+      {
+        "time": 2.6677,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 155.6677
+      },
+      {
+        "time": 4.0238,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 157.0238
+      },
+      {
+        "time": 5.4011,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 158.40109999999999
+      },
+      {
+        "time": 6.7747,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 159.7747
+      },
+      {
+        "time": 8.1171,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 161.1171
+      },
+      {
+        "time": 9.4745,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 162.4745
+      },
+      {
+        "time": 10.8501,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 163.8501
+      },
+      {
+        "time": 12.171,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 165.171
+      },
+      {
+        "time": 13.5065,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 166.5065
+      },
+      {
+        "time": 14.8455,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 167.8455
+      },
+      {
+        "time": 16.2106,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 169.2106
+      },
+      {
+        "time": 17.5626,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 170.5626
+      },
+      {
+        "time": 18.8911,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 171.8911
+      },
+      {
+        "time": 20.2356,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 173.2356
+      },
+      {
+        "time": 21.5899,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 174.5899
+      }
+    ]
+  },
+  "natural-late-army": {
+    "sourceStart": 234,
+    "duration": 28.4,
+    "method": "Actual 1x playback of accurate seekable transcode; raw video retained; muted visual review",
+    "samples": [
+      {
+        "time": 1.7591,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 235.7591
+      },
+      {
+        "time": 3.6063,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 237.6063
+      },
+      {
+        "time": 5.4449,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 239.4449
+      },
+      {
+        "time": 7.292,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 241.292
+      },
+      {
+        "time": 9.1461,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 243.1461
+      },
+      {
+        "time": 11.0197,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 245.0197
+      },
+      {
+        "time": 12.868,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 246.868
+      },
+      {
+        "time": 14.7354,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 248.7354
+      },
+      {
+        "time": 16.597,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 250.597
+      },
+      {
+        "time": 18.448,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 252.448
+      },
+      {
+        "time": 20.3003,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 254.3003
+      },
+      {
+        "time": 22.156,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 256.156
+      },
+      {
+        "time": 23.991,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 257.991
+      },
+      {
+        "time": 25.8636,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 259.8636
+      },
+      {
+        "time": 27.7388,
+        "paused": false,
+        "ended": false,
+        "sourceTime": 261.7388
+      }
+    ]
+  }
+}

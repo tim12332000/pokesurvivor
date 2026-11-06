@@ -1,0 +1,1101 @@
+{
+  "url": "http://127.0.0.1:8347/art-review/madara/rework-play/baseline-site/.omx/digimon.html?lang=zh-TW&layout=wide",
+  "seed": 231106,
+  "sourceHashes": {
+    ".omx/naruto-madara.js": "02853c81e0255f496c161a63dcb33d29a97d1765ae104aefee2085fd2ab6fc77",
+    ".omx/naruto-lee.js": "a23a8ae13749fa35863856dccf38d25d6704b07a79a6d1d3e2a2906ea9886fda",
+    ".omx/naruto-skills.js": "79e5c2c4304aec9ce586601a35d444bcd91a4eff13194ed3f1562e47681dbd43",
+    "js/game.js": "cec8fc52f4163ca223246aeae5fc6adca33d766f8faed059090ebf088ef5d7a1",
+    ".omx/digimon.html": "5aabe5fe6d4a80552f454b9ee294acfe585cbf8c4a7340dcfd8b0554b63c6cfe"
+  },
+  "targetNativeSecondsPerHero": 120.0,
+  "policy": "Clockwise square: D/S/A/W, one side per 1.5 native game seconds; new > upgrade > quantity > atk > cd > health > first; no rerolls; native UI clicks.",
+  "constraints": [
+    "Fresh isolated save and all permanent upgrades zero.",
+    "Native default speed 2 retained; no manual cast/time stepping/XP/level/invulnerability/spawner changes.",
+    "Same world seed and initial PRNG stream; native frames, combat and random consumption diverge, so encounters are not paired.",
+    "Death is recorded; identical policy and seed restart until cumulative observed game time >= target, maximum six attempts.",
+    "Half-second no-cast/no-enemy-hit proximity counts are descriptive; no active pose was retained in these baseline runs. CD, range and multi-hit actions must be considered; prop hits are not included in enemy-hit logs."
+  ],
+  "heroes": {
+    "madara": {
+      "totalObservedGameSeconds": 120.16313333334138,
+      "attempts": [
+        {
+          "path": "madara/attempt-1/run.json",
+          "time": 120.16313333334138,
+          "dead": false,
+          "level": 7,
+          "cards": 6,
+          "kills": 136,
+          "analysis": {
+            "bins": [
+              {
+                "from": 0,
+                "to": 15,
+                "casts": 9,
+                "hits": 5,
+                "hpLostByEnemies": 272,
+                "nearEnemySamples": 5,
+                "nearEnemyNoCastWithinHalfSecondSamples": 2,
+                "nearEnemyNoHitWithinHalfSecondSamples": 5,
+                "ending": {
+                  "t": 14.859733333333347,
+                  "state": "playing",
+                  "level": 2,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 3,
+                  "xp": 16.39999999999999,
+                  "xpNext": 101,
+                  "damage": 272.7648,
+                  "x": 273.6769279999998,
+                  "y": 154.27980800000063,
+                  "quantity": 0,
+                  "statsTaken": {
+                    "atk": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 3,
+                  "nearestEnemy": 324.2637924775094,
+                  "near150": 0,
+                  "casts": 8,
+                  "hits": 5
+                }
+              },
+              {
+                "from": 15,
+                "to": 30,
+                "casts": 8,
+                "hits": 17,
+                "hpLostByEnemies": 1227,
+                "nearEnemySamples": 19,
+                "nearEnemyNoCastWithinHalfSecondSamples": 9,
+                "nearEnemyNoHitWithinHalfSecondSamples": 10,
+                "ending": {
+                  "t": 29.946933333332385,
+                  "state": "playing",
+                  "level": 3,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 19,
+                  "xp": 108.6,
+                  "xpNext": 147,
+                  "damage": 1500.9825600000001,
+                  "x": 87.6164160000003,
+                  "y": -16.563423999999934,
+                  "quantity": 0,
+                  "statsTaken": {
+                    "atk": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-fire",
+                      "rank": 1,
+                      "cd": 2.0397999999999983,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 1,
+                  "nearestEnemy": 612.8199744051178,
+                  "near150": 0,
+                  "casts": 17,
+                  "hits": 22
+                }
+              },
+              {
+                "from": 30,
+                "to": 45,
+                "casts": 4,
+                "hits": 19,
+                "hpLostByEnemies": 1530,
+                "nearEnemySamples": 4,
+                "nearEnemyNoCastWithinHalfSecondSamples": 3,
+                "nearEnemyNoHitWithinHalfSecondSamples": 4,
+                "ending": {
+                  "t": 44.759733333331816,
+                  "state": "playing",
+                  "level": 4,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 34,
+                  "xp": 23.19999999999999,
+                  "xpNext": 200,
+                  "damage": 3033.510480000001,
+                  "x": 260.14818080000026,
+                  "y": 123.95937759999983,
+                  "quantity": 0,
+                  "statsTaken": {
+                    "atk": 1,
+                    "spd": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-fire",
+                      "rank": 1,
+                      "cd": 2.4438000000000053,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 3,
+                  "nearestEnemy": 301.93117735865377,
+                  "near150": 0,
+                  "casts": 21,
+                  "hits": 41
+                }
+              },
+              {
+                "from": 45,
+                "to": 60,
+                "casts": 4,
+                "hits": 17,
+                "hpLostByEnemies": 1383,
+                "nearEnemySamples": 0,
+                "nearEnemyNoCastWithinHalfSecondSamples": 0,
+                "nearEnemyNoHitWithinHalfSecondSamples": 0,
+                "ending": {
+                  "t": 59.81893333333131,
+                  "state": "playing",
+                  "level": 5,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 47,
+                  "xp": 69.6,
+                  "xpNext": 258,
+                  "damage": 4418.7620400000005,
+                  "x": 85.45585487999936,
+                  "y": 4.283079039999638,
+                  "quantity": 1,
+                  "statsTaken": {
+                    "atk": 1,
+                    "spd": 1,
+                    "quantity": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-fire",
+                      "rank": 1,
+                      "cd": 2.6035999999999997,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 2,
+                  "nearestEnemy": 489.93327114990825,
+                  "near150": 0,
+                  "casts": 25,
+                  "hits": 58
+                }
+              },
+              {
+                "from": 60,
+                "to": 75,
+                "casts": 5,
+                "hits": 35,
+                "hpLostByEnemies": 3952,
+                "nearEnemySamples": 4,
+                "nearEnemyNoCastWithinHalfSecondSamples": 3,
+                "nearEnemyNoHitWithinHalfSecondSamples": 3,
+                "ending": {
+                  "t": 74.89673333333307,
+                  "state": "playing",
+                  "level": 6,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 70,
+                  "xp": 59.40000000000002,
+                  "xpNext": 323,
+                  "damage": 7934.818953599998,
+                  "x": 348.1988745599975,
+                  "y": 217.45844287999856,
+                  "quantity": 1,
+                  "statsTaken": {
+                    "atk": 1,
+                    "spd": 1,
+                    "quantity": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-fire",
+                      "rank": 1,
+                      "cd": 2.743600000000009,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-susanoo",
+                      "rank": 1,
+                      "cd": 2.2110000000000056,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 5,
+                  "nearestEnemy": 149.88893024653598,
+                  "near150": 1,
+                  "casts": 30,
+                  "hits": 91
+                }
+              },
+              {
+                "from": 75,
+                "to": 90,
+                "casts": 6,
+                "hits": 32,
+                "hpLostByEnemies": 3656,
+                "nearEnemySamples": 0,
+                "nearEnemyNoCastWithinHalfSecondSamples": 0,
+                "nearEnemyNoHitWithinHalfSecondSamples": 0,
+                "ending": {
+                  "t": 89.74533333333594,
+                  "state": "playing",
+                  "level": 7,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 90,
+                  "xp": 24.80000000000001,
+                  "xpNext": 392,
+                  "damage": 12028.552905599992,
+                  "x": 115.35927327999582,
+                  "y": 69.7887872000011,
+                  "quantity": 1,
+                  "statsTaken": {
+                    "atk": 1,
+                    "spd": 1,
+                    "quantity": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-fire",
+                      "rank": 1,
+                      "cd": 2.5370000000000057,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-susanoo",
+                      "rank": 2,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 2,
+                  "nearestEnemy": 467.63465029905024,
+                  "near150": 0,
+                  "casts": 35,
+                  "hits": 125
+                }
+              },
+              {
+                "from": 90,
+                "to": 105,
+                "casts": 5,
+                "hits": 25,
+                "hpLostByEnemies": 5246,
+                "nearEnemySamples": 0,
+                "nearEnemyNoCastWithinHalfSecondSamples": 0,
+                "nearEnemyNoHitWithinHalfSecondSamples": 0,
+                "ending": {
+                  "t": 104.82073333333868,
+                  "state": "playing",
+                  "level": 7,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 109,
+                  "xp": 164.79999999999998,
+                  "xpNext": 392,
+                  "damage": 17277.958051199996,
+                  "x": 395.0336468621492,
+                  "y": 190.30678695853265,
+                  "quantity": 1,
+                  "statsTaken": {
+                    "atk": 1,
+                    "spd": 1,
+                    "quantity": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-fire",
+                      "rank": 1,
+                      "cd": 2.907400000000012,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-susanoo",
+                      "rank": 2,
+                      "cd": 2.1504000000000123,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 2,
+                  "nearestEnemy": 530.8195237548758,
+                  "near150": 0,
+                  "casts": 41,
+                  "hits": 150
+                }
+              },
+              {
+                "from": 105,
+                "to": 120,
+                "casts": 5,
+                "hits": 38,
+                "hpLostByEnemies": 6813,
+                "nearEnemySamples": 0,
+                "nearEnemyNoCastWithinHalfSecondSamples": 0,
+                "nearEnemyNoHitWithinHalfSecondSamples": 0,
+                "ending": {
+                  "t": 119.89073333334132,
+                  "state": "playing",
+                  "level": 7,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 134,
+                  "xp": 352.4,
+                  "xpNext": 392,
+                  "damage": 24236.122679999975,
+                  "x": 293.4607830076176,
+                  "y": 3.2352247571378276,
+                  "quantity": 1,
+                  "statsTaken": {
+                    "atk": 1,
+                    "spd": 1,
+                    "quantity": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-fire",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-susanoo",
+                      "rank": 2,
+                      "cd": 4.584600000000005,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 6,
+                  "nearestEnemy": 512.8466585916731,
+                  "near150": 0,
+                  "casts": 46,
+                  "hits": 188
+                }
+              },
+              {
+                "from": 120,
+                "to": 120.16313333334138,
+                "casts": 0,
+                "hits": 0,
+                "hpLostByEnemies": 0,
+                "nearEnemySamples": 0,
+                "nearEnemyNoCastWithinHalfSecondSamples": 0,
+                "nearEnemyNoHitWithinHalfSecondSamples": 0,
+                "ending": {
+                  "t": 120.14693333334138,
+                  "state": "playing",
+                  "level": 7,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 136,
+                  "xp": 352.4,
+                  "xpNext": 392,
+                  "damage": 24236.122679999975,
+                  "x": 293.4607830076176,
+                  "y": -36.876062122863985,
+                  "quantity": 1,
+                  "statsTaken": {
+                    "atk": 1,
+                    "spd": 1,
+                    "quantity": 1
+                  },
+                  "moves": [
+                    {
+                      "id": "naruto-madara",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-fire",
+                      "rank": 1,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": true
+                    },
+                    {
+                      "id": "naruto-madara-susanoo",
+                      "rank": 2,
+                      "cd": 4.328399999999993,
+                      "passive": true,
+                      "auto": true
+                    }
+                  ],
+                  "enemies": 6,
+                  "nearestEnemy": 475.21946372128747,
+                  "near150": 0,
+                  "casts": 46,
+                  "hits": 188
+                }
+              }
+            ],
+            "castsBySkill": {
+              "naruto-madara": 15,
+              "naruto-madara-fire": 22,
+              "naruto-madara-susanoo": 9
+            },
+            "totalHits": 188,
+            "firstHitAt": 9.258733333333343,
+            "firstLearnedNewSkill": {
+              "at": 23.330733333332848,
+              "cost": 2,
+              "key": "new:naruto-madara-fire"
+            }
+          },
+          "errors": [],
+          "missing": []
+        }
+      ]
+    },
+    "lee": {
+      "totalObservedGameSeconds": 120.06886666667486,
+      "attempts": [
+        {
+          "path": "lee/attempt-1/run.json",
+          "time": 120.06886666667486,
+          "dead": false,
+          "level": 11,
+          "cards": 10,
+          "kills": 147,
+          "analysis": {
+            "bins": [
+              {
+                "from": 0,
+                "to": 15,
+                "casts": 3,
+                "hits": 2,
+                "hpLostByEnemies": 124,
+                "nearEnemySamples": 25,
+                "nearEnemyNoCastWithinHalfSecondSamples": 21,
+                "nearEnemyNoHitWithinHalfSecondSamples": 23,
+                "ending": {
+                  "t": 14.854666666666681,
+                  "state": "playing",
+                  "level": 1,
+                  "hp": 260,
+                  "maxHp": 260,
+                  "kills": 2,
+                  "xp": 2.8,
+                  "xpNext": 62,
+                  "damage": 123.07679999999996,
+                  "x": 226.05972548364534,
+                  "y": 214.44573059829403,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 1,
+                      "cd": 0.01820000000000073,
+                      "passive": false,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 10,
+                  "nearestEnemy": 113.44749985146072,
+                  "near150": 2,
+                  "casts": 3,
+                  "hits": 2
+                }
+              },
+              {
+                "from": 15,
+                "to": 30,
+                "casts": 8,
+                "hits": 20,
+                "hpLostByEnemies": 845,
+                "nearEnemySamples": 45,
+                "nearEnemyNoCastWithinHalfSecondSamples": 32,
+                "nearEnemyNoHitWithinHalfSecondSamples": 29,
+                "ending": {
+                  "t": 29.944466666665686,
+                  "state": "playing",
+                  "level": 3,
+                  "hp": 257.71839888000045,
+                  "maxHp": 260,
+                  "kills": 18,
+                  "xp": 66.59999999999998,
+                  "xpNext": 147,
+                  "damage": 1370.6615999999997,
+                  "x": -235.432720149854,
+                  "y": 191.54416732432506,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 1,
+                      "cd": 1.071799999999999,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lee-pursuit",
+                      "rank": 1,
+                      "cd": 0.3769999999999992,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lotus",
+                      "rank": 1,
+                      "cd": 3.0839999999999934,
+                      "passive": false,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 6,
+                  "nearestEnemy": 138.41772685713812,
+                  "near150": 1,
+                  "casts": 11,
+                  "hits": 22
+                }
+              },
+              {
+                "from": 30,
+                "to": 45,
+                "casts": 13,
+                "hits": 46,
+                "hpLostByEnemies": 1303,
+                "nearEnemySamples": 45,
+                "nearEnemyNoCastWithinHalfSecondSamples": 31,
+                "nearEnemyNoHitWithinHalfSecondSamples": 28,
+                "ending": {
+                  "t": 44.786866666665034,
+                  "state": "playing",
+                  "level": 5,
+                  "hp": 265,
+                  "maxHp": 265,
+                  "kills": 37,
+                  "xp": 159.20000000000005,
+                  "xpNext": 258,
+                  "damage": 3162.6753599999997,
+                  "x": 286.63773425014637,
+                  "y": 274.8540137243247,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 1,
+                      "cd": 1.071799999999999,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lee-pursuit",
+                      "rank": 2,
+                      "cd": 0.048,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lotus",
+                      "rank": 1,
+                      "cd": 2.233018181818177,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-gates",
+                      "rank": 1,
+                      "cd": 17.29779999999999,
+                      "passive": true,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 10,
+                  "nearestEnemy": 127.91413674970687,
+                  "near150": 2,
+                  "casts": 24,
+                  "hits": 68
+                }
+              },
+              {
+                "from": 45,
+                "to": 60,
+                "casts": 12,
+                "hits": 31,
+                "hpLostByEnemies": 1933,
+                "nearEnemySamples": 46,
+                "nearEnemyNoCastWithinHalfSecondSamples": 30,
+                "nearEnemyNoHitWithinHalfSecondSamples": 22,
+                "ending": {
+                  "t": 59.8774666666645,
+                  "state": "playing",
+                  "level": 6,
+                  "hp": 257.13916392000044,
+                  "maxHp": 260,
+                  "kills": 59,
+                  "xp": 312.8,
+                  "xpNext": 323,
+                  "damage": 6212.706960000003,
+                  "x": 68.6028798501462,
+                  "y": 237.16178332432207,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 1,
+                      "cd": 1.071799999999999,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lee-pursuit",
+                      "rank": 3,
+                      "cd": 0.2397999999999953,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lotus",
+                      "rank": 1,
+                      "cd": 6.025399999999998,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-gates",
+                      "rank": 1,
+                      "cd": 2.207200000000814,
+                      "passive": true,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 8,
+                  "nearestEnemy": 120.2013674489657,
+                  "near150": 1,
+                  "casts": 36,
+                  "hits": 99
+                }
+              },
+              {
+                "from": 60,
+                "to": 75,
+                "casts": 10,
+                "hits": 40,
+                "hpLostByEnemies": 1913,
+                "nearEnemySamples": 47,
+                "nearEnemyNoCastWithinHalfSecondSamples": 37,
+                "nearEnemyNoHitWithinHalfSecondSamples": 35,
+                "ending": {
+                  "t": 74.97146666666634,
+                  "state": "playing",
+                  "level": 8,
+                  "hp": 284,
+                  "maxHp": 284,
+                  "kills": 78,
+                  "xp": 6.60000000000008,
+                  "xpNext": 467,
+                  "damage": 8658.400800000003,
+                  "x": 121.10364476337614,
+                  "y": 466.27920358329436,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 1,
+                      "cd": 1.071799999999999,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lee-pursuit",
+                      "rank": 4,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lotus",
+                      "rank": 1,
+                      "cd": 6.885418181818171,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-gates",
+                      "rank": 2,
+                      "cd": 25,
+                      "passive": true,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 10,
+                  "nearestEnemy": 0.8127619583030182,
+                  "near150": 4,
+                  "casts": 46,
+                  "hits": 139
+                }
+              },
+              {
+                "from": 75,
+                "to": 90,
+                "casts": 11,
+                "hits": 63,
+                "hpLostByEnemies": 5578,
+                "nearEnemySamples": 55,
+                "nearEnemyNoCastWithinHalfSecondSamples": 40,
+                "nearEnemyNoHitWithinHalfSecondSamples": 30,
+                "ending": {
+                  "t": 89.81066666666906,
+                  "state": "playing",
+                  "level": 9,
+                  "hp": 287,
+                  "maxHp": 260,
+                  "kills": 103,
+                  "xp": 334.80000000000007,
+                  "xpNext": 547,
+                  "damage": 15911.634181075204,
+                  "x": 270.08,
+                  "y": 750.08,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 1,
+                      "cd": 1.071799999999999,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lee-pursuit",
+                      "rank": 4,
+                      "cd": 0.3878000000000026,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lotus",
+                      "rank": 1,
+                      "cd": 1.1304181818181762,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-gates",
+                      "rank": 2,
+                      "cd": 13.184000000000054,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-reverse-lotus",
+                      "rank": 1,
+                      "cd": 2.621015384615379,
+                      "passive": false,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 11,
+                  "nearestEnemy": 134.68828007190095,
+                  "near150": 1,
+                  "casts": 57,
+                  "hits": 202
+                }
+              },
+              {
+                "from": 90,
+                "to": 105,
+                "casts": 12,
+                "hits": 73,
+                "hpLostByEnemies": 3197,
+                "nearEnemySamples": 57,
+                "nearEnemyNoCastWithinHalfSecondSamples": 36,
+                "nearEnemyNoHitWithinHalfSecondSamples": 24,
+                "ending": {
+                  "t": 104.90946666667202,
+                  "state": "playing",
+                  "level": 10,
+                  "hp": 290,
+                  "maxHp": 290,
+                  "kills": 120,
+                  "xp": 265.20000000000016,
+                  "xpNext": 631,
+                  "damage": 23476.181017075185,
+                  "x": 431.1473298256941,
+                  "y": 816.346726255329,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 2,
+                      "cd": 1.071799999999999,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lee-pursuit",
+                      "rank": 4,
+                      "cd": 0,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lotus",
+                      "rank": 1,
+                      "cd": 1.1304181818181762,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-gates",
+                      "rank": 2,
+                      "cd": 25,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-reverse-lotus",
+                      "rank": 1,
+                      "cd": 0.06520000000000642,
+                      "passive": false,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 18,
+                  "nearestEnemy": 7.287296780950786,
+                  "near150": 7,
+                  "casts": 69,
+                  "hits": 275
+                }
+              },
+              {
+                "from": 105,
+                "to": 120,
+                "casts": 11,
+                "hits": 149,
+                "hpLostByEnemies": 5823,
+                "nearEnemySamples": 52,
+                "nearEnemyNoCastWithinHalfSecondSamples": 37,
+                "nearEnemyNoHitWithinHalfSecondSamples": 19,
+                "ending": {
+                  "t": 119.74886666667479,
+                  "state": "playing",
+                  "level": 11,
+                  "hp": 293,
+                  "maxHp": 260,
+                  "kills": 147,
+                  "xp": 520.4,
+                  "xpNext": 721,
+                  "damage": 47709.461377762535,
+                  "x": 629.2944727342648,
+                  "y": 685.3233927872418,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 3,
+                      "cd": 1.071799999999999,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lee-pursuit",
+                      "rank": 4,
+                      "cd": 3.469446951953614e-18,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lotus",
+                      "rank": 1,
+                      "cd": 1.1304181818181762,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-gates",
+                      "rank": 2,
+                      "cd": 13.245800000001065,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-reverse-lotus",
+                      "rank": 1,
+                      "cd": 4.714415384615385,
+                      "passive": false,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 14,
+                  "nearestEnemy": 195.62835805104672,
+                  "near150": 0,
+                  "casts": 80,
+                  "hits": 424
+                }
+              },
+              {
+                "from": 120,
+                "to": 120.06886666667486,
+                "casts": 0,
+                "hits": 0,
+                "hpLostByEnemies": 0,
+                "nearEnemySamples": 0,
+                "nearEnemyNoCastWithinHalfSecondSamples": 0,
+                "nearEnemyNoHitWithinHalfSecondSamples": 0,
+                "ending": {
+                  "t": 120.00486666667484,
+                  "state": "playing",
+                  "level": 11,
+                  "hp": 293,
+                  "maxHp": 260,
+                  "kills": 147,
+                  "xp": 520.4,
+                  "xpNext": 721,
+                  "damage": 47709.461377762535,
+                  "x": 629.2944727342648,
+                  "y": 643.421312787242,
+                  "quantity": 0,
+                  "statsTaken": {},
+                  "moves": [
+                    {
+                      "id": "naruto-lee",
+                      "rank": 3,
+                      "cd": 1.071799999999999,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lee-pursuit",
+                      "rank": 4,
+                      "cd": 0.016,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-lotus",
+                      "rank": 1,
+                      "cd": 1.1304181818181762,
+                      "passive": false,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-gates",
+                      "rank": 2,
+                      "cd": 12.989800000001086,
+                      "passive": true,
+                      "auto": false
+                    },
+                    {
+                      "id": "naruto-reverse-lotus",
+                      "rank": 1,
+                      "cd": 4.4584153846153844,
+                      "passive": false,
+                      "auto": false
+                    }
+                  ],
+                  "enemies": 15,
+                  "nearestEnemy": 191.52227964266416,
+                  "near150": 0,
+                  "casts": 80,
+                  "hits": 424
+                }
+              }
+            ],
+            "castsBySkill": {
+              "naruto-lee": 7,
+              "naruto-lee-pursuit": 44,
+              "naruto-lotus": 5,
+              "tackle": 20,
+              "naruto-reverse-lotus": 4
+            },
+            "totalHits": 424,
+            "firstHitAt": 10.607866666666675,
+            "firstLearnedNewSkill": {
+              "at": 19.52426666666642,
+              "cost": 1,
+              "key": "new:naruto-lee-pursuit"
+            }
+          },
+          "errors": [],
+          "missing": []
+        }
+      ]
+    }
+  },
+  "observationComplete": true,
+  "baselineCommit": "0f941662b548aeb2b4a4f6972bf66f3955b5342c"
+}

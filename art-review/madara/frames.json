@@ -1,216 +1,6372 @@
 {
-  "source": "madara-actions-v1.png",
-  "bodyHeight": 281,
-  "directions": "right; left mirrored; side view for up/down",
-  "sha256": "8ae1d43e099ced737b3cf3fca8184b066a8bb06eff572cb731ecee5ef69adace",
+  "source": "madara-actions-v1-runtime.png",
+  "bodyHeight": 128,
+  "directions": "left/right body plus authored front/back combat and casting supplements",
+  "sha256": "6b1489fcd5b642da2c772cc51a8d04f7e2366ab14c11afb23ccc7a4a7988a4fd",
   "frames": [
     {
       "name": "idle",
-      "rect": [
+      "sourceRect": [
         59,
         5,
         146,
         283
       ],
       "anchor": [
-        91.0,
-        281
+        41.452,
+        128.0
+      ],
+      "sockets": {
+        "mouth": [
+          47.829,
+          29.609
+        ],
+        "palm": [
+          58.306,
+          57.851
+        ],
+        "elbow": [
+          45.096,
+          55.573
+        ],
+        "foot": [
+          54.662,
+          123.9
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            105.12,
+            65.09
+          ],
+          "pixel": [
+            105,
+            65
+          ],
+          "correction": 0.15
+        },
+        "palm": {
+          "nominal": [
+            128.48,
+            127.35
+          ],
+          "pixel": [
+            128,
+            127
+          ],
+          "correction": 0.59
+        },
+        "elbow": {
+          "nominal": [
+            99.28,
+            121.69
+          ],
+          "pixel": [
+            99,
+            122
+          ],
+          "correction": 0.42
+        },
+        "foot": {
+          "nominal": [
+            119.72,
+            271.68
+          ],
+          "pixel": [
+            120,
+            272
+          ],
+          "correction": 0.43
+        }
+      },
+      "rect": [
+        2,
+        2,
+        67,
+        129
       ]
     },
     {
       "name": "step-left",
-      "rect": [
+      "sourceRect": [
         377,
         8,
         161,
         281
       ],
       "anchor": [
-        80.5,
-        279
+        36.669,
+        127.089
+      ],
+      "sockets": {
+        "mouth": [
+          52.84,
+          29.609
+        ],
+        "palm": [
+          60.584,
+          64.228
+        ],
+        "elbow": [
+          49.651,
+          55.117
+        ],
+        "foot": [
+          60.128,
+          122.989
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            115.92,
+            64.63
+          ],
+          "pixel": [
+            116,
+            65
+          ],
+          "correction": 0.38
+        },
+        "palm": {
+          "nominal": [
+            141.68,
+            126.45
+          ],
+          "pixel": [
+            133,
+            141
+          ],
+          "correction": 16.94
+        },
+        "elbow": {
+          "nominal": [
+            109.48,
+            120.83
+          ],
+          "pixel": [
+            109,
+            121
+          ],
+          "correction": 0.51
+        },
+        "foot": {
+          "nominal": [
+            132.02,
+            269.76
+          ],
+          "pixel": [
+            132,
+            270
+          ],
+          "correction": 0.24
+        }
+      },
+      "rect": [
+        154,
+        2,
+        73,
+        128
       ]
     },
     {
       "name": "step-right",
-      "rect": [
+      "sourceRect": [
         703,
         8,
         156,
         280
       ],
       "anchor": [
-        89.5,
-        277
+        40.769,
+        126.178
+      ],
+      "sockets": {
+        "mouth": [
+          51.018,
+          29.153
+        ],
+        "palm": [
+          62.406,
+          65.139
+        ],
+        "elbow": [
+          48.285,
+          54.662
+        ],
+        "foot": [
+          58.306,
+          122.534
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            112.32,
+            64.4
+          ],
+          "pixel": [
+            112,
+            64
+          ],
+          "correction": 0.51
+        },
+        "palm": {
+          "nominal": [
+            137.28,
+            126.0
+          ],
+          "pixel": [
+            137,
+            143
+          ],
+          "correction": 17.0
+        },
+        "elbow": {
+          "nominal": [
+            106.08,
+            120.4
+          ],
+          "pixel": [
+            106,
+            120
+          ],
+          "correction": 0.41
+        },
+        "foot": {
+          "nominal": [
+            127.92,
+            268.8
+          ],
+          "pixel": [
+            128,
+            269
+          ],
+          "correction": 0.22
+        }
+      },
+      "rect": [
+        306,
+        2,
+        71,
+        128
       ]
     },
     {
       "name": "ready",
-      "rect": [
+      "sourceRect": [
         1010,
         30,
         196,
         258
       ],
       "anchor": [
-        86.0,
-        256
+        39.174,
+        116.612
+      ],
+      "sockets": {
+        "mouth": [
+          64.228,
+          26.875
+        ],
+        "palm": [
+          78.804,
+          62.861
+        ],
+        "elbow": [
+          60.584,
+          50.562
+        ],
+        "foot": [
+          73.338,
+          112.968
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            141.12,
+            59.34
+          ],
+          "pixel": [
+            141,
+            59
+          ],
+          "correction": 0.36
+        },
+        "palm": {
+          "nominal": [
+            172.48,
+            116.1
+          ],
+          "pixel": [
+            173,
+            138
+          ],
+          "correction": 21.91
+        },
+        "elbow": {
+          "nominal": [
+            133.28,
+            110.94
+          ],
+          "pixel": [
+            133,
+            111
+          ],
+          "correction": 0.29
+        },
+        "foot": {
+          "nominal": [
+            160.72,
+            247.68
+          ],
+          "pixel": [
+            161,
+            248
+          ],
+          "correction": 0.43
+        }
+      },
+      "rect": [
+        458,
+        2,
+        89,
+        118
       ]
     },
     {
       "name": "seal-start",
-      "rect": [
+      "sourceRect": [
         63,
         321,
         146,
         282
       ],
       "anchor": [
-        87.0,
-        280
+        39.63,
+        127.544
+      ],
+      "sockets": {
+        "mouth": [
+          47.829,
+          29.609
+        ],
+        "palm": [
+          58.306,
+          57.851
+        ],
+        "elbow": [
+          45.096,
+          55.117
+        ],
+        "foot": [
+          54.662,
+          123.445
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            105.12,
+            64.86
+          ],
+          "pixel": [
+            105,
+            65
+          ],
+          "correction": 0.18
+        },
+        "palm": {
+          "nominal": [
+            128.48,
+            126.9
+          ],
+          "pixel": [
+            128,
+            127
+          ],
+          "correction": 0.49
+        },
+        "elbow": {
+          "nominal": [
+            99.28,
+            121.26
+          ],
+          "pixel": [
+            99,
+            121
+          ],
+          "correction": 0.38
+        },
+        "foot": {
+          "nominal": [
+            119.72,
+            270.72
+          ],
+          "pixel": [
+            120,
+            271
+          ],
+          "correction": 0.4
+        }
+      },
+      "rect": [
+        2,
+        138,
+        67,
+        128
       ]
     },
     {
       "name": "seal-hold",
-      "rect": [
+      "sourceRect": [
         373,
         339,
         161,
         264
       ],
       "anchor": [
-        81.0,
-        262
+        36.897,
+        119.345
+      ],
+      "sockets": {
+        "mouth": [
+          52.84,
+          27.786
+        ],
+        "palm": [
+          64.683,
+          54.206
+        ],
+        "elbow": [
+          49.651,
+          51.929
+        ],
+        "foot": [
+          60.128,
+          115.246
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            115.92,
+            60.72
+          ],
+          "pixel": [
+            116,
+            61
+          ],
+          "correction": 0.29
+        },
+        "palm": {
+          "nominal": [
+            141.68,
+            118.8
+          ],
+          "pixel": [
+            142,
+            119
+          ],
+          "correction": 0.38
+        },
+        "elbow": {
+          "nominal": [
+            109.48,
+            113.52
+          ],
+          "pixel": [
+            109,
+            114
+          ],
+          "correction": 0.68
+        },
+        "foot": {
+          "nominal": [
+            132.02,
+            253.44
+          ],
+          "pixel": [
+            132,
+            253
+          ],
+          "correction": 0.44
+        }
+      },
+      "rect": [
+        154,
+        138,
+        73,
+        120
       ]
     },
     {
       "name": "fire-breath",
-      "rect": [
+      "sourceRect": [
         664,
         348,
         236,
         255
       ],
       "anchor": [
-        118.0,
-        253
+        53.751,
+        115.246
+      ],
+      "sockets": {
+        "mouth": [
+          83.815,
+          33.708
+        ],
+        "palm": [
+          94.747,
+          52.384
+        ],
+        "elbow": [
+          72.883,
+          50.107
+        ],
+        "foot": [
+          88.37,
+          111.601
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            184.0,
+            74.0
+          ],
+          "pixel": [
+            184,
+            74
+          ],
+          "correction": 0.0
+        },
+        "palm": {
+          "nominal": [
+            207.68,
+            114.75
+          ],
+          "pixel": [
+            208,
+            115
+          ],
+          "correction": 0.41
+        },
+        "elbow": {
+          "nominal": [
+            160.48,
+            109.65
+          ],
+          "pixel": [
+            160,
+            110
+          ],
+          "correction": 0.59
+        },
+        "foot": {
+          "nominal": [
+            193.52,
+            244.8
+          ],
+          "pixel": [
+            194,
+            245
+          ],
+          "correction": 0.52
+        }
+      },
+      "rect": [
+        306,
+        138,
+        108,
+        116
       ]
     },
     {
       "name": "recover",
-      "rect": [
+      "sourceRect": [
         1022,
         321,
         151,
         282
       ],
       "anchor": [
-        86.5,
-        280
+        39.402,
+        127.544
+      ],
+      "sockets": {
+        "mouth": [
+          49.651,
+          29.609
+        ],
+        "palm": [
+          60.584,
+          57.851
+        ],
+        "elbow": [
+          46.918,
+          55.117
+        ],
+        "foot": [
+          56.484,
+          123.445
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            108.72,
+            64.86
+          ],
+          "pixel": [
+            109,
+            65
+          ],
+          "correction": 0.31
+        },
+        "palm": {
+          "nominal": [
+            132.88,
+            126.9
+          ],
+          "pixel": [
+            133,
+            127
+          ],
+          "correction": 0.16
+        },
+        "elbow": {
+          "nominal": [
+            102.68,
+            121.26
+          ],
+          "pixel": [
+            103,
+            121
+          ],
+          "correction": 0.41
+        },
+        "foot": {
+          "nominal": [
+            123.82,
+            270.72
+          ],
+          "pixel": [
+            124,
+            271
+          ],
+          "correction": 0.33
+        }
+      },
+      "rect": [
+        458,
+        138,
+        69,
+        128
       ]
     },
     {
       "name": "arm-back",
-      "rect": [
+      "sourceRect": [
         43,
         643,
         203,
         277
       ],
       "anchor": [
-        100.5,
-        274
+        45.779,
+        124.811
+      ],
+      "sockets": {
+        "mouth": [
+          66.505,
+          29.153
+        ],
+        "palm": [
+          83.359,
+          63.772
+        ],
+        "elbow": [
+          62.861,
+          54.206
+        ],
+        "foot": [
+          75.616,
+          121.167
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            146.16,
+            63.71
+          ],
+          "pixel": [
+            146,
+            64
+          ],
+          "correction": 0.33
+        },
+        "palm": {
+          "nominal": [
+            178.64,
+            124.65
+          ],
+          "pixel": [
+            183,
+            140
+          ],
+          "correction": 15.96
+        },
+        "elbow": {
+          "nominal": [
+            138.04,
+            119.11
+          ],
+          "pixel": [
+            138,
+            119
+          ],
+          "correction": 0.12
+        },
+        "foot": {
+          "nominal": [
+            166.46,
+            265.92
+          ],
+          "pixel": [
+            166,
+            266
+          ],
+          "correction": 0.47
+        }
+      },
+      "rect": [
+        2,
+        274,
+        92,
+        126
       ]
     },
     {
       "name": "command",
-      "rect": [
+      "sourceRect": [
         364,
         640,
         211,
         280
       ],
       "anchor": [
-        89.5,
-        278
+        40.769,
+        126.633
+      ],
+      "sockets": {
+        "mouth": [
+          69.238,
+          36.897
+        ],
+        "palm": [
+          84.726,
+          46.463
+        ],
+        "elbow": [
+          65.139,
+          51.018
+        ],
+        "foot": [
+          76.982,
+          122.989
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            151.92,
+            64.4
+          ],
+          "pixel": [
+            152,
+            81
+          ],
+          "correction": 16.6
+        },
+        "palm": {
+          "nominal": [
+            185.68,
+            126.0
+          ],
+          "pixel": [
+            186,
+            102
+          ],
+          "correction": 24.0
+        },
+        "elbow": {
+          "nominal": [
+            143.48,
+            120.4
+          ],
+          "pixel": [
+            143,
+            112
+          ],
+          "correction": 8.41
+        },
+        "foot": {
+          "nominal": [
+            173.02,
+            268.8
+          ],
+          "pixel": [
+            169,
+            270
+          ],
+          "correction": 4.2
+        }
+      },
+      "rect": [
+        154,
+        274,
+        96,
+        128
       ]
     },
     {
       "name": "summon",
-      "rect": [
+      "sourceRect": [
         664,
         631,
         230,
         289
       ],
       "anchor": [
-        122.0,
-        287
+        55.573,
+        130.733
+      ],
+      "sockets": {
+        "mouth": [
+          77.438,
+          34.619
+        ],
+        "palm": [
+          84.27,
+          48.285
+        ],
+        "elbow": [
+          71.516,
+          56.484
+        ],
+        "foot": [
+          86.093,
+          126.178
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            165.6,
+            66.47
+          ],
+          "pixel": [
+            170,
+            76
+          ],
+          "correction": 10.5
+        },
+        "palm": {
+          "nominal": [
+            202.4,
+            130.05
+          ],
+          "pixel": [
+            185,
+            106
+          ],
+          "correction": 29.68
+        },
+        "elbow": {
+          "nominal": [
+            156.4,
+            124.27
+          ],
+          "pixel": [
+            157,
+            124
+          ],
+          "correction": 0.66
+        },
+        "foot": {
+          "nominal": [
+            188.6,
+            277.44
+          ],
+          "pixel": [
+            189,
+            277
+          ],
+          "correction": 0.59
+        }
+      },
+      "rect": [
+        306,
+        274,
+        105,
+        132
       ]
     },
     {
       "name": "finish",
-      "rect": [
+      "sourceRect": [
         1014,
         645,
         180,
         275
       ],
       "anchor": [
-        92.5,
-        272
+        42.135,
+        123.9
+      ],
+      "sockets": {
+        "mouth": [
+          59.217,
+          28.698
+        ],
+        "palm": [
+          67.872,
+          56.028
+        ],
+        "elbow": [
+          55.573,
+          53.751
+        ],
+        "foot": [
+          67.416,
+          120.256
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            129.6,
+            63.25
+          ],
+          "pixel": [
+            130,
+            63
+          ],
+          "correction": 0.47
+        },
+        "palm": {
+          "nominal": [
+            158.4,
+            123.75
+          ],
+          "pixel": [
+            149,
+            123
+          ],
+          "correction": 9.43
+        },
+        "elbow": {
+          "nominal": [
+            122.4,
+            118.25
+          ],
+          "pixel": [
+            122,
+            118
+          ],
+          "correction": 0.47
+        },
+        "foot": {
+          "nominal": [
+            147.6,
+            264.0
+          ],
+          "pixel": [
+            148,
+            264
+          ],
+          "correction": 0.4
+        }
+      },
+      "rect": [
+        458,
+        274,
+        82,
+        125
       ]
     },
     {
       "name": "flinch",
-      "rect": [
+      "sourceRect": [
         37,
         954,
         210,
         267
       ],
       "anchor": [
-        114.5,
-        265
+        52.157,
+        120.712
+      ],
+      "sockets": {
+        "mouth": [
+          66.505,
+          32.342
+        ],
+        "palm": [
+          84.27,
+          54.662
+        ],
+        "elbow": [
+          65.139,
+          52.384
+        ],
+        "foot": [
+          78.349,
+          116.612
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            151.2,
+            61.41
+          ],
+          "pixel": [
+            146,
+            71
+          ],
+          "correction": 10.91
+        },
+        "palm": {
+          "nominal": [
+            184.8,
+            120.15
+          ],
+          "pixel": [
+            185,
+            120
+          ],
+          "correction": 0.25
+        },
+        "elbow": {
+          "nominal": [
+            142.8,
+            114.81
+          ],
+          "pixel": [
+            143,
+            115
+          ],
+          "correction": 0.28
+        },
+        "foot": {
+          "nominal": [
+            172.2,
+            256.32
+          ],
+          "pixel": [
+            172,
+            256
+          ],
+          "correction": 0.38
+        }
+      },
+      "rect": [
+        2,
+        410,
+        96,
+        122
       ]
     },
     {
       "name": "hurt",
-      "rect": [
+      "sourceRect": [
         360,
         992,
         173,
         229
       ],
       "anchor": [
-        81.5,
-        227
+        37.125,
+        103.402
+      ],
+      "sockets": {
+        "mouth": [
+          56.94,
+          24.142
+        ],
+        "palm": [
+          68.783,
+          46.007
+        ],
+        "elbow": [
+          53.751,
+          44.641
+        ],
+        "foot": [
+          64.683,
+          100.214
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            124.56,
+            52.67
+          ],
+          "pixel": [
+            125,
+            53
+          ],
+          "correction": 0.55
+        },
+        "palm": {
+          "nominal": [
+            152.24,
+            103.05
+          ],
+          "pixel": [
+            151,
+            101
+          ],
+          "correction": 2.4
+        },
+        "elbow": {
+          "nominal": [
+            117.64,
+            98.47
+          ],
+          "pixel": [
+            118,
+            98
+          ],
+          "correction": 0.59
+        },
+        "foot": {
+          "nominal": [
+            141.86,
+            219.84
+          ],
+          "pixel": [
+            142,
+            220
+          ],
+          "correction": 0.21
+        }
+      },
+      "rect": [
+        154,
+        410,
+        79,
+        104
       ]
     },
     {
       "name": "fall",
-      "rect": [
+      "sourceRect": [
         612,
         1041,
         282,
         180
       ],
       "anchor": [
-        159.5,
-        179
+        72.655,
+        81.537
+      ],
+      "sockets": {
+        "mouth": [
+          98.391,
+          26.875
+        ],
+        "palm": [
+          107.502,
+          34.619
+        ],
+        "elbow": [
+          87.459,
+          35.075
+        ],
+        "foot": [
+          109.779,
+          74.249
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            203.04,
+            41.4
+          ],
+          "pixel": [
+            216,
+            59
+          ],
+          "correction": 21.86
+        },
+        "palm": {
+          "nominal": [
+            248.16,
+            81.0
+          ],
+          "pixel": [
+            236,
+            76
+          ],
+          "correction": 13.15
+        },
+        "elbow": {
+          "nominal": [
+            191.76,
+            77.4
+          ],
+          "pixel": [
+            192,
+            77
+          ],
+          "correction": 0.47
+        },
+        "foot": {
+          "nominal": [
+            231.24,
+            172.8
+          ],
+          "pixel": [
+            241,
+            163
+          ],
+          "correction": 13.83
+        }
+      },
+      "rect": [
+        306,
+        410,
+        128,
+        82
       ]
     },
     {
       "name": "faint",
-      "rect": [
+      "sourceRect": [
         935,
         1120,
         326,
         102
       ],
       "anchor": [
-        160.5,
-        100
+        73.11,
+        45.552
+      ],
+      "sockets": {
+        "mouth": [
+          107.046,
+          10.477
+        ],
+        "palm": [
+          131.189,
+          21.409
+        ],
+        "elbow": [
+          101.125,
+          20.043
+        ],
+        "foot": [
+          121.623,
+          42.363
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            234.72,
+            23.46
+          ],
+          "pixel": [
+            235,
+            23
+          ],
+          "correction": 0.54
+        },
+        "palm": {
+          "nominal": [
+            286.88,
+            45.9
+          ],
+          "pixel": [
+            288,
+            47
+          ],
+          "correction": 1.57
+        },
+        "elbow": {
+          "nominal": [
+            221.68,
+            43.86
+          ],
+          "pixel": [
+            222,
+            44
+          ],
+          "correction": 0.35
+        },
+        "foot": {
+          "nominal": [
+            267.32,
+            97.92
+          ],
+          "pixel": [
+            267,
+            93
+          ],
+          "correction": 4.93
+        }
+      },
+      "rect": [
+        458,
+        410,
+        148,
+        46
       ]
     }
-  ]
+  ],
+  "originalSource": "madara-actions-v1.png",
+  "originalSha256": "8ae1d43e099ced737b3cf3fca8184b066a8bb06eff572cb731ecee5ef69adace",
+  "originalBodyHeight": 281,
+  "bytes": 290529,
+  "size": [
+    608,
+    544
+  ],
+  "sheets": {
+    "taijutsu": {
+      "source": "madara-taijutsu-v2-runtime.png",
+      "sha256": "12cda82aa20c2342b57b832f21e740d10d00c602fbbfb800e34855c27e47c201",
+      "originalSource": "madara-taijutsu-v2.png",
+      "originalSha256": "4f0231180af0e0a873df1a344fdc1b7cd4a648498a6f88151f32cfe7a76f3c07",
+      "bodyHeight": 128,
+      "originalBodyHeight": 345,
+      "bytes": 192176,
+      "size": [
+        512,
+        408
+      ],
+      "frames": [
+        {
+          "name": "step",
+          "sourceRect": [
+            42,
+            79,
+            264,
+            325
+          ],
+          "anchor": [
+            9.09,
+            119.838
+          ],
+          "sockets": {
+            "mouth": [
+              75.316,
+              28.939
+            ],
+            "palm": [
+              89.043,
+              61.588
+            ],
+            "elbow": [
+              64.557,
+              58.991
+            ],
+            "foot": [
+              83.107,
+              116.128
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                203.28,
+                78.0
+              ],
+              "pixel": [
+                203,
+                78
+              ],
+              "correction": 0.28
+            },
+            "palm": {
+              "nominal": [
+                240.24,
+                165.75
+              ],
+              "pixel": [
+                240,
+                166
+              ],
+              "correction": 0.35
+            },
+            "elbow": {
+              "nominal": [
+                174.24,
+                159.25
+              ],
+              "pixel": [
+                174,
+                159
+              ],
+              "correction": 0.35
+            },
+            "foot": {
+              "nominal": [
+                224.4,
+                315.25
+              ],
+              "pixel": [
+                224,
+                313
+              ],
+              "correction": 2.29
+            }
+          },
+          "rect": [
+            2,
+            2,
+            98,
+            121
+          ]
+        },
+        {
+          "name": "palm",
+          "sourceRect": [
+            408,
+            76,
+            323,
+            328
+          ],
+          "anchor": [
+            7.791,
+            120.951
+          ],
+          "sockets": {
+            "mouth": [
+              73.09,
+              30.423
+            ],
+            "palm": [
+              117.612,
+              30.423
+            ],
+            "elbow": [
+              83.849,
+              36.359
+            ],
+            "foot": [
+              87.559,
+              117.241
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                197.03,
+                82.0
+              ],
+              "pixel": [
+                197,
+                82
+              ],
+              "correction": 0.03
+            },
+            "palm": {
+              "nominal": [
+                316.54,
+                82.0
+              ],
+              "pixel": [
+                317,
+                82
+              ],
+              "correction": 0.46
+            },
+            "elbow": {
+              "nominal": [
+                226.1,
+                98.4
+              ],
+              "pixel": [
+                226,
+                98
+              ],
+              "correction": 0.41
+            },
+            "foot": {
+              "nominal": [
+                242.25,
+                318.16
+              ],
+              "pixel": [
+                236,
+                316
+              ],
+              "correction": 6.61
+            }
+          },
+          "rect": [
+            130,
+            2,
+            120,
+            122
+          ]
+        },
+        {
+          "name": "elbow-windup",
+          "sourceRect": [
+            778,
+            67,
+            260,
+            337
+          ],
+          "anchor": [
+            40.626,
+            124.29
+          ],
+          "sockets": {
+            "mouth": [
+              73.461,
+              31.165
+            ],
+            "palm": [
+              89.786,
+              63.814
+            ],
+            "elbow": [
+              41.554,
+              42.667
+            ],
+            "foot": [
+              80.51,
+              121.322
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                197.6,
+                84.25
+              ],
+              "pixel": [
+                198,
+                84
+              ],
+              "correction": 0.47
+            },
+            "palm": {
+              "nominal": [
+                241.8,
+                171.87
+              ],
+              "pixel": [
+                242,
+                172
+              ],
+              "correction": 0.24
+            },
+            "elbow": {
+              "nominal": [
+                111.8,
+                114.58
+              ],
+              "pixel": [
+                112,
+                115
+              ],
+              "correction": 0.47
+            },
+            "foot": {
+              "nominal": [
+                221.0,
+                326.89
+              ],
+              "pixel": [
+                217,
+                327
+              ],
+              "correction": 4.0
+            }
+          },
+          "rect": [
+            258,
+            2,
+            96,
+            125
+          ]
+        },
+        {
+          "name": "elbow",
+          "sourceRect": [
+            1137,
+            71,
+            261,
+            333
+          ],
+          "anchor": [
+            46.377,
+            122.806
+          ],
+          "sockets": {
+            "mouth": [
+              76.429,
+              29.681
+            ],
+            "palm": [
+              70.864,
+              44.522
+            ],
+            "elbow": [
+              94.609,
+              38.586
+            ],
+            "foot": [
+              82.365,
+              119.838
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                206.19,
+                79.92
+              ],
+              "pixel": [
+                206,
+                80
+              ],
+              "correction": 0.21
+            },
+            "palm": {
+              "nominal": [
+                190.53,
+                119.88
+              ],
+              "pixel": [
+                191,
+                120
+              ],
+              "correction": 0.49
+            },
+            "elbow": {
+              "nominal": [
+                255.78,
+                103.23
+              ],
+              "pixel": [
+                255,
+                104
+              ],
+              "correction": 1.1
+            },
+            "foot": {
+              "nominal": [
+                221.85,
+                323.01
+              ],
+              "pixel": [
+                222,
+                323
+              ],
+              "correction": 0.15
+            }
+          },
+          "rect": [
+            386,
+            2,
+            97,
+            124
+          ]
+        },
+        {
+          "name": "pivot",
+          "sourceRect": [
+            1472,
+            78,
+            274,
+            325
+          ],
+          "anchor": [
+            51.571,
+            119.838
+          ],
+          "sockets": {
+            "mouth": [
+              74.203,
+              28.939
+            ],
+            "palm": [
+              97.577,
+              52.684
+            ],
+            "elbow": [
+              80.139,
+              47.119
+            ],
+            "foot": [
+              86.446,
+              116.87
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                200.02,
+                78.0
+              ],
+              "pixel": [
+                200,
+                78
+              ],
+              "correction": 0.02
+            },
+            "palm": {
+              "nominal": [
+                263.04,
+                123.5
+              ],
+              "pixel": [
+                263,
+                142
+              ],
+              "correction": 18.5
+            },
+            "elbow": {
+              "nominal": [
+                216.46,
+                126.75
+              ],
+              "pixel": [
+                216,
+                127
+              ],
+              "correction": 0.52
+            },
+            "foot": {
+              "nominal": [
+                232.9,
+                315.25
+              ],
+              "pixel": [
+                233,
+                315
+              ],
+              "correction": 0.27
+            }
+          },
+          "rect": [
+            2,
+            138,
+            102,
+            121
+          ]
+        },
+        {
+          "name": "knee",
+          "sourceRect": [
+            31,
+            487,
+            228,
+            357
+          ],
+          "anchor": [
+            33.391,
+            131.71
+          ],
+          "sockets": {
+            "mouth": [
+              64.557,
+              33.02
+            ],
+            "palm": [
+              76.8,
+              44.893
+            ],
+            "elbow": [
+              34.504,
+              63.443
+            ],
+            "foot": [
+              60.104,
+              99.803
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                173.28,
+                89.25
+              ],
+              "pixel": [
+                174,
+                89
+              ],
+              "correction": 0.76
+            },
+            "palm": {
+              "nominal": [
+                207.48,
+                121.38
+              ],
+              "pixel": [
+                207,
+                121
+              ],
+              "correction": 0.61
+            },
+            "elbow": {
+              "nominal": [
+                93.48,
+                171.36
+              ],
+              "pixel": [
+                93,
+                171
+              ],
+              "correction": 0.6
+            },
+            "foot": {
+              "nominal": [
+                168.72,
+                274.89
+              ],
+              "pixel": [
+                162,
+                269
+              ],
+              "correction": 8.94
+            }
+          },
+          "rect": [
+            130,
+            138,
+            85,
+            132
+          ]
+        },
+        {
+          "name": "kick",
+          "sourceRect": [
+            357,
+            490,
+            334,
+            354
+          ],
+          "anchor": [
+            40.441,
+            130.597
+          ],
+          "sockets": {
+            "mouth": [
+              63.814,
+              31.536
+            ],
+            "palm": [
+              82.736,
+              39.328
+            ],
+            "elbow": [
+              39.699,
+              53.797
+            ],
+            "foot": [
+              121.322,
+              47.119
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                170.34,
+                84.96
+              ],
+              "pixel": [
+                172,
+                85
+              ],
+              "correction": 1.66
+            },
+            "palm": {
+              "nominal": [
+                223.78,
+                113.28
+              ],
+              "pixel": [
+                223,
+                106
+              ],
+              "correction": 7.32
+            },
+            "elbow": {
+              "nominal": [
+                106.88,
+                145.14
+              ],
+              "pixel": [
+                107,
+                145
+              ],
+              "correction": 0.18
+            },
+            "foot": {
+              "nominal": [
+                327.32,
+                127.44
+              ],
+              "pixel": [
+                327,
+                127
+              ],
+              "correction": 0.54
+            }
+          },
+          "rect": [
+            258,
+            138,
+            124,
+            131
+          ]
+        },
+        {
+          "name": "turn-kick",
+          "sourceRect": [
+            744,
+            496,
+            263,
+            346
+          ],
+          "anchor": [
+            37.472,
+            127.629
+          ],
+          "sockets": {
+            "mouth": [
+              69.751,
+              29.31
+            ],
+            "palm": [
+              80.881,
+              53.797
+            ],
+            "elbow": [
+              64.557,
+              50.087
+            ],
+            "foot": [
+              94.238,
+              103.142
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                199.88,
+                83.04
+              ],
+              "pixel": [
+                188,
+                79
+              ],
+              "correction": 12.55
+            },
+            "palm": {
+              "nominal": [
+                218.29,
+                145.32
+              ],
+              "pixel": [
+                218,
+                145
+              ],
+              "correction": 0.43
+            },
+            "elbow": {
+              "nominal": [
+                173.58,
+                134.94
+              ],
+              "pixel": [
+                174,
+                135
+              ],
+              "correction": 0.42
+            },
+            "foot": {
+              "nominal": [
+                257.74,
+                276.8
+              ],
+              "pixel": [
+                254,
+                278
+              ],
+              "correction": 3.93
+            }
+          },
+          "rect": [
+            386,
+            138,
+            98,
+            128
+          ]
+        },
+        {
+          "name": "landing",
+          "sourceRect": [
+            1121,
+            532,
+            272,
+            312
+          ],
+          "anchor": [
+            50.087,
+            115.014
+          ],
+          "sockets": {
+            "mouth": [
+              75.687,
+              27.826
+            ],
+            "palm": [
+              97.948,
+              64.557
+            ],
+            "elbow": [
+              72.719,
+              63.814
+            ],
+            "foot": [
+              88.672,
+              112.417
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                204.0,
+                74.88
+              ],
+              "pixel": [
+                204,
+                75
+              ],
+              "correction": 0.12
+            },
+            "palm": {
+              "nominal": [
+                263.84,
+                174.72
+              ],
+              "pixel": [
+                264,
+                174
+              ],
+              "correction": 0.74
+            },
+            "elbow": {
+              "nominal": [
+                195.84,
+                171.6
+              ],
+              "pixel": [
+                196,
+                172
+              ],
+              "correction": 0.43
+            },
+            "foot": {
+              "nominal": [
+                239.36,
+                302.64
+              ],
+              "pixel": [
+                239,
+                303
+              ],
+              "correction": 0.51
+            }
+          },
+          "rect": [
+            2,
+            274,
+            101,
+            116
+          ]
+        },
+        {
+          "name": "recover",
+          "sourceRect": [
+            1514,
+            499,
+            200,
+            345
+          ],
+          "anchor": [
+            39.884,
+            127.258
+          ],
+          "sockets": {
+            "mouth": [
+              54.168,
+              30.794
+            ],
+            "palm": [
+              68.267,
+              79.397
+            ],
+            "elbow": [
+              51.942,
+              67.896
+            ],
+            "foot": [
+              63.814,
+              124.29
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                146.0,
+                82.8
+              ],
+              "pixel": [
+                146,
+                83
+              ],
+              "correction": 0.2
+            },
+            "palm": {
+              "nominal": [
+                184.0,
+                213.9
+              ],
+              "pixel": [
+                184,
+                214
+              ],
+              "correction": 0.1
+            },
+            "elbow": {
+              "nominal": [
+                140.0,
+                182.85
+              ],
+              "pixel": [
+                140,
+                183
+              ],
+              "correction": 0.15
+            },
+            "foot": {
+              "nominal": [
+                172.0,
+                334.65
+              ],
+              "pixel": [
+                172,
+                335
+              ],
+              "correction": 0.35
+            }
+          },
+          "rect": [
+            130,
+            274,
+            74,
+            128
+          ]
+        }
+      ]
+    },
+    "bodyDirections": {
+      "source": "madara-body-directions-v2-runtime.png",
+      "sha256": "65521002903d4f61e765c49064d5ec5dcff411922fe0a5ea51ada80c1dbe9834",
+      "originalSource": "madara-body-directions-v2.png",
+      "originalSha256": "ed75e489c03e0af4d92980e18e7e949c857e229fb90f8010833c1f919d097798",
+      "bodyHeight": 128,
+      "originalBodyHeight": 382,
+      "bytes": 151532,
+      "size": [
+        396,
+        266
+      ],
+      "frames": [
+        {
+          "name": "down-palm",
+          "sourceRect": [
+            108,
+            50,
+            273,
+            381
+          ],
+          "anchor": [
+            11.058,
+            126.995
+          ],
+          "sockets": {
+            "mouth": [
+              52.942,
+              34.513
+            ],
+            "palm": [
+              32.168,
+              89.466
+            ],
+            "elbow": [
+              39.204,
+              62.66
+            ],
+            "foot": [
+              80.419,
+              118.953
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                158.34,
+                102.87
+              ],
+              "pixel": [
+                158,
+                103
+              ],
+              "correction": 0.36
+            },
+            "palm": {
+              "nominal": [
+                95.55,
+                266.7
+              ],
+              "pixel": [
+                96,
+                267
+              ],
+              "correction": 0.54
+            },
+            "elbow": {
+              "nominal": [
+                117.39,
+                186.69
+              ],
+              "pixel": [
+                117,
+                187
+              ],
+              "correction": 0.5
+            },
+            "foot": {
+              "nominal": [
+                240.24,
+                361.95
+              ],
+              "pixel": [
+                240,
+                355
+              ],
+              "correction": 6.95
+            }
+          },
+          "rect": [
+            2,
+            2,
+            91,
+            128
+          ]
+        },
+        {
+          "name": "down-elbow",
+          "sourceRect": [
+            522,
+            49,
+            282,
+            382
+          ],
+          "anchor": [
+            10.22,
+            127.33
+          ],
+          "sockets": {
+            "mouth": [
+              63.33,
+              31.832
+            ],
+            "palm": [
+              66.01,
+              54.953
+            ],
+            "elbow": [
+              47.246,
+              53.613
+            ],
+            "foot": [
+              82.094,
+              121.634
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                188.94,
+                95.5
+              ],
+              "pixel": [
+                189,
+                95
+              ],
+              "correction": 0.5
+            },
+            "palm": {
+              "nominal": [
+                197.4,
+                164.26
+              ],
+              "pixel": [
+                197,
+                164
+              ],
+              "correction": 0.48
+            },
+            "elbow": {
+              "nominal": [
+                141.0,
+                160.44
+              ],
+              "pixel": [
+                141,
+                160
+              ],
+              "correction": 0.44
+            },
+            "foot": {
+              "nominal": [
+                245.34,
+                362.9
+              ],
+              "pixel": [
+                245,
+                363
+              ],
+              "correction": 0.35
+            }
+          },
+          "rect": [
+            101,
+            2,
+            94,
+            128
+          ]
+        },
+        {
+          "name": "down-kick",
+          "sourceRect": [
+            940,
+            43,
+            285,
+            386
+          ],
+          "anchor": [
+            69.864,
+            128.67
+          ],
+          "sockets": {
+            "mouth": [
+              65.005,
+              33.508
+            ],
+            "palm": [
+              14.408,
+              71.037
+            ],
+            "elbow": [
+              25.801,
+              60.649
+            ],
+            "foot": [
+              45.906,
+              89.131
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                193.8,
+                100.36
+              ],
+              "pixel": [
+                194,
+                100
+              ],
+              "correction": 0.41
+            },
+            "palm": {
+              "nominal": [
+                42.75,
+                212.3
+              ],
+              "pixel": [
+                43,
+                212
+              ],
+              "correction": 0.39
+            },
+            "elbow": {
+              "nominal": [
+                76.95,
+                181.42
+              ],
+              "pixel": [
+                77,
+                181
+              ],
+              "correction": 0.42
+            },
+            "foot": {
+              "nominal": [
+                136.8,
+                266.34
+              ],
+              "pixel": [
+                137,
+                266
+              ],
+              "correction": 0.39
+            }
+          },
+          "rect": [
+            200,
+            2,
+            95,
+            129
+          ]
+        },
+        {
+          "name": "down-recover",
+          "sourceRect": [
+            1412,
+            47,
+            237,
+            384
+          ],
+          "anchor": [
+            39.539,
+            127.665
+          ],
+          "sockets": {
+            "mouth": [
+              45.236,
+              33.508
+            ],
+            "palm": [
+              15.749,
+              83.77
+            ],
+            "elbow": [
+              15.749,
+              68.356
+            ],
+            "foot": [
+              66.681,
+              123.644
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                135.09,
+                99.84
+              ],
+              "pixel": [
+                135,
+                100
+              ],
+              "correction": 0.18
+            },
+            "palm": {
+              "nominal": [
+                47.4,
+                249.6
+              ],
+              "pixel": [
+                47,
+                250
+              ],
+              "correction": 0.57
+            },
+            "elbow": {
+              "nominal": [
+                47.4,
+                203.52
+              ],
+              "pixel": [
+                47,
+                204
+              ],
+              "correction": 0.62
+            },
+            "foot": {
+              "nominal": [
+                199.08,
+                368.64
+              ],
+              "pixel": [
+                199,
+                369
+              ],
+              "correction": 0.37
+            }
+          },
+          "rect": [
+            299,
+            2,
+            79,
+            129
+          ]
+        },
+        {
+          "name": "up-palm",
+          "sourceRect": [
+            112,
+            489,
+            256,
+            374
+          ],
+          "anchor": [
+            42.89,
+            124.649
+          ],
+          "sockets": {
+            "mouth": [
+              55.623,
+              30.157
+            ],
+            "palm": [
+              70.366,
+              10.052
+            ],
+            "elbow": [
+              62.66,
+              40.88
+            ],
+            "foot": [
+              73.047,
+              120.293
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                166.4,
+                89.76
+              ],
+              "pixel": [
+                166,
+                90
+              ],
+              "correction": 0.47
+            },
+            "palm": {
+              "nominal": [
+                209.92,
+                29.92
+              ],
+              "pixel": [
+                210,
+                30
+              ],
+              "correction": 0.11
+            },
+            "elbow": {
+              "nominal": [
+                194.56,
+                127.16
+              ],
+              "pixel": [
+                187,
+                122
+              ],
+              "correction": 9.15
+            },
+            "foot": {
+              "nominal": [
+                217.6,
+                359.04
+              ],
+              "pixel": [
+                218,
+                359
+              ],
+              "correction": 0.4
+            }
+          },
+          "rect": [
+            2,
+            135,
+            86,
+            125
+          ]
+        },
+        {
+          "name": "up-elbow",
+          "sourceRect": [
+            541,
+            492,
+            260,
+            371
+          ],
+          "anchor": [
+            43.56,
+            123.644
+          ],
+          "sockets": {
+            "mouth": [
+              54.953,
+              32.168
+            ],
+            "palm": [
+              65.34,
+              29.822
+            ],
+            "elbow": [
+              76.063,
+              23.455
+            ],
+            "foot": [
+              74.052,
+              119.288
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                163.8,
+                96.46
+              ],
+              "pixel": [
+                164,
+                96
+              ],
+              "correction": 0.5
+            },
+            "palm": {
+              "nominal": [
+                195.0,
+                89.04
+              ],
+              "pixel": [
+                195,
+                89
+              ],
+              "correction": 0.04
+            },
+            "elbow": {
+              "nominal": [
+                228.8,
+                70.49
+              ],
+              "pixel": [
+                227,
+                70
+              ],
+              "correction": 1.87
+            },
+            "foot": {
+              "nominal": [
+                221.0,
+                356.16
+              ],
+              "pixel": [
+                221,
+                356
+              ],
+              "correction": 0.16
+            }
+          },
+          "rect": [
+            101,
+            135,
+            87,
+            124
+          ]
+        },
+        {
+          "name": "up-kick",
+          "sourceRect": [
+            939,
+            486,
+            284,
+            340
+          ],
+          "anchor": [
+            30.157,
+            124.31459162303665
+          ],
+          "sockets": {
+            "mouth": [
+              52.272,
+              28.482
+            ],
+            "palm": [
+              74.387,
+              54.618
+            ],
+            "elbow": [
+              60.984,
+              51.267
+            ],
+            "foot": [
+              87.455,
+              14.743
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                156.2,
+                85.0
+              ],
+              "pixel": [
+                156,
+                85
+              ],
+              "correction": 0.2
+            },
+            "palm": {
+              "nominal": [
+                221.52,
+                163.2
+              ],
+              "pixel": [
+                222,
+                163
+              ],
+              "correction": 0.52
+            },
+            "elbow": {
+              "nominal": [
+                181.76,
+                153.0
+              ],
+              "pixel": [
+                182,
+                153
+              ],
+              "correction": 0.24
+            },
+            "foot": {
+              "nominal": [
+                261.28,
+                44.2
+              ],
+              "pixel": [
+                261,
+                44
+              ],
+              "correction": 0.34
+            }
+          },
+          "rect": [
+            200,
+            135,
+            95,
+            114
+          ]
+        },
+        {
+          "name": "up-recover",
+          "sourceRect": [
+            1424,
+            488,
+            215,
+            375
+          ],
+          "anchor": [
+            35.686,
+            124.984
+          ],
+          "sockets": {
+            "mouth": [
+              40.209,
+              31.497
+            ],
+            "palm": [
+              59.644,
+              84.105
+            ],
+            "elbow": [
+              57.634,
+              66.681
+            ],
+            "foot": [
+              60.649,
+              120.628
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                120.4,
+                93.75
+              ],
+              "pixel": [
+                120,
+                94
+              ],
+              "correction": 0.47
+            },
+            "palm": {
+              "nominal": [
+                178.45,
+                251.25
+              ],
+              "pixel": [
+                178,
+                251
+              ],
+              "correction": 0.51
+            },
+            "elbow": {
+              "nominal": [
+                172.0,
+                198.75
+              ],
+              "pixel": [
+                172,
+                199
+              ],
+              "correction": 0.25
+            },
+            "foot": {
+              "nominal": [
+                180.6,
+                360.0
+              ],
+              "pixel": [
+                181,
+                360
+              ],
+              "correction": 0.4
+            }
+          },
+          "rect": [
+            299,
+            135,
+            72,
+            126
+          ]
+        }
+      ]
+    },
+    "elements": {
+      "source": "madara-elements-v2-runtime.png",
+      "sha256": "aa5238696dfb2aef7cd1b3fb90edd0db40d3bc1783edf9d9db9d0afee24bace6",
+      "originalSource": "madara-elements-v2.png",
+      "originalSha256": "9d1d72813ac19f6b3b902b43f6847ea8e79308bcb6fe08bc7e1e7a5e71770a0a",
+      "bodyHeight": 256,
+      "originalBodyHeight": 571,
+      "bytes": 411449,
+      "size": [
+        1040,
+        430
+      ],
+      "frames": [
+        {
+          "name": "fire-burst",
+          "sourceRect": [
+            25,
+            132,
+            407,
+            247
+          ],
+          "anchor": [
+            83.391,
+            109.842
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            2,
+            2,
+            182,
+            111
+          ]
+        },
+        {
+          "name": "fire-wall",
+          "sourceRect": [
+            456,
+            28,
+            571,
+            362
+          ],
+          "anchor": [
+            117.24,
+            161.401
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            262,
+            2,
+            256,
+            162
+          ]
+        },
+        {
+          "name": "fire-tail",
+          "sourceRect": [
+            1030,
+            155,
+            472,
+            216
+          ],
+          "anchor": [
+            41.247,
+            95.944
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            522,
+            2,
+            212,
+            97
+          ]
+        },
+        {
+          "name": "rock",
+          "sourceRect": [
+            9,
+            480,
+            454,
+            470
+          ],
+          "anchor": [
+            86.529,
+            209.821
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            782,
+            2,
+            204,
+            211
+          ]
+        },
+        {
+          "name": "fracture",
+          "sourceRect": [
+            496,
+            484,
+            470,
+            453
+          ],
+          "anchor": [
+            83.391,
+            202.2
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            2,
+            217,
+            211,
+            203
+          ]
+        },
+        {
+          "name": "rubble",
+          "sourceRect": [
+            967,
+            596,
+            559,
+            321
+          ],
+          "anchor": [
+            87.874,
+            143.019
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            262,
+            217,
+            251,
+            144
+          ]
+        }
+      ]
+    },
+    "wood": {
+      "source": "madara-wood-v3-runtime.png",
+      "sha256": "899650fd0bb52212ef26d273ba61846f010a175da29a35a3c1368a5802694c8d",
+      "originalSource": "madara-wood-v3.png",
+      "originalSha256": "5449e46c013b42055678b5e66e52c4d9f4f1d4211bebb6d79705f1d458cd7b98",
+      "bodyHeight": 128,
+      "originalBodyHeight": 480,
+      "bytes": 111064,
+      "size": [
+        608,
+        129
+      ],
+      "frames": [
+        {
+          "name": "root",
+          "sourceRect": [
+            160,
+            144,
+            462,
+            342
+          ],
+          "anchor": [
+            61.6,
+            90.667
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            2,
+            2,
+            123,
+            91
+          ]
+        },
+        {
+          "name": "separate",
+          "sourceRect": [
+            944,
+            19,
+            411,
+            467
+          ],
+          "anchor": [
+            54.933,
+            124.0
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            154,
+            2,
+            110,
+            125
+          ]
+        },
+        {
+          "name": "reveal",
+          "sourceRect": [
+            120,
+            548,
+            521,
+            442
+          ],
+          "anchor": [
+            64.667,
+            117.333
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            306,
+            2,
+            139,
+            118
+          ]
+        },
+        {
+          "name": "dismiss",
+          "sourceRect": [
+            870,
+            746,
+            555,
+            243
+          ],
+          "anchor": [
+            67.6,
+            64.0
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            458,
+            2,
+            148,
+            65
+          ]
+        }
+      ]
+    },
+    "rib": {
+      "source": "madara-susanoo-rib-v3-runtime.png",
+      "sha256": "838d10e17aeae885940f4b01892643ed87e277f76fba7aacf53025210d867684",
+      "originalSource": "madara-susanoo-rib-v3.png",
+      "originalSha256": "431161fc40c0f931b3d5266ba0d4aa3eb9a479ffc68deb45731eb280d5cc9342",
+      "bodyHeight": 256,
+      "originalBodyHeight": 400,
+      "bytes": 656592,
+      "size": [
+        1360,
+        538
+      ],
+      "frames": [
+        {
+          "name": "guard",
+          "sourceRect": [
+            33,
+            23,
+            508,
+            401
+          ],
+          "anchor": [
+            163.2,
+            241.28
+          ],
+          "sockets": {
+            "shoulder": [
+              92.8,
+              81.92
+            ],
+            "hand": [
+              44.16,
+              216.96
+            ],
+            "bladeBase": [
+              44.16,
+              216.96
+            ],
+            "bladeTip": [
+              71.04,
+              232.32
+            ],
+            "groundAnchor": [
+              163.2,
+              241.28
+            ],
+            "ownerSocket": [
+              163.2,
+              241.28
+            ],
+            "ownerChest": [
+              163.2,
+              190.08
+            ],
+            "controlLinkSocket": [
+              163.2,
+              113.28
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                178,
+                151
+              ],
+              "pixel": [
+                178,
+                151
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                102,
+                362
+              ],
+              "pixel": [
+                102,
+                362
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                102,
+                362
+              ],
+              "pixel": [
+                102,
+                362
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                145,
+                384
+              ],
+              "pixel": [
+                144,
+                386
+              ],
+              "correction": 2.24
+            }
+          },
+          "rect": [
+            2,
+            2,
+            325,
+            257
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "draw",
+          "sourceRect": [
+            633,
+            29,
+            498,
+            392
+          ],
+          "anchor": [
+            166.4,
+            236.16
+          ],
+          "sockets": {
+            "shoulder": [
+              105.6,
+              78.08
+            ],
+            "hand": [
+              43.52,
+              165.12
+            ],
+            "bladeBase": [
+              43.52,
+              165.12
+            ],
+            "bladeTip": [
+              67.84,
+              166.4
+            ],
+            "groundAnchor": [
+              166.4,
+              236.16
+            ],
+            "ownerSocket": [
+              166.4,
+              236.16
+            ],
+            "ownerChest": [
+              166.4,
+              184.96
+            ],
+            "controlLinkSocket": [
+              166.4,
+              108.16
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                798,
+                151
+              ],
+              "pixel": [
+                798,
+                151
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                701,
+                287
+              ],
+              "pixel": [
+                701,
+                287
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                701,
+                287
+              ],
+              "pixel": [
+                701,
+                287
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                739,
+                289
+              ],
+              "pixel": [
+                739,
+                289
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            342,
+            2,
+            319,
+            251
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "raised",
+          "sourceRect": [
+            1221,
+            4,
+            525,
+            414
+          ],
+          "anchor": [
+            181.76,
+            252.16
+          ],
+          "sockets": {
+            "shoulder": [
+              115.2,
+              104.32
+            ],
+            "hand": [
+              94.08,
+              32.64
+            ],
+            "bladeBase": [
+              94.08,
+              32.64
+            ],
+            "bladeTip": [
+              126.72,
+              11.52
+            ],
+            "groundAnchor": [
+              181.76,
+              252.16
+            ],
+            "ownerSocket": [
+              181.76,
+              252.16
+            ],
+            "ownerChest": [
+              181.76,
+              200.96
+            ],
+            "controlLinkSocket": [
+              181.76,
+              124.16
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                1401,
+                167
+              ],
+              "pixel": [
+                1401,
+                167
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                1368,
+                55
+              ],
+              "pixel": [
+                1368,
+                55
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                1368,
+                55
+              ],
+              "pixel": [
+                1368,
+                55
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                1419,
+                22
+              ],
+              "pixel": [
+                1419,
+                22
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            682,
+            2,
+            336,
+            265
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "sweep",
+          "sourceRect": [
+            76,
+            454,
+            465,
+            380
+          ],
+          "anchor": [
+            88.96,
+            234.24
+          ],
+          "sockets": {
+            "shoulder": [
+              46.08,
+              80.0
+            ],
+            "hand": [
+              253.44,
+              104.96
+            ],
+            "bladeBase": [
+              253.44,
+              104.96
+            ],
+            "bladeTip": [
+              291.84,
+              104.32
+            ],
+            "groundAnchor": [
+              88.96,
+              234.24
+            ],
+            "ownerSocket": [
+              88.96,
+              234.24
+            ],
+            "ownerChest": [
+              88.96,
+              183.04
+            ],
+            "controlLinkSocket": [
+              88.96,
+              106.24
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                148,
+                579
+              ],
+              "pixel": [
+                148,
+                579
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                472,
+                618
+              ],
+              "pixel": [
+                472,
+                618
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                472,
+                618
+              ],
+              "pixel": [
+                472,
+                618
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                533,
+                620
+              ],
+              "pixel": [
+                532,
+                617
+              ],
+              "correction": 3.16
+            }
+          },
+          "rect": [
+            1022,
+            2,
+            298,
+            243
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "followthrough",
+          "sourceRect": [
+            619,
+            487,
+            502,
+            386
+          ],
+          "anchor": [
+            120.96,
+            232.32
+          ],
+          "sockets": {
+            "shoulder": [
+              90.88,
+              76.8
+            ],
+            "hand": [
+              275.84,
+              207.36
+            ],
+            "bladeBase": [
+              275.84,
+              207.36
+            ],
+            "bladeTip": [
+              316.8,
+              229.12
+            ],
+            "groundAnchor": [
+              120.96,
+              232.32
+            ],
+            "ownerSocket": [
+              120.96,
+              232.32
+            ],
+            "ownerChest": [
+              120.96,
+              181.12
+            ],
+            "controlLinkSocket": [
+              120.96,
+              104.32
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                761,
+                607
+              ],
+              "pixel": [
+                761,
+                607
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                1050,
+                811
+              ],
+              "pixel": [
+                1050,
+                811
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                1050,
+                811
+              ],
+              "pixel": [
+                1050,
+                811
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                1114,
+                845
+              ],
+              "pixel": [
+                1114,
+                845
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            2,
+            271,
+            321,
+            247
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "recover",
+          "sourceRect": [
+            1211,
+            470,
+            504,
+            373
+          ],
+          "anchor": [
+            162.56,
+            232.32
+          ],
+          "sockets": {
+            "shoulder": [
+              107.52,
+              82.56
+            ],
+            "hand": [
+              282.24,
+              149.76
+            ],
+            "bladeBase": [
+              282.24,
+              149.76
+            ],
+            "bladeTip": [
+              313.6,
+              151.68
+            ],
+            "groundAnchor": [
+              162.56,
+              232.32
+            ],
+            "ownerSocket": [
+              162.56,
+              232.32
+            ],
+            "ownerChest": [
+              162.56,
+              181.12
+            ],
+            "controlLinkSocket": [
+              162.56,
+              104.32
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                1379,
+                599
+              ],
+              "pixel": [
+                1379,
+                599
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                1652,
+                704
+              ],
+              "pixel": [
+                1652,
+                704
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                1652,
+                704
+              ],
+              "pixel": [
+                1652,
+                704
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                1707,
+                710
+              ],
+              "pixel": [
+                1701,
+                707
+              ],
+              "correction": 6.71
+            }
+          },
+          "rect": [
+            342,
+            271,
+            323,
+            239
+          ],
+          "groundPolicy": "measured virtual waist base"
+        }
+      ],
+      "ownerPolicy": "ground feet; 64px actor is foreground projection, not the forehead occupant"
+    },
+    "armored": {
+      "source": "madara-susanoo-armored-v4-runtime.png",
+      "sha256": "3ea01212c48844b69ef72819720e367c108a63e4a79ec6fa8ee1d0c6418215bb",
+      "originalSource": "madara-susanoo-armored-v4.png",
+      "originalSha256": "ca93d853cbb0bf17c3b8570e3c7523136eca5ea3fe3e361d231320162ab4e2cc",
+      "bodyHeight": 256,
+      "originalBodyHeight": 390,
+      "bytes": 550030,
+      "size": [
+        1408,
+        287
+      ],
+      "frames": [
+        {
+          "name": "guard",
+          "sourceRect": [
+            244,
+            54,
+            365,
+            390
+          ],
+          "anchor": [
+            108.964,
+            174.605
+          ],
+          "sockets": {
+            "shoulder": [
+              43.323,
+              97.805
+            ],
+            "hand": [
+              30.195,
+              194.954
+            ],
+            "bladeBase": [
+              43.323,
+              209.395
+            ],
+            "bladeTip": [
+              96.492,
+              252.718
+            ],
+            "groundAnchor": [
+              108.964,
+              174.605
+            ],
+            "ownerSocket": [
+              108.964,
+              174.605
+            ],
+            "ownerChest": [
+              108.964,
+              139.789
+            ],
+            "controlLinkSocket": [
+              108.964,
+              46.605
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                310,
+                203
+              ],
+              "pixel": [
+                310,
+                203
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                290,
+                351
+              ],
+              "pixel": [
+                290,
+                351
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                310,
+                373
+              ],
+              "pixel": [
+                310,
+                373
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                391,
+                439
+              ],
+              "pixel": [
+                391,
+                439
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            2,
+            2,
+            240,
+            256
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "draw",
+          "sourceRect": [
+            969,
+            19,
+            425,
+            431
+          ],
+          "anchor": [
+            124.718,
+            204.144
+          ],
+          "sockets": {
+            "shoulder": [
+              56.451,
+              101.744
+            ],
+            "hand": [
+              43.979,
+              51.2
+            ],
+            "bladeBase": [
+              59.733,
+              40.041
+            ],
+            "bladeTip": [
+              162.133,
+              3.938
+            ],
+            "groundAnchor": [
+              124.718,
+              204.144
+            ],
+            "ownerSocket": [
+              124.718,
+              204.144
+            ],
+            "ownerChest": [
+              124.718,
+              169.328
+            ],
+            "controlLinkSocket": [
+              124.718,
+              76.144
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                1055,
+                174
+              ],
+              "pixel": [
+                1055,
+                174
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                1036,
+                97
+              ],
+              "pixel": [
+                1036,
+                97
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                1060,
+                80
+              ],
+              "pixel": [
+                1060,
+                80
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                1216,
+                25
+              ],
+              "pixel": [
+                1216,
+                25
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            354,
+            2,
+            279,
+            283
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "sweep",
+          "sourceRect": [
+            175,
+            547,
+            530,
+            411
+          ],
+          "anchor": [
+            118.154,
+            166.072
+          ],
+          "sockets": {
+            "shoulder": [
+              108.308,
+              84.021
+            ],
+            "hand": [
+              206.113,
+              111.59
+            ],
+            "bladeBase": [
+              231.056,
+              113.559
+            ],
+            "bladeTip": [
+              344.615,
+              107.651
+            ],
+            "groundAnchor": [
+              118.154,
+              166.072
+            ],
+            "ownerSocket": [
+              118.154,
+              166.072
+            ],
+            "ownerChest": [
+              118.154,
+              131.256
+            ],
+            "controlLinkSocket": [
+              118.154,
+              38.072
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                340,
+                675
+              ],
+              "pixel": [
+                340,
+                675
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                489,
+                717
+              ],
+              "pixel": [
+                489,
+                717
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                527,
+                720
+              ],
+              "pixel": [
+                527,
+                720
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                700,
+                711
+              ],
+              "pixel": [
+                700,
+                711
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            706,
+            2,
+            348,
+            270
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "followthrough",
+          "sourceRect": [
+            847,
+            557,
+            527,
+            391
+          ],
+          "anchor": [
+            152.944,
+            172.636
+          ],
+          "sockets": {
+            "shoulder": [
+              158.851,
+              84.021
+            ],
+            "hand": [
+              248.779,
+              192.328
+            ],
+            "bladeBase": [
+              261.908,
+              202.831
+            ],
+            "bladeTip": [
+              343.303,
+              243.528
+            ],
+            "groundAnchor": [
+              152.944,
+              172.636
+            ],
+            "ownerSocket": [
+              152.944,
+              172.636
+            ],
+            "ownerChest": [
+              152.944,
+              137.82
+            ],
+            "controlLinkSocket": [
+              152.944,
+              44.636
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                1089,
+                685
+              ],
+              "pixel": [
+                1089,
+                685
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                1226,
+                850
+              ],
+              "pixel": [
+                1226,
+                850
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                1246,
+                866
+              ],
+              "pixel": [
+                1246,
+                866
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                1370,
+                928
+              ],
+              "pixel": [
+                1370,
+                928
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            1058,
+            2,
+            346,
+            257
+          ],
+          "groundPolicy": "measured virtual waist base"
+        }
+      ],
+      "ownerPolicy": "ground feet; 64px actor is foreground projection, not the forehead occupant"
+    },
+    "perfect": {
+      "source": "madara-susanoo-perfect-v4-runtime.png",
+      "sha256": "2a6375399ab05d359b9abf9b51c17b2e98dd9b5c391c519c04bb9c56b9f1c31a",
+      "originalSource": "madara-susanoo-perfect-v4.png",
+      "originalSha256": "e5900a38d74d9bbcde708b5715922c3392d44b9cfb3bf848e86fda0b1ff1e2e8",
+      "bodyHeight": 320,
+      "originalBodyHeight": 415,
+      "bytes": 647588,
+      "size": [
+        1552,
+        326
+      ],
+      "frames": [
+        {
+          "name": "guard",
+          "sourceRect": [
+            260,
+            53,
+            244,
+            415
+          ],
+          "anchor": [
+            124.145,
+            316.916
+          ],
+          "sockets": {
+            "shoulder": [
+              76.337,
+              118.747
+            ],
+            "hand": [
+              73.253,
+              178.892
+            ],
+            "bladeBase": [
+              73.253,
+              178.892
+            ],
+            "bladeTip": [
+              73.253,
+              178.892
+            ],
+            "groundAnchor": [
+              124.145,
+              316.916
+            ],
+            "ownerSocket": [
+              124.145,
+              316.916
+            ],
+            "ownerChest": [
+              124.145,
+              290.036
+            ],
+            "controlLinkSocket": [
+              124.145,
+              156.916
+            ],
+            "canonicalSocket": [
+              144.964,
+              50.12
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                359,
+                207
+              ],
+              "pixel": [
+                359,
+                207
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                355,
+                285
+              ],
+              "pixel": [
+                355,
+                285
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                355,
+                285
+              ],
+              "pixel": [
+                355,
+                285
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                355,
+                285
+              ],
+              "pixel": [
+                355,
+                285
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            2,
+            2,
+            188,
+            320
+          ],
+          "groundPolicy": "measured foot floor, never blade tip"
+        },
+        {
+          "name": "draw",
+          "sourceRect": [
+            978,
+            51,
+            274,
+            417
+          ],
+          "anchor": [
+            101.783,
+            317.687
+          ],
+          "sockets": {
+            "shoulder": [
+              80.193,
+              98.699
+            ],
+            "hand": [
+              61.687,
+              59.373
+            ],
+            "bladeBase": [
+              82.506,
+              41.639
+            ],
+            "bladeTip": [
+              197.398,
+              4.627
+            ],
+            "groundAnchor": [
+              101.783,
+              317.687
+            ],
+            "ownerSocket": [
+              101.783,
+              317.687
+            ],
+            "ownerChest": [
+              101.783,
+              290.807
+            ],
+            "controlLinkSocket": [
+              101.783,
+              157.687
+            ],
+            "canonicalSocket": [
+              158.843,
+              80.964
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                1082,
+                179
+              ],
+              "pixel": [
+                1082,
+                179
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                1058,
+                128
+              ],
+              "pixel": [
+                1058,
+                128
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                1085,
+                105
+              ],
+              "pixel": [
+                1085,
+                105
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                1234,
+                57
+              ],
+              "pixel": [
+                1234,
+                57
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            390,
+            2,
+            211,
+            322
+          ],
+          "groundPolicy": "measured foot floor, never blade tip"
+        },
+        {
+          "name": "sweep",
+          "sourceRect": [
+            185,
+            553,
+            498,
+            399
+          ],
+          "anchor": [
+            122.602,
+            302.265
+          ],
+          "sockets": {
+            "shoulder": [
+              132.627,
+              100.241
+            ],
+            "hand": [
+              212.048,
+              138.795
+            ],
+            "bladeBase": [
+              230.554,
+              142.651
+            ],
+            "bladeTip": [
+              380.916,
+              118.747
+            ],
+            "groundAnchor": [
+              122.602,
+              302.265
+            ],
+            "ownerSocket": [
+              122.602,
+              302.265
+            ],
+            "ownerChest": [
+              122.602,
+              275.385
+            ],
+            "controlLinkSocket": [
+              122.602,
+              142.265
+            ],
+            "canonicalSocket": [
+              160.386,
+              77.108
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                357,
+                683
+              ],
+              "pixel": [
+                357,
+                683
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                460,
+                733
+              ],
+              "pixel": [
+                460,
+                733
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                484,
+                738
+              ],
+              "pixel": [
+                484,
+                738
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                679,
+                707
+              ],
+              "pixel": [
+                679,
+                707
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            778,
+            2,
+            384,
+            308
+          ],
+          "groundPolicy": "measured foot floor, never blade tip"
+        },
+        {
+          "name": "followthrough",
+          "sourceRect": [
+            897,
+            553,
+            442,
+            399
+          ],
+          "anchor": [
+            124.916,
+            299.952
+          ],
+          "sockets": {
+            "shoulder": [
+              163.47,
+              104.096
+            ],
+            "hand": [
+              185.831,
+              194.313
+            ],
+            "bladeBase": [
+              212.048,
+              214.361
+            ],
+            "bladeTip": [
+              336.964,
+              296.867
+            ],
+            "groundAnchor": [
+              124.916,
+              299.952
+            ],
+            "ownerSocket": [
+              124.916,
+              299.952
+            ],
+            "ownerChest": [
+              124.916,
+              273.072
+            ],
+            "controlLinkSocket": [
+              124.916,
+              139.952
+            ],
+            "canonicalSocket": [
+              198.169,
+              71.711
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                1109,
+                688
+              ],
+              "pixel": [
+                1109,
+                688
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                1138,
+                805
+              ],
+              "pixel": [
+                1138,
+                805
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                1172,
+                831
+              ],
+              "pixel": [
+                1172,
+                831
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                1334,
+                938
+              ],
+              "pixel": [
+                1334,
+                938
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            1166,
+            2,
+            341,
+            308
+          ],
+          "groundPolicy": "measured foot floor, never blade tip"
+        }
+      ],
+      "ownerPolicy": "ground feet; 64px actor is foreground projection, not the forehead occupant"
+    },
+    "ribDirections": {
+      "source": "madara-rib-directions-v2-runtime.png",
+      "sha256": "c66645f04b86332ff1519371c38002e87aedf29bbeebeff92bd9274e1cf0eaa1",
+      "originalSource": "madara-rib-directions-v2.png",
+      "originalSha256": "7bb80df0458b199478efea9098581f26c3bb929acef06bfb388329e727378d9a",
+      "bodyHeight": 256,
+      "originalBodyHeight": 400,
+      "bytes": 762709,
+      "size": [
+        1568,
+        323
+      ],
+      "frames": [
+        {
+          "name": "down-draw",
+          "sourceRect": [
+            130,
+            10,
+            582,
+            450
+          ],
+          "anchor": [
+            188.16,
+            263.68
+          ],
+          "sockets": {
+            "shoulder": [
+              125.44,
+              117.12
+            ],
+            "hand": [
+              86.4,
+              35.2
+            ],
+            "bladeBase": [
+              86.4,
+              35.2
+            ],
+            "bladeTip": [
+              127.36,
+              11.52
+            ],
+            "groundAnchor": [
+              188.16,
+              263.68
+            ],
+            "ownerSocket": [
+              188.16,
+              263.68
+            ],
+            "ownerChest": [
+              188.16,
+              212.48
+            ],
+            "controlLinkSocket": [
+              188.16,
+              135.68
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                326,
+                193
+              ],
+              "pixel": [
+                326,
+                193
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                265,
+                65
+              ],
+              "pixel": [
+                265,
+                65
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                265,
+                65
+              ],
+              "pixel": [
+                265,
+                65
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                329,
+                28
+              ],
+              "pixel": [
+                329,
+                28
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            2,
+            2,
+            372,
+            288
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "down-sweep",
+          "sourceRect": [
+            855,
+            12,
+            564,
+            486
+          ],
+          "anchor": [
+            193.28,
+            258.56
+          ],
+          "sockets": {
+            "shoulder": [
+              117.12,
+              127.36
+            ],
+            "hand": [
+              86.4,
+              232.96
+            ],
+            "bladeBase": [
+              86.4,
+              232.96
+            ],
+            "bladeTip": [
+              92.16,
+              305.92
+            ],
+            "groundAnchor": [
+              193.28,
+              258.56
+            ],
+            "ownerSocket": [
+              193.28,
+              258.56
+            ],
+            "ownerChest": [
+              193.28,
+              207.36
+            ],
+            "controlLinkSocket": [
+              193.28,
+              130.56
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                1038,
+                211
+              ],
+              "pixel": [
+                1038,
+                211
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                990,
+                376
+              ],
+              "pixel": [
+                990,
+                376
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                990,
+                376
+              ],
+              "pixel": [
+                990,
+                376
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                999,
+                490
+              ],
+              "pixel": [
+                999,
+                490
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            394,
+            2,
+            361,
+            311
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "up-draw",
+          "sourceRect": [
+            65,
+            505,
+            606,
+            476
+          ],
+          "anchor": [
+            220.8,
+            300.8
+          ],
+          "sockets": {
+            "shoulder": [
+              272.64,
+              123.52
+            ],
+            "hand": [
+              312.32,
+              32.64
+            ],
+            "bladeBase": [
+              312.32,
+              32.64
+            ],
+            "bladeTip": [
+              296.32,
+              4.48
+            ],
+            "groundAnchor": [
+              220.8,
+              300.8
+            ],
+            "ownerSocket": [
+              220.8,
+              300.8
+            ],
+            "ownerChest": [
+              220.8,
+              249.6
+            ],
+            "controlLinkSocket": [
+              220.8,
+              172.8
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                491,
+                698
+              ],
+              "pixel": [
+                491,
+                698
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                553,
+                556
+              ],
+              "pixel": [
+                553,
+                556
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                553,
+                556
+              ],
+              "pixel": [
+                553,
+                556
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                528,
+                512
+              ],
+              "pixel": [
+                528,
+                512
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            786,
+            2,
+            388,
+            305
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "up-sweep",
+          "sourceRect": [
+            841,
+            498,
+            524,
+            499
+          ],
+          "anchor": [
+            204.16,
+            313.6
+          ],
+          "sockets": {
+            "shoulder": [
+              268.8,
+              131.84
+            ],
+            "hand": [
+              288.64,
+              33.92
+            ],
+            "bladeBase": [
+              288.64,
+              33.92
+            ],
+            "bladeTip": [
+              311.04,
+              8.96
+            ],
+            "groundAnchor": [
+              204.16,
+              313.6
+            ],
+            "ownerSocket": [
+              204.16,
+              313.6
+            ],
+            "ownerChest": [
+              204.16,
+              262.4
+            ],
+            "controlLinkSocket": [
+              204.16,
+              185.6
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                1261,
+                704
+              ],
+              "pixel": [
+                1261,
+                704
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                1292,
+                551
+              ],
+              "pixel": [
+                1292,
+                551
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                1292,
+                551
+              ],
+              "pixel": [
+                1292,
+                551
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                1327,
+                507
+              ],
+              "pixel": [
+                1327,
+                512
+              ],
+              "correction": 5.0
+            }
+          },
+          "rect": [
+            1178,
+            2,
+            335,
+            319
+          ],
+          "groundPolicy": "measured virtual waist base"
+        }
+      ],
+      "ownerPolicy": "ground feet; 64px actor is foreground projection, not the forehead occupant"
+    },
+    "armoredDirections": {
+      "source": "madara-armored-directions-v2-runtime.png",
+      "sha256": "d529737d8c51b270ad72969352e1a4302a92f9226169857895fd756b267d9101",
+      "originalSource": "madara-armored-directions-v2.png",
+      "originalSha256": "3f05f0a67f5c78a963c47e8e8fc0b0b22556b457494277edf48b075a435896aa",
+      "bodyHeight": 256,
+      "originalBodyHeight": 550,
+      "bytes": 343006,
+      "size": [
+        940,
+        296
+      ],
+      "frames": [
+        {
+          "name": "down-draw",
+          "sourceRect": [
+            60,
+            14,
+            496,
+            563
+          ],
+          "anchor": [
+            120.087,
+            188.975
+          ],
+          "sockets": {
+            "shoulder": [
+              58.647,
+              102.865
+            ],
+            "hand": [
+              41.425,
+              57.716
+            ],
+            "bladeBase": [
+              60.044,
+              60.509
+            ],
+            "bladeTip": [
+              229.004,
+              114.502
+            ],
+            "groundAnchor": [
+              120.087,
+              188.975
+            ],
+            "ownerSocket": [
+              120.087,
+              188.975
+            ],
+            "ownerChest": [
+              120.087,
+              154.159
+            ],
+            "controlLinkSocket": [
+              120.087,
+              60.975
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                186,
+                235
+              ],
+              "pixel": [
+                186,
+                235
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                149,
+                138
+              ],
+              "pixel": [
+                149,
+                138
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                189,
+                144
+              ],
+              "pixel": [
+                189,
+                144
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                551,
+                262
+              ],
+              "pixel": [
+                552,
+                260
+              ],
+              "correction": 2.24
+            }
+          },
+          "rect": [
+            2,
+            2,
+            231,
+            262
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "down-sweep",
+          "sourceRect": [
+            716,
+            10,
+            393,
+            628
+          ],
+          "anchor": [
+            92.625,
+            190.836
+          ],
+          "sockets": {
+            "shoulder": [
+              37.702,
+              107.985
+            ],
+            "hand": [
+              78.196,
+              169.891
+            ],
+            "bladeBase": [
+              80.989,
+              186.182
+            ],
+            "bladeTip": [
+              82.851,
+              288.582
+            ],
+            "groundAnchor": [
+              92.625,
+              190.836
+            ],
+            "ownerSocket": [
+              92.625,
+              190.836
+            ],
+            "ownerChest": [
+              92.625,
+              156.02
+            ],
+            "controlLinkSocket": [
+              92.625,
+              62.836
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                797,
+                242
+              ],
+              "pixel": [
+                797,
+                242
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                884,
+                375
+              ],
+              "pixel": [
+                884,
+                375
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                890,
+                410
+              ],
+              "pixel": [
+                890,
+                410
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                894,
+                630
+              ],
+              "pixel": [
+                894,
+                630
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            237,
+            2,
+            183,
+            292
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "up-draw",
+          "sourceRect": [
+            69,
+            706,
+            475,
+            568
+          ],
+          "anchor": [
+            114.967,
+            192.698
+          ],
+          "sockets": {
+            "shoulder": [
+              168.495,
+              80.989
+            ],
+            "hand": [
+              178.269,
+              48.873
+            ],
+            "bladeBase": [
+              157.789,
+              48.407
+            ],
+            "bladeTip": [
+              2.327,
+              102.865
+            ],
+            "groundAnchor": [
+              114.967,
+              192.698
+            ],
+            "ownerSocket": [
+              114.967,
+              192.698
+            ],
+            "ownerChest": [
+              114.967,
+              157.882
+            ],
+            "controlLinkSocket": [
+              114.967,
+              64.698
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                431,
+                880
+              ],
+              "pixel": [
+                431,
+                880
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                452,
+                811
+              ],
+              "pixel": [
+                452,
+                811
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                408,
+                810
+              ],
+              "pixel": [
+                408,
+                810
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                74,
+                927
+              ],
+              "pixel": [
+                74,
+                927
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            472,
+            2,
+            221,
+            264
+          ],
+          "groundPolicy": "measured virtual waist base"
+        },
+        {
+          "name": "up-sweep",
+          "sourceRect": [
+            681,
+            655,
+            367,
+            625
+          ],
+          "anchor": [
+            108.916,
+            216.436
+          ],
+          "sockets": {
+            "shoulder": [
+              134.516,
+              95.884
+            ],
+            "hand": [
+              121.484,
+              60.509
+            ],
+            "bladeBase": [
+              119.156,
+              47.942
+            ],
+            "bladeTip": [
+              114.502,
+              1.862
+            ],
+            "groundAnchor": [
+              108.916,
+              216.436
+            ],
+            "ownerSocket": [
+              108.916,
+              216.436
+            ],
+            "ownerChest": [
+              108.916,
+              181.62
+            ],
+            "controlLinkSocket": [
+              108.916,
+              88.436
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                970,
+                861
+              ],
+              "pixel": [
+                970,
+                861
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                942,
+                785
+              ],
+              "pixel": [
+                942,
+                785
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                937,
+                758
+              ],
+              "pixel": [
+                937,
+                758
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                927,
+                659
+              ],
+              "pixel": [
+                927,
+                659
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            707,
+            2,
+            171,
+            291
+          ],
+          "groundPolicy": "measured virtual waist base"
+        }
+      ],
+      "ownerPolicy": "ground feet; 64px actor is foreground projection, not the forehead occupant"
+    },
+    "perfectDirections": {
+      "source": "madara-perfect-directions-v2-runtime.png",
+      "sha256": "5ff5647dab8c641d2358fe878945aa2919ff51e3c0e5abe803a8e7ce2c675f47",
+      "originalSource": "madara-perfect-directions-v2.png",
+      "originalSha256": "97a275f588d3ac4886192fe180f9a23c0d25479f70d8c54f70b7035ee996b4c8",
+      "bodyHeight": 320,
+      "originalBodyHeight": 555,
+      "bytes": 547255,
+      "size": [
+        1036,
+        379
+      ],
+      "frames": [
+        {
+          "name": "down-draw",
+          "sourceRect": [
+            116,
+            26,
+            442,
+            555
+          ],
+          "anchor": [
+            121.081,
+            315.964
+          ],
+          "sockets": {
+            "shoulder": [
+              58.811,
+              120.505
+            ],
+            "hand": [
+              55.928,
+              64.577
+            ],
+            "bladeBase": [
+              81.874,
+              55.928
+            ],
+            "bladeTip": [
+              251.387,
+              39.784
+            ],
+            "groundAnchor": [
+              121.081,
+              315.964
+            ],
+            "ownerSocket": [
+              121.081,
+              315.964
+            ],
+            "ownerChest": [
+              121.081,
+              289.084
+            ],
+            "controlLinkSocket": [
+              121.081,
+              155.964
+            ],
+            "canonicalSocket": [
+              124.541,
+              62.27
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                218,
+                235
+              ],
+              "pixel": [
+                218,
+                235
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                213,
+                138
+              ],
+              "pixel": [
+                213,
+                138
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                258,
+                123
+              ],
+              "pixel": [
+                258,
+                123
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                553,
+                95
+              ],
+              "pixel": [
+                552,
+                95
+              ],
+              "correction": 1.0
+            }
+          },
+          "rect": [
+            2,
+            2,
+            255,
+            320
+          ],
+          "groundPolicy": "measured foot floor, never blade tip"
+        },
+        {
+          "name": "down-sweep",
+          "sourceRect": [
+            669,
+            31,
+            438,
+            587
+          ],
+          "anchor": [
+            128.577,
+            314.234
+          ],
+          "sockets": {
+            "shoulder": [
+              67.459,
+              106.09
+            ],
+            "hand": [
+              123.964,
+              163.171
+            ],
+            "bladeBase": [
+              125.694,
+              187.387
+            ],
+            "bladeTip": [
+              131.459,
+              335.568
+            ],
+            "groundAnchor": [
+              128.577,
+              314.234
+            ],
+            "ownerSocket": [
+              128.577,
+              314.234
+            ],
+            "ownerChest": [
+              128.577,
+              287.354
+            ],
+            "controlLinkSocket": [
+              128.577,
+              154.234
+            ],
+            "canonicalSocket": [
+              129.153,
+              58.811
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                786,
+                215
+              ],
+              "pixel": [
+                786,
+                215
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                884,
+                314
+              ],
+              "pixel": [
+                884,
+                314
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                887,
+                356
+              ],
+              "pixel": [
+                887,
+                356
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                898,
+                614
+              ],
+              "pixel": [
+                897,
+                613
+              ],
+              "correction": 1.41
+            }
+          },
+          "rect": [
+            261,
+            2,
+            253,
+            338
+          ],
+          "groundPolicy": "measured foot floor, never blade tip"
+        },
+        {
+          "name": "up-draw",
+          "sourceRect": [
+            84,
+            687,
+            431,
+            598
+          ],
+          "anchor": [
+            136.072,
+            341.91
+          ],
+          "sockets": {
+            "shoulder": [
+              211.604,
+              111.279
+            ],
+            "hand": [
+              203.532,
+              71.495
+            ],
+            "bladeBase": [
+              182.198,
+              62.27
+            ],
+            "bladeTip": [
+              8.649,
+              28.252
+            ],
+            "groundAnchor": [
+              136.072,
+              341.91
+            ],
+            "ownerSocket": [
+              136.072,
+              341.91
+            ],
+            "ownerChest": [
+              136.072,
+              315.03
+            ],
+            "controlLinkSocket": [
+              136.072,
+              181.91
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                451,
+                880
+              ],
+              "pixel": [
+                451,
+                880
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                437,
+                811
+              ],
+              "pixel": [
+                437,
+                811
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                400,
+                795
+              ],
+              "pixel": [
+                400,
+                795
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                93,
+                727
+              ],
+              "pixel": [
+                99,
+                736
+              ],
+              "correction": 10.82
+            }
+          },
+          "rect": [
+            520,
+            2,
+            249,
+            345
+          ],
+          "groundPolicy": "measured foot floor, never blade tip"
+        },
+        {
+          "name": "up-sweep",
+          "sourceRect": [
+            667,
+            634,
+            407,
+            651
+          ],
+          "anchor": [
+            123.387,
+            372.468
+          ],
+          "sockets": {
+            "shoulder": [
+              171.82,
+              112.432
+            ],
+            "hand": [
+              149.91,
+              67.459
+            ],
+            "bladeBase": [
+              144.721,
+              50.162
+            ],
+            "bladeTip": [
+              130.306,
+              2.883
+            ],
+            "groundAnchor": [
+              123.387,
+              372.468
+            ],
+            "ownerSocket": [
+              123.387,
+              372.468
+            ],
+            "ownerChest": [
+              123.387,
+              345.588
+            ],
+            "controlLinkSocket": [
+              123.387,
+              212.468
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                965,
+                829
+              ],
+              "pixel": [
+                965,
+                829
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                927,
+                751
+              ],
+              "pixel": [
+                927,
+                751
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                926,
+                721
+              ],
+              "pixel": [
+                918,
+                721
+              ],
+              "correction": 8.0
+            },
+            "bladeTip": {
+              "nominal": [
+                893,
+                639
+              ],
+              "pixel": [
+                893,
+                639
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            779,
+            2,
+            235,
+            375
+          ],
+          "groundPolicy": "measured foot floor, never blade tip"
+        }
+      ],
+      "ownerPolicy": "ground feet; 64px actor is foreground projection, not the forehead occupant"
+    },
+    "ribDown": {
+      "source": "madara-rib-down-contact-v2-runtime.png",
+      "sha256": "71fa53c94a339afa918a69e64533a6af13611cee41c6a7c01529ae33ae681fe4",
+      "originalSource": "madara-rib-down-contact-v2.png",
+      "originalSha256": "ac001770017cb267cfbe17fc2c9f2b48d1df4fba3c11a0e2dde3d0a8ff7ac2dd",
+      "bodyHeight": 256,
+      "originalBodyHeight": 620,
+      "bytes": 246157,
+      "size": [
+        336,
+        424
+      ],
+      "frames": [
+        {
+          "name": "down-contact",
+          "sourceRect": [
+            440,
+            8,
+            803,
+            1016
+          ],
+          "anchor": [
+            135.432,
+            252.697
+          ],
+          "sockets": {
+            "shoulder": [
+              75.974,
+              121.394
+            ],
+            "hand": [
+              134.194,
+              296.877
+            ],
+            "bladeBase": [
+              134.194,
+              296.877
+            ],
+            "bladeTip": [
+              136.258,
+              413.316
+            ],
+            "groundAnchor": [
+              135.432,
+              252.697
+            ],
+            "ownerSocket": [
+              135.432,
+              252.697
+            ],
+            "ownerChest": [
+              135.432,
+              201.497
+            ],
+            "controlLinkSocket": [
+              135.432,
+              124.697
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "shoulder": {
+              "nominal": [
+                624,
+                302
+              ],
+              "pixel": [
+                624,
+                302
+              ],
+              "correction": 0.0
+            },
+            "hand": {
+              "nominal": [
+                765,
+                727
+              ],
+              "pixel": [
+                765,
+                727
+              ],
+              "correction": 0.0
+            },
+            "bladeBase": {
+              "nominal": [
+                765,
+                727
+              ],
+              "pixel": [
+                765,
+                727
+              ],
+              "correction": 0.0
+            },
+            "bladeTip": {
+              "nominal": [
+                770,
+                1009
+              ],
+              "pixel": [
+                770,
+                1009
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            2,
+            2,
+            332,
+            420
+          ],
+          "groundPolicy": "measured virtual waist base"
+        }
+      ],
+      "ownerPolicy": "ground feet; 64px actor is foreground projection, not the forehead occupant"
+    },
+    "castingDirections": {
+      "source": "madara-casting-directions-v2-runtime.png",
+      "sha256": "0a979a8d411fa7c4aec84c960c032ca705117016d572e5ba2b4d5da70c601296",
+      "originalSource": "madara-casting-directions-v2.png",
+      "originalSha256": "9317af2991f5887fe3a0a5bdd021324db2705b93a560ea9907d17c894af1dd81",
+      "bodyHeight": 128,
+      "originalBodyHeight": 452,
+      "bytes": 132033,
+      "size": [
+        408,
+        266
+      ],
+      "frames": [
+        {
+          "name": "down-seal",
+          "sourceRect": [
+            112,
+            33,
+            291,
+            452
+          ],
+          "anchor": [
+            41.204,
+            127.434
+          ],
+          "sockets": {
+            "mouth": [
+              41.062,
+              38.513
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                145.5,
+                135.6
+              ],
+              "pixel": [
+                145,
+                136
+              ],
+              "correction": 0.64
+            }
+          },
+          "rect": [
+            2,
+            2,
+            82,
+            128
+          ]
+        },
+        {
+          "name": "down-breath",
+          "sourceRect": [
+            601,
+            65,
+            345,
+            420
+          ],
+          "anchor": [
+            48.283,
+            118.372
+          ],
+          "sockets": {
+            "mouth": [
+              58.053,
+              44.743
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                205.0,
+                158.0
+              ],
+              "pixel": [
+                205,
+                158
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            104,
+            2,
+            98,
+            119
+          ]
+        },
+        {
+          "name": "down-recover",
+          "sourceRect": [
+            1147,
+            33,
+            292,
+            452
+          ],
+          "anchor": [
+            41.487,
+            127.434
+          ],
+          "sockets": {
+            "mouth": [
+              43.044,
+              38.513
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                151.84,
+                135.6
+              ],
+              "pixel": [
+                152,
+                136
+              ],
+              "correction": 0.43
+            }
+          },
+          "rect": [
+            206,
+            2,
+            83,
+            128
+          ]
+        },
+        {
+          "name": "up-seal",
+          "sourceRect": [
+            115,
+            539,
+            284,
+            457
+          ],
+          "anchor": [
+            40.212,
+            129.133
+          ],
+          "sockets": {
+            "mouth": [
+              53.805,
+              31.15
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                190.28,
+                109.68
+              ],
+              "pixel": [
+                190,
+                110
+              ],
+              "correction": 0.43
+            }
+          },
+          "rect": [
+            308,
+            2,
+            80,
+            129
+          ]
+        },
+        {
+          "name": "up-breath",
+          "sourceRect": [
+            598,
+            542,
+            337,
+            454
+          ],
+          "anchor": [
+            47.717,
+            128.283
+          ],
+          "sockets": {
+            "mouth": [
+              63.434,
+              19.823
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                224.0,
+                70.0
+              ],
+              "pixel": [
+                224,
+                70
+              ],
+              "correction": 0.0
+            }
+          },
+          "rect": [
+            2,
+            135,
+            95,
+            129
+          ]
+        },
+        {
+          "name": "up-recover",
+          "sourceRect": [
+            1155,
+            539,
+            270,
+            457
+          ],
+          "anchor": [
+            38.23,
+            129.133
+          ],
+          "sockets": {
+            "mouth": [
+              53.522,
+              31.15
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                189.0,
+                109.68
+              ],
+              "pixel": [
+                189,
+                110
+              ],
+              "correction": 0.32
+            }
+          },
+          "rect": [
+            104,
+            135,
+            76,
+            129
+          ]
+        }
+      ]
+    },
+    "walkDirections": {
+      "source": "madara-walk-directions-v3-runtime.png",
+      "sha256": "7ee50b3203ce04ac56d613d63a085bec1b87a15420467aa3b1a5906c3ee3c552",
+      "originalSource": "madara-walk-directions-v3.png",
+      "originalSha256": "b5cb65a8c30c07afb525763afedc659d7fc6c851724d8fa11c741edb98c1dd68",
+      "bodyHeight": 128,
+      "originalBodyHeight": 434,
+      "bytes": 93288,
+      "size": [
+        232,
+        266
+      ],
+      "frames": [
+        {
+          "name": "down-left",
+          "sourceRect": [
+            129,
+            5,
+            175,
+            432
+          ],
+          "anchor": [
+            31.115,
+            126.82
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            2,
+            2,
+            52,
+            127
+          ]
+        },
+        {
+          "name": "down-pass-left",
+          "sourceRect": [
+            572,
+            5,
+            184,
+            422
+          ],
+          "anchor": [
+            22.12,
+            123.871
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            60,
+            2,
+            54,
+            124
+          ]
+        },
+        {
+          "name": "down-right",
+          "sourceRect": [
+            1022,
+            5,
+            175,
+            434
+          ],
+          "anchor": [
+            28.608,
+            127.41
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            118,
+            2,
+            52,
+            128
+          ]
+        },
+        {
+          "name": "down-pass-right",
+          "sourceRect": [
+            1464,
+            5,
+            179,
+            427
+          ],
+          "anchor": [
+            22.415,
+            125.346
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            176,
+            2,
+            53,
+            126
+          ]
+        },
+        {
+          "name": "up-left",
+          "sourceRect": [
+            137,
+            449,
+            171,
+            433
+          ],
+          "anchor": [
+            28.903,
+            127.115
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            2,
+            135,
+            50,
+            128
+          ]
+        },
+        {
+          "name": "up-pass-left",
+          "sourceRect": [
+            578,
+            450,
+            176,
+            400
+          ],
+          "anchor": [
+            20.203,
+            117.382
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            60,
+            135,
+            52,
+            118
+          ]
+        },
+        {
+          "name": "up-right",
+          "sourceRect": [
+            1023,
+            449,
+            175,
+            436
+          ],
+          "anchor": [
+            28.903,
+            128.0
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            118,
+            135,
+            52,
+            129
+          ]
+        },
+        {
+          "name": "up-pass-right",
+          "sourceRect": [
+            1468,
+            449,
+            171,
+            401
+          ],
+          "anchor": [
+            20.498,
+            117.677
+          ],
+          "sockets": {},
+          "sourceSocketMeasurements": {},
+          "rect": [
+            176,
+            135,
+            50,
+            118
+          ]
+        }
+      ]
+    }
+  }
 }

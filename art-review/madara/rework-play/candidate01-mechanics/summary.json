@@ -1,0 +1,542 @@
+{
+  "scope": "Madara version2 controlled geometry/lifecycle contracts; not natural growth or visual approval",
+  "sourceReport": "art-review\\madara\\rework-play\\candidate01-mechanics\\report.json",
+  "sourceReportSHA256": "4e3ca2afd03e1afb332e821a30cdfe8efd5523d341375013531e2e7a3365b76b",
+  "ok": true,
+  "errors": [],
+  "missing": [],
+  "failures": [],
+  "sourceHashes": {
+    ".omx/naruto.js": "3dec1ec335fd4ca9792977b35b1e248edb7550fb9c81677ecee163a617febd96",
+    ".omx/naruto-skills.js": "79e5c2c4304aec9ce586601a35d444bcd91a4eff13194ed3f1562e47681dbd43",
+    ".omx/naruto-training.js": "d5f710e4be0a3675cbe4594ae6e0200ae755f4ec3c15687b59e1b81c4a0bd4e6",
+    ".omx/digimon.html": "2510f552d7c4de6a374e4b0496902b9b9d3a9927799503fa54010ed184b18183",
+    "js/game.js": "165055e3b147b3ef53a21d9d1af895c569f4ad51bf8f84133af57ca26b930d0b",
+    "js/main.js": "f4c34d0f7b2761f44216f953886deacb32c8612a27c7973733988fb4af06df6d",
+    "js/core/audio.js": "319401eaa3547aff554c1b28946ab6205ea39bd25d7b1cfe6ad9ea0ffe2e2127",
+    ".omx/digimon-size.js": "8353f7326107b3d1a9aac538d4c9334f771883d1e804acb101074a610a7bfa61",
+    ".omx/combat-pulse.js": "9570100a9eb0de13a9092aa80538949201cc5fe06c3d053f5928e84ec4790b55",
+    "art-review/madara/runtime.js": "847dd6f37ed6a2b159f6f3c027a5b79249b31c01e2a57b36d20e7d035d8d41ce",
+    "art-review/madara/madara-actions-v1.png": "8ae1d43e099ced737b3cf3fca8184b066a8bb06eff572cb731ecee5ef69adace",
+    ".omx/naruto-madara-camera.js": "953493e03d849c7bbc94dba04df5e7285de59648c7e7bb3b883a17155d2e078d",
+    ".omx/naruto-madara.js": "14da27cef657835fb2e45e69a6fa7e50aa182af6c189112f12e75f57998ef078",
+    "art-review/madara/frames.json": "3a29565396bdc850a0d3c35ece1df7e2e5b6b805c1f4c8df5f9064c861e88477",
+    "art-review/madara/madara-actions-v1-runtime.png": "6b1489fcd5b642da2c772cc51a8d04f7e2366ab14c11afb23ccc7a4a7988a4fd",
+    "art-review/madara/madara-armored-directions-v2-runtime.png": "d529737d8c51b270ad72969352e1a4302a92f9226169857895fd756b267d9101",
+    "art-review/madara/madara-body-directions-v2-runtime.png": "65521002903d4f61e765c49064d5ec5dcff411922fe0a5ea51ada80c1dbe9834",
+    "art-review/madara/madara-casting-directions-v2-runtime.png": "0a979a8d411fa7c4aec84c960c032ca705117016d572e5ba2b4d5da70c601296",
+    "art-review/madara/madara-elements-v2-runtime.png": "aa5238696dfb2aef7cd1b3fb90edd0db40d3bc1783edf9d9db9d0afee24bace6",
+    "art-review/madara/madara-perfect-directions-v2-runtime.png": "5ff5647dab8c641d2358fe878945aa2919ff51e3c0e5abe803a8e7ce2c675f47",
+    "art-review/madara/madara-rib-directions-v2-runtime.png": "c66645f04b86332ff1519371c38002e87aedf29bbeebeff92bd9274e1cf0eaa1",
+    "art-review/madara/madara-rib-down-contact-v2-runtime.png": "71fa53c94a339afa918a69e64533a6af13611cee41c6a7c01529ae33ae681fe4",
+    "art-review/madara/madara-susanoo-armored-v4-runtime.png": "3ea01212c48844b69ef72819720e367c108a63e4a79ec6fa8ee1d0c6418215bb",
+    "art-review/madara/madara-susanoo-perfect-v4-runtime.png": "2a6375399ab05d359b9abf9b51c17b2e98dd9b5c391c519c04bb9c56b9f1c31a",
+    "art-review/madara/madara-susanoo-rib-v3-runtime.png": "838d10e17aeae885940f4b01892643ed87e277f76fba7aacf53025210d867684",
+    "art-review/madara/madara-taijutsu-v2-runtime.png": "12cda82aa20c2342b57b832f21e740d10d00c602fbbfb800e34855c27e47c201",
+    "art-review/madara/madara-walk-directions-v3-runtime.png": "7ee50b3203ce04ac56d613d63a085bec1b87a15420467aa3b1a5906c3ee3c552",
+    "art-review/madara/madara-wood-v3-runtime.png": "899650fd0bb52212ef26d273ba61846f010a175da29a35a3c1368a5802694c8d"
+  },
+  "sourceHashesAfter": {
+    ".omx/naruto.js": "3dec1ec335fd4ca9792977b35b1e248edb7550fb9c81677ecee163a617febd96",
+    ".omx/naruto-skills.js": "79e5c2c4304aec9ce586601a35d444bcd91a4eff13194ed3f1562e47681dbd43",
+    ".omx/naruto-training.js": "d5f710e4be0a3675cbe4594ae6e0200ae755f4ec3c15687b59e1b81c4a0bd4e6",
+    ".omx/digimon.html": "2510f552d7c4de6a374e4b0496902b9b9d3a9927799503fa54010ed184b18183",
+    "js/game.js": "165055e3b147b3ef53a21d9d1af895c569f4ad51bf8f84133af57ca26b930d0b",
+    "js/main.js": "f4c34d0f7b2761f44216f953886deacb32c8612a27c7973733988fb4af06df6d",
+    "js/core/audio.js": "319401eaa3547aff554c1b28946ab6205ea39bd25d7b1cfe6ad9ea0ffe2e2127",
+    ".omx/digimon-size.js": "8353f7326107b3d1a9aac538d4c9334f771883d1e804acb101074a610a7bfa61",
+    ".omx/combat-pulse.js": "9570100a9eb0de13a9092aa80538949201cc5fe06c3d053f5928e84ec4790b55",
+    "art-review/madara/runtime.js": "847dd6f37ed6a2b159f6f3c027a5b79249b31c01e2a57b36d20e7d035d8d41ce",
+    "art-review/madara/madara-actions-v1.png": "8ae1d43e099ced737b3cf3fca8184b066a8bb06eff572cb731ecee5ef69adace",
+    ".omx/naruto-madara-camera.js": "953493e03d849c7bbc94dba04df5e7285de59648c7e7bb3b883a17155d2e078d",
+    ".omx/naruto-madara.js": "14da27cef657835fb2e45e69a6fa7e50aa182af6c189112f12e75f57998ef078",
+    "art-review/madara/frames.json": "3a29565396bdc850a0d3c35ece1df7e2e5b6b805c1f4c8df5f9064c861e88477",
+    "art-review/madara/madara-actions-v1-runtime.png": "6b1489fcd5b642da2c772cc51a8d04f7e2366ab14c11afb23ccc7a4a7988a4fd",
+    "art-review/madara/madara-armored-directions-v2-runtime.png": "d529737d8c51b270ad72969352e1a4302a92f9226169857895fd756b267d9101",
+    "art-review/madara/madara-body-directions-v2-runtime.png": "65521002903d4f61e765c49064d5ec5dcff411922fe0a5ea51ada80c1dbe9834",
+    "art-review/madara/madara-casting-directions-v2-runtime.png": "0a979a8d411fa7c4aec84c960c032ca705117016d572e5ba2b4d5da70c601296",
+    "art-review/madara/madara-elements-v2-runtime.png": "aa5238696dfb2aef7cd1b3fb90edd0db40d3bc1783edf9d9db9d0afee24bace6",
+    "art-review/madara/madara-perfect-directions-v2-runtime.png": "5ff5647dab8c641d2358fe878945aa2919ff51e3c0e5abe803a8e7ce2c675f47",
+    "art-review/madara/madara-rib-directions-v2-runtime.png": "c66645f04b86332ff1519371c38002e87aedf29bbeebeff92bd9274e1cf0eaa1",
+    "art-review/madara/madara-rib-down-contact-v2-runtime.png": "71fa53c94a339afa918a69e64533a6af13611cee41c6a7c01529ae33ae681fe4",
+    "art-review/madara/madara-susanoo-armored-v4-runtime.png": "3ea01212c48844b69ef72819720e367c108a63e4a79ec6fa8ee1d0c6418215bb",
+    "art-review/madara/madara-susanoo-perfect-v4-runtime.png": "2a6375399ab05d359b9abf9b51c17b2e98dd9b5c391c519c04bb9c56b9f1c31a",
+    "art-review/madara/madara-susanoo-rib-v3-runtime.png": "838d10e17aeae885940f4b01892643ed87e277f76fba7aacf53025210d867684",
+    "art-review/madara/madara-taijutsu-v2-runtime.png": "12cda82aa20c2342b57b832f21e740d10d00c602fbbfb800e34855c27e47c201",
+    "art-review/madara/madara-walk-directions-v3-runtime.png": "7ee50b3203ce04ac56d613d63a085bec1b87a15420467aa3b1a5906c3ee3c552",
+    "art-review/madara/madara-wood-v3-runtime.png": "899650fd0bb52212ef26d273ba61846f010a175da29a35a3c1368a5802694c8d"
+  },
+  "cases": {
+    "desktop": {
+      "mechanismCaseCount": 58,
+      "mechanismCases": [
+        "body-short-contact-not-old-sector",
+        "moving-cast-cannot-hit-old-fan-edge",
+        "accepted-stationary-engagement-up65",
+        "accepted-stationary-engagement-up80",
+        "accepted-stationary-engagement-up35",
+        "accepted-stationary-engagement-right65",
+        "accepted-stationary-engagement-left65",
+        "accepted-stationary-engagement-down65",
+        "kick-does-not-prescan-future-foot",
+        "moving-body-caches-previous-world-socket",
+        "quantity-kick-tail-window-not-dropped",
+        "actual-hit-socket-and-drawn-body-frame-agree",
+        "fire-front-near-before-far-and-side-boundary",
+        "fire-released-origins-stay-in-world",
+        "guardian-real-blade-contact",
+        "authored-avatar-four-directions-and-blade-sockets",
+        "q4-cd05-guardian-body-and-fire-overlap",
+        "momentum-once-per-valid-body-round",
+        "q4-cd05-earned-perfect-window-automatic-body-fire",
+        "earlier-hit-final-miss-gives-no-momentum",
+        "fire-many-fronts-once-and-empty-cast-zero",
+        "earned-perfect-six-second-window-and-fields-survive",
+        "self-clone-does-not-feed-perfect",
+        "self-clone-fire-does-not-feed-perfect",
+        "army-role-sources-no-recursive-momentum",
+        "army-two-legal-upgrades-unlock-real-rear-guardian",
+        "live-army-growth-adds-only-difference-and-keeps-clocks",
+        "army-rear-guardian-relocates-into-real-distant-blade-path",
+        "meteor-two-impacts-and-distinct-fragment-landings",
+        "cancelled-first-rock-cannot-create-second-shatter",
+        "crater-fire-relay-once-not-through-wall",
+        "no-enemy-prop-naruto-madara",
+        "no-enemy-prop-naruto-madara-fire",
+        "no-enemy-prop-naruto-madara-susanoo",
+        "no-enemy-prop-naruto-madara-meteor",
+        "cancel-clear",
+        "cancel-unlearn",
+        "cancel-death",
+        "cancel-world",
+        "cancel-epoch",
+        "same-wave-hurt-clear",
+        "same-wave-hurt-unlearn",
+        "same-wave-hurt-remove-next",
+        "same-wave-onDealt-clear",
+        "same-wave-onDealt-unlearn",
+        "same-wave-onDealt-remove-next",
+        "stale-grid-primary-and-outer",
+        "occlusion-naruto-madara",
+        "occlusion-naruto-madara-fire",
+        "occlusion-naruto-madara-susanoo",
+        "occlusion-naruto-madara-meteor",
+        "prop-callback-cancels-next-prop",
+        "self-clone-owner-clear-isolation",
+        "unlearn-army-clears-pending-sources",
+        "pause-and-levelup-readonly",
+        "frozen-owner-suspends-released-fields",
+        "legal-growth-and-live-preview",
+        "native-restart-clears-all-channels"
+      ],
+      "mechanismFailures": [],
+      "nativePhaseScenes": {
+        "body": {
+          "rank": 2,
+          "quantity": 0,
+          "phases": [
+            "windup",
+            "palm",
+            "elbow",
+            "kick",
+            "landing",
+            "recovery",
+            "settled"
+          ]
+        },
+        "fire": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "seal",
+            "mouth-near",
+            "front-advance",
+            "far-front",
+            "tail"
+          ]
+        },
+        "rib": {
+          "rank": 1,
+          "quantity": 0,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "armored": {
+          "rank": 2,
+          "quantity": 0,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "perfect": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "pressure-flight",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "meteor": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "warnings",
+            "first-fall",
+            "first-impact",
+            "second-fall",
+            "second-shatter",
+            "fragment-flight",
+            "fragment-landings"
+          ]
+        },
+        "army": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "wood-emerge",
+            "reveal",
+            "role-attack",
+            "role-relocate",
+            "dismiss"
+          ]
+        }
+      }
+    },
+    "mobile390": {
+      "mechanismCaseCount": 58,
+      "mechanismCases": [
+        "body-short-contact-not-old-sector",
+        "moving-cast-cannot-hit-old-fan-edge",
+        "accepted-stationary-engagement-up65",
+        "accepted-stationary-engagement-up80",
+        "accepted-stationary-engagement-up35",
+        "accepted-stationary-engagement-right65",
+        "accepted-stationary-engagement-left65",
+        "accepted-stationary-engagement-down65",
+        "kick-does-not-prescan-future-foot",
+        "moving-body-caches-previous-world-socket",
+        "quantity-kick-tail-window-not-dropped",
+        "actual-hit-socket-and-drawn-body-frame-agree",
+        "fire-front-near-before-far-and-side-boundary",
+        "fire-released-origins-stay-in-world",
+        "guardian-real-blade-contact",
+        "authored-avatar-four-directions-and-blade-sockets",
+        "q4-cd05-guardian-body-and-fire-overlap",
+        "momentum-once-per-valid-body-round",
+        "q4-cd05-earned-perfect-window-automatic-body-fire",
+        "earlier-hit-final-miss-gives-no-momentum",
+        "fire-many-fronts-once-and-empty-cast-zero",
+        "earned-perfect-six-second-window-and-fields-survive",
+        "self-clone-does-not-feed-perfect",
+        "self-clone-fire-does-not-feed-perfect",
+        "army-role-sources-no-recursive-momentum",
+        "army-two-legal-upgrades-unlock-real-rear-guardian",
+        "live-army-growth-adds-only-difference-and-keeps-clocks",
+        "army-rear-guardian-relocates-into-real-distant-blade-path",
+        "meteor-two-impacts-and-distinct-fragment-landings",
+        "cancelled-first-rock-cannot-create-second-shatter",
+        "crater-fire-relay-once-not-through-wall",
+        "no-enemy-prop-naruto-madara",
+        "no-enemy-prop-naruto-madara-fire",
+        "no-enemy-prop-naruto-madara-susanoo",
+        "no-enemy-prop-naruto-madara-meteor",
+        "cancel-clear",
+        "cancel-unlearn",
+        "cancel-death",
+        "cancel-world",
+        "cancel-epoch",
+        "same-wave-hurt-clear",
+        "same-wave-hurt-unlearn",
+        "same-wave-hurt-remove-next",
+        "same-wave-onDealt-clear",
+        "same-wave-onDealt-unlearn",
+        "same-wave-onDealt-remove-next",
+        "stale-grid-primary-and-outer",
+        "occlusion-naruto-madara",
+        "occlusion-naruto-madara-fire",
+        "occlusion-naruto-madara-susanoo",
+        "occlusion-naruto-madara-meteor",
+        "prop-callback-cancels-next-prop",
+        "self-clone-owner-clear-isolation",
+        "unlearn-army-clears-pending-sources",
+        "pause-and-levelup-readonly",
+        "frozen-owner-suspends-released-fields",
+        "legal-growth-and-live-preview",
+        "native-restart-clears-all-channels"
+      ],
+      "mechanismFailures": [],
+      "nativePhaseScenes": {
+        "body": {
+          "rank": 2,
+          "quantity": 0,
+          "phases": [
+            "windup",
+            "palm",
+            "elbow",
+            "kick",
+            "landing",
+            "recovery",
+            "settled"
+          ]
+        },
+        "fire": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "seal",
+            "mouth-near",
+            "front-advance",
+            "far-front",
+            "tail"
+          ]
+        },
+        "rib": {
+          "rank": 1,
+          "quantity": 0,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "armored": {
+          "rank": 2,
+          "quantity": 0,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "perfect": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "pressure-flight",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "meteor": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "warnings",
+            "first-fall",
+            "first-impact",
+            "second-fall",
+            "second-shatter",
+            "fragment-flight",
+            "fragment-landings"
+          ]
+        },
+        "army": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "wood-emerge",
+            "reveal",
+            "role-attack",
+            "role-relocate",
+            "dismiss"
+          ]
+        }
+      }
+    },
+    "mobile360": {
+      "mechanismCaseCount": 58,
+      "mechanismCases": [
+        "body-short-contact-not-old-sector",
+        "moving-cast-cannot-hit-old-fan-edge",
+        "accepted-stationary-engagement-up65",
+        "accepted-stationary-engagement-up80",
+        "accepted-stationary-engagement-up35",
+        "accepted-stationary-engagement-right65",
+        "accepted-stationary-engagement-left65",
+        "accepted-stationary-engagement-down65",
+        "kick-does-not-prescan-future-foot",
+        "moving-body-caches-previous-world-socket",
+        "quantity-kick-tail-window-not-dropped",
+        "actual-hit-socket-and-drawn-body-frame-agree",
+        "fire-front-near-before-far-and-side-boundary",
+        "fire-released-origins-stay-in-world",
+        "guardian-real-blade-contact",
+        "authored-avatar-four-directions-and-blade-sockets",
+        "q4-cd05-guardian-body-and-fire-overlap",
+        "momentum-once-per-valid-body-round",
+        "q4-cd05-earned-perfect-window-automatic-body-fire",
+        "earlier-hit-final-miss-gives-no-momentum",
+        "fire-many-fronts-once-and-empty-cast-zero",
+        "earned-perfect-six-second-window-and-fields-survive",
+        "self-clone-does-not-feed-perfect",
+        "self-clone-fire-does-not-feed-perfect",
+        "army-role-sources-no-recursive-momentum",
+        "army-two-legal-upgrades-unlock-real-rear-guardian",
+        "live-army-growth-adds-only-difference-and-keeps-clocks",
+        "army-rear-guardian-relocates-into-real-distant-blade-path",
+        "meteor-two-impacts-and-distinct-fragment-landings",
+        "cancelled-first-rock-cannot-create-second-shatter",
+        "crater-fire-relay-once-not-through-wall",
+        "no-enemy-prop-naruto-madara",
+        "no-enemy-prop-naruto-madara-fire",
+        "no-enemy-prop-naruto-madara-susanoo",
+        "no-enemy-prop-naruto-madara-meteor",
+        "cancel-clear",
+        "cancel-unlearn",
+        "cancel-death",
+        "cancel-world",
+        "cancel-epoch",
+        "same-wave-hurt-clear",
+        "same-wave-hurt-unlearn",
+        "same-wave-hurt-remove-next",
+        "same-wave-onDealt-clear",
+        "same-wave-onDealt-unlearn",
+        "same-wave-onDealt-remove-next",
+        "stale-grid-primary-and-outer",
+        "occlusion-naruto-madara",
+        "occlusion-naruto-madara-fire",
+        "occlusion-naruto-madara-susanoo",
+        "occlusion-naruto-madara-meteor",
+        "prop-callback-cancels-next-prop",
+        "self-clone-owner-clear-isolation",
+        "unlearn-army-clears-pending-sources",
+        "pause-and-levelup-readonly",
+        "frozen-owner-suspends-released-fields",
+        "legal-growth-and-live-preview",
+        "native-restart-clears-all-channels"
+      ],
+      "mechanismFailures": [],
+      "nativePhaseScenes": {
+        "body": {
+          "rank": 2,
+          "quantity": 0,
+          "phases": [
+            "windup",
+            "palm",
+            "elbow",
+            "kick",
+            "landing",
+            "recovery",
+            "settled"
+          ]
+        },
+        "fire": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "seal",
+            "mouth-near",
+            "front-advance",
+            "far-front",
+            "tail"
+          ]
+        },
+        "rib": {
+          "rank": 1,
+          "quantity": 0,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "armored": {
+          "rank": 2,
+          "quantity": 0,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "perfect": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "manifest",
+            "draw",
+            "contact",
+            "recover",
+            "second-contact",
+            "pressure-flight",
+            "last-contact",
+            "fade",
+            "fade-end"
+          ]
+        },
+        "meteor": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "warnings",
+            "first-fall",
+            "first-impact",
+            "second-fall",
+            "second-shatter",
+            "fragment-flight",
+            "fragment-landings"
+          ]
+        },
+        "army": {
+          "rank": 3,
+          "quantity": 1,
+          "phases": [
+            "wood-emerge",
+            "reveal",
+            "role-attack",
+            "role-relocate",
+            "dismiss"
+          ]
+        }
+      }
+    }
+  }
+}

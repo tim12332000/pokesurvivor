@@ -1,0 +1,29 @@
+{
+  "tool": "built-in imagegen",
+  "scope": "Original front/down and rear/up locomotion, not mirrored whole-character recoloring",
+  "layout": "4 columns x 2 rows",
+  "selected": "madara-walk-directions-v3.png",
+  "versions": [
+    {
+      "source": "madara-walk-directions-v2.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1acf0-f8a5-73e3-a9d8-a40e93254e8d/exec-bf6df9a0-3239-4ace-9f94-14d981bb9e80.png",
+      "prompt": "prompt-walk-directions-v2.txt",
+      "sha256": "9112c1b8eece51fa440f296890c4fa08eeb712292da6e263beb01549f0d75894"
+    },
+    {
+      "source": "madara-walk-directions-v3.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1acf0-f8a5-73e3-a9d8-a40e93254e8d/exec-d7bcfec9-0020-4a08-8c3c-1e25056a831c.png",
+      "prompt": "prompt-walk-directions-v3.txt",
+      "sha256": "b5cb65a8c30c07afb525763afedc659d7fc6c851724d8fa11c741edb98c1dd68"
+    }
+  ],
+  "review": "v2 front row repeated the lead foot and was rejected. v3 visibly alternates front and rear support legs. Four frames per view form a two-step loop; not eight view directions or a motion-captured walk. Runtime-size movement must still be inspected.",
+  "alpha": {
+    "extrema": [
+      0,
+      255
+    ],
+    "emptyCorners": 0
+  },
+  "processing": "Source retained; production atlas cropping/normalization performed by the project asset builder."
+}

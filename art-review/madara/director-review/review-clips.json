@@ -1,0 +1,16 @@
+{
+  "source": "art-review\\madara\\rework-play\\candidate01\\madara\\attempt-1\\native-play.webm",
+  "scope": "Review derivatives, accurate transcoding; no crop or retiming; audio omitted for muted visual review",
+  "clips": [
+    {
+      "name": "natural-first-windows.mp4",
+      "sourceStart": 153,
+      "duration": 22
+    },
+    {
+      "name": "natural-late-army.mp4",
+      "sourceStart": 234,
+      "duration": 28.4
+    }
+  ]
+}

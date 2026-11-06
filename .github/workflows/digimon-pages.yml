@@ -36,6 +36,7 @@ jobs:
           node tools/test_growth_contract.cjs
           node tools/test_combat_pulse.cjs
           node tools/test_trial_build_scope.cjs
+          node tools/test_madara_framing.cjs
       - run: python tools/build_digimon_site.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

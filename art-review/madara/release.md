@@ -1,5 +1,7 @@
 # 宇智波斑可玩版本
 
+> 此頁是已被使用者否定品質的初版紀錄，保留作歷史，不再構成完成依據。現行重製與新證據見 [重製交付](release-v2.md)。
+
 入口：<https://tim12332000.github.io/pokesurvivor/.omx/digimon.html?lang=zh-TW&hero=madara>
 
 ## 玩家可見改動

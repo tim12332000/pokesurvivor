@@ -1,0 +1,230 @@
+{
+  "scope": "controlled level30, five rank3 skills and three quantity cards, 17 actual card applications; moving high-HP targets; native RAF and real input; not natural progression",
+  "sourceReportSHA256": "3c747bef75a59410dea146ee0849763d569de8b3f71e077bf29dc5b11404756c",
+  "ok": true,
+  "errors": [],
+  "views": {
+    "desktop": {
+      "build": {
+        "cards": 17,
+        "moves": [
+          {
+            "id": "naruto-madara",
+            "rank": 3
+          },
+          {
+            "id": "naruto-madara-fire",
+            "rank": 3
+          },
+          {
+            "id": "naruto-madara-susanoo",
+            "rank": 3
+          },
+          {
+            "id": "naruto-madara-meteor",
+            "rank": 3
+          },
+          {
+            "id": "naruto-madara-clones",
+            "rank": 3
+          }
+        ],
+        "quantity": 3,
+        "audioTracks": 1
+      },
+      "costs": [
+        {
+          "key": "new:naruto-madara-fire",
+          "description": "結印後從嘴部吐出4→6面寬火牆，每面固定當次原點與方向，向外推進才命中；數量至12面，身體0.74秒即收勢。三階留下真火線，四階交錯雙角火線。每輪真命中最多蓄勢一格。 自動施放，不占主動槽。"
+        },
+        {
+          "key": "new:naruto-madara-susanoo",
+          "description": "獨立須佐護體六秒，骨臂接觸成長為甲胄主刀連斬、另一刀護勢；數量增加實際刀線但維持六秒，不佔本體出手。三階後體術末擊與火牆真命中蓄滿三格，顯現六秒完成體巨刀與前推劍壓。本作勢能改編，不給無敵。 自動施放，不占主動槽。"
+        },
+        {
+          "key": "new:naruto-madara-meteor",
+          "description": "第一巨岩撞裂地面，第二顆砸碎更大區域，接續4→8塊真碎岩落向不同地點；數量卡至16個碎岩落點。每塊有獨立預告、高度與碰撞，走出可閃避。三階殘岩可由本體火牆引爆一次碎岩接力；碎岩及連動為本作改編。 自動施放，不占主動槽。"
+        },
+        {
+          "key": "new:naruto-madara-clones",
+          "description": "木質分出4→8名實體分身協戰12秒，數量卡至12名。前鋒近身、兩翼壓火、三階後後衛可用半身須佐，各有站位與施術時鐘，僅使用已學能力；不複製完成體也不蓄勢。四階可接本體落點指令；每階火力100→210%。 自動施放，不占主動槽。"
+        },
+        {
+          "key": "up:naruto-madara",
+          "description": "傷害 44→53；肢體半徑 12→14；踢掃 未啟用→啟用"
+        },
+        {
+          "key": "up:naruto-madara",
+          "description": "傷害 53→64；肢體半徑 14→16；接敵步幅 30→50"
+        },
+        {
+          "key": "up:naruto-madara-fire",
+          "description": "傷害 78→93；火牆寬 320→385；推進射程 560→645"
+        },
+        {
+          "key": "up:naruto-madara-fire",
+          "description": "傷害 93→113；火牆 4→5；火牆寬 385→450；推進射程 645→730；留焰秒 0→1.1"
+        },
+        {
+          "key": "up:naruto-madara-susanoo",
+          "description": "傷害 144→173；刀臂接觸 4→5；常態形態 骨架→甲胄"
+        },
+        {
+          "key": "up:naruto-madara-susanoo",
+          "description": "傷害 173→209；刀臂接觸 5→6；完成體解鎖 未解鎖→解鎖；完成體劍壓 0→2"
+        },
+        {
+          "key": "up:naruto-madara-meteor",
+          "description": "傷害 286→344；碎岩落點 4→5；首岩半徑 220→245；次岩半徑 330→360"
+        },
+        {
+          "key": "up:naruto-madara-meteor",
+          "description": "傷害 344→415；碎岩落點 5→6；首岩半徑 245→270；次岩半徑 360→390；殘岩秒 3→6；火牆引爆殘岩 未啟用→啟用"
+        },
+        {
+          "key": "up:naruto-madara-clones",
+          "description": "分身火力% 100→120"
+        },
+        {
+          "key": "up:naruto-madara-clones",
+          "description": "木分身 4→5；分身火力% 120→145；分工類別 2→3"
+        },
+        {
+          "key": "stat:quantity",
+          "description": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n戰場演舞：接觸連段 4→5；火遁・豪火滅卻：火牆 5→6；須佐能乎・巨刃連斬：刀臂接觸 6→7、完成體劍壓 2→3"
+        },
+        {
+          "key": "stat:quantity",
+          "description": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n戰場演舞：接觸連段 5→6；火遁・豪火滅卻：火牆 6→7；須佐能乎・巨刃連斬：刀臂接觸 7→9、完成體劍壓 3→3"
+        },
+        {
+          "key": "stat:quantity",
+          "description": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n戰場演舞：接觸連段 6→7；火遁・豪火滅卻：火牆 7→9；須佐能乎・巨刃連斬：刀臂接觸 9→11、完成體劍壓 3→4"
+        }
+      ],
+      "gameSeconds": 30.277866666666387,
+      "video": "madara-rework-desktop.webm",
+      "bytes": 4836210,
+      "casts": {
+        "naruto-madara-susanoo": 4,
+        "naruto-madara": 25,
+        "naruto-madara-fire": 6,
+        "naruto-madara-meteor": 3,
+        "naruto-madara-clones": 2
+      },
+      "hits": 2036,
+      "perfectCount": 4
+    },
+    "mobile390": {
+      "build": {
+        "cards": 17,
+        "moves": [
+          {
+            "id": "naruto-madara",
+            "rank": 3
+          },
+          {
+            "id": "naruto-madara-fire",
+            "rank": 3
+          },
+          {
+            "id": "naruto-madara-susanoo",
+            "rank": 3
+          },
+          {
+            "id": "naruto-madara-meteor",
+            "rank": 3
+          },
+          {
+            "id": "naruto-madara-clones",
+            "rank": 3
+          }
+        ],
+        "quantity": 3,
+        "audioTracks": 1
+      },
+      "costs": [
+        {
+          "key": "new:naruto-madara-fire",
+          "description": "結印後從嘴部吐出4→6面寬火牆，每面固定當次原點與方向，向外推進才命中；數量至12面，身體0.74秒即收勢。三階留下真火線，四階交錯雙角火線。每輪真命中最多蓄勢一格。 自動施放，不占主動槽。"
+        },
+        {
+          "key": "new:naruto-madara-susanoo",
+          "description": "獨立須佐護體六秒，骨臂接觸成長為甲胄主刀連斬、另一刀護勢；數量增加實際刀線但維持六秒，不佔本體出手。三階後體術末擊與火牆真命中蓄滿三格，顯現六秒完成體巨刀與前推劍壓。本作勢能改編，不給無敵。 自動施放，不占主動槽。"
+        },
+        {
+          "key": "new:naruto-madara-meteor",
+          "description": "第一巨岩撞裂地面，第二顆砸碎更大區域，接續4→8塊真碎岩落向不同地點；數量卡至16個碎岩落點。每塊有獨立預告、高度與碰撞，走出可閃避。三階殘岩可由本體火牆引爆一次碎岩接力；碎岩及連動為本作改編。 自動施放，不占主動槽。"
+        },
+        {
+          "key": "new:naruto-madara-clones",
+          "description": "木質分出4→8名實體分身協戰12秒，數量卡至12名。前鋒近身、兩翼壓火、三階後後衛可用半身須佐，各有站位與施術時鐘，僅使用已學能力；不複製完成體也不蓄勢。四階可接本體落點指令；每階火力100→210%。 自動施放，不占主動槽。"
+        },
+        {
+          "key": "up:naruto-madara",
+          "description": "傷害 44→53；肢體半徑 12→14；踢掃 未啟用→啟用"
+        },
+        {
+          "key": "up:naruto-madara",
+          "description": "傷害 53→64；肢體半徑 14→16；接敵步幅 30→50"
+        },
+        {
+          "key": "up:naruto-madara-fire",
+          "description": "傷害 78→93；火牆寬 320→385；推進射程 560→645"
+        },
+        {
+          "key": "up:naruto-madara-fire",
+          "description": "傷害 93→113；火牆 4→5；火牆寬 385→450；推進射程 645→730；留焰秒 0→1.1"
+        },
+        {
+          "key": "up:naruto-madara-susanoo",
+          "description": "傷害 144→173；刀臂接觸 4→5；常態形態 骨架→甲胄"
+        },
+        {
+          "key": "up:naruto-madara-susanoo",
+          "description": "傷害 173→209；刀臂接觸 5→6；完成體解鎖 未解鎖→解鎖；完成體劍壓 0→2"
+        },
+        {
+          "key": "up:naruto-madara-meteor",
+          "description": "傷害 286→344；碎岩落點 4→5；首岩半徑 220→245；次岩半徑 330→360"
+        },
+        {
+          "key": "up:naruto-madara-meteor",
+          "description": "傷害 344→415；碎岩落點 5→6；首岩半徑 245→270；次岩半徑 360→390；殘岩秒 3→6；火牆引爆殘岩 未啟用→啟用"
+        },
+        {
+          "key": "up:naruto-madara-clones",
+          "description": "分身火力% 100→120"
+        },
+        {
+          "key": "up:naruto-madara-clones",
+          "description": "木分身 4→5；分身火力% 120→145；分工類別 2→3"
+        },
+        {
+          "key": "stat:quantity",
+          "description": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n戰場演舞：接觸連段 4→5；火遁・豪火滅卻：火牆 5→6；須佐能乎・巨刃連斬：刀臂接觸 6→7、完成體劍壓 2→3"
+        },
+        {
+          "key": "stat:quantity",
+          "description": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n戰場演舞：接觸連段 5→6；火遁・豪火滅卻：火牆 6→7；須佐能乎・巨刃連斬：刀臂接觸 7→9、完成體劍壓 3→3"
+        },
+        {
+          "key": "stat:quantity",
+          "description": "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n戰場演舞：接觸連段 6→7；火遁・豪火滅卻：火牆 7→9；須佐能乎・巨刃連斬：刀臂接觸 9→11、完成體劍壓 3→4"
+        }
+      ],
+      "gameSeconds": 30.381199999999648,
+      "video": "madara-rework-mobile390.webm",
+      "bytes": 3180395,
+      "casts": {
+        "naruto-madara-susanoo": 4,
+        "naruto-madara": 26,
+        "naruto-madara-fire": 6,
+        "naruto-madara-meteor": 3,
+        "naruto-madara-clones": 2
+      },
+      "hits": 2088,
+      "perfectCount": 4
+    }
+  }
+}

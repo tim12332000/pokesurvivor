@@ -4,6 +4,7 @@ import hashlib
 import json
 import re
 import shutil
+import struct
 import subprocess
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -44,13 +45,22 @@ review_runtime.extend(['.omx/naruto-summoning.js', 'art-review/redrawn/gamabunta
 review_runtime.extend('art-review/redrawn/'+name for name in ['gamabunta-sword-v1.png','gamabunta-oil-v1.png','gamabunta-combo-fox-v2.png'])
 review_runtime.extend('art-review/redrawn/'+name for name in ['gamabunta-breath-actor-v1.png','gamabunta-oil-flame-v1.png'])
 review_runtime.append('.omx/naruto-rasengan-vfx.js')
-review_runtime.extend(['.omx/naruto-madara.js', 'art-review/madara/runtime.js',
+review_runtime.extend(['.omx/naruto-madara.js', '.omx/naruto-madara-camera.js', 'art-review/madara/runtime.js',
                        'art-review/madara/frames.json'])
 madara = json.loads((ROOT / 'art-review/madara/frames.json').read_text('utf-8'))
-madara_atlas = Path('art-review/madara') / madara['source']
-assert madara_atlas.suffix == '.png' and (ROOT / madara_atlas).resolve().is_relative_to((ROOT / 'art-review/madara').resolve())
-assert hashlib.sha256((ROOT / madara_atlas).read_bytes()).hexdigest() == madara['sha256'], 'Madara atlas differs from reviewed metadata'
-review_runtime.append(madara_atlas.as_posix())
+assert {'taijutsu', 'bodyDirections', 'walkDirections', 'castingDirections', 'elements', 'wood',
+        'rib', 'armored', 'perfect', 'ribDirections', 'armoredDirections', 'perfectDirections'} <= madara.get('sheets', {}).keys(), 'Madara production animation set is incomplete'
+for sheet in [madara, *madara.get('sheets', {}).values()]:
+    madara_atlas = Path('art-review/madara') / sheet['source']
+    assert madara_atlas.suffix == '.png' and (ROOT / madara_atlas).resolve().is_relative_to((ROOT / 'art-review/madara').resolve())
+    atlas_bytes = (ROOT / madara_atlas).read_bytes()
+    assert hashlib.sha256(atlas_bytes).hexdigest() == sheet['sha256'], f'Madara atlas differs from reviewed metadata: {madara_atlas}'
+    assert atlas_bytes.startswith(b'\x89PNG\r\n\x1a\n'), f'Invalid Madara PNG: {madara_atlas}'
+    atlas_width, atlas_height = struct.unpack('>II', atlas_bytes[16:24])
+    for frame in sheet['frames']:
+        x, y, width, height = frame['rect']
+        assert x >= 0 and y >= 0 and width > 0 and height > 0 and x + width <= atlas_width and y + height <= atlas_height, f'Madara frame outside atlas: {madara_atlas} / {frame["name"]}'
+    review_runtime.append(madara_atlas.as_posix())
 review_runtime.extend(['.omx/naruto/portraits/pain.png', '.omx/naruto/portraits/temari.png'])
 assert sources == {
     'redrawn/naruto-common-v1.png', 'redrawn/naruto-skills-v2.png',
@@ -125,7 +135,10 @@ html = html_path.read_text(encoding='utf-8')
 def version_asset(match):
     source = match[2]
     digest = hashlib.sha256((OUT / source).read_bytes()).hexdigest()[:12]
-    return match[1] + source + '?v=' + digest + match[3]
+    query = '?v=' + digest
+    if source == 'art-review/madara/runtime.js':
+        query += '&amp;data=' + hashlib.sha256((OUT / 'art-review/madara/frames.json').read_bytes()).hexdigest()[:12]
+    return match[1] + source + query + match[3]
 
 html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',
               version_asset, html)

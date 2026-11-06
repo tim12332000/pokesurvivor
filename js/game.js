@@ -801,6 +801,7 @@ G.Game = (() => {
     for (const a of G.SelfClones?.drawables(cam) || []) items.push({ y: a.y, ent: a });
     for (const a of G.NarutoPain?.drawables(cam) || []) items.push({ y: a.y, ent: a });
     for (const a of G.JujutsuYuta?.drawables(cam) || []) items.push({ y: a.y, ent: a });
+    for (const a of G.NarutoMadara?.drawables?.(cam) || []) items.push({ y: a.y, ent: a });
     const rift = G.Rift.drawable();
     if (rift) items.push({ y: rift.y, ent: rift });
     const arceus = pl && state !== 'ui' ? G.Judgment.drawable() : null;

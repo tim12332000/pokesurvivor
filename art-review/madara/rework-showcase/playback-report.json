@@ -1,0 +1,40 @@
+{
+  "method": "Complete local Blob decoding and 3s seek because the local SimpleHTTP preview server does not implement byte ranges; public CDN Range is verified separately.",
+  "media": [
+    {
+      "source": "http://127.0.0.1:8347/assets/previews/madara-natural-start.mp4",
+      "duration": 32,
+      "width": 960,
+      "height": 742,
+      "actualTime": 3.3509,
+      "error": null
+    },
+    {
+      "source": "http://127.0.0.1:8347/assets/previews/madara-natural-formed.mp4",
+      "duration": 44,
+      "width": 960,
+      "height": 742,
+      "actualTime": 3.3507,
+      "error": null
+    },
+    {
+      "source": "http://127.0.0.1:8347/assets/previews/madara-rework-desktop.webm",
+      "duration": 15.100566,
+      "width": 1100,
+      "height": 850,
+      "actualTime": 3.310038,
+      "error": null
+    },
+    {
+      "source": "http://127.0.0.1:8347/assets/previews/madara-rework-mobile390.webm",
+      "duration": 15.13925,
+      "width": 390,
+      "height": 844,
+      "actualTime": 3.311025,
+      "error": null
+    }
+  ],
+  "errors": [],
+  "missing": [],
+  "ok": true
+}

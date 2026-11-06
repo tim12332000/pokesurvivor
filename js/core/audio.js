@@ -438,6 +438,41 @@ G.Audio = (() => {
       else if (o.kind === 'orbit') tone('triangle', f, f * 1.5, 0.15, 0.04);
       else { tone('triangle', f * 1.5, f * 0.5, 0.09, 0.05); if (o.type === 'fire' || o.type === 'electric') hiss(0.06, 0.03, 'highpass', 3000); }
     },
+    'madara-palm'(o = {}) {
+      const kick = o.step === 'kick' || o.step === 'landing' || (Number(o.step) || 0) % 4 >= 2;
+      hiss(kick ? .11 : .06, .055, 'bandpass', kick ? 1700 : 2400, 450);
+      tone('triangle', kick ? 190 : 260, 75, kick ? .10 : .055, .055);
+    },
+    'madara-fire'() {
+      hiss(.52, .075, 'lowpass', 1600, 340);
+      hiss(.24, .025, 'bandpass', 3400, 1100, .08);
+      tone('sine', 115, 55, .23, .035);
+    },
+    'madara-blade'(o = {}) {
+      const heavy = !!(o.perfect || o.finisher);
+      hiss(heavy ? .26 : .14, heavy ? .07 : .04, 'bandpass', 3100, 450);
+      tone('triangle', heavy ? 105 : 220, 45, heavy ? .34 : .16, heavy ? .085 : .045);
+      if (heavy) tone('sine', 58, 34, .38, .07);
+    },
+    'madara-fall'(o = {}) {
+      hiss(o.second ? .62 : .46, .045, 'lowpass', 450, 1500);
+      tone('sine', o.second ? 62 : 82, 38, .48, .035);
+    },
+    'madara-meteor'(o = {}) {
+      const second = !!o.second;
+      hiss(second ? .85 : .50, second ? .13 : .09, 'lowpass', 1800, 90);
+      tone('sine', second ? 78 : 108, 28, second ? .90 : .52, second ? .15 : .11);
+      tone('triangle', second ? 160 : 230, 45, .13, .055);
+      if (second) hiss(.35, .04, 'bandpass', 1200, 240, .16);
+    },
+    'madara-form'() {
+      hiss(.65, .06, 'bandpass', 240, 1900);
+      [55, 82.4, 110].forEach((f, i) => tone('triangle', f, f * .94, .65, .025, i * .08));
+    },
+    'madara-wood'() {
+      hiss(.24, .055, 'bandpass', 850, 240);
+      tone('triangle', 165, 65, .16, .045);
+    },
     hit:     () => tone('triangle', 230, 90, 0.045, 0.045),
     faint:   () => tone('sine', 720, 240, 0.08, 0.04),
     bossDown() { hiss(0.7, 0.18, 'lowpass', 1500, 100); arp('triangle', [262, 330, 392, 523], 0.09, 0.4, 0.08); },
@@ -493,7 +528,9 @@ G.Audio = (() => {
   };
 
   // Separación mínima entre repeticiones del mismo efecto (ms).
-  const MIN_GAP = { hit: 45, faint: 60, xp: 35, coin: 50, grass: 70, shot: 70, hover: 40, break: 60, judge: 80 };
+  const MIN_GAP = { hit: 45, faint: 60, xp: 35, coin: 50, grass: 70, shot: 70, hover: 40, break: 60, judge: 80,
+    'madara-palm': 65, 'madara-fire': 140, 'madara-blade': 90,
+    'madara-fall': 250, 'madara-meteor': 180, 'madara-form': 500, 'madara-wood': 220 };
 
   function sfx(name, opts) {
     if (!ctx || settings.muted || settings.sfx <= 0 || ctx.state !== 'running') return;

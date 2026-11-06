@@ -1,0 +1,128 @@
+[
+  {
+    "key": "taijutsu",
+    "file": "madara-taijutsu-v2.png",
+    "prompt": "prompt-taijutsu-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-3a0e04d5-7de5-4665-addd-77e0049d0310.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "4f0231180af0e0a873df1a344fdc1b7cd4a648498a6f88151f32cfe7a76f3c07"
+  },
+  {
+    "key": "bodyDirections",
+    "file": "madara-body-directions-v2.png",
+    "prompt": "prompt-bodyDirections-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-0e4af200-fd81-4847-88ce-adcb4efde984.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "ed75e489c03e0af4d92980e18e7e949c857e229fb90f8010833c1f919d097798"
+  },
+  {
+    "key": "rib",
+    "file": "madara-susanoo-rib-v2.png",
+    "prompt": "prompt-rib-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-a5b1b7a3-bb72-48db-8681-26c576ef0661.png",
+    "sourceStatus": "superseded; background extraction required",
+    "sha256": "0c468405ed19b48e1c1aeb79c3b2b6aaf93a696649d24041f056b8a20f6d4093"
+  },
+  {
+    "key": "rib-clean",
+    "file": "madara-susanoo-rib-v3.png",
+    "prompt": "prompt-rib-clean-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-ea4da9cc-94ec-441f-88f6-3e46c1602f59.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "431161fc40c0f931b3d5266ba0d4aa3eb9a479ffc68deb45731eb280d5cc9342"
+  },
+  {
+    "key": "rib-directions",
+    "file": "madara-rib-directions-v2.png",
+    "prompt": "prompt-rib-directions-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-34781ea3-c0e6-44f2-9f1b-3f4df3594578.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "7bb80df0458b199478efea9098581f26c3bb929acef06bfb388329e727378d9a"
+  },
+  {
+    "key": "armored",
+    "file": "madara-susanoo-armored-v2.png",
+    "prompt": "prompt-armored-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-8afa85e0-dfc0-4b69-b9ee-7a79c15b8af7.png",
+    "sourceStatus": "superseded; blade gutter collision",
+    "sha256": "82b9b96fff48651514a6f06c2a7e4aa07e86592e48c73cf1b2ccb22cb928fa38"
+  },
+  {
+    "key": "armored-clean",
+    "file": "madara-susanoo-armored-v3.png",
+    "prompt": "prompt-armored-clean-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-2639394a-8e79-4cda-a77c-0df8dc83bf03.png",
+    "sourceStatus": "superseded; blade gutter collision",
+    "sha256": "1093cbc96d535189dee60dfbe92056c81ce0530267fa15fcc2aabc374fe3121c"
+  },
+  {
+    "key": "armored-repack",
+    "file": "madara-susanoo-armored-v4.png",
+    "prompt": "prompt-armored-repack-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-9b98c0d1-1c82-446e-8b05-5d52b5515c42.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "ca93d853cbb0bf17c3b8570e3c7523136eca5ea3fe3e361d231320162ab4e2cc"
+  },
+  {
+    "key": "armored-directions",
+    "file": "madara-armored-directions-v2.png",
+    "prompt": "prompt-armored-directions-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-add65145-b268-46ac-949a-add05276c3c1.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "3f05f0a67f5c78a963c47e8e8fc0b0b22556b457494277edf48b075a435896aa"
+  },
+  {
+    "key": "perfect",
+    "file": "madara-susanoo-perfect-v2.png",
+    "prompt": "prompt-perfect-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-5c147ddc-2328-444a-93f4-1bf68df7cff6.png",
+    "sourceStatus": "superseded; blade gutter collision",
+    "sha256": "6b9ab0970cb9d7e13702c847318cf0154d1efbd53aa2aeb95075ddf6c902ee27"
+  },
+  {
+    "key": "perfect-clean",
+    "file": "madara-susanoo-perfect-v3.png",
+    "prompt": "prompt-perfect-clean-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-98907aa4-f007-4075-8b82-af59fa88568b.png",
+    "sourceStatus": "superseded; blade gutter collision",
+    "sha256": "ecebd9e50dfd3fb78e8a1e07dc5368be3f3e6a5a88c3ba5bc9d4c3290ad940d7"
+  },
+  {
+    "key": "perfect-repack",
+    "file": "madara-susanoo-perfect-v4.png",
+    "prompt": "prompt-perfect-repack-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-7197026d-6445-44c2-b7ae-c5af66d90128.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "e5900a38d74d9bbcde708b5715922c3392d44b9cfb3bf848e86fda0b1ff1e2e8"
+  },
+  {
+    "key": "perfect-directions",
+    "file": "madara-perfect-directions-v2.png",
+    "prompt": "prompt-perfect-directions-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-a6b83c4e-3192-4489-bfd9-dc3fa7ebd75a.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "97a275f588d3ac4886192fe180f9a23c0d25479f70d8c54f70b7035ee996b4c8"
+  },
+  {
+    "key": "elements",
+    "file": "madara-elements-v2.png",
+    "prompt": "prompt-elements-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-d093f3c4-8a94-4597-b1bb-d2243ad4eb9d.png",
+    "sourceStatus": "selected or pending integration",
+    "sha256": "9d1d72813ac19f6b3b902b43f6847ea8e79308bcb6fe08bc7e1e7a5e71770a0a"
+  }
+]

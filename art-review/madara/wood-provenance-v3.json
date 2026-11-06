@@ -1,0 +1,31 @@
+{
+  "tool": "built-in imagegen",
+  "scope": "Original wood clone emergence/reveal/dismiss phase assets, no official extraction",
+  "layout": "2 columns x 2 rows, root/separate/reveal/dismiss; preserve relative phase sizes with a common standing source-height reference",
+  "sourceSize": [
+    1536,
+    1024
+  ],
+  "versions": [
+    {
+      "source": "madara-wood-v2.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1acf0-f8a5-73e3-a9d8-a40e93254e8d/exec-bb00a2f2-7640-4167-993d-59bb3c5d8016.png",
+      "prompt": "prompt-wood-v2.txt",
+      "sha256": "581173c9888ab5e35ac07377f168a07cc451f765b912270b24a702af4ce33c3f"
+    },
+    {
+      "source": "madara-wood-v3.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1acf0-f8a5-73e3-a9d8-a40e93254e8d/exec-0119e924-4afd-473e-9a7a-f70af192dfc3.png",
+      "prompt": "prompt-wood-v3.txt",
+      "sha256": "5449e46c013b42055678b5e66e52c4d9f4f1d4211bebb6d79705f1d458cd7b98"
+    }
+  ],
+  "selected": "madara-wood-v3.png",
+  "validation": {
+    "emptyCornersAlpha": 0,
+    "emptyGuttersAlpha": 0,
+    "transparentRevealOpening": true,
+    "browserCanvasGrassComposite": ".omx/state/madara-rework/wood-grass-preview.png"
+  },
+  "note": "Raw RGB in zero-alpha pixels may show a brown halo in an alpha-ignoring viewer. Production Canvas compositing was inspected; no visible fog or rectangular background. No programmatic recoloring/background removal."
+}

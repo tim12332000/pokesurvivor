@@ -1,0 +1,20 @@
+[
+  {
+    "key": "casting-directions",
+    "file": "madara-casting-directions-v2.png",
+    "prompt": "prompt-casting-directions-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-d69183dd-18c9-4059-a8bf-b0ed2205abfe.png",
+    "sourceStatus": "selected production supplement; final acceptance is independent",
+    "sha256": "9317af2991f5887fe3a0a5bdd021324db2705b93a560ea9907d17c894af1dd81"
+  },
+  {
+    "key": "rib-down-contact",
+    "file": "madara-rib-down-contact-v2.png",
+    "prompt": "prompt-rib-down-contact-production-v2.txt",
+    "tool": "built-in image_gen",
+    "originalOutput": "C:\\Users\\Tim\\.codex\\generated_images\\01a1acf2-3de8-7c50-b197-8d412cf3730d\\exec-22aeeb16-4443-4eee-bdaa-5280f681559f.png",
+    "sourceStatus": "selected production supplement; final acceptance is independent",
+    "sha256": "ac001770017cb267cfbe17fc2c9f2b48d1df4fba3c11a0e2dde3d0a8ff7ac2dd"
+  }
+]

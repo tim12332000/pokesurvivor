@@ -1,0 +1,5 @@
+# Frozen local runtime, reproducible from the recorded release commit/hashes.
+baseline-site/
+candidate-site*/
+**/native-play.webm
+**/raw-video/
