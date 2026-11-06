@@ -38,15 +38,15 @@ p.quantityPicks=p.quantityBonus=0;yutaBenefit=growth.quantityBenefit(p);
 assert.equal(yutaBenefit.consumers[0].before['顯現拳數'],8);assert.equal(yutaBenefit.consumers[0].after['顯現拳數'],10);
 p.quantityPicks=p.quantityBonus=7;assert.equal(growth.quantityBenefit(p).eligible,false,'Rika count card offered after both caps');
 p=hero(30014,['jjk-ryu','jjk-ryu-spread']);
-let b=growth.quantityBenefit(p);assert(b.eligible);assert.equal(b.consumers[0].before['砲道'],4);assert.equal(b.consumers[0].after['砲道'],5);assert.equal(b.consumers[0].nextChangeAt,1);
-p.quantityPicks=p.quantityBonus=1;b=growth.quantityBenefit(p);assert.equal(b.consumers[0].after['砲道'],6);
-p.quantityPicks=p.quantityBonus=6;assert.equal(growth.quantityBenefit(p).eligible,false,'all Ryu count consumers capped at9');
+let b=growth.quantityBenefit(p);assert(b.eligible);assert.equal(b.consumers[0].before['追蹤砲彈'],8);assert.equal(b.consumers[0].after['追蹤砲彈'],10);assert.equal(b.consumers[0].nextChangeAt,1);
+p.quantityPicks=p.quantityBonus=1;b=growth.quantityBenefit(p);assert.equal(b.consumers[0].after['追蹤砲彈'],12);
+p.quantityPicks=p.quantityBonus=6;assert.equal(growth.quantityBenefit(p).eligible,false,'all Ryu count consumers capped at18');
 assert(!growth.legalOffers(p,100).some(c=>c.key==='stat:quantity'));
 const rankCases=[
  ['jjk-yuta',3,'relayMarkDuration',1.2],['jjk-yuta',5,'bladeArc',2.5],['jjk-yuta-rika',3,'rikaSpeed',760],['jjk-yuta-rika',5,'radius',250],
  ['jjk-yuta-rika',5,'range',600],['jjk-yuta-rika',3,'comboBase',6],['jjk-yuta-speech',5,'range',320],['jjk-yuta-speech',3,'speechDuration',2.4],['jjk-yuta-speech',5,'speechBossDuration',1],['jjk-yuta-manifest',3,'recovery',7],['jjk-yuta-manifest',5,'recovery',6],
  ['jjk-yuta-manifest',1,'duration',8],['jjk-yuta-resonance',3,'radius',300],['jjk-yuta-resonance',5,'radius',360],
- ['jjk-ryu',3,'targetPolicy','elite'],['jjk-ryu',5,'range',414],['jjk-ryu-spread',3,'spreadStep',.8],['jjk-ryu-spread',5,'baseCount',5],
+ ['jjk-ryu',3,'targetPolicy','elite'],['jjk-ryu',5,'range',414],['jjk-ryu-spread',3,'range',920],['jjk-ryu-spread',5,'baseCount',10],
  ['jjk-ryu-impact',3,'radius',108],['jjk-ryu-impact',5,'range',330],['jjk-ryu-maximum',3,'firstTargetBonus',.15],
  ['jjk-ryu-maximum',1,'barrageBase',4],['jjk-ryu-maximum',3,'barrageBase',6],['jjk-ryu-maximum',5,'barrageBase',8],
  ['jjk-ryu-maximum',1,'radius',72],['jjk-ryu-maximum',3,'radius',96],['jjk-ryu-maximum',5,'radius',128],
@@ -97,8 +97,8 @@ for(const [dex,id] of [[30013,'jjk-yuta-resonance'],[30015,'jjk-uro-echo']]){
  assert(learn.apply(p)!==false);const linked=p.moves.find(m=>m.id===id);assert(linked.passive&&!linked.autoCast&&!p.slots.length,'linked effect stole a manual slot');
 }
 // Native upgrade application must install the same functional rank, not only instance previews.
-const live=G.Moves.instance('jjk-ryu-spread');G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.spreadStep,.8);
-G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.baseCount,5);
+const live=G.Moves.instance('jjk-ryu-spread');G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.range,920);
+G.Moves.levelUp(live);G.Moves.levelUp(live);assert.equal(live.baseCount,10);assert.equal(live.range,1120);
 p=hero(30013,['jjk-yuta']);const beforeStats=JSON.stringify(p.statsTaken);
 const cards=growth.legalOffers(p,3);assert(cards.some(c=>c.type==='stat'));assert.equal(JSON.stringify(p.statsTaken),beforeStats,'preview spent growth');assert(!p.narutoMilestonesShown,'offer consumed first-display milestone');
 const up=growth.legalOffers(p,100).find(c=>c.key==='up:jjk-yuta');assert.match(up.desc,/30→36/);assert.equal(p.moves[0].lvl,1);up.apply(p);assert.equal(p.moves[0].lvl,2);

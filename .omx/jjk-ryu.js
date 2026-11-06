@@ -6,7 +6,7 @@
   let effectSequence=0;
   const specs={
     'jjk-ryu':{charge:.22,cd:1.8,damage:42,range:360,radius:14},
-    'jjk-ryu-spread':{charge:.35,cd:5,damage:30,range:200,radius:12},
+    'jjk-ryu-spread':{charge:.35,cd:5,damage:30,range:800,radius:12},
     'jjk-ryu-impact':{charge:.45,cd:7,damage:100,range:300,radius:90},
     'jjk-ryu-ring':{charge:.32,cd:6.5,damage:48,range:112,radius:18},
     'jjk-ryu-maximum':{charge:.75,cd:5.4,damage:200,range:760,radius:72}
@@ -84,6 +84,13 @@
     return {count,radius:(p.ringRadii||[112,128,144,160,180])[L],width:(p.ringWidths||[18,21,24,27,30])[L],
       yScale:.55,interval,charge:p.ringCharge??.32,cd:p.ringCd??6.5,duration:count*interval};
   }
+  function scatterFor(owner,m){
+    const p=G.Jujutsu?.power?.ryu||{},L=level(m)-1;
+    const range=(p.scatterRanges||[800,860,920,1000,1120])[L];
+    return {count:Math.min(p.scatterCap??18,G.Quantity.count(owner,(p.scatterBases||[8,8,8,8,10])[L])),
+      range,travelRange:range*1.6,speed:(p.scatterSpeeds||[620,650,680,720,760])[L],
+      rise:.26,orbitMin:.6,orbitMax:1.15,turnRate:6.4};
+  }
   const actionLegal=(s,f)=>states.get(s.owner)===s&&G.CombatPulse.legal(f.cast)&&s.owner.moves?.some(m=>m.id===f.m.id);
   function targetFor(owner,m){
     const ring=m.digiMode==='jjk-ryu-ring',profile=ring?ringFor(owner,m):null;
@@ -115,9 +122,9 @@
     if(!canCast(owner,m))return false;
     const s=state(owner),target=targetFor(owner,m),p=settings(m),mode=m.digiMode;
     if(mode==='jjk-ryu-maximum')s.coreCharge=0;
-    const count=G.Quantity.count(owner,m.baseCount??4);
+    const scatterProfile=mode==='jjk-ryu-spread'?scatterFor(owner,m):null;
     s.action={owner,mode,m:{...m},...p,age:0,released:false,aim:Math.atan2(target.y-owner.y,target.x-owner.x),
-      tx:target.x,ty:target.y,targetObject:target,x:owner.x,y:owner.y,count:mode==='jjk-ryu-spread'?Math.min(9,count):1,
+      tx:target.x,ty:target.y,targetObject:target,x:owner.x,y:owner.y,count:scatterProfile?.count||1,scatterProfile,
       damage:p.damage*(owner.atk??1)*(G.NarutoSupport?.takeAttackBonus(owner)||1),crit:owner.critChance||0,
       sparks:fragments(mode==='jjk-ryu-maximum'?10:6,++effectSequence)};
     s.action.cast=G.CombatPulse.create(owner,m.id,{channel:'body'});
@@ -170,29 +177,49 @@
     return range;
   }
   function scatter(s,f){
-    const spacing=Math.min(f.m.spreadStep??.65,f.count>1?2.6/(f.count-1):0);
-    const registered=new Set(G.EnemyMgr.all());
-    const candidates=[...new Set(G.EnemyMgr.queryCircle(f.x,f.y,f.range+80))].filter(e=>
-      registered.has(e)&&alive(e)&&!e.friendly&&Math.hypot(e.x-f.x,e.y-f.y)<=f.range+(e.r||0)&&
-      Math.abs(Math.atan2(Math.sin(Math.atan2(e.y-f.y,e.x-f.x)-f.aim),Math.cos(Math.atan2(e.y-f.y,e.x-f.x)-f.aim)))<=1.5&&
-      clearPath(f.x,f.y,e.x,e.y));
-    const aims=Array.from({length:f.count},(_,i)=>f.aim+(i-(f.count-1)/2)*spacing),pairs=[],assigned=new Map(),used=new Set();
-    // Allocate the closest launch directions globally. Iterating from the
-    // outermost branch would give a lone nearby enemy an impossible U-turn.
-    for(let i=0;i<aims.length;i++)for(const target of candidates){
-      const delta=Math.atan2(target.y-f.y,target.x-f.x)-aims[i];
-      pairs.push({i,target,gap:Math.abs(Math.atan2(Math.sin(delta),Math.cos(delta)))});
-    }
-    pairs.sort((a,b)=>a.gap-b.gap||a.i-b.i);
-    for(const {i,target} of pairs)if(!assigned.has(i)&&!used.has(target)){assigned.set(i,target);used.add(target);}
-    f.scatterHits=new Set();
-    for(let i=0;i<f.count;i++){
-      const aim=aims[i],start=f.visualStart||{x:f.x,y:f.y-HEAD_HEIGHT},target=assigned.get(i)||null;
-      const shot={kind:'scatter',serial:++effectSequence,x:f.x,y:f.y,px:f.x,py:f.y,aim,radius:f.radius,
-        speed:500,range:f.range,distance:0,age:0,life:f.range/500,dead:false,
-        target,trail:[{x:f.x,y:f.y}],renderOffsetX:start.x-f.x,renderOffsetY:start.y-f.y,pulseIndex:i,action:f};
+    const profile=f.scatterProfile,start=f.visualStart||{x:f.x,y:f.y-HEAD_HEIGHT};
+    f.scatterStruck=new Set();
+    f.cast.channel='scatter';
+    f.cast.targetIsLegal=e=>actionLegal(s,f)&&G.EnemyMgr.all().includes(e);
+    for(let i=0;i<profile.count;i++){
+      const u=profile.count>1?i/(profile.count-1):0,direction=i*Math.PI*2/profile.count+f.castId*.31;
+      const shot={kind:'scatter',serial:++effectSequence,x:f.x,y:f.y,px:f.x,py:f.y,aim:-Math.PI/2,
+        radius:f.radius,speed:profile.speed,range:profile.travelRange,seekRange:profile.range,distance:0,
+        age:0,life:profile.rise+profile.orbitMax+profile.travelRange/profile.speed*1.8+.75,dead:false,
+        phase:'rise',lift:0,cruiseHeight:76+68*u,orbitAge:0,orbitDuration:profile.orbitMin+(profile.orbitMax-profile.orbitMin)*u,
+        orbitRadius:38+42*u,orbitDirection:direction,riseX:f.x,riseY:f.y,seekAge:0,target:null,
+        visualAngle:-Math.PI/2,trailTime:0,trail:[{x:f.x,y:f.y,lift:0,age:0}],
+        renderOffsetX:start.x-f.x,renderOffsetY:start.y-f.y,pulseIndex:i,action:f,profile};
       s.scatter.push(shot);
     }
+  }
+  function scatterTarget(s,shot,registered){
+    const r=Math.min(shot.seekRange,shot.range-shot.distance);
+    const reservations=new Map();
+    for(const other of s.scatter)if(other!==shot&&!other.dead&&other.target)
+      reservations.set(other.target,(reservations.get(other.target)||0)+1);
+    const candidates=[...new Set(G.EnemyMgr.queryCircle(shot.x,shot.y,r+80))].filter(e=>
+      registered.has(e)&&alive(e)&&!e.friendly&&Math.hypot(e.x-shot.x,e.y-shot.y)<=r+(e.r||0)&&clearPath(shot.x,shot.y,e.x,e.y));
+    candidates.sort((a,b)=>Number(shot.action.scatterStruck.has(a))-Number(shot.action.scatterStruck.has(b))||
+      (reservations.get(a)||0)-(reservations.get(b)||0)||Math.hypot(a.x-shot.x,a.y-shot.y)-Math.hypot(b.x-shot.x,b.y-shot.y));
+    shot.targetIsProp=false;
+    if(candidates.length)return candidates[0];
+    const prop=(G.World.propsInCircle?.(shot.x,shot.y,r)||[]).filter(e=>e.destructible!==false&&e.hp>0&&
+      Math.hypot(e.x-shot.x,e.y-shot.y)<=r+(e.r||0)&&clearPath(shot.x,shot.y,e.x,e.y,e))[0]||null;
+    shot.targetIsProp=!!prop;return prop;
+  }
+  function scatterFlight(shot,age){
+    const u=clamp(age/shot.diveDuration),ease=u*u*(3-2*u),height=shot.cruiseHeight;
+    return {distance:shot.diveDistance*ease+Math.max(0,age-shot.diveDuration)*shot.speed,
+      lift:height*(1-ease)+Math.sin(u*Math.PI)*Math.min(38,shot.diveDistance*.05)};
+  }
+  function scatterVisual(shot,previous,dt){
+    const point={x:shot.x,y:shot.y,lift:shot.lift,age:shot.age};
+    const dx=point.x-previous.x,dy=point.y-point.lift-(previous.y-previous.lift);
+    if(Math.hypot(dx,dy)>EPS)shot.visualAngle=Math.atan2(dy,dx);
+    shot.trailTime+=dt;
+    if(shot.trailTime>=.02){shot.trailTime%=.02;shot.trail.push(point);}
+    while(shot.trail.length>28||shot.trail[0]?.age<shot.age-.5)shot.trail.shift();
   }
   function circleContact(shot,target,distance){
     const c=Math.cos(shot.aim),sn=Math.sin(shot.aim),dx=target.x-shot.x,dy=target.y-shot.y;
@@ -202,56 +229,82 @@
     return along+reach>=0&&at<=distance+EPS?at:null;
   }
   function updateScatter(s,dt){
+    const registered=new Set(G.EnemyMgr.all());
     for(const shot of s.scatter){
-      if(shot.dead)continue;
-      if(!actionLegal(s,shot.action)){shot.dead=true;shot.age=shot.life;continue;}
-      const registered=new Set(G.EnemyMgr.all());
-      shot.age+=dt;
-      shot.px=shot.x;shot.py=shot.y;
-      let left=Math.min(shot.range-shot.distance,shot.speed*dt);
-      // Swept four-unit segments prevent fast bolts tunnelling through enemies or walls.
-      for(let n=0;n<64&&left>EPS&&!shot.dead;n++){
-        const distance=Math.min(4,left),target=shot.target;
-        // Branch outward before bending toward the separately assigned enemy.
-        // Turn and collision use the same short segments and finite path budget.
-        if(shot.distance>=20&&registered.has(target)&&alive(target)&&!target.friendly&&clearPath(shot.x,shot.y,target.x,target.y)){
-          const desired=Math.atan2(target.y-shot.y,target.x-shot.x),delta=Math.atan2(Math.sin(desired-shot.aim),Math.cos(desired-shot.aim));
-          shot.aim+=Math.max(-8*distance/shot.speed,Math.min(8*distance/shot.speed,delta));
+      let remaining=dt;
+      while(remaining>EPS&&!shot.dead){
+        if(!actionLegal(s,shot.action)){shot.dead=true;break;}
+        const step=Math.min(remaining,1/120),previous={x:shot.x,y:shot.y,lift:shot.lift};
+        remaining-=step;shot.age+=step;shot.px=shot.x;shot.py=shot.y;
+        if(shot.age>=shot.life){shot.dead=true;break;}
+        if(shot.phase==='rise'){
+          const u=clamp(shot.age/shot.profile.rise);
+          shot.x=shot.riseX+Math.sin(shot.orbitDirection)*14*u*u;
+          shot.y=shot.riseY+Math.cos(shot.orbitDirection)*8*u*u;
+          shot.lift=shot.cruiseHeight*u;
+          if(u>=1){shot.phase='orbit';shot.orbitX=shot.x;shot.orbitY=shot.y;}
         }
-        const c=Math.cos(shot.aim),sn=Math.sin(shot.aim);
-        const candidates=[];
-        for(const enemy of new Set(G.EnemyMgr.queryCircle(shot.x,shot.y,distance+shot.radius+80))){
-          if(!registered.has(enemy)||!alive(enemy)||enemy.friendly)continue;
-          const at=circleContact(shot,enemy,distance);
-          if(at!=null&&clearPath(shot.x,shot.y,enemy.x,enemy.y))candidates.push({target:enemy,at,prop:false});
-        }
-        for(const prop of G.World.propsInCircle?.(shot.x,shot.y,distance+shot.radius+80)||[]){
-          if(prop.hp<=0||prop.destructible===false)continue;
-          const at=circleContact(shot,prop,distance);
-          if(at!=null&&clearPath(shot.x,shot.y,prop.x,prop.y,prop))candidates.push({target:prop,at,prop:true});
-        }
-        const first=candidates.sort((a,b)=>a.at-b.at)[0];
-        const travel=first?.at??distance,length=clippedLength(shot.x,shot.y,shot.aim,travel,shot.radius,first?.prop?first.target:null);
-        const blocked=length+EPS<travel;
-        shot.x+=c*(blocked?length:travel);shot.y+=sn*(blocked?length:travel);
-        shot.distance+=blocked?length:travel;left-=travel;
-        shot.trail.push({x:shot.x,y:shot.y});if(shot.trail.length>28)shot.trail.shift();
-        if(blocked||first){
-          if(first&&!blocked){
-            if(first.prop){
-              if(!shot.action.scatterHits.has(first.target))G.World.damageProp?.(first.target,shot.action.damage,'#bff7ff');
-            }else if(!shot.action.scatterHits.has(first.target)){
-              contact(s,shot.action,[hitFor(s,{...shot.action,aim:shot.aim},first.target)],shot.pulseIndex);
-            }
-            // Even a previously struck enemy consumes a later bolt: this attack never pierces.
-            shot.action.scatterHits.add(first.target);
+        if(shot.phase==='orbit'){
+          shot.orbitAge=Math.max(0,shot.age-shot.profile.rise);
+          const u=clamp(shot.orbitAge/shot.orbitDuration),angle=u*Math.PI*2;
+          const turn=Math.atan2(Math.sin(shot.orbitDirection),Math.cos(shot.orbitDirection))*Math.sin(angle/2)**2;
+          const dx=shot.orbitRadius*(1-Math.cos(angle)),dy=-shot.orbitRadius*Math.sin(angle);
+          shot.x=shot.orbitX+dx*Math.cos(turn)-dy*Math.sin(turn);
+          shot.y=shot.orbitY+.35*(dx*Math.sin(turn)+dy*Math.cos(turn));shot.lift=shot.cruiseHeight;
+          if(u>=1){
+            shot.x=shot.orbitX;shot.y=shot.orbitY;shot.phase='seek';
+            shot.target=scatterTarget(s,shot,registered);
+            if(shot.target)shot.aim=Math.atan2(shot.target.y-shot.y,shot.target.x-shot.x);
+            shot.diveDistance=Math.max(1,shot.target?Math.hypot(shot.target.x-shot.x,shot.target.y-shot.y):shot.seekRange);
+            shot.diveDuration=Math.max(.55,shot.diveDistance/shot.speed*1.15);
           }
-          if(!actionLegal(s,shot.action)){shot.dead=true;break;}
-          effect(s,{kind:'impact',x:shot.x,y:shot.y,aim:shot.aim,radius:shot.radius,age:0,life:.18});
-          shot.dead=true;shot.age=shot.life;
         }
+        if(shot.phase==='seek'){
+          const target=shot.target,r=Math.min(shot.seekRange,shot.range-shot.distance);
+          const isEnemy=registered.has(target),isProp=shot.targetIsProp&&target?.hp>0;
+          if(!target||!alive(target)||(!isEnemy&&!isProp)||target.friendly||Math.hypot(target.x-shot.x,target.y-shot.y)>r+(target.r||0)||
+              !clearPath(shot.x,shot.y,target.x,target.y,isProp?target:null))shot.target=scatterTarget(s,shot,registered);
+          if(shot.target){
+            const desired=Math.atan2(shot.target.y-shot.y,shot.target.x-shot.x),delta=Math.atan2(Math.sin(desired-shot.aim),Math.cos(desired-shot.aim));
+            shot.aim+=Math.max(-shot.profile.turnRate*step,Math.min(shot.profile.turnRate*step,delta));
+          }
+          const before=scatterFlight(shot,shot.seekAge);
+          shot.seekAge=Math.max(0,shot.age-shot.profile.rise-shot.orbitDuration);
+          const after=scatterFlight(shot,shot.seekAge);shot.lift=after.lift;
+          let left=Math.min(shot.range-shot.distance,Math.max(0,after.distance-before.distance));
+          while(left>EPS&&!shot.dead){
+            const distance=Math.min(4,left),candidates=[];
+            if(shot.lift<=18){
+              for(const enemy of new Set(G.EnemyMgr.queryCircle(shot.x,shot.y,distance+shot.radius+80))){
+                if(!registered.has(enemy)||!alive(enemy)||enemy.friendly)continue;
+                const at=circleContact(shot,enemy,distance);
+                if(at!=null&&clearPath(shot.x,shot.y,enemy.x,enemy.y))candidates.push({target:enemy,at,prop:false});
+              }
+              for(const prop of G.World.propsInCircle?.(shot.x,shot.y,distance+shot.radius+80)||[]){
+                if(prop.hp<=0||prop.destructible===false)continue;
+                const at=circleContact(shot,prop,distance);
+                if(at!=null&&clearPath(shot.x,shot.y,prop.x,prop.y,prop))candidates.push({target:prop,at,prop:true});
+              }
+            }
+            const first=candidates.sort((a,b)=>a.at-b.at)[0],travel=first?.at??distance;
+            const length=clippedLength(shot.x,shot.y,shot.aim,travel,shot.radius,first?.prop?first.target:null),blocked=length+EPS<travel;
+            shot.x+=Math.cos(shot.aim)*(blocked?length:travel);shot.y+=Math.sin(shot.aim)*(blocked?length:travel);
+            shot.distance+=blocked?length:travel;left-=travel;
+            if(blocked||first){
+              if(first&&!blocked){
+                shot.action.scatterStruck.add(first.target);
+                if(first.prop)G.World.damageProp?.(first.target,shot.action.damage,'#bff7ff');
+                else contact(s,shot.action,[hitFor(s,{...shot.action,aim:shot.aim},first.target)],shot.pulseIndex);
+              }
+              if(actionLegal(s,shot.action))effect(s,{kind:'impact',scatter:true,x:shot.x,y:shot.y,aim:shot.aim,
+                radius:shot.radius,lift:shot.lift,renderOffsetX:shot.renderOffsetX,renderOffsetY:shot.renderOffsetY,age:0,life:.24});
+              shot.dead=true;
+            }
+          }
+          if(shot.distance+EPS>=shot.range)shot.dead=true;
+        }
+        scatterVisual(shot,previous,step);
       }
-      if(shot.distance+EPS>=shot.range){shot.dead=true;shot.age=shot.life;}
     }
     s.scatter=s.scatter.filter(shot=>!shot.dead);
   }
@@ -603,6 +656,12 @@
   C.drawGroundFields=function(ctx){oldGround.call(this,ctx);ground(ctx);};
   function statusFor(owner,m){
     const s=states.get(owner),coreCharge=s?.coreCharge||0,recoveryRemaining=Math.max(0,(s?.recoveryUntil||0)-(s?.clock||0));
+    const scatter=s?.scatter.filter(shot=>!shot.dead&&shot.action.m.id===m.id);
+    if(scatter?.length){
+      const phase=scatter.some(shot=>shot.phase==='rise')?'rise':scatter.some(shot=>shot.phase==='orbit')?'orbit':'seek';
+      return {state:'active',phase,count:scatter.length,remaining:Math.max(...scatter.map(shot=>shot.life-shot.age)),
+        duration:Math.max(...scatter.map(shot=>shot.life)),coreCharge,chargeRequired:3,recoveryRemaining};
+    }
     const ring=s?.rings.find(r=>!r.dead&&r.m.id===m.id);
     if(ring)return {state:'active',phase:'ring',remaining:Math.max(0,ring.duration-ring.age),duration:ring.duration,
       lapIndex:ring.lapIndex,count:ring.count,coreCharge,chargeRequired:3,recoveryRemaining};
@@ -611,7 +670,7 @@
     return {state:s?.action?.m.id===m.id?'casting':recoveryRemaining>EPS?'recovering':m.t>EPS?'cooldown':charging?'charging':waitingForCore||s?.action?'queued':'ready',
       remaining:m.t||0,coreCharge,chargeRequired:3,recoveryRemaining,coreRemaining,reason:charging?'core-charge':waitingForCore?'core-cadence':null};
   }
-  G.JjkRyu={dex:DEX,supports,handles:supports,canCast,cast,update,clear,pose,activeFor:pose,targetFor,statusFor,barrageFor,ringFor,ringProfile:ringFor,
+  G.JjkRyu={dex:DEX,supports,handles:supports,canCast,cast,update,clear,pose,activeFor:pose,targetFor,statusFor,barrageFor,ringFor,ringProfile:ringFor,scatterFor,scatterProfile:scatterFor,
     stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return s&&drawable(s)?s:null;},
     stats:(owner=G.Game.player)=>{const s=states.get(owner);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,effects:s.effects.length,
       coreCharge:s.coreCharge,chargeRequired:3,recoveryRemaining:Math.max(0,s.recoveryUntil-s.clock)}:null;}};

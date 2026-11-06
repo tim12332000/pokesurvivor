@@ -277,26 +277,65 @@
     frame.draws.push({kind:'barrage-muzzle',owner:id(owner),castId:f.castId,volleyIndex:f.volleyIndex,volleyCount:f.volleyCount,age:f.pulseAge});
   }
   function drawScatter(ctx,e,owner){
-    if(e.dead)return;
-    const x=e.x+(e.renderOffsetX||0),y=e.y+(e.renderOffsetY??-48),r=e.radius;
-    const trail=e.trail?.slice(-28);
-    if(trail?.length>1){
-      ctx.save();ctx.globalAlpha=.5;ctx.strokeStyle='#71dce9';ctx.lineWidth=Math.max(2,r*.4);ctx.lineJoin='round';ctx.beginPath();
-      for(let i=0;i<trail.length;i++){
-        const p=trail[i],tx=p.x+(e.renderOffsetX||0),ty=p.y+(e.renderOffsetY??-48);
-        i?ctx.lineTo(tx,ty):ctx.moveTo(tx,ty);
-      }
-      ctx.lineTo(x,y);ctx.stroke();ctx.restore();
+    if(e.dead||e.age<0)return;
+    const ox=e.renderOffsetX||0,oy=e.renderOffsetY??-48,lift=e.lift||0,r=e.radius;
+    const x=e.x+ox,y=e.y+oy-lift,phase=e.phase||'seek',detailed=!low();
+    const trail=(e.trail||[]).slice(-(detailed?28:18));
+    // Sampled altitude belongs to each old point. Reusing the head's current
+    // lift would drag a whole ascent/orbit trail up and down with the projectile.
+    const points=trail.map(p=>({x:p.x+ox,y:p.y+oy-(p.lift||0)}));
+    points.push({x,y});
+    ctx.save();ctx.lineCap='round';ctx.lineJoin='round';
+    if(lift>12){
+      ctx.globalAlpha=.11;ctx.fillStyle='#103c46';ctx.beginPath();
+      ctx.ellipse(e.x,e.y,r*.7,r*.28,0,0,TAU);ctx.fill();
     }
-    ctx.save();ctx.translate(x,y);ctx.rotate(e.aim);
-    // Short moving pellets have a visible tail, not a full-length artillery ray.
-    ctx.globalAlpha=.7;ctx.strokeStyle='#71dce9';ctx.lineWidth=Math.max(2,r*.4);
-    ctx.beginPath();ctx.moveTo(-r*2.3,0);ctx.lineTo(-r*.5,0);ctx.stroke();
-    ctx.globalAlpha=1;ctx.fillStyle='#71dce9';ctx.beginPath();
-    ctx.moveTo(r,0);ctx.lineTo(-r*.2,-r*.65);ctx.lineTo(-r,-r*.35);
-    ctx.lineTo(-r,r*.35);ctx.lineTo(-r*.2,r*.65);ctx.closePath();ctx.fill();
-    ctx.fillStyle='#f4ffff';ctx.beginPath();ctx.ellipse(r*.05,0,r*.48,r*.24,0,0,TAU);ctx.fill();ctx.restore();
-    frame.draws.push({kind:'scatter',owner:id(owner),castId:e.action?.castId,x,y,distance:e.distance,radius:r});
+    const groups=Math.min(detailed?5:3,points.length-1);
+    for(let g=0;g<groups;g++){
+      const a=Math.floor((points.length-1)*g/groups),b=Math.ceil((points.length-1)*(g+1)/groups),t=(g+1)/groups;
+      ctx.beginPath();ctx.moveTo(points[a].x,points[a].y);
+      for(let i=a+1;i<=b;i++)ctx.lineTo(points[i].x,points[i].y);
+      // The broad shell and tapering hot core describe one real bolt, not
+      // extra rays or luminous beads standing in for additional projectiles.
+      ctx.globalAlpha=.035+.14*t;ctx.strokeStyle='#2ab9da';ctx.lineWidth=r*(.7+.85*t);ctx.stroke();
+      ctx.globalAlpha=.09+.32*t;ctx.strokeStyle='#73edf2';ctx.lineWidth=r*(.2+.65*t);ctx.stroke();
+      ctx.globalAlpha=.12+.52*t;ctx.strokeStyle='#e8ffff';ctx.lineWidth=Math.max(1,r*(.08+.18*t));ctx.stroke();
+    }
+    ctx.translate(x,y);ctx.rotate(Number.isFinite(e.visualAngle)?e.visualAngle:e.aim);
+    const pulse=.94+.06*Math.sin(e.age*28+(e.serial||0)*1.7);
+    // A broad soft pressure head stays within the physical radius. Its dim
+    // rear wake stretches with flight while the bright contact tip stays put.
+    ctx.globalAlpha=.2;ctx.fillStyle='#27b9dc';ctx.beginPath();
+    ctx.ellipse(-r*.6,0,r*1.6,r,0,0,TAU);ctx.fill();
+    ctx.globalAlpha=.76;ctx.fillStyle='#77f1f3';ctx.beginPath();
+    ctx.moveTo(r,0);ctx.bezierCurveTo(r*.25,-r*.78,-r*.6,-r*.68,-r*1.75,0);
+    ctx.bezierCurveTo(-r*.6,r*.68,r*.25,r*.78,r,0);ctx.fill();
+    ctx.globalAlpha=.97;ctx.fillStyle='#f4ffff';ctx.beginPath();
+    ctx.ellipse(r*.05,0,r*.64,r*.3*pulse,0,0,TAU);ctx.fill();
+    if(detailed){
+      ctx.globalAlpha=.7;ctx.strokeStyle='#c7ffff';ctx.lineWidth=Math.max(1,r*.12);ctx.beginPath();
+      ctx.moveTo(-r*2.2,-r*.22);ctx.quadraticCurveTo(-r*.7,-r*.46,r*.15,-r*.2);ctx.stroke();
+    }
+    ctx.restore();
+    frame.draws.push({kind:'scatter',owner:id(owner),castId:e.action?.castId,x,y,distance:e.distance,radius:r,
+      phase,lift,angle:Number.isFinite(e.visualAngle)?e.visualAngle:e.aim,trailPoints:points.length});
+  }
+  function drawScatterImpact(ctx,e,ground){
+    const t=clamp(e.age/e.life),fade=(1-t)*(1-t),r=e.radius;
+    const x=e.x+(e.renderOffsetX||0),y=e.y+(e.renderOffsetY??-48)-(e.lift||0);
+    ctx.save();ctx.translate(ground?e.x:x,ground?e.y:y);ctx.rotate(e.aim||0);
+    if(ground){
+      ctx.globalAlpha=.12*fade;ctx.fillStyle='#51c6d8';ctx.beginPath();ctx.ellipse(0,0,r*1.5,r*.5,0,0,TAU);ctx.fill();
+    }else{
+      ctx.globalAlpha=.34*fade;ctx.fillStyle='#42cde3';ctx.beginPath();ctx.ellipse(0,0,r*(.7+t),r*(.65+.6*t),0,0,TAU);ctx.fill();
+      ctx.globalAlpha=.94*fade;ctx.fillStyle='#f1ffff';ctx.beginPath();ctx.ellipse(0,0,r*(.7-.3*t),r*(.4-.16*t),0,0,TAU);ctx.fill();
+      ctx.strokeStyle='#c9ffff';ctx.lineWidth=Math.max(1,r*.14);
+      for(let i=-1;i<=1;i++){
+        const a=i*.65,len=r*(.6+1.6*t);ctx.globalAlpha=(.8-.18*Math.abs(i))*fade;ctx.beginPath();
+        ctx.moveTo(Math.cos(a)*r*.35,Math.sin(a)*r*.35);ctx.lineTo(Math.cos(a)*len,Math.sin(a)*len);ctx.stroke();
+      }
+    }
+    ctx.restore();
   }
   function shards(ctx,x,y,r,age,life,seed){
     const fade=clamp(1-age/life),count=Math.min(8,limits.shards-frame.shards);ctx.save();ctx.strokeStyle='#c5f5f5';ctx.lineWidth=2;ctx.globalAlpha=fade;
@@ -361,6 +400,7 @@
     }
     for(const e of s.effects||[]){
       if(e.kind==='scatter')continue;
+      if(e.kind==='impact'&&e.scatter){drawScatterImpact(ctx,e,ground);continue;}
       if(e.kind==='beam'){if(!ground)drawBeam(ctx,e,owner);continue;}
       if(e.kind==='muzzle')continue;
       const t=clamp(e.age/e.life),r=e.kind==='explosion'?e.radius:Math.max(12,e.radius);

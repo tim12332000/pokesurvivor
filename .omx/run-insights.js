@@ -83,6 +83,11 @@
       if(move.id==='jjk-uro-screen'){const screen=api?.stateFor?.(player)?.screen;if(screen)return {label:'反射 '+screen.budget,fraction:Math.min(1,screen.budget/Math.max(1,screen.initialBudget??api.fractureProfile(player,move).budget))};}
       if(move.id==='jjk-uro-echo')return {label:'殘響連動',fraction:0};
     }
+    if(move.id==='jjk-ryu-spread'){
+      const status=api?.statusFor?.(player,move);
+      if(status?.state==='active')return {label:({rise:'升空 ',orbit:'索敵 ',seek:'追擊 '}[status.phase]||'砲彈 ')+status.count,
+        fraction:Math.max(0,Math.min(1,status.remaining/Math.max(.01,status.duration)))};
+    }
     if(move.id==='jjk-ryu-ring'){
       const status=api?.statusFor?.(player,move);
       if(status?.state==='active')return {label:'圓環 '+Math.min(status.count,(status.lapIndex??0)+1)+'/'+status.count,

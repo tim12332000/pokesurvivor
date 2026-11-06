@@ -3,6 +3,10 @@
   const catalog = G.NarutoSkillCatalog;
   if (!catalog) return;
   const entries = {
+    'jjk-ryu-spread': ['Scatter Cursed-Energy Cannon', () => {
+      const c=G.Jujutsu.power.ryu;
+      return `At character Lv.3, learn an automatic volley of ${c.scatterBases[0]}–${c.scatterBases[4]} independent cursed-energy bolts. After a 0.35s charge they rise for 0.26s, orbit independently for 0.6–1.15s, then choose current living targets and dive into long-range homing pursuit. Acquisition range ${c.scatterRanges[0]}–${c.scatterRanges[4]}; finite travel budget ${c.scatterRanges[0]*1.6}–${c.scatterRanges[4]*1.6}. The first quantity pick raises 8 to 10; cap ${c.scatterCap}. Each bolt hits once and stops; several bolts can hit the same enemy. Walls interrupt pursuit. Each successful volley grants at most one Full-Power charge. The rising and orbiting choreography is a game adaptation.`;
+    }],
     'jjk-ryu-ring': ['Granite Blast: Ring', () => {
       const c = G.Jujutsu.power.ryu;
       return `Automatically casts against nearby enemies at character Lv.5; no active slot. After ${c.ringCharge}s, the forehead beam bends around the body into a hollow ring and strikes its actual curved path ${c.ringBases.join('/')} times by tier. Quantity multiplies rounds by 1.25 per pick, rounded down, up to ${c.ringCap}; the first card increases 4 to 5. Ring radius ${c.ringRadii[0]}–${c.ringRadii[4]}, beam half-width ${c.ringWidths[0]}–${c.ringWidths[4]}; base cooldown ${c.ringCd}s. Move freely. Walls interrupt the beam. Each round hits an enemy once; after the initial curved lead closes, the hollow center is not hit. Grants no invulnerability, crowd control or projectile blocking. If Full-Power Blast is learned, each cast that hits earns at most one charge. The curved ring comes from the anime; repeated rounds and growth are game adaptations.`;
@@ -85,7 +89,8 @@
     '圓環':'Ring', '圓環輪次':'Ring rounds', '繞身蓄力':'Ring charge', '圓環收束':'Ring recovery',
     '圓環 {x}/{x}':'Ring {x}/{x}', '圓環輪次 {x}→{x}':'Ring rounds {x}→{x}',
     '穿線・蓄能爆發':'Piercing fire · Charged burst',
-    '普通砲命中蓄能，接續全力砲；散射追敵，圓環砲繞身迎擊，固定爆破對付敵群。':'Build charge with successful blasts, then unleash Full-Power Blast. Curved scatter shots chase enemies, the ring strikes nearby foes, and fixed blasts strike clusters.',
+    '普通砲命中蓄能，接續全力砲；散射砲升空迴旋後遠距追敵，圓環砲繞身迎擊，固定爆破對付敵群。':'Build charge with successful blasts, then unleash Full-Power Blast. Scatter cannons rise, orbit and pursue distant enemies; the ring strikes nearby foes and fixed blasts strike clusters.',
+    '升空索敵・蓄能爆發':'Skyward Hunt · Charged Artillery',
     '基礎6輪繞身切擊，環半徑144、砲道半寬24':'6 base ring rounds; ring radius 144, beam half-width 24',
     '基礎8輪繞身切擊，環半徑180、砲道半寬30，數量卡最多16輪':'8 base ring rounds; ring radius 180, beam half-width 30; quantity cards increase rounds up to 16',
     '殘風結':'Wind knots', '引爆風結':'Knot detonations', '風爆連切':'Gust cuts', '風爆半徑':'Gust radius',
@@ -169,7 +174,10 @@
     const description = typeof text === 'function' ? text() : text || definition.descEn;
     if (description) dictionary[definition.desc] = description;
     for (const [i, upgrade] of (definition.ups || []).entries()) {
-      if (id === 'jjk-ryu-ring') {
+      if (id === 'jjk-ryu-spread') {
+        const c = G.Jujutsu.power.ryu;
+        dictionary[upgrade.t] = `Damage increased; ${c.scatterBases[i+1]} rising homing bolts, acquisition range ${c.scatterRanges[i+1]}, travel budget ${c.scatterRanges[i+1]*1.6}; quantity cap ${c.scatterCap}`;
+      } else if (id === 'jjk-ryu-ring') {
         const c = G.Jujutsu.power.ryu;
         dictionary[upgrade.t] = `Damage increased; ${c.ringBases[i+1]} base ring rounds, radius ${c.ringRadii[i+1]}, beam half-width ${c.ringWidths[i+1]}; quantity cap ${c.ringCap} rounds`;
       } else dictionary[upgrade.t] = translateUpgrade(upgrade.t);

@@ -15,7 +15,7 @@
   function vector(p,m){
     const mode=m.digiMode||'',i=rank(m)-1;
     if(customConsumers.has(mode))return customConsumers.get(mode)(p,m);
-    if(mode==='jjk-ryu-spread')return {砲道:count(p,m.baseCount||4,9)};
+    if(mode==='jjk-ryu-spread')return {追蹤砲彈:count(p,G.Jujutsu.power.ryu.scatterBases[i],G.Jujutsu.power.ryu.scatterCap)};
     if(mode==='jjk-ryu-ring')return {圓環輪次:count(p,G.Jujutsu.power.ryu.ringBases[i],G.Jujutsu.power.ryu.ringCap)};
     if(mode==='jjk-ryu-maximum')return {追加重砲:count(p,m.barrageBase??[4,5,6,7,8][i],16)};
     if(mode==='yuta-rika'){
