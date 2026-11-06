@@ -2,7 +2,8 @@
 (() => {
   'use strict';
   if (G.JjkUro) return;
-  const DEX=30015, C=G.Combat, states=new Map(), effects=[];
+  const DEX=30015, C=G.Combat, states=new Map(), effects=[], orbits=[];
+  const ORBIT_DURATION=.8, TAU=Math.PI*2;
   const specs={
     'uro-sky':{cd:1.25,dmg:20,range:180,arc:1.6,release:.18,duration:.48},
     'uro-thin-ice':{cd:4.8,dmg:72,range:340,arc:2.5,release:.34,duration:1.64},
@@ -172,9 +173,31 @@
   function legal(b){return !terminal()&&b.world===G.World&&b.runEpoch===G.CombatPulse.epoch&&valid(b.owner)&&states.get(b.owner)===b.state&&
     b.owner.moves?.some(m=>m.id===b.id)&&(effects.includes(b)||b.state.screen===b);}
   const active=b=>playing()&&legal(b)&&!b.owner.frozen&&G.CombatPulse.legal(b.cast);
+  // Captured sky-space belongs to the actor, not the screen's remaining budget.
+  const orbitLegal=b=>!terminal()&&b.world===G.World&&b.runEpoch===G.CombatPulse.epoch&&valid(b.owner)&&
+    states.get(b.owner)===b.state&&!!learned(b.owner,b.id);
+  function orbitPosition(b){
+    b.angle=b.startAngle+b.direction*TAU*Math.min(1,b.age/b.duration);
+    b.x=b.owner.x+Math.cos(b.angle)*b.radius;b.y=b.owner.y+Math.sin(b.angle)*b.radius;
+  }
+  function updateOrbits(dt){
+    for(const b of [...orbits]){
+      if(!orbitLegal(b)){orbits.splice(orbits.indexOf(b),1);continue;}
+      if(b.owner.frozen)continue;
+      b.age=Math.min(b.duration,b.age+dt);orbitPosition(b);
+      if(b.age+1e-8<b.duration)continue;
+      const source=b.sourceEnemy,registered=G.EnemyMgr.all();
+      const chosen=alive(source)&&!source.friendly&&registered.includes(source)&&clearPath(b.x,b.y,source.x,source.y)?source:
+        targets(b.x,b.y,600).sort((a,c)=>Math.hypot(a.x-b.x,a.y-b.y)-Math.hypot(c.x-b.x,c.y-b.y))[0];
+      const aim=chosen?Math.atan2(chosen.y-b.y,chosen.x-b.x):Math.atan2(-b.incomingY,-b.incomingX);
+      G.Projectiles.spawn({...b.shot,x:b.x,y:b.y,vx:Math.cos(aim)*b.speed,vy:Math.sin(aim)*b.speed});
+      orbits.splice(orbits.indexOf(b),1);
+    }
+  }
   function clear(owner){
     if(owner)states.delete(owner);else states.clear();
     for(let i=effects.length-1;i>=0;i--)if(!owner||effects[i].owner===owner)effects.splice(i,1);
+    for(let i=orbits.length-1;i>=0;i--)if(!owner||orbits[i].owner===owner)orbits.splice(i,1);
   }
   function update(dt){
     if(terminal()){clear();return;}
@@ -184,6 +207,7 @@
       if(owner.frozen)continue;s.clock+=dt;
       if(s.screen){s.screen.age+=dt;for(const flash of s.screen.flashes)flash.age+=dt;s.screen.flashes=s.screen.flashes.filter(f=>f.age<.22);if(!legal(s.screen)||s.screen.budget<=0||s.screen.age>=s.screen.duration)s.screen=null;}
     }
+    updateOrbits(dt);
     for(const b of [...effects]){
       if(!legal(b)){const i=effects.indexOf(b);if(i>=0)effects.splice(i,1);continue;}
       if(b.owner.frozen)continue;
@@ -248,11 +272,16 @@
         w.counterTriggered=true;
         counter(s,w,p.sourceEnemy);
       }
-      G.Projectiles.spawn({x,y,vx:-(p.vx||0),vy:-(p.vy||0),r:Math.max(4,p.r||6),dmg:(p.dmg||10)*(owner.atk??1),life:Math.min(3,p.life||2),
-        friendly:true,owner,mid:w.id,mtype:p.mtype||'psychic',color:'#bfeaff',vis:G.VFX.forType(p.mtype||'psychic'),pierce:0,hits:new Set(),uroReturned:true});
+      const startAngle=Math.atan2(y-owner.y,x-owner.x),cross=(x-owner.x)*(p.vy||0)-(y-owner.y)*(p.vx||0);
+      orbits.push({owner,state:s,world:G.World,runEpoch:G.CombatPulse.epoch,id:w.id,sourceEnemy:p.sourceEnemy,
+        age:0,duration:ORBIT_DURATION,startAngle,angle:startAngle,direction:cross<0?-1:1,radius:Math.max(48,Math.hypot(x-owner.x,y-owner.y)),x,y,
+        incomingX:p.vx||0,incomingY:p.vy||0,speed:Math.max(280,Math.hypot(p.vx||0,p.vy||0)),
+        shot:{r:Math.max(5,p.r||6),dmg:(p.dmg||10)*(owner.atk??1),life:3,
+          friendly:true,owner,mid:w.id,mtype:p.mtype||'psychic',color:'#bfeaff',vis:G.VFX.forType(p.mtype||'psychic'),pierce:0,hits:new Set(),uroReturned:true}});
     }
   }
   function draw(ctx){
+    drawOrbits(ctx);
     if(G.JujutsuVFX?.enabled)return;
     if(terminal())return;
     ctx.save();ctx.lineWidth=1.5;
@@ -295,6 +324,24 @@
     }
     ctx.restore();
   }
+  function drawOrbits(ctx){
+    if(terminal())return;
+    for(const b of orbits){
+      if(!orbitLegal(b))continue;
+      const progress=Math.min(1,b.age/b.duration),tail=Math.min(progress*TAU,1.5),lift=G.LIFT||0;
+      ctx.save();ctx.translate(b.owner.x,b.owner.y-lift);
+      // A short comet trail reveals direction without covering the escape route.
+      ctx.lineCap='round';
+      for(let i=0;i<8;i++){
+        const a=b.angle-b.direction*tail*(1-i/8),z=b.angle-b.direction*tail*(1-(i+1)/8);
+        ctx.globalAlpha=.12+.65*i/8;ctx.strokeStyle='#8ceaff';ctx.lineWidth=3+3*i/8;
+        ctx.beginPath();ctx.arc(0,0,b.radius,a,z,b.direction<0);ctx.stroke();
+      }
+      ctx.globalAlpha=.95;ctx.fillStyle='#164b72';ctx.beginPath();ctx.arc(Math.cos(b.angle)*b.radius,Math.sin(b.angle)*b.radius,b.shot.r+3,0,TAU);ctx.fill();
+      ctx.fillStyle='#efffff';ctx.beginPath();ctx.arc(Math.cos(b.angle)*b.radius,Math.sin(b.angle)*b.radius,b.shot.r,0,TAU);ctx.fill();
+      ctx.restore();
+    }
+  }
   const oldTick=C.tick,oldUpdate=C.updateFields,oldAir=C.drawAirFields,oldClear=C.clearFields,oldResolve=C.resolve;
   C.tick=function(dt,owner,now){
     if((owner?.mon?.dex??owner?.dex)!==DEX)return oldTick.call(this,dt,owner,now);
@@ -327,5 +374,5 @@
     poseFor:owner=>{const b=states.get(owner)?.pose;if(!b||!legal(b))return null;
       const until=b.release+b.nextPulse*b.interval-b.age,phase=b.mode==='uro-screen'?(b.age<.08?'windup':b.age<.22?'pull':b.age<.3?'shatter':'recovery'):
         b.pulseIndex>=0&&b.pulseAge<.13?'shatter':b.done?'recovery':until<.14?'pull':'windup';return {...b,phase,frameName:phase};},
-    activeFor:owner=>{const b=states.get(owner)?.pose;return b&&legal(b)?b:null;},stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return !terminal()&&s?.world===G.World&&s?.runEpoch===G.CombatPulse.epoch?s:null;},get effects(){return effects;}};
+    activeFor:owner=>{const b=states.get(owner)?.pose;return b&&legal(b)?b:null;},stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return !terminal()&&s?.world===G.World&&s?.runEpoch===G.CombatPulse.epoch?s:null;},get effects(){return effects;},get orbits(){return orbits;}};
 })();
