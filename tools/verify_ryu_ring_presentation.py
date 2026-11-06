@@ -12,7 +12,7 @@ from playwright.sync_api import sync_playwright
 import test_jujutsu as base
 
 ROOT=Path(__file__).resolve().parents[1]
-OUT=ROOT/'art-review/ryu-ring-20261106/qa/presentation'
+OUT=Path(os.environ.get('RYU_RING_PRESENTATION_OUT',ROOT/'art-review/ryu-ring-20261106/qa/presentation'))
 
 class LabServer(ThreadingHTTPServer):
     request_queue_size=128
@@ -26,7 +26,7 @@ SETUP=r"""({rank,q})=>{
  const A=JAcceptance;A.reset();const m=A.fixture('jjk-ryu-ring',rank),p=A.p();
  p.quantityPicks=p.quantityBonus=q;p.invuln=999;
  const h=G.JjkRyu.ringProfile(p,m);
- for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.5])A.spawn(Math.cos(angle)*h.radius,Math.sin(angle)*h.radius);
+ for(const angle of [0,Math.PI/2,Math.PI,Math.PI*1.5])A.spawn(Math.cos(angle)*h.radius,Math.sin(angle)*h.radius*h.yScale);
  return {rank,q,profile:h};
 }"""
 STATE=r"""()=>{

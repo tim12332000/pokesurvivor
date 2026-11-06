@@ -27,7 +27,8 @@ CHECK = r"""() => {
  const rings=(owner=p)=>R.stateFor(owner)?.rings||[];
  assert(R.supports(id)&&typeof R.ringFor==='function','ring runtime/profile missing');
  for(const [rank,q,count,radius,width] of [[1,0,4,112,18],[1,1,5,112,18],[5,0,8,180,30],[5,20,16,180,30]]){
-  const m=setup(rank,q),profile=R.ringFor(p,m),victims=[[radius,0],[0,radius],[-radius,0],[0,-radius]].map(v=>spawn(...v));
+  const m=setup(rank,q),profile=R.ringFor(p,m),victims=[[radius,0],[0,radius*profile.yScale],[-radius,0],[0,-radius*profile.yScale]].map(v=>spawn(...v));
+  assert(profile.yScale===.55,'ring must use the ground-plane perspective');
   const outside=spawn(radius+width+60,80),events=victims.map(A.watch);
   assert(profile.count===count&&profile.radius===radius&&profile.width===width,'profile/card/rank contract differs '+rank+'/'+q+': '+JSON.stringify(profile));
   const f=cast(m);A.advance(profile.charge+profile.interval+.01);
@@ -46,6 +47,10 @@ CHECK = r"""() => {
  cast(outerMove);finish(outerProfile);assert(outerTarget.hp<outerTarget.maxHp,'valid outer tube failed to trigger/hit');
  outerMove=setup();outerProfile=R.ringFor(p,outerMove);spawn(outerProfile.radius+outerProfile.width+10,0);
  A.resume();try{assert(!R.canCast(p,outerMove),'unreachable outer target triggered ring')}finally{A.pause()};out.outerTrigger=true;
+ outerMove=setup();outerProfile=R.ringFor(p,outerMove);const verticalTarget=spawn(0,outerProfile.radius*outerProfile.yScale+outerProfile.width*.7);
+ cast(outerMove);finish(outerProfile);assert(verticalTarget.hp<verticalTarget.maxHp,'projected outer tube failed to trigger/hit');
+ outerMove=setup();outerProfile=R.ringFor(p,outerMove);spawn(0,outerProfile.radius*outerProfile.yScale+outerProfile.width+10);
+ A.resume();try{assert(!R.canCast(p,outerMove),'target above the projected ground ring wasted cooldown')}finally{A.pause()};out.projectedTrigger=true;
  // The head starts along a curved lead before the full hollow circle exists.
  let m=setup(),profile=R.ringFor(p,m),near=spawn(profile.radius-1,0),far=spawn(-profile.radius,0),a=A.watch(near),b=A.watch(far),f=cast(m);
  A.advance(profile.charge-.01);assert(!a.length&&!b.length,'damage preceded forehead release');
@@ -60,8 +65,20 @@ CHECK = r"""() => {
  out.movingOwner={newDamage:moved.maxHp-moved.hp,oldDamage:old.maxHp-old.hp};
  // Moving enemies are tested at the collision clock, not cast-time positions.
  m=setup();profile=R.ringFor(p,m);spawn(profile.radius,0);const enters=spawn(400,100),leaves=spawn(-profile.radius,0);cast(m);
- enters.x=0;enters.y=profile.radius;leaves.x=-400;G.EnemyMgr.rebuildGrid();finish(profile);
+ enters.x=0;enters.y=profile.radius*profile.yScale;leaves.x=-400;G.EnemyMgr.rebuildGrid();finish(profile);
  assert(enters.hp<enters.maxHp&&leaves.hp===leaves.maxHp,'ring ignored live enemy positions');out.movingEnemy=true;
+ // Projection stays aligned to the ground regardless of the original aim.
+ for(const aim of [0,Math.PI/2,Math.PI,Math.PI*1.5]){
+  m=setup();profile=R.ringFor(p,m);spawn(profile.radius*Math.cos(aim),profile.radius*profile.yScale*Math.sin(aim));
+  cast(m);A.advance(profile.charge+profile.interval+.01);
+  const r=rings()[0],xs=r.points.map(v=>v.x-p.x),ys=r.points.map(v=>v.y-p.y);
+  assert(r.renderOffsetX===0&&r.renderOffsetY===0,'ring is lifted away from its physical path');
+  assert(Math.abs(Math.max(...xs)-profile.radius)<1&&Math.abs(Math.min(...xs)+profile.radius)<1,'aim rotated the wide ground axis');
+  assert(Math.abs(Math.max(...ys)-profile.radius*profile.yScale)<1&&Math.abs(Math.min(...ys)+profile.radius*profile.yScale)<1,'aim rotated or lifted the projected ground ring');
+  const phantom=spawn(0,profile.radius);A.advance(profile.interval+.02);
+  assert(phantom.hp===phantom.maxHp,'old upright-circle region retained invisible damage');
+ }
+ out.groundPerspective=true;
  // A wall on the lead/first arc clips subsequent physical beam travel.
  m=setup();profile=R.ringFor(p,m);const blocked=spawn(profile.radius,0);cast(m);
  G.World.isWall=(x,y)=>x>=40&&x<=55;G.World.projectileBlock=(x,y)=>G.World.isWall(x,y)?'wall':false;finish(profile);
@@ -104,6 +121,11 @@ CHECK = r"""() => {
   const rgba=ctx.getImageData(0,0,700,700).data;let visible=0;for(let i=3;i<rgba.length;i+=4)visible+=Number(rgba[i]>30);
   assert(visible>100,'production '+quality+' ring is invisible');assert(snapshot()===stable,'drawing mutated ring simulation');
   out.draw[quality]={visible,draws:G.JujutsuVFX.inspect().draws.filter(d=>/ring/i.test(d.kind||''))};
+  // A wall can leave only a few segments after the first lap. Both quality
+  // paths must render that clipped beam without indexing before its start.
+  const live=rings()[0],original=live.segments;
+  try{for(const n of [1,2,3]){live.segments=original.slice(0,n);G.Combat.drawAirFields(ctx)}}finally{live.segments=original}
+  assert(snapshot()===stable,'clipped-path drawing mutated the simulation');out.draw[quality].shortPaths=[1,2,3];
  }
  // Short body animation ends while the independent circular cannon remains active.
  assert(!R.pose(p)&&rings().length,'ring monopolized body or expired before full circuit');

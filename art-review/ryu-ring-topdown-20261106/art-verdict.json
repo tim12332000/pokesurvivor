@@ -1,0 +1,24 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "The old uniform solid band and capsule-like bright head have been replaced by a softer, uneven-density beam with a travelling hot region.",
+    "Fine sampled hot-core marks remain visible in enlarged high-rank stills, but no longer form a rigid full-width strip at normal game size."
+  ],
+  "suggestions": [],
+  "reasoning": "Normal-entry desktop and mobile phases show a foot-anchored ground ellipse, a curved growing beam, soft material and readable actor/HUD. The decoded native sequence shows pressure moving through the same ring and the effect fully gone after expiry. This is a bounded visual approval, not a claim of player preference or physical-device performance.",
+  "next_actions": [
+    "Freeze this runtime and publish after mechanical/public checks."
+  ],
+  "inspected": [
+    "art-review/ryu-ring-topdown-20261106/qa/presentation-v2/mobile360-rank1-q0-full.png",
+    "art-review/ryu-ring-topdown-20261106/qa/presentation-v2/mobile360-rank1-q0-growing.png",
+    "art-review/ryu-ring-topdown-20261106/qa/presentation-v2/mobile360-rank5-q4-full.png",
+    "art-review/ryu-ring-topdown-20261106/qa/presentation-v2/mobile390-rank5-q4-late.png",
+    "art-review/ryu-ring-topdown-20261106/qa/presentation-v2/mobile390-rank5-q4-recovered.png",
+    "art-review/ryu-ring-topdown-20261106/qa/presentation-v2/desktop1280-rank5-q4-full.png",
+    ".omx/state/ryu-ring-topdown/frames-v2/mobile360-native-contact.jpg"
+  ],
+  "sourceSha256": "dc0283ffc0b82cc4b28626c97b9f8dd3ba208c7d4e5906dc8f119fc81e05e7fc"
+}
