@@ -8,6 +8,7 @@
   let reflectedDamageSerial = 0, reflectionBound = false, wallSerial = 0;
   const casts = new Map(), actors = new Map(), seen = new Map(), removed = new Set(), retired = new Set();
   const windPending = new Map(), WIND_LIMIT = 128, WIND_TTL = 3;
+  const chainProtection = new Map(), chainFloors = new Map(), CHAIN_LIMIT = 1024, CHAIN_TTL = 6.9;
   let session = '', scene = 0, clock = 0, shotSerial = 0, anticipatedResets = 0, hostUid = '';
   const stamp = () => [session, scene];
   const same = token => Array.isArray(token) && token[0] === session && token[1] === scene;
@@ -28,6 +29,7 @@
     reflectionSeen.clear(); localWalls.clear();
     casts.clear(); actors.clear(); seen.clear(); petSeen.clear(); removed.clear(); retired.clear();
     windPending.clear();
+    chainProtection.clear(); chainFloors.clear();
     clock = 0;
   }
   function begin(cfg) {
@@ -40,6 +42,7 @@
   }
   function clearOwner(uid) {
     retirePending(uid);
+    retireChain(uid);
     for (const [id, claim] of orbitClaims) if (claim.uid === uid) retireClaim(id, claim);
     for (const [id, claim] of liftClaims) if (claim.uid === uid) retireLift(id, claim);
     for (const [id, claim] of pushClaims) if (claim.uid === uid) retirePush(id, claim);
@@ -64,6 +67,7 @@
     if (retired.has(key)) return;
     retired.add(key); combat.clear(actor); G.NarutoTemariReflect?.clear(actor);
     retirePending(G.Net.uid, id);
+    retireChain(G.Net.uid, id);
     for (const [castKey, cast] of casts) if (cast.owner === actor) casts.delete(castKey);
     net.temariEvent(['tx', stamp(), G.Net.uid, id]);
   }
@@ -206,9 +210,104 @@
     }
     if (net.isHost) net.temariEvent(['tw', stamp(), uid, packet], uid);
   }
+  const safeId = id => Number.isSafeInteger(id) && id > 0;
+  const chainKey = (uid, actor, kind, id) => uid + ':' + actor + ':' + kind + ':' + id;
+  function chainFloor(uid, actor) {
+    const key = uid + ':' + actor;
+    let floor = chainFloors.get(key);
+    if (!floor) { floor = {seed:0,activation:0}; chainFloors.set(key, floor); }
+    return floor;
+  }
+  function retireChainRecord(key, entry) {
+    chainProtection.delete(key);
+    const floor = chainFloor(entry.uid, entry.actor);
+    floor[entry.kind] = Math.max(floor[entry.kind], entry.id);
+  }
+  function retireChain(uid, actor = null) {
+    for (const [key, entry] of chainProtection) if (entry.uid === uid && (actor === null || entry.actor === actor)) retireChainRecord(key, entry);
+  }
+  function expireChain() {
+    for (const [key, entry] of chainProtection) if (clock >= entry.expires) retireChainRecord(key, entry);
+  }
+  function validChainActor(packet) {
+    return packet && typeof packet.actor === 'string' && packet.actor.length <= 128 &&
+      (packet.actor === 'player' || /^clone:[\w-]+$/.test(packet.actor));
+  }
+  function validKnot(packet) {
+    return validChainActor(packet) && safeId(packet.seedId) && safeId(packet.sourceCastId) &&
+      ['x','y','age'].every(key => finite(packet[key])) && packet.age >= 0 && packet.ttl === 6;
+  }
+  function validChain(packet) {
+    return validChainActor(packet) && safeId(packet.heavyCastId) && safeId(packet.activationId) &&
+      Array.isArray(packet.consumedIds) && packet.consumedIds.length > 0 && packet.consumedIds.length <= 8 &&
+      packet.consumedIds.every(safeId) && new Set(packet.consumedIds).size === packet.consumedIds.length &&
+      Array.isArray(packet.bursts) && packet.bursts.length === packet.consumedIds.length &&
+      new Set(packet.bursts.map(b=>b?.id)).size === packet.bursts.length && packet.bursts.every(b => b && safeId(b.id) &&
+        ['x','y','age','radius'].every(key => finite(b[key])) && b.age >= 0 && b.radius > 0 && b.radius <= 440 &&
+        Number.isInteger(b.cuts) && b.cuts >= 3 && b.cuts <= 8 && b.interval === .1 && b.travel === .08 && b.damageType === 'flying');
+  }
+  function validChainRemoval(packet) {
+    return validChainActor(packet) && packet.removed === true &&
+      [packet.seedThrough,packet.activationThrough].every(id=>Number.isSafeInteger(id)&&id>=0) &&
+      packet.bursts === undefined && packet.consumedIds === undefined;
+  }
+  function chainOwner(uid, actor) {
+    const known = findActor(uid, actor);
+    if (known) return known;
+    // The result event is self-contained, even if a fresh clone's first cast
+    // packet has not arrived. Its identity starts at the parent snapshot; a
+    // ground knot never teleports an existing avatar to the contact point.
+    const parent = net.mate(uid)?.pl;
+    return parent && remoteOwner(uid, {actor,x:parent.x,y:parent.y,aim:parent.aim||0});
+  }
+  function protectChain(uid, actor, kind, id, consumed = false) {
+    const key = chainKey(uid, actor, kind, id), prior = chainProtection.get(key);
+    if (prior) { if (consumed) { prior.consumed = true; prior.expires = clock + CHAIN_TTL; } return; }
+    chainProtection.set(key, {uid,actor,kind,id,consumed,expires:clock+CHAIN_TTL});
+  }
+  function receiveChain(from, event) {
+    const uid = net.isHost ? from : event[2], packet = event[3], knot = event[0] === 'tk';
+    const removal = !knot && packet?.removed === true;
+    if ((net.isHost ? event[2] !== from : from !== hostUid) || uid === G.Net.uid ||
+        !(knot ? validKnot(packet) : removal ? validChainRemoval(packet) : validChain(packet)) || !liveWindOwner(uid, packet.actor)) return;
+    expireChain();
+    const floor = chainFloor(uid, packet.actor);
+    if (removal) {
+      if (packet.seedThrough <= floor.seed && packet.activationThrough <= floor.activation) return;
+      // The removal is a committed sequence boundary, not a blanket reset:
+      // newer results may already have arrived ahead of this delayed event.
+      for (const [key,entry] of chainProtection) if (entry.uid === uid && entry.actor === packet.actor &&
+          entry.id <= (entry.kind === 'seed' ? packet.seedThrough : packet.activationThrough)) retireChainRecord(key,entry);
+      floor.seed = Math.max(floor.seed,packet.seedThrough);
+      floor.activation = Math.max(floor.activation,packet.activationThrough);
+      const owner = findActor(uid,packet.actor);
+      if(owner)combat.clearWindChain?.(owner,packet);
+      if(net.isHost)net.temariEvent(['tg',stamp(),uid,packet],uid);
+      return;
+    }
+    const kind = knot ? 'seed' : 'activation', id = knot ? packet.seedId : packet.activationId;
+    const key = chainKey(uid, packet.actor, kind, id);
+    if (id <= floor[kind] || chainProtection.has(key)) return;
+    if (knot && packet.age >= packet.ttl) { floor.seed = Math.max(floor.seed, id); return; }
+    const consumed = knot ? [] : packet.consumedIds.filter(seedId => seedId > floor.seed && !chainProtection.has(chainKey(uid,packet.actor,'seed',seedId)));
+    // Admit the entire replay-protection set before touching presentation. Never
+    // evict live protection or partially consume an over-capacity activation.
+    if (chainProtection.size + 1 + consumed.length > CHAIN_LIMIT) return;
+    const owner = chainOwner(uid, packet.actor);if(!owner||owner.dead||owner.hp<=0)return;
+    protectChain(uid, packet.actor, kind, id);
+    if (knot) combat.applyWindKnot?.(owner, packet);
+    else {
+      for (const seedId of packet.consumedIds) if (seedId > floor.seed) protectChain(uid,packet.actor,'seed',seedId,true);
+      const live = (combat.windBursts||[]).filter(b => b.owner === owner && !b.dead && b.age < (b.cuts-1)*b.interval+b.travel+.12).length;
+      const incoming = packet.bursts.filter(b=>b.age < (b.cuts-1)*b.interval+b.travel+.12).length;
+      combat.applyWindChain?.(owner, packet, live+incoming<=32);
+    }
+    if (net.isHost) net.temariEvent([event[0],stamp(),uid,packet],uid);
+  }
   function receive(from, event) {
     if (!net.active || !same(event[1])) return;
     if (event[0] === 'tw') { releaseWind(from, event); return; }
+    if (event[0] === 'tk' || event[0] === 'tg') { receiveChain(from,event); return; }
     if (event[0] === 'tp') {
       const uid = net.isHost ? from : event[2], packet = event[3];
       if (uid === G.Net.uid || !packet || typeof packet.actor !== 'string' || !finite(packet.serial) ||
@@ -303,6 +402,7 @@
       if (uid === G.Net.uid || typeof id !== 'string' || !id.startsWith('clone:')) return;
       retired.add(key);
       retirePending(uid, id);
+      retireChain(uid, id);
       const owner = actors.get(key);
       if (owner) { combat.clear(owner); G.NarutoTemariReflect?.clear(owner); actors.delete(key); }
       for (const [enemyId, claim] of pushClaims) if (claim.uid === uid && claim.actor === id) retirePush(enemyId, claim);
@@ -354,6 +454,19 @@
     if (!validWind(packet)) return;
     const remembered = casts.get(keyOf(G.Net.uid, packet));if(remembered)Object.assign(remembered.packet,{x:packet.x,y:packet.y,aim:packet.aim});
     net.temariEvent(['tw', stamp(), G.Net.uid, packet]);
+  };
+  const previousKnot = combat.onWindKnot, previousChain = combat.onWindChain;
+  combat.onWindKnot = (owner, source) => {
+    previousKnot?.(owner,source);
+    if (!net.active || !localActor(owner) || owner.dead || owner.hp <= 0) return;
+    const packet = {...source,actor:actorId(owner)};
+    if(validKnot(packet))net.temariEvent(['tk',stamp(),G.Net.uid,packet]);
+  };
+  combat.onWindChain = (owner, source) => {
+    previousChain?.(owner,source);
+    if (!net.active || !localActor(owner) || owner.dead || owner.hp <= 0) return;
+    const packet = {...source,actor:actorId(owner)};
+    if(source.removed===true?validChainRemoval(packet):validChain(packet))net.temariEvent(['tg',stamp(),G.Net.uid,packet]);
   };
   combat.mayIntercept = (owner, shot, cast) => {
     if (previousPolicy?.(owner, shot, cast) === false) return false;
@@ -577,6 +690,7 @@
     bindReflection();
     if (net.active && G.Game.state === 'playing' && finite(dt) && dt > 0) clock += dt;
     expireWind();
+    expireChain();
     syncReflectionWalls();
     for (const mate of net.mates) if (mate.pl.dead || mate.pl.net?.dead) clearOwner(mate.uid);
     for (const actor of actors.values()) actor.anim.update(dt);
@@ -618,6 +732,7 @@
     else {
       const identity = ownerIdentity(owner);
       if (identity) retirePending(identity.uid, identity.actor);
+      if (identity) retireChain(identity.uid, identity.actor);
       actorRemoved(owner);
     }
     return clearFields.call(this, owner);
@@ -643,5 +758,5 @@
   };
   G.TemariCoop = { begin, clear, clearOwner, actorRemoved, stamp, trackShot, acceptShot, ownsMove, receive,
     hostFrame, remoteActors: () => [...actors.values()],
-    inspect: () => ({ session, scene, casts: casts.size, actors: actors.size, seen: seen.size, removed: removed.size, orbits:orbitClaims.size, lifts:liftClaims.size, pushes:pushClaims.size, reflections:reflections.size, pendingHazards:pendingHazards.size, petActors:petSeen.size, windPending:windPending.size, windLimit:WIND_LIMIT, windTTL:WIND_TTL }) };
+    inspect: () => ({ session, scene, casts: casts.size, actors: actors.size, seen: seen.size, removed: removed.size, orbits:orbitClaims.size, lifts:liftClaims.size, pushes:pushClaims.size, reflections:reflections.size, pendingHazards:pendingHazards.size, petActors:petSeen.size, windPending:windPending.size, windLimit:WIND_LIMIT, windTTL:WIND_TTL, chainProtection:chainProtection.size, chainLimit:CHAIN_LIMIT, chainTTL:CHAIN_TTL }) };
 })();

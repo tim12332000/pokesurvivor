@@ -50,13 +50,16 @@
     if(mode==='temari-reflect')return {反射副本:Math.floor(factor**picks(p))};
     if(G.NarutoTemari?.supports(mode)&&mode!=='temari-mastery'){
       if(mode==='temari-great-scythe'){
-        const h=G.NarutoTemari.heavyFor(p,m);return {射程:h.range,推退:h.pushDistance,扇角:Math.round(h.arc*180/Math.PI)};
+        const h=G.NarutoTemari.heavyFor(p,m),chain=G.NarutoTemari.windChainProfile?.(p,m);
+        return {射程:h.range,推退:h.pushDistance,扇角:Math.round(h.arc*180/Math.PI),
+          ...(chain?.enabled?{[G.I18n.t('引爆風結')]:chain.triggerLimit,[G.I18n.t('風爆連切')]:chain.cuts,[G.I18n.t('風爆半徑')]:chain.radius}:{})};
       }
       // snapshot() creates actor state; derive its public count formulas without
       // calling it for temporary quantity previews.
-      const Q=picks(p),L=G.NarutoTemari.mastery(p).L,scale=factor**Q;
-      if(mode==='temari-wind')return {風刃:Math.floor(3*scale),切擊:L?1+L+Q:1};
-      if(mode==='temari-typhoon')return {颱風:Math.floor(scale),彈數:[3,4,5,6,8][i]+(L?L+Q:0)};
+      const Q=picks(p),L=G.NarutoTemari.mastery(p).L,scale=factor**Q,chain=G.NarutoTemari.windChainProfile?.(p);
+      const seeds=chain?.enabled?{[G.I18n.t('殘風結')]:chain.seedLimit}:{};
+      if(mode==='temari-wind')return {風刃:Math.floor(3*scale),切擊:L?1+L+Q:1,...(L?seeds:{})};
+      if(mode==='temari-typhoon')return {颱風:Math.floor(scale),彈數:[3,4,5,6,8][i]+(L?L+Q:0),...seeds};
       return {協戰:Math.floor(scale),切擊:[4,4,5,5,6][i]+(L?L+Q:0)};
     }
     if(G.NarutoPain?.supports(mode)){
@@ -114,7 +117,7 @@
     }
     if(card.type==='up'){
       const id=card.key.slice(3),m=p.moves.find(m=>m.id===id);
-      if(m?.jujutsuSkill){
+      if(m?.jujutsuSkill||m?.digiMode==='temari-great-scythe'){
         const next=G.Moves.instance(id,m.lvl+1),parts=[];
         if(m.dmg!==next.dmg)parts.push(`傷害 ${fmt(m.dmg)}→${fmt(next.dmg)}`);
         if(m.range!==next.range)parts.push(`射程 ${fmt(m.range)}→${fmt(next.range)}`);
