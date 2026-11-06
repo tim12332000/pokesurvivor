@@ -1,0 +1,29 @@
+{
+  "project_id": "appgprj_6aee192bee748191aaf485c8e270b52b",
+  "version_id": "appgprj_6aee192bee748191aaf485c8e270b52b~appgver_230a1e885bec8191a93b6ffe791f919d",
+  "version_number": 1,
+  "commit_sha": "54defcefa60b6bfce1032cfaa985220630779991",
+  "archive_storage": {
+    "archive_format": "tar",
+    "sediment_file_id": "file_000000002b808206ae43e92c858453b1",
+    "content_hash": "sha256:1d7869e350e9700f9c588d0b0b6633c1b2c37b88d7a09703999ecbf5392c6915",
+    "size_bytes": 205015040,
+    "file_count": 13847
+  },
+  "deployment_id": "appgdep_6aee1c64a61481919eccea0fd5720f5f",
+  "status": "succeeded",
+  "url": "https://tim-pokesurvivor-sendai-20261107.handymusic1.chatgpt.site",
+  "game_source": "190c500e583aa012b965c7c8b0e3718f554b6223",
+  "source_branch": "feat/digimon-sandbox",
+  "site_checkout": "C:/Git/pokesurvivor/.omx/sites/ryu-sendai-external",
+  "access_mode": "public",
+  "deployment_updated_at": "2026-11-06T18:30:26.056790+00:00",
+  "automatedHttpVerification": {
+    "completed": false,
+    "reason": "Cloudflare edge returned HTTP403/error1010 to the automated HTTP client"
+  },
+  "browserHandoff": {
+    "completed": false,
+    "reason": "In-app browser access host unavailable"
+  }
+}
