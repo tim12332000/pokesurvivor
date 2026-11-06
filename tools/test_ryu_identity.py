@@ -66,40 +66,41 @@ CHECK = r"""() => {
  p.dead=true;p.hp=0;A.step(.01);assert(!R.stateFor(p),'death retained actor charge or recovery');
  checks.push('death clears charge, projectiles and recovery');
 
- setup(['jjk-ryu-spread']);const side=.65;
- const front=A.spawn(80,0),left=A.spawn(Math.cos(side)*145,-Math.sin(side)*145),right=A.spawn(Math.cos(side)*115,Math.sin(side)*115);
- const behindFront=A.spawn(165,0),far=A.spawn(235,0),outside=A.spawn(20,150),victims=[front,left,right,behindFront,far,outside],before=hp(victims);
- const spread=manual('jjk-ryu-spread');assert(spread.range===200&&spread.count===3,'spread is not the short three-bolt baseline');
- A.advance(.351);assert(loss(victims,before).every(n=>n===0),'scatter damaged at launch without flight');
- assert(R.stateFor(p).scatter.length===3&&R.stateFor(p).scatter.every(s=>s.kind==='scatter'),'scatter still uses instant beams');
- A.advance(.5);out.scatterDamage=loss(victims,before);
- assert(out.scatterDamage.slice(0,3).every(n=>n>0)&&out.scatterDamage.slice(3).every(n=>n===0),'short wide scatter first-contact/range/side boundary: '+out.scatterDamage);
+ setup(['jjk-ryu-spread']);
+ const front=A.spawn(520,0),left=A.spawn(350,-340),right=A.spawn(-380,220),outside=A.spawn(2400,0);
+ const victims=[front,left,right,outside],before=hp(victims);
+ const spread=manual('jjk-ryu-spread');assert(spread.range===800&&spread.count===8,'spread is not the doubled long-range baseline');
+ A.advance(.36);assert(loss(victims,before).every(n=>n===0),'scatter damaged at launch without airborne flight');
+ assert(R.stateFor(p).scatter.length===8&&R.stateFor(p).scatter.every(s=>s.phase==='rise'&&s.target==null),'scatter skipped rise or preselected a target');
+ A.advance(.5);assert(R.stateFor(p).scatter.every(s=>s.phase==='orbit'&&s.lift>40&&s.target==null),'scatter lacks independent airborne orbit');
+ A.advance(7);out.scatterDamage=loss(victims,before);
+ assert(out.scatterDamage.slice(0,3).every(n=>n>0)&&out.scatterDamage[3]===0,'long-range distributed coverage/outside boundary failed: '+out.scatterDamage);
  const contacts=G.CombatPulse.telemetry.filter(t=>t.castId===spread.castId&&t.runEpoch===spread.runEpoch);
- assert(contacts.length===3&&new Set(contacts.map(t=>t.contactPulseIndex)).size===3&&contacts.every(t=>t.primaryHits===1),'distinct travelling contacts dropped or repeated');
- out.scatterContacts=contacts;checks.push('short wide moving bolts and flight delay','first enemy consumes each bolt','separate physical contact pulses resolve under one cast');
+ assert(contacts.length===8&&new Set(contacts.map(t=>t.contactPulseIndex)).size===8&&contacts.every(t=>t.primaryHits===1),'distinct physical contacts dropped, repeated or pierced');
+ out.scatterContacts=contacts;checks.push('doubled airborne bolts and delayed live acquisition','long-range three-approach coverage','separate physical contact pulses under one cast');
 
- setup(['jjk-ryu-spread']);const wallFront=A.spawn(110,0),wallSide=A.spawn(Math.cos(side)*120,Math.sin(side)*120);
+ setup(['jjk-ryu-spread']);const wallFront=A.spawn(500,0),wallSide=A.spawn(60,420);
  const wallHP=hp([wallFront,wallSide]);manual('jjk-ryu-spread');
- G.World.projectileBlock=(x,y)=>x>=55&&x<=65&&Math.abs(y)<12?'wall':false;
- A.advance(.9);assert(wallFront.hp===wallHP[0]&&wallSide.hp<wallHP[1],'scatter crossed first wall or blocked an open side: '+loss([wallFront,wallSide],wallHP));
- checks.push('individual bolts stop at walls while open side continues');
+ G.World.isWall=(x,y)=>x>=180&&x<=200;G.World.projectileBlock=(x,y)=>G.World.isWall(x,y)?'wall':false;
+ A.advance(8);assert(wallFront.hp===wallHP[0]&&wallSide.hp<wallHP[1],'scatter crossed a solid wall or failed to use the open side: '+loss([wallFront,wallSide],wallHP));
+ checks.push('wall blocks seeking while a reachable side remains available');
 
  setup(['jjk-ryu-spread']);
- const chest={x:110,y:0,r:12,hp:1000,destructible:true,solid:true},behindChest=A.spawn(170,0),chestCalls=[];
+ const chest={x:110,y:0,r:12,hp:1000000,destructible:true,solid:true},behindChest=A.spawn(300,0),chestCalls=[];
  G.World.propsInCircle=(x,y,r)=>chest.hp>0&&Math.hypot(x-chest.x,y-chest.y)<=r+chest.r?[chest]:[];
  G.World.projectileBlock=(x,y,r)=>chest.hp>0&&Math.hypot(x-chest.x,y-chest.y)<=chest.r+r?chest:false;
  const damageProp=G.World.damageProp;G.World.damageProp=(prop,damage)=>{assert(prop===chest,'wrong prop');chest.hp-=damage;chestCalls.push(damage)};
- try{manual('jjk-ryu-spread');A.advance(.9);assert(chestCalls.length===1&&behindChest.hp===behindChest.maxHp,'scatter missed or pierced its first destructible blocker')}
+ try{manual('jjk-ryu-spread');A.advance(8);assert(chestCalls.length>0&&chestCalls.length<=8&&behindChest.hp===behindChest.maxHp,'scatter missed or pierced its first destructible blocker')}
  finally{G.World.damageProp=damageProp}
- checks.push('first destructible blocker receives one native damage event and stops the bolt');
+ checks.push('each bolt stops on its first destructible blocker');
 
  setup(['jjk-ryu-spread'],5);p.quantityPicks=p.quantityBonus=20;
- const shared=A.spawn(60,0);shared.r=65;const sharedEvents=A.watch(shared);const overlap=manual('jjk-ryu-spread');
- assert(overlap.count===9,'scatter quantity cap changed');A.advance(.35);
- const shots=R.stateFor(p).scatter,angles=shots.map(s=>s.aim);
- assert(angles.length===9&&Math.max(...angles)-Math.min(...angles)<=2.600001,'high quantity fan exceeds cap');
- A.advance(.5);assert(sharedEvents.length===1&&sharedEvents[0].id==='jjk-ryu-spread'&&sharedEvents[0].owner,'overlapping bolts repeated direct damage or lost attribution');
- checks.push('nine-bolt cap, bounded fan and one direct hit per volley');
+ const shared=A.spawn(620,0);shared.r=65;const sharedEvents=A.watch(shared);const overlap=manual('jjk-ryu-spread');
+ assert(overlap.count===18,'scatter doubled quantity cap changed');A.advance(.36);
+ const shots=R.stateFor(p).scatter;
+ assert(shots.length===18&&shots.every(s=>s.phase==='rise'),'high quantity lost real airborne bolts');
+ A.advance(8);assert(sharedEvents.length===18&&sharedEvents.every(e=>e.id==='jjk-ryu-spread'&&e.owner),'independent bolts lost real same-target payload or attribution');
+ checks.push('eighteen-bolt cap and one genuine direct hit per projectile');
 
  setup(['jjk-ryu-impact']);const lone=A.spawn(60,0),pack=[A.spawn(220,-20),A.spawn(230,0),A.spawn(220,20)],clusterHP=hp([lone,...pack]);
  const impact=manual('jjk-ryu-impact'),locked={x:impact.tx,y:impact.ty};
@@ -111,7 +112,7 @@ CHECK = r"""() => {
  out.clusterTarget=locked;checks.push('rank-one remote densest pack target','locked delayed cluster blast');
 
  setup(['jjk-ryu-spread']);A.spawn(150,0);manual('jjk-ryu-spread');A.advance(.36);
- const active=R.stateFor(p).scatter.length;assert(active===3,'missing in-flight cleanup fixture');
+ const active=R.stateFor(p).scatter.length;assert(active===8,'missing in-flight cleanup fixture');
  const pausedShots=JSON.stringify(R.stateFor(p).scatter.map(({x,y,age})=>({x,y,age})));
  G.Combat.updateFields(4);assert(JSON.stringify(R.stateFor(p).scatter.map(({x,y,age})=>({x,y,age})))===pausedShots,'pause moved travelling bolts');
  p.dead=true;p.hp=0;A.step(.01);assert(!R.stateFor(p),'death retained travelling scatter');

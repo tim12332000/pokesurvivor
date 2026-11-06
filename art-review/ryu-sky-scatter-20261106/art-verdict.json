@@ -1,0 +1,42 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "The original flat short arrow pellet has become an upward plume, separate horizontal orbit coils and independently departing diving cannon streams.",
+    "Eight-bolt and eighteen-bolt fixtures show visibly different head/trajectory density; overlapping high-count coils are still readable without hiding the actor or HUD."
+  ],
+  "suggestions": [],
+  "reasoning": "Final normal-entry desktop and 360/390 images plus native timelines show rise, horizontal orbit, independent departure, real contact and complete expiry. Offscreen pursuit continues beyond the normal viewport; the fifth target damage is independently recorded, without claiming its entire flight was visible.",
+  "next_actions": [],
+  "inspected": [
+    "qa/presentation-final/mobile360-rank1-q0-rise.png",
+    "qa/presentation-final/mobile360-rank5-q4-orbit.png",
+    "qa/presentation-final/mobile360-rank5-q4-seek.png",
+    "qa/presentation-final/mobile390-rank5-q4-first-impact.png",
+    "qa/presentation-final/desktop1280-rank1-q0-depart.png",
+    "qa/presentation-final/mobile390-rank5-q4-recovered.png",
+    ".omx/state/ryu-sky-scatter/frames-final/mobile360-rank1-q0-contact.jpg",
+    ".omx/state/ryu-sky-scatter/frames-final/mobile390-rank5-q4-contact.jpg"
+  ],
+  "sourceSha256": "c8586fc9c17a879eb724746c39d84714f2871767797701d5c9348436f057a422",
+  "limits": [
+    "Distant target [650,-160] is outside the normal mobile viewport; edge continuation was viewed and real far damage was checked in the final report.",
+    "High-count coils deliberately overlap; this does not claim every bolt is individually countable in each still.",
+    "An existing achievement overlay is clipped in one360-wide still; unrelated UI was preserved.",
+    "No physical-phone long run, audio listening, natural-XP full run or subjective fun claim."
+  ],
+  "finalEvidence": {
+    "report": "qa/presentation-final/report.json",
+    "reportOk": true,
+    "farTarget": [
+      650,
+      -160
+    ],
+    "farDamage": {
+      "rank1q0": 61,
+      "rank5q4": 564
+    },
+    "activeShotsAtRecovery": 0
+  }
+}

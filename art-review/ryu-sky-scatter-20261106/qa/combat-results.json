@@ -1,0 +1,1975 @@
+{
+  "mechanics": {
+    "url": "http://127.0.0.1:63165/.omx/digimon.html?lang=zh-TW",
+    "views": {
+      "desktop": {
+        "rank1q0": {
+          "profile": {
+            "count": 8,
+            "range": 800,
+            "travelRange": 1280,
+            "speed": 620,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          },
+          "hits": 8,
+          "damage": 440,
+          "contacts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "rank1q1": {
+          "profile": {
+            "count": 10,
+            "range": 800,
+            "travelRange": 1280,
+            "speed": 620,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          },
+          "hits": 10,
+          "damage": 550,
+          "contacts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "rank5q0": {
+          "profile": {
+            "count": 10,
+            "range": 1120,
+            "travelRange": 1792,
+            "speed": 760,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          },
+          "hits": 10,
+          "damage": 1160,
+          "contacts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "rank5q20": {
+          "profile": {
+            "count": 18,
+            "range": 1120,
+            "travelRange": 1792,
+            "speed": 760,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          },
+          "hits": 18,
+          "damage": 2088,
+          "contacts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ]
+        },
+        "range": [
+          {
+            "rank": 1,
+            "distance": 760,
+            "mode": "manual",
+            "hits": 8
+          },
+          {
+            "rank": 1,
+            "distance": 760,
+            "mode": "automatic",
+            "hits": 8
+          },
+          {
+            "rank": 5,
+            "distance": 1080,
+            "mode": "automatic",
+            "hits": 10
+          }
+        ],
+        "lateSelection": true,
+        "movingTarget": true,
+        "retarget": true,
+        "distributed": [
+          165,
+          110,
+          165
+        ],
+        "wall": true,
+        "chargeOnce": true,
+        "callback-clear": true,
+        "callback-unlearn": true,
+        "death": true,
+        "clear": true,
+        "unlearn": true,
+        "world": true,
+        "epoch": true,
+        "draw": {
+          "high": {
+            "visible": 7575
+          },
+          "low": {
+            "visible": 7471
+          }
+        },
+        "pauseAndReadonly": true,
+        "cloneHits": 16,
+        "legalGrowth": {
+          "counts": [
+            8,
+            10,
+            12,
+            15
+          ],
+          "previews": [
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n散射咒力砲：追蹤砲彈 8→10",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n散射咒力砲：追蹤砲彈 10→12",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n散射咒力砲：追蹤砲彈 12→15"
+          ],
+          "profile": {
+            "count": 18,
+            "range": 1120,
+            "travelRange": 1792,
+            "speed": 760,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          }
+        }
+      },
+      "mobile390": {
+        "rank1q0": {
+          "profile": {
+            "count": 8,
+            "range": 800,
+            "travelRange": 1280,
+            "speed": 620,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          },
+          "hits": 8,
+          "damage": 440,
+          "contacts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ]
+        },
+        "rank1q1": {
+          "profile": {
+            "count": 10,
+            "range": 800,
+            "travelRange": 1280,
+            "speed": 620,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          },
+          "hits": 10,
+          "damage": 550,
+          "contacts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "rank5q0": {
+          "profile": {
+            "count": 10,
+            "range": 1120,
+            "travelRange": 1792,
+            "speed": 760,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          },
+          "hits": 10,
+          "damage": 1160,
+          "contacts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9
+          ]
+        },
+        "rank5q20": {
+          "profile": {
+            "count": 18,
+            "range": 1120,
+            "travelRange": 1792,
+            "speed": 760,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          },
+          "hits": 18,
+          "damage": 2088,
+          "contacts": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17
+          ]
+        },
+        "range": [
+          {
+            "rank": 1,
+            "distance": 760,
+            "mode": "manual",
+            "hits": 8
+          },
+          {
+            "rank": 1,
+            "distance": 760,
+            "mode": "automatic",
+            "hits": 8
+          },
+          {
+            "rank": 5,
+            "distance": 1080,
+            "mode": "automatic",
+            "hits": 10
+          }
+        ],
+        "lateSelection": true,
+        "movingTarget": true,
+        "retarget": true,
+        "distributed": [
+          165,
+          110,
+          165
+        ],
+        "wall": true,
+        "chargeOnce": true,
+        "callback-clear": true,
+        "callback-unlearn": true,
+        "death": true,
+        "clear": true,
+        "unlearn": true,
+        "world": true,
+        "epoch": true,
+        "draw": {
+          "high": {
+            "visible": 7575
+          },
+          "low": {
+            "visible": 7471
+          }
+        },
+        "pauseAndReadonly": true,
+        "cloneHits": 16,
+        "legalGrowth": {
+          "counts": [
+            8,
+            10,
+            12,
+            15
+          ],
+          "previews": [
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n散射咒力砲：追蹤砲彈 8→10",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n散射咒力砲：追蹤砲彈 10→12",
+            "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n散射咒力砲：追蹤砲彈 12→15"
+          ],
+          "profile": {
+            "count": 18,
+            "range": 1120,
+            "travelRange": 1792,
+            "speed": 760,
+            "rise": 0.26,
+            "orbitMin": 0.6,
+            "orbitMax": 1.15,
+            "turnRate": 6.4
+          }
+        }
+      }
+    },
+    "errors": [],
+    "ok": true
+  },
+  "barrage": {
+    "desktop": {
+      "rank1q0": {
+        "config": {
+          "count": 4,
+          "radius": 72,
+          "range": 760,
+          "duration": 2.2,
+          "interval": 0.36000000000000004
+        },
+        "hits": [
+          554.4,
+          203.28,
+          203.28,
+          203.28,
+          203.28
+        ],
+        "pulses": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "casts": 1
+      },
+      "rank1q1": {
+        "config": {
+          "count": 5,
+          "radius": 72,
+          "range": 760,
+          "duration": 2.2,
+          "interval": 0.27
+        },
+        "hits": [
+          554.4,
+          203.28,
+          203.28,
+          203.28,
+          203.28,
+          203.28
+        ],
+        "pulses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "casts": 1
+      },
+      "rank5q0": {
+        "config": {
+          "count": 8,
+          "radius": 128,
+          "range": 1040,
+          "duration": 2.2,
+          "interval": 0.1542857142857143
+        },
+        "hits": [
+          1338.876,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212
+        ],
+        "pulses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "casts": 1
+      },
+      "rank5q20": {
+        "config": {
+          "count": 16,
+          "radius": 128,
+          "range": 1040,
+          "duration": 2.2,
+          "interval": 0.07200000000000001
+        },
+        "hits": [
+          1338.876,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212
+        ],
+        "pulses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "casts": 1
+      },
+      "timing": {
+        "mainDamage": 554.4,
+        "followDamage": 203.28,
+        "mainLife": 0.55,
+        "followLife": 0.24
+      },
+      "hud": true,
+      "boundary": {
+        "inside": [
+          554,
+          554,
+          554
+        ],
+        "outside": 0
+      },
+      "wall": true,
+      "prop1": {
+        "calls": 1,
+        "behindDamage": 1163
+      },
+      "prop100000": {
+        "calls": 5,
+        "behindDamage": 0
+      },
+      "clearDuringMain": {
+        "hits": 1
+      },
+      "sameWaveclear": {
+        "first": 1,
+        "second": 0
+      },
+      "sameWaveunlearn": {
+        "first": 1,
+        "second": 0
+      },
+      "clearDuringProp": true,
+      "moving": {
+        "pulse": 1,
+        "source": [
+          8,
+          200
+        ],
+        "newDamage": 203
+      },
+      "pause": true,
+      "death": true,
+      "clear": true,
+      "unlearn": true,
+      "world": true,
+      "epoch": true,
+      "largeDt": {
+        "hits": 17
+      },
+      "releaseAudio": [
+        {
+          "age": 0.7500000000000004,
+          "type": "psychic",
+          "main": true
+        },
+        {
+          "age": 0.8700000000000006,
+          "type": "psychic",
+          "main": false
+        },
+        {
+          "age": 1.2300000000000009,
+          "type": "psychic",
+          "main": false
+        },
+        {
+          "age": 1.5900000000000012,
+          "type": "psychic",
+          "main": false
+        },
+        {
+          "age": 1.9500000000000015,
+          "type": "psychic",
+          "main": false
+        }
+      ],
+      "clone": {
+        "sourceCleared": true,
+        "cloneHits": 5
+      },
+      "legalGrowth": {
+        "growthCounts": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "previews": [
+          "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n全力咒力砲：追加重砲 4→5",
+          "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n全力咒力砲：追加重砲 5→6",
+          "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n全力咒力砲：追加重砲 6→7"
+        ],
+        "final": {
+          "rank": 5,
+          "quantity": 4,
+          "radius": 128,
+          "range": 1040,
+          "count": 16
+        }
+      },
+      "supportCharge": {
+        "jjk-ryu": {
+          "charge": 1,
+          "hits": 1
+        },
+        "jjk-ryu-spread": {
+          "charge": 1,
+          "hits": 8
+        },
+        "jjk-ryu-impact": {
+          "charge": 1,
+          "hits": 3
+        }
+      },
+      "supportRotation": {
+        "casts": {
+          "jjk-ryu": 2,
+          "jjk-ryu-spread": 1,
+          "jjk-ryu-impact": 1,
+          "jjk-ryu-maximum": 1
+        },
+        "hits": 16,
+        "damage": 2816.352,
+        "effects": 1,
+        "coreCharge": 0,
+        "chargeRequired": 3,
+        "recoveryRemaining": 1.4499999999999993
+      },
+      "closeSpread": [
+        {
+          "distance": 60,
+          "hits": 8
+        },
+        {
+          "distance": 100,
+          "hits": 8
+        },
+        {
+          "distance": 140,
+          "hits": 8
+        }
+      ],
+      "withoutSpread": 1,
+      "curvedSpread": [
+        {
+          "q": 0,
+          "branches": 8,
+          "damaged": 8,
+          "curved": true
+        },
+        {
+          "q": 1,
+          "branches": 10,
+          "damaged": 10,
+          "curved": true
+        }
+      ],
+      "curved-wall": {
+        "contacts": 0
+      },
+      "curved-removed": {
+        "contacts": 0
+      },
+      "curved-cancel": {
+        "contacts": 1
+      },
+      "curvedCap": 18,
+      "presentation": {
+        "desktop-rank1-q0": [
+          {
+            "age": 0.49999999999999994,
+            "phase": "windup",
+            "pulseAge": 0,
+            "volleyIndex": 0,
+            "volleyCount": 5,
+            "hud": "巨砲蓄力",
+            "effects": []
+          },
+          {
+            "age": 0.76,
+            "phase": "fire",
+            "pulseAge": 0.010000000000000009,
+            "volleyIndex": 0,
+            "volleyCount": 5,
+            "hud": "連轟 1/5",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 72,
+                "life": 0.55,
+                "age": 0.009999999999999913
+              }
+            ]
+          },
+          {
+            "age": 0.9000000000000001,
+            "phase": "fire",
+            "pulseAge": 0.030000000000000138,
+            "volleyIndex": 1,
+            "volleyCount": 5,
+            "hud": "連轟 2/5",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 72,
+                "life": 0.55,
+                "age": 0.1499999999999999
+              },
+              {
+                "index": 1,
+                "radius": 50.4,
+                "life": 0.24,
+                "age": 0.03
+              }
+            ]
+          },
+          {
+            "age": 1.2500000000000002,
+            "phase": "fire",
+            "pulseAge": 0.02000000000000024,
+            "volleyIndex": 2,
+            "volleyCount": 5,
+            "hud": "連轟 3/5",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 72,
+                "life": 0.55,
+                "age": 0.5
+              },
+              {
+                "index": 2,
+                "radius": 50.4,
+                "life": 0.24,
+                "age": 0.019999999999999803
+              }
+            ]
+          },
+          {
+            "age": 1.9600000000000004,
+            "phase": "fire",
+            "pulseAge": 0.010000000000000231,
+            "volleyIndex": 4,
+            "volleyCount": 5,
+            "hud": "連轟 5/5",
+            "effects": [
+              {
+                "index": 4,
+                "radius": 50.4,
+                "life": 0.24,
+                "age": 0.00999999999999947
+              }
+            ]
+          },
+          {
+            "age": 2.1899999999999964,
+            "phase": "recoil",
+            "pulseAge": 0.23999999999999622,
+            "volleyIndex": 4,
+            "volleyCount": 5,
+            "hud": "連轟 5/5",
+            "effects": [
+              {
+                "index": 4,
+                "radius": 50.4,
+                "life": 0.24,
+                "age": 0.23999999999999946
+              }
+            ]
+          }
+        ],
+        "desktop-rank5-q4": [
+          {
+            "age": 0.49999999999999994,
+            "phase": "windup",
+            "pulseAge": 0,
+            "volleyIndex": 0,
+            "volleyCount": 17,
+            "hud": "巨砲蓄力",
+            "effects": []
+          },
+          {
+            "age": 0.76,
+            "phase": "fire",
+            "pulseAge": 0.010000000000000009,
+            "volleyIndex": 0,
+            "volleyCount": 17,
+            "hud": "連轟 1/17",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 128,
+                "life": 0.55,
+                "age": 0.009999999999999913
+              }
+            ]
+          },
+          {
+            "age": 0.9000000000000001,
+            "phase": "fire",
+            "pulseAge": 0.030000000000000138,
+            "volleyIndex": 1,
+            "volleyCount": 17,
+            "hud": "連轟 2/17",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 128,
+                "life": 0.55,
+                "age": 0.1499999999999999
+              },
+              {
+                "index": 1,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.03
+              }
+            ]
+          },
+          {
+            "age": 1.2500000000000002,
+            "phase": "fire",
+            "pulseAge": 0.02000000000000024,
+            "volleyIndex": 6,
+            "volleyCount": 17,
+            "hud": "連轟 7/17",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 128,
+                "life": 0.55,
+                "age": 0.5
+              },
+              {
+                "index": 5,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.0899999999999998
+              },
+              {
+                "index": 6,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.019999999999999803
+              }
+            ]
+          },
+          {
+            "age": 1.9600000000000004,
+            "phase": "fire",
+            "pulseAge": 0.010000000000000231,
+            "volleyIndex": 16,
+            "volleyCount": 17,
+            "hud": "連轟 17/17",
+            "effects": [
+              {
+                "index": 15,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.07999999999999947
+              },
+              {
+                "index": 16,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.00999999999999947
+              }
+            ]
+          },
+          {
+            "age": 2.1899999999999964,
+            "phase": "recoil",
+            "pulseAge": 0.23999999999999622,
+            "volleyIndex": 16,
+            "volleyCount": 17,
+            "hud": "連轟 17/17",
+            "effects": []
+          }
+        ],
+        "desktop-curve-q0": {
+          "fixture": "native RAF; same five approaches; rank 1",
+          "quantity": 0,
+          "branches": [
+            {
+              "x": 39.317804719261034,
+              "y": 22.426461735812815,
+              "aim": -1.5707963267948966,
+              "trail": 26
+            },
+            {
+              "x": 30.28734088203115,
+              "y": 28.38101488188728,
+              "aim": -1.5707963267948966,
+              "trail": 26
+            },
+            {
+              "x": -29.936925717921408,
+              "y": 24.272472370364085,
+              "aim": -1.5707963267948966,
+              "trail": 26
+            },
+            {
+              "x": -94.67553870144967,
+              "y": 1.7215760049664777,
+              "aim": -1.5707963267948966,
+              "trail": 26
+            },
+            {
+              "x": -108.63595425851061,
+              "y": -26.87037018516609,
+              "aim": -1.5707963267948966,
+              "trail": 26
+            },
+            {
+              "x": -60.16421616601701,
+              "y": -45.840357949557536,
+              "aim": -1.5707963267948966,
+              "trail": 26
+            },
+            {
+              "x": 36.57147110630176,
+              "y": -44.991667261084636,
+              "aim": -1.5707963267948966,
+              "trail": 26
+            },
+            {
+              "x": 128.36833409328227,
+              "y": -23.00043072495352,
+              "aim": -1.5707963267948966,
+              "trail": 26
+            }
+          ],
+          "hits": 0
+        },
+        "desktop-curve-q1": {
+          "fixture": "native RAF; same five approaches; rank 1",
+          "quantity": 1,
+          "branches": [
+            {
+              "x": 35.690231772741875,
+              "y": 21.519055456690293,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 24.468042423351907,
+              "y": 25.124057597540006,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -20.56977049277626,
+              "y": 22.39641817785472,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -75.61683699929074,
+              "y": 7.340391193606213,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -97.1110512895883,
+              "y": -22.86086769841546,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -84.97593641016731,
+              "y": -37.214903028688994,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -35.105264457385346,
+              "y": -46.4095452131108,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 40.88706336938948,
+              "y": -42.84422862450904,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 114.76367930756014,
+              "y": -25.704936039377134,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 160.93879550222408,
+              "y": -1.0518761345784595,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            }
+          ],
+          "hits": 0
+        }
+      }
+    },
+    "mobile": {
+      "rank1q0": {
+        "config": {
+          "count": 4,
+          "radius": 72,
+          "range": 760,
+          "duration": 2.2,
+          "interval": 0.36000000000000004
+        },
+        "hits": [
+          554.4,
+          203.28,
+          203.28,
+          203.28,
+          203.28
+        ],
+        "pulses": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "casts": 1
+      },
+      "rank1q1": {
+        "config": {
+          "count": 5,
+          "radius": 72,
+          "range": 760,
+          "duration": 2.2,
+          "interval": 0.27
+        },
+        "hits": [
+          554.4,
+          203.28,
+          203.28,
+          203.28,
+          203.28,
+          203.28
+        ],
+        "pulses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "casts": 1
+      },
+      "rank5q0": {
+        "config": {
+          "count": 8,
+          "radius": 128,
+          "range": 1040,
+          "duration": 2.2,
+          "interval": 0.1542857142857143
+        },
+        "hits": [
+          1338.876,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212
+        ],
+        "pulses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "casts": 1
+      },
+      "rank5q20": {
+        "config": {
+          "count": 16,
+          "radius": 128,
+          "range": 1040,
+          "duration": 2.2,
+          "interval": 0.07200000000000001
+        },
+        "hits": [
+          1338.876,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212,
+          490.9212
+        ],
+        "pulses": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "casts": 1
+      },
+      "timing": {
+        "mainDamage": 554.4,
+        "followDamage": 203.28,
+        "mainLife": 0.55,
+        "followLife": 0.24
+      },
+      "hud": true,
+      "boundary": {
+        "inside": [
+          554,
+          554,
+          554
+        ],
+        "outside": 0
+      },
+      "wall": true,
+      "prop1": {
+        "calls": 1,
+        "behindDamage": 1163
+      },
+      "prop100000": {
+        "calls": 5,
+        "behindDamage": 0
+      },
+      "clearDuringMain": {
+        "hits": 1
+      },
+      "sameWaveclear": {
+        "first": 1,
+        "second": 0
+      },
+      "sameWaveunlearn": {
+        "first": 1,
+        "second": 0
+      },
+      "clearDuringProp": true,
+      "moving": {
+        "pulse": 1,
+        "source": [
+          8,
+          200
+        ],
+        "newDamage": 203
+      },
+      "pause": true,
+      "death": true,
+      "clear": true,
+      "unlearn": true,
+      "world": true,
+      "epoch": true,
+      "largeDt": {
+        "hits": 17
+      },
+      "releaseAudio": [
+        {
+          "age": 0.7500000000000004,
+          "type": "psychic",
+          "main": true
+        },
+        {
+          "age": 0.8700000000000006,
+          "type": "psychic",
+          "main": false
+        },
+        {
+          "age": 1.2300000000000009,
+          "type": "psychic",
+          "main": false
+        },
+        {
+          "age": 1.5900000000000012,
+          "type": "psychic",
+          "main": false
+        },
+        {
+          "age": 1.9500000000000015,
+          "type": "psychic",
+          "main": false
+        }
+      ],
+      "clone": {
+        "sourceCleared": true,
+        "cloneHits": 5
+      },
+      "legalGrowth": {
+        "growthCounts": [
+          4,
+          5,
+          6,
+          7
+        ],
+        "previews": [
+          "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n全力咒力砲：追加重砲 4→5",
+          "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n全力咒力砲：追加重砲 5→6",
+          "每張使投射物、分身、護衛、環繞物與連擊等數量 ×1.25。保留小數累乘，最後取整，既有上限不變；穿透每張 +1。最多選 20 次。\n全力咒力砲：追加重砲 6→7"
+        ],
+        "final": {
+          "rank": 5,
+          "quantity": 4,
+          "radius": 128,
+          "range": 1040,
+          "count": 16
+        }
+      },
+      "supportCharge": {
+        "jjk-ryu": {
+          "charge": 1,
+          "hits": 1
+        },
+        "jjk-ryu-spread": {
+          "charge": 1,
+          "hits": 8
+        },
+        "jjk-ryu-impact": {
+          "charge": 1,
+          "hits": 3
+        }
+      },
+      "supportRotation": {
+        "casts": {
+          "jjk-ryu": 2,
+          "jjk-ryu-spread": 1,
+          "jjk-ryu-impact": 1,
+          "jjk-ryu-maximum": 1
+        },
+        "hits": 16,
+        "damage": 2816.352,
+        "effects": 1,
+        "coreCharge": 0,
+        "chargeRequired": 3,
+        "recoveryRemaining": 1.4499999999999993
+      },
+      "closeSpread": [
+        {
+          "distance": 60,
+          "hits": 8
+        },
+        {
+          "distance": 100,
+          "hits": 8
+        },
+        {
+          "distance": 140,
+          "hits": 8
+        }
+      ],
+      "withoutSpread": 1,
+      "curvedSpread": [
+        {
+          "q": 0,
+          "branches": 8,
+          "damaged": 8,
+          "curved": true
+        },
+        {
+          "q": 1,
+          "branches": 10,
+          "damaged": 10,
+          "curved": true
+        }
+      ],
+      "curved-wall": {
+        "contacts": 0
+      },
+      "curved-removed": {
+        "contacts": 0
+      },
+      "curved-cancel": {
+        "contacts": 1
+      },
+      "curvedCap": 18,
+      "presentation": {
+        "mobile-rank1-q0": [
+          {
+            "age": 0.49999999999999994,
+            "phase": "windup",
+            "pulseAge": 0,
+            "volleyIndex": 0,
+            "volleyCount": 5,
+            "hud": "巨砲蓄力",
+            "effects": []
+          },
+          {
+            "age": 0.76,
+            "phase": "fire",
+            "pulseAge": 0.010000000000000009,
+            "volleyIndex": 0,
+            "volleyCount": 5,
+            "hud": "連轟 1/5",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 72,
+                "life": 0.55,
+                "age": 0.009999999999999913
+              }
+            ]
+          },
+          {
+            "age": 0.9000000000000001,
+            "phase": "fire",
+            "pulseAge": 0.030000000000000138,
+            "volleyIndex": 1,
+            "volleyCount": 5,
+            "hud": "連轟 2/5",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 72,
+                "life": 0.55,
+                "age": 0.1499999999999999
+              },
+              {
+                "index": 1,
+                "radius": 50.4,
+                "life": 0.24,
+                "age": 0.03
+              }
+            ]
+          },
+          {
+            "age": 1.2500000000000002,
+            "phase": "fire",
+            "pulseAge": 0.02000000000000024,
+            "volleyIndex": 2,
+            "volleyCount": 5,
+            "hud": "連轟 3/5",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 72,
+                "life": 0.55,
+                "age": 0.5
+              },
+              {
+                "index": 2,
+                "radius": 50.4,
+                "life": 0.24,
+                "age": 0.019999999999999803
+              }
+            ]
+          },
+          {
+            "age": 1.9600000000000004,
+            "phase": "fire",
+            "pulseAge": 0.010000000000000231,
+            "volleyIndex": 4,
+            "volleyCount": 5,
+            "hud": "連轟 5/5",
+            "effects": [
+              {
+                "index": 4,
+                "radius": 50.4,
+                "life": 0.24,
+                "age": 0.00999999999999947
+              }
+            ]
+          },
+          {
+            "age": 2.1899999999999964,
+            "phase": "recoil",
+            "pulseAge": 0.23999999999999622,
+            "volleyIndex": 4,
+            "volleyCount": 5,
+            "hud": "連轟 5/5",
+            "effects": [
+              {
+                "index": 4,
+                "radius": 50.4,
+                "life": 0.24,
+                "age": 0.23999999999999946
+              }
+            ]
+          }
+        ],
+        "mobile-rank5-q4": [
+          {
+            "age": 0.49999999999999994,
+            "phase": "windup",
+            "pulseAge": 0,
+            "volleyIndex": 0,
+            "volleyCount": 17,
+            "hud": "巨砲蓄力",
+            "effects": []
+          },
+          {
+            "age": 0.76,
+            "phase": "fire",
+            "pulseAge": 0.010000000000000009,
+            "volleyIndex": 0,
+            "volleyCount": 17,
+            "hud": "連轟 1/17",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 128,
+                "life": 0.55,
+                "age": 0.009999999999999913
+              }
+            ]
+          },
+          {
+            "age": 0.9000000000000001,
+            "phase": "fire",
+            "pulseAge": 0.030000000000000138,
+            "volleyIndex": 1,
+            "volleyCount": 17,
+            "hud": "連轟 2/17",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 128,
+                "life": 0.55,
+                "age": 0.1499999999999999
+              },
+              {
+                "index": 1,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.03
+              }
+            ]
+          },
+          {
+            "age": 1.2500000000000002,
+            "phase": "fire",
+            "pulseAge": 0.02000000000000024,
+            "volleyIndex": 6,
+            "volleyCount": 17,
+            "hud": "連轟 7/17",
+            "effects": [
+              {
+                "index": 0,
+                "radius": 128,
+                "life": 0.55,
+                "age": 0.5
+              },
+              {
+                "index": 5,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.0899999999999998
+              },
+              {
+                "index": 6,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.019999999999999803
+              }
+            ]
+          },
+          {
+            "age": 1.9600000000000004,
+            "phase": "fire",
+            "pulseAge": 0.010000000000000231,
+            "volleyIndex": 16,
+            "volleyCount": 17,
+            "hud": "連轟 17/17",
+            "effects": [
+              {
+                "index": 15,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.07999999999999947
+              },
+              {
+                "index": 16,
+                "radius": 89.6,
+                "life": 0.1,
+                "age": 0.00999999999999947
+              }
+            ]
+          },
+          {
+            "age": 2.1899999999999964,
+            "phase": "recoil",
+            "pulseAge": 0.23999999999999622,
+            "volleyIndex": 16,
+            "volleyCount": 17,
+            "hud": "連轟 17/17",
+            "effects": []
+          }
+        ],
+        "mobile-curve-q0": {
+          "fixture": "native RAF; same five approaches; rank 1",
+          "quantity": 0,
+          "branches": [
+            {
+              "x": 51.271749485063616,
+              "y": 24.39328140306045,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 31.34346067126568,
+              "y": 31.08729745277663,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -32.239522799996394,
+              "y": 25.61791478414331,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -93.54977010301575,
+              "y": 4.978930115895434,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -112.82232017206907,
+              "y": -22.713939881892504,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -64.38459106194267,
+              "y": -43.90433650163911,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 28.254423030047803,
+              "y": -43.943568459012326,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 114.91824445657988,
+              "y": -25.314404797261034,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            }
+          ],
+          "hits": 0
+        },
+        "mobile-curve-q1": {
+          "fixture": "native RAF; same five approaches; rank 1",
+          "quantity": 1,
+          "branches": [
+            {
+              "x": 45.21919884502157,
+              "y": 25.607555650678705,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 20.987142343628907,
+              "y": 29.00381200236019,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -29.485218473084267,
+              "y": 23.62731505117552,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -79.72327022829155,
+              "y": 7.934460593706407,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -106.52837336055013,
+              "y": -12.110642422439367,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -96.84993880933501,
+              "y": -32.228634890379325,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": -45.90109874316421,
+              "y": -44.18821806470744,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 28.043444631284572,
+              "y": -42.26950249591952,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 98.5375033763228,
+              "y": -28.24286028988519,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            },
+            {
+              "x": 146.7034932373005,
+              "y": -8.520631680573814,
+              "aim": -1.5707963267948966,
+              "trail": 25
+            }
+          ],
+          "hits": 0
+        }
+      }
+    }
+  },
+  "identity": {
+    "desktop": {
+      "cadence": {
+        "events": [
+          {
+            "id": "jjk-ryu",
+            "clock": 0
+          },
+          {
+            "id": "jjk-ryu",
+            "clock": 1.8000000000000014
+          },
+          {
+            "id": "jjk-ryu",
+            "clock": 3.5999999999999672
+          },
+          {
+            "id": "jjk-ryu-maximum",
+            "clock": 5.399999999999929
+          }
+        ],
+        "releaseRecovery": 1.4299999999999997,
+        "charge": 0
+      },
+      "scatterDamage": [
+        110,
+        165,
+        165,
+        0
+      ],
+      "scatterContacts": [
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 0,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 1,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 3,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 2,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 4,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 6,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 5,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 7,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        }
+      ],
+      "clusterDamage": [
+        0,
+        185,
+        185,
+        185
+      ],
+      "clusterTarget": {
+        "x": 220,
+        "y": -20
+      },
+      "checks": [
+        "core energy starts only after learning maximum",
+        "maximum waits for successful core casts",
+        "missed core cast gives no charge",
+        "three hit casts charge once per cast",
+        "maximum replaces next scheduled core",
+        "recovery blocks only casting",
+        "pause freezes recovery",
+        "death clears charge, projectiles and recovery",
+        "doubled airborne bolts and delayed live acquisition",
+        "long-range three-approach coverage",
+        "separate physical contact pulses under one cast",
+        "wall blocks seeking while a reachable side remains available",
+        "each bolt stops on its first destructible blocker",
+        "eighteen-bolt cap and one genuine direct hit per projectile",
+        "rank-one remote densest pack target",
+        "locked delayed cluster blast",
+        "pause freezes travelling bolts",
+        "death removes in-flight bolts before contact",
+        "world changes cancel in-flight bolts",
+        "new run epoch clears previous bolts"
+      ],
+      "errors": []
+    },
+    "mobile": {
+      "cadence": {
+        "events": [
+          {
+            "id": "jjk-ryu",
+            "clock": 0
+          },
+          {
+            "id": "jjk-ryu",
+            "clock": 1.8000000000000014
+          },
+          {
+            "id": "jjk-ryu",
+            "clock": 3.5999999999999672
+          },
+          {
+            "id": "jjk-ryu-maximum",
+            "clock": 5.399999999999929
+          }
+        ],
+        "releaseRecovery": 1.4299999999999997,
+        "charge": 0
+      },
+      "scatterDamage": [
+        110,
+        165,
+        165,
+        0
+      ],
+      "scatterContacts": [
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 0,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 1,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 3,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 2,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 4,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 6,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 5,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        },
+        {
+          "runEpoch": 1,
+          "ownerId": 1,
+          "castId": 8,
+          "moveId": "jjk-ryu-spread",
+          "channel": "scatter",
+          "contactPulseIndex": 7,
+          "primaryHits": 1,
+          "primaryDamage": 55.44,
+          "secondaryHits": 0,
+          "secondaryDamage": 0
+        }
+      ],
+      "clusterDamage": [
+        0,
+        185,
+        185,
+        185
+      ],
+      "clusterTarget": {
+        "x": 220,
+        "y": -20
+      },
+      "checks": [
+        "core energy starts only after learning maximum",
+        "maximum waits for successful core casts",
+        "missed core cast gives no charge",
+        "three hit casts charge once per cast",
+        "maximum replaces next scheduled core",
+        "recovery blocks only casting",
+        "pause freezes recovery",
+        "death clears charge, projectiles and recovery",
+        "doubled airborne bolts and delayed live acquisition",
+        "long-range three-approach coverage",
+        "separate physical contact pulses under one cast",
+        "wall blocks seeking while a reachable side remains available",
+        "each bolt stops on its first destructible blocker",
+        "eighteen-bolt cap and one genuine direct hit per projectile",
+        "rank-one remote densest pack target",
+        "locked delayed cluster blast",
+        "pause freezes travelling bolts",
+        "death removes in-flight bolts before contact",
+        "world changes cancel in-flight bolts",
+        "new run epoch clears previous bolts"
+      ],
+      "errors": []
+    }
+  }
+}

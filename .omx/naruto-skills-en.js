@@ -86,6 +86,8 @@
     'naruto-kimimaro-curse': ['Cursed Seal of Earth', 'Permanent evolution passive; uses no active slot. With an enemy within 220, automatically transforms for 1s between other actions. After completion, Cursed Seal Level Two lasts for the rest of the run without timing out or repeating the transformation; changing arenas or clearing combat effects does not revert it. Damage +10/12.5/15/17.5/20% and movement speed +10%; upgrades update damage immediately. No HP cost, invulnerability, other skill cooldown reset or stacking. Inactive while dead; leaving the run or starting a new run still cleans up normally.']
   };
   const dictionary = {
+    '追蹤砲彈':'Homing bolts', '追蹤砲彈 {x}→{x}':'Homing bolts {x}→{x}',
+    '升空 {x}':'Rising {x}', '索敵 {x}':'Seeking {x}', '追擊 {x}':'Pursuing {x}',
     '圓環':'Ring', '圓環輪次':'Ring rounds', '繞身蓄力':'Ring charge', '圓環收束':'Ring recovery',
     '圓環 {x}/{x}':'Ring {x}/{x}', '圓環輪次 {x}→{x}':'Ring rounds {x}→{x}',
     '穿線・蓄能爆發':'Piercing fire · Charged burst',

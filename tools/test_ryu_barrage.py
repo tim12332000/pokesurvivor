@@ -119,7 +119,7 @@ CHECK=r"""() => {
  for(const id of ['jjk-ryu','jjk-ryu-spread','jjk-ryu-impact']){
   A.reset();const support=A.fixture(id);assert(p.addMove('jjk-ryu-maximum'),'maximum learn failed');
   const victims=[A.spawn(70,0),A.spawn(85,35),A.spawn(85,-35)];
-  const action=cast(support);A.advance(1);const s=R.stateFor(p);
+  const action=cast(support);A.advance(id==='jjk-ryu-spread'?8:1);const s=R.stateFor(p);
   assert(s.coreCharge===1,'support cast did not earn exactly one charge '+id+':'+s.coreCharge);
   if(id!=='jjk-ryu')assert(s.hits>=2,'support fixture did not exercise multi-target charge dedup '+id);
   assert(R.statusFor(p,p.moves.find(m=>m.id==='jjk-ryu-maximum')).coreCharge===1,'HUD charge source differs '+id);
@@ -128,7 +128,7 @@ CHECK=r"""() => {
    A.reset();const move=A.fixture(id);p.addMove('jjk-ryu-maximum');A.spawn(70,0);A.spawn(85,0);
    cast(move);const before=R.stateFor(p),previous=p.onDealt;
    p.onDealt=function(...args){if(cancel==='clear')G.Combat.clearFields(p);else p.moves=p.moves.filter(m=>m.id!==id);return previous.apply(this,args)};
-   try{A.advance(1)}finally{p.onDealt=previous}
+   try{A.advance(id==='jjk-ryu-spread'?8:1)}finally{p.onDealt=previous}
    assert(before.coreCharge===0,'cancelled contact granted charge '+id+'/'+cancel);
   }
   for(const miss of ['empty','wall','prop']){
@@ -140,42 +140,50 @@ CHECK=r"""() => {
     G.World.propsInCircle=()=>[prop];
     G.World.projectileBlock=(x,y,r)=>Math.hypot(x-prop.x,y-prop.y)<=prop.r+r?prop:false;
    }
-   A.advance(1);assert(R.stateFor(p).coreCharge===0,'miss/prop granted charge '+id+'/'+miss);
+   A.advance(id==='jjk-ryu-spread'?8:1);assert(R.stateFor(p).coreCharge===0,'miss/prop granted charge '+id+'/'+miss);
   }
  }
  m=setup();A.spawn(100,0);cast(m);A.advance(2.3);assert(R.stateFor(p).coreCharge===0,'maximum fueled itself');
  A.reset();const core=A.fixture('jjk-ryu');p.addMove('jjk-ryu-spread');p.addMove('jjk-ryu-impact');p.addMove('jjk-ryu-maximum');
  for(const move of p.moves)move.t=0;
  for(const [x,y]of [[70,0],[100,35],[100,-35]])A.spawn(x,y);
- A.advance(3.5,true);const earned=R.stats(p);
- assert(earned.casts['jjk-ryu']===1&&earned.casts['jjk-ryu-spread']===1&&earned.casts['jjk-ryu-impact']===1&&earned.casts['jjk-ryu-maximum']===1,
+ const rotationLanded=()=>{const action=R.pose(p);return R.stats(p)?.casts['jjk-ryu-maximum']>=1&&action?.mode==='jjk-ryu-maximum'&&
+  G.CombatPulse.telemetry.some(hit=>hit.castId===action.castId&&hit.runEpoch===action.runEpoch&&hit.moveId==='jjk-ryu-maximum'&&hit.primaryHits>0)};
+ for(let age=0;age<8&&!rotationLanded();age+=.01)A.step(.01,true);const earned=R.stats(p);
+ assert(earned.casts['jjk-ryu']>=1&&earned.casts['jjk-ryu-spread']===1&&earned.casts['jjk-ryu-impact']===1&&earned.casts['jjk-ryu-maximum']===1,
   'native support rotation did not cash earned burst '+JSON.stringify(earned));
- assert(G.CombatPulse.telemetry.some(hit=>hit.moveId==='jjk-ryu-maximum'&&hit.primaryHits>0),'earned maximum did not land through native scheduling');
+ assert(rotationLanded(),'earned maximum did not land through native scheduling');
  out.supportRotation=earned;
- // Branches use their actual curved flight path, and a first quantity pick
- // covers a fifth distinct approach instead of repainting the same hit.
+ // Real orbit/seek paths cover separate long approaches; quantity adds
+ // actual projectiles and therefore additional distinct target coverage.
  out.closeSpread=[];
  for(const distance of [60,100,140]){
   A.reset();const spread=A.fixture('jjk-ryu-spread'),enemy=A.spawn(distance,0),events=A.watch(enemy);
-  cast(spread);A.advance(1);
-  assert(events.length===1&&enemy.hp<enemy.maxHp,'single close target was allocated to an unreachable outer branch '+distance);
+  cast(spread);A.advance(8);
+  assert(events.length===8&&enemy.hp<enemy.maxHp,'independent airborne bolts failed to converge on a close target '+distance);
   out.closeSpread.push({distance,hits:events.length});
  }
- A.reset();const plain=A.fixture('jjk-ryu');
- const plainGroup=[A.spawn(130,0),...[-1.2,-.6,.6,1.2].map(a=>A.spawn(Math.cos(a)*180,Math.sin(a)*180))];
+ const approaches=()=>Array.from({length:10},(_,i)=>{const a=-1.3+i*2.6/9,r=i===0?250:560;return A.spawn(Math.cos(a)*r,Math.sin(a)*r)});
+ A.reset();const plain=A.fixture('jjk-ryu');const plainGroup=approaches();
+ // Both configurations face this exact layout: one close approach and nine
+ // separated distant approaches beyond the ordinary cannon's reach.
  cast(plain);A.advance(.8);out.withoutSpread=plainGroup.filter(enemy=>enemy.hp<enemy.maxHp).length;
- assert(out.withoutSpread===1,'ordinary cannon counterfactual covered the side approaches');
+ assert(out.withoutSpread===1,'ordinary cannon counterfactual covered remote side approaches');
  out.curvedSpread=[];
  for(const q of [0,1]){
   A.reset();const spread=A.fixture('jjk-ryu-spread');p.quantityPicks=p.quantityBonus=q;
-  const group=[A.spawn(130,0),...[-1.2,-.6,.6,1.2].map(a=>A.spawn(Math.cos(a)*180,Math.sin(a)*180))],outside=A.spawn(-220,0);
-  const branches=cast(spread);A.advance(.36);const shots=[...R.stateFor(p).scatter];
-  assert(shots.length===4+q,'first quantity pick did not add a real branch');
-  assert(new Set(shots.map(shot=>shot.target)).size===4+q,'branches duplicated assigned enemy instead of covering another approach');
-  const initial=shots.map(shot=>shot.aim);A.advance(.12);
-  assert(shots.some((shot,i)=>Math.abs(shot.aim-initial[i])>.05&&shot.trail?.length>2),'scatter only changed decoration, no curved movement');
-  A.advance(.5);const damaged=group.filter(enemy=>enemy.hp<enemy.maxHp).length;
-  assert(damaged===4+q&&outside.hp===outside.maxHp,'curved spread did not create distinct within-range coverage '+q+':'+damaged);
+  const group=approaches(),outside=A.spawn(-2400,0);
+  cast(spread);A.advance(.36);const shots=[...R.stateFor(p).scatter],count=q?10:8;
+  assert(shots.length===count&&shots.every(shot=>shot.target==null),'doubled bolts missing or targets preselected before orbit');
+  A.advance(.5);const initial=shots.map(shot=>({x:shot.x,y:shot.y}));A.advance(.12);
+  assert(shots.some((shot,i)=>Math.hypot(shot.x-initial[i].x,shot.y-initial[i].y)>5&&shot.trail?.length>2),'scatter only changed decoration, no physical orbit');
+  const acquired=new Map();
+  for(let age=0;age<7;age+=.01){
+   for(const shot of R.stateFor(p)?.scatter||[])if(shot.phase==='seek'&&shot.target&&!acquired.has(shot.pulseIndex))acquired.set(shot.pulseIndex,{bolt:shot.pulseIndex,target:group.indexOf(shot.target),position:[shot.target.x,shot.target.y]});
+   A.advance(.01);
+  }
+  const damaged=group.filter(enemy=>enemy.hp<enemy.maxHp).length;
+  assert(damaged===count&&outside.hp===outside.maxHp,'doubled spread did not cover distinct long approaches '+q+':'+JSON.stringify({damaged,damage:group.map(e=>e.maxHp-e.hp),acquired:[...acquired.values()]}));
   out.curvedSpread.push({q,branches:shots.length,damaged,curved:true});
  }
  for(const invalid of ['wall','removed','cancel']){
@@ -185,14 +193,14 @@ CHECK=r"""() => {
   if(invalid==='wall'){G.World.isWall=(x,y)=>x>=40&&x<=60;G.World.projectileBlock=(x,y)=>G.World.isWall(x,y)?'wall':false;}
   if(invalid==='removed')for(const enemy of victims)G.EnemyMgr.removeRemote(enemy.id,false);
   if(invalid==='cancel')p.onDealt=function(...args){G.Combat.clearFields(p);return original.apply(this,args)};
-  try{A.advance(.6)}finally{p.onDealt=original}
+  try{A.advance(8)}finally{p.onDealt=original}
   const contacts=events.reduce((n,list)=>n+list.length,0);
   assert(contacts===(invalid==='cancel'?1:0),'curved scatter violated wall/removal/callback cleanup '+invalid+':'+contacts);
   if(invalid==='cancel')assert(!R.stateFor(p),'cancelled curved cast retained state');
   out['curved-'+invalid]={contacts};
  }
  A.reset();const capped=A.fixture('jjk-ryu-spread',5);p.quantityPicks=p.quantityBonus=20;A.spawn(150,0);cast(capped);A.advance(.36);
- assert(R.stateFor(p).scatter.length===9,'curved spread exceeded branch cap');out.curvedCap=9;
+ assert(R.stateFor(p).scatter.length===18,'curved spread exceeded doubled branch cap');out.curvedCap=18;
  return out;
 }"""
 
@@ -242,11 +250,11 @@ def presentation(page,frame,label):
    const done=new Promise(resolve=>recorder.onstop=()=>{const reader=new FileReader;reader.onload=()=>resolve(reader.result);reader.readAsDataURL(new Blob(chunks,{type:'video/webm'}))});
    window.RyuCurveClip={stream,recorder,done};recorder.start();A.resume();G.JjkRyu.cast(p,m);
   }""",quantity)
-  page.wait_for_timeout(490)
+  page.wait_for_timeout(950)
   page.screenshot(path=str(OUT/f'{label}-curve-q{quantity}-native-flight.png'))
   results[f'{label}-curve-q{quantity}']=frame.evaluate("""()=>{const s=G.JjkRyu.stateFor(JAcceptance.p());return {fixture:'native RAF; same five approaches; rank 1',quantity:JAcceptance.p().quantityPicks,
     branches:s.scatter.map(e=>({x:e.x,y:e.y,aim:e.aim,trail:e.trail.length})),hits:s.hits};}""")
-  page.wait_for_timeout(600)
+  page.wait_for_timeout(3800)
   curve_clip=frame.evaluate("""async()=>{JAcceptance.pause();const clip=window.RyuCurveClip;clip.recorder.stop();const data=await clip.done;for(const track of clip.stream.getTracks())track.stop();return data;}""")
   (OUT/f'{label}-rank1-q{quantity}-native-curve.webm').write_bytes(base64.b64decode(curve_clip.split(';base64,',1)[1]))
  return results
