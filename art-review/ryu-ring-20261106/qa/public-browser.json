@@ -1,0 +1,74 @@
+{
+  "url": "https://tim12332000.github.io/pokesurvivor/?lang=zh-TW&hero=ryu&release=81d3b3da",
+  "errors": [],
+  "missing": [],
+  "views": {
+    "desktop": {
+      "level": 5,
+      "learned": [
+        "jjk-ryu",
+        "jjk-ryu-spread",
+        "jjk-ryu-ring"
+      ],
+      "damage": [
+        428,
+        428,
+        428,
+        428
+      ],
+      "pose": null,
+      "overflow": false,
+      "picks": [
+        "stat:atk",
+        "new:jjk-ryu-spread",
+        "stat:atk",
+        "new:jjk-ryu-ring"
+      ]
+    },
+    "mobile360": {
+      "level": 5,
+      "learned": [
+        "jjk-ryu",
+        "jjk-ryu-spread",
+        "jjk-ryu-ring"
+      ],
+      "damage": [
+        428,
+        428,
+        428,
+        428
+      ],
+      "pose": null,
+      "overflow": false,
+      "picks": [
+        "stat:atk",
+        "new:jjk-ryu-spread",
+        "stat:atk",
+        "new:jjk-ryu-ring"
+      ]
+    },
+    "mobile390": {
+      "level": 5,
+      "learned": [
+        "jjk-ryu",
+        "jjk-ryu-spread",
+        "jjk-ryu-ring"
+      ],
+      "damage": [
+        428,
+        428,
+        428,
+        428
+      ],
+      "pose": null,
+      "overflow": false,
+      "picks": [
+        "stat:atk",
+        "new:jjk-ryu-spread",
+        "stat:atk",
+        "new:jjk-ryu-ring"
+      ]
+    }
+  },
+  "ok": true
+}
