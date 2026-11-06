@@ -114,14 +114,16 @@
     if(b.ghost)return;
     const s=state(b.owner);s.totalEmitted++;s.emittedByMode[b.mode]=(s.emittedByMode[b.mode]||0)+1;
   }
-  const legal=b=>b.world===G.World&&(b.ghost?alive(b.owner):valid(b.owner));
+  const legal=b=>!b.cancelled&&b.world===G.World&&(b.ghost?alive(b.owner):valid(b.owner));
   function recordCut(b) {b.cuts++;if(!b.ghost)state(b.owner).totalCuts++;}
   function hit(b,e,dx,dy,knock=0,splash=false) {
     if(b.ghost||!legal(b)||!alive(e))return;
     const owner=b.owner,m=b.m,mult=G.Types.mult(m.type||'flying',e.types),crit=Math.random()<b.critChance;
     const damage=b.damage*mult*G.Weather.mult(m.type||'flying')*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(owner,e)||1);
     e.hurt(damage,'#bcebd9',dx,dy,knock,crit?'crit':G.Types.label(mult),owner,m.id);
+    if(!legal(b))return;
     owner.onDealt?.(damage);owner.dmgDealt=(owner.dmgDealt||0)+damage;
+    if(!legal(b))return;
     if(splash)G.DamageSplash?.hit(owner,e,damage,'#bcebd9',m.id);
     if(m.burn)e.applyBurn?.(m.burn);if(m.poison)e.applyPoison?.(m.poison);if(m.slow)e.applySlow?.(m.slow);
     b.hits++;state(owner).hitEvents++;
@@ -296,11 +298,12 @@
   }
   function beginPetAttack(a,m,target) {
     const owner=a.owner,s=state(owner),b={...snapshot(owner,m),owner,world:G.World,ghost:false,serial:++sequence};
-    a.cast=b;a.phase='move';a.roamTarget=null;a.restUntil=0;a.cuts=0;a.slash=0;a.nextCut=Infinity;
+    a.cast=b;a.target=target;a.pursuitAge=0;a.phase='move';a.roamTarget=null;a.restUntil=0;a.cuts=0;a.slash=0;a.nextCut=Infinity;
     const dx=target.x-a.x,dy=target.y-a.y,angle=Math.atan2(dy,dx);
     const offset=b.K>1?((a.index%5)-2)*Math.min(9,b.radius*.13):0;
-    a.tx=target.x-Math.sin(angle)*offset;
-    a.ty=target.y+Math.cos(angle)*offset;
+    a.targetOffsetX=-Math.sin(angle)*offset;a.targetOffsetY=Math.cos(angle)*offset;
+    a.tx=target.x+a.targetOffsetX;
+    a.ty=target.y+a.targetOffsetY;
     a.aim=angle;a.cooldown=Math.max(.05,(m.cd||10)*(owner.cdMul??1));
     s.latest=b;s.counts[b.mode]=b.K;s.castCounts[b.mode]=(s.castCounts[b.mode]||0)+1;
     G.NarutoTemari.onPetAttack?.(owner,a,{...b,owner:undefined,world:undefined,m:{...b.m}});
@@ -323,6 +326,26 @@
     if(a.remotePet)return;
     const m=petMove(a.owner);if(!m){a.dead=true;return;}
     a.age+=dt;a.cooldown=Math.max(0,a.cooldown-dt);a.moving=false;
+    if(a.target&&['move','prepare','slash'].includes(a.phase)) {
+      const target=a.target;
+      const reach=rangeFor(a.owner,m),distance=Math.hypot(target.x-a.x,target.y-a.y);
+      const pursuing=a.phase==='move'||distance>a.cast.radius*.65+(target.r||0);
+      // Bound initial acquisition only. Once contact starts the finite C-cut
+      // schedule bounds the combination, including long quantity-grown chains.
+      if(a.phase==='move')a.pursuitAge+=dt;
+      if(!alive(target)||target.friendly||Math.hypot(target.x-a.owner.x,target.y-a.owner.y)>reach+(target.r||0)||
+        (a.phase==='move'&&a.pursuitAge>Math.max(2,2*reach/a.cast.speed))) {
+        a.target=null;a.phase='return';a.roamTarget=null;
+      } else {
+        // Follow the real target through travel and the combination. Slashes
+        // still use the pet's actual position and never reach through walls.
+        a.tx=target.x+a.targetOffsetX;a.ty=target.y+a.targetOffsetY;
+        if(a.phase!=='move'&&pursuing) {
+          const travel=petTravel(a,a.tx,a.ty,a.cast.speed*dt);
+          if(travel.blocked){a.target=null;a.phase='return';a.roamTarget=null;}
+        }
+      }
+    }
     if(a.phase==='follow')a.phase='wander';
     if(a.phase==='wander'||a.phase==='return') {
       const ownerDistance=Math.hypot(a.x-a.owner.x,a.y-a.owner.y);
@@ -355,11 +378,15 @@
     while((a.phase==='prepare'||a.phase==='slash')&&a.cuts<b.C&&a.age+EPS>=a.nextCut) {
       a.phase='slash';a.slash=a.cuts;recordCut(b);a.cuts++;
       const aim=a.aim+(a.cuts%2?.35:-.35);
-      for(const e of circleTargets(a.x,a.y,b.radius))hit(b,e,Math.cos(aim),Math.sin(aim));
+      for(const e of circleTargets(a.x,a.y,b.radius)) {
+        if(!legal(b))return;
+        hit(b,e,Math.cos(aim),Math.sin(aim));
+      }
+      if(!legal(b))return;
       for(const p of props(a.x,a.y,b.radius))if(Math.hypot(p.x-a.x,p.y-a.y)<=b.radius+(p.r||0)&&clearPath(a.x,a.y,p.x,p.y,1,p))propHit(b,p);
       a.lastCut=a.nextCut;a.nextCut+=.12;
     }
-    if(a.phase==='slash'&&a.cuts>=b.C&&a.age-a.lastCut>=.16){a.phase='return';a.roamTarget=null;}
+    if(a.phase==='slash'&&a.cuts>=b.C&&a.age-a.lastCut>=.16){a.target=null;a.phase='return';a.roamTarget=null;}
   }
   function liftPacket(lift,reason) {
     return {castId:lift.cast.castId??lift.cast.serial,age:lift.age,duration:lift.duration,height:lift.height,reason};
@@ -596,7 +623,9 @@
     for(const [e,o] of orbits)if(!owner||o.owner===owner)releaseOrbit(e,'clear');
     for(const [actor,s] of states)if((!owner||actor===owner)&&!s.remotePets&&s.hasPetRoster)G.NarutoTemari.onPets?.(actor,{serial:++petPacketSequence,pets:[]});
     if(owner)states.delete(owner);else states.clear();
-    for(const list of [casts,blades,waves,summons,storms])for(let i=list.length-1;i>=0;i--)if(!owner||list[i].owner===owner)list.splice(i,1);
+    for(const list of [casts,blades,waves,summons,storms])for(let i=list.length-1;i>=0;i--)if(!owner||list[i].owner===owner) {
+      const a=list[i];(a.cast||a).cancelled=true;list.splice(i,1);
+    }
   }
   function update(dt) {
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
@@ -621,13 +650,15 @@
         !blades.some(a=>a.cast===b)&&!waves.some(a=>a.cast===b)&&!summons.some(a=>a.cast===b)&&!storms.some(a=>a.cast===b))casts.splice(i,1);
     }
     const petQueries=new Map();
-    for(const [list,advance] of [[waves,advanceWave],[summons,advanceSummon],[storms,advanceStorm]])for(let i=list.length-1;i>=0;i--) {
-      const a=list[i];if(!legal(a.cast)){list.splice(i,1);continue;}
+    // A damage callback can clear one owner from a mixed-owner list. Snapshot
+    // iteration prevents the surviving actors from being advanced twice.
+    for(const [list,advance] of [[waves,advanceWave],[summons,advanceSummon],[storms,advanceStorm]])for(const a of list.slice().reverse()) {
+      if(!legal(a.cast)){const index=list.indexOf(a);if(index>=0)list.splice(index,1);continue;}
       // A new actor only receives time after its individual release in this frame.
       const born=a.cast.release+(a.cast.kind==='typhoon'?0:a.cast.kind==='basic'?.12:.16)*a.index/a.cast.count;
       const elapsed=a.permanent?dt:Math.min(dt,Math.max(0,a.cast.age-born-a.age));if(elapsed>0)advance(a,elapsed,petQueries);
       // Cast age continues after release scheduling has completed.
-      if(a.dead)list.splice(i,1);
+      if(a.dead){const index=list.indexOf(a);if(index>=0)list.splice(index,1);}
     }
   }
   function activeFor(owner) {
