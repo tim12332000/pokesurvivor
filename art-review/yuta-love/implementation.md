@@ -13,3 +13,5 @@
 既有 `tools/test_yuta_release.py` 桌機／手機回歸通過；九項發布Node契約、六個變更JS語法檢查、`git diff --check` 與正式打包通過。打包後正常入口能學習及施放新技能。
 
 限制：敵人受控與合法選卡測試不代表自然長局，未驗實機手機長時間效能、未聽評音訊，不宣稱替玩家證明主觀樂趣。乙骨沿用戒指抬手素材，動漫審查接受此簡化。
+
+變更檔案：`.omx/jjk-yuta.js`、`.omx/jujutsu.js`、`.omx/jujutsu-growth.js`、`.omx/jujutsu-vfx.js`、`.omx/run-insights.js`、`.omx/naruto.js`、`.omx/menu-layout.css`；測試為 `tools/test_yuta_love.py`，動漫與發布證據見本目錄文件。
