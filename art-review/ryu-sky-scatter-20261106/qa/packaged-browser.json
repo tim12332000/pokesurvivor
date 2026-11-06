@@ -1,0 +1,129 @@
+{
+  "source": "190c500e583aa012b965c7c8b0e3718f554b6223",
+  "baseURL": "http://127.0.0.1:51045/",
+  "errors": [],
+  "missing": [],
+  "heroes": {
+    "ryu": {
+      "desktop": {
+        "level": 3,
+        "picks": [
+          "stat:atk",
+          "new:jjk-ryu-spread"
+        ],
+        "range": 800,
+        "hits": [
+          {
+            "raw": 60.983999999999995,
+            "loss": 61,
+            "owner": true,
+            "id": "jjk-ryu-spread"
+          },
+          {
+            "raw": 60.983999999999995,
+            "loss": 61,
+            "owner": true,
+            "id": "jjk-ryu-spread"
+          },
+          {
+            "raw": 60.983999999999995,
+            "loss": 61,
+            "owner": true,
+            "id": "jjk-ryu-spread"
+          },
+          {
+            "raw": 60.983999999999995,
+            "loss": 61,
+            "owner": true,
+            "id": "jjk-ryu-spread"
+          },
+          {
+            "raw": 60.983999999999995,
+            "loss": 61,
+            "owner": true,
+            "id": "jjk-ryu-spread"
+          },
+          {
+            "raw": 60.983999999999995,
+            "loss": 61,
+            "owner": true,
+            "id": "jjk-ryu-spread"
+          },
+          {
+            "raw": 60.983999999999995,
+            "loss": 61,
+            "owner": true,
+            "id": "jjk-ryu-spread"
+          },
+          {
+            "raw": 60.983999999999995,
+            "loss": 61,
+            "owner": true,
+            "id": "jjk-ryu-spread"
+          }
+        ],
+        "hpLoss": 488,
+        "remaining": 0,
+        "overflow": false,
+        "observedRise": [
+          {
+            "phase": "rise",
+            "lift": 1.7830769230769627
+          },
+          {
+            "phase": "rise",
+            "lift": 2.010989010989056
+          },
+          {
+            "phase": "rise",
+            "lift": 2.238901098901149
+          },
+          {
+            "phase": "rise",
+            "lift": 2.466813186813242
+          },
+          {
+            "phase": "rise",
+            "lift": 2.694725274725335
+          },
+          {
+            "phase": "rise",
+            "lift": 2.9226373626374276
+          },
+          {
+            "phase": "rise",
+            "lift": 3.1505494505495206
+          },
+          {
+            "phase": "rise",
+            "lift": 3.3784615384616137
+          }
+        ]
+      }
+    },
+    "uro": {
+      "desktop": {
+        "level": 6,
+        "picks": [
+          "stat:atk",
+          "new:jjk-uro-thin-ice",
+          "stat:atk",
+          "stat:atk",
+          "new:jjk-uro-screen"
+        ],
+        "angle": 6.283185307179586,
+        "duration": 0.8,
+        "returns": [
+          {
+            "x": 117.00000000000001,
+            "y": -2.865673510004807e-14,
+            "owner": true
+          }
+        ],
+        "remaining": 0,
+        "overflow": false
+      }
+    }
+  },
+  "ok": true
+}
