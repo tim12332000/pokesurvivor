@@ -1,0 +1,33 @@
+{
+  "source_video": "https://www.youtube.com/watch?v=DKNM-3LpfZE&t=26s",
+  "official_announcement": "https://jujutsukaisen.jp/news/20260322_01.php",
+  "source_sheet": "art-review\\jjk-anime-references-v2\\sendai-pv-storyboard-3.jpg",
+  "source_sheet_sha256": "8caf5bd0736855e16d7a9d7a63e005518cfb0516bf43edcfd447a1011646ef06",
+  "frame_size": [
+    320,
+    180
+  ],
+  "sample_interval_ms": 1000,
+  "ring_sample_index": 27,
+  "ring_approx_seconds": 27,
+  "crop_xyxy": [
+    0,
+    0,
+    320,
+    180
+  ],
+  "inspection": "Direct visual inspection of official public YouTube storyboard samples 24-29; not full video playback; no audio verification.",
+  "access_limits": [
+    "YouTube web open returned fetch throttled",
+    "CUA browser creation reports local browser use disabled in Work settings"
+  ],
+  "files": {
+    "official-pv-24s.png": "6730d3be1aced3b7ff5b4b1806fb053d29f5eff8f685b7f20bf51396f5b70628",
+    "official-pv-25s.png": "0fe6d8b1361c18ac2018ddf4e4b6682a9c71b141b37ab03f0dbb38193754ae42",
+    "official-pv-26s.png": "d22165849bcbf75b3b42eca1694bf99b1b5e1569000e5c0fd70aedf3785b2608",
+    "official-pv-27s.png": "857af90369c42fb1c3476bc2b800b7a6caf751aa43861921dcb86177a16201b1",
+    "official-pv-28s.png": "0cf9cfc6d735c602cfa617cee6a3bb5e84408bb10416aa519cfe3f461d0736b1",
+    "official-pv-29s.png": "ef43def028950984e158363a7a304a3aa8613e25d2fa3c2d12ab5afc644bc174",
+    "official-pv-ring-context.png": "fd6b6015237f1d61dcf43ebb0645d0fe6fd70e80ab739b459fbd2820960c275a"
+  }
+}

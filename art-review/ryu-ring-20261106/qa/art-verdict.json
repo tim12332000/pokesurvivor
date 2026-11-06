@@ -1,0 +1,14 @@
+{
+  "score": 91,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "Official PV uses perspective and multiple luminous coils; the game uses a top-down single physical circular tube with cyan shell, white core and travelling pressure crest.",
+    "The clean uniform tube is visually simpler than the ragged layered anime beam, but growth, moving crest and actual muzzle windup distinguish the attack from a static aura."
+  ],
+  "suggestions": [
+    "Keep the growing ingress, travelling crest, hollow center and full low-quality width together; do not replace the attack with an instant circular flash.",
+    "Treat optional ragged internal energy texture as a later polish pass; it must stay inside the same physical tube and preserve enemy readability."
+  ],
+  "reasoning": "Final desktop1280 and mobile360/390 normal-entry captures show forehead charge, advancing curved ingress, closed thick beam, changing crest location, readable central actor and clear expiry. This passes the bounded visual translation of the requested encircling cannon, not exact frame reproduction or a player-fun verdict."
+}

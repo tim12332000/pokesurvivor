@@ -1,0 +1,2176 @@
+{
+  "sourceHashes": {
+    ".omx/jjk-ryu.js": "1b14a13e77c59557346fd219c846a293fb4721481600de84331d8f47d3d80ca7",
+    ".omx/jujutsu-vfx.js": "09bd0a7a126a0584f8d051a63fc076396bc4753728edee69143bc389b40afc00",
+    ".omx/jujutsu.js": "e076fa1ed2312668ddbb2d8e688c83bf0f33eba9f28e3af646318f010991229b",
+    ".omx/jujutsu-growth.js": "72fd4bff6315b934ffbd8594d9b80528f40cb63c0424599e697d956feefa1c18",
+    ".omx/naruto.js": "66765d08cfab5f34d6131f2b9e536dd30124f1bf6c568934ab2d9200135278e5",
+    ".omx/naruto-skills-en.js": "4658609f79c277f2a5de9c5932e9d4567facb72ede204a39ac963107a22cf80a",
+    ".omx/run-insights.js": "d241fa04baaf3246a12b8624a9a50be0eac76c19d24e3259ad857d8423968845"
+  },
+  "url": "http://127.0.0.1:65489/.omx/digimon.html?lang=zh-TW&test=jujutsu",
+  "fixture": "controlled presentation; no claim of natural XP growth or physical-device verification",
+  "viewports": {
+    "desktop1280": {
+      "selection": {
+        "viewport": 675,
+        "kit": {
+          "text": "額砲Lv.1散射Lv.3圓環Lv.5爆破Lv.6全力砲Lv.9",
+          "x": 25,
+          "y": 339.296875,
+          "width": 625,
+          "height": 70.796875,
+          "visible": true,
+          "scrollWidth": 625,
+          "clientWidth": 625
+        },
+        "cells": [
+          {
+            "text": "額砲Lv.1",
+            "x": 25,
+            "y": 339.296875,
+            "width": 120.1875,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 118,
+            "clientWidth": 118
+          },
+          {
+            "text": "散射Lv.3",
+            "x": 151.1875,
+            "y": 339.296875,
+            "width": 120.203125,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 118,
+            "clientWidth": 118
+          },
+          {
+            "text": "圓環Lv.5",
+            "x": 277.390625,
+            "y": 339.296875,
+            "width": 120.203125,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 118,
+            "clientWidth": 118
+          },
+          {
+            "text": "爆破Lv.6",
+            "x": 403.59375,
+            "y": 339.296875,
+            "width": 120.203125,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 118,
+            "clientWidth": 118
+          },
+          {
+            "text": "全力砲Lv.9",
+            "x": 529.796875,
+            "y": 339.296875,
+            "width": 120.1875,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 118,
+            "clientWidth": 118
+          }
+        ],
+        "overflow": false
+      },
+      "legalCards": {
+        "method": "Lv1 blank run; staged character levels 2–5 with one genuine LevelUp card per level. This is legal card-contract evidence, not natural XP play.",
+        "picks": [
+          {
+            "level": 2,
+            "key": "stat:atk",
+            "title": "Potencia",
+            "description": "+10% de daño con todos los movimientos.\n攻擊 1.85→2.03"
+          },
+          {
+            "level": 3,
+            "key": "new:jjk-ryu-spread",
+            "title": "散射咒力砲",
+            "description": "蓄力0.35秒，四道咒力分岔後沿彎曲路徑追擊不同可達敵群，碰到首個敵人或障礙即停止；五階基礎五道。第一張數量卡四→五道，最多九道，同次不重複直擊同一敵人。學會全力砲後，每次施放真正命中最多蓄一格。 自動施放，不占主動槽。"
+          },
+          {
+            "level": 4,
+            "key": "stat:atk",
+            "title": "Potencia",
+            "description": "+10% de daño con todos los movimientos.\n攻擊 2.03→2.24"
+          },
+          {
+            "level": 5,
+            "key": "new:jjk-ryu-ring",
+            "title": "花崗岩砲・圓環",
+            "description": "近敵來襲時蓄力0.32秒，額前砲束彎曲成繞身圓環，連續4→8輪真實環帶切擊。數量卡第一張4→5輪，最多16輪；環半徑112→180、砲道半寬18→30。可移動，不附帶無敵、控場或擋彈；牆會截斷砲道。學會全力砲後，每次施放真正命中最多蓄一格。圓環繞身取自動畫，輪次與成長為本作改編。 自動施放，不占主動槽。"
+          }
+        ]
+      },
+      "screenshots": {
+        "desktop1280-rank1-q0": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 1,
+            "q": 0,
+            "profile": {
+              "count": 4,
+              "radius": 112,
+              "width": 18,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 0.88
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q0-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q0-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 4,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.8,
+                "duration": 0.88,
+                "lapIndex": 0,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/4",
+                "fraction": 0.9090909090909092
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q0-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 4,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.6300000000000001,
+                "duration": 0.88,
+                "lapIndex": 1,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/4",
+                "fraction": 0.715909090909091
+              }
+            },
+            {
+              "phase": "late",
+              "at": 1.1099999999999999,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q0-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.7899999999999997,
+                  "lapIndex": 3,
+                  "count": 4,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.0900000000000003,
+                "duration": 0.88,
+                "lapIndex": 3,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 4/4",
+                "fraction": 0.10227272727272761
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 1.44,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q0-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        },
+        "desktop1280-rank1-q1": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 1,
+            "q": 1,
+            "profile": {
+              "count": 5,
+              "radius": 112,
+              "width": 18,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 1.1
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q1-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q1-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 5,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 1.0200000000000002,
+                "duration": 1.1,
+                "lapIndex": 0,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/5",
+                "fraction": 0.9272727272727275
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q1-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 5,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.8500000000000001,
+                "duration": 1.1,
+                "lapIndex": 1,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/5",
+                "fraction": 0.7727272727272727
+              }
+            },
+            {
+              "phase": "late",
+              "at": 1.33,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q1-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 1.0099999999999996,
+                  "lapIndex": 4,
+                  "count": 5,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.09000000000000052,
+                "duration": 1.1,
+                "lapIndex": 4,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 5/5",
+                "fraction": 0.08181818181818229
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 1.6600000000000001,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank1-q1-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        },
+        "desktop1280-rank5-q4": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 5,
+            "q": 4,
+            "profile": {
+              "count": 16,
+              "radius": 180,
+              "width": 30,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 3.52
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank5-q4-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank5-q4-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 16,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 3.44,
+                "duration": 3.52,
+                "lapIndex": 0,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/16",
+                "fraction": 0.9772727272727273
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank5-q4-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 16,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 3.27,
+                "duration": 3.52,
+                "lapIndex": 1,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/16",
+                "fraction": 0.9289772727272727
+              }
+            },
+            {
+              "phase": "late",
+              "at": 3.75,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank5-q4-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 3.4299999999999695,
+                  "lapIndex": 15,
+                  "count": 16,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.0900000000000305,
+                "duration": 3.52,
+                "lapIndex": 15,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 16/16",
+                "fraction": 0.025568181818190483
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 4.08,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank5-q4-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        }
+      },
+      "native": {
+        "method": "production RAF canvas.captureStream(30), unstitched complete cycle, actual dispatched keyboard/touch input; controlled rank5 quantity4 durable enemies",
+        "config": {
+          "rank": 5,
+          "q": 4,
+          "profile": {
+            "count": 16,
+            "radius": 180,
+            "width": 30,
+            "interval": 0.22,
+            "charge": 0.32,
+            "cd": 6.5,
+            "duration": 3.52
+          }
+        },
+        "before": {
+          "position": [
+            0,
+            0
+          ],
+          "action": null,
+          "rings": [
+            {
+              "age": 0.33620000000000017,
+              "lapIndex": 1,
+              "count": 16,
+              "segments": 96
+            }
+          ],
+          "status": {
+            "state": "active",
+            "phase": "ring",
+            "remaining": 3.1837999999999997,
+            "duration": 3.52,
+            "lapIndex": 1,
+            "count": 16,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0
+          },
+          "hud": {
+            "label": "圓環 2/16",
+            "fraction": 0.9044886363636363
+          }
+        },
+        "after": {
+          "position": [
+            26.797392000000045,
+            0
+          ],
+          "action": null,
+          "rings": [
+            {
+              "age": 0.5523000000000007,
+              "lapIndex": 2,
+              "count": 16,
+              "segments": 96
+            }
+          ],
+          "status": {
+            "state": "active",
+            "phase": "ring",
+            "remaining": 2.9676999999999993,
+            "duration": 3.52,
+            "lapIndex": 2,
+            "count": 16,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0
+          },
+          "hud": {
+            "label": "圓環 3/16",
+            "fraction": 0.8430965909090907
+          }
+        },
+        "final": {
+          "position": [
+            26.797392000000045,
+            0
+          ],
+          "action": null,
+          "rings": [],
+          "status": {
+            "state": "cooldown",
+            "remaining": 2.1141999999999945,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0,
+            "coreRemaining": 0,
+            "reason": null
+          },
+          "hud": {
+            "label": "2.1s",
+            "fraction": 0.3252615384615376
+          }
+        },
+        "video": "art-review\\ryu-ring-20261106\\qa\\presentation\\desktop1280-rank5-q4-native-ring.webm"
+      }
+    },
+    "mobile360": {
+      "selection": {
+        "viewport": 360,
+        "kit": {
+          "text": "額砲Lv.1散射Lv.3圓環Lv.5爆破Lv.6全力砲Lv.9",
+          "x": 12,
+          "y": 228.296875,
+          "width": 336,
+          "height": 70.796875,
+          "visible": true,
+          "scrollWidth": 336,
+          "clientWidth": 336
+        },
+        "cells": [
+          {
+            "text": "額砲Lv.1",
+            "x": 12,
+            "y": 228.296875,
+            "width": 62.390625,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "text": "散射Lv.3",
+            "x": 80.390625,
+            "y": 228.296875,
+            "width": 62.40625,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "text": "圓環Lv.5",
+            "x": 148.796875,
+            "y": 228.296875,
+            "width": 62.390625,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "text": "爆破Lv.6",
+            "x": 217.1875,
+            "y": 228.296875,
+            "width": 62.40625,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          },
+          {
+            "text": "全力砲Lv.9",
+            "x": 285.59375,
+            "y": 228.296875,
+            "width": 62.40625,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 60,
+            "clientWidth": 60
+          }
+        ],
+        "overflow": false
+      },
+      "legalCards": {
+        "method": "Lv1 blank run; staged character levels 2–5 with one genuine LevelUp card per level. This is legal card-contract evidence, not natural XP play.",
+        "picks": [
+          {
+            "level": 2,
+            "key": "stat:atk",
+            "title": "Potencia",
+            "description": "+10% de daño con todos los movimientos.\n攻擊 1.85→2.03"
+          },
+          {
+            "level": 3,
+            "key": "new:jjk-ryu-spread",
+            "title": "散射咒力砲",
+            "description": "蓄力0.35秒，四道咒力分岔後沿彎曲路徑追擊不同可達敵群，碰到首個敵人或障礙即停止；五階基礎五道。第一張數量卡四→五道，最多九道，同次不重複直擊同一敵人。學會全力砲後，每次施放真正命中最多蓄一格。 自動施放，不占主動槽。"
+          },
+          {
+            "level": 4,
+            "key": "stat:atk",
+            "title": "Potencia",
+            "description": "+10% de daño con todos los movimientos.\n攻擊 2.03→2.24"
+          },
+          {
+            "level": 5,
+            "key": "new:jjk-ryu-ring",
+            "title": "花崗岩砲・圓環",
+            "description": "近敵來襲時蓄力0.32秒，額前砲束彎曲成繞身圓環，連續4→8輪真實環帶切擊。數量卡第一張4→5輪，最多16輪；環半徑112→180、砲道半寬18→30。可移動，不附帶無敵、控場或擋彈；牆會截斷砲道。學會全力砲後，每次施放真正命中最多蓄一格。圓環繞身取自動畫，輪次與成長為本作改編。 自動施放，不占主動槽。"
+          }
+        ]
+      },
+      "screenshots": {
+        "mobile360-rank1-q0": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 1,
+            "q": 0,
+            "profile": {
+              "count": 4,
+              "radius": 112,
+              "width": 18,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 0.88
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q0-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q0-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 4,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.8,
+                "duration": 0.88,
+                "lapIndex": 0,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/4",
+                "fraction": 0.9090909090909092
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q0-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 4,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.6300000000000001,
+                "duration": 0.88,
+                "lapIndex": 1,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/4",
+                "fraction": 0.715909090909091
+              }
+            },
+            {
+              "phase": "late",
+              "at": 1.1099999999999999,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q0-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.7899999999999997,
+                  "lapIndex": 3,
+                  "count": 4,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.0900000000000003,
+                "duration": 0.88,
+                "lapIndex": 3,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 4/4",
+                "fraction": 0.10227272727272761
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 1.44,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q0-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        },
+        "mobile360-rank1-q1": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 1,
+            "q": 1,
+            "profile": {
+              "count": 5,
+              "radius": 112,
+              "width": 18,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 1.1
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q1-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q1-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 5,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 1.0200000000000002,
+                "duration": 1.1,
+                "lapIndex": 0,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/5",
+                "fraction": 0.9272727272727275
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q1-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 5,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.8500000000000001,
+                "duration": 1.1,
+                "lapIndex": 1,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/5",
+                "fraction": 0.7727272727272727
+              }
+            },
+            {
+              "phase": "late",
+              "at": 1.33,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q1-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 1.0099999999999996,
+                  "lapIndex": 4,
+                  "count": 5,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.09000000000000052,
+                "duration": 1.1,
+                "lapIndex": 4,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 5/5",
+                "fraction": 0.08181818181818229
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 1.6600000000000001,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank1-q1-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        },
+        "mobile360-rank5-q4": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 5,
+            "q": 4,
+            "profile": {
+              "count": 16,
+              "radius": 180,
+              "width": 30,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 3.52
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank5-q4-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank5-q4-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 16,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 3.44,
+                "duration": 3.52,
+                "lapIndex": 0,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/16",
+                "fraction": 0.9772727272727273
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank5-q4-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 16,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 3.27,
+                "duration": 3.52,
+                "lapIndex": 1,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/16",
+                "fraction": 0.9289772727272727
+              }
+            },
+            {
+              "phase": "late",
+              "at": 3.75,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank5-q4-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 3.4299999999999695,
+                  "lapIndex": 15,
+                  "count": 16,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.0900000000000305,
+                "duration": 3.52,
+                "lapIndex": 15,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 16/16",
+                "fraction": 0.025568181818190483
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 4.08,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank5-q4-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        }
+      },
+      "native": {
+        "method": "production RAF canvas.captureStream(30), unstitched complete cycle, actual dispatched keyboard/touch input; controlled rank5 quantity4 durable enemies",
+        "config": {
+          "rank": 5,
+          "q": 4,
+          "profile": {
+            "count": 16,
+            "radius": 180,
+            "width": 30,
+            "interval": 0.22,
+            "charge": 0.32,
+            "cd": 6.5,
+            "duration": 3.52
+          }
+        },
+        "before": {
+          "position": [
+            0,
+            0
+          ],
+          "action": null,
+          "rings": [
+            {
+              "age": 0.3441000000000006,
+              "lapIndex": 1,
+              "count": 16,
+              "segments": 96
+            }
+          ],
+          "status": {
+            "state": "active",
+            "phase": "ring",
+            "remaining": 3.1758999999999995,
+            "duration": 3.52,
+            "lapIndex": 1,
+            "count": 16,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0
+          },
+          "hud": {
+            "label": "圓環 2/16",
+            "fraction": 0.902244318181818
+          }
+        },
+        "after": {
+          "position": [
+            28.940111999999917,
+            0
+          ],
+          "action": null,
+          "rings": [
+            {
+              "age": 0.6002000000000003,
+              "lapIndex": 2,
+              "count": 16,
+              "segments": 96
+            }
+          ],
+          "status": {
+            "state": "active",
+            "phase": "ring",
+            "remaining": 2.9197999999999995,
+            "duration": 3.52,
+            "lapIndex": 2,
+            "count": 16,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0
+          },
+          "hud": {
+            "label": "圓環 3/16",
+            "fraction": 0.8294886363636362
+          }
+        },
+        "final": {
+          "position": [
+            28.940111999999917,
+            0
+          ],
+          "action": null,
+          "rings": [],
+          "status": {
+            "state": "cooldown",
+            "remaining": 2.1100999999999948,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0,
+            "coreRemaining": 0,
+            "reason": null
+          },
+          "hud": {
+            "label": "2.1s",
+            "fraction": 0.32463076923076845
+          }
+        },
+        "video": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile360-rank5-q4-native-ring.webm"
+      }
+    },
+    "mobile390": {
+      "selection": {
+        "viewport": 390,
+        "kit": {
+          "text": "額砲Lv.1散射Lv.3圓環Lv.5爆破Lv.6全力砲Lv.9",
+          "x": 25,
+          "y": 350.984375,
+          "width": 340,
+          "height": 70.796875,
+          "visible": true,
+          "scrollWidth": 340,
+          "clientWidth": 340
+        },
+        "cells": [
+          {
+            "text": "額砲Lv.1",
+            "x": 25,
+            "y": 350.984375,
+            "width": 63.1875,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "text": "散射Lv.3",
+            "x": 94.1875,
+            "y": 350.984375,
+            "width": 63.203125,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "text": "圓環Lv.5",
+            "x": 163.390625,
+            "y": 350.984375,
+            "width": 63.203125,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "text": "爆破Lv.6",
+            "x": 232.59375,
+            "y": 350.984375,
+            "width": 63.203125,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          },
+          {
+            "text": "全力砲Lv.9",
+            "x": 301.796875,
+            "y": 350.984375,
+            "width": 63.203125,
+            "height": 70.796875,
+            "visible": true,
+            "scrollWidth": 61,
+            "clientWidth": 61
+          }
+        ],
+        "overflow": false
+      },
+      "legalCards": {
+        "method": "Lv1 blank run; staged character levels 2–5 with one genuine LevelUp card per level. This is legal card-contract evidence, not natural XP play.",
+        "picks": [
+          {
+            "level": 2,
+            "key": "stat:atk",
+            "title": "Potencia",
+            "description": "+10% de daño con todos los movimientos.\n攻擊 1.85→2.03"
+          },
+          {
+            "level": 3,
+            "key": "new:jjk-ryu-spread",
+            "title": "散射咒力砲",
+            "description": "蓄力0.35秒，四道咒力分岔後沿彎曲路徑追擊不同可達敵群，碰到首個敵人或障礙即停止；五階基礎五道。第一張數量卡四→五道，最多九道，同次不重複直擊同一敵人。學會全力砲後，每次施放真正命中最多蓄一格。 自動施放，不占主動槽。"
+          },
+          {
+            "level": 4,
+            "key": "stat:atk",
+            "title": "Potencia",
+            "description": "+10% de daño con todos los movimientos.\n攻擊 2.03→2.24"
+          },
+          {
+            "level": 5,
+            "key": "new:jjk-ryu-ring",
+            "title": "花崗岩砲・圓環",
+            "description": "近敵來襲時蓄力0.32秒，額前砲束彎曲成繞身圓環，連續4→8輪真實環帶切擊。數量卡第一張4→5輪，最多16輪；環半徑112→180、砲道半寬18→30。可移動，不附帶無敵、控場或擋彈；牆會截斷砲道。學會全力砲後，每次施放真正命中最多蓄一格。圓環繞身取自動畫，輪次與成長為本作改編。 自動施放，不占主動槽。"
+          }
+        ]
+      },
+      "screenshots": {
+        "mobile390-rank1-q0": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 1,
+            "q": 0,
+            "profile": {
+              "count": 4,
+              "radius": 112,
+              "width": 18,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 0.88
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q0-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q0-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 4,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.8,
+                "duration": 0.88,
+                "lapIndex": 0,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/4",
+                "fraction": 0.9090909090909092
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q0-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 4,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.6300000000000001,
+                "duration": 0.88,
+                "lapIndex": 1,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/4",
+                "fraction": 0.715909090909091
+              }
+            },
+            {
+              "phase": "late",
+              "at": 1.1099999999999999,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q0-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.7899999999999997,
+                  "lapIndex": 3,
+                  "count": 4,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.0900000000000003,
+                "duration": 0.88,
+                "lapIndex": 3,
+                "count": 4,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 4/4",
+                "fraction": 0.10227272727272761
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 1.44,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q0-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        },
+        "mobile390-rank1-q1": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 1,
+            "q": 1,
+            "profile": {
+              "count": 5,
+              "radius": 112,
+              "width": 18,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 1.1
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q1-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q1-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 5,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 1.0200000000000002,
+                "duration": 1.1,
+                "lapIndex": 0,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/5",
+                "fraction": 0.9272727272727275
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q1-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 5,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.8500000000000001,
+                "duration": 1.1,
+                "lapIndex": 1,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/5",
+                "fraction": 0.7727272727272727
+              }
+            },
+            {
+              "phase": "late",
+              "at": 1.33,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q1-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 1.0099999999999996,
+                  "lapIndex": 4,
+                  "count": 5,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.09000000000000052,
+                "duration": 1.1,
+                "lapIndex": 4,
+                "count": 5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 5/5",
+                "fraction": 0.08181818181818229
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 1.6600000000000001,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank1-q1-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        },
+        "mobile390-rank5-q4": {
+          "fixture": "controlled static durable enemies at four ring quadrants; production cast/update/draw",
+          "config": {
+            "rank": 5,
+            "q": 4,
+            "profile": {
+              "count": 16,
+              "radius": 180,
+              "width": 30,
+              "interval": 0.22,
+              "charge": 0.32,
+              "cd": 6.5,
+              "duration": 3.52
+            }
+          },
+          "stages": [
+            {
+              "phase": "windup",
+              "at": 0.16,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank5-q4-windup.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.16,
+                "released": false
+              },
+              "rings": [],
+              "status": {
+                "state": "casting",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "繞身蓄力",
+                "fraction": 0.5
+              }
+            },
+            {
+              "phase": "growing",
+              "at": 0.4,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank5-q4-growing.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": {
+                "mode": "jjk-ryu-ring",
+                "age": 0.40000000000000013,
+                "released": true
+              },
+              "rings": [
+                {
+                  "age": 0.07999999999999993,
+                  "lapIndex": 0,
+                  "count": 16,
+                  "segments": 50
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 3.44,
+                "duration": 3.52,
+                "lapIndex": 0,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 1/16",
+                "fraction": 0.9772727272727273
+              }
+            },
+            {
+              "phase": "full",
+              "at": 0.57,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank5-q4-full.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 0.24999999999999994,
+                  "lapIndex": 1,
+                  "count": 16,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 3.27,
+                "duration": 3.52,
+                "lapIndex": 1,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 2/16",
+                "fraction": 0.9289772727272727
+              }
+            },
+            {
+              "phase": "late",
+              "at": 3.75,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank5-q4-late.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [
+                {
+                  "age": 3.4299999999999695,
+                  "lapIndex": 15,
+                  "count": 16,
+                  "segments": 96
+                }
+              ],
+              "status": {
+                "state": "active",
+                "phase": "ring",
+                "remaining": 0.0900000000000305,
+                "duration": 3.52,
+                "lapIndex": 15,
+                "count": 16,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0
+              },
+              "hud": {
+                "label": "圓環 16/16",
+                "fraction": 0.025568181818190483
+              }
+            },
+            {
+              "phase": "recovered",
+              "at": 4.08,
+              "screenshot": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank5-q4-recovered.png",
+              "position": [
+                0,
+                0
+              ],
+              "action": null,
+              "rings": [],
+              "status": {
+                "state": "cooldown",
+                "remaining": 6.5,
+                "coreCharge": 0,
+                "chargeRequired": 3,
+                "recoveryRemaining": 0,
+                "coreRemaining": 0,
+                "reason": null
+              },
+              "hud": {
+                "label": "6.5s",
+                "fraction": 1
+              }
+            }
+          ]
+        }
+      },
+      "native": {
+        "method": "production RAF canvas.captureStream(30), unstitched complete cycle, actual dispatched keyboard/touch input; controlled rank5 quantity4 durable enemies",
+        "config": {
+          "rank": 5,
+          "q": 4,
+          "profile": {
+            "count": 16,
+            "radius": 180,
+            "width": 30,
+            "interval": 0.22,
+            "charge": 0.32,
+            "cd": 6.5,
+            "duration": 3.52
+          }
+        },
+        "before": {
+          "position": [
+            0,
+            0
+          ],
+          "action": null,
+          "rings": [
+            {
+              "age": 0.34420000000000006,
+              "lapIndex": 1,
+              "count": 16,
+              "segments": 96
+            }
+          ],
+          "status": {
+            "state": "active",
+            "phase": "ring",
+            "remaining": 3.1757999999999997,
+            "duration": 3.52,
+            "lapIndex": 1,
+            "count": 16,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0
+          },
+          "hud": {
+            "label": "圓環 2/16",
+            "fraction": 0.902215909090909
+          }
+        },
+        "after": {
+          "position": [
+            28.953503999999967,
+            0
+          ],
+          "action": null,
+          "rings": [
+            {
+              "age": 0.6003000000000006,
+              "lapIndex": 2,
+              "count": 16,
+              "segments": 96
+            }
+          ],
+          "status": {
+            "state": "active",
+            "phase": "ring",
+            "remaining": 2.9196999999999993,
+            "duration": 3.52,
+            "lapIndex": 2,
+            "count": 16,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0
+          },
+          "hud": {
+            "label": "圓環 3/16",
+            "fraction": 0.8294602272727271
+          }
+        },
+        "final": {
+          "position": [
+            28.953503999999967,
+            0
+          ],
+          "action": null,
+          "rings": [],
+          "status": {
+            "state": "cooldown",
+            "remaining": 2.1101999999999963,
+            "coreCharge": 0,
+            "chargeRequired": 3,
+            "recoveryRemaining": 0,
+            "coreRemaining": 0,
+            "reason": null
+          },
+          "hud": {
+            "label": "2.1s",
+            "fraction": 0.32464615384615325
+          }
+        },
+        "video": "art-review\\ryu-ring-20261106\\qa\\presentation\\mobile390-rank5-q4-native-ring.webm"
+      }
+    }
+  },
+  "errors": [],
+  "failedRequests": [],
+  "failures": [],
+  "sourceHashesAfter": {
+    ".omx/jjk-ryu.js": "1b14a13e77c59557346fd219c846a293fb4721481600de84331d8f47d3d80ca7",
+    ".omx/jujutsu-vfx.js": "09bd0a7a126a0584f8d051a63fc076396bc4753728edee69143bc389b40afc00",
+    ".omx/jujutsu.js": "e076fa1ed2312668ddbb2d8e688c83bf0f33eba9f28e3af646318f010991229b",
+    ".omx/jujutsu-growth.js": "72fd4bff6315b934ffbd8594d9b80528f40cb63c0424599e697d956feefa1c18",
+    ".omx/naruto.js": "66765d08cfab5f34d6131f2b9e536dd30124f1bf6c568934ab2d9200135278e5",
+    ".omx/naruto-skills-en.js": "4658609f79c277f2a5de9c5932e9d4567facb72ede204a39ac963107a22cf80a",
+    ".omx/run-insights.js": "d241fa04baaf3246a12b8624a9a50be0eac76c19d24e3259ad857d8423968845"
+  },
+  "ok": true
+}

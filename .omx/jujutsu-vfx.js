@@ -303,8 +303,46 @@
     for(let i=0;i<count;i++){const a=i*TAU/8+hash(i,seed)*.25,d=r*(.25+.65*age/life),len=4+7*fade;ctx.beginPath();ctx.moveTo(x+Math.cos(a)*d,y+Math.sin(a)*d*.65);ctx.lineTo(x+Math.cos(a)*(d+len),y+Math.sin(a)*(d+len)*.65);ctx.stroke();frame.shards++;}
     ctx.restore();
   }
+  function drawRyuRing(ctx,owner,ring,ground){
+    if(ring.dead||!ring.segments?.length)return;
+    const ox=ground?0:(ring.renderOffsetX||0),oy=ground?0:(ring.renderOffsetY??-48);
+    ctx.save();ctx.translate(ox,oy);ctx.lineJoin='round';ctx.lineCap='round';
+    ctx.beginPath();
+    for(let i=0;i<ring.segments.length;i++){
+      const segment=ring.segments[i],previous=ring.segments[i-1];
+      if(!previous||Math.hypot(segment.ax-previous.bx,segment.ay-previous.by)>.1)ctx.moveTo(segment.ax,segment.ay);
+      ctx.lineTo(segment.bx,segment.by);
+    }
+    // These layers share the clipped combat path. Low quality keeps its full
+    // physical width and every live circuit; only the interior seam is omitted.
+    ctx.globalAlpha=ground?.13:.52;ctx.strokeStyle=ground?'#61c6d5':'#3ebddf';ctx.lineWidth=ring.width*2;ctx.stroke();
+    if(!ground){
+      ctx.globalAlpha=.9;ctx.strokeStyle='#8eefff';ctx.lineWidth=ring.width*1.25;ctx.stroke();
+      ctx.globalAlpha=.96;ctx.strokeStyle='#f2ffff';ctx.lineWidth=ring.width*.55;ctx.stroke();
+      if(!low()){
+        ctx.globalAlpha=.65;ctx.strokeStyle='#ffffff';ctx.lineWidth=Math.max(1,ring.width*.12);ctx.stroke();
+      }
+      const phase=(ring.age%ring.interval)/ring.interval;
+      const headIndex=ring.cycle===0?ring.segments.length-1:Math.min(ring.segments.length-1,Math.floor(phase*ring.segments.length));
+      const head=ring.segments[headIndex];
+      // The whole closed tube remains physical. A travelling pressure crest
+      // makes each actual circuit readable without inventing extra hit paths.
+      ctx.globalAlpha=.95;ctx.strokeStyle='#ffffff';ctx.lineWidth=ring.width*.85;
+      ctx.beginPath();
+      const tail=Math.max(0,headIndex-Math.ceil(ring.segments.length*.13));
+      ctx.moveTo(ring.segments[tail].ax,ring.segments[tail].ay);
+      for(let i=tail;i<=headIndex;i++)ctx.lineTo(ring.segments[i].bx,ring.segments[i].by);
+      ctx.stroke();
+      ctx.globalAlpha=.95;ctx.fillStyle='#f5ffff';ctx.beginPath();
+      ctx.arc(head.bx,head.by,ring.width*.68,0,TAU);ctx.fill();
+      frame.draws.push({kind:'ryu-ring',owner:id(owner),castId:ring.action?.castId,
+        radius:ring.radius,width:ring.width,cycle:ring.cycle,count:ring.count,segments:ring.segments.length});
+    }
+    ctx.restore();
+  }
   function drawRyu(ctx,owner,s,ground){
     if(!s)return;
+    for(const ring of s.rings||[])drawRyuRing(ctx,owner,ring,ground);
     if(!ground&&s.action&&!s.action.released)drawCharge(ctx,owner,s.action);
     if(!ground&&s.action?.released)drawBarrageMuzzle(ctx,owner,s.action);
     if(!ground){

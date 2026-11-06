@@ -8,6 +8,7 @@
     'jjk-ryu':{charge:.22,cd:1.8,damage:42,range:360,radius:14},
     'jjk-ryu-spread':{charge:.35,cd:5,damage:30,range:200,radius:12},
     'jjk-ryu-impact':{charge:.45,cd:7,damage:100,range:300,radius:90},
+    'jjk-ryu-ring':{charge:.32,cd:6.5,damage:48,range:112,radius:18},
     'jjk-ryu-maximum':{charge:.75,cd:5.4,damage:200,range:760,radius:72}
   };
   const alive=a=>!!a&&!a.dead&&a.hp>0;
@@ -53,7 +54,7 @@
   function state(owner){
     let s=states.get(owner);
     if(s&&(s.world!==G.World||s.runEpoch!==G.CombatPulse.epoch)){clear(owner);s=null;}
-    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,clock:0,action:null,effects:[],scatter:[],ready:new Map(),casts:{},hits:0,damage:0,coreCharge:0,recoveryUntil:0};states.set(owner,s);}
+    if(!s){s={owner,world:G.World,runEpoch:G.CombatPulse.epoch,clock:0,action:null,effects:[],scatter:[],rings:[],ready:new Map(),casts:{},hits:0,damage:0,coreCharge:0,recoveryUntil:0};states.set(owner,s);}
     return s;
   }
   function clearPath(ax,ay,bx,by,target=null){
@@ -76,11 +77,19 @@
     const L=level(m)-1,count=Math.min(16,G.Quantity.count(owner,[4,5,6,7,8][L]));
     return {count,radius:[72,84,96,108,128][L],range:[760,820,880,940,1040][L],duration:2.2,interval:1.08/Math.max(1,count-1)};
   }
+  function ringFor(owner,m){
+    const p=G.Jujutsu?.power?.ryu||{},L=level(m)-1;
+    const count=Math.min(p.ringCap??16,G.Quantity.count(owner,(p.ringBases||[4,5,6,7,8])[L]));
+    const interval=p.ringInterval??.22;
+    return {count,radius:(p.ringRadii||[112,128,144,160,180])[L],width:(p.ringWidths||[18,21,24,27,30])[L],
+      interval,charge:p.ringCharge??.32,cd:p.ringCd??6.5,duration:count*interval};
+  }
   const actionLegal=(s,f)=>states.get(s.owner)===s&&G.CombatPulse.legal(f.cast)&&s.owner.moves?.some(m=>m.id===f.m.id);
   function targetFor(owner,m){
-    const r=settings(m).range;
+    const ring=m.digiMode==='jjk-ryu-ring',profile=ring?ringFor(owner,m):null;
+    const r=ring?profile.radius+profile.width:settings(m).range;
     const enemies=[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,r+80))].filter(e=>alive(e)&&!e.friendly&&
-      Math.hypot(e.x-owner.x,e.y-owner.y)<=r+(e.r||0)&&clearPath(owner.x,owner.y,e.x,e.y))
+      Math.hypot(e.x-owner.x,e.y-owner.y)<=r+(e.r||0)&&(ring||clearPath(owner.x,owner.y,e.x,e.y)))
       .sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
     if(m.impactTargetPolicy==='cluster'||m.digiMode==='jjk-ryu-impact'){
       const radius=settings(m).radius,score=e=>enemies.reduce((n,other)=>n+Number(Math.hypot(other.x-e.x,other.y-e.y)<=radius+(other.r||0)&&clearPath(e.x,e.y,other.x,other.y)),0);
@@ -91,13 +100,14 @@
     }
     if(enemies.length)return enemies[0];
     return (G.World.propsInCircle?.(owner.x,owner.y,r)||[]).filter(p=>p.destructible!==false&&p.hp>0&&
-      Math.hypot(p.x-owner.x,p.y-owner.y)<=r+(p.r||0)&&clearPath(owner.x,owner.y,p.x,p.y,p))
+      Math.hypot(p.x-owner.x,p.y-owner.y)<=r+(p.r||0)&&(ring||clearPath(owner.x,owner.y,p.x,p.y,p)))
       .sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y))[0]||null;
   }
   function canCast(owner,m){
     if(!valid(owner)||owner.frozen||G.Game.state!=='playing'||!supports(m?.digiMode))return false;
     const s=state(owner);
-    return !s.action&&s.clock+EPS>=s.recoveryUntil&&(m.t||0)<=EPS&&!!owner.moves?.some(x=>x.id===m.id)&&!!targetFor(owner,m);
+    return !s.action&&s.clock+EPS>=s.recoveryUntil&&(m.t||0)<=EPS&&
+      (m.digiMode!=='jjk-ryu-ring'||!s.rings.some(r=>!r.dead))&&!!owner.moves?.some(x=>x.id===m.id)&&!!targetFor(owner,m);
   }
   function cast(owner,m){
     if(!canCast(owner,m))return false;
@@ -115,6 +125,7 @@
         duration:barrage.duration,mainRadius:barrage.radius,barrageAim:f.aim,baseDamage:f.damage,lastShotAt:f.charge,pulseAge:0});
       f.damage*=1.5;
     }
+    if(mode==='jjk-ryu-ring')Object.assign(s.action,{charge:ringFor(owner,m).charge,ringProfile:ringFor(owner,m)});
     Object.assign(s.action,{castId:s.action.cast.castId,runEpoch:s.action.cast.runEpoch,channel:'body'});
     choreography(s.action);
     owner.aim=s.action.aim;m.t=Math.max(.05,p.cd*(owner.cdMul??1));m.castAt=performance.now();
@@ -242,6 +253,91 @@
     }
     s.scatter=s.scatter.filter(shot=>!shot.dead);
   }
+  function startRing(s,f){
+    const p=f.ringProfile,start=f.visualStart||{x:f.x,y:f.y-HEAD_HEIGHT};
+    f.cast.channel='ring';
+    // CombatPulse rechecks this predicate between secondary splash victims as
+    // well as direct hits, so a callback cannot retain the old ring's damage.
+    f.cast.targetIsLegal=e=>actionLegal(s,f)&&G.EnemyMgr.all().includes(e);
+    const ring={...p,action:f,m:f.m,age:0,cycle:0,lapIndex:0,progress:0,x:s.owner.x,y:s.owner.y,
+      renderOffsetX:start.x-f.x,renderOffsetY:start.y-f.y,points:[],segments:[],hitThisCycle:new Set(),
+      propHits:new Set(),nextPulseIndex:0,dead:false};
+    s.rings.push(ring);
+    return ring;
+  }
+  function ringPath(s,r){
+    const f=r.action,c=Math.cos(f.aim),sn=Math.sin(f.aim),radius=r.radius;
+    const local=[{x:8,y:0,lead:true}],leadSteps=16,arcSteps=96;
+    // The emitter bends into a tangent before closing around the actor. It is
+    // one connected cannon path, never a rotating straight ray or filled disk.
+    for(let i=1;i<=leadSteps;i++){
+      const t=i/leadSteps,u=1-t;
+      local.push({x:u*u*u*8+3*u*u*t*radius*.6+3*u*t*t*radius+t*t*t*radius,
+        y:-3*u*t*t*radius*.45,lead:true});
+    }
+    const growth=clamp(r.age/r.interval),arc=Math.min(arcSteps,Math.floor(growth*arcSteps));
+    for(let i=1;i<=arc;i++){const a=i*Math.PI*2/arcSteps;local.push({x:radius*Math.cos(a),y:radius*Math.sin(a),lead:false});}
+    r.x=s.owner.x;r.y=s.owner.y;r.progress=growth;r.segments=[];r.points=[];
+    let previous={x:r.x+local[0].x*c-local[0].y*sn,y:r.y+local[0].x*sn+local[0].y*c};
+    const breakProp=prop=>{
+      if(!actionLegal(s,f))return false;
+      if(prop.destructible===false||!Number.isFinite(prop.hp))return false;
+      if(!r.propHits.has(prop)&&prop.hp>0){r.propHits.add(prop);G.World.damageProp?.(prop,f.damage,'#bff7ff');}
+      return prop.hp<=0;
+    };
+    for(let i=1;i<local.length;i++){
+      const p=local[i],next={x:r.x+p.x*c-p.y*sn,y:r.y+p.x*sn+p.y*c};
+      const dx=next.x-previous.x,dy=next.y-previous.y,length=Math.hypot(dx,dy),aim=Math.atan2(dy,dx);
+      const clipped=clippedLength(previous.x,previous.y,aim,length,r.width,null,breakProp);
+      if(!actionLegal(s,f)){r.dead=true;return;}
+      const tip={x:previous.x+Math.cos(aim)*clipped,y:previous.y+Math.sin(aim)*clipped};
+      // The brief ingress disappears after the ring closes; the hollow center
+      // stays safe while each subsequent real lap strikes the circular path.
+      if((r.cycle===0||!p.lead)&&clipped>EPS){
+        if(!r.points.length)r.points.push(previous);
+        r.points.push(tip);r.segments.push({ax:previous.x,ay:previous.y,bx:tip.x,by:tip.y});
+      }
+      if(clipped+EPS<length)break;
+      previous=next;
+    }
+  }
+  function ringTouch(r,e){
+    const radius=r.width+(e.r||0);
+    return r.segments.some(p=>{
+      const dx=p.bx-p.ax,dy=p.by-p.ay,len=dx*dx+dy*dy;
+      const t=len>EPS?clamp(((e.x-p.ax)*dx+(e.y-p.ay)*dy)/len):0;
+      const x=p.ax+dx*t,y=p.ay+dy*t;
+      return Math.hypot(e.x-x,e.y-y)<=radius&&clearPath(x,y,e.x,e.y);
+    });
+  }
+  function advanceRing(s,r,dt){
+    const f=r.action;
+    if(!actionLegal(s,f)){r.dead=true;return;}
+    let left=Math.min(dt,Math.max(0,r.duration-r.age));
+    // A bounded simulation step observes every lap even after a delayed frame;
+    // damage is tied to the live curved path, not to decorative draw calls.
+    while(left>EPS&&!r.dead){
+      const step=Math.min(left,1/120,(r.cycle+1)*r.interval-r.age);
+      r.age+=step;left-=step;ringPath(s,r);
+      if(r.dead)break;
+      const registered=new Set(G.EnemyMgr.all()),hits=[];
+      for(const e of new Set(G.EnemyMgr.queryCircle(r.x,r.y,r.radius+r.width+80))){
+        if(!registered.has(e)||!alive(e)||e.friendly||r.hitThisCycle.has(e)||!ringTouch(r,e))continue;
+        r.hitThisCycle.add(e);hits.push(hitFor(s,f,e));
+      }
+      if(hits.length)contact(s,f,hits,r.nextPulseIndex++);
+      if(!actionLegal(s,f)){r.dead=true;break;}
+      if(r.age+EPS>=(r.cycle+1)*r.interval){
+        r.cycle++;r.lapIndex=r.cycle;
+        r.hitThisCycle.clear();r.propHits.clear();
+        if(r.cycle>=r.count)r.dead=true;
+      }
+    }
+  }
+  function updateRings(s,dt){
+    for(const ring of s.rings)advanceRing(s,ring,dt);
+    s.rings=s.rings.filter(r=>!r.dead);
+  }
   function release(s,f,pulseIndex=0){
     if(!actionLegal(s,f))return false;
     if(f.mode==='jjk-ryu-maximum'&&s.owner===G.Game.player)G.Audio?.sfx?.('shot',{kind:'cannon',main:pulseIndex===0,type:f.m.type||'psychic'});
@@ -264,6 +360,12 @@
       return;
     }
     if(f.mode==='jjk-ryu-spread'){scatter(s,f);return;}
+    if(f.mode==='jjk-ryu-ring'){
+      const ring=startRing(s,f);
+      advanceRing(s,ring,Math.max(0,f.age-f.charge));
+      s.rings=s.rings.filter(r=>!r.dead);
+      return actionLegal(s,f);
+    }
     const hitOnce=new Set(),candidates=[],propHits=new Set(),struckProps=new Set();
     for(let i=0;i<f.count;i++){
       const aim=f.aim+(f.count===1?0:(i-(f.count-1)/2)*(f.m.spreadStep??.20)),c=Math.cos(aim),sn=Math.sin(aim);
@@ -315,7 +417,7 @@
       if(owner.frozen)continue;
       s.clock+=dt;
       for(const e of s.effects)e.age+=dt;
-      updateScatter(s,dt);s.effects=s.effects.filter(e=>e.age<e.life&&!e.dead);
+      updateScatter(s,dt);updateRings(s,dt);s.effects=s.effects.filter(e=>e.age<e.life&&!e.dead);
       const f=s.action;if(!f)continue;
       if(!owner.moves?.some(m=>m.id===f.m.id)){s.action=null;continue;}
       f.age+=dt;
@@ -424,6 +526,14 @@
     ctx.globalAlpha=.9;ctx.fillStyle='#63dded';ctx.beginPath();ctx.ellipse(-8,0,20,e.radius*.75,0,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#f2ffff';ctx.beginPath();ctx.ellipse(-3,0,10,e.radius*.35,0,0,Math.PI*2);ctx.fill();ctx.restore();
   }
+  function ringArt(ctx,r){
+    if(r.dead||r.points.length<2)return;
+    ctx.save();ctx.translate(r.renderOffsetX,r.renderOffsetY);ctx.lineJoin='round';ctx.lineCap='round';
+    ctx.beginPath();r.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+    ctx.globalAlpha=.9;ctx.strokeStyle='#46c8df';ctx.lineWidth=r.width*2;ctx.stroke();
+    ctx.strokeStyle='#a5f7ff';ctx.lineWidth=r.width*1.2;ctx.stroke();
+    ctx.strokeStyle='#f5ffff';ctx.lineWidth=Math.max(2,r.width*.55);ctx.stroke();ctx.restore();
+  }
   function draw(ctx){
     if(G.JujutsuVFX?.enabled)return;
     if(terminal())return;
@@ -432,6 +542,7 @@
       if(!drawable(s))continue;
       if(s.action&&!s.action.released)charge(ctx,s,s.action);
       for(const shot of s.scatter)scatterArt(ctx,shot);
+      for(const ring of s.rings)ringArt(ctx,ring);
       for(const e of s.effects){
         if(e.kind==='beam')beam(ctx,e);else if(e.kind==='scatter')scatterArt(ctx,e);else if(e.kind==='muzzle')muzzle(ctx,e);else burst(ctx,e);
       }
@@ -488,12 +599,15 @@
   C.drawGroundFields=function(ctx){oldGround.call(this,ctx);ground(ctx);};
   function statusFor(owner,m){
     const s=states.get(owner),coreCharge=s?.coreCharge||0,recoveryRemaining=Math.max(0,(s?.recoveryUntil||0)-(s?.clock||0));
+    const ring=s?.rings.find(r=>!r.dead&&r.m.id===m.id);
+    if(ring)return {state:'active',phase:'ring',remaining:Math.max(0,ring.duration-ring.age),duration:ring.duration,
+      lapIndex:ring.lapIndex,count:ring.count,coreCharge,chargeRequired:3,recoveryRemaining};
     const maximum=m.digiMode==='jjk-ryu-maximum',charging=maximum&&coreCharge<3;
     const coreRemaining=owner.moves?.find(move=>move.digiMode==='jjk-ryu')?.t||0,waitingForCore=maximum&&!charging&&coreRemaining>EPS;
     return {state:s?.action?.m.id===m.id?'casting':recoveryRemaining>EPS?'recovering':m.t>EPS?'cooldown':charging?'charging':waitingForCore||s?.action?'queued':'ready',
       remaining:m.t||0,coreCharge,chargeRequired:3,recoveryRemaining,coreRemaining,reason:charging?'core-charge':waitingForCore?'core-cadence':null};
   }
-  G.JjkRyu={dex:DEX,supports,handles:supports,canCast,cast,update,clear,pose,activeFor:pose,targetFor,statusFor,barrageFor,
+  G.JjkRyu={dex:DEX,supports,handles:supports,canCast,cast,update,clear,pose,activeFor:pose,targetFor,statusFor,barrageFor,ringFor,ringProfile:ringFor,
     stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return s&&drawable(s)?s:null;},
     stats:(owner=G.Game.player)=>{const s=states.get(owner);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,effects:s.effects.length,
       coreCharge:s.coreCharge,chargeRequired:3,recoveryRemaining:Math.max(0,s.recoveryUntil-s.clock)}:null;}};

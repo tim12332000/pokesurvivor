@@ -3,6 +3,10 @@
   const catalog = G.NarutoSkillCatalog;
   if (!catalog) return;
   const entries = {
+    'jjk-ryu-ring': ['Granite Blast: Ring', () => {
+      const c = G.Jujutsu.power.ryu;
+      return `Automatically casts against nearby enemies at character Lv.5; no active slot. After ${c.ringCharge}s, the forehead beam bends around the body into a hollow ring and strikes its actual curved path ${c.ringBases.join('/')} times by tier. Quantity multiplies rounds by 1.25 per pick, rounded down, up to ${c.ringCap}; the first card increases 4 to 5. Ring radius ${c.ringRadii[0]}–${c.ringRadii[4]}, beam half-width ${c.ringWidths[0]}–${c.ringWidths[4]}; base cooldown ${c.ringCd}s. Move freely. Walls interrupt the beam. Each round hits an enemy once; after the initial curved lead closes, the hollow center is not hit. Grants no invulnerability, crowd control or projectile blocking. If Full-Power Blast is learned, each cast that hits earns at most one charge. The curved ring comes from the anime; repeated rounds and growth are game adaptations.`;
+    }],
     'naruto-shadow-clones': ['Multi Shadow Clone Jutsu', () => {
       const c = G.NarutoClones.config;
       return `Automatically summons clones once learned; uses no active slot. Cooldown ${c.cooldown}s. After ${c.sealDuration}s of hand signs, summon ${c.counts.join('/')} base clones for ${c.duration}s. Each quantity card multiplies their number by 1.25; multiply first, then round down. Clone punches and copied Rasengan, Rasenshuriken and ninja tools deal ${(c.damageMultiplier ?? 1) * 100}% of the original damage. Each clone disappears after ${c.hitsToDismiss} hits.`;
@@ -78,6 +82,12 @@
     'naruto-kimimaro-curse': ['Cursed Seal of Earth', 'Permanent evolution passive; uses no active slot. With an enemy within 220, automatically transforms for 1s between other actions. After completion, Cursed Seal Level Two lasts for the rest of the run without timing out or repeating the transformation; changing arenas or clearing combat effects does not revert it. Damage +10/12.5/15/17.5/20% and movement speed +10%; upgrades update damage immediately. No HP cost, invulnerability, other skill cooldown reset or stacking. Inactive while dead; leaving the run or starting a new run still cleans up normally.']
   };
   const dictionary = {
+    '圓環':'Ring', '圓環輪次':'Ring rounds', '繞身蓄力':'Ring charge', '圓環收束':'Ring recovery',
+    '圓環 {x}/{x}':'Ring {x}/{x}', '圓環輪次 {x}→{x}':'Ring rounds {x}→{x}',
+    '穿線・蓄能爆發':'Piercing fire · Charged burst',
+    '普通砲命中蓄能，接續全力砲；散射追敵，圓環砲繞身迎擊，固定爆破對付敵群。':'Build charge with successful blasts, then unleash Full-Power Blast. Curved scatter shots chase enemies, the ring strikes nearby foes, and fixed blasts strike clusters.',
+    '基礎6輪繞身切擊，環半徑144、砲道半寬24':'6 base ring rounds; ring radius 144, beam half-width 24',
+    '基礎8輪繞身切擊，環半徑180、砲道半寬30，數量卡最多16輪':'8 base ring rounds; ring radius 180, beam half-width 30; quantity cards increase rounds up to 16',
     '殘風結':'Wind knots', '引爆風結':'Knot detonations', '風爆連切':'Gust cuts', '風爆半徑':'Gust radius',
     '忍術圖鑑與來源': 'Ninjutsu Guide & Sources', '返回': 'Back',
     '常駐普攻 · 不用選招 · 不占主動槽': 'Automatic basic attack · No selection · No active slot',
@@ -158,7 +168,12 @@
     dictionary[definition.name] = name;
     const description = typeof text === 'function' ? text() : text || definition.descEn;
     if (description) dictionary[definition.desc] = description;
-    for (const upgrade of definition.ups || []) dictionary[upgrade.t] = translateUpgrade(upgrade.t);
+    for (const [i, upgrade] of (definition.ups || []).entries()) {
+      if (id === 'jjk-ryu-ring') {
+        const c = G.Jujutsu.power.ryu;
+        dictionary[upgrade.t] = `Damage increased; ${c.ringBases[i+1]} base ring rounds, radius ${c.ringRadii[i+1]}, beam half-width ${c.ringWidths[i+1]}; quantity cap ${c.ringCap} rounds`;
+      } else dictionary[upgrade.t] = translateUpgrade(upgrade.t);
+    }
   }
   // Guide intro is a single text node, so retain it as one exact dictionary key.
   const intro = '角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。';
