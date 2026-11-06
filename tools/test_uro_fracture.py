@@ -82,8 +82,13 @@ CHECK=r"""() => {
  assert(hits.length===4&&hits.every(h=>h.id==='jjk-uro-screen')&&counterKnocks.every(n=>n===0),'counter invented thin/control or missed source');out.counterUnlearned={hits:hits.length,budget:b.budget};
  for(const [rank,q,count,budget] of [[1,1,5,15],[5,20,16,64]]){
   screen(rank,false,q);e=A.spawn(0,400);hits=A.watch(e);const shield=U.stateFor(p).screen;assert(shield.budget===budget&&shield.initialBudget===budget,'quantity screen budget snapshot differs');
-  reflect(e);A.advance(3);assert(hits.length===count&&hits.every(h=>h.id==='jjk-uro-screen'),'counter quantity count differs');
-  out['counter-'+rank+'-'+q]={hits:hits.length,budget};
+  reflect(e);A.advance(3);
+  // The captured projectile now circles once and aims back at its shooter.
+  // It shares skill attribution with the independent screen counter, but is
+  // a separate real hit rather than another quantity-generated fracture.
+  const returnedHits=hits.filter(h=>Math.abs(h.raw-7*p.atk)<1e-8),counterHits=hits.filter(h=>Math.abs(h.raw-7*p.atk)>=1e-8);
+  assert(counterHits.length===count&&returnedHits.length===1&&hits.every(h=>h.id==='jjk-uro-screen'),'counter quantity count differs');
+  out['counter-'+rank+'-'+q]={hits:counterHits.length,returnedHits:returnedHits.length,budget};
  }
  screen();assert(p.addMove('jjk-uro-echo'),'learn echo with counter');e=A.spawn(300,0);reflect(e);A.advance(2);
  assert(U.stateFor(p).echoChains===0&&!U.effects.some(f=>f.mode==='uro-counter'||f.mode==='uro-echo'),'counter recursed or outlived own chain');out.counterNoRecursion=true;

@@ -1,0 +1,50 @@
+{
+  "ok": true,
+  "files": {
+    "index.html": {
+      "expected": "0bc06f0549285124eff8681c8c05c6b00fd4d08829afdec8867b69d90bb7f59e",
+      "actual": "0bc06f0549285124eff8681c8c05c6b00fd4d08829afdec8867b69d90bb7f59e",
+      "ok": true
+    },
+    ".omx/digimon.html": {
+      "expected": "6b279e1a675921f639cc131c2b12aaf2e8801ebfc29edb16d4394c1fce590820",
+      "actual": "6b279e1a675921f639cc131c2b12aaf2e8801ebfc29edb16d4394c1fce590820",
+      "ok": true
+    },
+    ".omx/jjk-uro.js": {
+      "expected": "33ab5e0145a200aaeacb865c30b2a8dd0ec94294d0e46636972af7f1db1c8bac",
+      "actual": "33ab5e0145a200aaeacb865c30b2a8dd0ec94294d0e46636972af7f1db1c8bac",
+      "ok": true
+    },
+    ".omx/jujutsu.js": {
+      "expected": "5fba03e6a3b391abd06183e739cb0fb4f476309776de435efebab692a5856aea",
+      "actual": "5fba03e6a3b391abd06183e739cb0fb4f476309776de435efebab692a5856aea",
+      "ok": true
+    },
+    ".omx/jujutsu-vfx.js": {
+      "expected": "dc0283ffc0b82cc4b28626c97b9f8dd3ba208c7d4e5906dc8f119fc81e05e7fc",
+      "actual": "dc0283ffc0b82cc4b28626c97b9f8dd3ba208c7d4e5906dc8f119fc81e05e7fc",
+      "ok": true
+    },
+    ".omx/jjk-ryu.js": {
+      "expected": "fcec04f34d874b2e4510d601f79173f234f7c628a40c1e66d64b28c890240747",
+      "actual": "fcec04f34d874b2e4510d601f79173f234f7c628a40c1e66d64b28c890240747",
+      "ok": true
+    },
+    ".omx/jjk-yuta.js": {
+      "expected": "25eb18af4fa7ced88906ad8f1e776a7ddf73b43a36314203ac55ae036ffe6ee2",
+      "actual": "25eb18af4fa7ced88906ad8f1e776a7ddf73b43a36314203ac55ae036ffe6ee2",
+      "ok": true
+    },
+    ".omx/naruto.js": {
+      "expected": "1f454345a8b30487cf9bb4c100d9d8efbcd21710f8afebdb4b4cc43df420f069",
+      "actual": "1f454345a8b30487cf9bb4c100d9d8efbcd21710f8afebdb4b4cc43df420f069",
+      "ok": true
+    },
+    "art-review/jjk-skills-v2.json": {
+      "expected": "887d885d07d9f63b2be00d1a2328a1f7d18cf40e3947a68f2f97c3fc2743e439",
+      "actual": "887d885d07d9f63b2be00d1a2328a1f7d18cf40e3947a68f2f97c3fc2743e439",
+      "ok": true
+    }
+  }
+}

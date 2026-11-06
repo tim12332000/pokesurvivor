@@ -1,0 +1,50 @@
+{
+  "url": "https://tim12332000.github.io/pokesurvivor/?lang=zh-TW&hero=uro&release=f3c3edd77668",
+  "errors": [],
+  "missing": [],
+  "views": {
+    "desktop": {
+      "level": 6,
+      "learned": [
+        "jjk-uro",
+        "jjk-uro-screen"
+      ],
+      "orbitAge": 0.8,
+      "duration": 0.8,
+      "turn": 6.283185307179586,
+      "returned": 1,
+      "friendly": true,
+      "owner": true,
+      "overflow": false
+    },
+    "mobile360": {
+      "level": 6,
+      "learned": [
+        "jjk-uro",
+        "jjk-uro-screen"
+      ],
+      "orbitAge": 0.8,
+      "duration": 0.8,
+      "turn": 6.283185307179586,
+      "returned": 1,
+      "friendly": true,
+      "owner": true,
+      "overflow": false
+    },
+    "mobile390": {
+      "level": 6,
+      "learned": [
+        "jjk-uro",
+        "jjk-uro-screen"
+      ],
+      "orbitAge": 0.8,
+      "duration": 0.8,
+      "turn": 6.283185307179586,
+      "returned": 1,
+      "friendly": true,
+      "owner": true,
+      "overflow": false
+    }
+  },
+  "ok": true
+}

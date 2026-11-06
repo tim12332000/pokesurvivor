@@ -1,0 +1,20 @@
+{
+  "score": 94,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [],
+  "suggestions": [],
+  "reasoning": "Inspected desktop and 360/390 mobile screenshots through the normal entry. The bright cyan-white projectile and short comet trail complete one lap around Uro before returning to the shooter. Low quality preserves the same visible projectile and arc. Native video playback samples show the orbit following actual player movement without obstructing the character or touch controls.",
+  "next_actions": [],
+  "threshold": 90,
+  "threshold_pass": true,
+  "evidence": [
+    "art-review/uro-orbit-20261106/visual/report.json",
+    "art-review/uro-orbit-20261106/visual/visual-contact-sheet.png"
+  ],
+  "limitations": [
+    "Controlled durable enemy and known projectile; not a natural XP or long-session test.",
+    "Mobile checks use 360/390 touch-enabled browser viewports, not physical phones.",
+    "Video playback samples were visually inspected; audio was not reviewed."
+  ]
+}
