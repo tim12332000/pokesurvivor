@@ -121,8 +121,15 @@ NATIVE_SETUP = r"""() => {
        stage==='idle'?knots.length===R.expectedKnots&&knots.every(a=>a.age>=.7):stage==='windup'?windup:
        stage==='cross'?!!R.burst&&R.burst.fronts.some(f=>f.index===0&&f.reach>0):
        stage==='pulse'?!!front&&front.reach>0&&!front.done:
-       stage==='last'?allFinal:stage==='terminal'?terminal:stage==='fade'?fading:
+       stage==='last'?allFinal&&terminal:stage==='terminal'?terminal:stage==='fade'?fading:
        !bursts.length&&R.activations.length===R.expectedKnots;
+     if(stage==='last'&&!bursts.length&&R.activations.length===R.expectedKnots&&!ready){
+       R.failure={stage,allFinal,terminal,hp:p.hp,dead:p.dead,retired:R.retired,hits:R.hits,
+         targets:(R.targets||[]).map(e=>({x:e.x,y:e.y,hp:e.hp,dead:e.dead})),
+         tracked:R.tracked.map(a=>({id:a.id,age:a.age,cuts:a.cuts,dead:a.dead,
+           fronts:a.fronts.map(f=>({index:f.index,reach:f.reach,done:f.done}))}))};
+       A.pause();R.reached=true;return;
+     }
      if(ready){
        A.pause();R.reached=true;
        R.stages.push({stage,index,time:G.Game.st.time,hits:R.hits.length,
@@ -137,7 +144,7 @@ NATIVE_SETUP = r"""() => {
 }"""
 
 
-def capture_native(browser):
+def capture_native(browser, only=None):
     report = {'scope': 'Normal Lv1 entry, then controlled Lv12 ordinary targets with calibrated third-round corpse HP and fresh high-HP receivers. Real basic seeding, native manual heavy selection and native RAF; phase pauses only. High fixture uses declared direct profile setup, not natural growth.',
               'sources': {name: hashlib.sha256((ROOT / name).read_bytes()).hexdigest() for name in
                           ['.omx/naruto-temari.js', '.omx/temari-cyclone-vfx.js', '.omx/jujutsu-growth.js',
@@ -146,6 +153,8 @@ def capture_native(browser):
     cases = [('desktop-q0', 1200, 900, False, 0, False), ('mobile390-q1', 390, 844, True, 1, False),
              ('mobile360-low-high', 360, 800, True, 20, True)]
     for name, width, height, mobile, quantity, high in cases:
+        if only and only != name:
+            continue
         folder = OUT / name
         folder.mkdir(exist_ok=True)
         context = browser.new_context(viewport={'width': width, 'height': height}, is_mobile=mobile,
@@ -179,6 +188,7 @@ def capture_native(browser):
             assert heavy_index >= 0
             heavy_card = page.locator('#cards .card').nth(heavy_index)
             heavy_card.scroll_into_view_if_needed()
+            page.wait_for_timeout(300)
             page.screenshot(path=str(folder / 'heavy-first-learn-card.png'))
             cards = {'heavy': heavy_card.locator('.ds').evaluate('''el=>({text:el.textContent,
               clientHeight:el.clientHeight,scrollHeight:el.scrollHeight,overflow:getComputedStyle(el).overflowY,
@@ -192,6 +202,7 @@ def capture_native(browser):
             assert quantity_index >= 0
             quantity_card = page.locator('#cards .card').nth(quantity_index)
             quantity_card.scroll_into_view_if_needed()
+            page.wait_for_timeout(300)
             page.screenshot(path=str(folder / 'quantity-preview-card.png'))
             cards['quantity'] = quantity_card.locator('.ds').evaluate('''el=>({text:el.textContent,
               clientHeight:el.clientHeight,scrollHeight:el.scrollHeight,overflow:getComputedStyle(el).overflowY,
@@ -202,6 +213,10 @@ def capture_native(browser):
         def capture(stage, index=0):
             page.evaluate('([stage,index])=>WindArt.seek(stage,index)', [stage, index])
             page.wait_for_function('WindArt.reached', polling=10)
+            failure = page.evaluate('WindArt.failure||null')
+            if failure:
+                (folder / 'failure.json').write_text(json.dumps(failure, indent=2), encoding='utf8')
+                raise AssertionError(failure)
             page.wait_for_timeout(70)
             suffix = f'{stage}-{index}' if stage == 'pulse' else stage
             page.screenshot(path=str(folder / f'{suffix}.png'))
@@ -219,7 +234,8 @@ def capture_native(browser):
         capture('idle')
         page.evaluate('''() => {
           const A=Acceptance,p=A.p();const targets=[A.spawn(130,0),A.spawn(200,20)];
-          targets.forEach(e=>{e.hp=e.maxHp=1e9;e.r=4});p.target=targets[0];G.EnemyMgr.rebuildGrid();
+          targets.forEach(e=>{e.hp=e.maxHp=1e9;e.r=4});WindArt.targets=targets;
+          p.target=targets[0];G.EnemyMgr.rebuildGrid();
         }''')
         profile = page.evaluate('''({quantity,high}) => {
           const A=Acceptance,p=A.p();p.quantityPicks=p.quantityBonus=quantity;
@@ -250,11 +266,12 @@ def capture_native(browser):
                    for a in result['activations'] for pulse in range(a['cuts'])), result
         assert not errors, errors
         report['cases'][name] = {'quantity': quantity, 'high': high, 'profile': profile, 'cards': cards, **result, 'errors': errors}
+        report_name = 'native-report.json' if not only else f'native-report-{only}.json'
+        (OUT / report_name).write_text(json.dumps(report, indent=2), encoding='utf8')
         video = page.video
         context.close()
         video.save_as(str(folder / 'native-chain.webm'))
         print(name, 'native seed/cross/everypulse/finalhit/recovery pass', flush=True)
-    (OUT / 'native-report.json').write_text(json.dumps(report, indent=2), encoding='utf8')
 
 
 def main():
@@ -263,6 +280,7 @@ def main():
     parser.add_argument('--label', default='candidate')
     parser.add_argument('--smoke', action='store_true', help='Probe actual empowered-basic to heavy activation at early and high profiles')
     parser.add_argument('--native', action='store_true', help='Capture actual native seeding/manual selection/every pulse in three viewports')
+    parser.add_argument('--native-case', choices=['desktop-q0', 'mobile390-q1', 'mobile360-low-high'])
     args = parser.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     with sync_playwright() as pw:
@@ -283,7 +301,7 @@ def main():
             (OUT / 'smoke.json').write_text(json.dumps(smoke, indent=2), encoding='utf8')
         page.close()
         if args.native:
-            capture_native(browser)
+            capture_native(browser, args.native_case)
         browser.close()
     for name, value in report.items():
         if isinstance(value, dict) and 'png' in value:
