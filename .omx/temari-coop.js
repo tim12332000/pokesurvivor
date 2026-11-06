@@ -7,7 +7,8 @@
   const reflectionSeen = new Map(), localWalls = new Map();
   let reflectedDamageSerial = 0, reflectionBound = false, wallSerial = 0;
   const casts = new Map(), actors = new Map(), seen = new Map(), removed = new Set(), retired = new Set();
-  let session = '', scene = 0, clock = 0, shotSerial = 0, anticipatedResets = 0;
+  const windPending = new Map(), WIND_LIMIT = 128, WIND_TTL = 3;
+  let session = '', scene = 0, clock = 0, shotSerial = 0, anticipatedResets = 0, hostUid = '';
   const stamp = () => [session, scene];
   const same = token => Array.isArray(token) && token[0] === session && token[1] === scene;
   const ownsMove = move => /^naruto-temari(?:-|$)/.test(move?.id || '');
@@ -26,10 +27,11 @@
     orbitClaims.clear(); liftClaims.clear(); pushClaims.clear(); pushSeen.clear(); reflections.clear(); pendingHazards.clear();
     reflectionSeen.clear(); localWalls.clear();
     casts.clear(); actors.clear(); seen.clear(); petSeen.clear(); removed.clear(); retired.clear();
+    windPending.clear();
     clock = 0;
   }
   function begin(cfg) {
-    clear(); session = String(cfg.host) + ':' + String(cfg.seed); scene = 0; shotSerial = 0; anticipatedResets = 0;
+    clear(); hostUid = String(cfg.host); session = hostUid + ':' + String(cfg.seed); scene = 0; shotSerial = 0; anticipatedResets = 0;
   }
   function retireClaim(id, claim) {
     combat.releaseNetworkOrbit?.(claim.enemy, claim.packet.castId);
@@ -37,6 +39,7 @@
     if (net.active && net.isHost) net.temariEvent(['te', stamp(), claim.uid, claim.actor, id, claim.packet]);
   }
   function clearOwner(uid) {
+    retirePending(uid);
     for (const [id, claim] of orbitClaims) if (claim.uid === uid) retireClaim(id, claim);
     for (const [id, claim] of liftClaims) if (claim.uid === uid) retireLift(id, claim);
     for (const [id, claim] of pushClaims) if (claim.uid === uid) retirePush(id, claim);
@@ -60,6 +63,7 @@
     const id = actorId(actor), key = G.Net.uid + ':' + id;
     if (retired.has(key)) return;
     retired.add(key); combat.clear(actor); G.NarutoTemariReflect?.clear(actor);
+    retirePending(G.Net.uid, id);
     for (const [castKey, cast] of casts) if (cast.owner === actor) casts.delete(castKey);
     net.temariEvent(['tx', stamp(), G.Net.uid, id]);
   }
@@ -158,8 +162,53 @@
       ['x', 'y', 'aim'].every(key => finite(packet[key])) && ownsMove(packet.m || { id: packet.id }) &&
       (!packet.deflect || ['start', 'end', 'range', 'halfAngle', 'budget'].every(key => finite(packet.deflect[key])));
   }
+  function retireWind(key, entry) {
+    windPending.delete(key);
+    // Start IDs already use a per-actor monotonic watermark. Advancing it on
+    // expiry/overflow makes a later start unable to resurrect a retired release.
+    const actor = entry.uid + ':' + entry.packet.actor;
+    seen.set(actor, Math.max(seen.get(actor) ?? -1, entry.packet.castId));
+  }
+  function retirePending(uid, actor = null) {
+    for (const [key, entry] of windPending) if (entry.uid === uid && (actor === null || entry.packet.actor === actor)) retireWind(key, entry);
+  }
+  function expireWind() {
+    for (const [key, entry] of windPending) if (clock - entry.at >= WIND_TTL) retireWind(key, entry);
+  }
+  function liveWindOwner(uid, actor) {
+    const mate = net.mate(uid);
+    return mate?.connected && !mate.pl.dead && !mate.pl.net?.dead && mate.pl.hp > 0 &&
+      !retired.has(uid + ':' + actor) && (mate.pl.mon?.dex ?? mate.pl.dex) === 30011;
+  }
+  function validWind(packet) {
+    return packet && typeof packet.actor === 'string' && packet.actor.length <= 128 &&
+      (packet.actor === 'player' || /^clone:[\w-]+$/.test(packet.actor)) &&
+      Number.isSafeInteger(packet.castId) && packet.castId >= 0 && ['x', 'y', 'aim'].every(key => finite(packet[key])) &&
+      (packet.age === undefined || (finite(packet.age) && packet.age >= 0));
+  }
+  function releaseWind(from, event) {
+    const uid = net.isHost ? from : event[2], packet = event[3];
+    if ((net.isHost ? event[2] !== from : from !== hostUid) || uid === G.Net.uid ||
+        !validWind(packet) || !liveWindOwner(uid, packet.actor)) return;
+    expireWind();
+    const key = keyOf(uid, packet), actorKey = uid + ':' + packet.actor;
+    const owner = findActor(uid, packet.actor);
+    const cast = owner && combat.casts.find(c => c.ghost && c.owner === owner && c.castId === packet.castId);
+    if (cast) {
+      if (!cast.needsRelease || cast.releaseOrigin || !combat.applyWindRelease?.(owner, packet)) return;
+      const remembered = casts.get(key); if (remembered) Object.assign(remembered.packet, {x:packet.x,y:packet.y,aim:packet.aim});
+    } else {
+      if ((seen.get(actorKey) ?? -1) >= packet.castId || windPending.has(key)) return;
+      while (windPending.size >= WIND_LIMIT) {
+        const [oldKey, entry] = windPending.entries().next().value; retireWind(oldKey, entry);
+      }
+      windPending.set(key, {uid, packet:{...packet}, at:clock});
+    }
+    if (net.isHost) net.temariEvent(['tw', stamp(), uid, packet], uid);
+  }
   function receive(from, event) {
     if (!net.active || !same(event[1])) return;
+    if (event[0] === 'tw') { releaseWind(from, event); return; }
     if (event[0] === 'tp') {
       const uid = net.isHost ? from : event[2], packet = event[3];
       if (uid === G.Net.uid || !packet || typeof packet.actor !== 'string' || !finite(packet.serial) ||
@@ -232,17 +281,28 @@
       combat.applyNetworkOrbit?.(owner, enemy, {...packet, authoritative:false});
     } else if (event[0] === 'tc') {
       const uid = net.isHost ? from : event[2], packet = event[3];
-      if (uid === G.Net.uid || !validPacket(packet)) return;
+      if (uid === G.Net.uid || !validPacket(packet) ||
+          (packet.needsRelease === true && ((net.isHost ? event[2] !== from : from !== hostUid) || !validWind(packet) || !liveWindOwner(uid, packet.actor)))) return;
+      expireWind();
       const key = uid + ':' + packet.actor;
       if ((seen.get(key) ?? -1) >= packet.castId) return;
       const owner = remoteOwner(uid, packet);
       if (!owner) return;
       seen.set(key, packet.castId); remember(uid, owner, packet); combat.ghost(owner, packet);
+      const windKey = keyOf(uid, packet), pending = windPending.get(windKey);
+      if (pending) {
+        windPending.delete(windKey);
+        const release = {...pending.packet, age:(pending.packet.age ?? 0) + clock - pending.at};
+        if (packet.needsRelease === true && combat.applyWindRelease?.(owner, release)) {
+          const remembered = casts.get(windKey);if(remembered)Object.assign(remembered.packet, {x:pending.packet.x,y:pending.packet.y,aim:pending.packet.aim});
+        }
+      }
       if (net.isHost) net.temariEvent(['tc', stamp(), uid, packet], uid);
     } else if (event[0] === 'tx') {
       const uid = net.isHost ? from : event[2], id = event[3], key = uid + ':' + id;
       if (uid === G.Net.uid || typeof id !== 'string' || !id.startsWith('clone:')) return;
       retired.add(key);
+      retirePending(uid, id);
       const owner = actors.get(key);
       if (owner) { combat.clear(owner); G.NarutoTemariReflect?.clear(owner); actors.delete(key); }
       for (const [enemyId, claim] of pushClaims) if (claim.uid === uid && claim.actor === id) retirePush(enemyId, claim);
@@ -286,6 +346,15 @@
   };
   const previousCast = combat.onCast, previousIntercept = combat.onIntercept, previousPolicy = combat.mayIntercept;
   combat.onCast = (owner, packet) => { previousCast?.(owner, packet); wireCast(owner, packet); };
+  const previousWindRelease = combat.onWindRelease;
+  combat.onWindRelease = (owner, source) => {
+    previousWindRelease?.(owner, source);
+    if (!net.active || !localActor(owner)) return;
+    const packet = {...source, actor:actorId(owner)};
+    if (!validWind(packet)) return;
+    const remembered = casts.get(keyOf(G.Net.uid, packet));if(remembered)Object.assign(remembered.packet,{x:packet.x,y:packet.y,aim:packet.aim});
+    net.temariEvent(['tw', stamp(), G.Net.uid, packet]);
+  };
   combat.mayIntercept = (owner, shot, cast) => {
     if (previousPolicy?.(owner, shot, cast) === false) return false;
     if (!net.active || net.isHost || !localActor(owner)) return true;
@@ -507,6 +576,7 @@
   G.Projectiles.update = function(dt, ...args) {
     bindReflection();
     if (net.active && G.Game.state === 'playing' && finite(dt) && dt > 0) clock += dt;
+    expireWind();
     syncReflectionWalls();
     for (const mate of net.mates) if (mate.pl.dead || mate.pl.net?.dead) clearOwner(mate.uid);
     for (const actor of actors.values()) actor.anim.update(dt);
@@ -545,7 +615,11 @@
   const clearFields = G.Combat.clearFields;
   G.Combat.clearFields = function(owner) {
     if (!owner) resetScene();
-    else actorRemoved(owner);
+    else {
+      const identity = ownerIdentity(owner);
+      if (identity) retirePending(identity.uid, identity.actor);
+      actorRemoved(owner);
+    }
     return clearFields.call(this, owner);
   };
   const resolve = G.Combat.resolve;
@@ -569,5 +643,5 @@
   };
   G.TemariCoop = { begin, clear, clearOwner, actorRemoved, stamp, trackShot, acceptShot, ownsMove, receive,
     hostFrame, remoteActors: () => [...actors.values()],
-    inspect: () => ({ session, scene, casts: casts.size, actors: actors.size, seen: seen.size, removed: removed.size, orbits:orbitClaims.size, lifts:liftClaims.size, pushes:pushClaims.size, reflections:reflections.size, pendingHazards:pendingHazards.size, petActors:petSeen.size }) };
+    inspect: () => ({ session, scene, casts: casts.size, actors: actors.size, seen: seen.size, removed: removed.size, orbits:orbitClaims.size, lifts:liftClaims.size, pushes:pushClaims.size, reflections:reflections.size, pendingHazards:pendingHazards.size, petActors:petSeen.size, windPending:windPending.size, windLimit:WIND_LIMIT, windTTL:WIND_TTL }) };
 })();
