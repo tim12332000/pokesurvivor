@@ -69,9 +69,9 @@
     const api=player.dex===30013?G.JujutsuYuta:player.dex===30014?G.JjkRyu:G.JjkUro;
     if(player.dex===30013){
       const s=api?.stateFor?.(player);
-      if(move.id==='jjk-yuta-manifest'&&s?.release){
-        const f=s.release,label=f.phase==='approach'?'放出就位':f.phase==='charge'?'雙源蓄力':'咒力放出';
-        return {label,fraction:f.phase==='charge'?Math.max(0,1-f.phaseAge/G.Jujutsu.power.yuta.releaseCharge):0};
+      if(s?.release?.m.id===move.id){
+        const f=s.release,label=f.phase==='approach'?'放出就位':f.phase==='charge'?'共同蓄力':f.pulseIndex<f.count?'純愛砲 '+f.pulseIndex+'/'+f.count:'放出收勢';
+        return {label,fraction:f.phase==='charge'?Math.max(0,1-f.phaseAge/G.Jujutsu.power.yuta.releaseCharge):1-f.pulseIndex/f.count};
       }
       if(move.id==='jjk-yuta-manifest'&&s&&s.manifestUntil>s.clock){const left=s.manifestUntil-s.clock;return {label:'顯現 '+left.toFixed(1)+'s',fraction:left/G.Jujutsu.power.yuta.manifestDuration};}
       if(move.id==='jjk-yuta-rika'&&s?.rika){const r=s.rika;return {label:r.phase==='strike'?(r.full?'雙人 ':'協擊 ')+r.strikeIndex+'/'+r.strikeCount:r.phase==='return'?'回身中':'追擊中',fraction:r.phase==='strike'?1-r.strikeIndex/r.strikeCount:0};}

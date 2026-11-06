@@ -26,6 +26,10 @@
       const config=G.Jujutsu.power.yuta;
       return {放出射程:config.releaseRanges[i],每路半徑:config.releaseRadii[i],每路基傷:config.releaseDamage[i]};
     }
+    if(mode==='yuta-love'){
+      const config=G.Jujutsu.power.yuta;
+      return {雙源脈衝:count(p,config.loveBases[i],config.loveCap)};
+    }
     if(mode==='uro-thin-ice'||mode==='uro-collapse')return {裂面波次:count(p,G.Jujutsu.power.uro.waveBases[i],G.Jujutsu.power.uro.waveCap)};
     if(mode==='uro-screen'){
       const config=G.Jujutsu.power.uro;

@@ -9,6 +9,7 @@
     'jjk-yuta-speech':['...wwwww....','..wpppppw...','.wpppppppw..','wpwppppwpw..','wppppppppw..','.wppppppw...','..wkkkkw....','...wwww.....','.bb....bb...','b..bbbb..b..','.bb....bb...','...bbbb.....'],
     'jjk-yuta-manifest':['.....w......','....bwb.....','.....w......','...ggggg....','..gwwwwwg...','.gww...wwg..','.gw.....wg..','.gw.....wg..','.gww...wwg..','..gwwwwwg...','...ggggg....','............'],
     'jjk-yuta-resonance':['w.........w.','.w.......w..','..w..p..w...','...wwpww....','....www.....','..ppwwwpp...','.ppwwwwwpp..','..ppwwwpp...','....www.....','...ww.ww....','..w.....w...','.w.......w..'],
+    'jjk-yuta-love':['............','pp..........','pwwb........','.pwwwbb.....','..pwwwwwbbbb','...pwwwwwwww','...pwwwwwwww','..pwwwwwbbbb','.pwwwbb.....','pwwb........','pp..........','............'],
     'jjk-ryu':['......www...','.....wwbww..','......www...','......bbb...','......bbb...','.....bwwb...','...kkbwwbkk.','..kppppppppk','..kpkkkkkppk','...kppppppk.','....kppppk..','.....kkkk...'],
     'jjk-ryu-spread':['.w....w...w.','.bw...w..wb.','..bw..w.wb..','...bw.wbw...','....bwww....','.....www....','.....bbb....','....bwwwb...','...kpppppk..','...kpkkkpk..','....kpppk...','.....kkk....'],
     'jjk-ryu-impact':['.....b......','..b..w..b...','...b.w.b....','..bbwwwbb...','.bwwwwwwwb..','bwwwggwwwb..','.bwwwwwwwb..','..bbwwwbb...','...b.w.b....','..b..w..b...','.....b......','............'],
@@ -26,6 +27,7 @@
       ['jjk-yuta','yuta-blade','咒力刀斬','fighting',1,1,30,125,90,'向前揮刀，命中前跟隨走位，斬擊近身扇形內敵人。'],
       ['jjk-yuta-rika','yuta-rika','里香協擊','fighting',3,4,100,440,160,'學會後里香常駐協戰，每次追擊連打4→8拳，數量卡至16拳；擊倒目標後接續追打可達敵人，終擊更重。完全顯現時巨大化、基礎拳數加倍至24拳，逐拳接乙骨刀斬。'],
       ['jjk-yuta-speech','yuta-speech','咒言・別動','psychic',6,8,35,240,240,'近身壓力或敵群來襲時喝停240→320範圍內敵人：普通敵人2→2.8秒停止移動、新攻擊、施法與接觸傷害，強敵0.7→1秒；已飛出的敵彈仍危險。可與里香連拳並行。'],
+      ['jjk-yuta-love','yuta-love','純愛砲','psychic',8,9,100,600,38,'里香短暫完整顯形，與乙骨共同蓄力0.55秒；手部與里香口部咒力匯成同一砲道，雙人各自造成真傷害，連續3→7段，數量卡最多12段；射程600→840、砲道半徑38→70。等待協擊收勢後出砲，可邊移動邊轟擊；完全顯現期間享有傷害加成。獨立短暫顯形與多段脈衝為本作改編，不附送完全顯現增益。'],
       ['jjk-yuta-manifest','yuta-manifest','里香完全顯現','psychic',9,16,0,600,160,'遇敵群或強敵顯現8秒，刷新里香一次，傷害+50→100%，刀拳雙人連打。每次顯現待連段收勢後，乙骨與同一里香短蓄0.55秒，從兩個起點各放出一道寬幅貫穿咒力，射程600→840；未學協擊也可放出，沒有免費拳擊。結束後恢復8→6秒，冷卻卡有效。'],
       ['jjk-yuta-resonance','yuta-resonance','協戰共鳴','fighting',12,0,80,240,240,'被動：里香終結重擊真正命中後，乙骨接一記寬幅共鳴終擊；半徑240→360。等待當前身體動作結束，不遞迴觸發。']
     ]],
@@ -51,11 +53,13 @@
   };
   Object.assign(power.yuta,{speechRadii:[240,260,280,300,320],speechDurations:[2,2.2,2.4,2.6,2.8],speechBossDurations:[.7,.775,.85,.925,1]});
   Object.assign(power.yuta,{releaseRanges:[600,660,720,780,840],releaseRadii:[38,46,54,62,70],releaseDamage:[150,190,230,270,320],releaseCharge:.55});
+  Object.assign(power.yuta,{loveBases:[3,4,5,6,7],loveCap:12,loveInterval:.12});
   // Functional ranks spend the existing upgrade choice; they are not free talents.
   const functional={
     'jjk-yuta':{base:{bladeArc:Math.PI*2/3},third:{relayMarkDuration:1.2},fifth:{bladeArc:2.5},text3:'刀斬標記1.2秒，里香優先追擊該目標',text5:'近身斬擊角擴至約143度'},
     'jjk-yuta-rika':{base:{rikaSpeed:640,rikaReturnSpeed:800,comboBase:4},third:{rikaSpeed:760},fifth:{rikaReturnSpeed:960},text3:'普通6拳／顯現12拳基數，重擊半徑200',text5:'普通8拳／顯現16拳基數，重擊半徑250，數量上限16／24拳'},
     'jjk-yuta-speech':{base:{speechDuration:2,speechBossDuration:.7},third:{},fifth:{},text3:'喝停半徑280，普通敵人2.4秒／強敵0.85秒',text5:'喝停半徑320，普通敵人2.8秒／強敵1秒'},
+    'jjk-yuta-love':{base:{},third:{},fifth:{},text3:'基礎5段雙源貫穿，射程720、每路半徑54',text5:'基礎7段雙源貫穿，射程840、每路半徑70，數量卡最多12段'},
     'jjk-yuta-manifest':{base:{recovery:8},third:{recovery:7},fifth:{recovery:6},text3:'顯現後基礎恢復7秒',text5:'顯現後基礎恢復6秒'},
     'jjk-yuta-resonance':{third:{radius:1.25,range:300},fifth:{radius:1.2,range:360},text3:'共鳴終擊半徑300',text5:'共鳴終擊半徑360'},
     'jjk-ryu':{third:{targetPolicy:'elite'},fifth:{range:414},text3:'優先可達精英，無精英才選最近敵人',text5:'穿線射程360→414'},
@@ -71,6 +75,7 @@
   const ladders={
     'yuta-speech':{range:power.yuta.speechRadii,radius:power.yuta.speechRadii,speechDuration:power.yuta.speechDurations,speechBossDuration:power.yuta.speechBossDurations},
     'yuta-rika':{range:power.yuta.rikaRanges,radius:power.yuta.rikaRadii,rikaSpeed:power.yuta.rikaSpeeds,comboBase:power.yuta.rikaBases},
+    'yuta-love':{range:power.yuta.releaseRanges,radius:power.yuta.releaseRadii},
     'yuta-manifest':{duration:[8,8,8,8,8],recovery:power.yuta.recoveries},
     'yuta-resonance':{range:power.yuta.resonanceRadii,radius:power.yuta.resonanceRadii},
     'uro-sky':{range:power.uro.palmRanges,arc:power.uro.palmArcs},

@@ -290,7 +290,7 @@
   };
   const learning=document.createElement('div');learning.className='launch-kit';learning.hidden=true;
   learning.setAttribute('aria-label','特色技能學習進程');detail.querySelector('.launch-description').after(learning);
-  const kitLabels={30016:['體術','火幕','須佐','隕石','木分身'],30013:['刀斬','里香','咒言','顯現','共鳴'],30014:['額砲','散射','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落','殘響']};
+  const kitLabels={30016:['體術','火幕','須佐','隕石','木分身'],30013:['刀斬','里香','咒言','純愛砲','顯現','共鳴'],30014:['額砲','散射','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落','殘響']};
   let learningDex;
   let previewDex;
   const syncQuickPick=()=>{

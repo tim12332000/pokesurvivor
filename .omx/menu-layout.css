@@ -99,7 +99,7 @@ body:has(#scr-menu.launch-menu:not(.hidden)) #credits-line {display:none}
   body #scr-menu.launch-menu {padding-top:156px}
   body #scr-menu.launch-menu .launch-detail {display:block;padding:0;border:0;background:none}
   body #scr-menu.launch-menu .launch-detail>:not(.launch-action) {display:none}
-  body #scr-menu.launch-menu .launch-detail>.launch-kit[data-skill-count="5"]:not([hidden]) {display:grid}
+  body #scr-menu.launch-menu .launch-detail>.launch-kit:is([data-skill-count="5"],[data-skill-count="6"]):not([hidden]) {display:grid}
   body #scr-menu.launch-menu #naruto-quick-pick .naruto-grid {grid-template-columns:repeat(2,minmax(0,1fr));max-height:225px}
 }
 @media (min-width:701px) and (max-height:540px) {
@@ -138,4 +138,5 @@ body #scr-menu.launch-menu .launch-kit small {font-size:9px;line-height:1.2;colo
   body #scr-menu.launch-menu .launch-kit b {font-size:10px}
   body #scr-menu.launch-menu .launch-kit[data-skill-count="5"]>span {grid-template-columns:1fr;row-gap:3px}
   body #scr-menu.launch-menu .launch-kit[data-skill-count="5"] img {grid-row:auto}
+  body #scr-menu.launch-menu .launch-kit[data-skill-count="6"] {grid-template-columns:repeat(3,minmax(0,1fr))}
 }
