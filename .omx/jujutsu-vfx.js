@@ -305,7 +305,8 @@
   }
   function drawRyuRing(ctx,owner,ring,ground){
     if(ring.dead||!ring.segments?.length)return;
-    const ox=ground?0:(ring.renderOffsetX||0),oy=ground?0:(ring.renderOffsetY??-48);
+    const ox=ground?0:(ring.renderOffsetX||0),oy=ground?0:(ring.renderOffsetY||0);
+    const ending=.4+.6*clamp((ring.duration-ring.age)/.18);
     ctx.save();ctx.translate(ox,oy);ctx.lineJoin='round';ctx.lineCap='round';
     ctx.beginPath();
     for(let i=0;i<ring.segments.length;i++){
@@ -313,28 +314,33 @@
       if(!previous||Math.hypot(segment.ax-previous.bx,segment.ay-previous.by)>.1)ctx.moveTo(segment.ax,segment.ay);
       ctx.lineTo(segment.bx,segment.by);
     }
-    // These layers share the clipped combat path. Low quality keeps its full
-    // physical width and every live circuit; only the interior seam is omitted.
-    ctx.globalAlpha=ground?.13:.52;ctx.strokeStyle=ground?'#61c6d5':'#3ebddf';ctx.lineWidth=ring.width*2;ctx.stroke();
+    // Only a faint envelope marks the full physical width. The beam's visible
+    // material is made of graded, travelling strands rather than a solid band.
+    ctx.globalAlpha=(ground?.035:.07)*ending;ctx.strokeStyle='#49c8e2';ctx.lineWidth=ring.width*2;ctx.stroke();
     if(!ground){
-      ctx.globalAlpha=.9;ctx.strokeStyle='#8eefff';ctx.lineWidth=ring.width*1.25;ctx.stroke();
-      ctx.globalAlpha=.96;ctx.strokeStyle='#f2ffff';ctx.lineWidth=ring.width*.55;ctx.stroke();
-      if(!low()){
-        ctx.globalAlpha=.65;ctx.strokeStyle='#ffffff';ctx.lineWidth=Math.max(1,ring.width*.12);ctx.stroke();
-      }
       const phase=(ring.age%ring.interval)/ring.interval;
-      const headIndex=ring.cycle===0?ring.segments.length-1:Math.min(ring.segments.length-1,Math.floor(phase*ring.segments.length));
-      const head=ring.segments[headIndex];
-      // The whole closed tube remains physical. A travelling pressure crest
-      // makes each actual circuit readable without inventing extra hit paths.
-      ctx.globalAlpha=.95;ctx.strokeStyle='#ffffff';ctx.lineWidth=ring.width*.85;
-      ctx.beginPath();
-      const tail=Math.max(0,headIndex-Math.ceil(ring.segments.length*.13));
-      ctx.moveTo(ring.segments[tail].ax,ring.segments[tail].ay);
-      for(let i=tail;i<=headIndex;i++)ctx.lineTo(ring.segments[i].bx,ring.segments[i].by);
-      ctx.stroke();
-      ctx.globalAlpha=.95;ctx.fillStyle='#f5ffff';ctx.beginPath();
-      ctx.arc(head.bx,head.by,ring.width*.68,0,TAU);ctx.fill();
+      const n=ring.segments.length,front=ring.cycle===0?1:phase,detailed=!low();
+      for(let i=0;i<n;i++){
+        const segment=ring.segments[i],along=i/Math.max(1,n-1);
+        const pressure=Math.pow((1+Math.cos((along-front)*TAU))/2,5);
+        const ripple=.5+.5*Math.sin(i*.47-ring.age*19);
+        const grain=.5+.5*Math.sin(i*.91-ring.age*31);
+        const stroke=(width,alpha,color,offset=0)=>{
+          const dx=segment.bx-segment.ax,dy=segment.by-segment.ay,len=Math.hypot(dx,dy)||1;
+          const ox=-dy/len*offset,oy=dx/len*offset;
+          ctx.globalAlpha=alpha*ending;ctx.strokeStyle=color;ctx.lineWidth=width;
+          ctx.beginPath();ctx.moveTo(segment.ax+ox,segment.ay+oy);ctx.lineTo(segment.bx+ox,segment.by+oy);ctx.stroke();
+        };
+        // Successive translucent cross-sections give a soft, uneven edge and
+        // a narrow hot core. No layer extends beyond the physical envelope.
+        stroke(ring.width*(1.5+.3*ripple),.035+.1*pressure,'#2daed4');
+        stroke(ring.width*(.65+.45*ripple),.12+.28*pressure,'#68e5ed');
+        stroke(ring.width*(.13+.22*grain),.12+.68*pressure,'#e4ffff');
+        if(detailed&&grain>.35){
+          const shear=Math.sin(i*.21-ring.age*13)*ring.width*.28;
+          stroke(Math.max(1,ring.width*.09),(.1+.35*pressure)*grain,'#bcfaff',shear);
+        }
+      }
       frame.draws.push({kind:'ryu-ring',owner:id(owner),castId:ring.action?.castId,
         radius:ring.radius,width:ring.width,cycle:ring.cycle,count:ring.count,segments:ring.segments.length});
     }

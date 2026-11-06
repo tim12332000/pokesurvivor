@@ -82,14 +82,16 @@
     const count=Math.min(p.ringCap??16,G.Quantity.count(owner,(p.ringBases||[4,5,6,7,8])[L]));
     const interval=p.ringInterval??.22;
     return {count,radius:(p.ringRadii||[112,128,144,160,180])[L],width:(p.ringWidths||[18,21,24,27,30])[L],
-      interval,charge:p.ringCharge??.32,cd:p.ringCd??6.5,duration:count*interval};
+      yScale:.55,interval,charge:p.ringCharge??.32,cd:p.ringCd??6.5,duration:count*interval};
   }
   const actionLegal=(s,f)=>states.get(s.owner)===s&&G.CombatPulse.legal(f.cast)&&s.owner.moves?.some(m=>m.id===f.m.id);
   function targetFor(owner,m){
     const ring=m.digiMode==='jjk-ryu-ring',profile=ring?ringFor(owner,m):null;
     const r=ring?profile.radius+profile.width:settings(m).range;
+    const inRange=e=>Math.hypot(e.x-owner.x,e.y-owner.y)<=r+(e.r||0)&&
+      (!ring||Math.abs(e.y-owner.y)<=profile.radius*profile.yScale+profile.width+(e.r||0));
     const enemies=[...new Set(G.EnemyMgr.queryCircle(owner.x,owner.y,r+80))].filter(e=>alive(e)&&!e.friendly&&
-      Math.hypot(e.x-owner.x,e.y-owner.y)<=r+(e.r||0)&&(ring||clearPath(owner.x,owner.y,e.x,e.y)))
+      inRange(e)&&(ring||clearPath(owner.x,owner.y,e.x,e.y)))
       .sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
     if(m.impactTargetPolicy==='cluster'||m.digiMode==='jjk-ryu-impact'){
       const radius=settings(m).radius,score=e=>enemies.reduce((n,other)=>n+Number(Math.hypot(other.x-e.x,other.y-e.y)<=radius+(other.r||0)&&clearPath(e.x,e.y,other.x,other.y)),0);
@@ -100,7 +102,7 @@
     }
     if(enemies.length)return enemies[0];
     return (G.World.propsInCircle?.(owner.x,owner.y,r)||[]).filter(p=>p.destructible!==false&&p.hp>0&&
-      Math.hypot(p.x-owner.x,p.y-owner.y)<=r+(p.r||0)&&(ring||clearPath(owner.x,owner.y,p.x,p.y,p)))
+      inRange(p)&&(ring||clearPath(owner.x,owner.y,p.x,p.y,p)))
       .sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y))[0]||null;
   }
   function canCast(owner,m){
@@ -254,31 +256,33 @@
     s.scatter=s.scatter.filter(shot=>!shot.dead);
   }
   function startRing(s,f){
-    const p=f.ringProfile,start=f.visualStart||{x:f.x,y:f.y-HEAD_HEIGHT};
+    const p=f.ringProfile;
     f.cast.channel='ring';
     // CombatPulse rechecks this predicate between secondary splash victims as
     // well as direct hits, so a callback cannot retain the old ring's damage.
     f.cast.targetIsLegal=e=>actionLegal(s,f)&&G.EnemyMgr.all().includes(e);
     const ring={...p,action:f,m:f.m,age:0,cycle:0,lapIndex:0,progress:0,x:s.owner.x,y:s.owner.y,
-      renderOffsetX:start.x-f.x,renderOffsetY:start.y-f.y,points:[],segments:[],hitThisCycle:new Set(),
+      renderOffsetX:0,renderOffsetY:0,points:[],segments:[],hitThisCycle:new Set(),
       propHits:new Set(),nextPulseIndex:0,dead:false};
     s.rings.push(ring);
     return ring;
   }
   function ringPath(s,r){
     const f=r.action,c=Math.cos(f.aim),sn=Math.sin(f.aim),radius=r.radius;
-    const local=[{x:8,y:0,lead:true}],leadSteps=16,arcSteps=96;
+    const local=[{x:8,y:0,lift:HEAD_HEIGHT,lead:true}],leadSteps=16,arcSteps=96;
     // The emitter bends into a tangent before closing around the actor. It is
     // one connected cannon path, never a rotating straight ray or filled disk.
     for(let i=1;i<=leadSteps;i++){
       const t=i/leadSteps,u=1-t;
       local.push({x:u*u*u*8+3*u*u*t*radius*.6+3*u*t*t*radius+t*t*t*radius,
-        y:-3*u*t*t*radius*.45,lead:true});
+        y:-3*u*t*t*radius*.45,lift:HEAD_HEIGHT*u*u*u,lead:true});
     }
     const growth=clamp(r.age/r.interval),arc=Math.min(arcSteps,Math.floor(growth*arcSteps));
     for(let i=1;i<=arc;i++){const a=i*Math.PI*2/arcSteps;local.push({x:radius*Math.cos(a),y:radius*Math.sin(a),lead:false});}
     r.x=s.owner.x;r.y=s.owner.y;r.progress=growth;r.segments=[];r.points=[];
-    let previous={x:r.x+local[0].x*c-local[0].y*sn,y:r.y+local[0].x*sn+local[0].y*c};
+    // Project after aim rotation: the ground ellipse never stands up or turns
+    // its wide axis with the target. Rendering uses these same clipped points.
+    let previous={x:r.x+local[0].x*c-local[0].y*sn,y:r.y+(local[0].x*sn+local[0].y*c)*r.yScale-local[0].lift};
     const breakProp=prop=>{
       if(!actionLegal(s,f))return false;
       if(prop.destructible===false||!Number.isFinite(prop.hp))return false;
@@ -286,13 +290,13 @@
       return prop.hp<=0;
     };
     for(let i=1;i<local.length;i++){
-      const p=local[i],next={x:r.x+p.x*c-p.y*sn,y:r.y+p.x*sn+p.y*c};
+      const p=local[i],next={x:r.x+p.x*c-p.y*sn,y:r.y+(p.x*sn+p.y*c)*r.yScale-(p.lift||0)};
       const dx=next.x-previous.x,dy=next.y-previous.y,length=Math.hypot(dx,dy),aim=Math.atan2(dy,dx);
       const clipped=clippedLength(previous.x,previous.y,aim,length,r.width,null,breakProp);
       if(!actionLegal(s,f)){r.dead=true;return;}
       const tip={x:previous.x+Math.cos(aim)*clipped,y:previous.y+Math.sin(aim)*clipped};
       // The brief ingress disappears after the ring closes; the hollow center
-      // stays safe while each subsequent real lap strikes the circular path.
+      // stays safe while each subsequent real lap strikes the projected path.
       if((r.cycle===0||!p.lead)&&clipped>EPS){
         if(!r.points.length)r.points.push(previous);
         r.points.push(tip);r.segments.push({ax:previous.x,ay:previous.y,bx:tip.x,by:tip.y});
