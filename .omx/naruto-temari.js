@@ -3,8 +3,10 @@
   if (G.NarutoTemari) return;
   const combat=G.Combat, TAU=Math.PI*2, EPS=1e-8;
   const states=new Map(), casts=[], blades=[], waves=[], summons=[], storms=[], orbits=new Map(), lifts=new Map(), pushes=new Map();
+  const windKnots=[],windBursts=[],WIND_CHAIN_ID='naruto-temari-wind-chain';
+  const windIssued=new WeakMap();
   const modes=new Set(['temari-wind','temari-mastery','temari-great-scythe','temari-blade-dance','temari-typhoon']);
-  let sequence=0, petSequence=0, petPacketSequence=0;
+  let sequence=0, petSequence=0, petPacketSequence=0,windSeedSequence=0,windActivationSequence=0,windBurstSequence=0;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
   const controlled=a=>a===G.Game.player||!!G.SelfClones?.isActor(a);
   const valid=a=>alive(a)&&controlled(a)&&(a.mon?.dex??a.dex)===30011;
@@ -43,6 +45,15 @@
       arc:Math.min(180,110+10*i+2*p.Q)*Math.PI/180,
       pushDistance:[120,145,170,195,220][i]+18*p.L+4*p.Q,pushDuration:.35,speed:720*p.speed};
   }
+  const heavyMove=owner=>owner?.moves?.find(m=>m.digiMode==='temari-great-scythe');
+  function windChainProfile(owner,m=heavyMove(owner)) {
+    const enabled=!!heavyMove(owner),H=rank(m),Q=Math.min(20,quantity(owner));
+    const limit=Math.min(8,2+Math.min(Q,4)+Math.floor((H-1)/2));
+    return {enabled,seedLimit:enabled?limit:0,triggerLimit:enabled?limit:0,
+      cuts:Math.min(8,3+Math.min(Q,3)+Math.floor((H-1)/2)),
+      radius:Math.min(440,heavyFor(owner,m).pushDistance+64+8*Q),damageRatio:.35,
+      knotTTL:6,knotRadius:10,knotLimit:8,minSpacing:48,interval:.1,travel:.08,fade:.12,burstLimit:32};
+  }
   function rangeFor(owner,m) {if(m.digiMode==='temari-great-scythe')return heavyFor(owner,m).range;if(m.digiMode==='temari-typhoon')return [240,270,300,330,360][rank(m)-1];return (m.range||[240,250,270,290,310][rank(m)-1])+mastery(owner).reach;}
   function targets(owner,m,candidates=null) {
     const r=rangeFor(owner,m);
@@ -77,7 +88,7 @@
       damage:(Number.isFinite(m.dmg)?m.dmg:fallback)*(owner.atk??1)*(empowered?p.power:1),
       critChance:owner.critChance||0,range:rangeFor(owner,m),speed:h?.speed??(m.speed||(basic?420:500))*p.speed,
       arc:h?.arc??(basic?[45,75,105,135,180][i]*Math.PI/180:m.arc||100*Math.PI/180),radius:basic?(m.contactRadius||30):heavy?(m.radius||160):typhoon?[240,270,300,330,360][i]:(m.radius||65),
-      pushDistance:h?.pushDistance??0,pushDuration:h?.pushDuration??0,
+      pushDistance:h?.pushDistance??0,pushDuration:h?.pushDuration??0,windChain:windChainProfile(owner,heavy?m:heavyMove(owner)),
       empowered,budget:empowered?p.budget:0,atk:owner.atk??1,emitted:0,cuts:0,hits:0,props:0};
   }
   function start(owner,snap,ghost=false) {
@@ -135,28 +146,35 @@
     if(b.ghost)return;
     const s=state(b.owner);s.totalEmitted++;s.emittedByMode[b.mode]=(s.emittedByMode[b.mode]||0)+1;
   }
-  const legal=b=>!b.cancelled&&b.world===G.World&&(b.ghost?alive(b.owner):valid(b.owner));
+  const legal=b=>!b.cancelled&&b.world===G.World&&(b.ghost?alive(b.owner):valid(b.owner))&&
+    (!b.windChainDerived||b.ghost||!!heavyMove(b.owner));
+  function cancelInvalidHit(b) {
+    if(b.windChainDerived&&!b.cancelled&&b.world===G.World&&valid(b.owner)&&!heavyMove(b.owner))clearWind(b.owner);
+    else clear(b.owner);
+  }
   function recordCut(b) {
     if(!legal(b))return false;
     b.cuts++;if(!b.ghost){const s=states.get(b.owner);if(s)s.totalCuts++;}return true;
   }
-  function hit(b,e,dx,dy,knock=0,splash=false) {
+  function hit(b,e,dx,dy,knock=0,splash=false,contactClock=null) {
     if(b.ghost||!legal(b)||!alive(e))return;
+    const point={x:e.x,y:e.y};
     const owner=b.owner,m=b.m,mult=G.Types.mult(m.type||'flying',e.types),crit=Math.random()<b.critChance;
     const damage=b.damage*mult*G.Weather.mult(m.type||'flying')*(crit?1.5:1)*(G.NarutoSupport?.precisionMultiplier(owner,e)||1);
     e.hurt(damage,'#bcebd9',dx,dy,knock,crit?'crit':G.Types.label(mult),owner,m.id);
-    if(!legal(b)){clear(owner);return false;}
+    if(!legal(b)){cancelInvalidHit(b);return false;}
     owner.onDealt?.(damage);owner.dmgDealt=(owner.dmgDealt||0)+damage;
-    if(!legal(b)){clear(owner);return false;}
+    if(!legal(b)){cancelInvalidHit(b);return false;}
     if(splash)G.DamageSplash?.hit(owner,e,damage,'#bcebd9',m.id);
-    if(!legal(b)){clear(owner);return false;}
+    if(!legal(b)){cancelInvalidHit(b);return false;}
     if(m.burn)e.applyBurn?.(m.burn);if(m.poison)e.applyPoison?.(m.poison);if(m.slow)e.applySlow?.(m.slow);
-    if(!legal(b)){clear(owner);return false;}
-    b.hits++;state(owner).hitEvents++;return true;
+    if(!legal(b)){cancelInvalidHit(b);return false;}
+    b.hits++;state(owner).hitEvents++;
+    seedWindKnot(b,e,point,contactClock);return damage;
   }
   function propHit(b,p) {
     if(b.ghost||!p||p.dead||p.hp<=0||!legal(b))return;
-    G.World.damageProp(p,b.damage,'#bcebd9');if(!legal(b)){clear(b.owner);return false;}
+    G.World.damageProp(p,b.damage,'#bcebd9');if(!legal(b)){cancelInvalidHit(b);return false;}
     b.props++;state(b.owner).propHits++;return true;
   }
   function circleTargets(x,y,r) {
@@ -164,6 +182,225 @@
       Math.hypot(e.x-x,e.y-y)<=r+(e.r||0)&&clearPath(x,y,e.x,e.y));
   }
   function props(x,y,r) {return G.World.propsInCircle?.(x,y,r)||[];}
+  const windLifetime=a=>(a.cuts-1)*a.interval+a.travel+.12;
+  const safeId=id=>Number.isSafeInteger(id)&&id>0;
+  const removeWind=(list,a)=>{a.dead=true;const index=list.indexOf(a);if(index>=0)list.splice(index,1);};
+  function clearWind(owner) {
+    const owners=owner?[owner]:[...new Set([...states.keys(),...windKnots.map(a=>a.owner),...windBursts.map(a=>a.owner)])];
+    for(const list of [windKnots,windBursts])for(const a of list.slice())if(!owner||a.owner===owner) {
+      if(a.cast)a.cast.cancelled=true;removeWind(list,a);
+    }
+    for(const actor of owners) {
+      const s=states.get(actor);if(s?.windSlotReady)s.windSlotReady.fill(s.clock);
+      const issued=windIssued.get(actor);
+      if(!issued||issued.seed===issued.retiredSeed&&issued.activation===issued.retiredActivation)continue;
+      issued.retiredSeed=issued.seed;issued.retiredActivation=issued.activation;
+      G.NarutoTemari.onWindChain?.(actor,{removed:true,seedThrough:issued.seed,activationThrough:issued.activation});
+    }
+  }
+  function clearWindChain(owner,packet) {
+    const seedThrough=packet?.seedThrough??0,activationThrough=packet?.activationThrough??0;
+    if(!owner||![seedThrough,activationThrough].every(n=>Number.isSafeInteger(n)&&n>=0)||!(seedThrough||activationThrough))return false;
+    for(const a of windKnots.slice())if(a.owner===owner&&a.seedId<=seedThrough)removeWind(windKnots,a);
+    for(const a of windBursts.slice())if(a.owner===owner&&a.activationId<=activationThrough) {
+      a.cast.cancelled=true;removeWind(windBursts,a);
+      const s=states.get(owner),end=a.created+windLifetime(a);
+      if(s?.windSlotReady&&Math.abs(s.windSlotReady[a.slot]-end)<EPS)s.windSlotReady[a.slot]=Math.min(end,s.clock);
+    }
+    return true;
+  }
+  function noteWindIssue(owner,key,id) {
+    let issued=windIssued.get(owner);
+    if(!issued){issued={seed:0,activation:0,retiredSeed:0,retiredActivation:0};windIssued.set(owner,issued);}
+    issued[key]=id;
+  }
+  function windOwnerLegal(a) {
+    return !a.dead&&a.world===G.World&&alive(a.owner)&&(a.ghost||valid(a.owner)&&!!heavyMove(a.owner));
+  }
+  function seedWindKnot(b,target,point,contactClock) {
+    const p=b.windChain;
+    if(b.ghost||!legal(b)||!heavyMove(b.owner)||!p?.enabled||
+      !(b.kind==='basic'&&b.empowered||b.kind==='typhoon'))return false;
+    b.windSeedTargets??=new WeakSet();
+    if(b.windSeedTargets.has(target))return false;
+    b.windSeedTargets.add(target);
+    if((b.windSeeded||0)>=p.seedLimit)return false;
+    const s=states.get(b.owner);if(!s)return false;
+    const created=Math.min(s.clock,Number.isFinite(contactClock)?contactClock:s.clock);
+    const owned=windKnots.filter(a=>a.owner===b.owner&&windOwnerLegal(a)&&s.clock-a.created<a.ttl-EPS);
+    if(owned.some(a=>Math.hypot(a.x-point.x,a.y-point.y)<p.minSpacing-EPS))return false;
+    if(owned.length>=p.knotLimit)removeWind(windKnots,owned.reduce((a,c)=>a.seedId<c.seedId?a:c));
+    const knot={seedId:++windSeedSequence,sourceCastId:b.castId??b.serial,owner:b.owner,world:G.World,
+      ...point,age:s.clock-created,created,ttl:p.knotTTL,r:p.knotRadius,ghost:false,consumed:false,dead:false};
+    windKnots.push(knot);noteWindIssue(b.owner,'seed',knot.seedId);
+    b.windSeeded=(b.windSeeded||0)+1;s.windSeeded=(s.windSeeded||0)+1;
+    G.NarutoTemari.onWindKnot?.(b.owner,{seedId:knot.seedId,sourceCastId:knot.sourceCastId,
+      x:knot.x,y:knot.y,age:knot.age,ttl:knot.ttl});return true;
+  }
+  function applyWindKnot(owner,packet) {
+    if(!alive(owner)||!packet||!safeId(packet.seedId)||!safeId(packet.sourceCastId)||
+      ![packet.x,packet.y,packet.age,packet.ttl].every(Number.isFinite)||packet.age<0||packet.age>=6||packet.ttl!==6)return false;
+    const s=state(owner),current=windKnots.find(a=>a.owner===owner&&a.seedId===packet.seedId);
+    if(current) {
+      if(!current.ghost||current.x!==packet.x||current.y!==packet.y||current.sourceCastId!==packet.sourceCastId)return false;
+      current.created=Math.min(current.created,s.clock-packet.age);current.age=Math.max(current.age,packet.age);return true;
+    }
+    const owned=windKnots.filter(a=>a.owner===owner&&!a.dead);
+    if(owned.length>=8) {
+      const oldest=owned.reduce((a,c)=>a.seedId<c.seedId?a:c);
+      if(packet.seedId<=oldest.seedId)return false;removeWind(windKnots,oldest);
+    }
+    windKnots.push({seedId:packet.seedId,sourceCastId:packet.sourceCastId,owner,world:G.World,
+      x:packet.x,y:packet.y,age:packet.age,created:s.clock-packet.age,ttl:6,r:10,ghost:true,consumed:false,dead:false});
+    return true;
+  }
+  function makeWindBurst(owner,packet,cast,activationId,ghost=false,slot=null) {
+    const s=state(owner),ready=s.windSlotReady??=Array(32).fill(-Infinity);
+    if(slot===null)slot=ready.indexOf(Math.min(...ready));
+    ready[slot]=Math.max(ready[slot],s.clock-packet.age+windLifetime(packet));
+    const a={...packet,owner,world:G.World,activationId,ghost,dead:false,cast,slot,
+      created:s.clock-packet.age,fade:.12,fronts:[],emitted:0,lastHits:[]};
+    // Received elapsed fronts are history, not a fresh attack on receipt.
+    if(ghost)while(a.emitted<a.cuts&&a.age+EPS>=a.emitted*a.interval) {
+      const started=a.emitted*a.interval,reach=a.radius*Math.min(1,Math.max(0,(a.age-started)/a.travel));
+      a.fronts.push({index:a.emitted,started,reach,done:reach>=a.radius-EPS,hits:new Set(),props:new Set()});a.emitted++;
+    }
+    return a;
+  }
+  function applyWindChain(owner,packet,present=true) {
+    if(!alive(owner)||!packet||!safeId(packet.heavyCastId)||!safeId(packet.activationId)||
+      !Array.isArray(packet.consumedIds)||!packet.consumedIds.length||packet.consumedIds.length>8||
+      !packet.consumedIds.every(safeId)||new Set(packet.consumedIds).size!==packet.consumedIds.length||
+      !Array.isArray(packet.bursts)||packet.bursts.length!==packet.consumedIds.length)return false;
+    const ids=new Set();
+    for(const a of packet.bursts) {
+      if(!a||!safeId(a.id)||ids.has(a.id)||![a.x,a.y,a.age,a.radius,a.cuts,a.interval,a.travel].every(Number.isFinite)||
+        a.age<0||a.radius<=0||a.radius>440||!Number.isInteger(a.cuts)||a.cuts<3||a.cuts>8||
+        a.interval!==.1||a.travel!==.08||a.damageType!=='flying')return false;
+      ids.add(a.id);
+      const old=windBursts.find(b=>b.owner===owner&&b.id===a.id);
+      if(old&&(!old.ghost||old.activationId!==packet.activationId||old.x!==a.x||old.y!==a.y||old.radius!==a.radius||old.cuts!==a.cuts))return false;
+    }
+    const additions=packet.bursts.filter(a=>a.age<windLifetime(a)&&!windBursts.some(b=>b.owner===owner&&b.id===a.id));
+    if(present&&windBursts.filter(a=>a.owner===owner&&!a.dead).length+additions.length>32)return false;
+    const s=states.get(owner);
+    if(present&&s?.windSlotReady&&s.windSlotReady.filter(at=>at<=s.clock+EPS).length<additions.length)return false;
+    // Validate the complete activation before touching any consumed knot.
+    for(const knot of windKnots.slice())if(knot.owner===owner&&packet.consumedIds.includes(knot.seedId)) {
+      knot.consumed=true;removeWind(windKnots,knot);
+    }
+    if(present)for(const a of additions)windBursts.push(makeWindBurst(owner,a,
+      {owner,world:G.World,ghost:true,windChainDerived:true,id:WIND_CHAIN_ID,m:{id:WIND_CHAIN_ID,type:'flying'}},packet.activationId,true));
+    return true;
+  }
+  function waveBornAt(w) {
+    const b=w.cast;return b.started+b.release+(b.kind==='basic'?.12:.16)*w.index/b.count;
+  }
+  function triggerWindChain(w,f,previous) {
+    const b=w.cast,p=b.windChain,s=states.get(b.owner);
+    if(b.ghost||b.kind!=='heavy'||!legal(b)||!heavyMove(b.owner)||!p?.enabled||!s)return;
+    // A burst expiring earlier in this frame must free its slot. Settle any
+    // legitimate final pulses first, rather than dropping them to admit a chain.
+    for(const a of windBursts.slice())if(a.owner===b.owner&&s.clock-a.created>=windLifetime(a)-EPS) {
+      advanceWindBurst(a);if(!a.dead)removeWind(windBursts,a);
+    }
+    if(!legal(b)||!heavyMove(b.owner)||states.get(b.owner)!==s)return;
+    const ready=[...(s.windSlotReady??=Array(p.burstLimit).fill(-Infinity))];
+    const limit=p.triggerLimit-(b.windTriggered||0);if(limit<=0||!ready.some(at=>at<=s.clock+EPS))return;
+    const candidates=[];
+    for(const knot of windKnots)if(knot.owner===b.owner&&!knot.ghost&&!knot.consumed&&windOwnerLegal(knot)&&
+      inWave(w,knot,previous)&&clearPath(w.x,w.y,knot.x,knot.y)) {
+      const d=Math.hypot(knot.x-w.x,knot.y-w.y),born=waveBornAt(w)+f.started;
+      const crossed=Math.max(knot.created,born+Math.max(0,d-knot.r)/b.speed,born+previous/b.speed);
+      // A new knot behind an already-passed front is not retroactively hit.
+      if(crossed>born+(d+knot.r)/b.speed+EPS||crossed>s.clock+EPS||crossed>=knot.created+knot.ttl-EPS)continue;
+      candidates.push({knot,crossed,exit:born+(d+knot.r)/b.speed});
+    }
+    candidates.sort((a,c)=>a.crossed-c.crossed||a.knot.seedId-c.knot.seedId);
+    const selected=[],duration=(p.cuts-1)*p.interval+p.travel+p.fade;
+    for(const candidate of candidates) {
+      const slot=ready.indexOf(Math.min(...ready)),crossed=Math.max(candidate.crossed,ready[slot]);
+      if(crossed>candidate.exit+EPS||crossed>s.clock+EPS||crossed>=candidate.knot.created+candidate.knot.ttl-EPS)continue;
+      selected.push({...candidate,crossed,slot});ready[slot]=crossed+duration;
+      if(selected.length>=limit)break;
+    }
+    if(!selected.length||!legal(b)||!heavyMove(b.owner)||states.get(b.owner)!==s)return;
+    s.windSlotReady=ready;
+    const activationId=++windActivationSequence,packets=[];
+    noteWindIssue(b.owner,'activation',activationId);
+    // Consume the whole chosen group before callbacks or any pulse damage.
+    for(const {knot} of selected){knot.consumed=true;removeWind(windKnots,knot);}
+    b.windTriggered=(b.windTriggered||0)+selected.length;
+    for(const {knot,crossed,slot} of selected) {
+      const packet={id:++windBurstSequence,x:knot.x,y:knot.y,age:Math.max(0,s.clock-crossed),
+        radius:p.radius,cuts:p.cuts,interval:p.interval,travel:p.travel,damageType:'flying'};
+      const cast={owner:b.owner,world:G.World,ghost:false,windChainDerived:true,id:WIND_CHAIN_ID,kind:'wind-chain',
+        m:{id:WIND_CHAIN_ID,type:'flying'},damage:b.damage*p.damageRatio,critChance:b.critChance,cuts:0,hits:0,props:0};
+      const burst=makeWindBurst(b.owner,packet,cast,activationId,false,slot);burst.created=crossed;burst.age=0;
+      windBursts.push(burst);packets.push(packet);
+    }
+    s.windChains=(s.windChains||0)+1;s.windTriggered=(s.windTriggered||0)+selected.length;
+    G.NarutoTemari.onWindChain?.(b.owner,{heavyCastId:b.castId??b.serial,activationId,
+      consumedIds:selected.map(({knot})=>knot.seedId),bursts:packets});
+  }
+  function windMark(a,target,pulse,point,damage,hpDamage,prop=false) {
+    const mark={...point,age:a.age,angle:Math.atan2(point.y-a.y,point.x-a.x),pulse,
+      ...(a.ghost?{visualOnly:true}:{})};
+    a.lastHits.push(mark);if(a.lastHits.length>32)a.lastHits.shift();
+    G.NarutoTemari.onWindChainHit?.(Object.freeze({owner:a.owner,burstId:a.id,activationId:a.activationId,
+      pulse,enemyId:prop?undefined:target.id,x:point.x,y:point.y,damage:damage||0,hpDamage:hpDamage||0,
+      ghost:a.ghost,visualOnly:a.ghost,prop}));
+  }
+  function advanceWindBurst(a) {
+    if(!windOwnerLegal(a)||!legal(a.cast))return;
+    const s=states.get(a.owner);if(!s)return;
+    a.age=Math.max(a.age,s.clock-a.created);a.lastHits=a.lastHits.filter(h=>a.age-h.age<.12);
+    while(a.emitted<a.cuts&&a.age+EPS>=a.emitted*a.interval) {
+      const index=a.emitted++;
+      a.fronts.push({index,started:index*a.interval,reach:0,done:false,hits:new Set(),props:new Set()});
+      if(!a.ghost){recordCut(a.cast);s.windCuts=(s.windCuts||0)+1;}
+    }
+    const candidates=[...new Set(G.EnemyMgr.queryCircle(a.x,a.y,a.radius+80))];
+    for(const f of a.fronts) {
+      if(!windOwnerLegal(a)||!legal(a.cast))return;
+      if(f.done)continue;
+      const previous=f.reach;f.reach=a.radius*Math.min(1,Math.max(0,(a.age-f.started)/a.travel));
+      const crossed=e=>{const d=Math.hypot(e.x-a.x,e.y-a.y),r=e.r||0;return d+r>=previous-EPS&&d<=f.reach+r;};
+      for(const e of candidates)if(!f.hits.has(e)&&alive(e)&&!e.friendly&&crossed(e)&&clearPath(a.x,a.y,e.x,e.y)) {
+        if(!windOwnerLegal(a)||!legal(a.cast))return;
+        f.hits.add(e);const point={x:e.x,y:e.y},hp=e.hp;
+        if(a.ghost)windMark(a,e,f.index,point);
+        else {
+          const damage=hit(a.cast,e,e.x-a.x,e.y-a.y);
+          if(!damage||!windOwnerLegal(a)||!legal(a.cast))return;
+          s.windHits=(s.windHits||0)+1;windMark(a,e,f.index,point,damage,hp-e.hp);
+        }
+      }
+      if(!a.ghost)for(const prop of props(a.x,a.y,a.radius))if(!f.props.has(prop)&&!prop.dead&&prop.hp>0&&
+        crossed(prop)&&clearPath(a.x,a.y,prop.x,prop.y,1,prop)) {
+        if(!windOwnerLegal(a)||!legal(a.cast))return;
+        f.props.add(prop);const point={x:prop.x,y:prop.y},hp=prop.hp;
+        if(propHit(a.cast,prop)&&windOwnerLegal(a)&&legal(a.cast))windMark(a,prop,f.index,point,a.cast.damage,hp-prop.hp,true);
+      }
+      if(f.reach>=a.radius-EPS)f.done=true;
+    }
+  }
+  function updateWind() {
+    for(const [owner] of states) {
+      const issued=windIssued.get(owner);
+      if(issued&&(issued.seed!==issued.retiredSeed||issued.activation!==issued.retiredActivation)&&!heavyMove(owner))clearWind(owner);
+    }
+    for(const a of windKnots.slice()) {
+      if(!windOwnerLegal(a)){removeWind(windKnots,a);continue;}
+      const s=states.get(a.owner);if(!s){removeWind(windKnots,a);continue;}
+      a.age=Math.max(a.age,s.clock-a.created);if(a.age>=a.ttl-EPS)removeWind(windKnots,a);
+    }
+    for(const a of windBursts.slice()) {
+      if(!windOwnerLegal(a)||!legal(a.cast)){a.cast.cancelled=true;removeWind(windBursts,a);continue;}
+      advanceWindBurst(a);
+      if(!a.dead&&a.age>=windLifetime(a)-EPS)removeWind(windBursts,a);
+    }
+  }
   function emit(b,i) {
     const target=b.targets[i%b.targets.length],spread=b.kind==='basic'||b.kind==='heavy'?0:((i%5)/4-.5)*.14;
     const aim=b.aim+spread;
@@ -238,11 +475,14 @@
         inWave(w,e,previous)&&clearPath(w.x,w.y,e.x,e.y)) {
         if(!legal(b))return;
         f.hits.add(e);
-        hit(b,e,Math.cos(w.aim),Math.sin(w.aim));
+        const d=Math.hypot(e.x-w.x,e.y-w.y),crossed=waveBornAt(w)+f.started+Math.max(0,d-(e.r||0))/b.speed;
+        hit(b,e,Math.cos(w.aim),Math.sin(w.aim),0,false,crossed);
         if(!legal(b))return;
         if(b.kind==='basic')claimLift(b.owner,e,b);
         else claimPush(b.owner,e,b);
       }
+      if(!legal(b))return;
+      triggerWindChain(w,f,previous);
       if(!legal(b))return;
       if(b.wavePropAge!==b.age){b.wavePropAge=b.age;b.waveProps=props(b.x,b.y,b.range);}
       for(const p of b.waveProps)if(!f.props.has(p)&&!p.dead&&p.hp>0&&
@@ -674,6 +914,7 @@
     }
   }
   function clear(owner) {
+    clearWind(owner);
     // Retire attacks before teardown callbacks can reenter their current wave.
     for(const list of [casts,blades,waves,summons,storms])for(const a of list)if(!owner||a.owner===owner)(a.cast||a).cancelled=true;
     for(const [e,p] of pushes)if(!owner||p.owner===owner)releasePush(e,'clear');
@@ -692,7 +933,9 @@
     advanceLifts(dt);
     advanceOrbits(dt);
     for(const [owner,s] of states) {
-      const remote=alive(owner)&&(s.remotePets||casts.some(b=>b.owner===owner&&b.ghost)||[...lifts.values()].some(lift=>lift.owner===owner&&lift.cast.ghost)||[...pushes.values()].some(p=>p.owner===owner&&p.cast.ghost));
+      const remote=alive(owner)&&(s.remotePets||casts.some(b=>b.owner===owner&&b.ghost)||
+        windKnots.some(a=>a.owner===owner&&a.ghost)||windBursts.some(a=>a.owner===owner&&a.ghost)||
+        [...lifts.values()].some(lift=>lift.owner===owner&&lift.cast.ghost)||[...pushes.values()].some(p=>p.owner===owner&&p.cast.ghost));
       if(s.world!==G.World||(!valid(owner)&&!remote)){clear(owner);continue;}
       // Freeze prevents new actions; already released winds and summons keep time.
       s.clock+=dt;
@@ -725,6 +968,7 @@
       // Cast age continues after release scheduling has completed.
       if(a.dead){const index=list.indexOf(a);if(index>=0)list.splice(index,1);}
     }
+    updateWind();
   }
   function activeFor(owner) {
     const s=states.get(owner);return s?.world===G.World&&alive(owner)?s.pose:null;
@@ -738,13 +982,16 @@
       basicRounds:s.basicRounds,basicCooldown:s.basicCooldown,cooldowns:{...s.cooldowns},totalEmitted:s.totalEmitted,
       emittedByMode:{...s.emittedByMode},castCounts:{...s.castCounts},counts:{...s.counts},totalCuts:s.totalCuts,hitEvents:s.hitEvents,propHits:s.propHits,
       intercepted:s.intercepted,blades:blades.filter(a=>a.owner===owner).length,waves:waves.filter(a=>a.owner===owner).length,
+      windSeeded:s.windSeeded||0,windChains:s.windChains||0,windTriggered:s.windTriggered||0,
+      windCuts:s.windCuts||0,windHits:s.windHits||0,
+      windLiveKnots:windKnots.filter(a=>a.owner===owner&&!a.dead).length,windLiveBursts:windBursts.filter(a=>a.owner===owner&&!a.dead).length,
       orbits:[...orbits.values()].filter(o=>o.owner===owner).length,summons:summons.filter(a=>a.owner===owner).length,storms:storms.filter(a=>a.owner===owner).length,pendingCuts:[...waves,...summons,...storms].filter(a=>a.owner===owner).reduce((n,a)=>n+(a.cast.kind==='typhoon'?[...a.contacts.values()].reduce((v,c)=>v+a.cast.C-c.cuts,0):(a.cast.kind==='summon'?(['wander','follow','return'].includes(a.phase)?a.cuts:a.cast.C):a.cast.R)-a.cuts),0)};
   }
   function air(ctx) {
-    G.TemariCycloneVFX?.drawAir(ctx,{storms,orbits:[...orbits.values()],pushes:[...pushes.values()],blades,waves,summons,states:[...states.values()]});
+    G.TemariCycloneVFX?.drawAir(ctx,{storms,orbits:[...orbits.values()],pushes:[...pushes.values()],blades,waves,summons,windKnots,windBursts,states:[...states.values()]});
   }
   function ground(ctx) {
-    G.TemariCycloneVFX?.drawGround(ctx,{storms,orbits:[...orbits.values()],summons});
+    G.TemariCycloneVFX?.drawGround(ctx,{storms,orbits:[...orbits.values()],summons,windKnots,windBursts});
   }
   // Projectile movement precedes native hit resolution. Intercept here so a shot
   // crossing both the fan and the owner cannot damage the owner first.
@@ -800,6 +1047,8 @@
     return result;
   };
   G.NarutoTemari={supports,canCast,cast,clear,update,activeFor,stateFor,snapshot,ghost,mastery,rangeFor,heavyFor,applyWindRelease,onWindRelease:null,
+    windChainProfile,applyWindKnot,applyWindChain,clearWindChain,onWindKnot:null,onWindChain:null,onWindChainHit:null,
+    get windKnots(){return windKnots;},get windBursts(){return windBursts;},
     pushed,pushFor:e=>pushes.get(e)||null,pushForState:e=>pushes.get(e)||null,applyNetworkPush,releaseNetworkPush,mayPush:null,onPush:null,onPushRelease:null,
     syncPets,petSnapshots,applyNetworkPets,onPets:null,onPetAttack:null,
     held,liftFor,liftForState:e=>lifts.get(e)||null,applyNetworkLift,releaseNetworkLift,mayLift:null,onLift:null,onLiftRelease:null,

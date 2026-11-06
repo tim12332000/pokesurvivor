@@ -54,14 +54,29 @@
   function local(ctx,a,draw) {
     ctx.save();ctx.translate(a.x,a.y-lift());draw();ctx.restore();
   }
-  function drawGround(ctx,{summons=[]}={}) {
+  const knotActive=a=>!a.consumed&&a.age>=0&&a.age<a.ttl;
+  function drawGround(ctx,{summons=[],windKnots=[]}={}) {
+    for(const a of sample(windKnots.filter(knotActive),40,128)) {
+      ctx.save();ctx.globalAlpha*=(a.ghost ? .1 : .16)*clamp(a.age/.12)*clamp((a.ttl-a.age)/.5);
+      ctx.fillStyle='#13372f';ctx.beginPath();ctx.ellipse(a.x,a.y,13,4,0,0,TAU);ctx.fill();ctx.restore();
+    }
     for(const a of sample(summons,100,32)) {
       const fade=a.phase==='fade'?clamp(1-(a.age-a.fadeAt)/.22):1;
       ctx.save();ctx.globalAlpha*=fade*.13;ctx.fillStyle='#17343a';ctx.beginPath();
       ctx.ellipse(a.x,a.y,15,4,0,0,TAU);ctx.fill();ctx.restore();
     }
   }
-  function drawAir(ctx,{storms=[],orbits=[],pushes=[],waves=[],summons=[],states=[]}={}) {
+  function drawAir(ctx,{storms=[],orbits=[],pushes=[],waves=[],summons=[],states=[],windKnots=[],windBursts=[]}={}) {
+    for(const a of sample(windKnots.filter(knotActive),40,128))local(ctx,a,()=>{
+      const fade=clamp(a.age/.12)*clamp((a.ttl-a.age)/.5)*(a.ghost ? .55 : 1),turn=a.age*.8;
+      const color=a.ghost?CYAN:WHITE;
+      for(let i=0;i<3;i++) {
+        const head=turn+i*TAU/3;
+        edge(ctx,9,head,.95,2.8,fade*.96,color);
+        edge(ctx,15,head+.15,.72,1.3,fade*.45,CYAN);
+      }
+      ctx.globalAlpha*=fade*.9;ctx.fillStyle=color;ctx.beginPath();ctx.arc(0,0,1.7,0,TAU);ctx.fill();
+    });
     for(const group of fieldGroups(waves,'range',24)) {
       const a=group[0];local(ctx,a,()=>{
       const b=a.cast||{},selected=[],spacing=Math.max(34,(b.range||240)*.2);
@@ -84,6 +99,33 @@
         if(heavy)edge(ctx,r*.96,(wave.aim||0)+arc*.45,arc*.9,1.2,fade*.22,CYAN);
       }
       });
+    }
+    let gustHitCount=0;
+    for(const a of sample(windBursts,b=>b.radius+30,32)) {
+      local(ctx,a,()=>{
+        for(const f of a.fronts||[]) {
+          const age=a.age-f.started,r=f.reach;
+          if(age<0||!(r>0))continue;
+          const fade=f.done?clamp(1-(age-a.travel)/a.fade):clamp(r/18);
+          if(!fade)continue;
+          const turn=(a.id%7)*.15+f.index*.45;
+          for(let i=0;i<3;i++) {
+            const head=turn+i*TAU/3;
+            edge(ctx,r,head,1.4,Math.min(7,2+r*.035),fade*.9);
+            edge(ctx,r*.96,head-.08,1.2,1.2,fade*.3,CYAN);
+          }
+        }
+      });
+      for(const mark of a.lastHits||[]) {
+        if(!!a.ghost!==!!mark.visualOnly||![mark.x,mark.y,mark.age,mark.angle].every(Number.isFinite))continue;
+        const age=a.age-mark.age;
+        if(age<0||age>=.12||!visible(mark,40))continue;
+        if(gustHitCount++>=48)break;
+        local(ctx,mark,()=>{
+          ctx.rotate(mark.angle+Math.PI/2);
+          streak(ctx,32,3,(1-age/.12)*.9);
+        });
+      }
     }
     let pushedCount=0;
     for(const p of pushes) {
