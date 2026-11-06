@@ -1,6 +1,6 @@
 ---
 name: naruto-survivor-skills
-description: 新增或調整 PokéSurvivor 跨界角色（火影、咒術等）、技能與誇張成長手感；涵蓋企劃／美術／動漫協作、素材動畫、戰鬥接線及驗證。不套用到其他遊戲。
+description: 完整新增、生成或重做 PokéSurvivor 跨界角色（火影、咒術等），自動套用總監與多角色分工、素材動畫、真戰鬥與自然成長驗收；也處理單招手感調整。依任務授權完成發布，不套用到其他遊戲。
 ---
 
 # 跨界角色製作與手感優化
@@ -9,9 +9,10 @@ description: 新增或調整 PokéSurvivor 跨界角色（火影、咒術等）�
 
 ## 按任務讀取
 
-- 完整新角色、技能設計或手感改善：先讀 [角色品質準則](references/character-quality.md)。這是石流／乙骨／烏鷺迭代經驗，不是固定角色模板。
+- 完整新增／生成／整體重做角色：必讀 [完整角色 SOP](references/new-character-sop.md)，預設自動啟動總監與原生多 agent 分工、內部退回修正，做到完整候選，不等使用者再次提醒。這是端到端交付流程，不是保證第一張生成圖就無需返工。
+- 單招設計或手感改善：讀 [角色品質準則](references/character-quality.md)，只跑相關範圍；不把小改一律升級成完整角色流程。
 - 素材、動畫、圖集或角色接線：讀 [製作流程](references/character-workflow.md)。單一已知問題只讀相關段落，不強制重跑完整角色流程。
-- 專案有 `art-review/design-council/charter.md` 時，由該入口載入現有企劃、美術、動漫指引；適合並行才分配獨立範圍，不改通用模型設定來冒充品質改善。
+- 專案有 `art-review/design-council/charter.md` 時，由該入口載入現有企劃、美術、動漫指引。完整角色依SOP預設總監與多角色分工；單點任務適合並行才分配獨立範圍，不改通用模型設定來冒充品質改善。
 
 ## 決策基準
 
@@ -39,4 +40,4 @@ description: 新增或調整 PokéSurvivor 跨界角色（火影、咒術等）�
 
 ## 維護此skill時
 
-專案有 `art-review/design-council/character-quality.md` 時，以它為品質準則來源，同步本包對應reference與已安裝的同名skill，並驗證連結／內容一致。這是修改指引時的維護工作，不是每次新增角色都先重寫規則。
+專案有 `art-review/design-council/character-quality.md`／`new-character-sop.md` 時，以它們為對應準則來源，同步本包reference與已安裝的同名skill，並驗證連結／內容一致。這是修改指引時的維護工作，不是每次新增角色都先重寫規則。
