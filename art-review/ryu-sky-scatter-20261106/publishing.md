@@ -34,4 +34,3 @@
 可恢復的發布資料保留在製作worktree `.omx/state/ryu-sky-scatter/publish.json`、`public-assets.json`。`publish.py verify`核對十個公開檔案；只有全部符合後，`browser_public.py`才核對公開Ryu／Uro各桌機／360／390的正常Lv1開局、合法學招、自動施放與真正命中／繞彈。這些公開驗證尚未完成時，不應寫成已部署。
 
 未驗手機實機長局、音效及自然XP完整養成。發布工作之外未新增依賴、重寫歷史或調整服務保護。
-
