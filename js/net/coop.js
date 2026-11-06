@@ -277,7 +277,7 @@ G.Coop = (() => {
           G.Combat.ghostCast(m.pl, ev[1], ev[2], ev[3], ev[4]);
           emit(['c', from, ev[1], ev[2], ev[3], ev[4]], from);
           break;
-        case 'tc': case 'td': case 'tx': case 'to': case 'te': case 'trc': case 'tr': case 'trh': case 'tp':
+        case 'tc': case 'tw': case 'td': case 'tx': case 'to': case 'te': case 'trc': case 'tr': case 'trh': case 'tp':
           G.TemariCoop?.receive(from, ev);
           break;
         case 'pb':
@@ -361,7 +361,7 @@ G.Coop = (() => {
         if (!G.TemariCoop || G.TemariCoop.acceptShot(ev[10])) G.Projectiles.spawn({ x: ev[1], y: ev[2], vx: ev[3], vy: ev[4], dmg: ev[5], r: ev[6], life: ev[7],
                               friendly: false, color: '#ff7a9e', vis: G.VFX.forType(ev[8]), mtype: ev[8], interceptable: ev[9] === true, coopShotId: ev[10], ...(ev[11] || {}) });
         break;
-      case 'tc': case 'td': case 'tx': case 'to': case 'te': case 'trc': case 'tr': case 'trh': case 'tp':
+      case 'tc': case 'tw': case 'td': case 'tx': case 'to': case 'te': case 'trc': case 'tr': case 'trh': case 'tp':
         G.TemariCoop?.receive(hostUid, ev);
         break;
       case 'c': { const m = mates.get(ev[1]); if (m) G.Combat.ghostCast(m.pl, ev[2], ev[3], ev[4], ev[5]); break; }

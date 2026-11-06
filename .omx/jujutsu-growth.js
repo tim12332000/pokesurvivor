@@ -50,7 +50,7 @@
     if(mode==='temari-reflect')return {反射副本:Math.floor(factor**picks(p))};
     if(G.NarutoTemari?.supports(mode)&&mode!=='temari-mastery'){
       if(mode==='temari-great-scythe'){
-        const h=G.NarutoTemari.heavyFor(p,m);return {射程:h.range,推退:h.pushDistance};
+        const h=G.NarutoTemari.heavyFor(p,m);return {射程:h.range,推退:h.pushDistance,扇角:Math.round(h.arc*180/Math.PI)};
       }
       // snapshot() creates actor state; derive its public count formulas without
       // calling it for temporary quantity previews.

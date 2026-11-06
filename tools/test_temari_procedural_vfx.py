@@ -155,6 +155,15 @@ def main():
                                 'heavy': [.45, .65, .85], 'cyclone': [.45, .8, 1.2],
                                 'reflect': [.06, .12, .2],
                             }[group]
+                            if group == 'heavy':
+                                # Heavy wave lifetime depends on the native cast
+                                # range/speed. A fixed .85s sample can be expired.
+                                timing = page.evaluate('''() => {
+                                  const f=Acceptance.vfxLatest;
+                                  return {release:f.release,travel:f.range/f.speed};
+                                }''')
+                                phases = [timing['release'] + timing['travel'] * progress
+                                          for progress in (.15, .5, .85)]
                             sequence = []
                             previous = 0
                             for phase in phases:
@@ -196,6 +205,10 @@ def main():
                                 # not intersect every independent return ray.
                             elif group != 'kamatari':
                                 assert end['emitted'] == end['count'], end
+                            if group == 'heavy':
+                                end['remainingHeavyWaves'] = page.evaluate('''() => G.NarutoTemari.waves
+                                  .filter(w=>w.cast===Acceptance.vfxLatest).length''')
+                                assert end['remainingHeavyWaves'] == 0, 'expired heavy wind wave retained'
                             if group == 'kamatari':
                                 # With no targets, pets keep roaming and resting
                                 # nearby. Sample the native motion at 50 ms.

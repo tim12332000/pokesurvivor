@@ -81,8 +81,9 @@ LIFECYCLE = r"""() => {
  }
  const base=A.heavyCast(5,5,5);A.finish(2);const full=base.hits[0].raw;G.Combat.clearFields();
  const card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:selfClone');A.assert(card,'clone card missing');card.apply(p);
- const clone=G.SelfClones.actors()[0];clone.x=clone.y=0;clone.target=base.e;base.hits.length=0;A.castNative(A.heavy,clone);const ownMoves=p.moves;
- p.moves=p.moves.filter(m=>m.digiMode==='temari-mastery');try{A.finish(2)}finally{p.moves=ownMoves}
+ const clone=G.SelfClones.actors()[0];clone.x=clone.y=0;clone.target=base.e;base.hits.length=0;A.castNative(A.heavy,clone);
+ // Freeze new actor actions while retaining the pending heavy as learned.
+ const wasFrozen=p.frozen;p.frozen=true;try{A.finish(2)}finally{p.frozen=wasFrozen}
  A.assert(base.hits.length===1&&base.hits[0].clone,'clone missing or duplicate damage '+JSON.stringify(base.hits));A.near(base.hits[0].raw*3,full,'clone one-third');
  G.SelfClones.clear();A.advance();A.assert(!T.stateFor(clone),'clone retained state');out.cloneThird=true;
  // A heavy escape supersedes our short lift and circular carry without later snapping back.

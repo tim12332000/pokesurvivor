@@ -110,7 +110,8 @@
       const t=(p.age-.2)/.14;if(t<0||t>=1)continue;
       local(ctx,o,()=>{const r=25+t*38;edge(ctx,r,(p.aim||0)+.6,1.2,2.5,Math.sin(t*Math.PI)*.8);});
     }
-    for(const group of fieldGroups(storms,'radius',24)) {
+    const stormGroups=fieldGroups(storms,'radius',24);
+    for(const group of stormGroups) {
       const a=group.find(s=>(s.age||0)<=(s.sweepDuration||1.2));if(!a)continue;
       const age=a.age||0,duration=a.sweepDuration||1.2;if(age>duration)continue;
       const r=a.cast?.radius||240,head=a.angle??((a.aim||0)+TAU*age/duration);
@@ -120,6 +121,27 @@
         edge(ctx,r*.91,head-.13,.58,2.2,fade*.32,CYAN);
         edge(ctx,r*.72,head-.22,.38,1.4,fade*.2,CYAN);
       });
+    }
+    let tailCount=0;
+    tailMarks: for(const group of stormGroups) {
+      const seen=new Set();
+      for(const a of group)for(const contacts of [a.contacts,a.propContacts])for(const contact of contacts?.values?.()||[]) {
+        const mark=a.cast?.ghost?contact.visualHit:contact.lastHit;
+        if(!mark||a.cast?.ghost&&mark.visualOnly!==true||
+          ![mark.x,mark.y,mark.age,mark.angle].every(Number.isFinite))continue;
+        const age=a.age-mark.age;
+        if(age<0||age>=.12||!visible(mark,35))continue;
+        const key=[Math.round(mark.x/12),Math.round(mark.y/12),Math.floor(mark.age*24)].join(':');
+        if(seen.has(key))continue;seen.add(key);
+        if(tailCount++>=48)break tailMarks;
+        // A completed cut stays at its actual contact, even if the target moves.
+        local(ctx,mark,()=>{
+          ctx.rotate(mark.angle+Math.PI/2);
+          const fade=1-age/.12;
+          streak(ctx,26,2.5,fade*.9);
+          edge(ctx,14,.8,1.6,1.4,fade*.35,CYAN);
+        });
+      }
     }
     let count=0;
     for(const o of orbits||[]) {

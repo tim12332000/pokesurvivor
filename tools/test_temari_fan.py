@@ -141,8 +141,10 @@ OWNERSHIP = r"""() => {
  const card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:selfClone');A.assert(card,'native clone card unavailable');card.apply(p);
  const clone=G.SelfClones.actors()[0];clone.x=clone.y=0;clone.target=e;clone.aim=0;clone.critChance=0;
  A.castNative('naruto-temari',clone);const f=T.stateFor(clone).latest;
- for(const m of clone.moves)m.t=999;const savedMoves=p.moves;p.moves=p.moves.filter(m=>m.digiMode==='temari-mastery');
- try{A.finish(5)}finally{p.moves=savedMoves}
+ // Hold new clone actions without unlearning its cast during windup. The
+ // released fronts keep their native schedule while the owner is frozen.
+ for(const m of clone.moves)m.t=999;const wasFrozen=p.frozen;p.frozen=true;
+ try{A.finish(5)}finally{p.frozen=wasFrozen}
  const actual=hits.filter(h=>h.clone&&h.id==='naruto-temari');A.assert(actual.length===ownerCast.count*ownerCast.R,'clone fan count/mastery reduced '+actual.length+'/'+ownerCast.count*ownerCast.R);
  actual.forEach(h=>A.near(h.raw*3,baseline,'clone damage scaled more than once'));
  out.clone={hits:actual.length,count:f.count,R:f.R,ratio:actual[0].raw/baseline};

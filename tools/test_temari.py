@@ -244,8 +244,9 @@ CLONES = r"""() => {
    G.Combat.clearFields();e.hp=e.maxHp;hits.length=0;const card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:selfClone');A.assert(card,'native clone card missing');card.apply(p);
    const clone=G.SelfClones.actors()[0];A.assert(clone,'native clone absent');clone.x=clone.y=0;clone.target=e;clone.aim=0;clone.critChance=0;
    A.castNative(id,clone);const state=T.stateFor(clone),f=state.latest;A.assert(f.count===owner.count&&f.R===owner.R&&f.C===owner.C,'clone reduced actor/cut counts');
-   for(const m of clone.moves)m.t=999;const ownerMoves=p.moves;p.moves=p.moves.filter(m=>m.digiMode==='temari-mastery');
-   try{A.finish(6)}finally{p.moves=ownerMoves}const actual=hits.filter(h=>h.clone&&h.id===id);A.assert(actual.length>0,'clone missed all contacts '+id);
+   // Suppress new clone actions without unlearning the pending cast.
+   for(const m of clone.moves)m.t=999;const wasFrozen=p.frozen;p.frozen=true;
+   try{A.finish(6)}finally{p.frozen=wasFrozen}const actual=hits.filter(h=>h.clone&&h.id===id);A.assert(actual.length>0,'clone missed all contacts '+id);
    actual.forEach(h=>A.near(h.raw*3,baseline,'clone damage must be one third once '+id));
    A.assert(T.stateFor(p)!==state,'clone shares mastery/basic counter state');out.push({id,count:f.count,hits:actual.length,ratio:actual[0].raw/baseline});
    G.SelfClones.clear();A.advance();A.assert(!T.stateFor(clone)&&!T.summons.some(s=>s.owner===clone),'deleted clone retained effects');
@@ -259,12 +260,12 @@ PERFORMANCE = r"""() => {
    const target=A.spawn(80,0,'boss');target.r=300;target.hp=target.maxHp=1e10;G.EnemyMgr.rebuildGrid();const hits=A.watch(target);p.target=target;
    const card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:selfClone');for(let i=0;i<3;i++)card.apply(p);
    const actors=[p,...G.SelfClones.actors()];for(const a of actors){a.x=a.y=0;a.target=target;a.aim=0;A.castNative('naruto-temari',a)}
-   const casts=actors.map(a=>T.stateFor(a).latest),moves=p.moves;p.moves=p.moves.filter(m=>m.digiMode==='temari-mastery');
+   const casts=actors.map(a=>T.stateFor(a).latest),wasFrozen=p.frozen;p.frozen=true;
    const cv=document.createElement('canvas');cv.width=1200;cv.height=900;const ctx=cv.getContext('2d'),samples=[],drawSamples=[];let peak=0,pending=0;
    try{for(let i=0;i<360;i++){const start=performance.now();A.advance(1/60);samples.push(performance.now()-start);
      peak=Math.max(peak,T.waves.length);pending=Math.max(pending,...actors.map(a=>T.stateFor(a)?.pendingCuts||0));
      if(draw){const at=performance.now();G.Combat.drawGroundFields(ctx);G.Combat.drawAirFields(ctx);drawSamples.push(performance.now()-at)}}}
-   finally{p.moves=moves}
+   finally{p.frozen=wasFrozen}
    A.assert(casts.every(c=>c.count===260&&c.emitted===260&&c.cuts===6760),'Q20 clone workload silently capped');
    A.assert(hits.length===4*6760,'Q20 clone physical event count '+hits.length);A.assert(!T.waves.length&&!T.casts.length,'Q20 workload failed to expire');
    const sum=a=>a.reduce((s,x)=>s+x,0),p95=a=>[...a].sort((a,b)=>a-b)[Math.floor(a.length*.95)]||0;

@@ -105,7 +105,7 @@ ORBIT = r"""() => {
  A.assert(watched.length===Math.floor(1.25**10)*(8+5+10),'control dedup removed independent damage '+watched.length);
  A.reset();A.mastery(0);A.rank(A.ty,1);p.cdMul=.02;const repeat=A.spawn(140,0);p.target=repeat;A.castNative(A.ty);A.finish(.5);
  const lease=T.orbitFor(repeat);A.assert(lease,'overlap control fixture absent');const angle=lease.startAngle;
- const moves=p.moves;p.moves=moves.filter(m=>m.digiMode==='temari-mastery');A.resume();try{G.Combat.tick(.2,p,0)}finally{p.moves=moves;A.pause()}
+ A.resume();try{G.Combat.tick(.2,p,0)}finally{A.pause()}
  A.finish(.5);A.assert(T.orbitFor(repeat)===lease&&lease.startAngle===angle,'overlapping cast restarted active orbit');
  return {traces,stacked:{peak,travel,maxStep,hits:watched.length},overlapLeasePreserved:true};
 }"""
@@ -135,7 +135,7 @@ ACCOUNTING = r"""() => {
    A.reset();A.mastery(0);A.rank(A.ty,1);p.percentHealthDamage=.001;p.lifestealRate=.00001;p.damageSplashPicks=2;p.critChance=crit;p.hp=p.maxHp/2;
    const e=A.spawn(150,0,boss?'boss':null),side=A.spawn(150,20,boss?'boss':null),hits=A.watch(e),secondary=A.watch(side),hp=p.hp,credit=p.dmgDealt;
    p.target=e;A.castNative(A.ty);A.finish(3);
-   const raw=30*p.atk*G.Types.mult('flying',e.types)*G.Weather.mult('flying')*(crit?1.5:1),bonus=e.maxHp*.001*(boss?.1:1),all=[...hits,...secondary];
+   const raw=G.Moves.instance(A.ty,1).dmg*p.atk*G.Types.mult('flying',e.types)*G.Weather.mult('flying')*(crit?1.5:1),bonus=e.maxHp*.001*(boss?.1:1),all=[...hits,...secondary];
    A.assert(hits.length===3&&secondary.length===3,'per-contact sweep damage');
    A.assert(all.every(h=>!h.secondary&&Math.abs(h.raw-raw)<1e-5&&h.damage===Math.round(raw+bonus)),'percent/crit/AOE splash accounting '+JSON.stringify(all));
    A.near(p.dmgDealt-credit,(raw+bonus)*all.length,'credit');A.near(p.hp-hp,(raw+bonus)*all.length*.00001,'lifesteal');out.push({boss,crit,hits:all.length,healed:p.hp-hp});
@@ -152,8 +152,10 @@ SNAPSHOT_OVERLAP = r"""() => {
  A.reset();A.mastery(5);p.quantityBonus=p.quantityPicks=5;p.target=A.spawn(150,0,'boss');
  const cd=G.LevelUp.offer(p,100).find(c=>c.key==='stat:cd');A.assert(cd,'native cooldown card absent');cd.apply(p);
  p.cdMul=.02;A.castNative(A.ty);const first=T.stateFor(p).latest;A.finish(.5);const old=[...T.storms];
- const moves=p.moves;p.moves=moves.filter(m=>m.digiMode==='temari-mastery');A.resume();try{G.Combat.tick(.2,p,0)}finally{p.moves=moves;A.pause()}
- const second=T.stateFor(p).latest;A.finish(.5);
+ A.resume();try{G.Combat.tick(.2,p,0)}finally{A.pause()}
+ // The same valid tick may also fire the independent automatic basic. Find
+ // the new typhoon itself instead of treating the latest basic as that cast.
+ const second=T.casts.filter(c=>c.owner===p&&c.mode==='temari-typhoon'&&c!==first).at(-1);A.finish(.5);
  A.assert(second!==first&&old.every(s=>T.storms.includes(s))&&T.storms.length===first.emitted+second.emitted,'new cast replaced old storms '+JSON.stringify({different:second!==first,old:old.length,retained:old.filter(s=>T.storms.includes(s)).length,total:T.storms.length,first:first.emitted,second:second.emitted}));
  const heavy=p.moves.find(m=>m.id==='naruto-temari-great-scythe');
  A.reset();p.target=A.spawn(150,0,'boss');A.select(A.ty);const group=p.activeGroup(),before=group.slice();group.push(heavy);for(const m of group)m.t=0;
@@ -161,7 +163,12 @@ SNAPSHOT_OVERLAP = r"""() => {
  finally{group.splice(0,group.length,...before);A.pause()}
  A.finish(.5);const cuts=T.stateFor(p).totalCuts;const m=p.moves.find(m=>m.id===A.ty),cooldown=m.t;
  // Switch to another active skill; Kamatari is now passive and has no slot.
- A.select('naruto-temari-great-scythe');A.finish(.5);A.assert(T.stateFor(p).totalCuts>cuts,'cutaway deleted storms');A.near(m.t,cooldown,'cutaway refreshed cooldown');
+ A.select('naruto-temari-great-scythe');A.finish(.5);A.assert(T.stateFor(p).totalCuts>cuts,'cutaway deleted storms');
+ // Field-only time does not recover move timers. A native playing tick does,
+ // even when the other active is selected; switching cannot refresh recovery.
+ A.near(m.t,cooldown,'field-only time changed cooldown');
+ A.resume();try{G.Combat.tick(.01,p,0)}finally{A.pause()}
+ A.near(T.stateFor(p).cooldowns[A.ty],Math.max(0,cooldown-.01),'offslot native recovery');
  return {snapshot:{T:Tn,C,damage},overlap:first.T+second.T,fusion:true,cutaway:true};
 }"""
 
@@ -169,8 +176,9 @@ CLONES_LIFECYCLE = r"""() => {
  const A=Acceptance,p=A.p(),T=G.NarutoTemari;A.tyLearn();const {e,hits,f}=A.tyCast(5,5,1);A.finish(6);const baseline=hits[0].raw;
  G.Combat.clearFields();hits.length=0;const card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:selfClone');A.assert(card,'clone card absent');card.apply(p);
  const clone=G.SelfClones.actors()[0];clone.x=clone.y=0;clone.target=e;clone.aim=0;A.castNative(A.ty,clone);const cf=T.stateFor(clone).latest;
- const ownerMoves=p.moves;p.moves=p.moves.filter(m=>m.digiMode==='temari-mastery');
- try{A.finish(6)}finally{p.moves=ownerMoves}
+ // Suppress new clone actions without unlearning its pending attack before
+ // release. Released fields continue while the owner is frozen.
+ p.frozen=true;try{A.finish(6)}finally{p.frozen=false}
  A.assert(cf.T===f.T&&cf.C===f.C&&hits.length===cf.potentialHits,'clone lost quantity/cuts '+JSON.stringify({T:cf.T,C:cf.C,ownerT:f.T,ownerC:f.C,hits:hits.length,potential:cf.potentialHits}));
  A.assert(hits.every(h=>h.clone),'clone damage misattributed');hits.forEach(h=>A.near(h.raw*3,baseline,'clone one-third'));
  G.SelfClones.clear();A.advance();A.assert(!T.stateFor(clone)&&!T.storms.some(s=>s.owner===clone),'clone cleanup');
@@ -196,12 +204,11 @@ PERFORMANCE = r"""() => {
  const card=G.LevelUp.offer(p,100).find(c=>c.key==='stat:selfClone');for(let i=0;i<3;i++)card.apply(p);
  const actors=[p,...G.SelfClones.actors()];for(const a of actors){a.x=a.y=0;a.target=target;A.castNative(A.ty,a)}const casts=actors.map(a=>T.stateFor(a).latest);
  const c=document.createElement('canvas');c.width=1200;c.height=900;const ctx=c.getContext('2d'),updates=[],draws=[];let peak=0;
- const ownerMoves=p.moves;p.moves=p.moves.filter(m=>m.digiMode==='temari-mastery');
  // Freeze only new actor actions after release to measure exactly one cast
  // group; already emitted fields preserve the production damage schedule.
  p.frozen=true;
  try{for(let i=0;i<600;i++){let start=performance.now();A.resume();try{G.Combat.updateFields(1/60)}finally{A.pause()}updates.push(performance.now()-start);peak=Math.max(peak,T.storms.length);
-   start=performance.now();ctx.clearRect(0,0,c.width,c.height);G.Combat.drawGroundFields(ctx);G.Combat.drawAirFields(ctx);draws.push(performance.now()-start)}}finally{p.moves=ownerMoves;p.frozen=false}
+   start=performance.now();ctx.clearRect(0,0,c.width,c.height);G.Combat.drawGroundFields(ctx);G.Combat.drawAirFields(ctx);draws.push(performance.now()-start)}}finally{p.frozen=false}
  A.assert(casts.every(f=>f.T===86&&f.C===33&&f.cuts===86*33),'high-quantity clone workload capped');
  A.assert(hits.length===4*86*33&&!T.storms.length,'high-quantity actual HP events or cleanup '+JSON.stringify({hits:hits.length,storms:T.storms.length}));
  const stats=a=>({total:a.reduce((s,v)=>s+v,0),p95:[...a].sort((a,b)=>a-b)[Math.floor(a.length*.95)],max:Math.max(...a)});
