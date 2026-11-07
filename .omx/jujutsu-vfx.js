@@ -355,7 +355,7 @@
     }
     // Only a faint envelope marks the full physical width. The beam's visible
     // material is made of graded, travelling strands rather than a solid band.
-    ctx.globalAlpha=(ground?.035:.07)*ending;ctx.strokeStyle='#49c8e2';ctx.lineWidth=ring.width*2;ctx.stroke();
+    ctx.globalAlpha=(ground?.035:.07)*ending;ctx.strokeStyle='#49c8e2';ctx.lineWidth=ring.currentWidth*2;ctx.stroke();
     if(!ground){
       const phase=(ring.age%ring.interval)/ring.interval;
       const n=ring.segments.length,front=ring.cycle===0?1:phase,detailed=!low();
@@ -372,16 +372,16 @@
         };
         // Successive translucent cross-sections give a soft, uneven edge and
         // a narrow hot core. No layer extends beyond the physical envelope.
-        stroke(ring.width*(1.5+.3*ripple),.035+.1*pressure,'#2daed4');
-        stroke(ring.width*(.65+.45*ripple),.12+.28*pressure,'#68e5ed');
-        stroke(ring.width*(.13+.22*grain),.12+.68*pressure,'#e4ffff');
+        stroke(ring.currentWidth*(1.5+.3*ripple),.035+.1*pressure,'#2daed4');
+        stroke(ring.currentWidth*(.65+.45*ripple),.12+.28*pressure,'#68e5ed');
+        stroke(ring.currentWidth*(.13+.22*grain),.12+.68*pressure,'#e4ffff');
         if(detailed&&grain>.35){
-          const shear=Math.sin(i*.21-ring.age*13)*ring.width*.28;
-          stroke(Math.max(1,ring.width*.09),(.1+.35*pressure)*grain,'#bcfaff',shear);
+          const shear=Math.sin(i*.21-ring.age*13)*ring.currentWidth*.28;
+          stroke(Math.max(.1,ring.currentWidth*.09),(.1+.35*pressure)*grain,'#bcfaff',shear);
         }
       }
       frame.draws.push({kind:'ryu-ring',owner:id(owner),castId:ring.action?.castId,
-        radius:ring.radius,width:ring.width,cycle:ring.cycle,count:ring.count,segments:ring.segments.length});
+        radius:ring.currentRadius,width:ring.currentWidth,cycle:ring.cycle,count:ring.count,segments:ring.segments.length});
     }
     ctx.restore();
   }

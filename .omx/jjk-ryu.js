@@ -80,9 +80,9 @@
   function ringFor(owner,m){
     const p=G.Jujutsu?.power?.ryu||{},L=level(m)-1;
     const count=Math.min(p.ringCap??16,G.Quantity.count(owner,(p.ringBases||[4,5,6,7,8])[L]));
-    const interval=p.ringInterval??.22;
+    const duration=Math.max(p.ringMinDuration??3,count*(p.ringInterval??.32)),interval=duration/count;
     return {count,radius:(p.ringRadii||[112,128,144,160,180])[L],width:(p.ringWidths||[18,21,24,27,30])[L],
-      yScale:.55,interval,charge:p.ringCharge??.32,cd:p.ringCd??6.5,duration:count*interval};
+      yScale:.55,interval,charge:p.ringCharge??.32,cd:p.ringCd??6.5,duration};
   }
   function scatterFor(owner,m){
     const p=G.Jujutsu?.power?.ryu||{},L=level(m)-1;
@@ -321,7 +321,12 @@
     return ring;
   }
   function ringPath(s,r){
-    const f=r.action,c=Math.cos(f.aim),sn=Math.sin(f.aim),radius=r.radius;
+    const f=r.action,c=Math.cos(f.aim),sn=Math.sin(f.aim),t=clamp(r.age/r.duration);
+    const smooth=v=>v*v*(3-2*v);
+    // The same live envelope drives both collision and production rendering.
+    const scale=t<.4?.18+.82*smooth(t/.4):t<=.7?1:1-smooth((t-.7)/.3);
+    const radius=r.radius*scale;
+    r.currentRadius=radius;r.currentWidth=r.width*scale;
     const local=[{x:8,y:0,lift:HEAD_HEIGHT,lead:true}],leadSteps=16,arcSteps=96;
     // The emitter bends into a tangent before closing around the actor. It is
     // one connected cannon path, never a rotating straight ray or filled disk.
@@ -345,7 +350,7 @@
     for(let i=1;i<local.length;i++){
       const p=local[i],next={x:r.x+p.x*c-p.y*sn,y:r.y+(p.x*sn+p.y*c)*r.yScale-(p.lift||0)};
       const dx=next.x-previous.x,dy=next.y-previous.y,length=Math.hypot(dx,dy),aim=Math.atan2(dy,dx);
-      const clipped=clippedLength(previous.x,previous.y,aim,length,r.width,null,breakProp);
+      const clipped=clippedLength(previous.x,previous.y,aim,length,r.currentWidth,null,breakProp);
       if(!actionLegal(s,f)){r.dead=true;return;}
       const tip={x:previous.x+Math.cos(aim)*clipped,y:previous.y+Math.sin(aim)*clipped};
       // The brief ingress disappears after the ring closes; the hollow center
@@ -359,7 +364,7 @@
     }
   }
   function ringTouch(r,e){
-    const radius=r.width+(e.r||0);
+    const radius=r.currentWidth+(e.r||0);
     return r.segments.some(p=>{
       const dx=p.bx-p.ax,dy=p.by-p.ay,len=dx*dx+dy*dy;
       const t=len>EPS?clamp(((e.x-p.ax)*dx+(e.y-p.ay)*dy)/len):0;
@@ -587,9 +592,9 @@
     if(r.dead||r.points.length<2)return;
     ctx.save();ctx.translate(r.renderOffsetX,r.renderOffsetY);ctx.lineJoin='round';ctx.lineCap='round';
     ctx.beginPath();r.points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
-    ctx.globalAlpha=.9;ctx.strokeStyle='#46c8df';ctx.lineWidth=r.width*2;ctx.stroke();
-    ctx.strokeStyle='#a5f7ff';ctx.lineWidth=r.width*1.2;ctx.stroke();
-    ctx.strokeStyle='#f5ffff';ctx.lineWidth=Math.max(2,r.width*.55);ctx.stroke();ctx.restore();
+    ctx.globalAlpha=.9;ctx.strokeStyle='#46c8df';ctx.lineWidth=r.currentWidth*2;ctx.stroke();
+    ctx.strokeStyle='#a5f7ff';ctx.lineWidth=r.currentWidth*1.2;ctx.stroke();
+    ctx.strokeStyle='#f5ffff';ctx.lineWidth=Math.max(.1,r.currentWidth*.55);ctx.stroke();ctx.restore();
   }
   function draw(ctx){
     if(G.JujutsuVFX?.enabled)return;

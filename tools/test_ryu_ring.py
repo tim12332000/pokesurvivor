@@ -31,15 +31,37 @@ CHECK = r"""() => {
   assert(profile.yScale===.55,'ring must use the ground-plane perspective');
   const outside=spawn(radius+width+60,80),events=victims.map(A.watch);
   assert(profile.count===count&&profile.radius===radius&&profile.width===width,'profile/card/rank contract differs '+rank+'/'+q+': '+JSON.stringify(profile));
-  const f=cast(m);A.advance(profile.charge+profile.interval+.01);
+  const f=cast(m);A.advance(profile.charge+profile.duration*.5);
   // The visible first-lap ingress is physical. Only after it closes is the
   // entire inner region hollow, including the original muzzle feed corridor.
   const center=spawn(0,0);A.advance(profile.duration-profile.interval+.25);
-  assert(events.every(h=>h.length===count),'one-hit-per-circuit failed '+rank+'/'+q+': '+events.map(h=>h.length));
-  assert(center.hp===center.maxHp&&outside.hp===outside.maxHp,'ring became filled disk or exceeded physical boundary '+rank+'/'+q+' aim='+f.aim+' centerLoss='+(center.maxHp-center.hp)+' outsideLoss='+(outside.maxHp-outside.hp));
+  assert(events.every(h=>h.length>0&&h.length<=count),'live expanding band hit count failed '+rank+'/'+q+': '+events.map(h=>h.length));
+  assert(outside.hp===outside.maxHp,'ring exceeded physical boundary '+rank+'/'+q+' aim='+f.aim+' centerLoss='+(center.maxHp-center.hp)+' outsideLoss='+(outside.maxHp-outside.hp));
   assert(events.flat().every(h=>h.owner&&h.id===id&&h.loss>0),'ring lost owner/move attribution');
   assert(!rings().length&&!R.pose(p),'completed ring/body retained active state');
   out['rank'+rank+'q'+q]={profile,hits:events.map(h=>h.length),damage:victims.map(e=>e.maxHp-e.hp),castId:f.castId};
+ }
+ // Expansion and retraction use one live geometry for damage and both renderers.
+ for(const [rank,q] of [[1,0],[5,20]]){
+  const m=setup(rank,q),h=R.ringFor(p,m);spawn(h.radius,0);cast(m);
+  assert(h.duration>=3&&h.duration>h.count*.22,'ring duration was not extended');
+  let previous=0;const samples=[];
+  for(const phase of [.02,.15,.4,.55,.7,.85,.97]){
+   A.advance(h.charge*(previous===0)+h.duration*(phase-previous));previous=phase;
+   const r=rings()[0];assert(r,'ring ended before shrink completed');
+   samples.push({phase,radius:r.currentRadius,width:r.currentWidth});
+   assert(Math.abs(r.currentWidth/h.width-r.currentRadius/h.radius)<1e-6,'draw/collision width scales differ');
+   if(phase===.15){
+    const outsideLive=spawn(-h.radius,0),hp=outsideLive.hp;
+    A.advance(.01);previous+=.01/h.duration;
+    assert(outsideLive.hp===hp,'full-size invisible damage during growth');
+   }
+  }
+  assert(samples[0].radius<samples[1].radius&&samples[1].radius<samples[2].radius,'small circle did not grow');
+  assert(Math.abs(samples[3].radius-h.radius)<.01,'full ring never reached intended radius');
+  assert(samples[4].radius>samples[5].radius&&samples[5].radius>samples[6].radius,'ring did not shrink');
+  A.advance(h.duration*.04);assert(!rings().length,'shrunk ring retained damage');
+  out['envelope'+rank+'q'+q]={profile:h,samples};
  }
  // Trigger range includes the physical tube, while a lone out-of-band enemy
  // cannot spend the cooldown on a ring that will never reach it.
@@ -56,10 +78,10 @@ CHECK = r"""() => {
  A.advance(profile.charge-.01);assert(!a.length&&!b.length,'damage preceded forehead release');
  A.advance(.05);assert(!b.length,'far-side ring appeared before curved beam reached it');
  const ring=rings()[0];assert(ring&&ring.points.length>1&&ring.segments.length,'release did not create physical growing curve');
- A.advance(profile.interval+.02);assert(a.length>0&&b.length>0,'first circle failed to reach both sides');
+ A.advance(profile.duration*.5);assert(a.length>0&&b.length>0,'first circle failed to reach both sides');
  out.curveTiming={nearHits:a.length,farHits:b.length,points:ring.points.length,segments:ring.segments.length};
  // Owner motion is sampled live; later circuits follow current position.
- m=setup();profile=R.ringFor(p,m);spawn(profile.radius,0);cast(m);A.advance(profile.charge+profile.interval+.01);
+ m=setup();profile=R.ringFor(p,m);spawn(profile.radius,0);cast(m);A.advance(profile.charge+profile.duration*.5);
  const old=spawn(-profile.radius,0),moved=spawn(400-profile.radius,0);p.x=400;p.aim=0;G.EnemyMgr.rebuildGrid();A.advance(profile.interval+.04);
  assert(moved.hp<moved.maxHp&&old.hp===old.maxHp,'moving ring used stale origin or swept a teleport chord');
  out.movingOwner={newDamage:moved.maxHp-moved.hp,oldDamage:old.maxHp-old.hp};
@@ -70,7 +92,7 @@ CHECK = r"""() => {
  // Projection stays aligned to the ground regardless of the original aim.
  for(const aim of [0,Math.PI/2,Math.PI,Math.PI*1.5]){
   m=setup();profile=R.ringFor(p,m);spawn(profile.radius*Math.cos(aim),profile.radius*profile.yScale*Math.sin(aim));
-  cast(m);A.advance(profile.charge+profile.interval+.01);
+  cast(m);A.advance(profile.charge+profile.duration*.5);
   const r=rings()[0],xs=r.points.map(v=>v.x-p.x),ys=r.points.map(v=>v.y-p.y);
   assert(r.renderOffsetX===0&&r.renderOffsetY===0,'ring is lifted away from its physical path');
   assert(Math.abs(Math.max(...xs)-profile.radius)<1&&Math.abs(Math.min(...xs)+profile.radius)<1,'aim rotated the wide ground axis');

@@ -68,7 +68,7 @@ def screenshots(page,frame,label):
         config=frame.evaluate(SETUP,{'rank':rank,'q':q})
         frame.evaluate('()=>{const A=JAcceptance;A.resume();try{G.JjkRyu.cast(A.p(),A.p().moves[0])}finally{A.pause()}}')
         h=config['profile'];end=h['charge']+h['duration']
-        stages=[(.16,'windup'),(.4,'growing'),(.57,'full'),(end-.09,'late'),(end+.24,'recovered')]
+        stages=[(.16,'windup'),(h['charge']+h['duration']*.15,'growing'),(h['charge']+h['duration']*.5,'full'),(h['charge']+h['duration']*.88,'late'),(end+.24,'recovered')]
         previous=0;states=[]
         for at,phase in stages:
             frame.evaluate('dt=>JAcceptance.advance(dt)',at-previous);previous=at
@@ -106,7 +106,7 @@ def native_clip(page,frame,context,label,mobile):
     after=frame.evaluate(STATE)
     assert after['position'][0]>before['position'][0]+1,'native keyboard/touch failed to move while ring active'
     page.screenshot(path=str(OUT/f'{label}-native-input-active.png'))
-    page.wait_for_timeout(3400)
+    page.wait_for_timeout(int(config['profile']['duration']*1000)+400)
     final=frame.evaluate(STATE)
     assert not final['rings'],'native full ring cycle failed to end'
     data=frame.evaluate(r"""async()=>{JAcceptance.pause();const c=window.RingClip;c.recorder.stop();const result=await c.done;for(const track of c.stream.getTracks())track.stop();return result;}""")
