@@ -35,7 +35,7 @@
     [30014,[
       ['jjk-ryu','jjk-ryu','花崗岩砲','psychic',1,1.8,42,360,14,'蓄力0.22秒，射出長距窄幅貫穿砲；學會全力砲後，每次真正命中蓄一格能量。'],
       ['jjk-ryu-spread','jjk-ryu-spread','散射咒力砲','psychic',3,5,30,800,12,'蓄力0.35秒，額前噴出8→10發咒力砲；先升空0.26秒，再各自迴旋0.6～1.15秒，結束後才分配當下活敵並俯衝追蹤。索敵800→1120、實際追擊航程1280→1792。第一張數量卡8→10發，最多18發；每發獨立命中一次，多發可打同一敵人。牆與障礙會截斷追擊。學會全力砲後，每次施放真正命中最多蓄一格；升空迴旋追蹤是本作演出改編。'],
-      ['jjk-ryu-ring','jjk-ryu-ring','花崗岩砲・圓環','psychic',5,6.5,48,112,18,'近敵來襲時蓄力0.32秒，額前砲束彎曲成繞身圓環，連續4→8輪真實環帶切擊。數量卡第一張4→5輪，最多16輪；環半徑112→180、砲道半寬18→30。可移動，不附帶無敵、控場或擋彈；牆會截斷砲道。學會全力砲後，每次施放真正命中最多蓄一格。圓環繞身取自動畫，輪次與成長為本作改編。'],
+      ['jjk-ryu-ring','jjk-ryu-ring','花崗岩砲・圓環','psychic',5,6.5,48,112,18,'近敵來襲時蓄力0.32秒，額前砲束從貼身小圓逐漸擴大成繞身圓環，維持大圈後縮小消散，至少持續3秒，連續4→8輪真實環帶切擊。數量卡第一張4→5輪，最多16輪；最大環半徑112→180、最大砲道半寬18→30，命中環帶隨圓環一起伸縮。可移動，不附帶無敵、控場或擋彈；牆會截斷砲道。學會全力砲後，每次施放真正命中最多蓄一格。圓環繞身取自動畫，輪次與成長為本作改編。'],
       ['jjk-ryu-impact','jjk-ryu-impact','咒力爆破','psychic',6,7,100,300,90,'優先鎖定最密集的可達敵群，預告0.45秒後在固定爆點範圍引爆；敵人可離開爆點。學會全力砲後，每次施放真正命中最多蓄一格。'],
       ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,5.4,200,760,72,'普通砲、散射、圓環或爆破共三次施放命中蓄滿後，蓄力0.75秒轟出巨型貫穿主砲（基傷×1.5），再連射4／5／6／7／8輪重砲（每輪×0.55）。數量卡增加連轟，最多16輪追加；射程760→1040、主砲半徑72→128，連轟時仍可移動。'],
     ]],
@@ -50,7 +50,7 @@
   // Shared combat profiles also drive card previews; new power is real geometry
   // and contact count, not a separate decorative progression.
   const power={
-    ryu:{ringRadii:[112,128,144,160,180],ringWidths:[18,21,24,27,30],ringBases:[4,5,6,7,8],ringCap:16,ringInterval:.22,ringCharge:.32,ringCd:6.5},
+    ryu:{ringRadii:[112,128,144,160,180],ringWidths:[18,21,24,27,30],ringBases:[4,5,6,7,8],ringCap:16,ringInterval:.32,ringMinDuration:3,ringCharge:.32,ringCd:6.5},
     yuta:{rikaBases:[4,5,6,7,8],rikaCap:16,fullCap:24,rikaRanges:[440,480,520,560,600],rikaRadii:[160,180,200,220,250],rikaSpeeds:[640,700,760,820,880],normalHeights:[88,91,94,97,100],fullHeights:[156,162,168,174,180],rikaCd:4,fullRikaCd:2.4,manifestDuration:8,recoveries:[8,7.5,7,6.5,6],duetRanges:[180,200,220,240,260],resonanceRadii:[240,270,300,330,360]},
     uro:{palmRanges:[180,200,220,240,260],palmArcs:[1.6,1.7,1.8,1.9,2],waveBases:[4,5,6,7,8],waveCap:16,thinRanges:[340,380,430,480,540],thinArcs:[2.5,2.7,2.9,3.1,3.3],collapseRange:600,collapseRadii:[210,240,270,300,340],screenRadii:[110,120,130,140,150],screenBudgets:[12,16,20,24,28],screenCap:64,screenDurations:[3.5,3.75,4,4.25,4.5],counterRange:600,counterRadii:[130,150,170,190,210],echoBases:[2,2,3,3,4],echoCap:8}
   };
