@@ -35,7 +35,7 @@
     [30014,[
       ['jjk-ryu','jjk-ryu','花崗岩砲','psychic',1,1.8,42,360,14,'蓄力0.22秒，射出長距窄幅貫穿砲；學會全力砲後，每次真正命中蓄一格能量。'],
       ['jjk-ryu-spread','jjk-ryu-spread','散射咒力砲','psychic',3,5,30,800,12,'蓄力0.35秒，額前噴出8→10發咒力砲；先升空0.26秒，再各自迴旋0.6～1.15秒，結束後才分配當下活敵並俯衝追蹤。索敵800→1120、實際追擊航程1280→1792。第一張數量卡8→10發，最多18發；每發獨立命中一次，多發可打同一敵人。牆與障礙會截斷追擊。學會全力砲後，每次施放真正命中最多蓄一格；升空迴旋追蹤是本作演出改編。'],
-      ['jjk-ryu-ring','jjk-ryu-ring','花崗岩砲・圓環','psychic',5,6.5,48,112,18,'近敵來襲時蓄力0.32秒，額前砲束從貼身小圓逐漸擴大成繞身圓環，維持大圈後縮小消散，至少持續3秒，連續4→8輪真實環帶切擊。數量卡第一張4→5輪，最多16輪；最大環半徑112→180、最大砲道半寬18→30，命中環帶隨圓環一起伸縮。可移動，不附帶無敵、控場或擋彈；牆會截斷砲道。學會全力砲後，每次施放真正命中最多蓄一格。圓環繞身取自動畫，輪次與成長為本作改編。'],
+      ['jjk-ryu-ring','jjk-ryu-ring','花崗岩砲・圓環','psychic',5,6.5,48,112,18,'近敵來襲時蓄力0.32秒，額前砲束從貼身小圓逐漸擴大成繞身圓環，維持大圈後縮小消散，至少持續6秒，連續4→8輪真實環帶切擊。數量卡第一張4→5輪，最多16輪；最大環半徑224→360、最大砲道半寬18→30，命中環帶隨圓環一起伸縮。可移動，不附帶無敵、控場或擋彈；牆會截斷砲道。學會全力砲後，每次施放真正命中最多蓄一格。圓環繞身取自動畫，輪次與成長為本作改編。'],
       ['jjk-ryu-impact','jjk-ryu-impact','咒力爆破','psychic',6,7,100,300,90,'優先鎖定最密集的可達敵群，預告0.45秒後在固定爆點範圍引爆；敵人可離開爆點。學會全力砲後，每次施放真正命中最多蓄一格。'],
       ['jjk-ryu-maximum','jjk-ryu-maximum','全力咒力砲','psychic',9,5.4,200,760,72,'普通砲、散射、圓環或爆破共三次施放命中蓄滿後，蓄力0.75秒轟出巨型貫穿主砲（基傷×1.5），再連射4／5／6／7／8輪重砲（每輪×0.55）。數量卡增加連轟，最多16輪追加；射程760→1040、主砲半徑72→128，連轟時仍可移動。'],
     ]],
@@ -50,7 +50,7 @@
   // Shared combat profiles also drive card previews; new power is real geometry
   // and contact count, not a separate decorative progression.
   const power={
-    ryu:{ringRadii:[112,128,144,160,180],ringWidths:[18,21,24,27,30],ringBases:[4,5,6,7,8],ringCap:16,ringInterval:.32,ringMinDuration:3,ringCharge:.32,ringCd:6.5},
+    ryu:{ringRadii:[224,256,288,320,360],ringWidths:[18,21,24,27,30],ringBases:[4,5,6,7,8],ringCap:16,ringInterval:.64,ringMinDuration:6,ringCharge:.32,ringCd:6.5},
     yuta:{rikaBases:[4,5,6,7,8],rikaCap:16,fullCap:24,rikaRanges:[440,480,520,560,600],rikaRadii:[160,180,200,220,250],rikaSpeeds:[640,700,760,820,880],normalHeights:[88,91,94,97,100],fullHeights:[156,162,168,174,180],rikaCd:4,fullRikaCd:2.4,manifestDuration:8,recoveries:[8,7.5,7,6.5,6],duetRanges:[180,200,220,240,260],resonanceRadii:[240,270,300,330,360]},
     uro:{palmRanges:[180,200,220,240,260],palmArcs:[1.6,1.7,1.8,1.9,2],waveBases:[4,5,6,7,8],waveCap:16,thinRanges:[340,380,430,480,540],thinArcs:[2.5,2.7,2.9,3.1,3.3],collapseRange:600,collapseRadii:[210,240,270,300,340],screenRadii:[110,120,130,140,150],screenBudgets:[12,16,20,24,28],screenCap:64,screenDurations:[3.5,3.75,4,4.25,4.5],counterRange:600,counterRadii:[130,150,170,190,210],echoBases:[2,2,3,3,4],echoCap:8}
   };
@@ -68,7 +68,7 @@
     'jjk-yuta-resonance':{third:{radius:1.25,range:300},fifth:{radius:1.2,range:360},text3:'共鳴終擊半徑300',text5:'共鳴終擊半徑360'},
     'jjk-ryu':{third:{targetPolicy:'elite'},fifth:{range:414},text3:'優先可達精英，無精英才選最近敵人',text5:'穿線射程360→414'},
     'jjk-ryu-spread':{base:{baseCount:8},third:{},fifth:{baseCount:10},text3:'基礎8發升空迴旋砲，索敵920、追擊航程1472',text5:'基礎10發，索敵1120、追擊航程1792，數量卡最多18發'},
-    'jjk-ryu-ring':{base:{ringBase:4},third:{},fifth:{},text3:'基礎6輪繞身切擊，環半徑144、砲道半寬24',text5:'基礎8輪繞身切擊，環半徑180、砲道半寬30，數量卡最多16輪'},
+    'jjk-ryu-ring':{base:{ringBase:4},third:{},fifth:{},text3:'基礎6輪繞身切擊，環半徑288、砲道半寬24',text5:'基礎8輪繞身切擊，環半徑360、砲道半寬30，數量卡最多16輪'},
     'jjk-ryu-impact':{base:{impactTargetPolicy:'cluster'},third:{radius:1.2},fifth:{range:330},text3:'爆心半徑90→108',text5:'群聚索敵射程300→330，爆點仍於起手鎖定'},
     'jjk-ryu-maximum':{base:{barrageBase:4},third:{firstTargetBonus:.15},fifth:{range:1040},text3:'追加6輪重砲；主砲半徑96、射程880，首個目標傷害+15%',text5:'追加8輪重砲；主砲半徑128、射程1040，數量可強化至16輪'},
     'jjk-uro':{base:{skyKnock:30},third:{},fifth:{skyKnock:44},text3:'掌擊射程220、扇角1.8',text5:'掌擊射程260，普通敵人推退44'},
