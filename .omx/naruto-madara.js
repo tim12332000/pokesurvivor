@@ -5,10 +5,10 @@
   const DEX=30016,C=G.Combat,EPS=1e-8,states=new Map();
   const rows=[
     ['naruto-madara','basic','戰場演舞','fighting',1,.95,24,105,90,'踏步掌、扭腰肘、轉胯踢、落地四段真肢體接觸；停步可短接敵，移動時不奪走走位。數量加追擊但整段不超過0.82秒。二階踢掃、三階加接敵步幅，末擊命中蓄勢一格。'],
-    ['naruto-madara-fire','fire','火遁・豪火滅卻','fire',3,5,42,430,210,'結印後從嘴部吐出4→6面寬火牆，每面固定當次原點與方向，向外推進才命中；數量至12面，身體0.74秒即收勢。三階留下真火線，四階交錯雙角火線。每輪真命中最多蓄勢一格。'],
-    ['naruto-madara-susanoo','susanoo','須佐能乎・巨刃連斬','psychic',6,7.5,78,460,240,'須佐投射現身六秒，骨臂接觸成長為甲胄主刀連斬、另一刀護勢；數量增加實際刀線但維持六秒，不佔本體出手。三階後體術末擊與火牆真命中蓄滿三格，顯現六秒完成體巨刀與前推劍壓。本作勢能改編，不給無敵。'],
-    ['naruto-madara-meteor','meteor','天礙震星・雙重落石','rock',9,13,155,700,250,'第一巨岩撞裂地面，第二顆砸碎更大區域，接續4→8塊真碎岩落向不同地點；數量卡至16個碎岩落點。每塊有獨立預告、高度與碰撞，走出可閃避。三階殘岩可由本體火牆引爆一次碎岩接力；碎岩及連動為本作改編。'],
-    ['naruto-madara-clones','clones','木遁・木分身','grass',12,18,32,500,180,'木質分出4→8名實體分身協戰12秒，數量卡至12名。前鋒近身、兩翼壓火、三階後後衛可用半身須佐，各有站位與施術時鐘，僅使用已學能力；不複製完成體也不蓄勢。四階可接本體落點指令；每階火力100→210%。']
+    ['naruto-madara-fire','fire','火遁・豪火滅卻','fire',2,4.5,42,430,210,'結印後從嘴部吐出4→6面寬火牆，每面固定當次原點與方向，向外推進才命中；數量至12面，身體0.74秒即收勢。三階留下真火線，四階交錯雙角火線。每輪真命中最多蓄勢一格。'],
+    ['naruto-madara-susanoo','susanoo','須佐能乎・巨刃連斬','psychic',3,7.5,78,460,240,'須佐投射現身六秒，骨臂接觸成長為甲胄主刀連斬、另一刀護勢；數量增加實際刀線但維持六秒，不佔本體出手。二階後體術末擊與火牆真命中蓄滿三格，顯現六秒完成體巨刀與前推劍壓。本作勢能改編，不給無敵。'],
+    ['naruto-madara-meteor','meteor','天礙震星・雙重落石','rock',7,13,155,700,250,'第一巨岩撞裂地面，第二顆砸碎更大區域，接續4→8塊真碎岩落向不同地點；數量卡至16個碎岩落點。每塊有獨立預告、高度與碰撞，走出可閃避。三階殘岩可由本體火牆引爆一次碎岩接力；碎岩及連動為本作改編。'],
+    ['naruto-madara-clones','clones','木遁・木分身','grass',1,18,32,500,180,'開局兩名常駐木分身，升階增至4／6／8／10名，數量卡至16名。學會豪火後兩翼吐火，學會須佐後全軍獨立揮斬；木分身二階全軍披甲胄須佐。拳腳、火遁與須佐各自接力，僅使用已學能力；不複製完成體也不蓄勢。升階與數量只補新增分身；火力100→210%。']
   ];
   const ids=new Set(rows.map(r=>r[0])),kit=[DEX,rows.map(([id,kind,name,type,level])=>[id,kind,name,type,level])];
   const rank=m=>Math.max(1,Math.min(5,Math.floor(m?.lvl||1)));
@@ -22,9 +22,9 @@
     const common={kind,rank:i+1,damage,range:m.range,radius:m.radius};
     if(kind==='basic'){const contacts=count(a,4+(i>=3?1:0),8);return {...common,range:56+4*i+(i>=2?50:30)+25,contacts,pulses:contacts,contactRadius:12+2*i,contactReach:56+4*i,stepBudget:i>=2?50:30,kickSweep:i>=1,duration:Math.min(.82,.62+(contacts-4)*.045),charge:.10};}
     if(kind==='fire'){const fronts=count(a,4+Math.floor(i/2),12);return {...common,fronts,pulses:fronts,width:320+65*i,speed:620+40*i,range:560+85*i,depth:36,release:.25,releaseWindow:.35,duration:.74,charge:.25,linger:i>=2?1.1:0,fork:i>=3,lingerTicks:i>=4?4:3};}
-    if(kind==='susanoo'){const slashes=count(a,4+i,12);return {...common,slashes,pulses:slashes,duration:6,manifest:.35,sweepDuration:.28,recovery:.28,bladeLength:220+25*i,bladeRadius:24+3*i,perfectLength:430+25*i,pressureEvery:i>=3?2:3,perfectUnlocked:i>=2,form:i>=1?'armored':'rib',charge:.35};}
+    if(kind==='susanoo'){const slashes=count(a,4+i,12);return {...common,slashes,pulses:slashes,duration:6,manifest:.35,sweepDuration:.28,recovery:.28,bladeLength:220+25*i,bladeRadius:24+3*i,perfectLength:430+25*i,pressureEvery:i>=3?2:3,perfectUnlocked:i>=1,form:i>=1?'armored':'rib',charge:.35};}
     if(kind==='meteor'){const fragments=count(a,4+i,16);return {...common,meteorCount:2,fragments,pulses:2+fragments,radius:220+25*i,secondRadius:330+30*i,fragmentRadius:90+10*i,fragmentSpread:310+25*i,delay:.85,release:.44,duration:.66,charge:.44,fallTime:.95,craterDuration:i>=2?6:3,craterRelay:i>=2};}
-    const cloneCount=count(a,[4,4,5,6,8][i],12);return {...common,cloneCount,pulses:cloneCount,cloneDuration:12,cloneDamageMultiplier:m.dmg/32,duration:.66,charge:.36,release:.36,roles:i>=2?3:2,relay:i>=3};
+    const cloneCount=count(a,[2,4,6,8,10][i],16);return {...common,cloneCount,pulses:cloneCount,cloneDuration:Infinity,cloneDamageMultiplier:m.dmg/32,duration:.66,charge:.36,release:.36,roles:2,relay:true,armyForm:i>=1?'armored':'rib'};
   }
   function vector(a,m){const p=profile(a,m);return p.kind==='basic'?{接觸連段:p.contacts}:p.kind==='fire'?{火牆:p.fronts}:p.kind==='susanoo'?{刀臂接觸:p.slashes,...(p.perfectUnlocked?{完成體劍壓:Math.floor(p.slashes/p.pressureEvery)+(p.slashes%p.pressureEvery?1:0)}:{})}:p.kind==='meteor'?{巨岩:2,碎岩落點:p.fragments}:{木分身:p.cloneCount};}
   function metrics(owner,m,en=false){
@@ -33,7 +33,7 @@
     if(p.kind==='fire')return Object.fromEntries([pair('火牆','Fire fronts',p.fronts),pair('火牆寬','Front width',p.width),pair('推進射程','Travel range',p.range),pair('留焰秒','Burn seconds',p.linger),pair('火線方向','Fire directions',p.fork?2:1)]);
     if(p.kind==='susanoo')return Object.fromEntries([pair('刀臂接觸','Blade contacts',p.slashes),pair('常態形態','Guardian form',p.form==='rib'?(en?'Ribcage':'骨架'):(en?'Armored':'甲胄')),pair('完成體解鎖','Perfect form unlocked',p.perfectUnlocked?(en?'Unlocked':'解鎖'):(en?'Locked':'未解鎖')),pair('完成體劍壓','Perfect pressure waves',p.perfectUnlocked?Math.floor(p.slashes/p.pressureEvery)+(p.slashes%p.pressureEvery?1:0):0)]);
     if(p.kind==='meteor')return Object.fromEntries([pair('碎岩落點','Fragment landings',p.fragments),pair('首岩半徑','First radius',p.radius),pair('次岩半徑','Second radius',p.secondRadius),pair('殘岩秒','Crater seconds',p.craterDuration),pair('火牆引爆殘岩','Fire crater relay',p.craterRelay?(en?'On':'啟用'):(en?'Off':'未啟用'))]);
-    return Object.fromEntries([pair('木分身','Wood doubles',p.cloneCount),pair('分身火力%','Army power %',Math.round(p.cloneDamageMultiplier*100)),pair('分工類別','Role types',p.roles),pair('本體指令接力','Command relay',p.relay?(en?'On':'啟用'):(en?'Off':'未啟用'))]);
+    return Object.fromEntries([pair('木分身','Wood doubles',p.cloneCount),pair('分身火力%','Army power %',Math.round(p.cloneDamageMultiplier*100)),pair('軍團須佐','Army guardian',p.armyForm==='armored'?(en?'Armored':'甲胄'):(en?'Ribcage':'骨架')),pair('本體指令接力','Command relay',p.relay?(en?'On':'啟用'):(en?'Off':'未啟用'))]);
   }
   function growthText(owner,m,next,en=false){
     const a=profile(owner,m),b=profile(owner,next),before=metrics(owner,m,en),after=metrics(owner,next,en),parts=[];
@@ -55,9 +55,9 @@
   const englishDescriptions=[
     'Step-in palm, elbow, turning kick and landing use real limb contacts. Standing still permits short footwork; movement keeps control. Quantity adds followups without extending the body sequence beyond 0.82 seconds. Rank 2 gains a sweeping kick; rank 3 gains footwork. A true final hit earns one momentum.',
     'After a short seal, exhale four to six broad advancing fire fronts. Each snapshots its mouth origin and heading; enemies are struck only when the front arrives. Quantity adds fronts up to twelve without extending the 0.74-second body pose. Rank 3 leaves burning lines; rank 4 crosses two headings. A successful cast earns at most one momentum.',
-    'An independent six-second guardian grows from skeletal limbs to armored blades. Quantity adds real blade sweeps without locking the body. Rank 3 unlocks a six-second Perfect Susanoo at three momentum, with gigantic blades and advancing sword pressure. Momentum and timing are game adaptations; no invulnerability.',
+    'An independent six-second guardian grows from skeletal limbs to armored blades. Quantity adds real blade sweeps without locking the body. Rank 2 unlocks a six-second Perfect Susanoo at three momentum, with gigantic blades and advancing sword pressure. Momentum and timing are game adaptations; no invulnerability.',
     'Two giant rocks land separately: the second shatters a wider area. Four to eight fragments then fall at separate marked locations; quantity adds fragments up to sixteen. Each has real height and a single landing collision. Rank 3 craters permit one fire-triggered rubble burst per cast, a non-recursive game adaptation.',
-    'Four to eight wood doubles fight for twelve seconds, up to twelve with quantity. Frontline taijutsu, flanking fire and rank-three rear armored guardians have separate positions and clocks and use learned abilities only. They never generate momentum or copy Perfect Susanoo. Rank 4 obeys the body attack orders. Army power grows from 100% to 210% of its base.'
+    'Start with two permanent wood doubles. Ranks increase the army to four, six, eight and ten; quantity grows it up to sixteen. Flanks use learned fire; every double independently uses learned skeletal Susanoo, armored at wood-clone rank 2. Body attacks and guardians have separate clocks. Growth adds new actors without resetting veterans. Doubles never generate momentum or copy Perfect Susanoo. Army power grows from 100% to 210% of its base.'
 
   ];
   const dictionary={'宇智波斑・穢土轉生':'Madara Uchiha · Reanimated'};
@@ -77,7 +77,7 @@
   if(guide){const article=document.createElement('article');article.className='naruto-skill-entry';const h=document.createElement('h3');h.textContent='宇智波斑・穢土轉生';article.append(h);for(const [id]of rows){const d=G.Moves.BY_ID[id],title=document.createElement('h4'),p=document.createElement('p');title.textContent=`Lv.${d.learnLevel} ${d.name}`;p.textContent=d.desc;article.append(title,p);}guide.append(article);}
   let starting=false;
   const startRun=G.Game.startRun;
-  G.Game.startRun=function(...args){starting=true;try{return startRun.apply(this,args);}finally{starting=false;}};
+  G.Game.startRun=function(...args){starting=true;try{const result=startRun.apply(this,args),owner=G.Game.player;if(owner?.mon?.dex===DEX){if(!owner.hasMove('naruto-madara-clones'))owner.addMove('naruto-madara-clones');const m=learned(owner,'naruto-madara-clones');if(m){const s=state(owner);spawnArmy(s,{m,spec:profile(owner,m)});}}return result;}finally{starting=false;}};
   const pool=G.Moves.poolFor;
   G.Moves.poolFor=mon=>mon.dex===DEX?rows.filter(r=>r[4]<=(!starting&&G.Game.player?.mon===mon?G.Game.player.level:1)).map(r=>r[0]):pool(mon);
   const addMove=G.Player.prototype.addMove;
@@ -85,10 +85,18 @@
     if(ids.has(id)){if(this.mon?.dex!==DEX||this.level<G.Moves.BY_ID[id].learnLevel||this.hasMove(id))return false;this.moves.push(G.Moves.instance(id));this.arrange();return true;}
     if(this.mon?.dex===DEX)return false;return addMove.call(this,id,...args);
   };
-  // Upgrade offers use this owner's real quantity investment, not the q=0 guide.
+  // Reserve one early army milestone; the remaining cards keep normal build choices.
   const offer=G.LevelUp.offer;
-  G.LevelUp.offer=function(owner,...args){
-    return offer.call(this,owner,...args).map(card=>{
+  G.LevelUp.offer=function(owner,n=3,...args){
+    const cards=offer.call(this,owner,n,...args);
+    if(owner.mon?.dex===DEX&&n<256&&n>0){
+      const milestones=[['naruto-madara-fire',1],['naruto-madara-susanoo',1],['naruto-madara-clones',2],['naruto-madara-susanoo',2],['naruto-madara-meteor',1]];
+      const milestone=milestones.find(([id,level])=>owner.level>=G.Moves.BY_ID[id].learnLevel&&!owner.banned?.has(id)&&(learned(owner,id)?.lvl||0)<level);
+      if(milestone){const id=milestone[0],key=(learned(owner,id)?'up:':'new:')+id;
+        if(!cards.some(c=>c.key===key)){const card=offer.call(this,owner,256,...args).find(c=>c.key===key);if(card){const index=cards.findIndex(c=>c.type!=='stat');if(cards.length<n)cards.push(card);else cards[index>=0?index:0]=card;}}
+      }
+    }
+    return cards.map(card=>{
       if(card.type!=='up')return card;
       const id=card.key.slice(3),m=owner.moves?.find(move=>move.id===id);
       if(!ids.has(id)||!m||m.lvl>=m.def.maxLvl)return card;
@@ -102,13 +110,15 @@
   }
   function clear(owner){if(!owner){for(const a of [...states.keys()])clear(a);return;}const s=states.get(owner);if(!s)return;for(const f of [s.body,s.guardian,...s.fires,...s.flames,...s.meteors,...s.pressures,...s.army.flatMap(a=>[a.body,a.guardian])])if(f?.cast)f.cast.runEpoch=-1;states.delete(owner);}
   function path(x,y,tx,ty,target=null){if(G.World.projectilePathClear)return G.World.projectilePathClear(x,y,tx,ty,target,{radius:1,spacing:4,includeStart:false});const n=Math.max(1,Math.ceil(Math.hypot(tx-x,ty-y)/4));for(let i=1;i<=n;i++){const px=x+(tx-x)*i/n,py=y+(ty-y)*i/n;if(G.World.isWall?.(px,py))return false;const b=G.World.projectileBlock?.(px,py,1);if(b&&b!==target)return false;}return true;}
-  function enemies(x,y,r){const registered=new Set(G.EnemyMgr.all());return [...new Set(G.EnemyMgr.queryCircle(x,y,r+100))].filter(e=>registered.has(e)&&alive(e)&&!e.friendly&&Math.hypot(e.x-x,e.y-y)<=r+(e.r||0));}
+  function registered(e){return !!e&&G.EnemyMgr.get(e.id)===e;}
+  function enemies(x,y,r){return [...new Set(G.EnemyMgr.queryCircle(x,y,r+100))].filter(e=>registered(e)&&alive(e)&&!e.friendly&&Math.hypot(e.x-x,e.y-y)<=r+(e.r||0));}
   function props(x,y,r){return [...new Set(G.World.propsInCircle?.(x,y,r)||[])].filter(p=>!p.dead&&p.destructible!==false&&p.hp>0&&Math.hypot(p.x-x,p.y-y)<=r+(p.r||0));}
   const learned=(a,id)=>a.moves?.find(m=>m.id===id);
-  function targetFor(owner,m,origin=owner,range=null){const r=range??profile(owner,m).range,nearest=list=>list.sort((a,b)=>Math.hypot(a.x-origin.x,a.y-origin.y)-Math.hypot(b.x-origin.x,b.y-origin.y))[0]||null;return nearest(enemies(origin.x,origin.y,r).filter(e=>path(origin.x,origin.y,e.x,e.y)))||nearest(props(origin.x,origin.y,r).filter(p=>path(origin.x,origin.y,p.x,p.y,p)));}
+  function nearest(origin,list,eligible){let best=null,distance=Infinity;for(const t of list){const d=(t.x-origin.x)**2+(t.y-origin.y)**2;if(d>=distance||!eligible(t))continue;best=t;distance=d;}return best;}
+  function targetFor(owner,m,origin=owner,range=null){const r=range??profile(owner,m).range;return nearest(origin,enemies(origin.x,origin.y,r),e=>path(origin.x,origin.y,e.x,e.y))||nearest(origin,props(origin.x,origin.y,r),p=>path(origin.x,origin.y,p.x,p.y,p));}
   function drawable(s,f){return !!f&&states.get(s.owner)===s&&s.world===G.World&&s.epoch===G.CombatPulse.epoch&&valid(s.owner)&&!!learned(s.owner,f.m.id)&&(!f.actor||s.army.includes(f.actor)&&!!learned(s.owner,'naruto-madara-clones'))&&f.cast.runEpoch===s.epoch;}
   const legal=(s,f)=>drawable(s,f)&&G.CombatPulse.legal(f.cast);
-  function source(s,m,channel,actor=null){return {owner:s.owner,actor,m:{...m},spec:profile(s.owner,m),age:0,pulseSequence:0,cast:G.CombatPulse.create(s.owner,m.id,{channel,targetIsLegal:t=>G.EnemyMgr.all().includes(t)}),hitEvents:0,credited:false};}
+  function source(s,m,channel,actor=null){return {owner:s.owner,actor,m:{...m},spec:profile(s.owner,m),age:0,pulseSequence:0,cast:G.CombatPulse.create(s.owner,m.id,{channel,targetIsLegal:registered}),hitEvents:0,credited:false};}
   const moving=a=>a===G.Game.player&&Math.hypot(...(G.Input?.axis?.()||[0,0]))>.18;
   const angle=(x,y,tx,ty)=>Math.atan2(ty-y,tx-x);
   function toward(actor,tx,ty,budget){let left=Math.min(Math.max(0,budget),Math.hypot(tx-actor.x,ty-actor.y)),travel=0;for(let i=0;i<40&&left>.001;i++){const step=Math.min(4,left),d=Math.hypot(tx-actor.x,ty-actor.y);if(d<.001)break;const x=actor.x+(tx-actor.x)/d*step,y=actor.y+(ty-actor.y)/d*step;if(!path(actor.x,actor.y,x,y)||G.World.isFree&&!G.World.isFree(x,y,actor.r||12,true))break;actor.x=x;actor.y=y;left-=step;travel+=step;}return travel;}
@@ -164,9 +174,9 @@
     return [...enemies(actor.x,actor.y,r),...props(actor.x,actor.y,r)].filter(t=>path(actor.x,actor.y,t.x,t.y,t.destructible?t:null)&&basicApproach(actor,t,p).gap<=allowed+.5).sort((a,b)=>Math.hypot(a.x-actor.x,a.y-actor.y)-Math.hypot(b.x-actor.x,b.y-actor.y))[0]||null;
   }
   function makeBody(s,m,actor=null,target=null){const f=source(s,m,actor?'army-body':'body',actor),origin=actor||s.owner,p=f.spec,t=target||(p.kind==='basic'?basicTarget(s.owner,m,origin):targetFor(s.owner,m,origin,p.range));if(!t||p.kind==='fire'&&Math.hypot(t.x-origin.x,t.y-origin.y)>p.range+(t.r||0)||p.kind==='basic'&&basicApproach(origin,t,p).gap>(actor?0:moving(origin)?0:p.stepBudget)+.5)return null;Object.assign(f,{aim:angle(origin.x,origin.y,t.x,t.y),target:t,index:0,emitted:0,stepUsed:0,duration:p.duration,phase:'windup'});if(actor&&p.kind==='fire')f.spec={...p,fronts:Math.min(4,p.fronts)};return f;}
-  function makeGuardian(s,m,actor=null,target=null){const g=source(s,m,actor?'army-guardian':'guardian',actor),origin=actor||s.owner,t=target||guardianTarget(s.owner,m,origin,!actor&&s.impetus>=3&&g.spec.perfectUnlocked);if(!t)return null;Object.assign(g,{duration:6,aim:angle(origin.x,origin.y,t.x,t.y),phase:'manifest',form:g.spec.form,perfect:false,index:0,swing:null,blade:null,prevBlade:null});if(actor)g.spec={...g.spec,slashes:Math.min(5,g.spec.slashes),bladeLength:g.spec.bladeLength*.75};else if(s.impetus>=3&&g.spec.perfectUnlocked)transform(s,g);if(!g.perfect)audio('madara-form',{perfect:false},!!actor);return g;}
-  function canCast(owner,m){if(!valid(owner)||owner.frozen||G.Game.state!=='playing'||!ids.has(m?.id)||(m.t||0)>EPS||!learned(owner,m.id))return false;const s=state(owner),p=profile(owner,m);if(p.kind==='susanoo')return !s.guardian&&!!guardianTarget(owner,m,owner,!G.SelfClones?.isActor?.(owner)&&s.impetus>=3&&p.perfectUnlocked);if(s.body||p.kind==='clones'&&s.army.length)return false;return p.kind==='basic'?!!basicTarget(owner,m):!!targetFor(owner,m,owner,p.range);}
-  function cast(owner,m){if(!canCast(owner,m))return false;const s=state(owner),p=profile(owner,m);if(p.kind==='susanoo'){s.guardian=makeGuardian(s,m);if(!s.guardian)return false;}else{s.body=makeBody(s,m);if(!s.body)return false;owner.aim=s.body.aim;owner.cast?.(m);}m.t=Math.max(.1,m.cd*(owner.cdMul??1));m.castAt=performance.now();s.casts[m.id]=(s.casts[m.id]||0)+1;s.readyAt.delete(m.id);return true;}
+  function makeGuardian(s,m,actor=null,target=null){const g=source(s,m,actor?'army-guardian':'guardian',actor),origin=actor||s.owner,t=target||guardianTarget(s.owner,m,origin,!actor&&s.impetus>=3&&g.spec.perfectUnlocked);if(!t)return null;Object.assign(g,{duration:6,aim:angle(origin.x,origin.y,t.x,t.y),phase:'manifest',form:g.spec.form,perfect:false,index:0,swing:null,blade:null,prevBlade:null});if(actor){g.form=actor.rank>=2?'armored':'rib';g.spec={...g.spec,form:g.form,slashes:Math.min(8,g.spec.slashes),bladeLength:g.spec.bladeLength*.75};}else if(s.impetus>=3&&g.spec.perfectUnlocked)transform(s,g);if(!g.perfect)audio('madara-form',{perfect:false},!!actor);return g;}
+  function canCast(owner,m){if(!valid(owner)||owner.frozen||G.Game.state!=='playing'||!ids.has(m?.id)||(m.t||0)>EPS||!learned(owner,m.id))return false;const s=state(owner),p=profile(owner,m);if(p.kind==='susanoo')return !s.guardian&&!!guardianTarget(owner,m,owner,!G.SelfClones?.isActor?.(owner)&&s.impetus>=3&&p.perfectUnlocked);if(s.body||p.kind==='clones'&&s.army.length)return false;if(p.kind==='clones')return true;return p.kind==='basic'?!!basicTarget(owner,m):!!targetFor(owner,m,owner,p.range);}
+  function cast(owner,m){if(!canCast(owner,m))return false;const s=state(owner),p=profile(owner,m);if(p.kind==='susanoo'){s.guardian=makeGuardian(s,m);if(!s.guardian)return false;}else{if(p.kind==='clones'){s.body=source(s,m,'body');Object.assign(s.body,{aim:owner.aim||0,duration:p.duration,phase:'windup'});}else s.body=makeBody(s,m);if(!s.body)return false;owner.aim=s.body.aim;owner.cast?.(m);}m.t=Math.max(.1,m.cd*(owner.cdMul??1));m.castAt=performance.now();s.casts[m.id]=(s.casts[m.id]||0)+1;s.readyAt.delete(m.id);return true;}
   function advanceBasic(s,f){
     const actor=f.actor||s.owner,p=f.spec,interval=(p.duration-.18)/p.contacts,oldAge=f.previousBasicAge??0,newAge=f.age;
     f.basicSegments??=[];
@@ -174,7 +184,7 @@
       const begin=.1+index*interval;if(newAge<begin||oldAge>=begin+interval)continue;
       let segment=f.basicSegments[index];
       if(!segment){
-        const retained=f.target&&alive(f.target)&&(G.EnemyMgr.all().includes(f.target)||f.target.destructible&&props(actor.x,actor.y,basicSearchRadius(actor,p,p.stepBudget)).includes(f.target))?f.target:null,t=basicTarget(s.owner,f.m,actor,f.actor||moving(actor)?0:Math.max(0,p.stepBudget-f.stepUsed))||retained;if(t){f.target=t;f.aim=angle(actor.x,actor.y,t.x,t.y);if(!f.actor&&!moving(actor)&&f.stepUsed<p.stepBudget){const reach=basicApproach(actor,t,p,f.aim),ratio=reach.distance?Math.min(1,(reach.gap+2)/reach.distance):0;f.stepUsed+=toward(actor,actor.x+reach.dx*ratio,actor.y+reach.dy*ratio,Math.min(12,p.stepBudget-f.stepUsed,reach.gap+2));}}
+        const retained=f.target&&alive(f.target)&&(registered(f.target)||f.target.destructible&&props(actor.x,actor.y,basicSearchRadius(actor,p,p.stepBudget)).includes(f.target))?f.target:null,t=basicTarget(s.owner,f.m,actor,f.actor||moving(actor)?0:Math.max(0,p.stepBudget-f.stepUsed))||retained;if(t){f.target=t;f.aim=angle(actor.x,actor.y,t.x,t.y);if(!f.actor&&!moving(actor)&&f.stepUsed<p.stepBudget){const reach=basicApproach(actor,t,p,f.aim),ratio=reach.distance?Math.min(1,(reach.gap+2)/reach.distance):0;f.stepUsed+=toward(actor,actor.x+reach.dx*ratio,actor.y+reach.dy*ratio,Math.min(12,p.stepBudget-f.stepUsed,reach.gap+2));}}
         segment={aim:f.aim,hitSet:new Set(),propSet:new Set(),hits:0,finalized:false,previousPoint:null,previousProgress:0};f.basicSegments[index]=segment;audio('madara-palm',{step:basicContact(f,index)},!!f.actor);
       }
       const name=basicContact(f,index),socketName=name==='kick'||name==='landing'?'foot':name,from=Math.max(0,Math.min(1,(oldAge-begin)/interval)),to=Math.max(0,Math.min(1,(newAge-begin)/interval)),start=name==='kick'&&p.kickSweep?.15:.28,end=name==='kick'&&p.kickSweep?.85:.75;
@@ -205,19 +215,19 @@
 
   function armyActor(s,p,index,life){
     const a=index*Math.PI*2/p.cloneCount,x=s.owner.x+Math.cos(a)*65,y=s.owner.y+Math.sin(a)*65,clearSpot=path(s.owner.x,s.owner.y,x,y);
-    return {serial:++actorSequence,role:['front','flank-left','flank-right','guard'][index%4],x:clearSpot?x:s.owner.x,y:clearSpot?y:s.owner.y,r:12,age:0,life,damageMultiplier:p.cloneDamageMultiplier*.65,rank:p.rank,relay:p.relay,cooldown:index*.12,body:null,guardian:null,target:null,phase:'emerge',emerge:.60};
+    return {serial:++actorSequence,role:['flank-left','flank-right','front','front'][index%4],x:clearSpot?x:s.owner.x,y:clearSpot?y:s.owner.y,r:12,age:0,life,damageMultiplier:p.cloneDamageMultiplier*.65,rank:p.rank,relay:p.relay,cooldown:index*.12,guardianCooldown:index*.22,body:null,guardian:null,target:null,phase:'emerge',emerge:.60};
   }
   const armySignature=(owner,m)=>`${m.lvl}:${G.Quantity?.bonus(owner)??owner.quantityPicks??0}:${m.dmg}`;
   function spawnArmy(s,f){
     const p=f.spec;s.armyExpires=s.clock+p.cloneDuration+.60;s.armySignature=armySignature(s.owner,f.m);
-    for(let i=0;i<p.cloneCount;i++)s.army.push(armyActor(s,p,i,p.cloneDuration+.60));audio('madara-wood');
+    for(let i=s.army.length;i<p.cloneCount;i++)s.army.push(armyActor(s,p,i,p.cloneDuration));audio('madara-wood');
   }
   function syncArmyGrowth(s){
-    const m=learned(s.owner,'naruto-madara-clones');if(!m||!s.army.length||s.clock>=s.armyExpires)return;
+    const m=learned(s.owner,'naruto-madara-clones');if(!m||!s.army.length)return;
     const signature=armySignature(s.owner,m);if(signature===s.armySignature)return;s.armySignature=signature;const p=profile(s.owner,m);
     for(const a of s.army){a.damageMultiplier=p.cloneDamageMultiplier*.65;a.rank=p.rank;a.relay=p.relay;}
     // Only new actors are added. Existing positions, actions, cooldowns and lifetime stay intact.
-    for(let i=s.army.length;i<p.cloneCount;i++)s.army.push(armyActor(s,p,i,s.armyExpires-s.clock));
+    for(let i=s.army.length;i<p.cloneCount;i++)s.army.push(armyActor(s,p,i,p.cloneDuration));
   }
 
   function advanceBody(s,f,dt){if(!legal(s,f))return false;f.age+=dt;const p=f.spec;f.phase=bodyPose(f).phase;if(p.kind==='basic'){advanceBasic(s,f);}else if(p.kind==='fire'){while(f.emitted<p.fronts&&f.age+EPS>=p.release+p.releaseWindow*f.emitted/Math.max(1,p.fronts-1)){if(!legal(s,f))return false;emitFire(s,f,f.emitted++);}}else if(!f.released&&f.age>=p.release){f.released=true;if(p.kind==='meteor')emitMeteors(s,f);else spawnArmy(s,f);}return legal(s,f)&&f.age<p.duration;}
@@ -228,18 +238,18 @@
     g.authoredBlade=false;const length=g.perfect?g.spec.perfectLength:g.spec.bladeLength,side=g.index%2?-1:1,theta=g.aim+side*(1.2-2.4*progress);return {ax:origin.x+Math.cos(theta)*36,ay:origin.y+Math.sin(theta)*36,bx:origin.x+Math.cos(theta)*length,by:origin.y+Math.sin(theta)*length,radius:g.perfect?g.spec.bladeRadius*1.35:g.spec.bladeRadius,renderOffsetY:-40};
   }
   function guardianApproach(owner,m,actor,target,perfect=false){
-    const spec=profile(owner,m),aim=angle(actor.x,actor.y,target.x,target.y),g={spec,actor:actor===owner?null:actor,form:perfect?'perfect':spec.form,perfect,index:0,aim,age:0,duration:6,swing:{start:0},phase:'draw'};if(actor!==owner)spec.bladeLength*=.75;let best=null;
+    const spec=profile(owner,m),aim=angle(actor.x,actor.y,target.x,target.y),g={spec,actor:actor===owner?null:actor,form:perfect?'perfect':actor!==owner?(actor.rank>=2?'armored':'rib'):spec.form,perfect,index:0,aim,age:0,duration:6,swing:{start:0},phase:'draw'};if(actor!==owner)spec.bladeLength*=.75;let best=null;
     for(const [phase,progress]of [['draw',0],['sweep',.3],['sweep',.7]]){
       g.phase=phase;g.age=progress*spec.sweepDuration;const b=bladeAt(g,actor,progress),dx=b.bx-b.ax,dy=b.by-b.ay,t=Math.max(0,Math.min(1,((target.x-b.ax)*dx+(target.y-b.ay)*dy)/(dx*dx+dy*dy||1))),x=b.ax+dx*t,y=b.ay+dy*t,distance=Math.hypot(target.x-x,target.y-y),gap=Math.max(0,distance-b.radius-(target.r||0));
       if(!best||gap<best.gap)best={gap,distance,dx:target.x-x,dy:target.y-y};
     }return best;
   }
-  function guardianTarget(owner,m,actor=owner,perfect=false){return [...enemies(actor.x,actor.y,perfect?850:650),...props(actor.x,actor.y,650)].filter(t=>path(actor.x,actor.y,t.x,t.y,t.destructible?t:null)&&guardianApproach(owner,m,actor,t,perfect).gap<=.5).sort((a,b)=>Math.hypot(a.x-actor.x,a.y-actor.y)-Math.hypot(b.x-actor.x,b.y-actor.y))[0]||null;}
+  function guardianTarget(owner,m,actor=owner,perfect=false){return nearest(actor,[...enemies(actor.x,actor.y,perfect?850:650),...props(actor.x,actor.y,650)],t=>path(actor.x,actor.y,t.x,t.y,t.destructible?t:null)&&guardianApproach(owner,m,actor,t,perfect).gap<=.5);}
   function emitPressure(s,g,releaseBlade=null){const o=g.actor||s.owner,b=releaseBlade||g.blade||{ax:o.x,ay:o.y,bx:o.x+Math.cos(g.aim)*40,by:o.y+Math.sin(g.aim)*40},f=source(s,g.m,'guardian-pressure',g.actor);Object.assign(f,{spec:{...g.spec,damage:g.spec.damage*.65},x:b.bx,y:b.by,aim:g.aim,distance:0,width:180+g.spec.rank*15,speed:850,range:1000,hitSet:new Set(),propSet:new Set(),phase:'advance'});s.pressures.push(f);}
   function advanceGuardian(s,g,dt){
-    if(!legal(s,g))return false;g.age+=dt;const p=g.spec,count=g.actor?Math.min(5,p.slashes):p.slashes,interval=(g.duration-.9)/count,at=.4+g.index*interval,origin=g.actor||s.owner;
+    if(!legal(s,g))return false;g.age+=dt;const p=g.spec,count=g.actor?Math.min(8,p.slashes):p.slashes,interval=(g.duration-.9)/count,at=.4+g.index*interval,origin=g.actor||s.owner;
     if(g.age>=at&&g.index<count){
-      if(!g.swing){const assigned=g.actor?.target,t=assigned&&G.EnemyMgr.all().includes(assigned)&&alive(assigned)?assigned:guardianTarget(s.owner,g.m,origin,g.perfect)||targetFor(s.owner,g.m,origin,g.perfect?850:650);if(t)g.aim=angle(origin.x,origin.y,t.x,t.y);g.swing={start:at,progress:0,hitSet:new Set(),propSet:new Set(),sound:false};}
+      if(!g.swing){const assigned=g.actor?(guardianTarget(s.owner,g.m,origin)||g.actor.target):null,t=assigned&&registered(assigned)&&alive(assigned)?assigned:guardianTarget(s.owner,g.m,origin,g.perfect)||targetFor(s.owner,g.m,origin,g.perfect?850:650);if(t)g.aim=angle(origin.x,origin.y,t.x,t.y);g.swing={start:at,progress:0,hitSet:new Set(),propSet:new Set(),sound:false};}
       const swing=g.swing,progress=Math.max(0,Math.min(1,(g.age-swing.start)/p.sweepDuration)),previous=swing.progress;g.phase=progress<.18?'draw':progress<.88?'sweep':'recover';
       if(progress>=.18&&!swing.sound){swing.sound=true;audio('madara-blade',{perfect:g.perfect,finisher:g.index===count-1},!!g.actor);}
       const next=bladeAt(g,origin,progress),previousBlade=g.blade||next,n=Math.min(24,Math.max(1,Math.ceil(Math.max(Math.hypot(next.ax-previousBlade.ax,next.ay-previousBlade.ay),Math.hypot(next.bx-previousBlade.bx,next.by-previousBlade.by))/20)));
@@ -264,12 +274,35 @@
     if(left<=0&&!f.landed){if(f.second&&!f.parent.firstLanded)return false;f.landed=true;contact(s,f,{kind:'circle',x:f.x,y:f.y,radius:f.radius},f.index,{ratio:f.scale,hitSet:f.hitSet,propSet:f.propSet});if(!legal(s,f))return false;audio('madara-meteor',{second:f.second},f.fragment);if(f.second)s.effects=s.effects.filter(e=>!e.first||e.pair!==f.parent);s.effects.push({kind:'meteor-impact',x:f.x,y:f.y,radius:f.radius,second:f.second,fragment:f.fragment,first:!f.fragment&&!f.second,pair:f.parent,age:0,life:!f.fragment&&!f.second?f.spec.delay+.1:.9});if(!f.fragment&&!f.second){f.parent.firstLanded=true;}if(!f.fragment&&!f.second)s.craters.push({moveId:f.m.id,x:f.x,y:f.y,radius:f.radius,age:0,duration:f.spec.craterDuration,relay:f.spec.craterRelay});if(f.second){releaseFragments(s,f);s.command={x:f.x,y:f.y,target:null,expires:s.clock+3,kind:'meteor'};for(const a of s.army)if(a.relay)a.cooldown=0;}}
     return f.age<f.delay+.4;
   }
+  function armyLeash(){
+    const camera=G.Camera,pixels=(camera.w||768)*(camera.scale||1),height=(camera.h||420)*(camera.scale||1),native=camera.viewportScale?.(pixels,height)||camera.scale||1;
+    return Math.max(150,Math.min(280,pixels/native*.29));
+  }
   function armyMove(s,a,dt){
-    const fire=learned(s.owner,'naruto-madara-fire'),guard=learned(s.owner,'naruto-madara-susanoo'),basic=learned(s.owner,'naruto-madara'),desired=a.role.startsWith('flank')&&fire?fire:a.role==='guard'&&a.rank>=3&&guard?guard:basic||fire||guard;if(!desired)return;
-    const claimed=new Set(s.army.filter(other=>other!==a&&other.target).map(other=>other.target)),candidates=enemies(s.owner.x,s.owner.y,850).filter(e=>path(a.x,a.y,e.x,e.y)),command=a.relay&&s.command?.expires>s.clock?s.command:null;candidates.sort((x,y)=>Number(claimed.has(x))-Number(claimed.has(y))+(command?(Math.hypot(x.x-command.x,x.y-command.y)-Math.hypot(y.x-command.x,y.y-command.y))*.001:0));
-    if(!a.target||!G.EnemyMgr.all().includes(a.target)||!alive(a.target)||!path(a.x,a.y,a.target.x,a.target.y))a.target=candidates[0]||targetFor(s.owner,desired,a,600);const t=a.target;if(!t){if(!a.body&&!a.guardian)toward(a,s.owner.x+Math.cos(a.serial)*85,s.owner.y+Math.sin(a.serial)*85,260*dt);return;}
-    let x=t.x,y=t.y;if(desired.madaraKind==='fire'){const side=a.role==='flank-left'?-1:1,aim=angle(s.owner.x,s.owner.y,t.x,t.y),forward=Math.max(100,Math.hypot(t.x-s.owner.x,t.y-s.owner.y)-profile(s.owner,desired).range*.72);x=s.owner.x+Math.cos(aim)*forward-Math.sin(aim)*side*130;y=s.owner.y+Math.sin(aim)*forward+Math.cos(aim)*side*130;}else if(desired.madaraKind==='susanoo'){const reach=guardianApproach(s.owner,desired,a,t),ratio=reach.distance?Math.min(1,(reach.gap+3)/reach.distance):0;x=a.x+reach.dx*ratio;y=a.y+reach.dy*ratio;}else{const reach=basicApproach(a,t,profile(s.owner,desired)),ratio=reach.distance?Math.min(1,(reach.gap+2)/reach.distance):0;x=a.x+reach.dx*ratio;y=a.y+reach.dy*ratio;}
-    if(!a.body&&(!a.guardian||a.guardian.phase!=='sweep'))toward(a,x,y,340*dt);if(a.body||a.guardian||a.cooldown>EPS)return;if(desired.madaraKind==='basic'&&basicApproach(a,t,profile(s.owner,desired)).gap>.5)return;if(desired.madaraKind==='susanoo'){if(guardianApproach(s.owner,desired,a,t).gap>.5)return;a.guardian=makeGuardian(s,desired,a,t);if(a.guardian)a.cooldown=7*(s.owner.cdMul??1);}else{a.body=makeBody(s,desired,a,t);if(a.body)a.cooldown=Math.max(.9,desired.cd*(s.owner.cdMul??1));}
+    const fire=learned(s.owner,'naruto-madara-fire'),guard=learned(s.owner,'naruto-madara-susanoo'),basic=learned(s.owner,'naruto-madara'),desired=a.role.startsWith('flank')&&fire?fire:basic||fire;if(!desired)return;
+    const leash=armyLeash();
+    if(a.target&&(!registered(a.target)||!alive(a.target)||Math.hypot(a.target.x-s.owner.x,a.target.y-s.owner.y)>leash+550))a.target=null;
+    if(a.target&&s.clock>=(a.pathCheckAt||0)){a.pathCheckAt=s.clock+.12;if(!path(a.x,a.y,a.target.x,a.target.y))a.target=null;}
+    if(!a.target&&s.clock>=(a.acquireAt||0)){
+      const claimed=new Set(s.army.filter(other=>other!==a&&other.target).map(other=>other.target)),command=a.relay&&s.command?.expires>s.clock?s.command:null;
+      let score=Infinity;
+      for(const e of enemies(s.owner.x,s.owner.y,leash+500)){const value=Number(claimed.has(e))+(command?Math.hypot(e.x-command.x,e.y-command.y)*.001:0);if(value>=score||!path(a.x,a.y,e.x,e.y))continue;a.target=e;score=value;}
+      a.acquireAt=a.target?0:s.clock+.10+(a.serial%4)*.01;a.pathCheckAt=s.clock+.12;
+    }
+    const t=a.target,index=s.army.indexOf(a),side=a.role==='flank-left'?-1:a.role==='flank-right'?1:index%2?-1:1,ring=Math.floor(index/4),slot={x:s.owner.x+side*Math.min(leash*.85,100+ring*38),y:s.owner.y+30+(index%4>=2?55:0)};
+    let x=slot.x,y=slot.y;
+    if(t&&desired.madaraKind==='basic'){
+      const reach=basicApproach(a,t,profile(s.owner,desired)),ratio=reach.distance?Math.min(1,(reach.gap+2)/reach.distance):0;x=a.x+reach.dx*ratio;y=a.y+reach.dy*ratio;
+    }else if(t)y+=Math.max(-40,Math.min(45,(t.y-s.owner.y)*.15));
+    // Keep the army beside its owner while walking normally; melee retains real contact.
+    const dx=x-s.owner.x,dy=y-s.owner.y,d=Math.hypot(dx,dy);if(d>leash){x=s.owner.x+dx/d*leash;y=s.owner.y+dy/d*leash;}
+    if(!a.body&&a.guardian?.phase!=='sweep')toward(a,x,y,Math.max(400,s.owner.spd||0)*dt);
+    if(!t)return;
+    // Guardian is an independent actor channel: it never reserves the clone's body.
+    if(guard&&!a.guardian&&a.guardianCooldown<=EPS&&s.clock>=(a.guardianCheckAt||0)){a.guardianCheckAt=s.clock+.10;const victim=guardianApproach(s.owner,guard,a,t).gap<=.5?t:guardianTarget(s.owner,guard,a);if(victim){a.guardian=makeGuardian(s,guard,a,victim);if(a.guardian)a.guardianCooldown=Math.max(6.2,guard.cd*(s.owner.cdMul??1));}}
+    if(a.body||a.cooldown>EPS)return;
+    const bodyMove=desired.madaraKind==='basic'&&basicApproach(a,t,profile(s.owner,desired)).gap>.5?fire:desired;if(!bodyMove)return;
+    a.body=makeBody(s,bodyMove,a,t);if(a.body)a.cooldown=Math.max(.7,bodyMove.cd*(s.owner.cdMul??1));
   }
   function update(dt){
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;const steps=Math.min(60,Math.max(1,Math.ceil(dt/.025))),h=dt/steps;
@@ -281,15 +314,26 @@
       const advanceList=(key,fn)=>{for(const f of [...s[key]]){if(!fn(s,f,h)){const i=s[key].indexOf(f);if(i>=0)s[key].splice(i,1);}if(states.get(owner)!==s)break;}};
       advanceList('fires',advanceFront);advanceList('flames',advanceFlame);advanceList('meteors',advanceMeteor);advanceList('pressures',(state,f,delta)=>advanceFront(state,f,delta,true));if(states.get(owner)!==s)continue;
       if(!learned(owner,'naruto-madara-clones'))s.army.length=0;else syncArmyGrowth(s);
-      for(const a of [...s.army]){a.age+=h;a.cooldown=Math.max(0,a.cooldown-h);if(a.age>=a.life){s.effects.push({kind:'wood-dismiss',x:a.x,y:a.y,age:0,life:.45});s.army.splice(s.army.indexOf(a),1);continue;}if(a.age<a.emerge)continue;if(a.body&&!advanceBody(s,a.body,h))a.body=null;if(a.guardian&&!advanceGuardian(s,a.guardian,h))a.guardian=null;if(states.get(owner)!==s)break;a.phase=a.body?'cast':a.guardian?'guardian':'move';armyMove(s,a,h);}
+      for(const a of [...s.army]){a.age+=h;a.cooldown=Math.max(0,a.cooldown-h);a.guardianCooldown=Math.max(0,(a.guardianCooldown||0)-h);if(a.age>=a.life){s.effects.push({kind:'wood-dismiss',x:a.x,y:a.y,age:0,life:.45});s.army.splice(s.army.indexOf(a),1);continue;}if(a.age<a.emerge)continue;if(a.body&&!advanceBody(s,a.body,h))a.body=null;if(a.guardian&&!advanceGuardian(s,a.guardian,h))a.guardian=null;if(states.get(owner)!==s)break;a.phase=a.body?'cast':a.guardian?'guardian':'move';armyMove(s,a,h);}
     }
   }
   function tick(dt,owner,now){if((owner?.mon?.dex??owner?.dex)!==DEX)return oldTick.call(this,dt,owner,now);if(!valid(owner)||owner.frozen||G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;const s=state(owner),moves=owner.moves.filter(m=>ids.has(m.id));for(const m of moves){m.t=Math.max(0,(m.t||0)-dt);if(m.t<=EPS&&!s.readyAt.has(m.id))s.readyAt.set(m.id,s.clock);}const guardian=moves.find(m=>m.madaraKind==='susanoo');if(guardian&&canCast(owner,guardian))cast(owner,guardian);if(s.body)return;const ready=moves.filter(m=>m.madaraKind!=='susanoo'&&canCast(owner,m)).sort((a,b)=>(s.readyAt.get(a.id)??s.clock)-(s.readyAt.get(b.id)??s.clock));if(ready[0])cast(owner,ready[0]);}
   function pose(owner){const s=states.get(owner);return valid(owner)&&s?.world===G.World&&s.epoch===G.CombatPulse.epoch?bodyPose(s.body):null;}
   function guardianPose(owner){const s=states.get(owner);if(!valid(owner)||s?.world!==G.World||s.epoch!==G.CombatPulse.epoch)return null;const g=s.guardian;return g?{form:g.form,phase:g.phase,height:avatarOptions(g,g.actor||owner,g.swing?.progress||0).height,age:g.swing?g.age-g.swing.start:g.age,aim:g.aim,side:g.index%2?-1:1,blade:g.blade,prevBlade:g.prevBlade,perfect:g.perfect,remaining:g.duration-g.age}:null;}
   function drawBlade(ctx,g,alpha=1){const b=g.blade;if(!b||g.authoredBlade)return;ctx.save();ctx.globalAlpha*=alpha;ctx.lineCap='round';ctx.strokeStyle=g.perfect?'#7caaff':'#739ddd';ctx.lineWidth=b.radius*1.2;ctx.beginPath();ctx.moveTo(b.ax,b.ay+b.renderOffsetY);ctx.lineTo(b.bx,b.by+b.renderOffsetY);ctx.stroke();ctx.strokeStyle='#d6efff';ctx.lineWidth=b.radius*.36;ctx.beginPath();ctx.moveTo(b.ax,b.ay+b.renderOffsetY);ctx.lineTo(b.bx,b.by+b.renderOffsetY);ctx.stroke();ctx.restore();}
-  function drawGuardian(ctx,s,g){const o=g.actor||s.owner,options=avatarOptions(g,o,g.swing?.progress||0);options.blade=g.blade;options.prevBlade=g.prevBlade;if(G.MadaraArt?.drawAvatar)G.MadaraArt.drawAvatar(ctx,options);else{ctx.save();ctx.globalAlpha=options.alpha;ctx.strokeStyle='#70a5e2';ctx.lineWidth=5;for(let i=0;i<4;i++){ctx.beginPath();ctx.ellipse(o.x,o.y-35-i*20,options.height*.27,options.height*.13,0,0,Math.PI);ctx.stroke();}ctx.restore();}if(g.phase==='sweep'||g.phase==='draw')drawBlade(ctx,g,g.phase==='sweep'?.85:.3);}
-  function drawFront(ctx,f,pressure=false){const p=f.spec,d=f.distance,width=f.currentWidth??(pressure?f.width:p.width),offset=pressure?-40:f.visualOffsetY;if(!pressure&&G.MadaraArt?.drawElement?.(ctx,{kind:'fire',phase:'wall',alpha:f.actor?.50:.72,x:f.x+Math.cos(f.aim)*d,y:f.y+Math.sin(f.aim)*d+offset,width,depth:p.depth*2,aim:f.aim,age:f.age,progress:d/p.range}))return;ctx.save();ctx.translate(f.x,f.y+offset);ctx.rotate(f.aim);ctx.globalAlpha=pressure?.65:.67;ctx.strokeStyle=pressure?'#a8d6ff':'#d84b22';ctx.lineWidth=pressure?18:26;ctx.beginPath();ctx.moveTo(d,-width/2);ctx.lineTo(d,width/2);ctx.stroke();const count=pressure?8:Math.max(8,Math.min(20,Math.round(width/25)));for(let i=0;i<count;i++){const y=(i/(count-1)-.5)*width,wave=Math.sin(f.age*16+i*2.4),length=pressure?30:28+wave*12;ctx.fillStyle=pressure?'#e3f7ff':i%3?'#fa8a28':'#ffd35b';ctx.beginPath();ctx.moveTo(d-18,y-12);ctx.quadraticCurveTo(d+length,y-15,d+length+6,y);ctx.quadraticCurveTo(d+length*.4,y+4,d-18,y+12);ctx.closePath();ctx.fill();}ctx.restore();}
+  function armyOpacity(s,x,y){const owner=G.Game.player;if(!owner||s.owner!==owner||s.army.length<4)return 1;const near=Math.max(0,1-Math.hypot(x-owner.x,(y-owner.y)*.75)/200),density=Math.min(1,(s.army.length-2)/10);return Math.max(.22,1-density*(.22+.56*near));}
+  function drawGuardian(ctx,s,g){const o=g.actor||s.owner,options=avatarOptions(g,o,g.swing?.progress||0),opacity=g.actor?armyOpacity(s,o.x,o.y):1;options.alpha*=opacity;options.blade=g.blade;options.prevBlade=g.prevBlade;if(G.MadaraArt?.drawAvatar)G.MadaraArt.drawAvatar(ctx,options);else{ctx.save();ctx.globalAlpha=options.alpha;ctx.strokeStyle='#70a5e2';ctx.lineWidth=5;for(let i=0;i<4;i++){ctx.beginPath();ctx.ellipse(o.x,o.y-35-i*20,options.height*.27,options.height*.13,0,0,Math.PI);ctx.stroke();}ctx.restore();}if(g.phase==='sweep'||g.phase==='draw')drawBlade(ctx,g,(g.phase==='sweep'?.85:.3)*opacity);}
+  function secondaryFireOpacity(){
+    let layers=0;
+    for(const s of states.values()){
+      if(!valid(s.owner)||s.world!==G.World||s.epoch!==G.CombatPulse.epoch)continue;
+      for(const f of s.fires)if((f.actor||s.owner!==G.Game.player)&&drawable(s,f))layers++;
+      for(const f of s.flames)if((f.actor||s.owner!==G.Game.player)&&drawable(s,f))layers++;
+    }
+    // Preserve the main breath; many independent clone layers share a visual budget.
+    return Math.min(1,12/Math.max(12,layers));
+  }
+  function drawFront(ctx,f,pressure=false,crowd=1){const s=states.get(f.owner),opacity=(f.actor&&s?armyOpacity(s,f.x+Math.cos(f.aim)*f.distance,f.y+Math.sin(f.aim)*f.distance):1)*(!pressure&&(f.actor||f.owner!==G.Game.player)?crowd:1),p=f.spec,d=f.distance,width=f.currentWidth??(pressure?f.width:p.width),offset=pressure?-40:f.visualOffsetY;if(!pressure&&G.MadaraArt?.drawElement?.(ctx,{kind:'fire',phase:'wall',alpha:(f.actor?.50:.72)*opacity,x:f.x+Math.cos(f.aim)*d,y:f.y+Math.sin(f.aim)*d+offset,width,depth:p.depth*2,aim:f.aim,age:f.age,progress:d/p.range}))return;ctx.save();ctx.translate(f.x,f.y+offset);ctx.rotate(f.aim);ctx.globalAlpha=(pressure?.65:.67)*opacity;ctx.strokeStyle=pressure?'#a8d6ff':'#d84b22';ctx.lineWidth=pressure?18:26;ctx.beginPath();ctx.moveTo(d,-width/2);ctx.lineTo(d,width/2);ctx.stroke();const count=pressure?8:Math.max(8,Math.min(20,Math.round(width/25)));for(let i=0;i<count;i++){const y=(i/(count-1)-.5)*width,wave=Math.sin(f.age*16+i*2.4),length=pressure?30:28+wave*12;ctx.fillStyle=pressure?'#e3f7ff':i%3?'#fa8a28':'#ffd35b';ctx.beginPath();ctx.moveTo(d-18,y-12);ctx.quadraticCurveTo(d+length,y-15,d+length+6,y);ctx.quadraticCurveTo(d+length*.4,y+4,d-18,y+12);ctx.closePath();ctx.fill();}ctx.restore();}
   function drawArmy(ctx,s,a){ctx.save();const emergePhase=a.age<.18?'root':a.age<.40?'separate':'reveal';if(a.age<a.emerge)G.MadaraArt?.drawElement?.(ctx,{kind:'wood',phase:emergePhase,x:a.x,y:a.y,height:64,age:a.age,progress:a.age/a.emerge});ctx.globalAlpha=Math.max(0,Math.min(1,(a.age-.40)/.20))*.88;const p=bodyPose(a.body);G.MadaraArt?.draw(ctx,a,{x:a.x,y:a.y,height:64,state:p?'cast':a.phase==='move'?'walk':'idle',time:p?.age??a.age,dir:G.Sprites?.dirFromAngle?.(p?.aim??a.guardian?.aim??(a.target?angle(a.x,a.y,a.target.x,a.target.y):0))??2,pose:p});ctx.strokeStyle='#adbd82';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(a.x-8,a.y+1);ctx.lineTo(a.x+8,a.y+1);ctx.stroke();ctx.restore();}
   function drawables(){
     if(!['playing','paused','levelup'].includes(G.Game.state))return [];
@@ -308,6 +352,7 @@
   }
   function draw(ctx,ground=false){
     if(!['playing','paused','levelup'].includes(G.Game.state))return;
+    const crowd=ground?1:secondaryFireOpacity();
     for(const s of states.values()){
       if(!valid(s.owner)||s.world!==G.World||s.epoch!==G.CombatPulse.epoch)continue;
       if(ground){
@@ -316,17 +361,23 @@
         for(const f of s.meteors){if(!drawable(s,f)||f.landed)continue;ctx.save();ctx.globalAlpha=f.fragment?.24:.42;ctx.strokeStyle=f.second?'#c9b3e9':'#cba980';ctx.lineWidth=f.fragment?1:3;ctx.beginPath();ctx.arc(f.x,f.y,f.radius,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#1b1426';ctx.globalAlpha=.15;ctx.beginPath();ctx.ellipse(f.x,f.y,f.radius*.65,f.radius*.3,0,0,Math.PI*2);ctx.fill();ctx.restore();}continue;
       }
 
-      for(const f of s.fires)if(drawable(s,f))drawFront(ctx,f);for(const f of s.pressures)if(drawable(s,f))drawFront(ctx,f,true);
-      for(const f of s.flames){if(!drawable(s,f))continue;if(G.MadaraArt?.drawElement?.(ctx,{kind:'fire',phase:'tail',alpha:.55*(1-f.age/f.duration),x:f.x,y:f.y-32,width:f.width,depth:50,aim:f.aim,age:f.age,progress:f.age/f.duration}))continue;ctx.save();ctx.translate(f.x,f.y-32);ctx.rotate(f.aim);ctx.globalAlpha=.55*(1-f.age/f.duration);for(let i=0;i<12;i++){const y=(i/11-.5)*f.width,h=12+7*Math.sin(f.age*18+i*2);ctx.fillStyle=i%2?'#ec6a1e':'#ffc34b';ctx.beginPath();ctx.moveTo(-9,y-7);ctx.lineTo(h,y);ctx.lineTo(-9,y+7);ctx.closePath();ctx.fill();}ctx.restore();}
+      for(const f of s.fires)if(drawable(s,f))drawFront(ctx,f,false,crowd);for(const f of s.pressures)if(drawable(s,f))drawFront(ctx,f,true);
+      for(const f of s.flames){if(!drawable(s,f))continue;const opacity=(f.actor?armyOpacity(s,f.x,f.y):1)*((f.actor||f.owner!==G.Game.player)?crowd:1);if(G.MadaraArt?.drawElement?.(ctx,{kind:'fire',phase:'tail',alpha:.55*(1-f.age/f.duration)*opacity,x:f.x,y:f.y-32,width:f.width,depth:50,aim:f.aim,age:f.age,progress:f.age/f.duration}))continue;ctx.save();ctx.translate(f.x,f.y-32);ctx.rotate(f.aim);ctx.globalAlpha=.55*(1-f.age/f.duration)*opacity;for(let i=0;i<12;i++){const y=(i/11-.5)*f.width,h=12+7*Math.sin(f.age*18+i*2);ctx.fillStyle=i%2?'#ec6a1e':'#ffc34b';ctx.beginPath();ctx.moveTo(-9,y-7);ctx.lineTo(h,y);ctx.lineTo(-9,y+7);ctx.closePath();ctx.fill();}ctx.restore();}
       for(const f of s.meteors){if(!drawable(s,f)||f.landed)continue;const left=f.delay-f.age;if(left>.65)continue;const h=f.height??Math.max(0,left)*650,r=f.radius*(f.fragment?.32:.58),px=f.fragment?f.sourceX+(f.x-f.sourceX)*f.flightProgress:f.x-h*.15,py=f.fragment?f.sourceY+(f.y-f.sourceY)*f.flightProgress:f.y;if(G.MadaraArt?.drawElement?.(ctx,{kind:'meteor',phase:f.fragment?'flight':'fall',x:px,y:py-h-r,radius:r,collisionRadius:f.radius,age:f.age,progress:f.fragment?f.flightProgress:1-left/.65,height:h,second:f.second,fragment:f.fragment}))continue;ctx.save();ctx.translate(px,py-h-r);ctx.globalAlpha=.94;ctx.fillStyle=f.fragment?'#74626a':f.second?'#756581':'#8e7666';ctx.strokeStyle='#c4a68e';ctx.lineWidth=f.fragment?2:5;ctx.beginPath();for(let i=0;i<12;i++){const a=i*Math.PI/6,rr=r*(.92+.08*Math.sin(i*5+f.index));i?ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr):ctx.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);}ctx.closePath();ctx.fill();ctx.stroke();ctx.strokeStyle='#3b3440';ctx.lineWidth=3;for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-r*.7+i*r*.4,-r*.55);ctx.lineTo(-r*.35+i*r*.3,r*.5);ctx.stroke();}ctx.restore();}
       for(const e of s.effects){const t=e.age/e.life;ctx.save();ctx.globalAlpha=e.first?1:1-t;if(['meteor-impact','rubble'].includes(e.kind)){ctx.fillStyle='#8f7468';for(let i=0;i<10;i++){const a=i*Math.PI/5,d=e.radius*t;ctx.fillRect(e.x+Math.cos(a)*d,e.y+Math.sin(a)*d-Math.sin(t*Math.PI)*65,5,5);}ctx.restore();continue;}if(e.kind==='wood-dismiss'){G.MadaraArt?.drawElement?.(ctx,{kind:'wood',phase:'dismiss',x:e.x,y:e.y,height:64,age:e.age,progress:t});}else if(e.kind==='contact'){ctx.strokeStyle='#f5d7af';ctx.lineWidth=2;ctx.beginPath();ctx.arc(e.x,e.y,e.radius*(.4+t),0,Math.PI*2);ctx.stroke();}else{ctx.strokeStyle=e.second?'#b8a0e0':'#c49c77';ctx.lineWidth=e.kind==='meteor-impact'?7:4;ctx.beginPath();ctx.arc(e.x,e.y,e.radius*(.6+.4*t),0,Math.PI*2);ctx.stroke();ctx.fillStyle='#8f7468';for(let i=0;i<12;i++){const a=i*Math.PI/6,d=e.radius*t;ctx.fillRect(e.x+Math.cos(a)*d,e.y+Math.sin(a)*d-Math.sin(t*Math.PI)*65,5,5);}}ctx.restore();}
     }
   }
+  function drawLocalSilhouette(ctx){
+    const owner=G.Game.player,s=states.get(owner);if(!valid(owner)||!s||s.world!==G.World||s.epoch!==G.CombatPulse.epoch||s.army.length<4||!['playing','paused','levelup'].includes(G.Game.state))return;
+    if(!s.army.some(a=>Math.hypot(a.x-owner.x,a.y-owner.y)<220))return;
+    const p=bodyPose(s.body),height=64*(owner.anim?.scale||1),time=p?.age??((owner.anim?.frame||0)*6+(owner.anim?.t||0))/60;
+    ctx.save();ctx.shadowColor='#141320';ctx.shadowBlur=2;G.MadaraArt?.draw(ctx,owner,{x:owner.x,y:owner.y,height,state:p?'cast':owner.walking?'walk':'idle',time,dir:owner.anim?.dir??2,pose:p,flash:owner.flash>0});ctx.restore();
+  }
   const oldTick=C.tick,oldUpdate=C.updateFields,oldClear=C.clearFields,oldAir=C.drawAirFields,oldGround=C.drawGroundFields;
-  C.tick=tick;C.updateFields=function(dt){const r=oldUpdate.call(this,dt);update(dt);return r;};C.clearFields=function(owner){const r=oldClear.call(this,owner);clear(owner);return r;};C.drawAirFields=function(ctx){oldAir.call(this,ctx);draw(ctx);};C.drawGroundFields=function(ctx){oldGround.call(this,ctx);draw(ctx,true);};
+  C.tick=tick;C.updateFields=function(dt){const r=oldUpdate.call(this,dt);update(dt);return r;};C.clearFields=function(owner){const r=oldClear.call(this,owner);clear(owner);return r;};C.drawAirFields=function(ctx){oldAir.call(this,ctx);draw(ctx);drawLocalSilhouette(ctx);};C.drawGroundFields=function(ctx){oldGround.call(this,ctx);draw(ctx,true);};
   function statusFor(owner,m){const s=states.get(owner),kind=m.madaraKind,active=kind==='susanoo'?s?.guardian:kind==='clones'?s?.army.length:kind==='fire'?s?.fires.some(f=>!f.actor):kind==='meteor'?s?.meteors.length:s?.body?.m.id===m.id;return {state:active?'active':m.t>EPS?'cooldown':kind!=='susanoo'&&s?.body?'queued':'ready',remaining:kind==='susanoo'&&s?.guardian?s.guardian.duration-s.guardian.age:m.t||0,impetus:s?.impetus||0,perfect:!!s?.guardian?.perfect,reason:kind==='susanoo'?'guardian':null};}
   const nativeSkillState=G.RunInsights?.skillState;
   if(nativeSkillState)G.RunInsights.skillState=function(owner,m){if(!ids.has(m?.id))return nativeSkillState(owner,m);const s=states.get(owner),p=profile(owner,m),status=statusFor(owner,m),body=s?.body?.m.id===m.id?s.body:null,en=G.I18n.lang==='en';let label;if(p.kind==='susanoo')label=s?.guardian?(s.guardian.perfect?(en?'Perfect ':'完成體 '):(en?'Guardian ':'須佐 '))+status.remaining.toFixed(1)+'s':`${en?'Momentum':'勢能'} ${s?.impetus||0}/3`;else if(body)label=body.spec.kind==='basic'?`${en?'Contact':'接觸'} ${body.index}/${body.spec.contacts}`:en?'Casting':'施術中';else if(p.kind==='clones'&&s?.army.length)label=`${en?'Army':'軍團'} ${s.army.length}`;else if(p.kind==='fire'&&s?.fires.some(f=>!f.actor))label=`${en?'Fire fronts':'火牆'} ${s.fires.filter(f=>!f.actor).length}`;else if(p.kind==='meteor'&&s?.meteors.length)label=`${en?'Falling rocks':'落石'} ${s.meteors.filter(f=>!f.landed).length}`;else label=status.state==='queued'?(en?'Queued':'待本體'):m.t>EPS?m.t.toFixed(1)+'s':en?'Ready':'就緒';return {label,fraction:s?.guardian&&p.kind==='susanoo'?status.remaining/6:Math.min(1,(m.t||0)/Math.max(.05,m.cd*(owner.cdMul??1)))};};
-  G.NarutoMadara={version:2,dex:DEX,kit,supports,profile,vector,targetFor,canCast,cast,update,clear,pose,guardianPose,statusFor,draw,drawables,
+  G.NarutoMadara={version:3,dex:DEX,kit,supports,profile,vector,targetFor,canCast,cast,update,clear,pose,guardianPose,statusFor,draw,drawables,
     stateFor:(a=G.Game.player)=>states.get(a)||null,stats:(a=G.Game.player)=>{const s=states.get(a);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,propHits:s.propHits,propDamage:s.propDamage,impetus:s.impetus,perfectCount:s.perfectCount,army:s.army.length,fronts:s.fires.length,meteors:s.meteors.length,hitContacts:s.hitContacts.map(c=>({...c,geometry:{...c.geometry}})),contacts:s.contacts.map(c=>({...c,geometry:{...c.geometry}}))}:null;}};
 })();

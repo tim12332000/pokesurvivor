@@ -112,25 +112,36 @@
     const {form='rib',phase='manifest',age=0,aim=0}=options;
     return api.loaded&&paint(ctx,avatarSample(form,phase,age,aim,options),options);
   }
+  function drawFire(ctx,options){
+    const width=Math.max(1,options.width??150),depth=Math.max(12,options.depth??72),tail=options.phase==='tail';
+    const low=options.quality==='low'||options.lowQuality||G.Settings?.fx===0||innerWidth<=700||!!G.Touch?.active;
+    const frame=frameAt('elements',1),[sx,sy,sw,sh]=frame.rect,aim=options.aim||0,c=Math.cos(aim),s=Math.sin(aim);
+    const tick=Math.floor(Math.max(0,options.age||0)*12),n=Math.max(1,Math.min(low?4:6,Math.ceil(width/85))),aspect=sw/sh;
+    ctx.save();ctx.translate(options.x||0,options.y||0);ctx.globalAlpha*=options.alpha??1;ctx.imageSmoothingEnabled=false;
+    // Fit whole natural-aspect curls inside the cross-front width; never slice them.
+    for(let i=0;i<n;i++){
+      const wave=Math.sin(i*2.17+tick*.58),edge=n>2&&(i===0||i===n-1)?.86:1;
+      const h=Math.min(((tail?62:116)+(tail?9:15)*wave)*edge,width/(Math.abs(s)*aspect+Math.abs(c)||1)),w=h*aspect;
+      const footprint=Math.abs(s)*w+Math.abs(c)*h,spread=Math.max(0,width-footprint),u=n===1?0:spread*(i/(n-1)-.5),v=depth*(.04+.13*Math.sin(i*1.71+tick*.41));
+      const px=Math.round(c*v-s*u),py=Math.round(s*v+c*u);
+      ctx.save();ctx.translate(px,py);if(i%2)ctx.scale(-1,1);
+      // Natural-aspect authored curls overlap into one rolling, bright-fronted mass.
+      ctx.drawImage(images.elements,sx,sy,sw,sh,-w/2,-h,w,h);ctx.restore();
+    }
+    ctx.restore();return true;
+  }
   function drawElement(ctx,options={}) {
     const {kind,phase,x=0,y=0,alpha=1}=options;
     const sheet=kind==='wood'?'wood':'elements';if(!api.loaded||!metadata?.sheets?.[sheet])return false;
     const index=kind==='wood'?({root:0,separate:1,reveal:2,dismiss:3}[phase]??0):kind==='fire'?(phase==='tail'?2:phase==='wall'?1:0):kind==='meteor'?3:kind==='fracture'?4:5;
     const frame=frameAt(sheet,index),[sx,sy,sw,sh]=frame.rect;
     if(kind==='wood')return paint(ctx,frame,{x,y,height:options.height??64,alpha});
+    if(kind==='fire'&&(phase==='wall'||phase==='tail'))return drawFire(ctx,options);
     ctx.save();ctx.translate(x,y);ctx.globalAlpha*=alpha;ctx.imageSmoothingEnabled=false;
     if(kind==='fire'){
       const width=options.width??150,depth=options.depth??72;
-      if(phase==='wall'){
-        // This source's broad axis is horizontal and its flame tips point up.
-        ctx.rotate((options.aim||0)+Math.PI/2);
-        ctx.drawImage(images.elements,sx,sy,sw,sh,-width*.5,-depth*.5,width,depth);
-      }else{
-        // Burst/tail tiles point right; distribute several undistorted tongues
-        // across the same wall width instead of squeezing one long image.
-        ctx.rotate(options.aim||0);const count=Math.max(1,Math.min(7,Math.ceil(width/70))),span=width/count;
-        for(let i=0;i<count;i++)ctx.drawImage(images.elements,sx,sy,sw,sh,-depth*.5,-width*.5+i*span,depth,span);
-      }
+      ctx.rotate(options.aim||0);const count=Math.max(1,Math.min(7,Math.ceil(width/70))),span=width/count;
+      for(let i=0;i<count;i++)ctx.drawImage(images.elements,sx,sy,sw,sh,-depth*.5,-width*.5+i*span,depth,span);
     }else{
       const radius=options.radius??80;
       ctx.drawImage(images.elements,sx,sy,sw,sh,-radius,-radius,radius*2,radius*2);
