@@ -21,7 +21,7 @@
     ['jjk-yuta','Yuta Okkotsu','乙骨憂太','咒術迴戰・里香協戰',['fighting','psychic'],5,150,120],
     ['jjk-ryu','Ryu Ishigori','石流龍','咒術迴戰・咒力砲擊',['psychic'],5,165,108],
     ['jjk-uro','Takako Uro','烏鷺亨子','咒術迴戰・天空操術',['psychic','flying'],5,125,132],
-    ['madara','Madara Uchiha','宇智波斑','穢土轉生・戰場壓制',['fire','psychic'],5,180,118]
+    ['madara','Madara Uchiha','宇智波斑','穢土轉生・須佐軍團',['fire','psychic'],5,180,118]
   ];
   const records = new Map(), dictionary = {};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
@@ -285,7 +285,7 @@
     30010:['六道協同','天道引斥控場，五道分工護衛，以通靈、飛彈與地爆天星壓制敵群。'],
     30013:['雙人連打・里香共鳴','里香常駐追擊，顯現巨大化接雙人連打；十二級可學協戰共鳴終擊。'],
     30014:['升空索敵・蓄能爆發','普通砲命中蓄能，接續全力砲；散射砲升空迴旋後遠距追敵，圓環砲繞身迎擊，固定爆破對付敵群。'],
-    30016:['穢土斑・戰場壓制','體術與火牆接力，須佐獨立斬擊；蓄勢展開完全體，雙隕石與分工木分身掃蕩敵潮。'],
+    30016:['穢土斑・須佐軍團','開局兩名常駐木分身，升階擴軍、全軍披上須佐；本體蓄勢展開完全體，雙隕石壓境。'],
     30015:['巨幅裂面・反擊連鎖','連續碎面與巨型裂區壓制敵潮，真反射接獨立反擊；十二級可學裂面殘響。']
   };
   const learning=document.createElement('div');learning.className='launch-kit';learning.hidden=true;
