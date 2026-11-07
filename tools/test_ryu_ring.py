@@ -26,7 +26,7 @@ CHECK = r"""() => {
  const finish=(profile)=>A.advance(profile.charge+profile.duration+.25);
  const rings=(owner=p)=>R.stateFor(owner)?.rings||[];
  assert(R.supports(id)&&typeof R.ringFor==='function','ring runtime/profile missing');
- for(const [rank,q,count,radius,width] of [[1,0,4,112,18],[1,1,5,112,18],[5,0,8,180,30],[5,20,16,180,30]]){
+ for(const [rank,q,count,radius,width] of [[1,0,4,224,18],[1,1,5,224,18],[5,0,8,360,30],[5,20,16,360,30]]){
   const m=setup(rank,q),profile=R.ringFor(p,m),victims=[[radius,0],[0,radius*profile.yScale],[-radius,0],[0,-radius*profile.yScale]].map(v=>spawn(...v));
   assert(profile.yScale===.55,'ring must use the ground-plane perspective');
   const outside=spawn(radius+width+60,80),events=victims.map(A.watch);
@@ -44,7 +44,7 @@ CHECK = r"""() => {
  // Expansion and retraction use one live geometry for damage and both renderers.
  for(const [rank,q] of [[1,0],[5,20]]){
   const m=setup(rank,q),h=R.ringFor(p,m);spawn(h.radius,0);cast(m);
-  assert(h.duration>=3&&h.duration>h.count*.22,'ring duration was not extended');
+  assert(h.duration>=6&&h.duration>h.count*.22,'ring duration was not extended');
   let previous=0;const samples=[];
   for(const phase of [.02,.15,.4,.55,.7,.85,.97]){
    A.advance(h.charge*(previous===0)+h.duration*(phase-previous));previous=phase;
@@ -82,12 +82,12 @@ CHECK = r"""() => {
  out.curveTiming={nearHits:a.length,farHits:b.length,points:ring.points.length,segments:ring.segments.length};
  // Owner motion is sampled live; later circuits follow current position.
  m=setup();profile=R.ringFor(p,m);spawn(profile.radius,0);cast(m);A.advance(profile.charge+profile.duration*.5);
- const old=spawn(-profile.radius,0),moved=spawn(400-profile.radius,0);p.x=400;p.aim=0;G.EnemyMgr.rebuildGrid();A.advance(profile.interval+.04);
+ const old=spawn(-profile.radius,0),moved=spawn(1000-profile.radius,0);p.x=1000;p.aim=0;G.EnemyMgr.rebuildGrid();A.advance(profile.interval+.04);
  assert(moved.hp<moved.maxHp&&old.hp===old.maxHp,'moving ring used stale origin or swept a teleport chord');
  out.movingOwner={newDamage:moved.maxHp-moved.hp,oldDamage:old.maxHp-old.hp};
  // Moving enemies are tested at the collision clock, not cast-time positions.
- m=setup();profile=R.ringFor(p,m);spawn(profile.radius,0);const enters=spawn(400,100),leaves=spawn(-profile.radius,0);cast(m);
- enters.x=0;enters.y=profile.radius*profile.yScale;leaves.x=-400;G.EnemyMgr.rebuildGrid();finish(profile);
+ m=setup();profile=R.ringFor(p,m);spawn(profile.radius,0);const enters=spawn(1000,100),leaves=spawn(-profile.radius,0);cast(m);
+ enters.x=0;enters.y=profile.radius*profile.yScale;leaves.x=-1000;G.EnemyMgr.rebuildGrid();finish(profile);
  assert(enters.hp<enters.maxHp&&leaves.hp===leaves.maxHp,'ring ignored live enemy positions');out.movingEnemy=true;
  // Projection stays aligned to the ground regardless of the original aim.
  for(const aim of [0,Math.PI/2,Math.PI,Math.PI*1.5]){
@@ -135,12 +135,12 @@ CHECK = r"""() => {
  }
  // Draw from the production VFX path at two qualities and prove no simulation mutation.
  m=setup();profile=R.ringFor(p,m);spawn(profile.radius,0);cast(m);A.advance(profile.charge+profile.interval+.02);
- const c=document.createElement('canvas');c.width=c.height=700;const ctx=c.getContext('2d');
+ const c=document.createElement('canvas');c.width=c.height=1200;const ctx=c.getContext('2d');
  const snapshot=()=>JSON.stringify({clock:R.stateFor(p).clock,damage:R.stats(p).damage,rings:rings().map(r=>({age:r.age,cycle:r.cycle,lapIndex:r.lapIndex,points:r.points,segments:r.segments}))});
  const stable=snapshot();out.draw={};
  for(const quality of ['high','low']){
-  G.JujutsuVFX.setQuality(quality);ctx.clearRect(0,0,700,700);ctx.save();ctx.translate(350,350);G.Combat.drawAirFields(ctx);ctx.restore();
-  const rgba=ctx.getImageData(0,0,700,700).data;let visible=0;for(let i=3;i<rgba.length;i+=4)visible+=Number(rgba[i]>30);
+  G.JujutsuVFX.setQuality(quality);ctx.clearRect(0,0,700,700);ctx.save();ctx.translate(600,600);G.Combat.drawAirFields(ctx);ctx.restore();
+  const rgba=ctx.getImageData(0,0,1200,1200).data;let visible=0;for(let i=3;i<rgba.length;i+=4)visible+=Number(rgba[i]>30);
   assert(visible>100,'production '+quality+' ring is invisible');assert(snapshot()===stable,'drawing mutated ring simulation');
   out.draw[quality]={visible,draws:G.JujutsuVFX.inspect().draws.filter(d=>/ring/i.test(d.kind||''))};
   // A wall can leave only a few segments after the first lap. Both quality
@@ -165,7 +165,7 @@ CHECK = r"""() => {
  for(let i=0;i<3;i++){const q=G.LevelUp.offer(p,1000).find(c=>c.key==='stat:quantity');assert(q,'useful quantity missing');previews.push(q.desc);q.apply(p);counts.push(R.ringFor(p,m).count)}
  assert(counts.join(',')==='4,5,6,7','actual quantity picks differ '+counts);
  for(let i=0;i<4;i++){const up=G.LevelUp.offer(p,1000).find(c=>c.key==='up:'+id);assert(up&&up.apply(p)!==false,'normal upgrade missing')}
- profile=R.ringFor(p,m);assert(m.lvl===5&&profile.radius===180&&profile.width===30,'upgrades did not change real ring geometry');
+ profile=R.ringFor(p,m);assert(m.lvl===5&&profile.radius===360&&profile.width===30,'upgrades did not change real ring geometry');
  const lastQuantity=G.LevelUp.offer(p,1000).find(c=>c.key==='stat:quantity');assert(lastQuantity,'last useful ring quantity card missing');lastQuantity.apply(p);
  assert(R.ringFor(p,m).count===16&&!G.LevelUp.offer(p,1000).some(c=>c.key==='stat:quantity'),'ring cap offered useless quantity card');
  const nativeMon=p.mon;

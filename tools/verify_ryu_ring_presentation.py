@@ -87,7 +87,7 @@ def native_clip(page,frame,context,label,mobile):
       const recorder=new MediaRecorder(stream,{mimeType:'video/webm',videoBitsPerSecond:2200000});
       recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};
       const done=new Promise(resolve=>recorder.onstop=()=>{const reader=new FileReader;reader.onload=()=>resolve(reader.result);reader.readAsDataURL(new Blob(chunks,{type:'video/webm'}))});
-      window.RingClip={stream,recorder,done};recorder.start();A.resume();G.JjkRyu.cast(A.p(),A.p().moves[0]);
+      window.RingClip={stream,recorder,done};recorder.start();A.resume();const move=A.p().moves[0];G.JjkRyu.cast(A.p(),move);move.t=999;
     }""")
     page.wait_for_timeout(650)
     before=frame.evaluate(STATE)

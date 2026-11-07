@@ -80,8 +80,8 @@
   function ringFor(owner,m){
     const p=G.Jujutsu?.power?.ryu||{},L=level(m)-1;
     const count=Math.min(p.ringCap??16,G.Quantity.count(owner,(p.ringBases||[4,5,6,7,8])[L]));
-    const duration=Math.max(p.ringMinDuration??3,count*(p.ringInterval??.32)),interval=duration/count;
-    return {count,radius:(p.ringRadii||[112,128,144,160,180])[L],width:(p.ringWidths||[18,21,24,27,30])[L],
+    const duration=Math.max(p.ringMinDuration??6,count*(p.ringInterval??.64)),interval=duration/count;
+    return {count,radius:(p.ringRadii||[224,256,288,320,360])[L],width:(p.ringWidths||[18,21,24,27,30])[L],
       yScale:.55,interval,charge:p.ringCharge??.32,cd:p.ringCd??6.5,duration};
   }
   function scatterFor(owner,m){
@@ -322,9 +322,8 @@
   }
   function ringPath(s,r){
     const f=r.action,c=Math.cos(f.aim),sn=Math.sin(f.aim),t=clamp(r.age/r.duration);
-    const smooth=v=>v*v*(3-2*v);
     // The same live envelope drives both collision and production rendering.
-    const scale=t<.4?.18+.82*smooth(t/.4):t<=.7?1:1-smooth((t-.7)/.3);
+    const scale=t<.4?.09+.91*(t/.4)**2:t<=.7?1:1-((t-.7)/.3)**2;
     const radius=r.radius*scale;
     r.currentRadius=radius;r.currentWidth=r.width*scale;
     const local=[{x:8,y:0,lift:HEAD_HEIGHT,lead:true}],leadSteps=16,arcSteps=96;
