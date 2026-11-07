@@ -1,2867 +1,2867 @@
 {
-  "source": "madara-actions-v1-runtime.png",
+  "source": "madara-actions-chibi-v1-runtime.png",
   "bodyHeight": 128,
-  "directions": "left/right body plus authored front/back combat and casting supplements",
-  "sha256": "6b1489fcd5b642da2c772cc51a8d04f7e2366ab14c11afb23ccc7a4a7988a4fd",
+  "directions": "left/right chibi body; authored front/back combat, casting and walking",
+  "sha256": "af1634b4bc2a0f1c7401aad922b53de39ddf75408f05db3ee1d21b83cfb811e1",
   "frames": [
     {
       "name": "idle",
       "sourceRect": [
-        59,
-        5,
-        146,
-        283
+        65,
+        51,
+        161,
+        261
       ],
       "anchor": [
-        41.452,
-        128.0
+        46.835,
+        127.019
       ],
       "sockets": {
         "mouth": [
-          47.829,
-          29.609
+          63.755,
+          56.398
         ],
         "palm": [
-          58.306,
-          57.851
+          28.444,
+          93.67
         ],
         "elbow": [
-          45.096,
-          55.573
+          25.502,
+          83.372
         ],
         "foot": [
-          54.662,
-          123.9
+          63.264,
+          123.096
         ]
       },
       "sourceSocketMeasurements": {
         "mouth": {
           "nominal": [
-            105.12,
-            65.09
+            130.41,
+            114.84
           ],
           "pixel": [
-            105,
-            65
+            130,
+            115
           ],
-          "correction": 0.15
+          "correction": 0.44
         },
         "palm": {
           "nominal": [
-            128.48,
-            127.35
+            57.96,
+            190.53
           ],
           "pixel": [
-            128,
-            127
+            58,
+            191
           ],
-          "correction": 0.59
+          "correction": 0.47
         },
         "elbow": {
           "nominal": [
-            99.28,
-            121.69
+            51.52,
+            169.65
           ],
           "pixel": [
-            99,
-            122
+            52,
+            170
           ],
-          "correction": 0.42
+          "correction": 0.59
         },
         "foot": {
           "nominal": [
-            119.72,
-            271.68
+            128.8,
+            250.56
           ],
           "pixel": [
-            120,
-            272
+            129,
+            251
           ],
-          "correction": 0.43
+          "correction": 0.48
         }
       },
       "rect": [
         2,
         2,
-        67,
-        129
+        79,
+        128
       ]
     },
     {
       "name": "step-left",
       "sourceRect": [
-        377,
-        8,
-        161,
-        281
+        379,
+        51,
+        162,
+        261
       ],
       "anchor": [
-        36.669,
-        127.089
+        42.667,
+        126.529
       ],
       "sockets": {
         "mouth": [
-          52.84,
-          29.609
+          63.755,
+          56.398
         ],
         "palm": [
-          60.584,
-          64.228
+          70.13,
+          83.372
         ],
         "elbow": [
-          49.651,
-          55.117
+          52.475,
+          81.9
         ],
         "foot": [
-          60.128,
-          122.989
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            115.92,
-            64.63
-          ],
-          "pixel": [
-            116,
-            65
-          ],
-          "correction": 0.38
-        },
-        "palm": {
-          "nominal": [
-            141.68,
-            126.45
-          ],
-          "pixel": [
-            133,
-            141
-          ],
-          "correction": 16.94
-        },
-        "elbow": {
-          "nominal": [
-            109.48,
-            120.83
-          ],
-          "pixel": [
-            109,
-            121
-          ],
-          "correction": 0.51
-        },
-        "foot": {
-          "nominal": [
-            132.02,
-            269.76
-          ],
-          "pixel": [
-            132,
-            270
-          ],
-          "correction": 0.24
-        }
-      },
-      "rect": [
-        154,
-        2,
-        73,
-        128
-      ]
-    },
-    {
-      "name": "step-right",
-      "sourceRect": [
-        703,
-        8,
-        156,
-        280
-      ],
-      "anchor": [
-        40.769,
-        126.178
-      ],
-      "sockets": {
-        "mouth": [
-          51.018,
-          29.153
-        ],
-        "palm": [
-          62.406,
-          65.139
-        ],
-        "elbow": [
-          48.285,
-          54.662
-        ],
-        "foot": [
-          58.306,
-          122.534
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            112.32,
-            64.4
-          ],
-          "pixel": [
-            112,
-            64
-          ],
-          "correction": 0.51
-        },
-        "palm": {
-          "nominal": [
-            137.28,
-            126.0
-          ],
-          "pixel": [
-            137,
-            143
-          ],
-          "correction": 17.0
-        },
-        "elbow": {
-          "nominal": [
-            106.08,
-            120.4
-          ],
-          "pixel": [
-            106,
-            120
-          ],
-          "correction": 0.41
-        },
-        "foot": {
-          "nominal": [
-            127.92,
-            268.8
-          ],
-          "pixel": [
-            128,
-            269
-          ],
-          "correction": 0.22
-        }
-      },
-      "rect": [
-        306,
-        2,
-        71,
-        128
-      ]
-    },
-    {
-      "name": "ready",
-      "sourceRect": [
-        1010,
-        30,
-        196,
-        258
-      ],
-      "anchor": [
-        39.174,
-        116.612
-      ],
-      "sockets": {
-        "mouth": [
-          64.228,
-          26.875
-        ],
-        "palm": [
-          78.804,
-          62.861
-        ],
-        "elbow": [
-          60.584,
-          50.562
-        ],
-        "foot": [
-          73.338,
-          112.968
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            141.12,
-            59.34
-          ],
-          "pixel": [
-            141,
-            59
-          ],
-          "correction": 0.36
-        },
-        "palm": {
-          "nominal": [
-            172.48,
-            116.1
-          ],
-          "pixel": [
-            173,
-            138
-          ],
-          "correction": 21.91
-        },
-        "elbow": {
-          "nominal": [
-            133.28,
-            110.94
-          ],
-          "pixel": [
-            133,
-            111
-          ],
-          "correction": 0.29
-        },
-        "foot": {
-          "nominal": [
-            160.72,
-            247.68
-          ],
-          "pixel": [
-            161,
-            248
-          ],
-          "correction": 0.43
-        }
-      },
-      "rect": [
-        458,
-        2,
-        89,
-        118
-      ]
-    },
-    {
-      "name": "seal-start",
-      "sourceRect": [
-        63,
-        321,
-        146,
-        282
-      ],
-      "anchor": [
-        39.63,
-        127.544
-      ],
-      "sockets": {
-        "mouth": [
-          47.829,
-          29.609
-        ],
-        "palm": [
-          58.306,
-          57.851
-        ],
-        "elbow": [
-          45.096,
-          55.117
-        ],
-        "foot": [
-          54.662,
-          123.445
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            105.12,
-            64.86
-          ],
-          "pixel": [
-            105,
-            65
-          ],
-          "correction": 0.18
-        },
-        "palm": {
-          "nominal": [
-            128.48,
-            126.9
-          ],
-          "pixel": [
-            128,
-            127
-          ],
-          "correction": 0.49
-        },
-        "elbow": {
-          "nominal": [
-            99.28,
-            121.26
-          ],
-          "pixel": [
-            99,
-            121
-          ],
-          "correction": 0.38
-        },
-        "foot": {
-          "nominal": [
-            119.72,
-            270.72
-          ],
-          "pixel": [
-            120,
-            271
-          ],
-          "correction": 0.4
-        }
-      },
-      "rect": [
-        2,
-        138,
-        67,
-        128
-      ]
-    },
-    {
-      "name": "seal-hold",
-      "sourceRect": [
-        373,
-        339,
-        161,
-        264
-      ],
-      "anchor": [
-        36.897,
-        119.345
-      ],
-      "sockets": {
-        "mouth": [
-          52.84,
-          27.786
-        ],
-        "palm": [
-          64.683,
-          54.206
-        ],
-        "elbow": [
-          49.651,
-          51.929
-        ],
-        "foot": [
-          60.128,
-          115.246
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            115.92,
-            60.72
-          ],
-          "pixel": [
-            116,
-            61
-          ],
-          "correction": 0.29
-        },
-        "palm": {
-          "nominal": [
-            141.68,
-            118.8
-          ],
-          "pixel": [
-            142,
-            119
-          ],
-          "correction": 0.38
-        },
-        "elbow": {
-          "nominal": [
-            109.48,
-            113.52
-          ],
-          "pixel": [
-            109,
-            114
-          ],
-          "correction": 0.68
-        },
-        "foot": {
-          "nominal": [
-            132.02,
-            253.44
-          ],
-          "pixel": [
-            132,
-            253
-          ],
-          "correction": 0.44
-        }
-      },
-      "rect": [
-        154,
-        138,
-        73,
-        120
-      ]
-    },
-    {
-      "name": "fire-breath",
-      "sourceRect": [
-        664,
-        348,
-        236,
-        255
-      ],
-      "anchor": [
-        53.751,
-        115.246
-      ],
-      "sockets": {
-        "mouth": [
-          83.815,
-          33.708
-        ],
-        "palm": [
-          94.747,
-          52.384
-        ],
-        "elbow": [
-          72.883,
-          50.107
-        ],
-        "foot": [
-          88.37,
-          111.601
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            184.0,
-            74.0
-          ],
-          "pixel": [
-            184,
-            74
-          ],
-          "correction": 0.0
-        },
-        "palm": {
-          "nominal": [
-            207.68,
-            114.75
-          ],
-          "pixel": [
-            208,
-            115
-          ],
-          "correction": 0.41
-        },
-        "elbow": {
-          "nominal": [
-            160.48,
-            109.65
-          ],
-          "pixel": [
-            160,
-            110
-          ],
-          "correction": 0.59
-        },
-        "foot": {
-          "nominal": [
-            193.52,
-            244.8
-          ],
-          "pixel": [
-            194,
-            245
-          ],
-          "correction": 0.52
-        }
-      },
-      "rect": [
-        306,
-        138,
-        108,
-        116
-      ]
-    },
-    {
-      "name": "recover",
-      "sourceRect": [
-        1022,
-        321,
-        151,
-        282
-      ],
-      "anchor": [
-        39.402,
-        127.544
-      ],
-      "sockets": {
-        "mouth": [
-          49.651,
-          29.609
-        ],
-        "palm": [
-          60.584,
-          57.851
-        ],
-        "elbow": [
-          46.918,
-          55.117
-        ],
-        "foot": [
-          56.484,
-          123.445
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            108.72,
-            64.86
-          ],
-          "pixel": [
-            109,
-            65
-          ],
-          "correction": 0.31
-        },
-        "palm": {
-          "nominal": [
-            132.88,
-            126.9
-          ],
-          "pixel": [
-            133,
-            127
-          ],
-          "correction": 0.16
-        },
-        "elbow": {
-          "nominal": [
-            102.68,
-            121.26
-          ],
-          "pixel": [
-            103,
-            121
-          ],
-          "correction": 0.41
-        },
-        "foot": {
-          "nominal": [
-            123.82,
-            270.72
-          ],
-          "pixel": [
-            124,
-            271
-          ],
-          "correction": 0.33
-        }
-      },
-      "rect": [
-        458,
-        138,
-        69,
-        128
-      ]
-    },
-    {
-      "name": "arm-back",
-      "sourceRect": [
-        43,
-        643,
-        203,
-        277
-      ],
-      "anchor": [
-        45.779,
-        124.811
-      ],
-      "sockets": {
-        "mouth": [
-          66.505,
-          29.153
-        ],
-        "palm": [
-          83.359,
-          63.772
-        ],
-        "elbow": [
-          62.861,
-          54.206
-        ],
-        "foot": [
-          75.616,
-          121.167
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            146.16,
-            63.71
-          ],
-          "pixel": [
-            146,
-            64
-          ],
-          "correction": 0.33
-        },
-        "palm": {
-          "nominal": [
-            178.64,
-            124.65
-          ],
-          "pixel": [
-            183,
-            140
-          ],
-          "correction": 15.96
-        },
-        "elbow": {
-          "nominal": [
-            138.04,
-            119.11
-          ],
-          "pixel": [
-            138,
-            119
-          ],
-          "correction": 0.12
-        },
-        "foot": {
-          "nominal": [
-            166.46,
-            265.92
-          ],
-          "pixel": [
-            166,
-            266
-          ],
-          "correction": 0.47
-        }
-      },
-      "rect": [
-        2,
-        274,
-        92,
-        126
-      ]
-    },
-    {
-      "name": "command",
-      "sourceRect": [
-        364,
-        640,
-        211,
-        280
-      ],
-      "anchor": [
-        40.769,
-        126.633
-      ],
-      "sockets": {
-        "mouth": [
-          69.238,
-          36.897
-        ],
-        "palm": [
-          84.726,
-          46.463
-        ],
-        "elbow": [
-          65.139,
-          51.018
-        ],
-        "foot": [
-          76.982,
-          122.989
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            151.92,
-            64.4
-          ],
-          "pixel": [
-            152,
-            81
-          ],
-          "correction": 16.6
-        },
-        "palm": {
-          "nominal": [
-            185.68,
-            126.0
-          ],
-          "pixel": [
-            186,
-            102
-          ],
-          "correction": 24.0
-        },
-        "elbow": {
-          "nominal": [
-            143.48,
-            120.4
-          ],
-          "pixel": [
-            143,
-            112
-          ],
-          "correction": 8.41
-        },
-        "foot": {
-          "nominal": [
-            173.02,
-            268.8
-          ],
-          "pixel": [
-            169,
-            270
-          ],
-          "correction": 4.2
-        }
-      },
-      "rect": [
-        154,
-        274,
-        96,
-        128
-      ]
-    },
-    {
-      "name": "summon",
-      "sourceRect": [
-        664,
-        631,
-        230,
-        289
-      ],
-      "anchor": [
-        55.573,
-        130.733
-      ],
-      "sockets": {
-        "mouth": [
-          77.438,
-          34.619
-        ],
-        "palm": [
-          84.27,
-          48.285
-        ],
-        "elbow": [
-          71.516,
-          56.484
-        ],
-        "foot": [
-          86.093,
-          126.178
-        ]
-      },
-      "sourceSocketMeasurements": {
-        "mouth": {
-          "nominal": [
-            165.6,
-            66.47
-          ],
-          "pixel": [
-            170,
-            76
-          ],
-          "correction": 10.5
-        },
-        "palm": {
-          "nominal": [
-            202.4,
-            130.05
-          ],
-          "pixel": [
-            185,
-            106
-          ],
-          "correction": 29.68
-        },
-        "elbow": {
-          "nominal": [
-            156.4,
-            124.27
-          ],
-          "pixel": [
-            157,
-            124
-          ],
-          "correction": 0.66
-        },
-        "foot": {
-          "nominal": [
-            188.6,
-            277.44
-          ],
-          "pixel": [
-            189,
-            277
-          ],
-          "correction": 0.59
-        }
-      },
-      "rect": [
-        306,
-        274,
-        105,
-        132
-      ]
-    },
-    {
-      "name": "finish",
-      "sourceRect": [
-        1014,
-        645,
-        180,
-        275
-      ],
-      "anchor": [
-        42.135,
-        123.9
-      ],
-      "sockets": {
-        "mouth": [
-          59.217,
-          28.698
-        ],
-        "palm": [
-          67.872,
-          56.028
-        ],
-        "elbow": [
-          55.573,
-          53.751
-        ],
-        "foot": [
-          67.416,
-          120.256
+          65.226,
+          123.096
         ]
       },
       "sourceSocketMeasurements": {
         "mouth": {
           "nominal": [
             129.6,
-            63.25
+            114.84
           ],
           "pixel": [
             130,
-            63
+            115
           ],
-          "correction": 0.47
+          "correction": 0.43
         },
         "palm": {
           "nominal": [
-            158.4,
-            123.75
+            142.56,
+            169.65
           ],
           "pixel": [
-            149,
-            123
+            143,
+            170
           ],
-          "correction": 9.43
+          "correction": 0.56
         },
         "elbow": {
           "nominal": [
-            122.4,
-            118.25
+            106.92,
+            167.04
           ],
           "pixel": [
-            122,
-            118
+            107,
+            167
           ],
-          "correction": 0.47
+          "correction": 0.09
         },
         "foot": {
           "nominal": [
-            147.6,
-            264.0
+            132.84,
+            250.56
           ],
           "pixel": [
-            148,
-            264
+            133,
+            251
           ],
-          "correction": 0.4
+          "correction": 0.47
         }
       },
       "rect": [
-        458,
-        274,
+        145,
+        2,
+        79,
+        128
+      ]
+    },
+    {
+      "name": "step-right",
+      "sourceRect": [
+        698,
+        51,
+        161,
+        261
+      ],
+      "anchor": [
+        43.157,
+        127.019
+      ],
+      "sockets": {
+        "mouth": [
+          63.264,
+          56.398
+        ],
+        "palm": [
+          68.659,
+          83.372
+        ],
+        "elbow": [
+          52.966,
+          81.9
+        ],
+        "foot": [
+          65.716,
+          123.096
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            128.8,
+            114.84
+          ],
+          "pixel": [
+            129,
+            115
+          ],
+          "correction": 0.26
+        },
+        "palm": {
+          "nominal": [
+            140.07,
+            169.65
+          ],
+          "pixel": [
+            140,
+            170
+          ],
+          "correction": 0.36
+        },
+        "elbow": {
+          "nominal": [
+            107.87,
+            167.04
+          ],
+          "pixel": [
+            108,
+            167
+          ],
+          "correction": 0.14
+        },
+        "foot": {
+          "nominal": [
+            133.63,
+            250.56
+          ],
+          "pixel": [
+            134,
+            251
+          ],
+          "correction": 0.57
+        }
+      },
+      "rect": [
+        288,
+        2,
+        79,
+        128
+      ]
+    },
+    {
+      "name": "ready",
+      "sourceRect": [
+        1001,
+        72,
+        193,
+        240
+      ],
+      "anchor": [
+        46.1,
+        116.72
+      ],
+      "sockets": {
+        "mouth": [
+          75.525,
+          50.513
+        ],
+        "palm": [
+          83.372,
+          79.939
+        ],
+        "elbow": [
+          66.207,
+          74.054
+        ],
+        "foot": [
+          71.111,
+          111.816
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            154.4,
+            103.2
+          ],
+          "pixel": [
+            154,
+            103
+          ],
+          "correction": 0.45
+        },
+        "palm": {
+          "nominal": [
+            169.84,
+            163.2
+          ],
+          "pixel": [
+            170,
+            163
+          ],
+          "correction": 0.26
+        },
+        "elbow": {
+          "nominal": [
+            135.1,
+            151.2
+          ],
+          "pixel": [
+            135,
+            151
+          ],
+          "correction": 0.22
+        },
+        "foot": {
+          "nominal": [
+            144.75,
+            228.0
+          ],
+          "pixel": [
+            145,
+            228
+          ],
+          "correction": 0.25
+        }
+      },
+      "rect": [
+        431,
+        2,
+        95,
+        118
+      ]
+    },
+    {
+      "name": "seal-start",
+      "sourceRect": [
+        66,
+        365,
+        165,
+        259
+      ],
+      "anchor": [
+        46.345,
+        126.038
+      ],
+      "sockets": {
+        "mouth": [
+          65.716,
+          55.908
+        ],
+        "palm": [
+          51.004,
+          77.487
+        ],
+        "elbow": [
+          33.839,
+          81.41
+        ],
+        "foot": [
+          63.755,
+          122.115
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            133.65,
+            113.96
+          ],
+          "pixel": [
+            134,
+            114
+          ],
+          "correction": 0.35
+        },
+        "palm": {
+          "nominal": [
+            103.95,
+            157.99
+          ],
+          "pixel": [
+            104,
+            158
+          ],
+          "correction": 0.05
+        },
+        "elbow": {
+          "nominal": [
+            69.3,
+            165.76
+          ],
+          "pixel": [
+            69,
+            166
+          ],
+          "correction": 0.38
+        },
+        "foot": {
+          "nominal": [
+            130.35,
+            248.64
+          ],
+          "pixel": [
+            130,
+            249
+          ],
+          "correction": 0.5
+        }
+      },
+      "rect": [
+        2,
+        134,
+        81,
+        127
+      ]
+    },
+    {
+      "name": "seal-hold",
+      "sourceRect": [
+        373,
+        367,
+        177,
+        257
+      ],
+      "anchor": [
+        44.628,
+        125.057
+      ],
+      "sockets": {
+        "mouth": [
+          69.64,
+          55.418
+        ],
+        "palm": [
+          69.64,
+          75.525
+        ],
+        "elbow": [
+          46.1,
+          79.448
+        ],
+        "foot": [
+          69.64,
+          121.134
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            141.6,
+            113.08
+          ],
+          "pixel": [
+            142,
+            113
+          ],
+          "correction": 0.41
+        },
+        "palm": {
+          "nominal": [
+            141.6,
+            154.2
+          ],
+          "pixel": [
+            142,
+            154
+          ],
+          "correction": 0.45
+        },
+        "elbow": {
+          "nominal": [
+            93.81,
+            161.91
+          ],
+          "pixel": [
+            94,
+            162
+          ],
+          "correction": 0.21
+        },
+        "foot": {
+          "nominal": [
+            141.6,
+            246.72
+          ],
+          "pixel": [
+            142,
+            247
+          ],
+          "correction": 0.49
+        }
+      },
+      "rect": [
+        145,
+        134,
+        87,
+        126
+      ]
+    },
+    {
+      "name": "fire-breath",
+      "sourceRect": [
+        665,
+        388,
+        216,
+        236
+      ],
+      "anchor": [
+        52.72,
+        114.759
+      ],
+      "sockets": {
+        "mouth": [
+          81.41,
+          61.303
+        ],
+        "palm": [
+          96.613,
+          56.889
+        ],
+        "elbow": [
+          76.506,
+          70.621
+        ],
+        "foot": [
+          86.805,
+          111.326
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            166.32,
+            125.08
+          ],
+          "pixel": [
+            166,
+            125
+          ],
+          "correction": 0.33
+        },
+        "palm": {
+          "nominal": [
+            196.56,
+            115.64
+          ],
+          "pixel": [
+            197,
+            116
+          ],
+          "correction": 0.57
+        },
+        "elbow": {
+          "nominal": [
+            155.52,
+            143.96
+          ],
+          "pixel": [
+            156,
+            144
+          ],
+          "correction": 0.48
+        },
+        "foot": {
+          "nominal": [
+            177.12,
+            226.56
+          ],
+          "pixel": [
+            177,
+            227
+          ],
+          "correction": 0.46
+        }
+      },
+      "rect": [
+        288,
+        134,
+        106,
+        116
+      ]
+    },
+    {
+      "name": "recover",
+      "sourceRect": [
+        1010,
+        367,
+        167,
+        257
+      ],
+      "anchor": [
+        47.326,
+        125.057
+      ],
+      "sockets": {
+        "mouth": [
+          65.716,
+          55.418
+        ],
+        "palm": [
+          27.954,
+          92.199
+        ],
+        "elbow": [
+          24.521,
+          81.9
+        ],
+        "foot": [
+          65.716,
+          121.134
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            133.6,
+            113.08
+          ],
+          "pixel": [
+            134,
+            113
+          ],
+          "correction": 0.41
+        },
+        "palm": {
+          "nominal": [
+            56.78,
+            187.61
+          ],
+          "pixel": [
+            57,
+            188
+          ],
+          "correction": 0.45
+        },
+        "elbow": {
+          "nominal": [
+            50.1,
+            167.05
+          ],
+          "pixel": [
+            50,
+            167
+          ],
+          "correction": 0.11
+        },
+        "foot": {
+          "nominal": [
+            133.6,
+            246.72
+          ],
+          "pixel": [
+            134,
+            247
+          ],
+          "correction": 0.49
+        }
+      },
+      "rect": [
+        431,
+        134,
         82,
-        125
+        126
+      ]
+    },
+    {
+      "name": "arm-back",
+      "sourceRect": [
+        59,
+        688,
+        189,
+        244
+      ],
+      "anchor": [
+        48.552,
+        118.682
+      ],
+      "sockets": {
+        "mouth": [
+          64.736,
+          54.927
+        ],
+        "palm": [
+          83.372,
+          78.958
+        ],
+        "elbow": [
+          64.736,
+          77.977
+        ],
+        "foot": [
+          75.034,
+          114.759
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            132.3,
+            112.24
+          ],
+          "pixel": [
+            132,
+            112
+          ],
+          "correction": 0.38
+        },
+        "palm": {
+          "nominal": [
+            170.1,
+            161.04
+          ],
+          "pixel": [
+            170,
+            161
+          ],
+          "correction": 0.11
+        },
+        "elbow": {
+          "nominal": [
+            132.3,
+            158.6
+          ],
+          "pixel": [
+            132,
+            159
+          ],
+          "correction": 0.5
+        },
+        "foot": {
+          "nominal": [
+            153.09,
+            234.24
+          ],
+          "pixel": [
+            153,
+            234
+          ],
+          "correction": 0.26
+        }
+      },
+      "rect": [
+        2,
+        266,
+        93,
+        120
+      ]
+    },
+    {
+      "name": "command",
+      "sourceRect": [
+        363,
+        687,
+        209,
+        245
+      ],
+      "anchor": [
+        49.287,
+        119.172
+      ],
+      "sockets": {
+        "mouth": [
+          66.697,
+          55.418
+        ],
+        "palm": [
+          97.594,
+          57.87
+        ],
+        "elbow": [
+          75.034,
+          68.659
+        ],
+        "foot": [
+          76.996,
+          115.249
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            135.85,
+            112.7
+          ],
+          "pixel": [
+            136,
+            113
+          ],
+          "correction": 0.34
+        },
+        "palm": {
+          "nominal": [
+            198.55,
+            117.6
+          ],
+          "pixel": [
+            199,
+            118
+          ],
+          "correction": 0.6
+        },
+        "elbow": {
+          "nominal": [
+            152.57,
+            139.65
+          ],
+          "pixel": [
+            153,
+            140
+          ],
+          "correction": 0.55
+        },
+        "foot": {
+          "nominal": [
+            156.75,
+            235.2
+          ],
+          "pixel": [
+            157,
+            235
+          ],
+          "correction": 0.32
+        }
+      },
+      "rect": [
+        145,
+        266,
+        102,
+        120
+      ]
+    },
+    {
+      "name": "summon",
+      "sourceRect": [
+        664,
+        684,
+        221,
+        248
+      ],
+      "anchor": [
+        58.851,
+        120.644
+      ],
+      "sockets": {
+        "mouth": [
+          67.188,
+          42.667
+        ],
+        "palm": [
+          99.556,
+          48.552
+        ],
+        "elbow": [
+          82.391,
+          59.831
+        ],
+        "foot": [
+          87.785,
+          116.72
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            137.02,
+            86.8
+          ],
+          "pixel": [
+            137,
+            87
+          ],
+          "correction": 0.2
+        },
+        "palm": {
+          "nominal": [
+            203.32,
+            99.2
+          ],
+          "pixel": [
+            203,
+            99
+          ],
+          "correction": 0.38
+        },
+        "elbow": {
+          "nominal": [
+            167.96,
+            121.52
+          ],
+          "pixel": [
+            168,
+            122
+          ],
+          "correction": 0.48
+        },
+        "foot": {
+          "nominal": [
+            179.01,
+            238.08
+          ],
+          "pixel": [
+            179,
+            238
+          ],
+          "correction": 0.08
+        }
+      },
+      "rect": [
+        288,
+        266,
+        108,
+        122
+      ]
+    },
+    {
+      "name": "finish",
+      "sourceRect": [
+        1002,
+        694,
+        181,
+        238
+      ],
+      "anchor": [
+        50.023,
+        115.739
+      ],
+      "sockets": {
+        "mouth": [
+          71.111,
+          52.475
+        ],
+        "palm": [
+          79.939,
+          83.862
+        ],
+        "elbow": [
+          62.284,
+          74.544
+        ],
+        "foot": [
+          72.582,
+          111.816
+        ]
+      },
+      "sourceSocketMeasurements": {
+        "mouth": {
+          "nominal": [
+            144.8,
+            107.1
+          ],
+          "pixel": [
+            145,
+            107
+          ],
+          "correction": 0.22
+        },
+        "palm": {
+          "nominal": [
+            162.9,
+            171.36
+          ],
+          "pixel": [
+            163,
+            171
+          ],
+          "correction": 0.37
+        },
+        "elbow": {
+          "nominal": [
+            126.7,
+            152.32
+          ],
+          "pixel": [
+            127,
+            152
+          ],
+          "correction": 0.44
+        },
+        "foot": {
+          "nominal": [
+            148.42,
+            228.48
+          ],
+          "pixel": [
+            148,
+            228
+          ],
+          "correction": 0.64
+        }
+      },
+      "rect": [
+        431,
+        266,
+        89,
+        117
       ]
     },
     {
       "name": "flinch",
       "sourceRect": [
-        37,
-        954,
-        210,
-        267
+        59,
+        984,
+        207,
+        231
       ],
       "anchor": [
-        52.157,
-        120.712
+        55.172,
+        112.307
       ],
       "sockets": {
         "mouth": [
-          66.505,
-          32.342
+          64.736,
+          40.705
         ],
         "palm": [
-          84.27,
-          54.662
+          93.18,
+          63.264
         ],
         "elbow": [
-          65.139,
-          52.384
+          75.034,
+          70.13
         ],
         "foot": [
-          78.349,
-          116.612
+          76.015,
+          108.874
         ]
       },
       "sourceSocketMeasurements": {
         "mouth": {
           "nominal": [
-            151.2,
-            61.41
+            132.48,
+            83.16
           ],
           "pixel": [
-            146,
-            71
+            132,
+            83
           ],
-          "correction": 10.91
+          "correction": 0.51
         },
         "palm": {
           "nominal": [
-            184.8,
-            120.15
+            190.44,
+            129.36
           ],
           "pixel": [
-            185,
-            120
+            190,
+            129
           ],
-          "correction": 0.25
+          "correction": 0.57
         },
         "elbow": {
           "nominal": [
-            142.8,
-            114.81
+            153.18,
+            143.22
           ],
           "pixel": [
-            143,
-            115
+            153,
+            143
           ],
           "correction": 0.28
         },
         "foot": {
           "nominal": [
-            172.2,
-            256.32
+            155.25,
+            221.76
           ],
           "pixel": [
-            172,
-            256
+            155,
+            222
           ],
-          "correction": 0.38
+          "correction": 0.35
         }
       },
       "rect": [
         2,
-        410,
-        96,
-        122
+        398,
+        102,
+        113
       ]
     },
     {
       "name": "hurt",
       "sourceRect": [
-        360,
-        992,
-        173,
-        229
+        358,
+        1000,
+        188,
+        215
       ],
       "anchor": [
-        37.125,
-        103.402
+        45.364,
+        104.46
       ],
       "sockets": {
         "mouth": [
-          56.94,
-          24.142
+          70.13,
+          53.946
         ],
         "palm": [
-          68.783,
-          46.007
+          66.207,
+          84.352
         ],
         "elbow": [
-          53.751,
-          44.641
+          52.475,
+          78.958
         ],
         "foot": [
-          64.683,
-          100.214
+          72.092,
+          101.027
         ]
       },
       "sourceSocketMeasurements": {
         "mouth": {
           "nominal": [
-            124.56,
-            52.67
+            142.88,
+            109.65
           ],
           "pixel": [
-            125,
-            53
+            143,
+            110
           ],
-          "correction": 0.55
+          "correction": 0.37
         },
         "palm": {
           "nominal": [
-            152.24,
-            103.05
+            135.36,
+            172.0
           ],
           "pixel": [
-            151,
-            101
+            135,
+            172
           ],
-          "correction": 2.4
+          "correction": 0.36
         },
         "elbow": {
           "nominal": [
-            117.64,
-            98.47
+            107.16,
+            161.25
           ],
           "pixel": [
-            118,
-            98
+            107,
+            161
           ],
-          "correction": 0.59
+          "correction": 0.3
         },
         "foot": {
           "nominal": [
-            141.86,
-            219.84
+            146.64,
+            206.4
           ],
           "pixel": [
-            142,
-            220
+            147,
+            206
           ],
-          "correction": 0.21
+          "correction": 0.54
         }
       },
       "rect": [
-        154,
-        410,
-        79,
-        104
+        145,
+        398,
+        92,
+        105
       ]
     },
     {
       "name": "fall",
       "sourceRect": [
-        612,
-        1041,
-        282,
-        180
+        624,
+        1039,
+        253,
+        179
       ],
       "anchor": [
-        72.655,
-        81.537
+        72.092,
+        86.805
       ],
       "sockets": {
         "mouth": [
-          98.391,
-          26.875
+          65.716,
+          47.571
         ],
         "palm": [
-          107.502,
-          34.619
+          109.364,
+          53.456
         ],
         "elbow": [
-          87.459,
-          35.075
+          90.728,
+          56.398
         ],
         "foot": [
-          109.779,
-          74.249
+          112.797,
+          73.563
         ]
       },
       "sourceSocketMeasurements": {
         "mouth": {
           "nominal": [
-            203.04,
-            41.4
+            134.09,
+            96.66
           ],
           "pixel": [
-            216,
-            59
+            134,
+            97
           ],
-          "correction": 21.86
+          "correction": 0.35
         },
         "palm": {
           "nominal": [
-            248.16,
-            81.0
+            222.64,
+            109.19
           ],
           "pixel": [
-            236,
-            76
+            223,
+            109
           ],
-          "correction": 13.15
+          "correction": 0.41
         },
         "elbow": {
           "nominal": [
-            191.76,
-            77.4
+            184.69,
+            114.56
           ],
           "pixel": [
-            192,
-            77
+            185,
+            115
           ],
-          "correction": 0.47
+          "correction": 0.54
         },
         "foot": {
           "nominal": [
-            231.24,
-            172.8
+            230.23,
+            150.36
           ],
           "pixel": [
-            241,
-            163
+            230,
+            150
           ],
-          "correction": 13.83
+          "correction": 0.43
         }
       },
       "rect": [
-        306,
-        410,
-        128,
-        82
+        288,
+        398,
+        124,
+        88
       ]
     },
     {
       "name": "faint",
       "sourceRect": [
-        935,
-        1120,
-        326,
-        102
+        942,
+        1102,
+        284,
+        116
       ],
       "anchor": [
-        73.11,
-        45.552
+        69.64,
+        55.908
       ],
       "sockets": {
         "mouth": [
-          107.046,
-          10.477
+          111.326,
+          48.552
         ],
         "palm": [
-          131.189,
-          21.409
+          130.943,
+          49.042
         ],
         "elbow": [
-          101.125,
-          20.043
+          101.517,
+          46.1
         ],
         "foot": [
-          121.623,
-          42.363
+          13.732,
+          49.042
         ]
       },
       "sourceSocketMeasurements": {
         "mouth": {
           "nominal": [
-            234.72,
-            23.46
+            227.2,
+            98.6
           ],
           "pixel": [
-            235,
-            23
+            227,
+            99
           ],
-          "correction": 0.54
+          "correction": 0.45
         },
         "palm": {
           "nominal": [
-            286.88,
-            45.9
-          ],
-          "pixel": [
-            288,
-            47
-          ],
-          "correction": 1.57
-        },
-        "elbow": {
-          "nominal": [
-            221.68,
-            43.86
-          ],
-          "pixel": [
-            222,
-            44
-          ],
-          "correction": 0.35
-        },
-        "foot": {
-          "nominal": [
-            267.32,
-            97.92
+            266.96,
+            99.76
           ],
           "pixel": [
             267,
-            93
+            100
           ],
-          "correction": 4.93
+          "correction": 0.24
+        },
+        "elbow": {
+          "nominal": [
+            207.32,
+            93.96
+          ],
+          "pixel": [
+            207,
+            94
+          ],
+          "correction": 0.32
+        },
+        "foot": {
+          "nominal": [
+            28.4,
+            99.76
+          ],
+          "pixel": [
+            28,
+            100
+          ],
+          "correction": 0.47
         }
       },
       "rect": [
-        458,
-        410,
-        148,
-        46
+        431,
+        398,
+        139,
+        57
       ]
     }
   ],
-  "originalSource": "madara-actions-v1.png",
-  "originalSha256": "8ae1d43e099ced737b3cf3fca8184b066a8bb06eff572cb731ecee5ef69adace",
-  "originalBodyHeight": 281,
-  "bytes": 290529,
+  "originalSource": "madara-actions-chibi-v1.png",
+  "originalSha256": "9374b60dd970da1d196cf8bf0a89c061107e1cf161b821f6ab9730e83ea41de9",
+  "originalBodyHeight": 261,
+  "bytes": 312557,
   "size": [
-    608,
-    544
+    572,
+    528
   ],
   "sheets": {
     "taijutsu": {
-      "source": "madara-taijutsu-v2-runtime.png",
-      "sha256": "12cda82aa20c2342b57b832f21e740d10d00c602fbbfb800e34855c27e47c201",
-      "originalSource": "madara-taijutsu-v2.png",
-      "originalSha256": "4f0231180af0e0a873df1a344fdc1b7cd4a648498a6f88151f32cfe7a76f3c07",
+      "source": "madara-taijutsu-chibi-v1-runtime.png",
+      "sha256": "3bfeb56325fce08524bd5a040618599494bc504fba0e80beb340934e21e23f58",
+      "originalSource": "madara-taijutsu-chibi-v1.png",
+      "originalSha256": "01717fb78b78bb46b87a532ac6e0d97c1c61bb9b9c1db430e10766084d4d173e",
       "bodyHeight": 128,
-      "originalBodyHeight": 345,
-      "bytes": 192176,
+      "originalBodyHeight": 377,
+      "bytes": 204972,
       "size": [
-        512,
-        408
+        456,
+        402
       ],
       "frames": [
         {
           "name": "step",
           "sourceRect": [
-            42,
-            79,
+            38,
+            41,
             264,
-            325
+            382
           ],
           "anchor": [
-            9.09,
-            119.838
+            42.101,
+            129.019
           ],
           "sockets": {
             "mouth": [
-              75.316,
-              28.939
+              66.207,
+              62.133
             ],
             "palm": [
-              89.043,
-              61.588
+              78.09,
+              84.202
             ],
             "elbow": [
-              64.557,
-              58.991
+              53.645,
+              82.844
             ],
             "foot": [
-              83.107,
-              116.128
+              75.374,
+              124.605
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                203.28,
-                78.0
+                195.36,
+                183.36
               ],
               "pixel": [
-                203,
-                78
+                195,
+                183
               ],
-              "correction": 0.28
+              "correction": 0.51
             },
             "palm": {
               "nominal": [
-                240.24,
-                165.75
+                229.68,
+                248.3
               ],
               "pixel": [
-                240,
-                166
+                230,
+                248
               ],
-              "correction": 0.35
+              "correction": 0.44
             },
             "elbow": {
               "nominal": [
-                174.24,
-                159.25
+                158.4,
+                244.48
               ],
               "pixel": [
-                174,
-                159
+                158,
+                244
               ],
-              "correction": 0.35
+              "correction": 0.62
             },
             "foot": {
               "nominal": [
-                224.4,
-                315.25
+                221.76,
+                366.72
               ],
               "pixel": [
-                224,
-                313
+                222,
+                367
               ],
-              "correction": 2.29
+              "correction": 0.37
             }
           },
           "rect": [
             2,
             2,
-            98,
-            121
+            90,
+            130
           ]
         },
         {
           "name": "palm",
           "sourceRect": [
-            408,
-            76,
-            323,
-            328
+            398,
+            41,
+            311,
+            382
           ],
           "anchor": [
-            7.791,
-            120.951
+            40.233,
+            129.019
           ],
           "sockets": {
             "mouth": [
-              73.09,
-              30.423
+              64.509,
+              62.133
             ],
             "palm": [
-              117.612,
-              30.423
+              104.573,
+              62.133
             ],
             "elbow": [
-              83.849,
-              36.359
+              74.016,
+              71.3
             ],
             "foot": [
-              87.559,
-              117.241
+              76.053,
+              124.605
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                197.03,
-                82.0
+                189.71,
+                183.36
               ],
               "pixel": [
-                197,
-                82
-              ],
-              "correction": 0.03
-            },
-            "palm": {
-              "nominal": [
-                316.54,
-                82.0
-              ],
-              "pixel": [
-                317,
-                82
+                190,
+                183
               ],
               "correction": 0.46
             },
-            "elbow": {
+            "palm": {
               "nominal": [
-                226.1,
-                98.4
+                308.0,
+                183.0
               ],
               "pixel": [
-                226,
-                98
+                308,
+                183
               ],
-              "correction": 0.41
+              "correction": 0.0
+            },
+            "elbow": {
+              "nominal": [
+                217.7,
+                210.1
+              ],
+              "pixel": [
+                218,
+                210
+              ],
+              "correction": 0.32
             },
             "foot": {
               "nominal": [
-                242.25,
-                318.16
+                223.92,
+                366.72
               ],
               "pixel": [
-                236,
-                316
+                224,
+                367
               ],
-              "correction": 6.61
+              "correction": 0.29
             }
           },
           "rect": [
-            130,
+            116,
             2,
-            120,
-            122
+            106,
+            130
           ]
         },
         {
           "name": "elbow-windup",
           "sourceRect": [
-            778,
-            67,
+            756,
+            41,
             260,
-            337
+            382
           ],
           "anchor": [
-            40.626,
-            124.29
+            40.233,
+            129.019
           ],
           "sockets": {
             "mouth": [
-              73.461,
-              31.165
+              67.225,
+              62.133
             ],
             "palm": [
-              89.786,
-              63.814
+              78.43,
+              82.844
             ],
             "elbow": [
-              41.554,
-              42.667
+              29.199,
+              61.114
             ],
             "foot": [
-              80.51,
-              121.322
+              72.318,
+              124.605
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
                 197.6,
-                84.25
+                183.36
               ],
               "pixel": [
                 198,
-                84
+                183
               ],
-              "correction": 0.47
+              "correction": 0.54
             },
             "palm": {
               "nominal": [
-                241.8,
-                171.87
+                231.4,
+                244.48
               ],
               "pixel": [
-                242,
-                172
+                231,
+                244
               ],
-              "correction": 0.24
+              "correction": 0.62
             },
             "elbow": {
               "nominal": [
-                111.8,
-                114.58
+                85.8,
+                179.54
               ],
               "pixel": [
-                112,
-                115
+                86,
+                180
               ],
-              "correction": 0.47
+              "correction": 0.5
             },
             "foot": {
               "nominal": [
-                221.0,
-                326.89
+                213.2,
+                366.72
               ],
               "pixel": [
-                217,
-                327
+                213,
+                367
               ],
-              "correction": 4.0
+              "correction": 0.34
             }
           },
           "rect": [
-            258,
+            230,
             2,
-            96,
-            125
+            88,
+            130
           ]
         },
         {
           "name": "elbow",
           "sourceRect": [
-            1137,
-            71,
-            261,
-            333
+            1120,
+            41,
+            263,
+            382
           ],
           "anchor": [
-            46.377,
-            122.806
+            40.912,
+            129.019
           ],
           "sockets": {
             "mouth": [
-              76.429,
-              29.681
+              68.923,
+              62.133
             ],
             "palm": [
-              70.864,
-              44.522
+              61.454,
+              72.658
             ],
             "elbow": [
-              94.609,
-              38.586
+              83.183,
+              69.942
             ],
             "foot": [
-              82.365,
-              119.838
+              74.016,
+              124.605
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                206.19,
-                79.92
+                202.51,
+                183.36
               ],
               "pixel": [
-                206,
-                80
+                203,
+                183
               ],
-              "correction": 0.21
+              "correction": 0.61
             },
             "palm": {
               "nominal": [
-                190.53,
-                119.88
+                181.47,
+                213.92
               ],
               "pixel": [
-                191,
-                120
+                181,
+                214
               ],
-              "correction": 0.49
+              "correction": 0.48
             },
             "elbow": {
               "nominal": [
-                255.78,
-                103.23
+                244.59,
+                206.28
               ],
               "pixel": [
-                255,
-                104
+                245,
+                206
               ],
-              "correction": 1.1
+              "correction": 0.5
             },
             "foot": {
               "nominal": [
-                221.85,
-                323.01
+                218.29,
+                366.72
               ],
               "pixel": [
-                222,
-                323
+                218,
+                367
               ],
-              "correction": 0.15
+              "correction": 0.4
             }
           },
           "rect": [
-            386,
+            344,
             2,
-            97,
-            124
+            89,
+            130
           ]
         },
         {
           "name": "pivot",
           "sourceRect": [
-            1472,
-            78,
-            274,
-            325
+            1439,
+            41,
+            317,
+            380
           ],
           "anchor": [
-            51.571,
-            119.838
+            56.361,
+            128.34
           ],
           "sockets": {
             "mouth": [
-              74.203,
-              28.939
+              81.825,
+              61.793
             ],
             "palm": [
-              97.577,
-              52.684
+              101.178,
+              76.053
             ],
             "elbow": [
-              80.139,
-              47.119
+              77.411,
+              74.695
             ],
             "foot": [
-              86.446,
-              116.87
+              90.313,
+              123.926
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                200.02,
-                78.0
+                240.92,
+                182.4
               ],
               "pixel": [
-                200,
-                78
+                241,
+                182
               ],
-              "correction": 0.02
+              "correction": 0.41
             },
             "palm": {
               "nominal": [
-                263.04,
-                123.5
+                297.98,
+                224.2
               ],
               "pixel": [
-                263,
-                142
+                298,
+                224
               ],
-              "correction": 18.5
+              "correction": 0.2
             },
             "elbow": {
               "nominal": [
-                216.46,
-                126.75
+                228.24,
+                220.4
               ],
               "pixel": [
-                216,
-                127
+                228,
+                220
               ],
-              "correction": 0.52
+              "correction": 0.47
             },
             "foot": {
               "nominal": [
-                232.9,
-                315.25
+                266.28,
+                364.8
               ],
               "pixel": [
-                233,
-                315
+                266,
+                365
               ],
-              "correction": 0.27
+              "correction": 0.34
             }
           },
           "rect": [
             2,
-            138,
-            102,
-            121
+            136,
+            108,
+            129
           ]
         },
         {
           "name": "knee",
           "sourceRect": [
-            31,
-            487,
-            228,
-            357
+            24,
+            478,
+            250,
+            380
           ],
           "anchor": [
-            33.391,
-            131.71
+            38.027,
+            128.34
           ],
           "sockets": {
             "mouth": [
-              64.557,
-              33.02
+              61.793,
+              61.793
             ],
             "palm": [
-              76.8,
-              44.893
+              75.374,
+              67.225
             ],
             "elbow": [
-              34.504,
-              63.443
+              35.65,
+              76.053
             ],
             "foot": [
-              60.104,
-              99.803
+              61.793,
+              109.666
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                173.28,
-                89.25
+                182.5,
+                182.4
               ],
               "pixel": [
-                174,
-                89
+                182,
+                182
               ],
-              "correction": 0.76
+              "correction": 0.64
             },
             "palm": {
               "nominal": [
-                207.48,
-                121.38
+                222.5,
+                197.6
               ],
               "pixel": [
-                207,
-                121
+                222,
+                198
               ],
-              "correction": 0.61
+              "correction": 0.64
             },
             "elbow": {
               "nominal": [
-                93.48,
-                171.36
+                105.0,
+                224.2
               ],
               "pixel": [
-                93,
-                171
+                105,
+                224
               ],
-              "correction": 0.6
+              "correction": 0.2
             },
             "foot": {
               "nominal": [
-                168.72,
-                274.89
+                182.5,
+                323.0
               ],
               "pixel": [
-                162,
-                269
+                182,
+                323
               ],
-              "correction": 8.94
+              "correction": 0.5
             }
           },
           "rect": [
-            130,
-            138,
+            116,
+            136,
             85,
-            132
+            129
           ]
         },
         {
           "name": "kick",
           "sourceRect": [
-            357,
-            490,
-            334,
-            354
+            350,
+            478,
+            325,
+            380
           ],
           "anchor": [
-            40.441,
-            130.597
+            43.459,
+            128.34
           ],
           "sockets": {
             "mouth": [
-              63.814,
-              31.536
+              66.207,
+              61.793
             ],
             "palm": [
-              82.736,
-              39.328
+              80.467,
+              67.225
             ],
             "elbow": [
-              39.699,
-              53.797
+              41.761,
+              76.053
             ],
             "foot": [
-              121.322,
-              47.119
+              104.912,
+              74.695
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                170.34,
-                84.96
+                195.0,
+                182.4
               ],
               "pixel": [
-                172,
-                85
+                195,
+                182
               ],
-              "correction": 1.66
+              "correction": 0.4
             },
             "palm": {
               "nominal": [
-                223.78,
-                113.28
+                237.25,
+                197.6
               ],
               "pixel": [
-                223,
-                106
+                237,
+                198
               ],
-              "correction": 7.32
+              "correction": 0.47
             },
             "elbow": {
               "nominal": [
-                106.88,
-                145.14
+                123.5,
+                224.2
               ],
               "pixel": [
-                107,
-                145
+                123,
+                224
               ],
-              "correction": 0.18
+              "correction": 0.54
             },
             "foot": {
               "nominal": [
-                327.32,
-                127.44
+                308.75,
+                220.4
               ],
               "pixel": [
-                327,
-                127
+                309,
+                220
               ],
-              "correction": 0.54
+              "correction": 0.47
             }
           },
           "rect": [
-            258,
-            138,
-            124,
-            131
+            230,
+            136,
+            110,
+            129
           ]
         },
         {
           "name": "turn-kick",
           "sourceRect": [
-            744,
-            496,
-            263,
-            346
+            724,
+            478,
+            282,
+            380
           ],
           "anchor": [
-            37.472,
-            127.629
+            40.064,
+            128.34
           ],
           "sockets": {
             "mouth": [
-              69.751,
-              29.31
+              71.639,
+              61.793
             ],
             "palm": [
-              80.881,
-              53.797
+              83.183,
+              74.695
             ],
             "elbow": [
-              64.557,
-              50.087
+              61.114,
+              70.96
             ],
             "foot": [
-              94.238,
-              103.142
+              89.973,
+              113.401
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                199.88,
-                83.04
+                211.5,
+                182.4
               ],
               "pixel": [
-                188,
-                79
+                211,
+                182
               ],
-              "correction": 12.55
+              "correction": 0.64
             },
             "palm": {
               "nominal": [
-                218.29,
-                145.32
+                245.34,
+                220.4
               ],
               "pixel": [
-                218,
-                145
+                245,
+                220
               ],
-              "correction": 0.43
+              "correction": 0.52
             },
             "elbow": {
               "nominal": [
-                173.58,
-                134.94
+                180.48,
+                209.0
               ],
               "pixel": [
-                174,
-                135
+                180,
+                209
               ],
-              "correction": 0.42
+              "correction": 0.48
             },
             "foot": {
               "nominal": [
-                257.74,
-                276.8
+                265.08,
+                334.4
               ],
               "pixel": [
-                254,
-                278
+                265,
+                334
               ],
-              "correction": 3.93
+              "correction": 0.41
             }
           },
           "rect": [
-            386,
-            138,
-            98,
-            128
+            344,
+            136,
+            96,
+            129
           ]
         },
         {
           "name": "landing",
           "sourceRect": [
-            1121,
-            532,
-            272,
-            312
+            1106,
+            518,
+            289,
+            340
           ],
           "anchor": [
-            50.087,
-            115.014
+            48.552,
+            114.759
           ],
           "sockets": {
             "mouth": [
-              75.687,
-              27.826
+              73.676,
+              60.095
             ],
             "palm": [
-              97.948,
-              64.557
+              92.35,
+              79.788
             ],
             "elbow": [
-              72.719,
-              63.814
+              69.602,
+              83.183
             ],
             "foot": [
-              88.672,
-              112.417
+              82.504,
+              110.684
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                204.0,
-                74.88
+                216.75,
+                176.8
               ],
               "pixel": [
-                204,
-                75
+                217,
+                177
               ],
-              "correction": 0.12
+              "correction": 0.32
             },
             "palm": {
               "nominal": [
-                263.84,
-                174.72
+                271.66,
+                234.6
               ],
               "pixel": [
-                264,
-                174
+                272,
+                235
               ],
-              "correction": 0.74
+              "correction": 0.52
             },
             "elbow": {
               "nominal": [
-                195.84,
-                171.6
+                205.19,
+                244.8
               ],
               "pixel": [
-                196,
-                172
+                205,
+                245
               ],
-              "correction": 0.43
+              "correction": 0.28
             },
             "foot": {
               "nominal": [
-                239.36,
-                302.64
+                242.76,
+                326.4
               ],
               "pixel": [
-                239,
-                303
+                243,
+                326
               ],
-              "correction": 0.51
+              "correction": 0.47
             }
           },
           "rect": [
             2,
-            274,
-            101,
-            116
+            270,
+            98,
+            115
           ]
         },
         {
           "name": "recover",
           "sourceRect": [
-            1514,
-            499,
-            200,
-            345
+            1476,
+            481,
+            253,
+            377
           ],
           "anchor": [
-            39.884,
-            127.258
+            47.703,
+            127.321
           ],
           "sockets": {
             "mouth": [
-              54.168,
-              30.794
+              64.509,
+              61.454
             ],
             "palm": [
-              68.267,
-              79.397
+              75.714,
+              92.011
             ],
             "elbow": [
-              51.942,
-              67.896
+              61.793,
+              83.183
             ],
             "foot": [
-              63.814,
-              124.29
+              71.3,
+              122.907
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                146.0,
-                82.8
+                189.75,
+                180.96
               ],
               "pixel": [
-                146,
-                83
+                190,
+                181
               ],
-              "correction": 0.2
+              "correction": 0.25
             },
             "palm": {
               "nominal": [
-                184.0,
-                213.9
+                222.64,
+                271.44
               ],
               "pixel": [
-                184,
-                214
+                223,
+                271
               ],
-              "correction": 0.1
+              "correction": 0.57
             },
             "elbow": {
               "nominal": [
-                140.0,
-                182.85
+                182.16,
+                245.05
               ],
               "pixel": [
-                140,
-                183
+                182,
+                245
               ],
-              "correction": 0.15
+              "correction": 0.17
             },
             "foot": {
               "nominal": [
-                172.0,
-                334.65
+                209.99,
+                361.92
               ],
               "pixel": [
-                172,
-                335
+                210,
+                362
               ],
-              "correction": 0.35
+              "correction": 0.08
             }
           },
           "rect": [
-            130,
-            274,
-            74,
+            116,
+            270,
+            86,
             128
           ]
         }
       ]
     },
     "bodyDirections": {
-      "source": "madara-body-directions-v2-runtime.png",
-      "sha256": "65521002903d4f61e765c49064d5ec5dcff411922fe0a5ea51ada80c1dbe9834",
-      "originalSource": "madara-body-directions-v2.png",
-      "originalSha256": "ed75e489c03e0af4d92980e18e7e949c857e229fb90f8010833c1f919d097798",
+      "source": "madara-body-directions-chibi-v1-runtime.png",
+      "sha256": "4a59ff2e0d0afcfaf2f3cd2423e3b038851bc93c997c6d23f69956e785b34d6d",
+      "originalSource": "madara-body-directions-chibi-v1.png",
+      "originalSha256": "66e391fb761173d4825b8234881bd14271ee5ab881169175017799bac8887eae",
       "bodyHeight": 128,
-      "originalBodyHeight": 382,
-      "bytes": 151532,
+      "originalBodyHeight": 373,
+      "bytes": 158476,
       "size": [
-        396,
+        412,
         266
       ],
       "frames": [
         {
           "name": "down-palm",
           "sourceRect": [
-            108,
-            50,
-            273,
-            381
+            110,
+            59,
+            254,
+            375
           ],
           "anchor": [
-            11.058,
-            126.995
+            44.611,
+            128.0
           ],
           "sockets": {
             "mouth": [
-              52.942,
-              34.513
+              50.445,
+              59.024
             ],
             "palm": [
-              32.168,
-              89.466
+              28.826,
+              86.134
             ],
             "elbow": [
-              39.204,
-              62.66
+              29.512,
+              79.614
             ],
             "foot": [
-              80.419,
-              118.953
+              73.094,
+              123.539
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                158.34,
-                102.87
+                147.32,
+                172.5
               ],
               "pixel": [
-                158,
-                103
+                147,
+                172
               ],
-              "correction": 0.36
+              "correction": 0.59
             },
             "palm": {
               "nominal": [
-                95.55,
-                266.7
+                83.82,
+                251.25
               ],
               "pixel": [
-                96,
-                267
+                84,
+                251
               ],
-              "correction": 0.54
+              "correction": 0.31
             },
             "elbow": {
               "nominal": [
-                117.39,
-                186.69
+                86.36,
+                232.5
               ],
               "pixel": [
-                117,
-                187
-              ],
-              "correction": 0.5
-            },
-            "foot": {
-              "nominal": [
-                240.24,
-                361.95
-              ],
-              "pixel": [
-                240,
-                355
-              ],
-              "correction": 6.95
-            }
-          },
-          "rect": [
-            2,
-            2,
-            91,
-            128
-          ]
-        },
-        {
-          "name": "down-elbow",
-          "sourceRect": [
-            522,
-            49,
-            282,
-            382
-          ],
-          "anchor": [
-            10.22,
-            127.33
-          ],
-          "sockets": {
-            "mouth": [
-              63.33,
-              31.832
-            ],
-            "palm": [
-              66.01,
-              54.953
-            ],
-            "elbow": [
-              47.246,
-              53.613
-            ],
-            "foot": [
-              82.094,
-              121.634
-            ]
-          },
-          "sourceSocketMeasurements": {
-            "mouth": {
-              "nominal": [
-                188.94,
-                95.5
-              ],
-              "pixel": [
-                189,
-                95
-              ],
-              "correction": 0.5
-            },
-            "palm": {
-              "nominal": [
-                197.4,
-                164.26
-              ],
-              "pixel": [
-                197,
-                164
-              ],
-              "correction": 0.48
-            },
-            "elbow": {
-              "nominal": [
-                141.0,
-                160.44
-              ],
-              "pixel": [
-                141,
-                160
-              ],
-              "correction": 0.44
-            },
-            "foot": {
-              "nominal": [
-                245.34,
-                362.9
-              ],
-              "pixel": [
-                245,
-                363
-              ],
-              "correction": 0.35
-            }
-          },
-          "rect": [
-            101,
-            2,
-            94,
-            128
-          ]
-        },
-        {
-          "name": "down-kick",
-          "sourceRect": [
-            940,
-            43,
-            285,
-            386
-          ],
-          "anchor": [
-            69.864,
-            128.67
-          ],
-          "sockets": {
-            "mouth": [
-              65.005,
-              33.508
-            ],
-            "palm": [
-              14.408,
-              71.037
-            ],
-            "elbow": [
-              25.801,
-              60.649
-            ],
-            "foot": [
-              45.906,
-              89.131
-            ]
-          },
-          "sourceSocketMeasurements": {
-            "mouth": {
-              "nominal": [
-                193.8,
-                100.36
-              ],
-              "pixel": [
-                194,
-                100
-              ],
-              "correction": 0.41
-            },
-            "palm": {
-              "nominal": [
-                42.75,
-                212.3
-              ],
-              "pixel": [
-                43,
-                212
-              ],
-              "correction": 0.39
-            },
-            "elbow": {
-              "nominal": [
-                76.95,
-                181.42
-              ],
-              "pixel": [
-                77,
-                181
-              ],
-              "correction": 0.42
-            },
-            "foot": {
-              "nominal": [
-                136.8,
-                266.34
-              ],
-              "pixel": [
-                137,
-                266
-              ],
-              "correction": 0.39
-            }
-          },
-          "rect": [
-            200,
-            2,
-            95,
-            129
-          ]
-        },
-        {
-          "name": "down-recover",
-          "sourceRect": [
-            1412,
-            47,
-            237,
-            384
-          ],
-          "anchor": [
-            39.539,
-            127.665
-          ],
-          "sockets": {
-            "mouth": [
-              45.236,
-              33.508
-            ],
-            "palm": [
-              15.749,
-              83.77
-            ],
-            "elbow": [
-              15.749,
-              68.356
-            ],
-            "foot": [
-              66.681,
-              123.644
-            ]
-          },
-          "sourceSocketMeasurements": {
-            "mouth": {
-              "nominal": [
-                135.09,
-                99.84
-              ],
-              "pixel": [
-                135,
-                100
-              ],
-              "correction": 0.18
-            },
-            "palm": {
-              "nominal": [
-                47.4,
-                249.6
-              ],
-              "pixel": [
-                47,
-                250
-              ],
-              "correction": 0.57
-            },
-            "elbow": {
-              "nominal": [
-                47.4,
-                203.52
-              ],
-              "pixel": [
-                47,
-                204
+                86,
+                232
               ],
               "correction": 0.62
             },
             "foot": {
               "nominal": [
-                199.08,
-                368.64
+                213.36,
+                360.0
               ],
               "pixel": [
-                199,
-                369
+                213,
+                360
               ],
-              "correction": 0.37
+              "correction": 0.36
             }
           },
           "rect": [
-            299,
             2,
-            79,
+            2,
+            87,
             129
           ]
         },
         {
-          "name": "up-palm",
+          "name": "down-elbow",
           "sourceRect": [
-            112,
-            489,
-            256,
-            374
+            531,
+            59,
+            258,
+            375
           ],
           "anchor": [
-            42.89,
-            124.649
+            45.126,
+            128.0
           ],
           "sockets": {
             "mouth": [
-              55.623,
-              30.157
+              53.877,
+              59.024
             ],
             "palm": [
-              70.366,
-              10.052
+              64.515,
+              73.437
             ],
             "elbow": [
-              62.66,
-              40.88
+              30.885,
+              70.692
             ],
             "foot": [
-              73.047,
-              120.293
+              74.466,
+              123.539
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                166.4,
-                89.76
+                157.38,
+                172.5
               ],
               "pixel": [
-                166,
-                90
+                157,
+                172
               ],
-              "correction": 0.47
+              "correction": 0.63
             },
             "palm": {
               "nominal": [
-                209.92,
-                29.92
+                188.34,
+                213.75
               ],
               "pixel": [
-                210,
-                30
+                188,
+                214
               ],
-              "correction": 0.11
+              "correction": 0.42
             },
             "elbow": {
               "nominal": [
-                194.56,
-                127.16
+                90.3,
+                206.25
               ],
               "pixel": [
-                187,
-                122
+                90,
+                206
               ],
-              "correction": 9.15
+              "correction": 0.39
             },
             "foot": {
               "nominal": [
-                217.6,
-                359.04
+                216.72,
+                360.0
               ],
               "pixel": [
-                218,
-                359
+                217,
+                360
               ],
-              "correction": 0.4
+              "correction": 0.28
+            }
+          },
+          "rect": [
+            105,
+            2,
+            89,
+            129
+          ]
+        },
+        {
+          "name": "down-kick",
+          "sourceRect": [
+            946,
+            60,
+            283,
+            374
+          ],
+          "anchor": [
+            67.603,
+            127.657
+          ],
+          "sockets": {
+            "mouth": [
+              57.308,
+              59.024
+            ],
+            "palm": [
+              11.668,
+              79.614
+            ],
+            "elbow": [
+              26.08,
+              70.692
+            ],
+            "foot": [
+              36.032,
+              103.979
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                166.97,
+                172.04
+              ],
+              "pixel": [
+                167,
+                172
+              ],
+              "correction": 0.05
+            },
+            "palm": {
+              "nominal": [
+                33.96,
+                231.88
+              ],
+              "pixel": [
+                34,
+                232
+              ],
+              "correction": 0.13
+            },
+            "elbow": {
+              "nominal": [
+                76.41,
+                205.7
+              ],
+              "pixel": [
+                76,
+                206
+              ],
+              "correction": 0.51
+            },
+            "foot": {
+              "nominal": [
+                104.71,
+                302.94
+              ],
+              "pixel": [
+                105,
+                303
+              ],
+              "correction": 0.3
+            }
+          },
+          "rect": [
+            208,
+            2,
+            97,
+            128
+          ]
+        },
+        {
+          "name": "down-recover",
+          "sourceRect": [
+            1395,
+            60,
+            251,
+            373
+          ],
+          "anchor": [
+            47.7,
+            126.971
+          ],
+          "sockets": {
+            "mouth": [
+              51.818,
+              59.024
+            ],
+            "palm": [
+              18.188,
+              92.311
+            ],
+            "elbow": [
+              19.903,
+              79.271
+            ],
+            "foot": [
+              72.408,
+              122.853
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                150.6,
+                171.58
+              ],
+              "pixel": [
+                151,
+                172
+              ],
+              "correction": 0.58
+            },
+            "palm": {
+              "nominal": [
+                52.71,
+                268.56
+              ],
+              "pixel": [
+                53,
+                269
+              ],
+              "correction": 0.53
+            },
+            "elbow": {
+              "nominal": [
+                57.73,
+                231.26
+              ],
+              "pixel": [
+                58,
+                231
+              ],
+              "correction": 0.37
+            },
+            "foot": {
+              "nominal": [
+                210.84,
+                358.08
+              ],
+              "pixel": [
+                211,
+                358
+              ],
+              "correction": 0.18
+            }
+          },
+          "rect": [
+            311,
+            2,
+            86,
+            128
+          ]
+        },
+        {
+          "name": "up-palm",
+          "sourceRect": [
+            109,
+            489,
+            267,
+            351
+          ],
+          "anchor": [
+            43.753,
+            119.764
+          ],
+          "sockets": {
+            "mouth": [
+              63.142,
+              47.013
+            ],
+            "palm": [
+              81.673,
+              27.796
+            ],
+            "elbow": [
+              72.408,
+              48.043
+            ],
+            "foot": [
+              76.869,
+              115.646
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                184.23,
+                136.89
+              ],
+              "pixel": [
+                184,
+                137
+              ],
+              "correction": 0.25
+            },
+            "palm": {
+              "nominal": [
+                237.63,
+                80.73
+              ],
+              "pixel": [
+                238,
+                81
+              ],
+              "correction": 0.46
+            },
+            "elbow": {
+              "nominal": [
+                210.93,
+                140.4
+              ],
+              "pixel": [
+                211,
+                140
+              ],
+              "correction": 0.41
+            },
+            "foot": {
+              "nominal": [
+                224.28,
+                336.96
+              ],
+              "pixel": [
+                224,
+                337
+              ],
+              "correction": 0.28
             }
           },
           "rect": [
             2,
             135,
-            86,
-            125
+            92,
+            120
           ]
         },
         {
           "name": "up-elbow",
           "sourceRect": [
             541,
-            492,
-            260,
-            371
-          ],
-          "anchor": [
-            43.56,
-            123.644
-          ],
-          "sockets": {
-            "mouth": [
-              54.953,
-              32.168
-            ],
-            "palm": [
-              65.34,
-              29.822
-            ],
-            "elbow": [
-              76.063,
-              23.455
-            ],
-            "foot": [
-              74.052,
-              119.288
-            ]
-          },
-          "sourceSocketMeasurements": {
-            "mouth": {
-              "nominal": [
-                163.8,
-                96.46
-              ],
-              "pixel": [
-                164,
-                96
-              ],
-              "correction": 0.5
-            },
-            "palm": {
-              "nominal": [
-                195.0,
-                89.04
-              ],
-              "pixel": [
-                195,
-                89
-              ],
-              "correction": 0.04
-            },
-            "elbow": {
-              "nominal": [
-                228.8,
-                70.49
-              ],
-              "pixel": [
-                227,
-                70
-              ],
-              "correction": 1.87
-            },
-            "foot": {
-              "nominal": [
-                221.0,
-                356.16
-              ],
-              "pixel": [
-                221,
-                356
-              ],
-              "correction": 0.16
-            }
-          },
-          "rect": [
-            101,
-            135,
-            87,
-            124
-          ]
-        },
-        {
-          "name": "up-kick",
-          "sourceRect": [
-            939,
-            486,
-            284,
-            340
-          ],
-          "anchor": [
-            30.157,
-            124.31459162303665
-          ],
-          "sockets": {
-            "mouth": [
-              52.272,
-              28.482
-            ],
-            "palm": [
-              74.387,
-              54.618
-            ],
-            "elbow": [
-              60.984,
-              51.267
-            ],
-            "foot": [
-              87.455,
-              14.743
-            ]
-          },
-          "sourceSocketMeasurements": {
-            "mouth": {
-              "nominal": [
-                156.2,
-                85.0
-              ],
-              "pixel": [
-                156,
-                85
-              ],
-              "correction": 0.2
-            },
-            "palm": {
-              "nominal": [
-                221.52,
-                163.2
-              ],
-              "pixel": [
-                222,
-                163
-              ],
-              "correction": 0.52
-            },
-            "elbow": {
-              "nominal": [
-                181.76,
-                153.0
-              ],
-              "pixel": [
-                182,
-                153
-              ],
-              "correction": 0.24
-            },
-            "foot": {
-              "nominal": [
-                261.28,
-                44.2
-              ],
-              "pixel": [
-                261,
-                44
-              ],
-              "correction": 0.34
-            }
-          },
-          "rect": [
-            200,
-            135,
-            95,
-            114
-          ]
-        },
-        {
-          "name": "up-recover",
-          "sourceRect": [
-            1424,
             488,
-            215,
-            375
+            260,
+            351
           ],
           "anchor": [
-            35.686,
-            124.984
+            45.126,
+            119.764
           ],
           "sockets": {
             "mouth": [
-              40.209,
-              31.497
+              59.024,
+              48.043
             ],
             "palm": [
-              59.644,
-              84.105
+              71.378,
+              39.807
             ],
             "elbow": [
-              57.634,
-              66.681
+              82.016,
+              32.601
             ],
             "foot": [
-              60.649,
-              120.628
+              74.81,
+              115.646
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                120.4,
-                93.75
-              ],
-              "pixel": [
-                120,
-                94
-              ],
-              "correction": 0.47
-            },
-            "palm": {
-              "nominal": [
-                178.45,
-                251.25
-              ],
-              "pixel": [
-                178,
-                251
-              ],
-              "correction": 0.51
-            },
-            "elbow": {
-              "nominal": [
-                172.0,
-                198.75
+                171.6,
+                140.4
               ],
               "pixel": [
                 172,
-                199
+                140
               ],
-              "correction": 0.25
+              "correction": 0.57
+            },
+            "palm": {
+              "nominal": [
+                208.0,
+                115.83
+              ],
+              "pixel": [
+                208,
+                116
+              ],
+              "correction": 0.17
+            },
+            "elbow": {
+              "nominal": [
+                239.2,
+                94.77
+              ],
+              "pixel": [
+                239,
+                95
+              ],
+              "correction": 0.3
             },
             "foot": {
               "nominal": [
-                180.6,
-                360.0
+                218.4,
+                336.96
               ],
               "pixel": [
-                181,
-                360
+                218,
+                337
               ],
               "correction": 0.4
             }
           },
           "rect": [
-            299,
+            105,
             135,
-            72,
-            126
+            89,
+            120
+          ]
+        },
+        {
+          "name": "up-kick",
+          "sourceRect": [
+            947,
+            488,
+            288,
+            354
+          ],
+          "anchor": [
+            32.601,
+            131.775
+          ],
+          "sockets": {
+            "mouth": [
+              57.308,
+              51.131
+            ],
+            "palm": [
+              71.035,
+              62.113
+            ],
+            "elbow": [
+              57.308,
+              53.534
+            ],
+            "foot": [
+              89.909,
+              32.944
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                167.04,
+                148.68
+              ],
+              "pixel": [
+                167,
+                149
+              ],
+              "correction": 0.32
+            },
+            "palm": {
+              "nominal": [
+                207.36,
+                180.54
+              ],
+              "pixel": [
+                207,
+                181
+              ],
+              "correction": 0.58
+            },
+            "elbow": {
+              "nominal": [
+                167.04,
+                155.76
+              ],
+              "pixel": [
+                167,
+                156
+              ],
+              "correction": 0.24
+            },
+            "foot": {
+              "nominal": [
+                262.08,
+                95.58
+              ],
+              "pixel": [
+                262,
+                96
+              ],
+              "correction": 0.43
+            }
+          },
+          "rect": [
+            208,
+            135,
+            99,
+            121
+          ]
+        },
+        {
+          "name": "up-recover",
+          "sourceRect": [
+            1410,
+            489,
+            248,
+            350
+          ],
+          "anchor": [
+            42.381,
+            119.421
+          ],
+          "sockets": {
+            "mouth": [
+              51.818,
+              51.475
+            ],
+            "palm": [
+              72.408,
+              80.3
+            ],
+            "elbow": [
+              68.976,
+              72.064
+            ],
+            "foot": [
+              70.692,
+              115.303
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                151.28,
+                150.5
+              ],
+              "pixel": [
+                151,
+                150
+              ],
+              "correction": 0.57
+            },
+            "palm": {
+              "nominal": [
+                210.8,
+                234.5
+              ],
+              "pixel": [
+                211,
+                234
+              ],
+              "correction": 0.54
+            },
+            "elbow": {
+              "nominal": [
+                200.88,
+                210.0
+              ],
+              "pixel": [
+                201,
+                210
+              ],
+              "correction": 0.12
+            },
+            "foot": {
+              "nominal": [
+                205.84,
+                336.0
+              ],
+              "pixel": [
+                206,
+                336
+              ],
+              "correction": 0.16
+            }
+          },
+          "rect": [
+            311,
+            135,
+            85,
+            120
           ]
         }
       ]
@@ -5943,430 +5943,1197 @@
       "ownerPolicy": "ground feet; 64px actor is foreground projection, not the forehead occupant"
     },
     "castingDirections": {
-      "source": "madara-casting-directions-v2-runtime.png",
-      "sha256": "0a979a8d411fa7c4aec84c960c032ca705117016d572e5ba2b4d5da70c601296",
-      "originalSource": "madara-casting-directions-v2.png",
-      "originalSha256": "9317af2991f5887fe3a0a5bdd021324db2705b93a560ea9907d17c894af1dd81",
+      "source": "madara-casting-directions-chibi-v1-runtime.png",
+      "sha256": "12a99e6332e0cfe788811b56464e63f452fcf1f0e6b77c70c141b2c992767fe9",
+      "originalSource": "madara-casting-directions-chibi-v1.png",
+      "originalSha256": "2c973b70c0b1ea6da8ce5e0b4cf4db455eddf2cae38380f6dcae3c50fa1b6a21",
       "bodyHeight": 128,
-      "originalBodyHeight": 452,
-      "bytes": 132033,
+      "originalBodyHeight": 439,
+      "bytes": 128866,
       "size": [
-        408,
-        266
+        404,
+        264
       ],
       "frames": [
         {
           "name": "down-seal",
           "sourceRect": [
-            112,
-            33,
-            291,
-            452
+            153,
+            41,
+            268,
+            437
           ],
           "anchor": [
-            41.204,
-            127.434
+            43.736,
+            126.542
           ],
           "sockets": {
             "mouth": [
-              41.062,
-              38.513
+              46.068,
+              54.815
+            ],
+            "palm": [
+              43.736,
+              71.435
+            ],
+            "elbow": [
+              64.146,
+              73.768
+            ],
+            "foot": [
+              64.729,
+              122.46
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                145.5,
-                135.6
+                158.12,
+                187.91
               ],
               "pixel": [
-                145,
-                136
+                158,
+                188
               ],
-              "correction": 0.64
+              "correction": 0.15
+            },
+            "palm": {
+              "nominal": [
+                150.08,
+                244.72
+              ],
+              "pixel": [
+                150,
+                245
+              ],
+              "correction": 0.29
+            },
+            "elbow": {
+              "nominal": [
+                219.76,
+                253.46
+              ],
+              "pixel": [
+                220,
+                253
+              ],
+              "correction": 0.52
+            },
+            "foot": {
+              "nominal": [
+                222.44,
+                419.52
+              ],
+              "pixel": [
+                222,
+                420
+              ],
+              "correction": 0.65
             }
           },
           "rect": [
             2,
             2,
-            82,
-            128
+            78,
+            127
           ]
         },
         {
           "name": "down-breath",
           "sourceRect": [
-            601,
-            65,
-            345,
-            420
+            604,
+            73,
+            331,
+            406
           ],
           "anchor": [
-            48.283,
-            118.372
+            48.401,
+            117.503
           ],
           "sockets": {
             "mouth": [
-              58.053,
-              44.743
+              53.941,
+              58.023
+            ],
+            "palm": [
+              42.569,
+              63.854
+            ],
+            "elbow": [
+              81.932,
+              71.144
+            ],
+            "foot": [
+              80.182,
+              113.713
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                205.0,
-                158.0
+                185.36,
+                198.94
               ],
               "pixel": [
-                205,
-                158
+                185,
+                199
               ],
-              "correction": 0.0
+              "correction": 0.36
+            },
+            "palm": {
+              "nominal": [
+                145.64,
+                219.24
+              ],
+              "pixel": [
+                146,
+                219
+              ],
+              "correction": 0.43
+            },
+            "elbow": {
+              "nominal": [
+                281.35,
+                243.6
+              ],
+              "pixel": [
+                281,
+                244
+              ],
+              "correction": 0.53
+            },
+            "foot": {
+              "nominal": [
+                274.73,
+                389.76
+              ],
+              "pixel": [
+                275,
+                390
+              ],
+              "correction": 0.36
             }
           },
           "rect": [
-            104,
+            103,
             2,
-            98,
-            119
+            97,
+            118
           ]
         },
         {
           "name": "down-recover",
           "sourceRect": [
-            1147,
-            33,
-            292,
-            452
+            1088,
+            40,
+            274,
+            439
           ],
           "anchor": [
-            41.487,
-            127.434
+            46.214,
+            127.417
           ],
           "sockets": {
             "mouth": [
-              43.044,
-              38.513
+              47.235,
+              55.107
+            ],
+            "palm": [
+              72.018,
+              90.97
+            ],
+            "elbow": [
+              63.854,
+              80.765
+            ],
+            "foot": [
+              66.187,
+              122.752
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                151.84,
-                135.6
+                161.66,
+                188.77
               ],
               "pixel": [
-                152,
-                136
+                162,
+                189
               ],
-              "correction": 0.43
+              "correction": 0.41
+            },
+            "palm": {
+              "nominal": [
+                246.6,
+                311.69
+              ],
+              "pixel": [
+                247,
+                312
+              ],
+              "correction": 0.51
+            },
+            "elbow": {
+              "nominal": [
+                219.2,
+                276.57
+              ],
+              "pixel": [
+                219,
+                277
+              ],
+              "correction": 0.47
+            },
+            "foot": {
+              "nominal": [
+                227.42,
+                421.44
+              ],
+              "pixel": [
+                227,
+                421
+              ],
+              "correction": 0.61
             }
           },
           "rect": [
-            206,
+            204,
             2,
-            83,
+            80,
             128
           ]
         },
         {
           "name": "up-seal",
           "sourceRect": [
-            115,
-            539,
-            284,
-            457
+            155,
+            545,
+            264,
+            418
           ],
           "anchor": [
-            40.212,
-            129.133
+            41.986,
+            121.294
           ],
           "sockets": {
             "mouth": [
-              53.805,
-              31.15
+              58.606,
+              36.446
+            ],
+            "palm": [
+              67.645,
+              47.526
+            ],
+            "elbow": [
+              66.187,
+              58.606
+            ],
+            "foot": [
+              63.854,
+              116.92
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                190.28,
-                109.68
+                200.64,
+                125.4
               ],
               "pixel": [
-                190,
-                110
+                201,
+                125
               ],
-              "correction": 0.43
+              "correction": 0.54
+            },
+            "palm": {
+              "nominal": [
+                232.32,
+                163.02
+              ],
+              "pixel": [
+                232,
+                163
+              ],
+              "correction": 0.32
+            },
+            "elbow": {
+              "nominal": [
+                227.04,
+                200.64
+              ],
+              "pixel": [
+                227,
+                201
+              ],
+              "correction": 0.36
+            },
+            "foot": {
+              "nominal": [
+                219.12,
+                401.28
+              ],
+              "pixel": [
+                219,
+                401
+              ],
+              "correction": 0.3
             }
           },
           "rect": [
-            308,
+            305,
             2,
-            80,
-            129
+            77,
+            122
           ]
         },
         {
           "name": "up-breath",
           "sourceRect": [
-            598,
-            542,
-            337,
-            454
+            606,
+            544,
+            311,
+            419
           ],
           "anchor": [
-            47.717,
-            128.283
+            46.797,
+            121.585
           ],
           "sockets": {
             "mouth": [
-              63.434,
-              19.823
+              64.437,
+              29.449
+            ],
+            "palm": [
+              70.852,
+              30.615
+            ],
+            "elbow": [
+              82.515,
+              50.15
+            ],
+            "foot": [
+              75.226,
+              117.212
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                224.0,
-                70.0
+                220.81,
+                100.56
               ],
               "pixel": [
-                224,
-                70
+                221,
+                101
               ],
-              "correction": 0.0
+              "correction": 0.48
+            },
+            "palm": {
+              "nominal": [
+                242.58,
+                104.75
+              ],
+              "pixel": [
+                243,
+                105
+              ],
+              "correction": 0.49
+            },
+            "elbow": {
+              "nominal": [
+                283.01,
+                171.79
+              ],
+              "pixel": [
+                283,
+                172
+              ],
+              "correction": 0.21
+            },
+            "foot": {
+              "nominal": [
+                258.13,
+                402.24
+              ],
+              "pixel": [
+                258,
+                402
+              ],
+              "correction": 0.27
             }
           },
           "rect": [
             2,
-            135,
-            95,
-            129
+            134,
+            91,
+            122
           ]
         },
         {
           "name": "up-recover",
           "sourceRect": [
-            1155,
-            539,
-            270,
-            457
+            1107,
+            545,
+            255,
+            418
           ],
           "anchor": [
-            38.23,
-            129.133
+            38.925,
+            121.294
           ],
           "sockets": {
             "mouth": [
-              53.522,
-              31.15
+              49.859,
+              51.317
+            ],
+            "palm": [
+              64.729,
+              82.806
+            ],
+            "elbow": [
+              60.938,
+              72.018
+            ],
+            "foot": [
+              61.813,
+              116.92
             ]
           },
           "sourceSocketMeasurements": {
             "mouth": {
               "nominal": [
-                189.0,
-                109.68
+                170.85,
+                175.56
               ],
               "pixel": [
-                189,
-                110
+                171,
+                176
               ],
-              "correction": 0.32
+              "correction": 0.46
+            },
+            "palm": {
+              "nominal": [
+                221.85,
+                284.24
+              ],
+              "pixel": [
+                222,
+                284
+              ],
+              "correction": 0.28
+            },
+            "elbow": {
+              "nominal": [
+                209.1,
+                246.62
+              ],
+              "pixel": [
+                209,
+                247
+              ],
+              "correction": 0.39
+            },
+            "foot": {
+              "nominal": [
+                211.65,
+                401.28
+              ],
+              "pixel": [
+                212,
+                401
+              ],
+              "correction": 0.45
             }
           },
           "rect": [
-            104,
-            135,
-            76,
-            129
+            103,
+            134,
+            74,
+            122
           ]
         }
       ]
     },
     "walkDirections": {
-      "source": "madara-walk-directions-v3-runtime.png",
-      "sha256": "7ee50b3203ce04ac56d613d63a085bec1b87a15420467aa3b1a5906c3ee3c552",
-      "originalSource": "madara-walk-directions-v3.png",
-      "originalSha256": "b5cb65a8c30c07afb525763afedc659d7fc6c851724d8fa11c741edb98c1dd68",
+      "source": "madara-walk-directions-chibi-v1-runtime.png",
+      "sha256": "8a92f9ce1aa8151abea8299f9739fb487250e4e1f6c54083a36f80afe998842f",
+      "originalSource": "madara-walk-directions-chibi-v1.png",
+      "originalSha256": "f13ff940d7bee7a3a5760453e43164816351f90d09cb1cb0af58d7e94f332ad8",
       "bodyHeight": 128,
-      "originalBodyHeight": 434,
-      "bytes": 93288,
+      "originalBodyHeight": 418,
+      "bytes": 125405,
       "size": [
-        232,
-        266
+        316,
+        264
       ],
       "frames": [
         {
           "name": "down-left",
           "sourceRect": [
-            129,
-            5,
-            175,
-            432
+            111,
+            19,
+            246,
+            418
           ],
           "anchor": [
-            31.115,
-            126.82
+            45.627,
+            127.388
           ],
-          "sockets": {},
-          "sourceSocketMeasurements": {},
+          "sockets": {
+            "mouth": [
+              41.34,
+              55.12
+            ],
+            "palm": [
+              57.263,
+              86.967
+            ],
+            "elbow": [
+              59.407,
+              75.636
+            ],
+            "foot": [
+              44.402,
+              122.794
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                135.3,
+                179.74
+              ],
+              "pixel": [
+                135,
+                180
+              ],
+              "correction": 0.4
+            },
+            "palm": {
+              "nominal": [
+                186.96,
+                284.24
+              ],
+              "pixel": [
+                187,
+                284
+              ],
+              "correction": 0.24
+            },
+            "elbow": {
+              "nominal": [
+                194.34,
+                246.62
+              ],
+              "pixel": [
+                194,
+                247
+              ],
+              "correction": 0.51
+            },
+            "foot": {
+              "nominal": [
+                145.14,
+                401.28
+              ],
+              "pixel": [
+                145,
+                401
+              ],
+              "correction": 0.31
+            }
+          },
           "rect": [
             2,
             2,
-            52,
-            127
+            75,
+            128
           ]
         },
         {
           "name": "down-pass-left",
           "sourceRect": [
-            572,
-            5,
-            184,
-            422
+            555,
+            19,
+            245,
+            415
           ],
           "anchor": [
-            22.12,
-            123.871
+            32.459,
+            126.469
           ],
-          "sockets": {},
-          "sourceSocketMeasurements": {},
+          "sockets": {
+            "mouth": [
+              41.34,
+              54.507
+            ],
+            "palm": [
+              22.354,
+              82.679
+            ],
+            "elbow": [
+              15.617,
+              75.024
+            ],
+            "foot": [
+              31.541,
+              121.876
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                134.75,
+                178.45
+              ],
+              "pixel": [
+                135,
+                178
+              ],
+              "correction": 0.51
+            },
+            "palm": {
+              "nominal": [
+                73.5,
+                269.75
+              ],
+              "pixel": [
+                73,
+                270
+              ],
+              "correction": 0.56
+            },
+            "elbow": {
+              "nominal": [
+                51.45,
+                244.85
+              ],
+              "pixel": [
+                51,
+                245
+              ],
+              "correction": 0.47
+            },
+            "foot": {
+              "nominal": [
+                102.9,
+                398.4
+              ],
+              "pixel": [
+                103,
+                398
+              ],
+              "correction": 0.41
+            }
+          },
           "rect": [
-            60,
+            81,
             2,
-            54,
-            124
+            75,
+            127
           ]
         },
         {
           "name": "down-right",
           "sourceRect": [
-            1022,
-            5,
-            175,
-            434
+            999,
+            19,
+            245,
+            418
           ],
           "anchor": [
-            28.608,
-            127.41
+            34.756,
+            127.388
           ],
-          "sockets": {},
-          "sourceSocketMeasurements": {},
+          "sockets": {
+            "mouth": [
+              41.34,
+              55.12
+            ],
+            "palm": [
+              59.407,
+              86.967
+            ],
+            "elbow": [
+              59.407,
+              75.636
+            ],
+            "foot": [
+              35.215,
+              122.794
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                134.75,
+                179.74
+              ],
+              "pixel": [
+                135,
+                180
+              ],
+              "correction": 0.36
+            },
+            "palm": {
+              "nominal": [
+                193.55,
+                284.24
+              ],
+              "pixel": [
+                194,
+                284
+              ],
+              "correction": 0.51
+            },
+            "elbow": {
+              "nominal": [
+                193.55,
+                246.62
+              ],
+              "pixel": [
+                194,
+                247
+              ],
+              "correction": 0.59
+            },
+            "foot": {
+              "nominal": [
+                115.15,
+                401.28
+              ],
+              "pixel": [
+                115,
+                401
+              ],
+              "correction": 0.32
+            }
+          },
           "rect": [
-            118,
+            160,
             2,
-            52,
+            75,
             128
           ]
         },
         {
           "name": "down-pass-right",
           "sourceRect": [
-            1464,
-            5,
-            179,
-            427
+            1442,
+            19,
+            245,
+            415
           ],
           "anchor": [
-            22.415,
-            125.346
+            43.943,
+            126.469
           ],
-          "sockets": {},
-          "sourceSocketMeasurements": {},
+          "sockets": {
+            "mouth": [
+              41.34,
+              54.507
+            ],
+            "palm": [
+              21.742,
+              82.679
+            ],
+            "elbow": [
+              16.536,
+              75.024
+            ],
+            "foot": [
+              49.608,
+              121.876
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                134.75,
+                178.45
+              ],
+              "pixel": [
+                135,
+                178
+              ],
+              "correction": 0.51
+            },
+            "palm": {
+              "nominal": [
+                71.05,
+                269.75
+              ],
+              "pixel": [
+                71,
+                270
+              ],
+              "correction": 0.25
+            },
+            "elbow": {
+              "nominal": [
+                53.9,
+                244.85
+              ],
+              "pixel": [
+                54,
+                245
+              ],
+              "correction": 0.18
+            },
+            "foot": {
+              "nominal": [
+                161.7,
+                398.4
+              ],
+              "pixel": [
+                162,
+                398
+              ],
+              "correction": 0.5
+            }
+          },
           "rect": [
-            176,
+            239,
             2,
-            53,
-            126
+            75,
+            127
           ]
         },
         {
           "name": "up-left",
           "sourceRect": [
-            137,
-            449,
-            171,
-            433
+            111,
+            462,
+            240,
+            415
           ],
           "anchor": [
-            28.903,
-            127.115
+            42.258,
+            126.469
           ],
-          "sockets": {},
-          "sourceSocketMeasurements": {},
+          "sockets": {
+            "mouth": [
+              49.301,
+              47.158
+            ],
+            "palm": [
+              12.555,
+              88.804
+            ],
+            "elbow": [
+              13.167,
+              77.474
+            ],
+            "foot": [
+              42.565,
+              121.876
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                160.8,
+                153.55
+              ],
+              "pixel": [
+                161,
+                154
+              ],
+              "correction": 0.49
+            },
+            "palm": {
+              "nominal": [
+                40.8,
+                290.5
+              ],
+              "pixel": [
+                41,
+                290
+              ],
+              "correction": 0.54
+            },
+            "elbow": {
+              "nominal": [
+                43.2,
+                253.15
+              ],
+              "pixel": [
+                43,
+                253
+              ],
+              "correction": 0.25
+            },
+            "foot": {
+              "nominal": [
+                139.2,
+                398.4
+              ],
+              "pixel": [
+                139,
+                398
+              ],
+              "correction": 0.45
+            }
+          },
           "rect": [
             2,
-            135,
-            50,
-            128
+            134,
+            73,
+            127
           ]
         },
         {
           "name": "up-pass-left",
           "sourceRect": [
-            578,
-            450,
-            176,
-            400
+            555,
+            462,
+            239,
+            399
           ],
           "anchor": [
-            20.203,
-            117.382
+            33.99,
+            121.569
           ],
-          "sockets": {},
-          "sourceSocketMeasurements": {},
+          "sockets": {
+            "mouth": [
+              48.995,
+              45.321
+            ],
+            "palm": [
+              9.493,
+              82.986
+            ],
+            "elbow": [
+              11.636,
+              71.962
+            ],
+            "foot": [
+              43.177,
+              103.809
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                160.13,
+                147.63
+              ],
+              "pixel": [
+                160,
+                148
+              ],
+              "correction": 0.39
+            },
+            "palm": {
+              "nominal": [
+                31.07,
+                271.32
+              ],
+              "pixel": [
+                31,
+                271
+              ],
+              "correction": 0.33
+            },
+            "elbow": {
+              "nominal": [
+                38.24,
+                235.41
+              ],
+              "pixel": [
+                38,
+                235
+              ],
+              "correction": 0.48
+            },
+            "foot": {
+              "nominal": [
+                141.01,
+                339.15
+              ],
+              "pixel": [
+                141,
+                339
+              ],
+              "correction": 0.15
+            }
+          },
           "rect": [
-            60,
-            135,
-            52,
-            118
+            81,
+            134,
+            73,
+            122
           ]
         },
         {
           "name": "up-right",
           "sourceRect": [
-            1023,
-            449,
-            175,
-            436
+            998,
+            462,
+            239,
+            414
           ],
           "anchor": [
-            28.903,
-            128.0
+            42.258,
+            126.469
           ],
-          "sockets": {},
-          "sourceSocketMeasurements": {},
+          "sockets": {
+            "mouth": [
+              48.995,
+              46.852
+            ],
+            "palm": [
+              11.636,
+              88.804
+            ],
+            "elbow": [
+              13.78,
+              77.474
+            ],
+            "foot": [
+              43.177,
+              121.569
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                160.13,
+                153.18
+              ],
+              "pixel": [
+                160,
+                153
+              ],
+              "correction": 0.22
+            },
+            "palm": {
+              "nominal": [
+                38.24,
+                289.8
+              ],
+              "pixel": [
+                38,
+                290
+              ],
+              "correction": 0.31
+            },
+            "elbow": {
+              "nominal": [
+                45.41,
+                252.54
+              ],
+              "pixel": [
+                45,
+                253
+              ],
+              "correction": 0.62
+            },
+            "foot": {
+              "nominal": [
+                141.01,
+                397.44
+              ],
+              "pixel": [
+                141,
+                397
+              ],
+              "correction": 0.44
+            }
+          },
           "rect": [
-            118,
-            135,
-            52,
-            129
+            160,
+            134,
+            73,
+            127
           ]
         },
         {
           "name": "up-pass-right",
           "sourceRect": [
-            1468,
-            449,
-            171,
-            401
+            1442,
+            462,
+            239,
+            399
           ],
           "anchor": [
-            20.498,
-            117.677
+            35.368,
+            121.569
           ],
-          "sockets": {},
-          "sourceSocketMeasurements": {},
+          "sockets": {
+            "mouth": [
+              48.995,
+              45.321
+            ],
+            "palm": [
+              9.493,
+              82.986
+            ],
+            "elbow": [
+              12.555,
+              71.962
+            ],
+            "foot": [
+              43.177,
+              103.809
+            ]
+          },
+          "sourceSocketMeasurements": {
+            "mouth": {
+              "nominal": [
+                160.13,
+                147.63
+              ],
+              "pixel": [
+                160,
+                148
+              ],
+              "correction": 0.39
+            },
+            "palm": {
+              "nominal": [
+                31.07,
+                271.32
+              ],
+              "pixel": [
+                31,
+                271
+              ],
+              "correction": 0.33
+            },
+            "elbow": {
+              "nominal": [
+                40.63,
+                235.41
+              ],
+              "pixel": [
+                41,
+                235
+              ],
+              "correction": 0.55
+            },
+            "foot": {
+              "nominal": [
+                141.01,
+                339.15
+              ],
+              "pixel": [
+                141,
+                339
+              ],
+              "correction": 0.15
+            }
+          },
           "rect": [
-            176,
-            135,
-            50,
-            118
+            239,
+            134,
+            73,
+            122
           ]
         }
       ]
     }
-  }
+  },
+  "bodyStyle": "large-head compact chibi, matched to current Naruto sprites"
 }

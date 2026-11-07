@@ -1,0 +1,54 @@
+{
+  "date": "2026-11-07",
+  "generator": "built-in image_gen.imagegen",
+  "use_case": "style-transfer",
+  "note": "Prompt set below records the common production requirements and per-sheet pose instructions used in the five edit calls. Original generated PNG bytes are retained unchanged.",
+  "reference": "art-review/redrawn/naruto-common-v1.png",
+  "assets": [
+    {
+      "output": "art-review/madara/madara-actions-chibi-v1.png",
+      "input": "art-review/madara/madara-actions-v1.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1b4b3-3629-74b0-9181-310af0b64d55/exec-cc97a192-4b05-4c0f-97a3-704430a3b63c.png",
+      "prompt": "Use case: style-transfer. Edit the Madara action sheet; Naruto common-v1 is the exact game art style/proportion reference only. Redraw EVERY sprite at the same scale in the original row-major layout. Head including hair roughly 40% of standing height, short compact torso and short limbs, 2.5 heads tall. Crisp pixel art, dark outlines, limited cel shading, not tall realistic anime. Preserve Madara long spiky black hair covering one eye, red segmented armor, dark underclothes/gloves, shin wraps, sandals, stern visible eye. Same action/direction semantics; entire bodies; generous genuinely transparent gutters/background; no text, labels, effects, duplicate hands or feet. Readable at 64px. Layout and poses: 4x4, row1 idle/left step/right step/ready; row2 seal-start/seal-hold/fire-breath right hand by mouth/recover; row3 arm-back/forward command palm/both arms raised summon/finish; row4 recoil/bent hurt/falling sideways/lying faint.",
+      "transparent_background": true,
+      "sha256": "9374b60dd970da1d196cf8bf0a89c061107e1cf161b821f6ab9730e83ea41de9",
+      "inputSha256": "8ae1d43e099ced737b3cf3fca8184b066a8bb06eff572cb731ecee5ef69adace"
+    },
+    {
+      "output": "art-review/madara/madara-taijutsu-chibi-v1.png",
+      "input": "art-review/madara/madara-taijutsu-v2.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1b4b3-3629-74b0-9181-310af0b64d55/exec-8f8fb810-4b63-4b19-9d2b-8baf9542f77b.png",
+      "prompt": "Use case: style-transfer. Edit the Madara action sheet; Naruto common-v1 is the exact game art style/proportion reference only. Redraw EVERY sprite at the same scale in the original row-major layout. Head including hair roughly 40% of standing height, short compact torso and short limbs, 2.5 heads tall. Crisp pixel art, dark outlines, limited cel shading, not tall realistic anime. Preserve Madara long spiky black hair covering one eye, red segmented armor, dark underclothes/gloves, shin wraps, sandals, stern visible eye. Same action/direction semantics; entire bodies; generous genuinely transparent gutters/background; no text, labels, effects, duplicate hands or feet. Readable at 64px. Layout and poses: 2x5, all facing right: row1 low stepping guard/extended open palm/elbow windup/elbow strike/pivot; row2 raised knee/extended horizontal kick/turning kick/low landing/upright recovery.",
+      "transparent_background": true,
+      "sha256": "01717fb78b78bb46b87a532ac6e0d97c1c61bb9b9c1db430e10766084d4d173e",
+      "inputSha256": "4f0231180af0e0a873df1a344fdc1b7cd4a648498a6f88151f32cfe7a76f3c07"
+    },
+    {
+      "output": "art-review/madara/madara-body-directions-chibi-v1.png",
+      "input": "art-review/madara/madara-body-directions-v2.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1b4b3-3629-74b0-9181-310af0b64d55/exec-7af49223-cf8e-49e0-8115-a5e9ffd8735a.png",
+      "prompt": "Use case: style-transfer. Edit the Madara action sheet; Naruto common-v1 is the exact game art style/proportion reference only. Redraw EVERY sprite at the same scale in the original row-major layout. Head including hair roughly 40% of standing height, short compact torso and short limbs, 2.5 heads tall. Crisp pixel art, dark outlines, limited cel shading, not tall realistic anime. Preserve Madara long spiky black hair covering one eye, red segmented armor, dark underclothes/gloves, shin wraps, sandals, stern visible eye. Same action/direction semantics; entire bodies; generous genuinely transparent gutters/background; no text, labels, effects, duplicate hands or feet. Readable at 64px. Layout and poses: 2x4: row1 front open palm/elbow across chest/kick sole toward viewer/upright recovery; row2 back palm/elbow/high turning kick/recovery.",
+      "transparent_background": true,
+      "sha256": "66e391fb761173d4825b8234881bd14271ee5ab881169175017799bac8887eae",
+      "inputSha256": "ed75e489c03e0af4d92980e18e7e949c857e229fb90f8010833c1f919d097798"
+    },
+    {
+      "output": "art-review/madara/madara-casting-directions-chibi-v1.png",
+      "input": "art-review/madara/madara-casting-directions-v2.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1b4b3-3629-74b0-9181-310af0b64d55/exec-d0de6f1a-b8fb-45d3-b599-23a702a2ca1f.png",
+      "prompt": "Use case: style-transfer. Edit the Madara action sheet; Naruto common-v1 is the exact game art style/proportion reference only. Redraw EVERY sprite at the same scale in the original row-major layout. Head including hair roughly 40% of standing height, short compact torso and short limbs, 2.5 heads tall. Crisp pixel art, dark outlines, limited cel shading, not tall realistic anime. Preserve Madara long spiky black hair covering one eye, red segmented armor, dark underclothes/gloves, shin wraps, sandals, stern visible eye. Same action/direction semantics; entire bodies; generous genuinely transparent gutters/background; no text, labels, effects, duplicate hands or feet. Readable at 64px. Layout and poses: 2x3: row1 front seal/front breath mouth open hand near mouth/front recovery; row2 rear seal/rear head turned lifted hand near mouth breath/rear recovery. Remove source background glow entirely.",
+      "transparent_background": true,
+      "sha256": "2c973b70c0b1ea6da8ce5e0b4cf4db455eddf2cae38380f6dcae3c50fa1b6a21",
+      "inputSha256": "9317af2991f5887fe3a0a5bdd021324db2705b93a560ea9907d17c894af1dd81"
+    },
+    {
+      "output": "art-review/madara/madara-walk-directions-chibi-v1.png",
+      "input": "art-review/madara/madara-walk-directions-v3.png",
+      "rawOutput": "C:/Users/Tim/.codex/generated_images/01a1b4b3-3629-74b0-9181-310af0b64d55/exec-b3b4054e-a696-427b-b75e-5a17029741a9.png",
+      "prompt": "Use case: style-transfer. Edit the Madara action sheet; Naruto common-v1 is the exact game art style/proportion reference only. Redraw EVERY sprite at the same scale in the original row-major layout. Head including hair roughly 40% of standing height, short compact torso and short limbs, 2.5 heads tall. Crisp pixel art, dark outlines, limited cel shading, not tall realistic anime. Preserve Madara long spiky black hair covering one eye, red segmented armor, dark underclothes/gloves, shin wraps, sandals, stern visible eye. Same action/direction semantics; entire bodies; generous genuinely transparent gutters/background; no text, labels, effects, duplicate hands or feet. Readable at 64px. Layout and poses: 2x4: row1 front left forward/left passing/right forward/right passing; row2 same four back walk phases; clearly alternate feet and arms, same baseline.",
+      "transparent_background": true,
+      "sha256": "f13ff940d7bee7a3a5760453e43164816351f90d09cb1cb0af58d7e94f332ad8",
+      "inputSha256": "b5cb65a8c30c07afb525763afedc659d7fc6c851724d8fa11c741edb98c1dd68"
+    }
+  ]
+}

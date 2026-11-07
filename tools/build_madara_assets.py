@@ -211,6 +211,12 @@ def extra_sheets():
 
 
 def main():
+    # Preserve the reviewed non-body actors while refreshing the current body.
+    # The historical full rebuild below is only for pre-chibi source trees.
+    chibi_sources = ['actions', 'taijutsu', 'body-directions', 'casting-directions', 'walk-directions']
+    if all((ART / ('madara-' + name + '-chibi-v1.png')).is_file() for name in chibi_sources):
+        from build_madara_chibi_assets import main as build_chibi
+        return build_chibi()
     source = ART / 'madara-actions-v1.png'
     image = Image.open(source).convert('RGBA')
     alpha = image.getchannel('A')

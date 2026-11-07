@@ -1,0 +1,227 @@
+{
+  "scope": "normal entry, three controlled true fire casts earn Perfect; native RAF/camera thereafter; not natural growth",
+  "views": {
+    "desktop": {
+      "start": {
+        "form": {
+          "form": "perfect",
+          "phase": "manifest",
+          "height": 380,
+          "age": 0,
+          "aim": 0,
+          "side": 1,
+          "blade": null,
+          "prevBlade": null,
+          "perfect": true,
+          "remaining": 6
+        },
+        "perfectCount": 1
+      },
+      "active": {
+        "framing": {
+          "active": true,
+          "scale": 1.2893240251513551,
+          "nativeScale": 1.6666666666666667,
+          "targetScale": 1.2893240251513551,
+          "offset": 192.152875,
+          "top": 454.30575,
+          "bottom": 70,
+          "width": 1280,
+          "height": 900.0000000000001
+        },
+        "top": 111.99885390028292,
+        "bottom": 787.998853900283,
+        "ownerScreenY": 697.7461721396882,
+        "form": {
+          "form": "perfect",
+          "phase": "sweep",
+          "height": 380,
+          "age": 0.11486666666666578,
+          "aim": 0,
+          "side": -1,
+          "blade": {
+            "ax": 128.19299999999998,
+            "ay": -149.54162499999998,
+            "bx": 306.74787499999996,
+            "by": -177.92762499999998,
+            "radius": 40.5,
+            "renderOffsetY": -40,
+            "frame": {
+              "sheet": "perfect",
+              "index": 2
+            }
+          },
+          "prevBlade": {
+            "ax": 128.19299999999998,
+            "ay": -149.54162499999998,
+            "bx": 306.74787499999996,
+            "by": -177.92762499999998,
+            "radius": 40.5,
+            "renderOffsetY": -40,
+            "frame": {
+              "sheet": "perfect",
+              "index": 2
+            }
+          },
+          "perfect": true,
+          "remaining": 4.635133333333334
+        }
+      },
+      "pauseFrozen": true,
+      "end": {
+        "scale": 1.6666666666666667,
+        "expected": 1.6666666666666667,
+        "cue": null
+      }
+    },
+    "mobile390": {
+      "start": {
+        "form": {
+          "form": "perfect",
+          "phase": "manifest",
+          "height": 380,
+          "age": 0,
+          "aim": 0,
+          "side": 1,
+          "blade": null,
+          "prevBlade": null,
+          "perfect": true,
+          "remaining": 6
+        },
+        "perfectCount": 1
+      },
+      "active": {
+        "framing": {
+          "active": true,
+          "scale": 0.7222222222222222,
+          "nativeScale": 0.7222222222222222,
+          "targetScale": 0.7222222222222222,
+          "offset": 25.07498076923082,
+          "top": 454.30575,
+          "bottom": 70,
+          "width": 390,
+          "height": 843.9999999999999
+        },
+        "top": 111.99991622298177,
+        "bottom": 490.66518011187065,
+        "ownerScreenY": 440.1096245563151,
+        "form": {
+          "form": "perfect",
+          "phase": "sweep",
+          "height": 380,
+          "age": 0.11486666666666556,
+          "aim": 0,
+          "side": -1,
+          "blade": {
+            "ax": 128.19299999999998,
+            "ay": -149.54162499999998,
+            "bx": 306.74787499999996,
+            "by": -177.92762499999998,
+            "radius": 40.5,
+            "renderOffsetY": -40,
+            "frame": {
+              "sheet": "perfect",
+              "index": 2
+            }
+          },
+          "prevBlade": {
+            "ax": 128.19299999999998,
+            "ay": -149.54162499999998,
+            "bx": 306.74787499999996,
+            "by": -177.92762499999998,
+            "radius": 40.5,
+            "renderOffsetY": -40,
+            "frame": {
+              "sheet": "perfect",
+              "index": 2
+            }
+          },
+          "perfect": true,
+          "remaining": 4.635133333333334
+        }
+      },
+      "pauseFrozen": true,
+      "end": {
+        "scale": 0.7222222222222222,
+        "expected": 0.7222222222222222,
+        "cue": null
+      }
+    },
+    "mobile360": {
+      "start": {
+        "form": {
+          "form": "perfect",
+          "phase": "manifest",
+          "height": 380,
+          "age": 0,
+          "aim": 0,
+          "side": 1,
+          "blade": null,
+          "prevBlade": null,
+          "perfect": true,
+          "remaining": 6
+        },
+        "perfectCount": 1
+      },
+      "active": {
+        "framing": {
+          "active": true,
+          "scale": 0.6666666666666666,
+          "nativeScale": 0.6666666666666666,
+          "targetScale": 0.6666666666666666,
+          "offset": 22.30574999999999,
+          "top": 454.30575,
+          "bottom": 70,
+          "width": 360,
+          "height": 800
+        },
+        "top": 111.99993108389177,
+        "bottom": 461.5370977505584,
+        "ownerScreenY": 414.87043108389173,
+        "form": {
+          "form": "perfect",
+          "phase": "sweep",
+          "height": 380,
+          "age": 0.11466666666666558,
+          "aim": 0,
+          "side": -1,
+          "blade": {
+            "ax": 128.19299999999998,
+            "ay": -149.54162499999998,
+            "bx": 306.74787499999996,
+            "by": -177.92762499999998,
+            "radius": 40.5,
+            "renderOffsetY": -40,
+            "frame": {
+              "sheet": "perfect",
+              "index": 2
+            }
+          },
+          "prevBlade": {
+            "ax": 128.19299999999998,
+            "ay": -149.54162499999998,
+            "bx": 306.74787499999996,
+            "by": -177.92762499999998,
+            "radius": 40.5,
+            "renderOffsetY": -40,
+            "frame": {
+              "sheet": "perfect",
+              "index": 2
+            }
+          },
+          "perfect": true,
+          "remaining": 4.635333333333334
+        }
+      },
+      "pauseFrozen": true,
+      "end": {
+        "scale": 0.6666666666666666,
+        "expected": 0.6666666666666666,
+        "cue": null
+      }
+    }
+  },
+  "errors": [],
+  "failures": [],
+  "ok": true
+}
