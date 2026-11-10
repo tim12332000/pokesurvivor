@@ -1,0 +1,77 @@
+{
+  "scope": "Controlled real-enemy final-slash contracts, not natural growth or subjective visual approval",
+  "sourceSha256": "0d50517a002d854c0a11d918b8a07630c0655ead09d5a5da60b67e613c9dc854",
+  "cases": {
+    "charge_and_expanded_duration": {
+      "ok": true,
+      "result": {
+        "start": 4.489999999999949,
+        "releaseAge": 9.969999999999832,
+        "charge": 5.479999999999883,
+        "duration": 11.93,
+        "arcAngle": 2.2,
+        "range": 1100
+      }
+    },
+    "advancing_arc_hits_spread_once": {
+      "ok": true,
+      "result": {
+        "counts": [
+          1,
+          1,
+          1,
+          0,
+          0
+        ],
+        "damage": [
+          554,
+          554,
+          554,
+          0,
+          0
+        ],
+        "castId": 9
+      }
+    },
+    "pause_and_skill_removal": {
+      "ok": true,
+      "result": {
+        "distance": 9,
+        "pause": true,
+        "unlearn": true
+      }
+    },
+    "same_wave_callback_clear": {
+      "ok": true,
+      "result": {
+        "h1": 1,
+        "h2": 0
+      }
+    },
+    "death_and_world_cancel": {
+      "ok": true,
+      "result": {
+        "death": true,
+        "world": true
+      }
+    },
+    "ordinary_guardian_excludes_finisher": {
+      "ok": true,
+      "result": {
+        "duration": 6,
+        "finisher": false,
+        "arc": false
+      }
+    },
+    "army_guardian_excludes_finisher": {
+      "ok": true,
+      "result": {
+        "observed": 2008,
+        "finisher": false,
+        "arc": false
+      }
+    }
+  },
+  "errors": [],
+  "ok": true
+}

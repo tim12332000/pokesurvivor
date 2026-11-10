@@ -1,0 +1,461 @@
+{
+  "scope": "controlled production runtime regression",
+  "cases": {
+    "pursuit_dodge_eighty_percent": {
+      "ok": true,
+      "result": {
+        "dodges": 8,
+        "hits": 2,
+        "dodgeInvulnerability": 0
+      }
+    },
+    "wood_army_appears_in_windows": {
+      "ok": true,
+      "result": {
+        "expiry": 6.96,
+        "ready": 18.96,
+        "minimumRest": 12,
+        "secondWave": 16
+      }
+    },
+    "chain_and_quantity": {
+      "ok": true,
+      "result": [
+        {
+          "q": 0,
+          "expected": 4,
+          "segments": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "damage": [
+            271,
+            0,
+            197,
+            0
+          ],
+          "phases": [
+            "approach",
+            "contact",
+            "return"
+          ],
+          "poses": [
+            "palm",
+            "elbow",
+            "kick"
+          ],
+          "targetsSeen": [
+            2,
+            4,
+            2,
+            4
+          ],
+          "seconds": 1.370000000000001
+        },
+        {
+          "q": 1,
+          "expected": 5,
+          "segments": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "damage": [
+            277,
+            0,
+            285,
+            0
+          ],
+          "phases": [
+            "approach",
+            "contact",
+            "return"
+          ],
+          "poses": [
+            "palm",
+            "elbow",
+            "kick"
+          ],
+          "targetsSeen": [
+            6,
+            8,
+            6,
+            8,
+            6
+          ],
+          "seconds": 1.5700000000000012
+        },
+        {
+          "q": 4,
+          "expected": 9,
+          "segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "damage": [
+            475,
+            0,
+            491,
+            0
+          ],
+          "phases": [
+            "approach",
+            "contact",
+            "return"
+          ],
+          "poses": [
+            "palm",
+            "elbow",
+            "kick"
+          ],
+          "targetsSeen": [
+            10,
+            12,
+            10,
+            12,
+            10,
+            12,
+            10,
+            12,
+            10
+          ],
+          "seconds": 2.249999999999996
+        }
+      ]
+    },
+    "single_target_and_impetus": {
+      "ok": true,
+      "result": {
+        "hits": 4,
+        "impetus": 1
+      }
+    },
+    "target_death": {
+      "ok": true,
+      "result": {
+        "replacementHits": 4
+      }
+    },
+    "movement_cancels": {
+      "ok": true,
+      "result": {
+        "x": 0,
+        "y": 0,
+        "hits": 0
+      }
+    },
+    "pause_death_clear": {
+      "ok": true,
+      "result": {
+        "pause": true,
+        "death": true,
+        "callbackClear": {
+          "h1": 1,
+          "h2": 0
+        }
+      }
+    },
+    "wall_blocks": {
+      "ok": true,
+      "result": {
+        "accepted": false,
+        "hits": 0,
+        "x": 0
+      }
+    },
+    "moving_enemy": {
+      "ok": true,
+      "result": {
+        "hits": 4,
+        "enemy": {
+          "x": 184,
+          "y": 16
+        }
+      }
+    },
+    "return_input": {
+      "ok": true,
+      "result": {
+        "x": 115.13241161495783,
+        "y": 0.0735796383251428
+      }
+    },
+    "finisher_miss": {
+      "ok": true,
+      "result": {
+        "earlierHits": 3,
+        "impetus": 0
+      }
+    },
+    "identity_cancellation": {
+      "ok": true,
+      "result": {
+        "unlearn": true,
+        "world": true,
+        "epoch": true
+      }
+    },
+    "dynamic_wall": {
+      "ok": true,
+      "result": {
+        "approach": {
+          "wall": 24.999013602508214,
+          "x": 2.220446049250313e-16,
+          "hits": 0
+        },
+        "return": {
+          "wall": 62.56579888781123,
+          "x": 67.19387106215667
+        }
+      }
+    },
+    "directional_contacts": {
+      "ok": true,
+      "result": [
+        {
+          "rank": 1,
+          "aim": 0,
+          "hits": 4,
+          "segments": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "rank": 1,
+          "aim": 1.5707963267948966,
+          "hits": 4,
+          "segments": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "rank": 1,
+          "aim": 3.141592653589793,
+          "hits": 4,
+          "segments": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "rank": 1,
+          "aim": -1.5707963267948966,
+          "hits": 4,
+          "segments": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        {
+          "rank": 5,
+          "aim": 0,
+          "hits": 12,
+          "segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "rank": 5,
+          "aim": 1.5707963267948966,
+          "hits": 12,
+          "segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "rank": 5,
+          "aim": 3.141592653589793,
+          "hits": 12,
+          "segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ]
+        },
+        {
+          "rank": 5,
+          "aim": -1.5707963267948966,
+          "hits": 12,
+          "segments": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11
+          ]
+        }
+      ]
+    },
+    "retreat_after_finisher_hit": {
+      "ok": true,
+      "result": {
+        "hits": 4,
+        "impetus": 1,
+        "cancelPoint": {
+          "x": 100.1339349683949,
+          "y": 0.04935801495380876
+        }
+      }
+    },
+    "three_finishers_transform_guardian": {
+      "ok": true,
+      "result": {
+        "rounds": [
+          {
+            "impetus": 1,
+            "perfect": false,
+            "clock": 1.0000000000000007
+          },
+          {
+            "impetus": 2,
+            "perfect": false,
+            "clock": 2.0000000000000013
+          },
+          {
+            "impetus": 0,
+            "perfect": true,
+            "clock": 2.99999999999998
+          }
+        ],
+        "perfectCount": 1,
+        "form": "perfect"
+      }
+    },
+    "wood_army_stays_local": {
+      "ok": true,
+      "result": {
+        "observed": [
+          {
+            "serial": 36,
+            "contacts": 8,
+            "duration": 0.8
+          },
+          {
+            "serial": 37,
+            "contacts": 8,
+            "duration": 0.8
+          },
+          {
+            "serial": 39,
+            "contacts": 8,
+            "duration": 0.8
+          },
+          {
+            "serial": 40,
+            "contacts": 8,
+            "duration": 0.8
+          },
+          {
+            "serial": 38,
+            "contacts": 8,
+            "duration": 0.8
+          },
+          {
+            "serial": 41,
+            "contacts": 8,
+            "duration": 0.8
+          },
+          {
+            "serial": 35,
+            "contacts": 8,
+            "duration": 0.8
+          },
+          {
+            "serial": 42,
+            "contacts": 8,
+            "duration": 0.8
+          },
+          {
+            "serial": 43,
+            "contacts": 8,
+            "duration": 0.8
+          }
+        ],
+        "impetus": 0,
+        "army": 9
+      }
+    },
+    "real_quantity_card": {
+      "ok": true,
+      "result": {
+        "before": {
+          "接觸連段": 4
+        },
+        "after": {
+          "接觸連段": 5
+        },
+        "quantityPicks": 1,
+        "segments": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "hits": 5
+      }
+    }
+  },
+  "errors": [],
+  "sourceSha256": "0d50517a002d854c0a11d918b8a07630c0655ead09d5a5da60b67e613c9dc854",
+  "ok": true
+}
