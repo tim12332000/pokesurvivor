@@ -1,0 +1,67 @@
+{
+  "scope": "controlled actual normal-menu runtime, fixed step; no natural-growth claim",
+  "sourceSha256": "ca760052326bde85d97d127efa78fe660e9c9a3083cbc3c2150b2eb31aa20851",
+  "baselineSha256": "ab94bff303428fe28e697e4ff2718abed5022e3ce142800bb652d3c13667275b",
+  "fullReportSha256": "8c803d244320607c1080640e4a6593e4852690bb490981e4c081bec493fde4e8",
+  "fullReportLocalPath": "art-review\\lee-skill-afterimages-20261112\\qa\\mechanics.json",
+  "ok": true,
+  "errors": [],
+  "cases": {
+    "naruto-lee-pursuit": {
+      "ok": true,
+      "combatIdentical": [
+        "positions",
+        "hits",
+        "loss",
+        "damage",
+        "ended"
+      ]
+    },
+    "naruto-lee": {
+      "ok": true,
+      "combatIdentical": [
+        "positions",
+        "hits",
+        "loss",
+        "damage",
+        "ended"
+      ]
+    },
+    "naruto-lotus": {
+      "ok": true,
+      "combatIdentical": [
+        "positions",
+        "hits",
+        "loss",
+        "damage",
+        "ended"
+      ]
+    },
+    "naruto-reverse-lotus": {
+      "ok": true,
+      "combatIdentical": [
+        "positions",
+        "hits",
+        "loss",
+        "damage",
+        "ended"
+      ]
+    },
+    "naruto-lee-drunken": {
+      "ok": true,
+      "combatIdentical": [
+        "positions",
+        "hits",
+        "loss",
+        "damage",
+        "ended"
+      ]
+    },
+    "lifecycle": {
+      "ok": true
+    },
+    "gates_walking": {
+      "ok": true
+    }
+  }
+}

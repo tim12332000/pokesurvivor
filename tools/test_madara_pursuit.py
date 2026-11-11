@@ -32,6 +32,34 @@ HELPERS = r'''() => {
 }'''
 
 CASES = {
+    'afterimages_low_quality_keeps_newest': r'''() => {
+ const T=PursuitTest,{A,M,p,assert}=T,m=T.scene();A.spawn(145,0);T.cast(m);T.until(()=>M.stateFor(p)?.afterimages?.length>0);const s=M.stateFor(p),newest=s.afterimages.at(-1),quality=G.Settings.get('quality'),draw=G.MadaraArt.draw,ctx=document.createElement('canvas').getContext('2d');let newestDraws=0;
+ try{G.Settings.set('quality','low');assert(G.Settings.fx===0,'fixture not low quality');G.MadaraArt.draw=function(c,a,o){if(o.pose===newest.pose&&o.alpha>0)newestDraws++;return draw.call(this,c,a,o)};for(const d of M.drawables())d.draw(ctx);assert(newestDraws===1,'low quality skipped newest/only echo');return {snapshots:s.afterimages.length,newestDraws};}finally{G.MadaraArt.draw=draw;G.Settings.set('quality',quality)}
+}''',
+    'afterimages_are_visual_snapshots': r'''() => {
+ const T=PursuitTest,{A,M,p,assert}=T,m=T.scene(),enemy=A.spawn(145,0);T.cast(m);T.until(()=>M.stateFor(p)?.afterimages?.length>=3);const s=M.stateFor(p),image=s.afterimages[0],point={x:image.x,y:image.y,aim:image.pose.aim};p.x+=12;s.body.aim+=.2;assert(image.x===point.x&&image.y===point.y&&image.pose.aim===point.aim,'afterimage followed live body');p.x-=12;s.body.aim-=.2;
+ const before=JSON.stringify(s.afterimages),hp=enemy.hp,damage=s.damage,canvas=document.createElement('canvas'),ctx=canvas.getContext('2d'),draw=G.MadaraArt.draw;let calls=0;
+ G.MadaraArt.draw=function(c,a,o){if(o?.alpha>0&&o.alpha<1){calls++;assert(o.pose&&o.state==='cast','echo lost authored pose')}return draw.call(this,c,a,o)};
+ try{for(let i=0;i<3;i++)for(const d of M.drawables())d.draw(ctx)}finally{G.MadaraArt.draw=draw}
+ assert(calls>0&&before===JSON.stringify(s.afterimages),'draw mutated afterimages');assert(enemy.hp===hp&&s.damage===damage,'afterimages caused damage');M.update(.3);assert(before===JSON.stringify(s.afterimages),'paused trail advanced');
+ let maximum=s.afterimages.length;for(let i=0;i<60;i++){T.step();maximum=Math.max(maximum,s.afterimages.length)}assert(maximum<=6,'unbounded trail');G.Input.axis=()=>[-1,0];for(let i=0;i<30;i++)T.step();G.Input.axis=T.nativeAxis;assert(!s.body&&s.afterimages.length===0,'cancel left afterimages');return {drawCalls:calls,maxSnapshots:maximum,damageFromDrawing:0};
+}''',
+    'afterimages_clear_with_skill': r'''() => {
+ const T=PursuitTest,{A,M,p,assert}=T,m=T.scene();A.spawn(145,0);T.cast(m);T.until(()=>M.stateFor(p)?.afterimages?.length>0);const s=M.stateFor(p);p.moves=p.moves.filter(x=>x.id!==m.id);T.step();assert(s.afterimages.length===0,'unlearn retained afterimages');M.clear(p);assert(!M.stateFor(p),'clear retained afterimage owner');return true;
+}''',
+    'three_hits_before_switch': r'''() => {
+ const T=PursuitTest,{A,M,p,assert}=T,m=T.scene(5,4),one=A.spawn(145,0),two=A.spawn(230,75),three=A.spawn(110,-130);T.cast(m);const s=M.stateFor(p),sequence=[],seen=new Set();
+ for(let i=0;i<1000&&s.body;i++){const f=s.body;if(f.pursuitPhase==='contact'&&!seen.has(f.index)){seen.add(f.index);sequence.push({index:f.index,target:f.target.id});}T.step();}
+ assert(sequence.length===12,'missing focused contacts');assert(sequence[0].target===one.id&&sequence.slice(0,3).every(x=>x.target===one.id),'first enemy not retained for three strikes '+JSON.stringify(sequence));
+ for(let i=0;i<sequence.length;i+=3){assert(sequence.slice(i,i+3).every(x=>x.target===sequence[i].target),'focus changed within three-hit group');if(i)assert(sequence[i].target!==sequence[i-1].target,'did not switch after third hit');}
+ return {sequence};
+}''',
+    'focus_death_retargets_early': r'''() => {
+ const T=PursuitTest,{A,M,p,assert}=T,m=T.scene(),one=A.spawn(145,0),two=A.spawn(220,65),events=A.watch(two),hurt=one.hurt;let firstHits=0;
+ one.hurt=function(...args){firstHits++;const r=hurt.apply(this,args);this.dead=true;this.hp=0;return r};T.cast(m);const s=M.stateFor(p),sequence=[],seen=new Set();
+ for(let i=0;i<1000&&s.body;i++){const f=s.body;if(f.pursuitPhase==='contact'&&!seen.has(f.index)){seen.add(f.index);sequence.push(f.target.id)}T.step();}
+ assert(firstHits===1&&events.length>0,'death did not continue real hits');assert(sequence[0]===one.id&&sequence[1]===two.id,'dead focus blocked early switch '+JSON.stringify(sequence));return {sequence,firstHits,replacementHits:events.length};
+}''',
     'pursuit_dodge_eighty_percent': r'''() => {
  const T=PursuitTest,{A,M,p,assert}=T,m=T.scene(),e=A.spawn(145,0);T.cast(m);T.until(()=>M.stateFor(p).body?.pursuitPhase==='contact');const originalRandom=Math.random,context={cause:'contact',sourceEnemy:e,fromX:e.x,fromY:e.y};let dodges=0,hits=0;
  function incoming(roll,c=context,pure=false){p.hp=p.maxHp;p.invuln=0;const hp=p.hp;Math.random=()=>roll;A.resume();try{p.hurt(10,null,pure,c)}finally{A.pause()}return {dodged:p.hp===hp,invuln:p.invuln};}
