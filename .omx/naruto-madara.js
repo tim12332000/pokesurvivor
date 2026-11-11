@@ -4,7 +4,7 @@
   if(G.NarutoMadara)return;
   const DEX=30016,C=G.Combat,EPS=1e-8,states=new Map();
   const rows=[
-    ['naruto-madara','basic','戰場演舞','fighting',1,.95,16,105,90,'快速踏步接敵，以低單段傷害的掌、肘、踢密集連續追擊，優先換人、逐段加速，末段迴旋踢清身；數量增加真追擊，最多12段。正常收招沿可通行路線回位，移動輸入立即中止追擊與回位。二階踢掃、三階擴大接敵範圍，末擊真命中蓄勢一格。追擊與連打期間有80%機率閃避敵人攻擊，閃避不給無敵；起手、回位與收招後不適用。連續追擊為本作改編，仍可能受傷；木分身維持近身連打。'],
+    ['naruto-madara','basic','戰場演舞','fighting',1,.95,16,105,90,'快速踏步接敵，以低單段傷害的掌、肘、踢密集連續追擊，同一敵人連打3次後優先換人、逐段加速，末段迴旋踢清身；數量增加真追擊，最多12段。正常收招沿可通行路線回位，移動輸入立即中止追擊與回位。二階踢掃、三階擴大接敵範圍，末擊真命中蓄勢一格。追擊與連打期間有80%機率閃避敵人攻擊，閃避不給無敵；起手、回位與收招後不適用。連續追擊為本作改編，仍可能受傷；木分身維持近身連打。'],
     ['naruto-madara-fire','fire','火遁・豪火滅卻','fire',2,18,42,430,210,'結印後從嘴部吐出4→6面寬火牆，每面固定當次原點與方向，向外推進才命中；數量至12面，身體0.74秒即收勢。三階留下真火線，四階交錯雙角火線。每輪真命中最多蓄勢一格。'],
     ['naruto-madara-susanoo','susanoo','須佐能乎・巨刃連斬','psychic',3,30,78,460,240,'須佐投射現身六秒，骨臂接觸成長為甲胄主刀連斬、另一刀護勢；數量增加實際刀線但維持六秒，不佔本體出手。二階後體術末擊與火牆真命中蓄滿三格，顯現六秒完成體巨刀與前推劍壓。完成體末斬蓄力5秒，再揮出一道向前擴張的大範圍圓弧斬波，斬波推進才命中。本作勢能改編，不給無敵。'],
     ['naruto-madara-meteor','meteor','天礙震星・雙重落石','rock',7,52,155,700,250,'第一巨岩撞裂地面，第二顆砸碎更大區域，接續4→8塊真碎岩落向不同地點；數量卡至16個碎岩落點。每塊有獨立預告、高度與碰撞，走出可閃避。三階殘岩可由本體火牆引爆一次碎岩接力；碎岩及連動為本作改編。'],
@@ -20,7 +20,7 @@
   function profile(a,m){
     const i=rank(m)-1,kind=m.madaraKind||m.digiMode?.replace('madara-','')||'basic',damage=m.dmg*(a.atk??1);
     const common={kind,rank:i+1,damage,range:m.range,radius:m.radius};
-    if(kind==='basic'){const contacts=count(a,4+i,12);return {...common,range:180+30*i,contacts,pulses:contacts,contactRadius:12+2*i,contactReach:56+4*i,stepBudget:180+30*i,pursuitRange:340+40*i,pursuitSpeed:1200+100*i,contactDuration:.15,minContactDuration:.075,dodgeChance:.8,returnDuration:.55,kickSweep:i>=1,duration:.18+contacts*.15,charge:.07};}
+    if(kind==='basic'){const contacts=count(a,4+i,12);return {...common,range:180+30*i,contacts,pulses:contacts,contactRadius:12+2*i,contactReach:56+4*i,stepBudget:180+30*i,pursuitRange:340+40*i,pursuitSpeed:1200+100*i,contactDuration:.15,minContactDuration:.075,hitsPerTarget:3,dodgeChance:.8,returnDuration:.55,kickSweep:i>=1,duration:.18+contacts*.15,charge:.07};}
     if(kind==='fire'){const fronts=count(a,4+Math.floor(i/2),12);return {...common,fronts,pulses:fronts,width:320+65*i,speed:620+40*i,range:560+85*i,depth:36,release:.25,releaseWindow:.35,duration:.74,charge:.25,linger:i>=2?1.1:0,fork:i>=3,lingerTicks:i>=4?4:3};}
     if(kind==='susanoo'){const slashes=count(a,4+i,12);return {...common,slashes,pulses:slashes,duration:6,manifest:.35,sweepDuration:.28,recovery:.28,bladeLength:220+25*i,bladeRadius:24+3*i,perfectLength:430+25*i,pressureEvery:i>=3?2:3,finisherCharge:5,finisherSweep:.48,finisherRecovery:.45,finisherRange:1100,finisherArc:2.2,finisherDepth:48,perfectUnlocked:i>=1,form:i>=1?'armored':'rib',charge:.35};}
     if(kind==='meteor'){const fragments=count(a,4+i,16);return {...common,meteorCount:2,fragments,pulses:2+fragments,radius:220+25*i,secondRadius:330+30*i,fragmentRadius:90+10*i,fragmentSpread:310+25*i,delay:.85,release:.44,duration:.66,charge:.44,fallTime:.95,craterDuration:i>=2?6:3,craterRelay:i>=2};}
@@ -53,7 +53,7 @@
   }
   const englishNames=['Battlefield Taijutsu','Fire Release: Majestic Destroyer Flame','Susanoo: Giant Blade Barrage','Heaven Concealed: Twin Meteors','Wood Release: Wood Clones'];
   const englishDescriptions=[
-    'Quickly step into a faster chain of lighter palm, elbow and kick contacts, preferring a new enemy each strike and accelerating through the chain. Quantity adds pursuits up to twelve. The final spinning kick earns one momentum on a true enemy hit. Return along a clear route after the chain; movement input immediately cancels pursuit and return. Rank 2 gains sweeping kicks; rank 3 expands pursuit reach. During pursuit and strikes, incoming enemy attacks have an 80% chance to be dodged, without granting invulnerability. The opening charge, return and time after the chain gain no dodge bonus. This pursuit is a game adaptation. Wood doubles keep their close-range combo.',
+    'Quickly step into a faster chain of lighter palm, elbow and kick contacts, landing three strikes on the same enemy before preferring a new target and accelerating through the chain. Quantity adds pursuits up to twelve. The final spinning kick earns one momentum on a true enemy hit. Return along a clear route after the chain; movement input immediately cancels pursuit and return. Rank 2 gains sweeping kicks; rank 3 expands pursuit reach. During pursuit and strikes, incoming enemy attacks have an 80% chance to be dodged, without granting invulnerability. The opening charge, return and time after the chain gain no dodge bonus. This pursuit is a game adaptation. Wood doubles keep their close-range combo.',
     'After a short seal, exhale four to six broad advancing fire fronts. Each snapshots its mouth origin and heading; enemies are struck only when the front arrives. Quantity adds fronts up to twelve without extending the 0.74-second body pose. Rank 3 leaves burning lines; rank 4 crosses two headings. A successful cast earns at most one momentum.',
     'An independent six-second guardian grows from skeletal limbs to armored blades. Quantity adds real blade sweeps without locking the body. Rank 2 unlocks a six-second Perfect Susanoo at three momentum, with gigantic blades and advancing sword pressure. The Perfect form ends with a five-second charged slash that releases one broad, expanding crescent wave, dealing damage only as it advances. Momentum and timing are game adaptations; no invulnerability.',
     'Two giant rocks land separately: the second shatters a wider area. Four to eight fragments then fall at separate marked locations; quantity adds fragments up to sixteen. Each has real height and a single landing collision. Rank 3 craters permit one fire-triggered rubble burst per cast, a non-recursive game adaptation.',
@@ -106,7 +106,7 @@
   let actorSequence=0;
   function state(owner){
     let s=states.get(owner);if(s&&(s.world!==G.World||s.epoch!==G.CombatPulse.epoch)){clear(owner);s=null;}
-    if(!s){s={owner,world:G.World,epoch:G.CombatPulse.epoch,clock:0,body:null,guardian:null,fires:[],flames:[],meteors:[],pressures:[],army:[],craters:[],effects:[],contacts:[],hitContacts:[],casts:{},hits:0,damage:0,propHits:0,propDamage:0,impetus:0,perfectCount:0,readyAt:new Map(),command:null};Object.defineProperty(s,'action',{get(){return s.body;}});Object.defineProperty(s,'clones',{get(){return s.army;}});Object.defineProperty(s,'fields',{get(){return [...s.fires,...s.flames,...s.meteors,...s.pressures];}});states.set(owner,s);}return s;
+    if(!s){s={owner,world:G.World,epoch:G.CombatPulse.epoch,clock:0,body:null,guardian:null,fires:[],flames:[],meteors:[],pressures:[],army:[],craters:[],effects:[],afterimages:[],contacts:[],hitContacts:[],casts:{},hits:0,damage:0,propHits:0,propDamage:0,impetus:0,perfectCount:0,readyAt:new Map(),command:null};Object.defineProperty(s,'action',{get(){return s.body;}});Object.defineProperty(s,'clones',{get(){return s.army;}});Object.defineProperty(s,'fields',{get(){return [...s.fires,...s.flames,...s.meteors,...s.pressures];}});states.set(owner,s);}return s;
   }
   function clear(owner){if(!owner){for(const a of [...states.keys()])clear(a);return;}const s=states.get(owner);if(!s)return;for(const f of [s.body,s.guardian,...s.fires,...s.flames,...s.meteors,...s.pressures,...s.army.flatMap(a=>[a.body,a.guardian])])if(f?.cast)f.cast.runEpoch=-1;states.delete(owner);}
   function path(x,y,tx,ty,target=null){if(G.World.projectilePathClear)return G.World.projectilePathClear(x,y,tx,ty,target,{radius:1,spacing:4,includeStart:false});const n=Math.max(1,Math.ceil(Math.hypot(tx-x,ty-y)/4));for(let i=1;i<=n;i++){const px=x+(tx-x)*i/n,py=y+(ty-y)*i/n;if(G.World.isWall?.(px,py))return false;const b=G.World.projectileBlock?.(px,py,1);if(b&&b!==target)return false;}return true;}
@@ -208,6 +208,7 @@
     const a=s.owner,p=f.spec,r=p.stepBudget;
     const eligible=t=>alive(t)&&Math.hypot(t.x-f.origin.x,t.y-f.origin.y)<=p.pursuitRange+(t.r||0)&&path(a.x,a.y,t.x,t.y,t.destructible?t:null);
     const candidates=enemies(a.x,a.y,r).filter(eligible);
+    if(candidates.includes(f.target)&&(f.comboTarget!==f.target||(f.comboHits||0)<p.hitsPerTarget))return f.target;
     return nearest(a,candidates,t=>t!==f.lastTarget)||nearest(a,candidates,()=>true)||nearest(a,props(a.x,a.y,r),eligible);
   }
   function returnFromPursuit(f){
@@ -268,6 +269,7 @@
     }
     segment.previousPoint=point;
     if(to>=1){
+      if(segment.hitSet.has(f.target)){f.comboHits=f.comboTarget===f.target?(f.comboHits||0)+1:1;f.comboTarget=f.target;}
       f.lastTarget=f.target;f.index++;
       if(f.index>=p.contacts){
         returnFromPursuit(f);
@@ -387,7 +389,7 @@
       if(!valid(owner)||s.world!==G.World||s.epoch!==G.CombatPulse.epoch){clear(owner);continue;}
       // Explicit contract: freeze suspends this owner's released fields as well as body/army.
       if(owner.frozen)continue;s.clock+=h;for(const e of s.effects)e.age+=h;s.effects=s.effects.filter(e=>e.age<e.life);for(const c of s.craters)c.age+=h;s.craters=s.craters.filter(c=>c.age<c.duration&&!!learned(owner,c.moveId));
-      if(s.body&&!advanceBody(s,s.body,h))s.body=null;if(states.get(owner)!==s)continue;if(s.guardian&&!advanceGuardian(s,s.guardian,h))s.guardian=null;if(states.get(owner)!==s)continue;
+      if(s.body&&!advanceBody(s,s.body,h))s.body=null;if(states.get(owner)!==s)continue;updateAfterimages(s,h);if(s.guardian&&!advanceGuardian(s,s.guardian,h))s.guardian=null;if(states.get(owner)!==s)continue;
       const advanceList=(key,fn)=>{for(const f of [...s[key]]){if(!fn(s,f,h)){const i=s[key].indexOf(f);if(i>=0)s[key].splice(i,1);}if(states.get(owner)!==s)break;}};
       advanceList('fires',advanceFront);advanceList('flames',advanceFlame);advanceList('meteors',advanceMeteor);advanceList('pressures',(state,f,delta)=>advanceFront(state,f,delta,true));if(states.get(owner)!==s)continue;
       if(!learned(owner,'naruto-madara-clones'))s.army.length=0;else syncArmyGrowth(s);
@@ -431,11 +433,32 @@
   }
   function drawFront(ctx,f,pressure=false,crowd=1){if(f.curved){drawCrescent(ctx,f);return;}const s=states.get(f.owner),opacity=(f.actor&&s?armyOpacity(s,f.x+Math.cos(f.aim)*f.distance,f.y+Math.sin(f.aim)*f.distance):1)*(!pressure&&(f.actor||f.owner!==G.Game.player)?crowd:1),p=f.spec,d=f.distance,width=f.currentWidth??(pressure?f.width:p.width),offset=pressure?-40:f.visualOffsetY;if(!pressure&&G.MadaraArt?.drawElement?.(ctx,{kind:'fire',phase:'wall',alpha:(f.actor?.50:.72)*opacity,x:f.x+Math.cos(f.aim)*d,y:f.y+Math.sin(f.aim)*d+offset,width,depth:p.depth*2,aim:f.aim,age:f.age,progress:d/p.range}))return;ctx.save();ctx.translate(f.x,f.y+offset);ctx.rotate(f.aim);ctx.globalAlpha=(pressure?.65:.67)*opacity;ctx.strokeStyle=pressure?'#a8d6ff':'#d84b22';ctx.lineWidth=pressure?18:26;ctx.beginPath();ctx.moveTo(d,-width/2);ctx.lineTo(d,width/2);ctx.stroke();const count=pressure?8:Math.max(8,Math.min(20,Math.round(width/25)));for(let i=0;i<count;i++){const y=(i/(count-1)-.5)*width,wave=Math.sin(f.age*16+i*2.4),length=pressure?30:28+wave*12;ctx.fillStyle=pressure?'#e3f7ff':i%3?'#fa8a28':'#ffd35b';ctx.beginPath();ctx.moveTo(d-18,y-12);ctx.quadraticCurveTo(d+length,y-15,d+length+6,y);ctx.quadraticCurveTo(d+length*.4,y+4,d-18,y+12);ctx.closePath();ctx.fill();}ctx.restore();}
   function drawArmy(ctx,s,a){ctx.save();const emergePhase=a.age<.18?'root':a.age<.40?'separate':'reveal';if(a.age<a.emerge)G.MadaraArt?.drawElement?.(ctx,{kind:'wood',phase:emergePhase,x:a.x,y:a.y,height:64,age:a.age,progress:a.age/a.emerge});ctx.globalAlpha=Math.max(0,Math.min(1,(a.age-.40)/.20))*.88;const p=bodyPose(a.body);G.MadaraArt?.draw(ctx,a,{x:a.x,y:a.y,height:64,state:p?'cast':a.phase==='move'?'walk':'idle',time:p?.age??a.age,dir:G.Sprites?.dirFromAngle?.(p?.aim??a.guardian?.aim??(a.target?angle(a.x,a.y,a.target.x,a.target.y):0))??2,pose:p});ctx.strokeStyle='#adbd82';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(a.x-8,a.y+1);ctx.lineTo(a.x+8,a.y+1);ctx.stroke();ctx.restore();}
+  function updateAfterimages(s,dt){
+    for(const image of s.afterimages)image.age+=dt;
+    s.afterimages=s.afterimages.filter(image=>image.age<image.life);
+    if(!learned(s.owner,'naruto-madara')){s.afterimages.length=0;return;}
+    const f=s.body;
+    if(s.owner!==G.Game.player||!f?.pursuit||f.age<f.spec.charge||!['approach','contact'].includes(f.pursuitPhase))return;
+    if(s.clock<(s.nextAfterimageAt||0))return;s.nextAfterimageAt=s.clock+.035;
+    const pose={...bodyPose(f)};
+    s.afterimages.push({x:s.owner.x,y:s.owner.y,height:64*(s.owner.anim?.scale||1),pose,dir:G.Sprites.dirFromAngle(pose.aim),age:0,life:.22});
+    if(s.afterimages.length>6)s.afterimages.shift();
+  }
+  function drawAfterimages(ctx,s){
+    if(!learned(s.owner,'naruto-madara'))return;
+    const low=G.Settings?.fx===0;
+    for(let i=0;i<s.afterimages.length;i++){
+      if(low&&(s.afterimages.length-1-i)%2!==0)continue;
+      const image=s.afterimages[i],fade=1-image.age/image.life,offset=16+image.age*150;
+      G.MadaraArt?.draw(ctx,s.owner,{x:image.x-Math.cos(image.pose.aim)*offset,y:image.y-Math.sin(image.pose.aim)*offset,height:image.height,state:'cast',time:image.pose.age,dir:image.dir,pose:image.pose,alpha:.46*fade,flash:false});
+    }
+  }
   function drawables(){
     if(!['playing','paused','levelup'].includes(G.Game.state))return [];
     const result=[];
     for(const s of states.values()){
       if(!valid(s.owner)||s.world!==G.World||s.epoch!==G.CombatPulse.epoch)continue;
+      if(s.afterimages.length)result.push({y:s.owner.y-.03,draw(ctx){drawAfterimages(ctx,s);}});
       if(s.guardian&&drawable(s,s.guardian)){const g=s.guardian;result.push({y:s.owner.y-.01,draw(ctx){drawGuardian(ctx,s,g);}});}
       for(const a of s.army){if(a.guardian&&drawable(s,a.guardian)){const g=a.guardian;result.push({y:a.y-.01,draw(ctx){drawGuardian(ctx,s,g);}});}result.push({y:a.y,draw(ctx){drawArmy(ctx,s,a);}});}
     }

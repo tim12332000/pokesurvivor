@@ -13,6 +13,7 @@
       { scale: 1.50, count: 10, life: .86, interval: .08, opacity: .66, color: '#ff315b' }
     ].map(style => Object.freeze(style)))
   });
+  const skillTrail=Object.freeze({scale:1,count:6,life:.22,interval:.035,opacity:.46,color:null});
   const cycleDuration = config.openingDuration + config.openingBurstDuration + config.cooldown;
   const states = new Map(), openings = new Map(), cycles = new Map();
   const isClone = owner => !!owner?.sourceOwner;
@@ -202,16 +203,27 @@
     if (performing(this)) return;
     return playerCast.apply(this, args);
   };
-  function snapshot(owner, style) {
+  function trailTechnique(owner) {
+    if(owner!==G.Game.player||owner?.mon?.dex!==30006||owner.dead||!(owner.hp>0)||!controlled(owner)||performing(owner))return null;
+    const whirlwind=G.DigimonSkills?.whirlwindFor?.(owner),lotus=G.NarutoLee?.activeFor?.(owner),drunk=G.NarutoDrunkenFist?.activeFor?.(owner),pursuit=G.NarutoPursuit?.activeFor?.(owner);
+    const active=whirlwind||((lotus?.world===G.World&&(['lift','suspend','combo','descent'].includes(lotus.phase)||lotus.phase==='approach'&&!lotus.pullable))?lotus:null)||drunk||pursuit;
+    if(!active)return null;
+    const pose=G.AnimationLab?.stateFor?.(owner.anim);
+    if(!pose||pose.state!=='skill'||!owner.moves?.some(move=>move.id===pose.id))return null;
+    if(pose.phase==='recovery'||pose.phase==='recover')return null;
+    return {...pose};
+  }
+  function snapshot(owner, style, pose=null) {
     const image = document.createElement('canvas');
     image.width = image.height = 192;
     const tint = image.getContext('2d');
     // Freeze the actual pose now; later turns and attacks must not redraw history.
-    owner.anim.draw(tint, 96, 160, { flash: true });
-    tint.globalCompositeOperation = 'source-in';
-    tint.fillStyle = style.color; tint.fillRect(0, 0, 192, 192);
-    return { x: owner.x, y: owner.y, image, ttl: style.life, life: style.life,
-      scale: style.scale, opacity: style.opacity, color: style.color };
+    const dx=pose?.offsetX||0,dy=(pose?.offsetY||0)-(pose?.visualLift||0),anchorY=pose?96:160;
+    owner.anim.draw(tint, 96-dx, anchorY-dy, { flash: !!style.color });
+    if(style.color){tint.globalCompositeOperation = 'source-in';tint.fillStyle = style.color; tint.fillRect(0, 0, 192, 192);}
+    return { x: owner.x+dx, y: owner.y+dy, image, ttl: style.life, life: style.life,
+      scale: style.scale, opacity: style.opacity, color: style.color, natural:!style.color,anchorY,aim:pose?.aim??owner.aim??0,
+      skillId:pose?.id??null,poseKey:pose?.key??null,phase:pose?.phase??null,visualLift:pose?.visualLift||0,rotation:pose?.rotation||0 };
   }
   function updateOpening(owner, elapsed) {
     const f = openings.get(owner);
@@ -254,25 +266,26 @@
         }
       }
     }
-    for (const [owner, state] of states) if (!owners.includes(owner) || !stage(owner) || state.world !== G.World) states.delete(owner);
+    for (const [owner, state] of states) if (!owners.includes(owner) || owner.mon?.dex!==30006 || owner.dead || !(owner.hp>0) || !controlled(owner) || state.world !== G.World) states.delete(owner);
     for (const owner of owners) {
       if (!isClone(owner) && learnedStage(owner) && !cycles.has(owner)) beginOpening(owner);
       migrate(owner);
       syncMaxHealth(owner);
-      const level = stage(owner);
-      if (!level) { states.delete(owner); continue; }
+      const level = stage(owner),technique=trailTechnique(owner);
+      if (!level&&!technique&&!states.has(owner))continue;
       if (states.get(owner)?.world !== G.World) {
         states.set(owner, { owner, world: G.World, age: 0, sampleT: 0, images: [], lastX: owner.x, lastY: owner.y });
       }
       const state = states.get(owner);
       if(state.level!==level){state.images=[];state.sampleT=0;state.level=level;state.lastX=owner.x;state.lastY=owner.y;}
-      if (G.Game.state !== 'playing' || !(dt > 0) || !Number.isFinite(dt)) continue;
+      if (G.Game.state !== 'playing' || owner.frozen || !(dt > 0) || !Number.isFinite(dt)) continue;
       state.age += dt; state.sampleT -= dt;
-      state.images = state.images.filter(ghost => (ghost.ttl -= dt) > 0);
-      const style = config.trails[level - 1];
+      state.images = state.images.filter(ghost => (ghost.ttl -= dt) > 0&&(!ghost.skillId||owner.moves?.some(move=>move.id===ghost.skillId)));
+      const style = level?config.trails[level - 1]:skillTrail;
+      if(!level&&!technique&&state.images.length===0){states.delete(owner);continue;}
       if (state.images.length > style.count) state.images.splice(0, state.images.length - style.count);
-      if (state.sampleT <= 0 && Math.hypot(owner.x - state.lastX, owner.y - state.lastY) >= 2) {
-        state.images.push(snapshot(owner, style));
+      if (state.sampleT <= 0 && (technique||level&&Math.hypot(owner.x - state.lastX, owner.y - state.lastY) >= 2)) {
+        state.images.push(snapshot(owner, style,technique));
         if (state.images.length > style.count) state.images.shift();
         state.sampleT = style.interval; state.lastX = owner.x; state.lastY = owner.y;
       }
@@ -404,7 +417,7 @@
   function draw(ctx, ground) {
     for (const state of states.values()) {
       const owner = state.owner, level = stage(owner);
-      if (!level || state.world !== G.World || state.level !== level) continue;
+      if (owner.dead||!(owner.hp>0)||owner.mon?.dex!==30006||!controlled(owner)||state.world !== G.World || state.level !== level) continue;
       const phase = state.age, x = owner.x, y = owner.y;
       const opening = openingFor(owner);
       if (opening) drawOpening(ctx, opening, level, ground);
@@ -412,17 +425,21 @@
       if (ground) {
         const alpha = ctx.globalAlpha;
         ctx.imageSmoothingEnabled = false;
-        for (const ghost of state.images) {
+        for (let i=0;i<state.images.length;i++) {
+          const ghost=state.images[i];if(ghost.skillId&&!owner.moves?.some(move=>move.id===ghost.skillId))continue;if(ghost.natural&&G.Settings?.fx===0&&(state.images.length-1-i)%2!==0)continue;
+          const fade=ghost.ttl/ghost.life,offset=ghost.natural?16+(ghost.life-ghost.ttl)*150:0;
           ctx.save();
-          ctx.globalAlpha = alpha * ghost.opacity * Math.sqrt(ghost.ttl / ghost.life);
-          ctx.translate(Math.round(ghost.x), Math.round(ghost.y));
+          ctx.globalAlpha = alpha * ghost.opacity * (ghost.natural?fade:Math.sqrt(fade));
+          ctx.translate(Math.round(ghost.x-Math.cos(ghost.aim)*offset), Math.round(ghost.y-Math.sin(ghost.aim)*offset));
           ctx.scale(ghost.scale, ghost.scale);
-          ctx.drawImage(ghost.image, -96, -160);
+          ctx.drawImage(ghost.image, -96, -(ghost.anchorY??160));
           ctx.restore();
         }
+        if(!level){ctx.restore();continue;}
         ctx.strokeStyle = config.trails[level - 1].color; ctx.globalAlpha = .25 + level * .06; ctx.lineWidth = 1;
         ctx.beginPath(); ctx.ellipse(Math.round(x), Math.round(y), 20 + level, 7, 0, 0, Math.PI * 2); ctx.stroke();
       } else {
+        if(!level){ctx.restore();continue;}
         const count = level >= 3 ? 8 : 5;
         ctx.fillStyle = config.trails[level - 1].color; ctx.globalAlpha = .35 + level * .06;
         for (let i = 0; i < count; i++) {
@@ -445,8 +462,9 @@
   C.clearFields = function(owner) { const result = clearFields.call(this, owner); clear(owner); return result; };
   C.drawGroundFields = function(ctx) { ground.call(this, ctx); draw(ctx, true); };
   C.drawAirFields = function(ctx) { air.call(this, ctx); draw(ctx, false); };
-  const afterimagesFor = owner => (states.get(owner)?.world === G.World && stage(owner) && states.get(owner).level === stage(owner) ? states.get(owner).images : [])
-    .map(({ x, y, ttl, life, scale, color, opacity }) => ({ x, y, ttl, life, scale, color, opacity }));
+  const afterimagesFor = owner => (owner&&!owner.dead&&owner.hp>0&&controlled(owner)&&owner.mon?.dex===30006&&states.get(owner)?.world === G.World && states.get(owner).level === stage(owner) ? states.get(owner).images : [])
+    .filter(ghost=>!ghost.skillId||owner.moves?.some(move=>move.id===ghost.skillId))
+    .map(({ x, y, ttl, life, scale, color, opacity, natural,skillId,poseKey,phase,visualLift,rotation,anchorY }) => ({ x, y, ttl, life, scale, color, opacity,natural,skillId,poseKey,phase,visualLift,rotation,anchorY }));
   G.NarutoGates = { config, openingFor, charging, performing, presentationFor, learnedStage, status, stage, effectTier, level: stage, bonusPercent, healingMultiplier, attackSpeedMultiplier, inheritedRegen, maxHealthBonus, syncMaxHealth, afterimagesFor,
     active: owner => stage(owner) > 0,
     redSkin: owner => stage(owner) > 0, redForm: owner => stage(owner) >= 3,
