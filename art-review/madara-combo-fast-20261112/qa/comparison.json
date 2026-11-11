@@ -1,0 +1,245 @@
+{
+  "baselineRef": "5da2919f",
+  "sourceSha256": "bca2c14ce7cf70c89ba5c8bfbd60e9575a985c3d688a03453813a7647221d09d",
+  "versions": {
+    "before": [
+      {
+        "rank": 1,
+        "q": 0,
+        "crowd": false,
+        "seconds": 1.1200000000000008,
+        "damage": 346,
+        "segments": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "contacts": 4,
+        "baseDamage": 24,
+        "contactDuration": 0.22,
+        "pursuitSpeed": 900,
+        "minimum": 0.115,
+        "active": false,
+        "returned": true
+      },
+      {
+        "rank": 1,
+        "q": 1,
+        "crowd": false,
+        "seconds": 1.280000000000001,
+        "damage": 434,
+        "segments": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "contacts": 5,
+        "baseDamage": 24,
+        "contactDuration": 0.22,
+        "pursuitSpeed": 900,
+        "minimum": 0.115,
+        "active": false,
+        "returned": true
+      },
+      {
+        "rank": 5,
+        "q": 4,
+        "crowd": false,
+        "seconds": 2.1299999999999986,
+        "damage": 2395,
+        "segments": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "contacts": 12,
+        "baseDamage": 50.39999999999999,
+        "contactDuration": 0.22,
+        "pursuitSpeed": 1220,
+        "minimum": 0.115,
+        "active": false,
+        "returned": true
+      },
+      {
+        "rank": 1,
+        "q": 0,
+        "crowd": true,
+        "seconds": 1.360000000000001,
+        "damage": 346,
+        "segments": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "contacts": 4,
+        "baseDamage": 24,
+        "contactDuration": 0.22,
+        "pursuitSpeed": 900,
+        "minimum": 0.115,
+        "active": false,
+        "returned": true
+      },
+      {
+        "rank": 5,
+        "q": 4,
+        "crowd": true,
+        "seconds": 2.4199999999999924,
+        "damage": 2395,
+        "segments": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "contacts": 12,
+        "baseDamage": 50.39999999999999,
+        "contactDuration": 0.22,
+        "pursuitSpeed": 1220,
+        "minimum": 0.115,
+        "active": false,
+        "returned": true
+      }
+    ],
+    "after": [
+      {
+        "rank": 1,
+        "q": 0,
+        "crowd": false,
+        "seconds": 0.7900000000000005,
+        "damage": 231,
+        "segments": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "contacts": 4,
+        "baseDamage": 16,
+        "contactDuration": 0.15,
+        "pursuitSpeed": 1200,
+        "minimum": 0.075,
+        "active": false,
+        "returned": true
+      },
+      {
+        "rank": 1,
+        "q": 1,
+        "crowd": false,
+        "seconds": 0.9000000000000006,
+        "damage": 288,
+        "segments": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "contacts": 5,
+        "baseDamage": 16,
+        "contactDuration": 0.15,
+        "pursuitSpeed": 1200,
+        "minimum": 0.075,
+        "active": false,
+        "returned": true
+      },
+      {
+        "rank": 5,
+        "q": 4,
+        "crowd": false,
+        "seconds": 1.480000000000001,
+        "damage": 1595,
+        "segments": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "contacts": 12,
+        "baseDamage": 33.6,
+        "contactDuration": 0.15,
+        "pursuitSpeed": 1600,
+        "minimum": 0.075,
+        "active": false,
+        "returned": true
+      },
+      {
+        "rank": 1,
+        "q": 0,
+        "crowd": true,
+        "seconds": 0.9700000000000006,
+        "damage": 231,
+        "segments": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "contacts": 4,
+        "baseDamage": 16,
+        "contactDuration": 0.15,
+        "pursuitSpeed": 1200,
+        "minimum": 0.075,
+        "active": false,
+        "returned": true
+      },
+      {
+        "rank": 5,
+        "q": 4,
+        "crowd": true,
+        "seconds": 1.7000000000000013,
+        "damage": 1595,
+        "segments": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "contacts": 12,
+        "baseDamage": 33.6,
+        "contactDuration": 0.15,
+        "pursuitSpeed": 1600,
+        "minimum": 0.075,
+        "active": false,
+        "returned": true
+      }
+    ]
+  },
+  "ok": true
+}

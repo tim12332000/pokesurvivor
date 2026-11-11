@@ -4,7 +4,7 @@
   if(G.NarutoMadara)return;
   const DEX=30016,C=G.Combat,EPS=1e-8,states=new Map();
   const rows=[
-    ['naruto-madara','basic','戰場演舞','fighting',1,.95,24,105,90,'踏步接敵，以掌、肘、踢連續追擊，優先換人、逐段加速，末段迴旋踢清身；數量增加真追擊，最多12段。正常收招沿可通行路線回位，移動輸入立即中止追擊與回位。二階踢掃、三階擴大接敵範圍，末擊真命中蓄勢一格。追擊與連打期間有80%機率閃避敵人攻擊，閃避不給無敵；起手、回位與收招後不適用。連續追擊為本作改編，仍可能受傷；木分身維持近身連打。'],
+    ['naruto-madara','basic','戰場演舞','fighting',1,.95,16,105,90,'快速踏步接敵，以低單段傷害的掌、肘、踢密集連續追擊，優先換人、逐段加速，末段迴旋踢清身；數量增加真追擊，最多12段。正常收招沿可通行路線回位，移動輸入立即中止追擊與回位。二階踢掃、三階擴大接敵範圍，末擊真命中蓄勢一格。追擊與連打期間有80%機率閃避敵人攻擊，閃避不給無敵；起手、回位與收招後不適用。連續追擊為本作改編，仍可能受傷；木分身維持近身連打。'],
     ['naruto-madara-fire','fire','火遁・豪火滅卻','fire',2,18,42,430,210,'結印後從嘴部吐出4→6面寬火牆，每面固定當次原點與方向，向外推進才命中；數量至12面，身體0.74秒即收勢。三階留下真火線，四階交錯雙角火線。每輪真命中最多蓄勢一格。'],
     ['naruto-madara-susanoo','susanoo','須佐能乎・巨刃連斬','psychic',3,30,78,460,240,'須佐投射現身六秒，骨臂接觸成長為甲胄主刀連斬、另一刀護勢；數量增加實際刀線但維持六秒，不佔本體出手。二階後體術末擊與火牆真命中蓄滿三格，顯現六秒完成體巨刀與前推劍壓。完成體末斬蓄力5秒，再揮出一道向前擴張的大範圍圓弧斬波，斬波推進才命中。本作勢能改編，不給無敵。'],
     ['naruto-madara-meteor','meteor','天礙震星・雙重落石','rock',7,52,155,700,250,'第一巨岩撞裂地面，第二顆砸碎更大區域，接續4→8塊真碎岩落向不同地點；數量卡至16個碎岩落點。每塊有獨立預告、高度與碰撞，走出可閃避。三階殘岩可由本體火牆引爆一次碎岩接力；碎岩及連動為本作改編。'],
@@ -20,7 +20,7 @@
   function profile(a,m){
     const i=rank(m)-1,kind=m.madaraKind||m.digiMode?.replace('madara-','')||'basic',damage=m.dmg*(a.atk??1);
     const common={kind,rank:i+1,damage,range:m.range,radius:m.radius};
-    if(kind==='basic'){const contacts=count(a,4+i,12);return {...common,range:180+30*i,contacts,pulses:contacts,contactRadius:12+2*i,contactReach:56+4*i,stepBudget:180+30*i,pursuitRange:340+40*i,pursuitSpeed:900+80*i,contactDuration:.22,dodgeChance:.8,returnDuration:.55,kickSweep:i>=1,duration:.18+contacts*.22,charge:.10};}
+    if(kind==='basic'){const contacts=count(a,4+i,12);return {...common,range:180+30*i,contacts,pulses:contacts,contactRadius:12+2*i,contactReach:56+4*i,stepBudget:180+30*i,pursuitRange:340+40*i,pursuitSpeed:1200+100*i,contactDuration:.15,minContactDuration:.075,dodgeChance:.8,returnDuration:.55,kickSweep:i>=1,duration:.18+contacts*.15,charge:.07};}
     if(kind==='fire'){const fronts=count(a,4+Math.floor(i/2),12);return {...common,fronts,pulses:fronts,width:320+65*i,speed:620+40*i,range:560+85*i,depth:36,release:.25,releaseWindow:.35,duration:.74,charge:.25,linger:i>=2?1.1:0,fork:i>=3,lingerTicks:i>=4?4:3};}
     if(kind==='susanoo'){const slashes=count(a,4+i,12);return {...common,slashes,pulses:slashes,duration:6,manifest:.35,sweepDuration:.28,recovery:.28,bladeLength:220+25*i,bladeRadius:24+3*i,perfectLength:430+25*i,pressureEvery:i>=3?2:3,finisherCharge:5,finisherSweep:.48,finisherRecovery:.45,finisherRange:1100,finisherArc:2.2,finisherDepth:48,perfectUnlocked:i>=1,form:i>=1?'armored':'rib',charge:.35};}
     if(kind==='meteor'){const fragments=count(a,4+i,16);return {...common,meteorCount:2,fragments,pulses:2+fragments,radius:220+25*i,secondRadius:330+30*i,fragmentRadius:90+10*i,fragmentSpread:310+25*i,delay:.85,release:.44,duration:.66,charge:.44,fallTime:.95,craterDuration:i>=2?6:3,craterRelay:i>=2};}
@@ -53,7 +53,7 @@
   }
   const englishNames=['Battlefield Taijutsu','Fire Release: Majestic Destroyer Flame','Susanoo: Giant Blade Barrage','Heaven Concealed: Twin Meteors','Wood Release: Wood Clones'];
   const englishDescriptions=[
-    'Step into a chain of real palm, elbow and kick contacts, preferring a new enemy each strike and accelerating through the chain. Quantity adds pursuits up to twelve. The final spinning kick earns one momentum on a true enemy hit. Return along a clear route after the chain; movement input immediately cancels pursuit and return. Rank 2 gains sweeping kicks; rank 3 expands pursuit reach. During pursuit and strikes, incoming enemy attacks have an 80% chance to be dodged, without granting invulnerability. The opening charge, return and time after the chain gain no dodge bonus. This pursuit is a game adaptation. Wood doubles keep their close-range combo.',
+    'Quickly step into a faster chain of lighter palm, elbow and kick contacts, preferring a new enemy each strike and accelerating through the chain. Quantity adds pursuits up to twelve. The final spinning kick earns one momentum on a true enemy hit. Return along a clear route after the chain; movement input immediately cancels pursuit and return. Rank 2 gains sweeping kicks; rank 3 expands pursuit reach. During pursuit and strikes, incoming enemy attacks have an 80% chance to be dodged, without granting invulnerability. The opening charge, return and time after the chain gain no dodge bonus. This pursuit is a game adaptation. Wood doubles keep their close-range combo.',
     'After a short seal, exhale four to six broad advancing fire fronts. Each snapshots its mouth origin and heading; enemies are struck only when the front arrives. Quantity adds fronts up to twelve without extending the 0.74-second body pose. Rank 3 leaves burning lines; rank 4 crosses two headings. A successful cast earns at most one momentum.',
     'An independent six-second guardian grows from skeletal limbs to armored blades. Quantity adds real blade sweeps without locking the body. Rank 2 unlocks a six-second Perfect Susanoo at three momentum, with gigantic blades and advancing sword pressure. The Perfect form ends with a five-second charged slash that releases one broad, expanding crescent wave, dealing damage only as it advances. Momentum and timing are game adaptations; no invulnerability.',
     'Two giant rocks land separately: the second shatters a wider area. Four to eight fragments then fall at separate marked locations; quantity adds fragments up to sixteen. Each has real height and a single landing collision. Rank 3 craters permit one fire-triggered rubble burst per cast, a non-recursive game adaptation.',
@@ -245,7 +245,7 @@
         if(moved<.001||f.travelAge>.6){returnFromPursuit(f);return true;}
         if(basicApproach(a,t,p,f.aim,f.index).gap>.5)return true;
       }
-      f.pursuitPhase='contact';f.segmentAge=0;f.segmentDuration=Math.max(.115,p.contactDuration*Math.pow(.9,f.index));
+      f.pursuitPhase='contact';f.segmentAge=0;f.segmentDuration=Math.max(p.minContactDuration,p.contactDuration*Math.pow(.9,f.index));
       f.segment={aim:f.aim,hitSet:new Set(),propSet:new Set(),hits:0,previousPoint:null};
       audio('madara-palm',{step:basicContact(f,f.index)});
       return true;
