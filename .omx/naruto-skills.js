@@ -665,6 +665,29 @@
   kinds['gaara-sand-guard'] = 'buff';
   kinds['toad-summon'] = 'meteor';
   Object.assign(kinds,{'tenten-kunai':'projectile','tenten-fuma':'projectile','tenten-mastery':'buff','tenten-bounce':'buff','tenten-guard':'buff','tenten-tags':'meteor','tenten-twin':'projectile'});
+  // Shikamaru's shadow geometry and quantity are consumed by NarutoShikamaru.profile.
+  const shikamaruSource='https://naruto-official.com/en/news/01_1910';
+  const shikamaruUps=Array.from({length:4},(_,i)=>({t:'影術傷害與實際覆蓋成長',m:{dmg:[1.2,1.4/1.2,1.7/1.4,2/1.7][i]}}));
+  const shikamaruDesigns=[
+    ['naruto-shikamaru','影真似之術','shadow',1,1.2,18,'足底黑影沿地面延伸，接觸敵人才造成傷害與短暫束縛。數量卡增加真正分枝，升階擴大覆蓋。牆會阻擋。普通敵人暫停移動與新攻擊，強敵只限制位移、仍能攻擊；已在途敵彈仍有威脅。'],
+    ['naruto-shikamaru-sewing','影縫之術','sewing',2,4.2,34,'黑影延伸至敵群後抬起尖端，連續穿刺真正接觸的目標。數量卡增加影線，升階增加多段；影模仿留住敵人，讓後續穿刺接上。'],
+    ['naruto-shikamaru-trap','起爆札・誘敵陷阱','trap',3,6,62,'預先佈下可見起爆札，延時爆破固定落點；以影模仿留下追兵，再讓爆破清開敵群。數量卡增加實際陷阱；屬道具戰術與本作自動施放改編。'],
+    ['naruto-shikamaru-tactics','奈良流・戰術佈局','tactics',4,0,0,'常駐被動，每階使影術增加一條真正分枝，並延長影模仿與影縫的拘束時間，讓追兵留在起爆札落點。具體收益顯示於成長預覽。本作改編。'],
+    ['naruto-shikamaru-strangle','影首縛之術','strangle',5,7,54,'黑影沿被捕捉的目標抬升，分段收緊形成群體爆發；數量卡增加同時收緊的影分枝，升階增加收緊波次、接觸寬度與射程。本作將拘束改編為自動群攻。']
+  ];
+  for(const [id,name,key,learnLevel,cd,dmg,desc]of shikamaruDesigns){
+    const design={name,mode:'shikamaru-'+key,icon:id,type:key==='trap'?'fire':'psychic',learnLevel,cd,dmg,range:360,radius:100,passive:true,autoCast:key!=='tactics',ups:shikamaruUps.map(u=>({...u,t:key==='tactics'?'影分枝 +1；拘束時間 +0.12 秒':key==='sewing'?'傷害、射程、接觸半徑增加；穿刺波次 +1':key==='trap'?'傷害、爆破半徑及佈陣射程增加':key==='strangle'?'傷害、射程、束縛範圍增加；收緊波次 +1':'傷害、影術射程及接觸寬度增加',m:key==='tactics'?{}:{...u.m}})),source_url:shikamaruSource,desc:desc+' 學會即生效，不占主動槽。'};
+    kinds[design.mode]=key==='tactics'?'buff':'melee';
+    if(key==='shadow')profiles.push([30017,'shikamaru',name,'Shikamaru Nara','01_1910',design]);else extra.push([id,[30017],design]);
+    const iconRows={
+      shadow:['.....ww.....','....wwww....','.....kk.....','.....kk.....','..s..kk..s..','..ss.kk.ss..','...sskkss...','....skks....','.....kk.....','...sskkss...','..ss.kk.ss..','.ss..kk..ss.'],
+      sewing:['..s..ss..s..','..k..kk..k..','..k..kk..k..','.sk.skk.ks..','.kk.skk.kk..','.kk.skk.kk..','..k..kk..k..','..ssskkss...','....skks....','.....kk.....','....kkkk....','...kkkkkk...'],
+      trap:['....rrrr....','...rwwwwr...','...rwkkwr...','...rwkkwr...','...rwwwwr...','...rwkkwr...','...rwwwwr...','....rrrr....','.....rr.....','....r..r....','...r....r...','............'],
+      tactics:['ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss','ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss','ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss'],
+      strangle:['....wwww....','...wwwwww...','...wkwwkw...','...wwwwww...','....wwww....','...ssssss...','..sskkkks...','..skkkkss...','...ssss.....','.....kk.....','....skks....','...sskkss...']
+    };
+    G.Icons.UI[id]={pal:{k:'#111221',s:'#a58bd4',w:'#edd9b1',r:'#e6a14f'},outline:true,rows:iconRows[key]};
+  }
   const definitions = new Map(), byDex = new Map(), references = new Map();
   const extraPools = new Map();
 
@@ -758,7 +781,7 @@
   guide.translate = true;
   guide.innerHTML = '<div class="box"><div class="naruto-skill-heading"><h2>忍術圖鑑與來源</h2><button class="btn small ghost" id="naruto-skills-close">返回</button></div><p class="sub">角色與忍術參考官方動畫、角色資料與遊戲說明；傷害、冷卻、範圍、回復與自動連段皆為本跨界版改編，也包含角色後期能力。中文採常見譯名。鳴人 Lv.9 可學九尾查克拉外衣；佐助 Lv.1 可學草薙劍環繞、Lv.9 可學風魔手裏劍。草薙劍僅在選用並施放後環繞，切換別招立即消失。僅開放各角色的特色忍術。特色技能達學習等級時會優先出現一次；略過後仍可隨機抽到；角色招式池互不混用。控制、輔助與直線貫穿不等同全周範圍傷害。</p><div class="naruto-skill-entries"></div></div>';
   function activationLabel(move) {
-    if (['naruto-gaara','naruto-tenten','naruto-pain','naruto-temari','naruto-lee-pursuit','naruto-kimimaro'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
+    if (['naruto-shikamaru','naruto-gaara','naruto-tenten','naruto-pain','naruto-temari','naruto-lee-pursuit','naruto-kimimaro'].includes(move.id)) return '常駐普攻 · 不用選招 · 不占主動槽';
     if (move.id==='naruto-gates') return '自動開門 · 維持15秒（5+10） · 演出5秒後CD25秒 · 週期30秒 · 不占主動槽';
     if (move.autoCast) return '常駐自動施放 · 不需選招 · 不占主動槽';
     if (move.passive) return '常駐被動 · 學會即生效 · 不占主動槽';

@@ -14,6 +14,11 @@
   }
   function vector(p,m){
     const mode=m.digiMode||'',i=rank(m)-1;
+    if(mode.startsWith('shikamaru-')&&G.NarutoShikamaru){
+      if(mode==='shikamaru-tactics')return null;
+      const pfile=G.NarutoShikamaru.profile(p,m);
+      return mode==='shikamaru-trap'?{起爆札:pfile.traps,爆破半徑:pfile.radius,佈陣射程:pfile.range}:{影分枝:pfile.branches,接觸波次:pfile.pulses,影術射程:pfile.range};
+    }
     if(customConsumers.has(mode))return customConsumers.get(mode)(p,m);
     if(mode==='jjk-ryu-spread')return {追蹤砲彈:count(p,G.Jujutsu.power.ryu.scatterBases[i],G.Jujutsu.power.ryu.scatterCap)};
     if(mode==='jjk-ryu-ring')return {圓環輪次:count(p,G.Jujutsu.power.ryu.ringBases[i],G.Jujutsu.power.ryu.ringCap)};
@@ -123,6 +128,20 @@
     }
     if(card.type==='up'){
       const id=card.key.slice(3),m=p.moves.find(m=>m.id===id);
+      if(m?.digiMode?.startsWith('shikamaru-')&&G.NarutoShikamaru){
+        const next=G.Moves.instance(id,m.lvl+1),metrics=(owner,move)=>{
+          if(move.digiMode==='shikamaru-tactics'){
+            const probe=Object.create(owner);probe.moves=owner.moves.map(x=>x.id===move.id?move:x);
+            const shadow=probe.moves.find(x=>x.digiMode==='shikamaru-shadow')||G.Moves.instance('naruto-shikamaru');
+            const profile=G.NarutoShikamaru.profile(probe,shadow);return {影分枝:profile.branches,束縛秒數:profile.bindDuration};
+          }
+          const profile=G.NarutoShikamaru.profile(owner,move);
+          return {傷害:profile.damage,...vector(owner,move),接觸半徑:profile.radius,...(profile.kind==='shadow'||profile.kind==='sewing'?{束縛秒數:profile.bindDuration}:{})};
+        };
+        const before=metrics(p,m),after=metrics(p,next),parts=[];
+        for(const key of Object.keys(before))if(before[key]!==after[key])parts.push(`${key} ${fmt(before[key])}→${fmt(after[key])}`);
+        return {...card,desc:parts.join('；'),growthMove:m};
+      }
       if(m?.jujutsuSkill||m?.digiMode==='temari-great-scythe'){
         const next=G.Moves.instance(id,m.lvl+1),parts=[];
         if(m.dmg!==next.dmg)parts.push(`傷害 ${fmt(m.dmg)}→${fmt(next.dmg)}`);
