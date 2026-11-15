@@ -2,10 +2,10 @@
 (() => {
   if (G.NarutoTemari) return;
   const combat=G.Combat, TAU=Math.PI*2, EPS=1e-8;
-  const states=new Map(), casts=[], blades=[], waves=[], summons=[], storms=[], orbits=new Map(), lifts=new Map(), pushes=new Map();
+  const states=new Map(), casts=[], blades=[], waves=[], summons=[], storms=[], roamers=[], orbits=new Map(), lifts=new Map(), pushes=new Map();
   const windKnots=[],windBursts=[],WIND_CHAIN_ID='naruto-temari-wind-chain';
   const windIssued=new WeakMap();
-  const modes=new Set(['temari-wind','temari-mastery','temari-great-scythe','temari-blade-dance','temari-typhoon']);
+  const modes=new Set(['temari-wind','temari-mastery','temari-great-scythe','temari-blade-dance','temari-typhoon','temari-roaming']);
   let sequence=0, petSequence=0, petPacketSequence=0,windSeedSequence=0,windActivationSequence=0,windBurstSequence=0;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
   const controlled=a=>a===G.Game.player||!!G.SelfClones?.isActor(a);
@@ -69,7 +69,7 @@
       .sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
   }
   function canCast(owner,m) {
-    if(!valid(owner)||owner.frozen||!supports(m?.digiMode)||(m.digiMode==='temari-mastery'||m.digiMode==='temari-blade-dance'))return false;
+    if(!valid(owner)||owner.frozen||!supports(m?.digiMode)||(m.digiMode==='temari-mastery'||m.digiMode==='temari-blade-dance'||m.digiMode==='temari-roaming'))return false;
     const s=state(owner),basic=m.digiMode==='temari-wind';
     if(basic?s.basicCooldown>EPS:!selected(owner,m)||(s.cooldowns[m.id]||0)>EPS)return false;
     return targets(owner,m).length>0;
@@ -913,16 +913,84 @@
         G.NarutoTemari.onIntercept?.(b.owner,p,b);}
     }
   }
+  // Independent ground winds keep moving while the owner uses another technique.
+  function roamingProfile(owner,m=owner.moves?.find(m=>m.digiMode==='temari-roaming')) {
+    const level=rank(m);
+    return {count:Math.min(12,level+quantity(owner)),radius:24+3*(level-1),
+      lifetime:5,interval:.4,speed:155};
+  }
+  function roamingLegal(a) {
+    return !a.dead&&legal(a.cast)&&a.owner.moves?.some(m=>m.id===a.cast.id);
+  }
+  function updateRoamers(dt) {
+    for(const owner of [G.Game.player,...(G.SelfClones?.actors?.()||[])]) {
+      if(!valid(owner))continue;
+      const m=owner.moves?.find(m=>m.digiMode==='temari-roaming');
+      if(!m)continue;
+      const s=state(owner);s.roamingCooldown=Math.max(0,(s.roamingCooldown||0)-dt);
+      if(owner.frozen||s.roamingCooldown>EPS)continue;
+      const profile=roamingProfile(owner,m);
+      s.roamingCooldown=Math.max(.05,(m.cd||6)*(owner.cdMul??1));
+      const b={owner,world:G.World,id:m.id,m:{...m},kind:'roaming',damage:m.dmg*(owner.atk??1),
+        critChance:owner.critChance||0,hits:0,props:0};
+      const owned=roamers.filter(a=>a.owner===owner&&roamingLegal(a)).length;
+      for(let i=0;i<Math.max(0,profile.count-owned);i++) {
+        const phase=++sequence*2.3999632297;
+        roamers.push({...profile,owner,cast:b,x:owner.x,y:owner.y,age:0,phase,
+          heading:(owner.aim||0)+phase,contacts:new Map()});
+      }
+    }
+    for(const a of roamers.slice()) {
+      if(!roamingLegal(a)){a.dead=true;continue;}
+      // Small simulation steps sweep contact and terrain even after a slow frame.
+      let remaining=Math.min(dt,a.lifetime-a.age);
+      while(remaining>EPS&&roamingLegal(a)) {
+        const step=Math.min(remaining,1/60);remaining-=step;a.age+=step;
+        a.heading+=Math.sin(a.age*2.1+a.phase)*step*2.4;
+        const dx=Math.cos(a.heading)*a.speed*step,dy=Math.sin(a.heading)*a.speed*step;
+        if(clearPath(a.x,a.y,a.x+dx,a.y+dy,Math.max(2,a.radius*.35))) {a.x+=dx;a.y+=dy;}
+        else a.heading+=Math.PI*.73;
+        for(const e of circleTargets(a.x,a.y,a.radius)) {
+          if(!roamingLegal(a))break;
+          if(a.age+EPS<(a.contacts.get(e)??-Infinity))continue;
+          a.contacts.set(e,a.age+a.interval);
+          hit(a.cast,e,Math.cos(a.heading),Math.sin(a.heading));
+          if(!roamingLegal(a))break;
+        }
+        // Dead enemies must not be retained for the rest of the wind's lifetime.
+        for(const e of a.contacts.keys())if(!alive(e))a.contacts.delete(e);
+      }
+      if(a.age+EPS>=a.lifetime)a.dead=true;
+    }
+    for(let i=roamers.length-1;i>=0;i--)if(roamers[i].dead||!roamingLegal(roamers[i]))roamers.splice(i,1);
+  }
+  function drawRoamers(ctx) {
+    for(const a of roamers) {
+      if(!roamingLegal(a))continue;
+      const fade=Math.min(1,a.age/.16,(a.lifetime-a.age)/.35),r=a.radius;
+      ctx.save();ctx.translate(a.x,a.y);ctx.globalAlpha=fade;
+      ctx.fillStyle='rgba(47,76,74,.22)';ctx.beginPath();ctx.ellipse(0,3,r,r*.43,0,0,TAU);ctx.fill();
+      // The wide ground swirl shows contact width; stacked ribbons taper down.
+      for(let j=0;j<6;j++) {
+        const t=j/5,w=r*(.24+.76*t),y=-6-t*r*1.7;
+        ctx.strokeStyle=j%2?'#eafff7':'#83d2bb';ctx.lineWidth=2.5;
+        ctx.beginPath();ctx.ellipse(Math.sin(a.age*7+j)*3,y,w,w*.27,
+          Math.sin(a.age*4+j)*.12,a.age*9+j,a.age*9+j+Math.PI*1.65);ctx.stroke();
+      }
+      ctx.strokeStyle='#bdebd9';ctx.lineWidth=2;ctx.beginPath();
+      ctx.ellipse(0,0,r,r*.48,0,a.age*5,a.age*5+Math.PI*1.7);ctx.stroke();ctx.restore();
+    }
+  }
   function clear(owner) {
     clearWind(owner);
     // Retire attacks before teardown callbacks can reenter their current wave.
-    for(const list of [casts,blades,waves,summons,storms])for(const a of list)if(!owner||a.owner===owner)(a.cast||a).cancelled=true;
+    for(const list of [casts,blades,waves,summons,storms,roamers])for(const a of list)if(!owner||a.owner===owner)(a.cast||a).cancelled=true;
     for(const [e,p] of pushes)if(!owner||p.owner===owner)releasePush(e,'clear');
     for(const [e,lift] of lifts)if(!owner||lift.owner===owner)releaseLift(e,'clear');
     for(const [e,o] of orbits)if(!owner||o.owner===owner)releaseOrbit(e,'clear');
     for(const [actor,s] of states)if((!owner||actor===owner)&&!s.remotePets&&s.hasPetRoster)G.NarutoTemari.onPets?.(actor,{serial:++petPacketSequence,pets:[]});
     if(owner)states.delete(owner);else states.clear();
-    for(const list of [casts,blades,waves,summons,storms])for(let i=list.length-1;i>=0;i--)if(!owner||list[i].owner===owner) {
+    for(const list of [casts,blades,waves,summons,storms,roamers])for(let i=list.length-1;i>=0;i--)if(!owner||list[i].owner===owner) {
       const a=list[i];(a.cast||a).cancelled=true;list.splice(i,1);
     }
   }
@@ -969,6 +1037,7 @@
       if(a.dead){const index=list.indexOf(a);if(index>=0)list.splice(index,1);}
     }
     updateWind();
+    updateRoamers(dt);
   }
   function activeFor(owner) {
     const s=states.get(owner);return s?.world===G.World&&alive(owner)?s.pose:null;
@@ -979,6 +1048,7 @@
     return {owner,pose:s.pose,latest:q,Q:p.Q,L:p.L,N:Math.floor(3*1.25**p.Q),R:p.R,W:1,K:Math.floor(1.25**p.Q),C:petMove(owner)?snapshot(owner,petMove(owner)).C:q?.C||0,
       petPhases:summons.filter(a=>a.owner===owner&&a.permanent&&!a.dead).reduce((out,a)=>(out[a.phase]=(out[a.phase]||0)+1,out),{}),
       T:Math.floor(1.25**p.Q),P:[3,4,5,6,8][rank(owner.moves?.find(m=>m.digiMode==='temari-typhoon'))-1]+(p.L?p.L+p.Q:0),
+      roamingCooldown:s.roamingCooldown||0,roamers:roamers.filter(a=>a.owner===owner).length,
       basicRounds:s.basicRounds,basicCooldown:s.basicCooldown,cooldowns:{...s.cooldowns},totalEmitted:s.totalEmitted,
       emittedByMode:{...s.emittedByMode},castCounts:{...s.castCounts},counts:{...s.counts},totalCuts:s.totalCuts,hitEvents:s.hitEvents,propHits:s.propHits,
       intercepted:s.intercepted,blades:blades.filter(a=>a.owner===owner).length,waves:waves.filter(a=>a.owner===owner).length,
@@ -988,6 +1058,7 @@
       orbits:[...orbits.values()].filter(o=>o.owner===owner).length,summons:summons.filter(a=>a.owner===owner).length,storms:storms.filter(a=>a.owner===owner).length,pendingCuts:[...waves,...summons,...storms].filter(a=>a.owner===owner).reduce((n,a)=>n+(a.cast.kind==='typhoon'?[...a.contacts.values()].reduce((v,c)=>v+a.cast.C-c.cuts,0):(a.cast.kind==='summon'?(['wander','follow','return'].includes(a.phase)?a.cuts:a.cast.C):a.cast.R)-a.cuts),0)};
   }
   function air(ctx) {
+    drawRoamers(ctx);
     G.TemariCycloneVFX?.drawAir(ctx,{storms,orbits:[...orbits.values()],pushes:[...pushes.values()],blades,waves,summons,windKnots,windBursts,states:[...states.values()]});
   }
   function ground(ctx) {
@@ -1046,7 +1117,7 @@
     if(valid(this)&&s?.world===G.World)for(const m of this.moves||[])if(Object.hasOwn(s.cooldowns,m.id))m.t=s.cooldowns[m.id];
     return result;
   };
-  G.NarutoTemari={supports,canCast,cast,clear,update,activeFor,stateFor,snapshot,ghost,mastery,rangeFor,heavyFor,applyWindRelease,onWindRelease:null,
+  G.NarutoTemari={roamingProfile,get roamers(){return roamers;},supports,canCast,cast,clear,update,activeFor,stateFor,snapshot,ghost,mastery,rangeFor,heavyFor,applyWindRelease,onWindRelease:null,
     windChainProfile,applyWindKnot,applyWindChain,clearWindChain,onWindKnot:null,onWindChain:null,onWindChainHit:null,
     get windKnots(){return windKnots;},get windBursts(){return windBursts;},
     pushed,pushFor:e=>pushes.get(e)||null,pushForState:e=>pushes.get(e)||null,applyNetworkPush,releaseNetworkPush,mayPush:null,onPush:null,onPushRelease:null,

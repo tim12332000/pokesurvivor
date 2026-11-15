@@ -52,6 +52,7 @@
     if(mode==='kimimaro-camellia')return {目標:count(p,4,12)};
     if(mode==='kimimaro-bullets')return {指骨:count(p,5,15)};
     if(mode==='kimimaro-boomerang')return {骨迴旋:count(p,m.count||1,16),穿透:(m.pierce||0)+picks(p)};
+    if(mode==='temari-roaming')return {小龍捲:G.NarutoTemari.roamingProfile(p,m).count};
     if(mode==='temari-reflect')return {反射副本:Math.floor(factor**picks(p))};
     if(G.NarutoTemari?.supports(mode)&&mode!=='temari-mastery'){
       if(mode==='temari-great-scythe'){
