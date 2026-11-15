@@ -558,6 +558,12 @@
     }]
   );
   extra.push(
+    ['naruto-temari-roaming',[30011],{
+      name:'風遁・遊走小龍捲',mode:'temari-roaming',icon:'temariRoaming',type:'flying',passive:true,learnLevel:4,cd:6,dmg:12,
+      count:1,range:360,radius:24,
+      ups:[14.4,16.8,19.2,21.6].map((dmg,i)=>({t:`每次傷害 ${dmg}・龍捲風 ${i+2} 個・接觸半徑 ${27+i*3}`,m:{dmg:dmg/[12,14.4,16.8,19.2][i]}})),
+      desc:'Lv.4可學，自動施放、不占主動欄。每6秒在身邊生成小龍捲風，持續5秒在地面曲折遊走，遇牆轉向；碰到敵人即造成傷害，同一龍捲對同敵每0.4秒最多一次。五階每次基傷12／14.4／16.8／19.2／21.6，基礎數量1／2／3／4／5，每張數量卡再加1，最多同時12個；半徑24／27／30／33／36。各個獨立傷害，攻擊與冷卻卡有效，可與其他招式並行。本作改編。',source_url:temariSource
+    }],
     ['naruto-temari-three-stars',[30011],{
       name:'三星扇精通',mode:'temari-mastery',icon:'temariMastery',type:'flying',passive:true,learnLevel:3,cd:0,dmg:0,
       masterySpeed:1.15,masteryReach:40,empowerMultiplier:1.15,deflectBase:1,
@@ -653,7 +659,7 @@
   Object.assign(kinds,{'kimimaro-willow':'melee','kimimaro-camellia':'melee','kimimaro-bullets':'projectile',
     'kimimaro-larch':'melee','kimimaro-vine':'melee','kimimaro-flower':'melee','kimimaro-lily':'melee',
     'kimimaro-bracken':'aura','kimimaro-curse':'buff','kimimaro-bone-guard':'buff','kimimaro-boomerang':'projectile'});
-  Object.assign(kinds,{'temari-wind':'cone','temari-mastery':'buff','temari-great-scythe':'cone','temari-blade-dance':'dash','temari-typhoon':'meteor','temari-reflect':'buff'});
+  Object.assign(kinds,{'temari-roaming':'buff','temari-wind':'cone','temari-mastery':'buff','temari-great-scythe':'cone','temari-blade-dance':'dash','temari-typhoon':'meteor','temari-reflect':'buff'});
   kinds['lee-pursuit']='melee';
   Object.assign(kinds,{'pain-basic':'projectile','pain-gravity':'aura','pain-missiles':'projectile','pain-summon':'dash','pain-soul':'melee','pain-absorb':'buff','pain-repair':'buff','pain-planet':'meteor'});
   kinds['gaara-sand-guard'] = 'buff';

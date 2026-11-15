@@ -31,6 +31,9 @@ G.Icons = (() => {
     temariTyphoon: { pal: { w:'#effcf8', s:'#83d2bb', p:'#875681' }, rows: [
       '...ssssss...', '..swssssws..', '.swss..ssws.', '..ssssssws..', '...swssws...', '....swws....',
       '....swws....', '...swsws....', '..sswwss....', '...swws.....', '....ss......', '..pppppppp..'] },
+    temariRoaming: { pal: { w:'#effcf8', s:'#83d2bb' }, rows: [
+      '..ssssssss..', '.swwwwwwwws.', '..sssswwss..', '...swwss....', '....swws....', '....sws.....',
+      '.....ss.....', '......s.....', '..ss........', '.swws..swws.', '..ss..swws..', '.......ss...'] },
     temariReflect: { pal: { w:'#effcf8', s:'#83d2bb', p:'#875681' }, rows: [
       '....ssss....', '..sswwwwss..', '.swwsssswws.', '.sws....sws.', 'sws..pp..sws', 'sw...pp...ws',
       'sw...pp...ws', 'sws..pp..sws', '.sws....sws.', '.swwsssswws.', '..sswwwwss..', '....ssss....'] },

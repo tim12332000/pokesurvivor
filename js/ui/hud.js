@@ -274,6 +274,7 @@ G.HUD = (() => {
     const sy = controls ? controls.slots[0].y : h - S - 18;
     const BOND = '#ff8ad8';
     const cdOf = m => {
+      if(m.digiMode==='temari-roaming')return G.U.clamp((G.NarutoTemari.stateFor(pl)?.roamingCooldown||0)/Math.max(.05,m.cd*pl.cdMul),0,1);
       const council=G.RunInsights?.skillState(pl,m);if(council)return council.fraction;
       if(m.id==='naruto-gates'){
         const status=G.NarutoGates?.status(pl);
@@ -444,7 +445,8 @@ G.HUD = (() => {
         const mastery = pl.moves.find(move => move.digiMode === 'temari-mastery');
         const rank = mastery?.lvl || 0, recuts = state?.R ?? (rank ? 1 + rank + q : 1);
         const count = base => G.Quantity?.count(pl, base) ?? base;
-        const label = m.digiMode === 'temari-mastery' ? '普攻 ' + recuts + ' 斬' :
+        const label = m.digiMode === 'temari-roaming' ? '龍捲 ' + G.NarutoTemari.roamingProfile(pl,m).count :
+          m.digiMode === 'temari-mastery' ? '普攻 ' + recuts + ' 斬' :
           m.digiMode === 'temari-wind' ? [45,75,105,135,180][Math.max(0,Math.min(4,m.lvl-1))] + '° ' + (state?.N ?? count(3)) + '×' + recuts :
           m.digiMode === 'temari-great-scythe' ? '推退 ' + (G.NarutoTemari.heavyFor?.(pl,m)?.pushDistance??[120,145,170,195,220][Math.max(0,Math.min(4,m.lvl-1))]) :
           m.digiMode === 'temari-typhoon' ? '迴旋 ' + count(1) + '×' + ([3,4,5,6,8][Math.max(0,Math.min(4,m.lvl-1))] + (rank ? rank + q : 0)) :
