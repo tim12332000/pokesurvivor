@@ -121,6 +121,11 @@
   G.Player.prototype.arrange=function(...args){G.NarutoSharingan?.migrate(this);migrateNarutoAutomatic(this);migrateGaaraPassives(this);migratePainPassives(this);migrateTemariPassives(this);migrateKimimaroPassives(this);return arrange.apply(this,args);};
   const addMove=G.Player.prototype.addMove;
   G.Player.prototype.addMove=function(id,...args){
+    if(id==='naruto-shikamaru'||id.startsWith('naruto-shikamaru-')){
+      const def=G.Moves.BY_ID[id];
+      if(this.mon?.dex!==30017||!def||this.level<(def.learnLevel||1)||this.hasMove(id))return false;
+      this.moves.push(G.Moves.instance(id,1));this.arrange();return true;
+    }
     if(id==='naruto-toad-summon'&&(this.mon?.dex!==30001||this.level<12))return false;
     if(this.mon?.dex===30001&&narutoAutomatic.has(id)){
       if(this.hasMove(id)){migrateNarutoAutomatic(this);return false;}
@@ -172,7 +177,7 @@
     const player=G.Game.player;
     if(player?.mon===mon){G.NarutoSharingan?.migrate(player);migrateNarutoAutomatic(player);migrateGaaraPassives(player);migratePainPassives(player);migrateTemariPassives(player);migrateKimimaroPassives(player);}
     const ids=poolFor(mon);
-    if(mon.dex===30012){
+    if(mon.dex===30012||mon.dex===30017){
       const level=startingRun?1:player?.mon===mon?Math.max(1,player.level||1):1;
       return ids.filter(id=>(G.Moves.BY_ID[id]?.learnLevel||1)<=level);
     }

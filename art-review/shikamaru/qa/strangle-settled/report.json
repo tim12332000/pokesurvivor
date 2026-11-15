@@ -1,0 +1,4581 @@
+{
+  "controlled": true,
+  "sourceBefore": {
+    ".omx/naruto-shikamaru.js": "81be68d2b2aa529cf709b0d07ecb8bbe727420ae1c9582ef0d1b0fe1a31318a0",
+    "art-review/shikamaru-art.js": "d11921f57de8470d8ea1c0d6b05a8cc10ddc667e681979804e10618eaa6b5923",
+    "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+    "js/entities/enemy.js": "d35930081aba4652aa37c35cad1ca96b9e1a23f1534f1dd054bad284e591791f",
+    "js/systems/combat.js": "5f8315d3987d169d99d7ebe17d809f94aa7068825ee4e377a6fd285a41561748",
+    "js/systems/self-clone.js": "f4a05ea297bae3fa0e318fc9699117a949ccb66e816e723c81a58ba2fcf4f62e",
+    ".omx/naruto-skills.js": "20bdf6c6f821ac70f137eab316686598febd1f49b933711000635aed92e4add7",
+    "art-review/shikamaru/atlas-v1.png": "172369eb508ac2772bf767e0d8a8ab79b4a4863407023dab4862324fdc71b76f",
+    "art-review/shikamaru/source-v1.png": "34c5b74a399265a77d85cd1fc96709d89cf22964201cf71f63c23d43276cfd4b",
+    "art-review/shikamaru/source-v2-throw.png": "8be8db2cb397aadb64688b8fcc4839dd878e049d854a8b1066b0c599b9514176"
+  },
+  "samples": [
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-00.png",
+      "t": 0.45066666666666666,
+      "wall": 1.2094000000953675,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 2,
+          "kind": "shadow",
+          "age": 0.288,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 76,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 72.38423518714865,
+                "y": -23.162955259887564
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 72.38423518714865,
+                "y": 23.162955259887564
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 74.16820614912602,
+                "y": 16.58545135414607
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 75.35577394922191,
+                "y": 9.87458011835272
+              }
+            }
+          ],
+          "traps": []
+        },
+        {
+          "serial": 3,
+          "kind": "strangle",
+          "age": 0.030866666666666938,
+          "emitted": 0,
+          "pulses": 5,
+          "rays": [
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "prepare",
+      "artPose": {
+        "kind": "strangle",
+        "age": 0.030866666666666938
+      },
+      "stats": {
+        "casts": {
+          "shadow": 1,
+          "strangle": 1
+        },
+        "hits": 1,
+        "damage": 46.569599999999994,
+        "bound": 1,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-01.png",
+      "t": 1.0748666666666664,
+      "wall": 1.5252999999523162,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 2,
+          "kind": "shadow",
+          "age": 0.9121999999999999,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 158.64373462994087,
+                "y": 20.78858972284783
+              }
+            }
+          ],
+          "traps": []
+        },
+        {
+          "serial": 3,
+          "kind": "strangle",
+          "age": 0.6550666666666669,
+          "emitted": 2,
+          "pulses": 5,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": null,
+      "stats": {
+        "casts": {
+          "shadow": 1,
+          "strangle": 1
+        },
+        "hits": 5,
+        "damage": 419.1264,
+        "bound": 3,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-02.png",
+      "t": 1.5228666666666668,
+      "wall": 1.7482999999523163,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 3,
+          "kind": "strangle",
+          "age": 1.103066666666667,
+          "emitted": 4,
+          "pulses": 5,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            }
+          ],
+          "traps": []
+        },
+        {
+          "serial": 4,
+          "kind": "shadow",
+          "age": 0.14400000000000002,
+          "emitted": 0,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "seal",
+      "artPose": {
+        "kind": "shadow",
+        "age": 0.14400000000000002
+      },
+      "stats": {
+        "casts": {
+          "shadow": 2,
+          "strangle": 1
+        },
+        "hits": 7,
+        "damage": 698.544,
+        "bound": 3,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-03.png",
+      "t": 1.9380666666666668,
+      "wall": 1.9555,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 3,
+          "kind": "strangle",
+          "age": 1.518266666666667,
+          "emitted": 5,
+          "pulses": 5,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            }
+          ],
+          "traps": []
+        },
+        {
+          "serial": 4,
+          "kind": "shadow",
+          "age": 0.5592,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 158.64373462994087,
+                "y": 20.78858972284783
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": {
+        "kind": "shadow",
+        "age": 0.5592
+      },
+      "stats": {
+        "casts": {
+          "shadow": 2,
+          "strangle": 1
+        },
+        "hits": 11,
+        "damage": 977.9616000000001,
+        "bound": 6,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-04.png",
+      "t": 2.3860666666666672,
+      "wall": 2.176700000047684,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 3,
+          "kind": "strangle",
+          "age": 1.9662666666666675,
+          "emitted": 5,
+          "pulses": 5,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            }
+          ],
+          "traps": []
+        },
+        {
+          "serial": 4,
+          "kind": "shadow",
+          "age": 1.0072,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 158.64373462994087,
+                "y": 20.78858972284783
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": null,
+      "stats": {
+        "casts": {
+          "shadow": 2,
+          "strangle": 1
+        },
+        "hits": 11,
+        "damage": 977.9616000000001,
+        "bound": 6,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-05.png",
+      "t": 2.8180666666666676,
+      "wall": 2.3977000000476836,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 5,
+          "kind": "shadow",
+          "age": 0.22380000000000017,
+          "emitted": 0,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 28,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 26.667876121581077,
+                "y": -8.533720358905946
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 26.667876121581077,
+                "y": 8.533720358905946
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 27.325128581256955,
+                "y": 6.110429446264341
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 27.762653560239656,
+                "y": 3.6380032014983708
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "seal",
+      "artPose": {
+        "kind": "shadow",
+        "age": 0.22380000000000017
+      },
+      "stats": {
+        "casts": {
+          "shadow": 3,
+          "strangle": 1
+        },
+        "hits": 11,
+        "damage": 977.9616000000001,
+        "bound": 6,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-06.png",
+      "t": 3.265466666666669,
+      "wall": 2.6202000000476837,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 5,
+          "kind": "shadow",
+          "age": 0.6712000000000011,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 158.64373462994087,
+                "y": 20.78858972284783
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": null,
+      "stats": {
+        "casts": {
+          "shadow": 3,
+          "strangle": 1
+        },
+        "hits": 14,
+        "damage": 1117.6704000000002,
+        "bound": 9,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-07.png",
+      "t": 3.711466666666669,
+      "wall": 2.844200000047684,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 5,
+          "kind": "shadow",
+          "age": 1.1172000000000015,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 158.64373462994087,
+                "y": 20.78858972284783
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": null,
+      "stats": {
+        "casts": {
+          "shadow": 3,
+          "strangle": 1
+        },
+        "hits": 14,
+        "damage": 1117.6704000000002,
+        "bound": 9,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-08.png",
+      "t": 4.159666666666669,
+      "wall": 3.0644000000953673,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 6,
+          "kind": "shadow",
+          "age": 0.3520000000000001,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 118.1005942527162,
+                "y": -37.79219016086918
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 118.1005942527162,
+                "y": 37.79219016086918
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 122.94889433820418,
+                "y": 16.11115703520707
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "seal",
+      "artPose": {
+        "kind": "shadow",
+        "age": 0.3520000000000001
+      },
+      "stats": {
+        "casts": {
+          "shadow": 4,
+          "strangle": 1
+        },
+        "hits": 17,
+        "damage": 1257.3792000000003,
+        "bound": 12,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-09.png",
+      "t": 4.607266666666669,
+      "wall": 3.2869000000953674,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 6,
+          "kind": "shadow",
+          "age": 0.7995999999999996,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 158.64373462994087,
+                "y": 20.78858972284783
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": null,
+      "stats": {
+        "casts": {
+          "shadow": 4,
+          "strangle": 1
+        },
+        "hits": 17,
+        "damage": 1257.3792000000003,
+        "bound": 12,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-10.png",
+      "t": 5.055466666666669,
+      "wall": 3.5100999999046327,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 7,
+          "kind": "shadow",
+          "age": 0.03220000000000073,
+          "emitted": 0,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            },
+            {
+              "source": null,
+              "tip": null
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "prepare",
+      "artPose": {
+        "kind": "shadow",
+        "age": 0.03220000000000073
+      },
+      "stats": {
+        "casts": {
+          "shadow": 5,
+          "strangle": 1
+        },
+        "hits": 17,
+        "damage": 1257.3792000000003,
+        "bound": 12,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-11.png",
+      "t": 5.50346666666667,
+      "wall": 3.7349000000953674,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 7,
+          "kind": "shadow",
+          "age": 0.4802000000000008,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": -202.19641637426875,
+                "y": -75.97768886589894
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "seal",
+      "artPose": {
+        "kind": "shadow",
+        "age": 0.4802000000000008
+      },
+      "stats": {
+        "casts": {
+          "shadow": 5,
+          "strangle": 1
+        },
+        "hits": 20,
+        "damage": 1397.0880000000004,
+        "bound": 15,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-12.png",
+      "t": 5.93546666666667,
+      "wall": 3.9552000000476837,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 7,
+          "kind": "shadow",
+          "age": 0.9122000000000006,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": -404.3928327485375,
+                "y": -151.95537773179788
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": null,
+      "stats": {
+        "casts": {
+          "shadow": 5,
+          "strangle": 1
+        },
+        "hits": 21,
+        "damage": 1443.6576000000005,
+        "bound": 15,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": -368.48994653196644,
+            "y": -138.46444467143556,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-13.png",
+      "t": 6.415666666666669,
+      "wall": 4.191299999952316,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 8,
+          "kind": "shadow",
+          "age": 0.19219999999999893,
+          "emitted": 0,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 8,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 7.619393177594594,
+                "y": -2.43820581683027
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 7.619393177594594,
+                "y": 2.43820581683027
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 7.807179594644844,
+                "y": 1.7458369846469546
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 7.932186731497044,
+                "y": 1.0394294861423916
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "seal",
+      "artPose": {
+        "kind": "shadow",
+        "age": 0.19219999999999893
+      },
+      "stats": {
+        "casts": {
+          "shadow": 6,
+          "strangle": 1
+        },
+        "hits": 21,
+        "damage": 1443.6576000000005,
+        "bound": 15,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": -368.48994653196644,
+            "y": -138.46444467143556,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-14.png",
+      "t": 6.86386666666667,
+      "wall": 4.415599999904632,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 8,
+          "kind": "shadow",
+          "age": 0.6403999999999999,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 158.64373462994087,
+                "y": 20.78858972284783
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": {
+        "kind": "shadow",
+        "age": 0.6403999999999999
+      },
+      "stats": {
+        "casts": {
+          "shadow": 6,
+          "strangle": 1
+        },
+        "hits": 24,
+        "damage": 1583.3664000000006,
+        "bound": 18,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": -368.48994653196644,
+            "y": -138.46444467143556,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-15.png",
+      "t": 7.31166666666667,
+      "wall": 4.639299999952316,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 8,
+          "kind": "shadow",
+          "age": 1.0881999999999996,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 158.64373462994087,
+                "y": 20.78858972284783
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": null,
+      "stats": {
+        "casts": {
+          "shadow": 6,
+          "strangle": 1
+        },
+        "hits": 24,
+        "damage": 1583.3664000000006,
+        "bound": 18,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": -368.48994653196644,
+            "y": -138.46444467143556,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-16.png",
+      "t": 7.760066666666671,
+      "wall": 4.863,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 9,
+          "kind": "shadow",
+          "age": 0.3362000000000008,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 112,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 106.67150448632431,
+                "y": -34.13488143562378
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 106.67150448632431,
+                "y": 34.13488143562378
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": -81.13989767278335,
+                "y": -77.20308935301908
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 109.30051432502782,
+                "y": 24.441717785057364
+              }
+            }
+          ],
+          "traps": []
+        },
+        {
+          "serial": 10,
+          "kind": "strangle",
+          "age": 0.3362000000000008,
+          "emitted": 1,
+          "pulses": 5,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 125,
+                "y": -40
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 125,
+                "y": 40
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 125,
+                "y": -40
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "crouch",
+      "artPose": {
+        "kind": "strangle",
+        "age": 0.3362000000000008
+      },
+      "stats": {
+        "casts": {
+          "shadow": 7,
+          "strangle": 2
+        },
+        "hits": 30,
+        "damage": 2142.2016,
+        "bound": 21,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": -368.48994653196644,
+            "y": -138.46444467143556,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 9,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 139.7088
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 139.7088
+          },
+          {
+            "cast": 9,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 9,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          }
+        ]
+      }
+    },
+    {
+      "mode": "strangle",
+      "direction": "right",
+      "image": "strangle-right-17.png",
+      "t": 8.20806666666667,
+      "wall": 5.087,
+      "moves": [
+        {
+          "id": "naruto-shikamaru",
+          "rank": 3
+        },
+        {
+          "id": "naruto-shikamaru-strangle",
+          "rank": 3
+        }
+      ],
+      "casts": [
+        {
+          "serial": 9,
+          "kind": "shadow",
+          "age": 0.784200000000001,
+          "emitted": 1,
+          "pulses": 1,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 120,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": -48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 152.38786355189188,
+                "y": 48.7641163366054
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": -304.2746162729375,
+                "y": -289.51158507382155
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 117.10769391967266,
+                "y": 26.18755476970432
+              }
+            }
+          ],
+          "traps": []
+        },
+        {
+          "serial": 10,
+          "kind": "strangle",
+          "age": 0.784200000000001,
+          "emitted": 3,
+          "pulses": 5,
+          "rays": [
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 125,
+                "y": -40
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 125,
+                "y": 40
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 90,
+                "y": 0
+              }
+            },
+            {
+              "source": {
+                "x": 0,
+                "y": 0
+              },
+              "tip": {
+                "x": 125,
+                "y": -40
+              }
+            }
+          ],
+          "traps": []
+        }
+      ],
+      "animDirection": 2,
+      "artFrame": "idle",
+      "artPose": null,
+      "stats": {
+        "casts": {
+          "shadow": 7,
+          "strangle": 2
+        },
+        "hits": 37,
+        "damage": 3027.023999999999,
+        "bound": 21,
+        "detonations": 0,
+        "contacts": [
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 2,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 4,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 3,
+            "mode": "strangle",
+            "pulse": 5,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 4,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 5,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 6,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 7,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": -368.48994653196644,
+            "y": -138.46444467143556,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 8,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 9,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 139.7088
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 139.7088
+          },
+          {
+            "cast": 9,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": -40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 9,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": 125,
+            "y": 40,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 125,
+            "y": -40,
+            "damage": 139.7088
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 2,
+            "x": 125,
+            "y": 40,
+            "damage": 139.7088
+          },
+          {
+            "cast": 9,
+            "mode": "shadow",
+            "pulse": 1,
+            "x": -262.12122363835897,
+            "y": -249.40342335017303,
+            "damage": 46.569599999999994
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 90,
+            "y": 0,
+            "damage": 139.7088
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 125,
+            "y": -40,
+            "damage": 139.7088
+          },
+          {
+            "cast": 10,
+            "mode": "strangle",
+            "pulse": 3,
+            "x": 125,
+            "y": 40,
+            "damage": 139.7088
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [],
+  "url": "http://127.0.0.1:8348/.omx/digimon.html?lang=zh-TW&layout=wide",
+  "nativePhaseCaptures": [
+    {
+      "image": "native-strangle-right-first.png",
+      "kind": "strangle",
+      "direction": "right",
+      "phase": "first",
+      "age": 0.27106666666666684,
+      "emitted": 1,
+      "pulses": 5,
+      "gameTime": 0.6908666666666665,
+      "wall": 1.328,
+      "effects": [
+        {
+          "x": 90,
+          "y": 0,
+          "age": 0.01619999999999982,
+          "bodyH": 39
+        }
+      ]
+    },
+    {
+      "image": "native-strangle-right-settled.png",
+      "kind": "strangle",
+      "direction": "right",
+      "phase": "settled",
+      "effectAge": 0.14419999999999983,
+      "bodyH": 39,
+      "gameTime": 0.8188666666666665,
+      "wall": 1.3917999999523163
+    },
+    {
+      "image": "native-strangle-right-middle.png",
+      "kind": "strangle",
+      "direction": "right",
+      "phase": "middle",
+      "age": 0.7348666666666671,
+      "emitted": 3,
+      "pulses": 5,
+      "gameTime": 1.1546666666666667,
+      "wall": 1.5599000000953673,
+      "effects": [
+        {
+          "x": 90,
+          "y": 0,
+          "age": 0.2558000000000003,
+          "bodyH": 39
+        },
+        {
+          "x": 90,
+          "y": 0,
+          "age": 0.015800000000000182,
+          "bodyH": 39
+        }
+      ]
+    },
+    {
+      "image": "native-strangle-right-last.png",
+      "kind": "strangle",
+      "direction": "right",
+      "phase": "last",
+      "age": 1.1830666666666672,
+      "emitted": 5,
+      "pulses": 5,
+      "gameTime": 1.6028666666666669,
+      "wall": 1.7834000000953674,
+      "effects": [
+        {
+          "x": 90,
+          "y": 0,
+          "age": 0.2400000000000001,
+          "bodyH": 39
+        },
+        {
+          "x": 90,
+          "y": 0,
+          "age": 0.016,
+          "bodyH": 39
+        }
+      ]
+    }
+  ],
+  "sourceAfter": {
+    ".omx/naruto-shikamaru.js": "81be68d2b2aa529cf709b0d07ecb8bbe727420ae1c9582ef0d1b0fe1a31318a0",
+    "art-review/shikamaru-art.js": "d11921f57de8470d8ea1c0d6b05a8cc10ddc667e681979804e10618eaa6b5923",
+    "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+    "js/entities/enemy.js": "d35930081aba4652aa37c35cad1ca96b9e1a23f1534f1dd054bad284e591791f",
+    "js/systems/combat.js": "5f8315d3987d169d99d7ebe17d809f94aa7068825ee4e377a6fd285a41561748",
+    "js/systems/self-clone.js": "f4a05ea297bae3fa0e318fc9699117a949ccb66e816e723c81a58ba2fcf4f62e",
+    ".omx/naruto-skills.js": "20bdf6c6f821ac70f137eab316686598febd1f49b933711000635aed92e4add7",
+    "art-review/shikamaru/atlas-v1.png": "172369eb508ac2772bf767e0d8a8ab79b4a4863407023dab4862324fdc71b76f",
+    "art-review/shikamaru/source-v1.png": "34c5b74a399265a77d85cd1fc96709d89cf22964201cf71f63c23d43276cfd4b",
+    "art-review/shikamaru/source-v2-throw.png": "8be8db2cb397aadb64688b8fcc4839dd878e049d854a8b1066b0c599b9514176"
+  },
+  "sourceStable": true
+}

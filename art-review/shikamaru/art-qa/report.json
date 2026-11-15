@@ -1,0 +1,188 @@
+{
+  "desktop": {
+    "errors": [],
+    "entry": {
+      "dex": 30017,
+      "level": 1,
+      "ready": true
+    },
+    "poses": [
+      {
+        "dir": "down",
+        "walk": [
+          "frontRun1",
+          "frontRun2"
+        ],
+        "cast": [
+          "frontPrepare",
+          "frontSeal",
+          "frontSeal",
+          "frontIdle"
+        ]
+      },
+      {
+        "dir": "up",
+        "walk": [
+          "backRun1",
+          "backRun2"
+        ],
+        "cast": [
+          "backPrepare",
+          "backSeal",
+          "backSeal",
+          "backIdle"
+        ]
+      },
+      {
+        "dir": "right",
+        "walk": [
+          "run1",
+          "run2"
+        ],
+        "cast": [
+          "prepare",
+          "seal",
+          "seal",
+          "idle"
+        ]
+      },
+      {
+        "dir": "left",
+        "walk": [
+          "run1",
+          "run2"
+        ],
+        "cast": [
+          "prepare",
+          "seal",
+          "seal",
+          "idle"
+        ]
+      }
+    ]
+  },
+  "mobile390": {
+    "errors": [],
+    "entry": {
+      "dex": 30017,
+      "level": 1,
+      "ready": true
+    },
+    "poses": [
+      {
+        "dir": "down",
+        "walk": [
+          "frontRun1",
+          "frontRun2"
+        ],
+        "cast": [
+          "frontPrepare",
+          "frontSeal",
+          "frontSeal",
+          "frontIdle"
+        ]
+      },
+      {
+        "dir": "up",
+        "walk": [
+          "backRun1",
+          "backRun2"
+        ],
+        "cast": [
+          "backPrepare",
+          "backSeal",
+          "backSeal",
+          "backIdle"
+        ]
+      },
+      {
+        "dir": "right",
+        "walk": [
+          "run1",
+          "run2"
+        ],
+        "cast": [
+          "prepare",
+          "seal",
+          "seal",
+          "idle"
+        ]
+      },
+      {
+        "dir": "left",
+        "walk": [
+          "run1",
+          "run2"
+        ],
+        "cast": [
+          "prepare",
+          "seal",
+          "seal",
+          "idle"
+        ]
+      }
+    ]
+  },
+  "mobile360": {
+    "errors": [],
+    "entry": {
+      "dex": 30017,
+      "level": 1,
+      "ready": true
+    },
+    "poses": [
+      {
+        "dir": "down",
+        "walk": [
+          "frontRun1",
+          "frontRun2"
+        ],
+        "cast": [
+          "frontPrepare",
+          "frontSeal",
+          "frontSeal",
+          "frontIdle"
+        ]
+      },
+      {
+        "dir": "up",
+        "walk": [
+          "backRun1",
+          "backRun2"
+        ],
+        "cast": [
+          "backPrepare",
+          "backSeal",
+          "backSeal",
+          "backIdle"
+        ]
+      },
+      {
+        "dir": "right",
+        "walk": [
+          "run1",
+          "run2"
+        ],
+        "cast": [
+          "prepare",
+          "seal",
+          "seal",
+          "idle"
+        ]
+      },
+      {
+        "dir": "left",
+        "walk": [
+          "run1",
+          "run2"
+        ],
+        "cast": [
+          "prepare",
+          "seal",
+          "seal",
+          "idle"
+        ]
+      }
+    ]
+  }
+}

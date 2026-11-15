@@ -41,6 +41,8 @@ for hero in ('naruto', 'sasuke', 'rock-lee', 'gaara', 'tenten'):
     assert (ROOT / source).resolve().is_relative_to((ROOT / '.omx/naruto/portraits').resolve())
     review_runtime.append(source)
 review_runtime.append('.omx/naruto-rasenshuriken-vfx.js')
+review_runtime.extend(['.omx/naruto-shikamaru.js', 'art-review/shikamaru-art.js',
+                       'art-review/shikamaru-frames.json', 'art-review/shikamaru/atlas-v1.png'])
 review_runtime.extend(['.omx/naruto-summoning.js', 'art-review/redrawn/gamabunta-summon-v2.png', 'art-review/redrawn/gamabunta-water-v1.png'])
 review_runtime.extend('art-review/redrawn/'+name for name in ['gamabunta-sword-v1.png','gamabunta-oil-v1.png','gamabunta-combo-fox-v2.png'])
 review_runtime.extend('art-review/redrawn/'+name for name in ['gamabunta-breath-actor-v1.png','gamabunta-oil-flame-v1.png'])

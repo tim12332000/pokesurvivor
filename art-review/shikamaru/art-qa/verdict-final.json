@@ -1,0 +1,22 @@
+{
+  "score": 92,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "方向圖採前/背/側，左側鏡射，並非獨立八方向",
+    "投擲苦無在短暫起飛時可經過頭身輪廓，未持續遮蔽角色/威脅"
+  ],
+  "suggestions": [],
+  "reasoning": "獨立實看正常桌機、360/390入口與四方向投札各prepare/release/recover共12張原生RAF完成畫面，前背新圖已真接入；另實看影縫地面連接尖刺、影首縛扣頸、影捕捉平帶的當輪相位及原生影片播放採樣。身份、實際方向、收勢及主角/敵人/地面可辨，先前具體阻擋解除。此為美術演出放行，不代表真人樂趣/手機實機長局/音效聽評。 首縛依bodyH修正後另看首/中/末三幀，貼身上升/收束仍保留主角與敵人輪廓。",
+  "next_actions": [],
+  "threshold": 90,
+  "evidence": [
+    "art-review/shikamaru/art-qa/report.json",
+    "art-review/shikamaru/qa/trap-native-phases/report.json",
+    "art-review/shikamaru/qa/trap-native-phases/native-trap-{direction}-{prepare,release,recover}.png",
+    "art-review/shikamaru/qa/native-final-cardinal/report.json",
+    "art-review/shikamaru/art-qa/video-review.json",
+    "art-review/shikamaru/qa/trap-phases-release/report.json",
+    "art-review/shikamaru/qa/strangle-body-final/report.json"
+  ]
+}
