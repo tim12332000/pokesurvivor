@@ -1,0 +1,310 @@
+{
+  "status": "Focused skill-identity QA complete; visual distinction still requires independent art review, not a score or implied player approval.",
+  "sourceManifest": {
+    ".omx/naruto-shikamaru.js": "f21056996cc63d0dca9fa10b94ccbcee2dd7057e89f0d77ebcb1d3b27276061c",
+    "art-review/shikamaru-art.js": "a141fd37fa66ffc240480c7fef002fc0c0b5dd0b2ad8391bc2e44c49bf31884d",
+    "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+    ".omx/naruto-skills.js": "a1ee401fb010b110d368bc56692bd118df948040637e7245385fb10dba29f5f3",
+    ".omx/digimon.html": "f2af3d20d117acedf498ce704f1a9ae4f9e5d8caa1ac91a6c8d4c748da72cec9"
+  },
+  "sourceStable": {
+    "controlled": true,
+    "native": true
+  },
+  "checks": [
+    "events",
+    "readOnly",
+    "cleanup",
+    "callbackCancel",
+    "chainGrowth",
+    "chainStopping"
+  ],
+  "trueHurtEventCount": 49,
+  "trueContactLedgerCount": 49,
+  "effectActorGroups": 25,
+  "maximumObjectsPerCastTarget": 1,
+  "effectActorIdentityRule": "One object per kind/castId/targetId; no sewing spike cluster or strangle arm recreated per real pulse.",
+  "sewingPeak": {
+    "firstMeasuredNativePixels": 69,
+    "firstSampleHeightFraction": 1,
+    "maximum": 69,
+    "retractionObserved": true,
+    "method": "Actual Combat.drawAirFields native pixel-alpha height around the first target, independently paired with real hurt events and pulse metadata."
+  },
+  "strangleActualPulseSamples": [
+    {
+      "clock": 1.8400000000000014,
+      "castId": 6,
+      "targetId": 1,
+      "pulseIndex": 1,
+      "age": 0,
+      "sample": {
+        "kind": "strangle",
+        "stage": "tighten",
+        "x": 180,
+        "y": 0,
+        "neckY": -25.35,
+        "progress": 1,
+        "tight": 1,
+        "close": 0.8,
+        "pulseIndex": 1
+      }
+    },
+    {
+      "clock": 2.07,
+      "castId": 6,
+      "targetId": 1,
+      "pulseIndex": 2,
+      "age": 0,
+      "sample": {
+        "kind": "strangle",
+        "stage": "tighten",
+        "x": 180,
+        "y": 0,
+        "neckY": -25.35,
+        "progress": 1,
+        "tight": 1,
+        "close": 0.9,
+        "pulseIndex": 2
+      }
+    },
+    {
+      "clock": 2.299999999999995,
+      "castId": 6,
+      "targetId": 1,
+      "pulseIndex": 3,
+      "age": 0,
+      "sample": {
+        "kind": "strangle",
+        "stage": "tighten",
+        "x": 180,
+        "y": 0,
+        "neckY": -25.35,
+        "progress": 1,
+        "tight": 1,
+        "close": 1,
+        "pulseIndex": 3
+      }
+    }
+  ],
+  "readOnly": {
+    "100DrawAndQueriesNoStateChange": true,
+    "pausedUpdateNoStateChange": true
+  },
+  "lifecycleCleanup": [
+    "clear",
+    "death",
+    "world"
+  ],
+  "callbackCancellation": [
+    {
+      "id": "naruto-shikamaru-sewing",
+      "hits": 2,
+      "actors": 0,
+      "pending": 0
+    },
+    {
+      "id": "naruto-shikamaru-strangle",
+      "hits": 2,
+      "actors": 0,
+      "pending": 0
+    }
+  ],
+  "chainRegression": {
+    "growth": [
+      {
+        "rank": 1,
+        "quantity": 0,
+        "trueDistinctHurtTargets": 1
+      },
+      {
+        "rank": 2,
+        "quantity": 0,
+        "trueDistinctHurtTargets": 2
+      },
+      {
+        "rank": 3,
+        "quantity": 0,
+        "trueDistinctHurtTargets": 3
+      },
+      {
+        "rank": 1,
+        "quantity": 1,
+        "trueDistinctHurtTargets": 2
+      },
+      {
+        "rank": 1,
+        "quantity": 3,
+        "trueDistinctHurtTargets": 4
+      }
+    ],
+    "stopping": [
+      "miss",
+      "target-dead-before-contact",
+      "wall",
+      "callback-clear",
+      "owner-death",
+      "world"
+    ]
+  },
+  "nativeConfiguration": "Rank3 Q0 shadow, rank1 sewing/strangle, four true cards; same close three static million-HP native enemies at (85,0),(75,95),(-25,105). Normal shared-plan RAF auto-casts. No manual sim or skill clock stepping.",
+  "nativeViewports": {
+    "desktop": {
+      "frameCount": 20,
+      "frameFiles": [
+        "shadow-prepare.png",
+        "shadow-first.png",
+        "sewing-body.png",
+        "shadow-middle.png",
+        "sewing-rise.png",
+        "shadow-last.png",
+        "sewing-first.png",
+        "sewing-middle.png",
+        "sewing-last.png",
+        "net-first.png",
+        "net-middle.png",
+        "net-last.png",
+        "net-dissipated.png",
+        "strangle-rise.png",
+        "strangle-first.png",
+        "strangle-middle.png",
+        "strangle-last.png",
+        "shadow-dissipated.png",
+        "sewing-dissipated.png",
+        "strangle-dissipated.png"
+      ],
+      "sourceDirectory": "art-review/shikamaru/qa/skill-identity/native/desktop",
+      "sewingBodyProof": {
+        "time": 0.5628666666666668,
+        "pose": {
+          "kind": "sewing",
+          "phase": "sewing",
+          "age": 0.016000000000000014,
+          "phaseAge": 0.016000000000000014,
+          "phaseDuration": 0.55,
+          "key": "prepare"
+        }
+      },
+      "video": "skill-identity-native.webm"
+    },
+    "mobile360": {
+      "frameCount": 20,
+      "frameFiles": [
+        "shadow-prepare.png",
+        "shadow-first.png",
+        "sewing-body.png",
+        "shadow-middle.png",
+        "sewing-rise.png",
+        "shadow-last.png",
+        "sewing-first.png",
+        "sewing-middle.png",
+        "sewing-last.png",
+        "net-first.png",
+        "net-middle.png",
+        "net-last.png",
+        "net-dissipated.png",
+        "strangle-rise.png",
+        "strangle-first.png",
+        "strangle-middle.png",
+        "strangle-last.png",
+        "shadow-dissipated.png",
+        "sewing-dissipated.png",
+        "strangle-dissipated.png"
+      ],
+      "sourceDirectory": "art-review/shikamaru/qa/skill-identity/native/mobile360",
+      "sewingBodyProof": {
+        "time": 0.579066666666667,
+        "pose": {
+          "kind": "sewing",
+          "phase": "sewing",
+          "age": 0.016000000000000014,
+          "phaseAge": 0.016000000000000014,
+          "phaseDuration": 0.55,
+          "key": "prepare"
+        }
+      },
+      "video": "skill-identity-native.webm"
+    },
+    "mobile390": {
+      "frameCount": 20,
+      "frameFiles": [
+        "shadow-prepare.png",
+        "shadow-first.png",
+        "sewing-body.png",
+        "shadow-middle.png",
+        "sewing-rise.png",
+        "shadow-last.png",
+        "sewing-first.png",
+        "sewing-middle.png",
+        "sewing-last.png",
+        "net-first.png",
+        "net-middle.png",
+        "net-last.png",
+        "net-dissipated.png",
+        "strangle-rise.png",
+        "strangle-first.png",
+        "strangle-middle.png",
+        "strangle-last.png",
+        "shadow-dissipated.png",
+        "sewing-dissipated.png",
+        "strangle-dissipated.png"
+      ],
+      "sourceDirectory": "art-review/shikamaru/qa/skill-identity/native/mobile390",
+      "sewingBodyProof": {
+        "time": 0.579066666666667,
+        "pose": {
+          "kind": "sewing",
+          "phase": "sewing",
+          "age": 0.016000000000000014,
+          "phaseAge": 0.016000000000000014,
+          "phaseDuration": 0.55,
+          "key": "prepare"
+        }
+      },
+      "video": "skill-identity-native.webm"
+    }
+  },
+  "fixedCounterexample": "Initial formal check rejected net effects without true cast/move/pulse/target/source metadata. Original failure report retained. Author switched true-hit net visual to contactVisual with finite event age, preserving damage, geometry and timing; full check now passes.",
+  "evidenceBoundary": "Earlier genuine-card natural chain/core evidence is retained for unchanged behavior, not claimed as footage of this newer skill-specific presentation. This patch has explicit native rendering evidence on desktop/360/390 and chain regressions; no unrelated natural long run was repeated.",
+  "limitations": [
+    "Viewport emulation is not a physical-phone long run.",
+    "No audio listening review.",
+    "Tests and visual scores cannot certify player enjoyment or acceptance."
+  ],
+  "errors": {
+    "controlled": [],
+    "native": []
+  },
+  "rawEvidence": {
+    "report.json": {
+      "path": "art-review/shikamaru/qa/skill-identity/report.json",
+      "sha256": "061a3093f0eb318ccefa955e36a32c2249cb0f20fc92e4085080e24e2c124ea0",
+      "bytes": 11252791
+    },
+    "net-metadata-counterexample.json": {
+      "path": "art-review/shikamaru/qa/skill-identity/net-metadata-counterexample.json",
+      "sha256": "0992b6156dc84134cbbe07c5f39b705882c61b8649a4362951dbef10dc3ed6fc",
+      "bytes": 1460
+    },
+    "native/report.json": {
+      "path": "art-review/shikamaru/qa/skill-identity/native/report.json",
+      "sha256": "c4cb98da0dcc5187046214bc8560e11947943b9c0c1f173b6190e146e9674d71",
+      "bytes": 2201720
+    },
+    "native/desktop/skill-identity-native.webm": {
+      "path": "art-review/shikamaru/qa/skill-identity/native/desktop/skill-identity-native.webm",
+      "sha256": "cfde0f842cae073b0c91e053ce66a75ba41c22f4a512b4353683558ddc16bda7",
+      "bytes": 643998
+    },
+    "native/mobile360/skill-identity-native.webm": {
+      "path": "art-review/shikamaru/qa/skill-identity/native/mobile360/skill-identity-native.webm",
+      "sha256": "58a38e7320a3bb09c0672c4bba44ecd6ed8e9ae972031a504fced2358021bb52",
+      "bytes": 373815
+    },
+    "native/mobile390/skill-identity-native.webm": {
+      "path": "art-review/shikamaru/qa/skill-identity/native/mobile390/skill-identity-native.webm",
+      "sha256": "71d409f9928db75101ce198bb1a71a02d3ae95cf7337fe8ebfbf892f184ac72e",
+      "bytes": 421772
+    }
+  }
+}

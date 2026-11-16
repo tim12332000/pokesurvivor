@@ -11,15 +11,21 @@ vm.runInNewContext(fs.readFileSync('art-review/shikamaru-art.js','utf8'),context
  const pose=(phase,extra={})=>({phase,phaseAge:.2,phaseDuration:1,kind:'shadow',moving:false,age:50,...extra});
  assert.equal(art.sample('cast',50,'down',pose('prepare')).key,'frontPrepare');
  assert.equal(art.sample('cast',50,'up',pose('release')).key,'backSeal');
- assert.equal(art.sample('cast',50,'right',pose('net',{phaseAge:.1})).key,'seal');
- assert.equal(art.sample('cast',50,'right',pose('net',{phaseAge:.5})).key,'crouch');
+ assert.equal(art.sample('cast',50,'right',pose('net',{phaseAge:.1})).key,'prepare');
+ assert.equal(art.sample('cast',50,'right',pose('net',{phaseAge:.5})).key,'seal');
  assert.equal(art.sample('cast',50,'down',pose('finish',{phaseAge:.95})).key,'frontIdle');
- for(const phase of ['drag','net','blast','finish','recover']){
+ for(const phase of ['drag','net','blast','finish','recover','sewing']){
   assert.equal(art.sample('cast',.1,'up',pose(phase,{moving:true})).key,'backRun2');
  }
  assert.equal(art.sample('cast',50,'up',pose('recover',{kind:'trap'})).key,'backThrowRecover');
  assert.equal(art.sample('cast',50,'down',pose('release',{kind:'trap',phaseAge:.02,phaseDuration:.22})).key,'frontThrowRelease');
  assert.equal(art.sample('cast',50,'down',pose('release',{kind:'trap',phaseAge:.2,phaseDuration:.22})).key,'frontThrowRecover');
+ assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',phaseAge:.05})).key,'frontPrepare');
+ assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',phaseAge:.4})).key,'frontCrouch');
+ assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',phaseAge:.8})).key,'frontSeal');
+ assert.equal(art.sample('cast',50,'up',pose('finish',{kind:'strangle',phaseAge:.2})).key,'backCrouch');
+ assert.equal(art.sample('cast',50,'up',pose('finish',{kind:'strangle',phaseAge:.5})).key,'backSeal');
+ assert.equal(art.sample('cast',50,'up',pose('finish',{kind:'shadow',phaseAge:.2})).key,'backIdle');
  assert.equal(art.sample('hurt',50,'right',pose('net')).key,'hurt');
  const ctx={save(){},restore(){},translate(){},scale(){},drawImage(...args){drawCalls.push(args)}};
  art.draw(ctx,{}, {state:'cast',time:.1,dir:4,pose:pose('drag',{moving:true,aim:0})});

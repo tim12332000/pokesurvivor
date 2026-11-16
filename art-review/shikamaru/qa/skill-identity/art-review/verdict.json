@@ -1,0 +1,25 @@
+{
+  "score": 90,
+  "verdict": "pass",
+  "category_match": true,
+  "differences": [
+    "三招在正常shared循環會短暫交會：net消散可同時有下一輪影縫，首縛首段可帶上一輪刺的收回；未把交會另一招當作本招輪廓。",
+    "手機能辨沿身盤繞/扣頸主形，未聲稱逐根手指細節在360寬度都清楚；未實聽音效或做實機長局。"
+  ],
+  "suggestions": [],
+  "reasoning": "本輪獨立實看同配置桌機首中末/消散及360/390關鍵rise/峰值/收回，真播放最新三尺寸短片到片尾：模仿貼地纏足；影縫由每pulse重生小effect改為同cast-target唯一刺actor，真hurt達主刺峰值、退回後下波再升，手機有明顯高於敵身的主形且未疊forest，sewing身體phase/key crouch確實出現不再被plan吞；首縛由每pulse重生手改同手沿身上升、跨pulse收緊後釋放，主輪廓不再像影縫直刺；net維持平地交叉收束並站立施術。這是當輪辨識合約放行，不以有刺/有手或文字標籤自行宣稱完成，也不代表使用者認可美感/好玩。",
+  "next_actions": [],
+  "threshold": 90,
+  "source": {
+    ".omx/naruto-shikamaru.js": "f21056996cc63d0dca9fa10b94ccbcee2dd7057e89f0d77ebcb1d3b27276061c",
+    "art-review/shikamaru-art.js": "a141fd37fa66ffc240480c7fef002fc0c0b5dd0b2ad8391bc2e44c49bf31884d",
+    "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+    ".omx/naruto-skills.js": "a1ee401fb010b110d368bc56692bd118df948040637e7245385fb10dba29f5f3",
+    ".omx/digimon.html": "f2af3d20d117acedf498ce704f1a9ae4f9e5d8caa1ac91a6c8d4c748da72cec9"
+  },
+  "evidence": [
+    "art-review/shikamaru/qa/skill-identity/native/report.json",
+    "art-review/shikamaru/qa/skill-identity/art-review/final-playback.json",
+    "art-review/shikamaru/qa/skill-identity/report.json"
+  ]
+}
