@@ -43,7 +43,7 @@
     const s=state(a),p=profile(a,m),t=targets(a,p).filter(e=>p.kind!=='strangle'||held(e)&&leases.get(e)?.cast.owner===a);
     if(p.kind==='sewing'){
       const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:p.kind,age:0,duration:p.release+p.pulses*p.interval+.4,aim:a.aim||0,rays:[],traps:[],emitted:0,cancelled:false,hits:0,followChain:s.lastChain};
-      s.cooldowns[m.id]=p.cd;m.t=p.cd;s.casts[p.kind]=(s.casts[p.kind]||0)+1;casts.push(b);return true;
+      s.cooldowns[m.id]=p.cd;m.t=p.cd;s.casts[p.kind]=(s.casts[p.kind]||0)+1;s.sewingPose={kind:'sewing',phase:'sewing',started:s.clock,duration:.55,aim:b.aim};casts.push(b);return true;
     }
     const count=p.kind==='trap'?p.traps:p.kind==='shadow'?1:p.branches;
     const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:p.kind,age:0,duration:p.kind==='trap'?1.3:p.release+(p.pulses-1)*p.interval+p.range/p.speed+.4,
@@ -77,9 +77,15 @@
     if(!legal(b))return false;
     b.owner.onDealt?.(damage);if(!legal(b))return false;
     b.owner.dmgDealt=(b.owner.dmgDealt||0)+damage;b.state.hits++;b.state.damage+=damage;b.hits++;
-    if(b.state.contacts.length<120)b.state.contacts.push({cast:b.serial,mode:b.kind,pulse:b.emitted,x:e.x,y:e.y,damage});
+    if(b.state.contacts.length<120)b.state.contacts.push({cast:b.serial,moveId:b.m.id,targetId:e.id??null,mode:b.kind,pulse:b.emitted,x:e.x,y:e.y,damage});
     G.DamageSplash?.hit?.(b.owner,e,damage,b.kind==='trap'?'#ffc27b':'#bca6db',b.m.id);
     return legal(b);
+  }
+  function contactVisual(b,e,kind,pulseIndex,life){
+    const existing=effects.find(v=>v.kind===kind&&v.castId===b.serial&&v.target===e);
+    const data={owner:b.owner,world:b.world,kind,castId:b.serial,moveId:b.m.id,pulseIndex,sourceX:e.x,sourceY:e.y,targetId:e.id??null,target:e,bodyH:e.bodyH||Math.max(18,(e.r||12)*2),x:e.x,y:e.y,radius:(e.r||12)+5,castRef:b};
+    if(existing){Object.assign(existing,data);existing.age=0;existing.life=life;existing.lastPulseAt=b.age;existing.pulseEvents.push({index:pulseIndex,age:b.age});return existing;}
+    const visual={...data,age:0,life,lastPulseAt:b.age,pulseEvents:[{index:pulseIndex,age:b.age}]};effects.push(visual);return visual;
   }
   function segmentDistance(x,y,ax,ay,bx,by){const dx=bx-ax,dy=by-ay,t=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/(dx*dx+dy*dy||1)));return Math.hypot(x-ax-t*dx,y-ay-t*dy);}
   function ribbonGeometry(ax,ay,bx,by,radius){
@@ -155,7 +161,7 @@
       segment.contact=true;segment.contactPoint=point;chain.visited.add(e);chain.lastContact=point;
       // Keep the confirmed contact path; a killing hit still owns a real graft point.
       segment.path=segment.grownPoints.map(p=>({...p}));segment.path.push(point);segment.travelled=segment.totalLength=segment.path.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-segment.path[i].x,p.y-segment.path[i].y),0);refreshSegment(b,segment);
-      bind(b,e);effects.push({owner:b.owner,world:b.world,kind:'shadow',x:point.x,y:point.y,age:0,life:.25,radius:10});
+      bind(b,e);contactVisual(b,e,'shadow',chain.current+1,.25);
       if(!legal(b))return;
       if(chain.segments.length>=b.spec.chainTargets){chain.ended=true;return;}
       const next=[...new Set(G.EnemyMgr.queryCircle(point.x,point.y,b.spec.chainRange))].filter(t=>alive(t)&&!t.friendly&&!chain.visited.has(t)&&Math.hypot(t.x-point.x,t.y-point.y)<=b.spec.chainRange+(t.r||0)&&clearPath(point.x,point.y,t.x,t.y)).sort((a,z)=>Number(held(a))-Number(held(z))||Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(z.x-point.x,z.y-point.y))[0];
@@ -170,7 +176,7 @@
       for(const segment of b.followChain.chain.segments){
         if(!legal(b))return;const e=segment.target;
         if(!segment.contact||segment.linked===false||!alive(e)||!chainConnected(b.followChain,e))continue;
-        if(!hit(b,e))return;bind(b,e);effects.push({owner:b.owner,world:b.world,kind:'sewing',x:e.x,y:e.y,age:0,life:.36,radius:12});
+        if(!hit(b,e))return;bind(b,e);contactVisual(b,e,'sewing',b.emitted,Math.max(.13,b.duration-b.age+.13));
       }
     }
   }
@@ -196,7 +202,7 @@
         ray.source={x:ax,y:ay};ray.tip={x:e.x,y:e.y};
         if(current<.08||seen.has(e))continue;
         seen.add(e);b.emitted=index+1;if(!hit(b,e))return;
-        effects.push({owner,world:b.world,kind:'strangle',x:e.x,y:e.y,bodyH:e.bodyH||Math.max(18,(e.r||12)*2),age:0,life:.43,radius:(e.r||12)+5});
+        contactVisual(b,e,'strangle',index+1,Math.max(.24,b.duration-b.age+.18));
         continue;
       }
       const d=Math.hypot(ray.x-ax,ray.y-ay),wanted=Math.min(d,p.range,current*p.speed),dx=d?(ray.x-ax)/d:0,dy=d?(ray.y-ay)/d:0;
@@ -228,7 +234,7 @@
   }
   function detonate(b,t){
     if(t.detonated||!legal(b))return;t.detonated=true;b.state.detonations++;
-    effects.push({owner:b.owner,world:b.world,kind:'explosion',x:t.x,y:t.y,age:0,life:.5,radius:b.spec.radius});
+    effects.push({owner:b.owner,world:b.world,kind:'explosion',castId:b.serial,moveId:b.m.id,pulseIndex:b.emitted,sourceX:t.x,sourceY:t.y,targetId:null,x:t.x,y:t.y,age:0,life:.5,radius:b.spec.radius});
     for(const e of new Set(G.EnemyMgr.queryCircle(t.x,t.y,b.spec.radius+40))){
       if(!legal(b))return;if(!alive(e)||e.friendly||Math.hypot(e.x-t.x,e.y-t.y)>b.spec.radius+(e.r||0)||!clearPath(t.x,t.y,e.x,e.y))continue;
       if(!hit(b,e,held(e)&&leases.get(e)?.cast.owner===b.owner?1.5:1))return;
@@ -318,8 +324,8 @@
       if(p.stop>=spec.stopWindow||s.clock-p.started>=spec.dragTimeout)startNet(s);
     }else if(p.phase==='net'&&age>=spec.netPrepare){
       // A Lv1 net is already a real second attack, even before any tool is learned.
-      const net={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec,kind:'shadow',shared:true,finisher:true,cancelled:false,hits:0,emitted:1};
-      for(const [e]of heldList){if(!legal(net)||!hit(net,e,2))break;effects.push({owner:a,world:G.World,kind:'net',x:e.x,y:e.y,age:0,life:.4,radius:(e.r||12)+12});}
+      const net={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec,kind:'shadow',age:0,shared:true,finisher:true,cancelled:false,hits:0,emitted:1};
+      for(const [e]of heldList){if(!legal(net)||!hit(net,e,2))break;const visual=contactVisual(net,e,'net',net.emitted,.4);visual.radius=(e.r||12)+12;}
       if(states.get(a)!==s)return;
       relay(s,'sewing',true);
       let scheduled=0,last=s.clock;
@@ -359,7 +365,12 @@
       else{b.hitSets??=[];for(let i=0;i<b.spec.pulses;i++){const start=b.spec.release+i*b.spec.interval;if(b.age<start)break;pulse(b,i,Math.max(0,b.age-start));}}
       if(b.age>=b.duration||(b.kind==='shadow'&&b.chain.ended&&b.age>=b.spec.release+.4)){const i=casts.indexOf(b);if(i>=0)casts.splice(i,1);}
     }
-    for(let i=effects.length-1;i>=0;i--){const e=effects[i];e.age+=dt;if(e.age>=e.life||e.world!==G.World||!valid(e.owner))effects.splice(i,1);}
+    for(let i=effects.length-1;i>=0;i--){const e=effects[i];e.age=e.castRef&&casts.includes(e.castRef)?Math.max(0,e.castRef.age-e.lastPulseAt):e.age+dt;if(e.age>=e.life||e.world!==G.World||!valid(e.owner)||e.castRef&&!legal(e.castRef))effects.splice(i,1);}
+    for(const s of states.values())if(s.cue){
+      s.cue.action=skillAction(s,'strangle')?'strangle':skillAction(s,'sewing')?'sewing':null;
+      s.cue.actionLabel=s.cue.action==='strangle'?'影首縛 · 收緊':s.cue.action==='sewing'?'影縫 · 穿刺':'';
+      if(s.cue.phase==='finish'&&s.cue.action!=='strangle')s.cue.label='影術收勢';
+    }
   }
   function tick(dt,a,now){
     if((a?.mon?.dex??a?.dex)!==DEX)return oldTick.call(this,dt,a,now);
@@ -393,7 +404,9 @@
       if(b.kind==='trap')for(const t of b.traps){if(t.detonated||b.age<.55)continue;ctx.save();ctx.translate(t.x,t.y);ctx.rotate(.22);ctx.fillStyle='#e9d6a1';ctx.fillRect(-6,-10,12,20);ctx.strokeStyle='#663927';ctx.lineWidth=2;ctx.strokeRect(-6,-10,12,20);ctx.fillStyle='#613c35';ctx.fillRect(-2,-6,4,11);ctx.fillStyle='#ffb353';ctx.fillRect(3,-12,3,3);ctx.restore();}
       ctx.restore();
     }
-    for(const [e,l]of leases){if(!held(e))continue;ctx.save();ctx.fillStyle='#242126';ctx.beginPath();ctx.ellipse(e.x,e.y,(e.r||12)+8,9,0,0,Math.PI*2);ctx.fill();ctx.restore();}
+    for(const [e,l]of leases){if(!held(e))continue;ctx.save();ctx.fillStyle='#242126';ctx.beginPath();ctx.ellipse(e.x,e.y,(e.r||12)+8,9,0,0,Math.PI*2);ctx.fill();
+      // Possession stays at the ankles; neither needles nor a neck-hand belong here.
+      ctx.strokeStyle='#312a32';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(e.x,e.y-3,(e.r||12)+3,4,-.15,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(e.x-(e.r||12),e.y+2);ctx.quadraticCurveTo(e.x,e.y-7,e.x+(e.r||12),e.y);ctx.stroke();ctx.restore();}
     for(const s of states.values())if(s.plan?.phase==='net'){
       const u=Math.min(1,(s.clock-s.plan.at)/profile(s.owner,moveFor(s.owner,'shadow')).netPrepare);
       ctx.save();ctx.strokeStyle='#a99aba';ctx.lineWidth=2;ctx.globalAlpha=.45+.5*u;
@@ -414,7 +427,60 @@
       ctx.restore();ctx.save();ctx.strokeStyle=Number.isFinite(node.blastAt)?'#ffbe66':'#997d67';ctx.globalAlpha=Number.isFinite(node.blastAt)?.6:.2;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(node.x,node.y,b.spec.radius,0,Math.PI*2);ctx.stroke();ctx.restore();
     }
   }
+  function sewingVisualFor(b,target,visual=null){
+    if(!legal(b))return null;
+    const interval=b.spec.interval,retract=Math.min(.095,interval*.58),prepare=Math.min(.06,interval*.35);
+    const since=visual?visual.age:Infinity,until=b.spec.release+b.emitted*interval-b.age;
+    let height=0,stage='rest';
+    if(since<retract){height=1-since/retract;stage=since<EPS?'contact':'withdraw';}
+    else if(casts.includes(b)&&alive(target)&&b.emitted<b.spec.pulses&&until>=0&&until<=prepare){height=1-until/prepare;stage='rise';}
+    const x=alive(target)?target.x:visual?.x,y=alive(target)?target.y:visual?.y;if(!Number.isFinite(x)||!Number.isFinite(y))return null;
+    const bodyH=visual?.bodyH||target.bodyH||28;
+    return {kind:'sewing',stage,x,y,height,maximum:Math.max(48,Math.min(112,bodyH+30)),pulseIndex:visual?.pulseIndex||b.emitted+1,retract,prepare};
+  }
+  function effectVisualFor(e){
+    if(!e?.castRef||!legal(e.castRef))return null;
+    if(e.kind==='sewing')return sewingVisualFor(e.castRef,e.target,e);
+    if(e.kind==='strangle'){
+      const b=e.castRef,y=alive(e.target)?e.target.y:e.y,tight=Math.max(0,1-e.age/Math.min(.16,b.spec.interval*.7));
+      return {kind:e.kind,stage:e.age<EPS?'tighten':'hold',x:alive(e.target)?e.target.x:e.x,y,neckY:y-Math.max(12,e.bodyH*.65),progress:1,tight,close:Math.min(1,.45+.3*e.pulseIndex/b.spec.pulses+.25*tight),pulseIndex:e.pulseIndex};
+    }
+    return {kind:e.kind,stage:'contact',x:e.x,y:e.y,pulseIndex:e.pulseIndex};
+  }
+  function drawSewingActor(ctx,b,target,visual){
+    const sample=sewingVisualFor(b,target,visual);if(!sample||sample.height<=0)return;
+    const {x,y,height,maximum}=sample;
+    const radius=target.r||12,pulse=visual?.pulseIndex||b.emitted+1;
+    ctx.save();ctx.globalAlpha=1;ctx.fillStyle='#242126';
+    for(let i=0;i<3;i++){
+      const base=x+(i-1)*Math.min(15,radius*.7),floor=y+Math.abs(i-1)*3,h=maximum*height*(i===1?1:.78),lean=(i-1)*(13+3*(pulse%2));
+      ctx.beginPath();ctx.moveTo(base-6,floor);ctx.bezierCurveTo(base-11,floor-h*.35,base+lean-3,floor-h*.76,base+lean,floor-h);ctx.bezierCurveTo(base+lean+6,floor-h*.52,base+9,floor-h*.16,base+7,floor);ctx.closePath();ctx.fill();
+      ctx.strokeStyle='#51484e';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(base+3,floor-3);ctx.quadraticCurveTo(base+lean+3,floor-h*.48,base+lean,floor-h+4);ctx.stroke();
+    }ctx.restore();
+  }
+  function drawStrangleActor(ctx,target,visual,b,progress){
+    if(!legal(b))return;
+    const x=alive(target)?target.x:visual?.x??target.x,y=alive(target)?target.y:visual?.y??target.y,bodyH=visual?.bodyH||target.bodyH||28;
+    const scale=Math.max(.75,Math.min(1.7,bodyH/44)),neck=y-Math.max(12,bodyH*.65)*progress;
+    const since=visual?.age??Infinity,tight=Number.isFinite(since)?Math.max(0,1-since/Math.min(.16,b.spec.interval*.7)):0;
+    ctx.save();ctx.globalAlpha=visual?Math.min(1,Math.max(0,(visual.life-visual.age)/.16)):1;ctx.strokeStyle='#242126';ctx.lineWidth=(5+2*tight)*scale;
+    ctx.beginPath();ctx.moveTo(x-7*scale,y);ctx.bezierCurveTo(x-18*scale,y-8*scale,x+17*scale,neck+10*scale,x+2*scale,neck);ctx.stroke();
+    // Unlike ground nets or piercing needles, this is one continuous rising arm.
+    for(let i=0;i<2;i++){const h=(y-neck)*(i+1)/3;ctx.beginPath();ctx.ellipse(x,y-h,Math.max(5,(target.r||12)*(1-.15*tight)),4*scale,.2*(i%2?1:-1),0,Math.PI*1.8);ctx.stroke();}
+    if(progress>.5){
+      ctx.translate(x,neck);ctx.scale(scale,scale);const close=visual?effectVisualFor(visual).close:.45;ctx.fillStyle='#242126';ctx.fillRect(-4,-2,12,10);ctx.lineWidth=3;ctx.lineCap='round';
+      for(let i=0;i<4;i++){const fx=-4+i*3;ctx.beginPath();ctx.moveTo(fx,2);ctx.bezierCurveTo(fx-7*(1-close),-10,fx-5*close,-8,fx-7*close,1+2*close);ctx.stroke();}
+      ctx.beginPath();ctx.moveTo(7,6);ctx.quadraticCurveTo(13-5*close,1,7-4*close,-2);ctx.stroke();
+    }ctx.restore();
+  }
   function drawAir(ctx){
+    const sewingActors=new Map();
+    for(const b of casts)if(b.kind==='sewing'&&legal(b)){const targets=new Set(b.followChain.chain.segments.filter(s=>s.contact&&s.linked!==false).map(s=>s.target));sewingActors.set(b,targets);}
+    for(const e of effects)if(e.kind==='sewing'&&e.castRef&&legal(e.castRef)){if(!sewingActors.has(e.castRef))sewingActors.set(e.castRef,new Set());sewingActors.get(e.castRef).add(e.target);}
+    for(const [b,targets]of sewingActors)for(const target of targets)drawSewingActor(ctx,b,target,effects.find(e=>e.kind==='sewing'&&e.castId===b.serial&&e.target===target));
+    for(const b of casts)if(b.kind==='strangle'&&legal(b)&&b.age<b.spec.release+.08){
+      const seen=new Set();for(const ray of b.rays){const target=ray.target;if(seen.has(target)||!alive(target)||!held(target))continue;seen.add(target);drawStrangleActor(ctx,target,null,b,Math.min(1,b.age/(b.spec.release+.08)));}
+    }
     for(const s of states.values())for(const node of s.board){const b=node.cast,age=s.clock-node.born;if(!legal(b)||age>=b.spec.trapArm)continue;
       const u=age/b.spec.trapArm,x=b.origin.x+(node.x-b.origin.x)*u,y=b.origin.y+(node.y-b.origin.y)*u-Math.sin(u*Math.PI)*35;
       ctx.save();ctx.translate(x,y);ctx.rotate(u*8);ctx.fillStyle='#c5cbd2';ctx.beginPath();ctx.moveTo(12,0);ctx.lineTo(-6,-5);ctx.lineTo(-6,5);ctx.closePath();ctx.fill();ctx.fillStyle='#ead7a3';ctx.fillRect(-15,-4,9,16);ctx.fillStyle='#713d33';ctx.fillRect(-11,0,2,9);ctx.restore();
@@ -424,6 +490,7 @@
       for(const t of b.traps){ctx.save();ctx.translate(b.origin.x+(t.x-b.origin.x)*u,b.origin.y+(t.y-b.origin.y)*u-24-Math.sin(u*Math.PI)*35);ctx.rotate(b.aim+u*5);ctx.fillStyle='#c8cbd1';ctx.beginPath();ctx.moveTo(12,0);ctx.lineTo(-4,-5);ctx.lineTo(-4,5);ctx.closePath();ctx.fill();ctx.strokeStyle='#3c3544';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-4,0);ctx.lineTo(-12,0);ctx.stroke();ctx.fillStyle='#ead7a3';ctx.fillRect(-19,-4,8,15);ctx.fillStyle='#763c36';ctx.fillRect(-16,-1,2,8);ctx.restore();}
     }
     for(const e of effects){
+      if(e.kind==='sewing')continue;
       const t=e.age/e.life;ctx.save();ctx.globalAlpha=1-t;
       if(e.kind==='explosion'){
         ctx.fillStyle='#e58b38';for(let i=0;i<9;i++){const a=i*Math.PI*2/9,d=e.radius*t;ctx.beginPath();ctx.arc(e.x+Math.cos(a)*d,e.y+Math.sin(a)*d-12,12*(1-t)+3,0,Math.PI*2);ctx.fill();}
@@ -432,33 +499,17 @@
         const r=e.radius*(1-.7*t);ctx.strokeStyle='#302137';ctx.lineWidth=7*(1-t)+2;
         ctx.beginPath();ctx.ellipse(e.x,e.y,r,r*.5,0,0,Math.PI*2);ctx.stroke();
         for(const sign of [-1,1]){ctx.beginPath();ctx.moveTo(e.x-sign*r,e.y-r*.4);ctx.quadraticCurveTo(e.x,e.y+8*(1-t),e.x+sign*r,e.y+r*.4);ctx.stroke();}
-      }else if(e.kind==='sewing'){
-        const rise=Math.min(1,t*5),sink=Math.max(0,(t-.65)/.35),height=48*rise*(1-sink);
-        for(let i=0;i<3;i++){
-          const x=e.x+(i-1)*10,y=e.y+Math.abs(i-1)*4,lean=(i-1)*9;
-          ctx.fillStyle='#191522';ctx.beginPath();ctx.moveTo(x-6,y);ctx.quadraticCurveTo(x-3,y-height*.55,x+lean,y-height);ctx.quadraticCurveTo(x+8,y-height*.3,x+7,y);ctx.closePath();ctx.fill();
-          ctx.strokeStyle='#7c688e';ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(x+4,y-3);ctx.lineTo(x+lean,y-height+5);ctx.stroke();
-        }
       }else if(e.kind==='strangle'){
-        const rise=Math.min(1,t*3.5),neck=e.y-Math.max(12,e.bodyH*.65)*rise;
-        const palmScale=Math.max(.5,Math.min(1.6,e.bodyH/52));
-        ctx.strokeStyle='#211b2b';ctx.lineWidth=6*palmScale;ctx.beginPath();ctx.moveTo(e.x-7*palmScale,e.y);ctx.bezierCurveTo(e.x-20*palmScale,e.y-15*palmScale,e.x+20*palmScale,neck+13*palmScale,e.x+2*palmScale,neck);ctx.stroke();
-        // The hand grows out of the connected shadow along the body, then closes.
-        if(rise>.55){
-          ctx.save();ctx.translate(e.x,neck);ctx.scale(palmScale,palmScale);
-          const close=Math.min(1,(rise-.55)/.45);ctx.fillStyle='#211b2b';ctx.fillRect(-3,-3,12,10);
-          ctx.strokeStyle='#211b2b';ctx.lineWidth=3;ctx.lineCap='round';
-          for(let i=0;i<4;i++){const x=-3+i*3;ctx.beginPath();ctx.moveTo(x,1);ctx.quadraticCurveTo(x-7*(1-close),-13,x-8*close,-5+5*close);ctx.stroke();}
-          ctx.beginPath();ctx.moveTo(7,5);ctx.lineTo(12-5*close,-2);ctx.stroke();ctx.restore();
-        }
+        drawStrangleActor(ctx,e.target,e,e.castRef,1);
       }else{
-        ctx.strokeStyle='#35283f';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(e.x,e.y,12+8*t,6+3*t,0,0,Math.PI*2);ctx.stroke();
+        const x=alive(e.target)?e.target.x:e.x,y=alive(e.target)?e.target.y:e.y,r=e.radius||12;
+        ctx.strokeStyle='#302a31';ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(x,y-2,r,4,-.18,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(x-r,y+2);ctx.quadraticCurveTo(x,y-6,x+r,y);ctx.stroke();
       }
       ctx.restore();
     }
     const s=states.get(G.Game.player),cue=s?.cue;
     if(s&&cue&&valid(s.owner)&&s.plan){
-      const text=cue.label+(cue.remaining>0?' '+cue.remaining.toFixed(1)+'s':'');ctx.save();ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+      const text=(cue.actionLabel?cue.actionLabel+'｜':'')+cue.label+(cue.remaining>0?' '+cue.remaining.toFixed(1)+'s':'');ctx.save();ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
       const w=ctx.measureText(text).width+14,x=s.owner.x,y=s.owner.y+30;
       ctx.fillStyle='rgba(20,18,28,.82)';ctx.fillRect(x-w/2,y-10,w,20);ctx.fillStyle=cue.phase==='net'||cue.phase==='blast'?'#ffda91':'#e4d8ed';ctx.fillText(text,x,y);ctx.restore();
     }
@@ -481,11 +532,19 @@
     const s=states.get(a);if(!s)return {label:'影網待命',fraction:0};
     if(m?.digiMode==='shikamaru-tactics')return {label:'戰術被動',fraction:0};
     const c=s.cue;if(!c)return {label:'影網待命',fraction:0};
-    const kind=m?.digiMode?.replace('shikamaru-',''),label=kind==='trap'?(c.phase==='blast'&&s.plan?.nodes?'連爆':'札'+c.board):kind==='sewing'?(c.phase==='net'||c.phase==='blast'?'影縫接力':'待接影縫'):kind==='strangle'?(c.phase==='finish'?'首縛終結':'待收網'):c.phase==='net'?'收網':c.phase==='recover'?'整備':'捕捉'+c.captured;
+    const kind=m?.digiMode?.replace('shikamaru-',''),label=kind==='trap'?(c.phase==='blast'&&s.plan?.nodes?'連爆':'札'+c.board):kind==='sewing'?(skillAction(s,'sewing')?'影縫刺擊':'待接影縫'):kind==='strangle'?(skillAction(s,'strangle')?'首縛收緊':'待收網'):c.phase==='net'?'收網':c.phase==='recover'?'整備':'捕捉'+c.captured;
     return {label,fraction:c.phase==='drag'?Math.max(0,Math.min(1,1-c.remaining/2.4)):c.phase==='net'?Math.max(0,Math.min(1,1-c.remaining/.28)):c.phase==='blast'?1:0};
   }
-  G.NarutoShikamaru={version:5,dex:DEX,supports,profile,canCast,cast,update,clear,held,stopped,clearPath,segmentDistance,statusFor,shadowVisualFor,ribbonGeometry,ribbonContains,polygonContains,
-    activeFor:a=>{const s=states.get(a),p=s?.plan,throwing=s?.throwPose;if(throwing&&s.clock-throwing.started<throwing.duration&&!s.moving)return {...throwing,phaseAge:s.clock-throwing.started,phaseDuration:throwing.duration,age:s.clock-throwing.started,moving:false};if(p){const m=moveFor(a,'shadow'),spec=profile(a,m),duration={prepare:spec.release,release:spec.captureWindow-spec.release,drag:spec.dragTimeout,net:spec.netPrepare,blast:Math.max(.4,(p.end||s.clock)-p.at),finish:p.finishDuration||.65,recover:spec.recoverTime}[p.phase];return {kind:p.phase==='finish'&&moveFor(a,'strangle')?'strangle':'shadow',phase:p.phase,phaseAge:s.clock-p.at,phaseDuration:duration,age:s.clock-p.at,duration,moving:s.moving,aim:a.aim||0};}const b=s?.pose;return b&&legal(b)&&b.age<.65?{...b,kind:b.kind,age:b.age,duration:.65}:null;},
+  function skillAction(s,kind){
+    for(const b of casts)if(b.owner===s.owner&&b.kind===kind&&legal(b)){
+      if(kind==='sewing'&&b.emitted<b.spec.pulses&&b.followChain.chain.segments.some(seg=>seg.contact&&alive(seg.target)&&chainConnected(b.followChain,seg.target)))return b;
+      if(kind==='strangle'&&b.rays.some(ray=>alive(ray.target)&&held(ray.target)))return b;
+    }
+    const visual=effects.find(e=>e.owner===s.owner&&e.kind===kind&&e.castRef&&legal(e.castRef)&&(kind!=='sewing'||sewingVisualFor(e.castRef,e.target,e)?.height>0));return visual?.castRef||null;
+  }
+  function sewingPoseFor(a,s,p){const pose=s?.sewingPose;if(!pose||!moveFor(a,'sewing')||['net','finish'].includes(p?.phase)||s.clock-pose.started>=pose.duration)return null;return {...pose,phaseAge:s.clock-pose.started,phaseDuration:pose.duration,age:s.clock-pose.started,moving:s.moving};}
+  G.NarutoShikamaru={version:5,dex:DEX,supports,profile,canCast,cast,update,clear,held,stopped,clearPath,segmentDistance,statusFor,shadowVisualFor,ribbonGeometry,ribbonContains,polygonContains,sewingVisualFor,effectVisualFor,
+    activeFor:a=>{const s=states.get(a),p=s?.plan,throwing=s?.throwPose,sewing=sewingPoseFor(a,s,p);if(sewing)return sewing;if(throwing&&s.clock-throwing.started<throwing.duration&&!s.moving)return {...throwing,phaseAge:s.clock-throwing.started,phaseDuration:throwing.duration,age:s.clock-throwing.started,moving:false};if(p){const m=moveFor(a,'shadow'),spec=profile(a,m),duration={prepare:spec.release,release:spec.captureWindow-spec.release,drag:spec.dragTimeout,net:spec.netPrepare,blast:Math.max(.4,(p.end||s.clock)-p.at),finish:p.finishDuration||.65,recover:spec.recoverTime}[p.phase];return {kind:p.phase==='finish'&&skillAction(s,'strangle')?'strangle':'shadow',phase:p.phase,phaseAge:s.clock-p.at,phaseDuration:duration,age:s.clock-p.at,duration,moving:s.moving,aim:a.aim||0};}const b=s?.pose;return b&&legal(b)&&b.age<.65?{...b,kind:b.kind,age:b.age,duration:.65}:null;},
     stateFor:(a=G.Game.player)=>states.get(a)||null,stats:(a=G.Game.player)=>{const s=states.get(a);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,bound:s.bound,detonations:s.detonations,contacts:s.contacts.slice(),phase:s.plan?.phase||'ready',cycles:s.cycles,travelled:s.travelled,dragged:s.dragged,board:s.board.length}:null;},
     get casts(){return casts;},get leases(){return leases;},get effects(){return effects;}};
 })();
