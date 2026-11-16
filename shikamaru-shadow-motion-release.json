@@ -1,0 +1,26 @@
+{
+  "sourceCommit": "f2d1a760a37098e64e9bfeeb974f4a2fe1aeb5e6",
+  "previousStaticCommit": "f3566b4855129b6e39699703877b99c39901d8a3",
+  "feature": "shikamaru-mass-possession-and-continuous-moving-shadow",
+  "sha256": {
+    "index.html": "0bc06f0549285124eff8681c8c05c6b00fd4d08829afdec8867b69d90bb7f59e",
+    ".omx/digimon.html": "85efa76af71c5dab78be584ade1be11b40f0bd807f82a18c48f763f1a971ba9a",
+    ".omx/portrait.html": "a319387f8a241edf3d80fbe7a0555cd887243721402ce2873788f67bd624992b",
+    ".omx/naruto-shikamaru.js": "b310da9010ea74e9641d9636ff256f9fb40788db12882f83269a19d67d4f8a2d",
+    ".omx/naruto-shikamaru-mass.js": "99d497bdbecf8f329e423c67ae8f35a2558c6c03233d3b07e5a8739e4ca79802",
+    "art-review/shikamaru/reference-shadow-geometry.js": "cd7ad5000878cd18f477388a2b1f5b36bd098e2bb9282abfb6466f5aec1b1fb4",
+    "art-review/shikamaru-art.js": "9b4d4599c79eb1a0f504ffb33dd33cfd720c8c9846b47b9a5780830eb79020b6",
+    "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+    "art-review/shikamaru/atlas-v1.png": "172369eb508ac2772bf767e0d8a8ab79b4a4863407023dab4862324fdc71b76f",
+    ".omx/naruto-skills.js": "a066d3a0d8023e3a2d9a368a4038a432aea13e8e82e8668e22622a6e63872282",
+    ".omx/naruto.js": "46b6ef40bfb83d8b7243817c5f37152cf961ef6a87d44d64bc964148ccebd903",
+    ".omx/jujutsu-growth.js": "6957261f16da1559de7f27e0b1b53b0746b47704636ebb33ac34c6fce24c06ca",
+    ".omx/naruto-rasenshuriken-vfx.js": "128627aab7c72869a3e0b00a3118d7320937868614e3f2281fdbbd18e7e305e0",
+    ".omx/naruto-clones.js": "0b7fc6543bf463d28c3dc4062ac5e8109659b750b5fcb9fe24f9cb4b21b5217d",
+    ".omx/naruto-support.js": "26b07e3283a8941951e1c62c5218e924b50248359019d4fdd399ce5f79429347",
+    "art-review/kyuubi-form.js": "1246db4665c1c266429982eb0b9779de573522b80f36c17b57f0bb9f9a470627",
+    "art-review/kyuubi-frames.json": "4e716b16ca0d9e7f902979585cc905613cc3abcf82fc8a500208a076955c52ce",
+    "art-review/redrawn/one-tail-v2.png": "d775a6300516d5a6cfb9e3036fb032bb0a5117542d696e8c1559e230073cc9d9",
+    "art-review/redrawn/one-tail-vertical-v1.png": "b4ff9cf65b4e0ac40a5752e86c3cb8a1917a4486369cf7592d603066623f87b9"
+  }
+}

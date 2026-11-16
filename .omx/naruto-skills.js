@@ -678,10 +678,12 @@
     ['naruto-shikamaru-sewing','影縫之術','sewing',2,4.2,34,'從已接合的同一片地影前部鼓起，逐輪長出高拱黑影，尖端越過弧頂再回落穿身。只沿真正捕捉的接點施術；尖端真的掃過敵人身體才造成傷害，提前離開或牆阻可使穿刺落空。數量與升階增加真正高拱穿刺輪次，不在敵腳瞬刷刺群，也不從本體同時發射扇形影線。'],
     ['naruto-shikamaru-trap','起爆札・誘敵陷阱','trap',3,6,62,'沿真正走過的路徑預佈固定起爆札，落地後不跟敵人滑動；用影模仿將走入札區的追兵原地留下。成熟札與捕捉目標成立時可停步提前收網，繼續移動也會到時逐札連爆。數量增加真札位及預置多張起爆符的爆輪，收益顯示於成長預覽；自動佈陣及多符連爆為本作改編。'],
     ['naruto-shikamaru-tactics','奈良流・影術精修','tactics',4,0,0,'常駐精修，延長已接影目標的拘束窗口；二、四階各增加一個同時捕捉目標，使多條地影同時鎖住不同敵人。只強化已學影術，不另外射出影線；各階真收益顯示於成長預覽。本作改編。'],
-    ['naruto-shikamaru-strangle','影首縛之術','strangle',5,7,54,'舊招式ID保留相容；本次新招式池暫不提供。貼體影首縛需另完成當格身體遮影攀升與接觸驗收。']
+    ['naruto-shikamaru-strangle','影首縛之術','strangle',5,7,54,'舊招式ID保留相容；本次新招式池暫不提供。貼體影首縛需另完成當格身體遮影攀升與接觸驗收。'],
+    ['naruto-shikamaru-checkmate','奈良流・詰將','checkmate',5,12,100,'收網時自動發動的決定性終局。對真正接住的目標連續升起三輪粗厚高拱影縫，尖端實際穿身才造成傷害並埋下固定起爆札；最後同時引爆，145半徑內造成三倍爆破傷害，同一敵人不重複吃相疊爆區。數量前兩張各追加一輪連刺，並擴大爆區；升階增傷、擴大爆區，三、五階再加一輪。冷卻12秒，牆可擋穿刺和爆破，保留自由移動及強敵攻擊。影縫送札與群體終局為本作改編。'],
+    ['naruto-shikamaru-mass','影真似・大捕縛','mass',6,32,45,'以自身起手位置為中心向外展開範圍，每個敵人各有一條筆直尖黑影，尖端真正穿過身體後才定住，不設目標數上限。初始目標完成捕縛或失效後，再原地投出一顆起爆符炸彈於範圍中心引爆；長冷卻、低傷害。圓底僅用極淺柔邊提示，不遮住敵人和地面。初始圓半徑260、拘束3.2秒、冷卻32秒；每次升階擴大半徑20、延長拘束0.2秒並增傷，技能升階不縮短冷卻。數量前12張各擴大半徑5，不增加炸彈顆數、不限制捕捉人數。大圓群控與起爆符投彈為本作改編。']
   ];
   for(const [id,name,key,learnLevel,cd,dmg,desc]of shikamaruDesigns){
-    const design={name,mode:'shikamaru-'+key,icon:id,type:key==='trap'?'fire':'psychic',learnLevel,cd,dmg,range:360,radius:100,passive:true,autoCast:key!=='tactics',ups:shikamaruUps.map(u=>({...u,t:key==='tactics'?'拘束時間 +0.12 秒；二、四階增加捕捉目標':key==='sewing'?'高拱穿刺傷害增加；三、五階追加真穿刺輪次':key==='trap'?'傷害與爆破半徑增加；三、五階增加札位及每札爆輪':key==='strangle'?'傷害、收緊射程及目標數增加；收緊波次 +1':'苦無傷害與捕捉射程增加；同時捕捉目標 +1；三、五階苦無 +1',m:key==='tactics'?{}:{...u.m}})),source_url:shikamaruSource,desc:desc+' 學會即生效，不占主動槽。'};
+    const design={name,mode:'shikamaru-'+key,icon:id,type:key==='trap'||key==='mass'?'fire':'psychic',learnLevel,cd,dmg,range:key==='mass'?440:360,radius:key==='mass'?260:100,passive:true,autoCast:key!=='tactics',ups:shikamaruUps.map(u=>({...u,t:key==='mass'?'爆破傷害增加；圓區半徑 +20；拘束 +0.2 秒':key==='checkmate'?'詰將傷害與爆破半徑增加；三、五階追加連刺輪次':key==='tactics'?'拘束時間 +0.12 秒；二、四階增加捕捉目標':key==='sewing'?'高拱穿刺傷害增加；三、五階追加真穿刺輪次':key==='trap'?'傷害與爆破半徑增加；三、五階增加札位及每札爆輪':key==='strangle'?'傷害、收緊射程及目標數增加；收緊波次 +1':'苦無傷害與捕捉射程增加；同時捕捉目標 +1；三、五階苦無 +1',m:key==='tactics'?{}:{...u.m}})),source_url:shikamaruSource,desc:desc+' 學會即生效，不占主動槽。'};
     kinds[design.mode]=key==='tactics'?'buff':'melee';
     if(key==='shadow')profiles.push([30017,'shikamaru',name,'Shikamaru Nara','01_1910',design]);else extra.push([id,key==='strangle'?[]:[30017],design]);
     const iconRows={
@@ -689,7 +691,9 @@
       sewing:['..s..ss..s..','..k..kk..k..','..k..kk..k..','.sk.skk.ks..','.kk.skk.kk..','.kk.skk.kk..','..k..kk..k..','..ssskkss...','....skks....','.....kk.....','....kkkk....','...kkkkkk...'],
       trap:['....rrrr....','...rwwwwr...','...rwkkwr...','...rwkkwr...','...rwwwwr...','...rwkkwr...','...rwwwwr...','....rrrr....','.....rr.....','....r..r....','...r....r...','............'],
       tactics:['ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss','ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss','ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss'],
-      strangle:['....wwww....','...wwwwww...','...wkwwkw...','...wwwwww...','....wwww....','...ssssss...','..sskkkks...','..skkkkss...','...ssss.....','.....kk.....','....skks....','...sskkss...']
+      strangle:['....wwww....','...wwwwww...','...wkwwkw...','...wwwwww...','....wwww....','...ssssss...','..sskkkks...','..skkkkss...','...ssss.....','.....kk.....','....skks....','...sskkss...'],
+      checkmate:['.....rr.....','..r..rr..r..','...r.ww.r...','....wwww....','...wwkkww...','...wwkkww...','....wwww....','....ssss....','..sss..sss..','.ss......ss.','ss........ss','............'],
+      mass:['....ssss....','..ss....ss..','.s........s.','s....rr....s','s...rwwr...s','s...rwkr...s','s...rwwr...s','s....rr....s','.s...kk...s.','..ss.kk.ss..','....ssss....','.....kk.....']
     };
     G.Icons.UI[id]={pal:{k:'#111221',s:'#a58bd4',w:'#edd9b1',r:'#e6a14f'},outline:true,rows:iconRows[key]};
   }
@@ -832,7 +836,7 @@
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = dex===30017?`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · ${move.digiMode==='shikamaru-tactics'?'強化共用影網':'捕群／苦無連投'} · 可升至 Lv.${move.maxLvl||5}`:`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.${move.maxLvl||5}`;
+      extraStats.textContent = dex===30017?`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · ${move.digiMode==='shikamaru-mass'?'無人數上限圓區拘束／單彈爆破 · 冷卻32秒':move.digiMode==='shikamaru-tactics'?'強化共用影網':move.digiMode==='shikamaru-checkmate'?'連刺埋札／終局爆破':'捕群／苦無連投'} · 可升至 Lv.${move.maxLvl||5}`:`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.${move.maxLvl||5}`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';

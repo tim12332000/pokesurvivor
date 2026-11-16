@@ -4,7 +4,7 @@
   const C=G.Combat,DEX=30017,EPS=1e-8,states=new Map(),casts=[],leases=new Map(),effects=[];
   const Ref=G.ShikamaruReferenceGeometry;
   if(!Ref)throw Error('Shikamaru reference geometry must load before combat');
-  const modes=new Set(['shikamaru-shadow','shikamaru-sewing','shikamaru-trap','shikamaru-strangle','shikamaru-tactics']);
+  const modes=new Set(['shikamaru-shadow','shikamaru-sewing','shikamaru-trap','shikamaru-strangle','shikamaru-tactics','shikamaru-checkmate']);
   let serial=0;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
   const valid=a=>alive(a)&&(a===G.Game.player||!!G.SelfClones?.isActor(a))&&(a.mon?.dex??a.dex)===DEX;
@@ -17,12 +17,13 @@
     const L=rank(m),Q=Math.max(0,Math.min(16,Math.floor(G.Quantity?.bonus(a)??a.quantityPicks??a.quantityBonus??0)));
     const tactics=a.moves?.find(x=>x.digiMode==='shikamaru-tactics'),T=tactics?rank(tactics):0;
     const kind=(m?.digiMode||'shikamaru-shadow').replace('shikamaru-','');
+    const ultimate=kind==='checkmate';
     return {kind,L,Q,T,range:(m?.range||300)+24*(L-1)+12*Q,
-      branches:Math.min(16,L+Q+Math.floor(T/2)),chainTargets:Math.min(16,L+Q+Math.floor(T/2)),chainHops:0,simultaneousRoots:Math.min(16,L+Q+Math.floor(T/2)),chainRange:Math.min(240,((m?.range||300)+24*(L-1)+12*Q)*.75),pulses:kind==='sewing'?2+Math.floor((L-1)/2)+Math.min(2,Q):kind==='strangle'?2+L:1,
+      branches:Math.min(16,L+Q+Math.floor(T/2)),chainTargets:Math.min(16,L+Q+Math.floor(T/2)),chainHops:0,simultaneousRoots:Math.min(16,L+Q+Math.floor(T/2)),chainRange:Math.min(240,((m?.range||300)+24*(L-1)+12*Q)*.75),pulses:ultimate?3+Math.floor((L-1)/2)+Math.min(2,Q):kind==='sewing'?2+Math.floor((L-1)/2)+Math.min(2,Q):kind==='strangle'?2+L:1,
       traps:Math.min(24,3+2*Q+Math.floor((L-1)/2)),radius:(kind==='trap'?108:kind==='strangle'?70:22)+7*(L-1)+(kind==='trap'?8*Q:0),
       damage:(m?.dmg??(kind==='shadow'?12:kind==='sewing'?17:kind==='trap'?65:35))*(a.atk??1),
       bindDuration:1.25+.23*L+.12*T,cd:Math.max(.2,(m?.cd??(kind==='shadow'?1.5:kind==='sewing'?4:kind==='trap'?5.5:7))*(a.cdMul??1)),
-      kunaiRounds:3+Math.floor((L-1)/2),kunaiInterval:.13,kunaiSpeed:740,speed:620+35*L,release:kind==='trap'?.25:.18,interval:kind==='sewing'?.7:kind==='strangle'?.23:.16,archFlight:.5,archPrepare:.12,needleWidth:5*(a.anim?.scale||1),
+      kunaiRounds:3+Math.floor((L-1)/2),kunaiInterval:.13,kunaiSpeed:740,speed:620+35*L,release:ultimate?.3:kind==='trap'?.25:.18,interval:ultimate?.24:kind==='sewing'?.7:kind==='strangle'?.23:.16,archFlight:ultimate?.58:.5,archPrepare:.12,needleWidth:(ultimate?7:5)*(a.anim?.scale||1),blastRadius:145+15*(L-1)+5*Math.min(8,Q),blastScale:3,blastFuse:.2,
       trapLifetime:10,deployDistance:54,trapArm:.55,blastRounds:1+Math.min(3,Q)+Math.floor((L-1)/2),blastInterval:.16,chainInterval:.12,captureWindow:.55,dragTimeout:a.moves?.some(x=>x.digiMode==='shikamaru-trap')?2.4:.9,stopWindow:.25,netPrepare:.28,recoverTime:.35};
   }
   function clearPath(ax,ay,bx,by,r=1,target=null){
@@ -46,13 +47,15 @@
   function chainConnected(b,e){const chain=b.followChain||b;if(!chain.chain)return clearPath(b.owner.x,b.owner.y,e.x,e.y);if(!legal(chain))return false;const index=chain.chain.segments.findIndex(s=>s.target===e&&s.contact);return index>=0&&chain.chain.segments[index].linked!==false;}
   function held(e){const l=leases.get(e);return !!l&&legal(l.cast)&&alive(e)&&l.until>l.cast.state.clock&&chainConnected(l.cast,e);}
   const stopped=e=>held(e)&&!strong(e);
-  function canCast(a,m){if(!valid(a)||a.frozen||!supports(m)||m.digiMode==='shikamaru-tactics'||m.digiMode==='shikamaru-strangle')return false;const s=state(a),p=profile(a,m);if((s.cooldowns[m.id]||0)>EPS)return false;if(p.kind==='shadow'&&(casts.some(b=>b.owner===a&&b.kind==='shadow'&&legal(b)&&!b.chain?.ended)||ownedCaptures(s).length))return false;if(p.kind==='sewing')return !!s.lastChain&&legal(s.lastChain)&&s.lastChain.chain.segments.some(x=>x.contact&&alive(x.target));const t=targets(a,p);return t.length>0;}
+  function canCast(a,m){if(!valid(a)||a.frozen||!supports(m)||m.digiMode==='shikamaru-tactics'||m.digiMode==='shikamaru-strangle')return false;const s=state(a),p=profile(a,m);if((s.cooldowns[m.id]||0)>EPS)return false;if(p.kind==='shadow'&&(casts.some(b=>b.owner===a&&b.kind==='shadow'&&legal(b)&&!b.chain?.ended)||ownedCaptures(s).length))return false;if(p.kind==='sewing'||p.kind==='checkmate')return !!s.lastChain&&legal(s.lastChain)&&s.lastChain.chain.segments.some(x=>x.contact&&alive(x.target)&&chainConnected(s.lastChain,x.target)&&(p.kind!=='checkmate'||held(x.target)&&leases.get(x.target)?.cast.owner===a));const t=targets(a,p);return t.length>0;}
   function cast(a,m){
     if(!canCast(a,m))return false;
     const s=state(a),p=profile(a,m),t=targets(a,p).filter(e=>p.kind!=='strangle'||held(e)&&leases.get(e)?.cast.owner===a);
-    if(p.kind==='sewing'){
-      const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:p.kind,age:0,duration:p.release+p.pulses*p.interval+p.archFlight+.4,aim:a.aim||0,rays:[],traps:[],arcs:[],emitted:0,cancelled:false,hits:0,followChain:s.lastChain};
-      s.cooldowns[m.id]=p.cd;m.t=p.cd;s.casts[p.kind]=(s.casts[p.kind]||0)+1;s.sewingPose={kind:'sewing',phase:'sewing',started:s.clock,duration:.55,aim:b.aim};casts.push(b);return true;
+    if(p.kind==='sewing'||p.kind==='checkmate'){
+      const ultimate=p.kind==='checkmate',blastAt=p.release+(p.pulses-1)*p.interval+p.archPrepare+p.archFlight+p.blastFuse;
+      const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:'sewing',ultimate,age:0,duration:ultimate?blastAt+.5:p.release+p.pulses*p.interval+p.archFlight+.4,blastAt,sites:new Map(),aim:a.aim||0,rays:[],traps:[],arcs:[],emitted:0,cancelled:false,hits:0,followChain:s.lastChain};
+      if(ultimate)for(const [e,l]of ownedCaptures(s))l.until=Math.max(l.until,s.clock+b.duration);
+      s.cooldowns[m.id]=p.cd;m.t=p.cd;s.casts[p.kind]=(s.casts[p.kind]||0)+1;s.sewingPose={kind:'sewing',phase:'sewing',started:s.clock,duration:.55,aim:b.aim};if(ultimate)s.ultimate=b;casts.push(b);return true;
     }
     const count=p.kind==='trap'?p.traps:p.kind==='shadow'?Math.min(p.branches,t.length):p.branches;
     const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:p.kind,age:0,duration:p.kind==='trap'?1.3:p.release+(p.pulses-1)*p.interval+p.range/p.speed+.4,
@@ -152,8 +155,21 @@
       if(remaining>=d){grown.push({...z});remaining-=d;}else{if(remaining>0)grown.push({x:a.x+(z.x-a.x)*remaining/d,y:a.y+(z.y-a.y)*remaining/d});break;}
     }
     const source=segment.sourceActor?(alive(segment.sourceActor)?segment.sourceActor:segment.origin):b.owner;
-    grown[0]={x:source.x+(alive(segment.sourceActor)?segment.sourceOffset?.x||0:0),y:source.y+(alive(segment.sourceActor)?segment.sourceOffset?.y||0:0)};
-    if(segment.contact&&alive(segment.target)&&grown.length>1)grown[grown.length-1]={x:segment.target.x+(segment.contactOffset?.x||0),y:segment.target.y+(segment.contactOffset?.y||0)};
+    const root={x:source.x+(alive(segment.sourceActor)?segment.sourceOffset?.x||0:0),y:source.y+(alive(segment.sourceActor)?segment.sourceOffset?.y||0:0)},start=grown[0],end=grown.at(-1);
+    const tip=segment.contact&&alive(segment.target)&&grown.length>1?{x:segment.target.x+(segment.contactOffset?.x||0),y:segment.target.y+(segment.contactOffset?.y||0)}:end;
+    const ox=end.x-start.x,oy=end.y-start.y,oldLength=Math.hypot(ox,oy),dx=tip.x-root.x,dy=tip.y-root.y,length=Math.hypot(dx,dy);
+    // Transport the entire grown curve in its chord's frame. Moving only the
+    // first/last vertex leaves one long edge and a right-angle elbow behind.
+    // The unreleased tip stays fixed; short links flatten instead of looping.
+    if(grown.length>1&&oldLength>EPS){
+      const bendScale=Math.min(1,length/oldLength),nx=length?-dy/length:0,ny=length?dx/length:0;
+      for(let i=0;i<grown.length;i++){
+        const px=grown[i].x-start.x,py=grown[i].y-start.y,u=Math.max(0,Math.min(1,(px*ox+py*oy)/(oldLength*oldLength))),bend=(-oy*px+ox*py)/oldLength*bendScale;
+        grown[i]={x:root.x+dx*u+nx*bend,y:root.y+dy*u+ny*bend};
+      }
+      grown[grown.length-1]={...tip};
+    }
+    grown[0]=root;
     segment.grownPoints=grown;segment.polygon=chainMesh(segment,b.spec.radius);
     segment.linked=!grown.some((p,i,list)=>i&&!clearPath(list[i-1].x,list[i-1].y,p.x,p.y));
   }
@@ -226,7 +242,8 @@
       for(const segment of b.followChain.chain.segments){
         if(!legal(b))return;const e=segment.target;
         if(!segment.contact||segment.linked===false||!alive(e)||!chainConnected(b.followChain,e))continue;
-        const arc=Ref.makeArch(b.owner,e,{x:b.owner.x,y:b.owner.y},b.arcs.length,b.spec.needleWidth);arc.born=born;arc.pulseIndex=b.emitted;arc.hitSet=new Set();arc.bodySource=Ref.bodyFor(e);b.arcs.push(arc);
+        const origin=b.ultimate?segment.grownPoints[Math.floor((segment.grownPoints.length-1)*.4)]:b.owner;
+        const arc=Ref.makeArch(b.owner,e,{x:origin.x,y:origin.y},b.arcs.length,b.spec.needleWidth);if(b.ultimate)arc.lift*=1.35;arc.born=born;arc.pulseIndex=b.emitted;arc.hitSet=new Set();arc.bodySource=Ref.bodyFor(e);b.arcs.push(arc);
       }
     }
     for(const arc of b.arcs){
@@ -241,12 +258,25 @@
             arc.hit=true;arc.hitSet.add(arc.target);arc.contact={point:{...contact},previous:{...arc.previous},current:{...arc.current},progress:arc.progress,phase:arc.phase,targetId:arc.target.id,bodyKey:body?.key};
             const emitted=b.emitted;b.emitted=arc.pulseIndex;if(!hit(b,arc.target)){b.emitted=emitted;return;}b.emitted=emitted;
             if(b.state.contacts.length)b.state.contacts[b.state.contacts.length-1].geometry={kind:'xyz-tip-sweep',...arc.contact};
+            if(b.ultimate&&!b.sites.has(arc.target))b.sites.set(arc.target,{x:contact.x,y:contact.y,plantedAt:b.age,detonated:false});
           }
         }
       }
       arc.previous=old;
     }
-    if(b.emitted>=b.spec.pulses&&!b.arcs.some(arc=>!arc.blocked&&arc.progress<1&&alive(arc.target)))b.duration=Math.min(b.duration,b.age+.16);
+    if(b.ultimate&&b.age+EPS>=b.blastAt){
+      const seen=b.blastSeen??(b.blastSeen=new Set());
+      for(const site of b.sites.values()){
+        if(!legal(b))return;if(site.detonated)continue;site.detonated=true;b.state.detonations++;
+        effects.push({owner:b.owner,world:b.world,kind:'checkmate-blast',castRef:b,lastPulseAt:b.age,x:site.x,y:site.y,age:0,life:.48,radius:b.spec.blastRadius});
+        for(const e of new Set(G.EnemyMgr.queryCircle(site.x,site.y,b.spec.blastRadius+40))){
+          if(!legal(b))return;if(!alive(e)||e.friendly||seen.has(e)||Math.hypot(e.x-site.x,e.y-site.y)>b.spec.blastRadius+(e.r||0)||!clearPath(site.x,site.y,e.x,e.y))continue;
+          seen.add(e);const emitted=b.emitted;b.emitted=b.spec.pulses+1;if(!hit(b,e,b.spec.blastScale)){b.emitted=emitted;return;}b.emitted=emitted;
+          if(b.state.contacts.length)b.state.contacts.at(-1).geometry={kind:'planted-tag-blast',origin:{x:site.x,y:site.y},radius:b.spec.blastRadius};
+        }
+      }
+    }
+    if(!b.ultimate&&b.emitted>=b.spec.pulses&&!b.arcs.some(arc=>!arc.blocked&&arc.progress<1&&alive(arc.target)))b.duration=Math.min(b.duration,b.age+.16);
   }
   function shadowVisualFor(a){
     const s=states.get(a),m=moveFor(a,'shadow'),p=m?profile(a,m):null,b=s?.lastChain;let extensionTotal=0,branches=0;
@@ -389,12 +419,14 @@
         if(!hit(net,e,2))break;if(s.contacts.length)s.contacts[s.contacts.length-1].geometry={kind:'ground-alpha-net',point:contact,bodyKey:projection?.body.key};
       }
       if(states.get(a)!==s)return;
-      relay(s,'sewing',true);
+      const ultimate=moveFor(a,'checkmate');
+      const finishing=ultimate&&cast(a,ultimate)?casts.at(-1):relay(s,'sewing',true);
+      if(finishing?.ultimate){s.ultimate=finishing;p.checkmate=true;}
       let scheduled=0,last=s.clock;
       for(const t of s.board){if(!legal(t.cast)||Number.isFinite(t.blastAt)||s.clock-t.born<t.cast.spec.trapArm)continue;
         t.blastAt=s.clock+scheduled*t.cast.spec.chainInterval;last=t.blastAt+(t.cast.spec.blastRounds-1)*t.cast.spec.blastInterval;scheduled++;
       }
-      p.phase='blast';p.at=s.clock;p.end=Math.max(s.clock+.4,last+.2);p.nodes=scheduled;
+      p.phase='blast';p.at=s.clock;p.end=Math.max(s.clock+.4,last+.2,finishing?.ultimate?s.clock+finishing.duration:0);p.nodes=scheduled;
     }else if(p.phase==='blast'&&s.clock>=p.end&&!activeFront(s)&&!activeSewing(s)){const finish=relay(s,'strangle',true);p.phase='finish';p.at=s.clock;p.finishDuration=finish?finish.spec.release+(finish.spec.pulses-1)*finish.spec.interval+.25:.45;for(const [,l]of ownedCaptures(s))l.until=Math.max(l.until,s.clock+p.finishDuration+.1);}
     else if(p.phase==='finish'&&age>=p.finishDuration){p.phase='recover';p.at=s.clock;for(const [e]of ownedCaptures(s))leases.delete(e);}
     else if(p.phase==='recover'&&s.clock-p.at>=(p.empty?.18:spec.recoverTime)){s.plan=null;s.sewingQueued=false;}
@@ -460,6 +492,11 @@
     for(const s of states.values()){
       if(!valid(s.owner)||s.world!==G.World)continue;Ref.drawProjection(ctx,s.projection);
       for(const projection of s.projections?.values()||[])Ref.drawProjection(ctx,projection);
+      for(const b of casts)if(b.owner===s.owner&&b.ultimate&&legal(b))for(const site of b.sites.values()){
+        if(site.detonated)continue;ctx.save();ctx.translate(site.x,site.y);const u=Math.min(1,b.age/b.blastAt);
+        ctx.strokeStyle='#e9b668';ctx.lineWidth=2;ctx.globalAlpha=.25+.55*u;ctx.beginPath();ctx.ellipse(0,0,b.spec.blastRadius,b.spec.blastRadius*.55,0,0,Math.PI*2);ctx.stroke();
+        ctx.globalAlpha=1;for(let i=0;i<3;i++){ctx.save();ctx.rotate((i-1)*.65);ctx.fillStyle='#f2dfab';ctx.fillRect(-5,-21,10,20);ctx.fillStyle='#813c31';ctx.fillRect(-1,-18,2,12);ctx.restore();}ctx.restore();
+      }
       const b=s.lastChain;if(b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length)){
         ctx.save();ctx.fillStyle='#030304';for(const segment of b.chain.segments){if(segment.linked===false)continue;if(segment.polygon.length<3)continue;ctx.beginPath();segment.polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();}ctx.restore();
       }
@@ -475,7 +512,9 @@
       ctx.beginPath();ctx.moveTo(11,0);ctx.lineTo(-3,-4);ctx.lineTo(-6,0);ctx.lineTo(-3,4);ctx.closePath();ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(-6,0);ctx.lineTo(-12,0);ctx.stroke();ctx.restore();
     }
     for(const b of casts)if(b.kind==='sewing'&&legal(b))for(const arc of b.arcs||[]){const age=b.age-arc.born;if(age<0||age>b.spec.archPrepare+b.spec.archFlight+.16)continue;Ref.drawArch(ctx,arc,Math.min(1,Math.max(0,(b.spec.archPrepare+b.spec.archFlight+.16-age)/.16)));}
-    for(const e of effects)if(e.kind==='explosion'){const u=e.age/e.life;ctx.save();ctx.globalAlpha=1-u;ctx.fillStyle='#ed9b43';for(let i=0;i<7;i++){const a=i*Math.PI*2/7;ctx.beginPath();ctx.arc(e.x+Math.cos(a)*e.radius*u,e.y+Math.sin(a)*e.radius*u-8,8*(1-u)+2,0,Math.PI*2);ctx.fill();}ctx.restore();}
+    for(const e of effects)if(e.kind==='explosion'||e.kind==='checkmate-blast'){const u=e.age/e.life,ultimate=e.kind==='checkmate-blast';ctx.save();ctx.globalAlpha=1-u;ctx.fillStyle='#ed9b43';for(let i=0;i<(ultimate?12:7);i++){const a=i*Math.PI*2/(ultimate?12:7);ctx.beginPath();ctx.arc(e.x+Math.cos(a)*e.radius*u,e.y+Math.sin(a)*e.radius*u-8,(ultimate?22:8)*(1-u)+2,0,Math.PI*2);ctx.fill();}if(ultimate){ctx.strokeStyle='#ffe4a6';ctx.lineWidth=6*(1-u)+1;ctx.beginPath();ctx.ellipse(e.x,e.y,e.radius*u,e.radius*u*.6,0,0,Math.PI*2);ctx.stroke();}ctx.restore();}
+    const s=states.get(G.Game.player),b=s?.ultimate;
+    if(b&&legal(b)&&b.age<b.duration){ctx.save();ctx.font='bold 17px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';const text=b.age<b.blastAt?'奈良流・詰將':'勝負已定',x=b.owner.x,y=b.owner.y-88,w=ctx.measureText(text).width+24;ctx.fillStyle='rgba(15,15,19,.86)';ctx.fillRect(x-w/2,y-15,w,30);ctx.fillStyle=b.age<b.blastAt?'#e8dbbe':'#ffd58c';ctx.fillText(text,x,y);ctx.restore();}
   }
   function drawGround(ctx){
     for(const a of [G.Game.player,...(G.SelfClones?.actors?.()||[])])if(valid(a)){
@@ -627,6 +666,7 @@
   function statusFor(a,m){
     const s=states.get(a);if(!s)return {label:'影網待命',fraction:0};
     if(m?.digiMode==='shikamaru-tactics')return {label:'戰術被動',fraction:0};
+    if(m?.digiMode==='shikamaru-checkmate'){const b=s.ultimate,cd=profile(a,m).cd,remaining=s.cooldowns[m.id]||0;return {label:b&&legal(b)&&b.age<b.duration?(b.age<b.blastAt?'詰將連刺':'終局爆破'):remaining>0?'詰將 '+Math.ceil(remaining)+'s':'待收網・詰將',fraction:1-Math.min(1,remaining/cd)};}
     const c=s.cue;if(!c)return {label:'影網待命',fraction:0};
     const kind=m?.digiMode?.replace('shikamaru-',''),label=kind==='trap'?(c.phase==='blast'&&s.plan?.nodes?'連爆':'札'+c.board):kind==='sewing'?(skillAction(s,'sewing')?'影縫刺擊':'待接影縫'):kind==='strangle'?(skillAction(s,'strangle')?'首縛收緊':'待收網'):c.phase==='net'?'收網':c.phase==='recover'?'整備':'捕捉'+c.captured;
     return {label,fraction:c.phase==='drag'?Math.max(0,Math.min(1,1-c.remaining/2.4)):c.phase==='net'?Math.max(0,Math.min(1,1-c.remaining/.28)):c.phase==='blast'?1:0};
@@ -639,8 +679,8 @@
     const visual=effects.find(e=>e.owner===s.owner&&e.kind===kind&&e.castRef&&legal(e.castRef)&&(kind!=='sewing'||sewingVisualFor(e.castRef,e.target,e)?.height>0));return visual?.castRef||null;
   }
   function sewingPoseFor(a,s,p){const pose=s?.sewingPose;if(!pose||!moveFor(a,'sewing')||['net','finish'].includes(p?.phase)||s.clock-pose.started>=pose.duration)return null;const cast=casts.findLast(b=>b.owner===a&&b.kind==='sewing'&&legal(b)),arc=cast?.arcs.find(arc=>arc.progress<1&&!arc.blocked);return {...pose,stage:arc?.phase||'ground',phaseAge:s.clock-pose.started,phaseDuration:pose.duration,age:s.clock-pose.started,moving:s.moving};}
-  G.NarutoShikamaru={version:6,dex:DEX,supports,profile,canCast,cast,update,clear,held,stopped,clearPath,segmentDistance,statusFor,shadowVisualFor,ribbonGeometry,ribbonContains,polygonContains,sewingVisualFor,effectVisualFor,projectionFor,
-    activeFor:a=>{const s=states.get(a),p=s?.plan,throwing=s?.throwPose,sewing=sewingPoseFor(a,s,p);if(sewing)return sewing;if(throwing&&s.clock-throwing.started<throwing.duration&&!s.moving)return {...throwing,phaseAge:s.clock-throwing.started,phaseDuration:throwing.duration,age:s.clock-throwing.started,moving:false};if(p){const m=moveFor(a,'shadow'),spec=profile(a,m),duration={prepare:spec.release,release:spec.captureWindow-spec.release,drag:spec.dragTimeout,net:spec.netPrepare,blast:Math.max(.4,(p.end||s.clock)-p.at),finish:p.finishDuration||.65,recover:spec.recoverTime}[p.phase];return {kind:p.phase==='finish'&&skillAction(s,'strangle')?'strangle':'shadow',phase:p.phase,phaseAge:s.clock-p.at,phaseDuration:duration,age:s.clock-p.at,duration,moving:s.moving,aim:a.aim||0};}const b=s?.pose;return b&&legal(b)&&b.age<.65?{...b,kind:b.kind,age:b.age,duration:.65}:null;},
+  G.NarutoShikamaru={version:7,dex:DEX,supports,profile,canCast,cast,update,clear,held,stopped,clearPath,segmentDistance,statusFor,shadowVisualFor,ribbonGeometry,ribbonContains,polygonContains,sewingVisualFor,effectVisualFor,projectionFor,
+    activeFor:a=>{const s=states.get(a),p=s?.plan,throwing=s?.throwPose,sewing=sewingPoseFor(a,s,p);if(s?.ultimate&&legal(s.ultimate)&&s.ultimate.age<s.ultimate.duration)return {kind:'checkmate',phase:'checkmate',phaseAge:s.ultimate.age,phaseDuration:s.ultimate.duration,age:s.ultimate.age,duration:s.ultimate.duration,moving:s.moving,aim:a.aim||0};if(sewing)return sewing;if(throwing&&s.clock-throwing.started<throwing.duration&&!s.moving)return {...throwing,phaseAge:s.clock-throwing.started,phaseDuration:throwing.duration,age:s.clock-throwing.started,moving:false};if(p){const m=moveFor(a,'shadow'),spec=profile(a,m),duration={prepare:spec.release,release:spec.captureWindow-spec.release,drag:spec.dragTimeout,net:spec.netPrepare,blast:Math.max(.4,(p.end||s.clock)-p.at),finish:p.finishDuration||.65,recover:spec.recoverTime}[p.phase];return {kind:p.phase==='finish'&&skillAction(s,'strangle')?'strangle':'shadow',phase:p.phase,phaseAge:s.clock-p.at,phaseDuration:duration,age:s.clock-p.at,duration,moving:s.moving,aim:a.aim||0};}const b=s?.pose;return b&&legal(b)&&b.age<.65?{...b,kind:b.kind,age:b.age,duration:.65}:null;},
     stateFor:(a=G.Game.player)=>states.get(a)||null,stats:(a=G.Game.player)=>{const s=states.get(a);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,bound:s.bound,detonations:s.detonations,contacts:s.contacts.slice(),phase:s.plan?.phase||'ready',cycles:s.cycles,travelled:s.travelled,dragged:s.dragged,board:s.board.length}:null;},
     get casts(){return casts;},get leases(){return leases;},get effects(){return effects;}};
 })();
