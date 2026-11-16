@@ -540,7 +540,7 @@ G.World = (() => {
     return out;
   }
 
-  function drawProp(ctx, p, t) {
+  function drawProp(ctx, p, t, opening = 0) {
     const chest = p.type === 'chest' || p.type === 'bigchest';
     const P = G.Sprites.PX * (chest ? 1.25 : 1);
     const variant = p.type === 'grass' ? (Math.sin(t * 2.4 + p.wiggle) > 0.55 ? 1 : 0)
@@ -568,23 +568,52 @@ G.World = (() => {
       ctx.restore();
     }
     if (chest) {
-      const pulse = (Math.sin(t * 3 + p.x * .03 + p.y * .02) + 1) / 2;
+      const calm = G.Settings.get('calm');
+      const phase = t * 2 + p.x * .03 + p.y * .02;
+      const bob = Math.sin(phase), pulse = (bob + 1) / 2;
+      const lift = 13 + bob * (calm ? 2 : 5);
       ctx.save();
-      ctx.fillStyle = `rgba(255,205,64,${.12 + pulse * .07})`;
-      ctx.strokeStyle = `rgba(255,226,128,${.6 + pulse * .2})`;
+      // The shadow stays on the ground while the scroll floats above it.
+      ctx.fillStyle = `rgba(0,0,0,${.24 - pulse * .06})`;
+      ctx.beginPath();ctx.ellipse(p.x, p.y, p.r * (1.25 - pulse * .12), 5, 0, 0, Math.PI * 2);ctx.fill();
+      ctx.strokeStyle = `rgba(255,226,128,${.35 + pulse * .18})`;
       ctx.lineWidth = 2;
-      ctx.beginPath();ctx.ellipse(p.x, p.y - 2, w * .65, 9 + pulse * 2, 0, 0, 6.2832);
-      ctx.fill();ctx.stroke();
-      // Pixel glints draw directly, without adding persistent FX particles.
+      ctx.beginPath();ctx.ellipse(p.x, p.y - 1, w * .44, 7, 0, 0, Math.PI * 2);ctx.stroke();
+      ctx.translate(p.x, p.y - h / 2 - lift);
+      ctx.rotate(-.14 + (calm ? 0 : Math.sin(phase * .7) * .045));
+      const glow = ctx.createRadialGradient(0, 0, w * .15, 0, 0, h * .7);
+      glow.addColorStop(0, `rgba(255,225,132,${.2 + opening * .18})`);
+      glow.addColorStop(1, 'rgba(255,225,132,0)');
+      ctx.fillStyle = glow;ctx.fillRect(-h * .7, -h * .7, h * 1.4, h * 1.4);
+      // Unseal into a parchment sheet rather than opening a wooden lid.
+      if (opening > 0) {
+        const length = w * 1.15 * opening;
+        ctx.save();ctx.beginPath();ctx.rect(0, -h * .32, length, h * .64);ctx.clip();
+        ctx.fillStyle = '#e8d9b2';ctx.fillRect(0, -h * .32, length, h * .64);
+        ctx.strokeStyle = '#74654b';ctx.lineWidth = 2;
+        ctx.strokeRect(3, -h * .28, w * 1.05, h * .56);
+        ctx.fillStyle = '#38342a';ctx.textAlign = 'center';ctx.textBaseline = 'middle';
+        ctx.font = `bold ${Math.round(h * .34)}px "DFKai-SB", "KaiTi", "BiauKai", serif`;
+        ctx.fillText('禁', w * .67, 0);
+        ctx.restore();
+      }
+      ctx.drawImage(img, -w / 2, -h / 2, w, h);
+      // Keep brush strokes crisp at gameplay size instead of enlarging a 13px glyph.
+      ctx.fillStyle = '#e5dac5';ctx.fillRect(-5 * P, -7 * P, 10 * P, 15 * P);
+      ctx.fillStyle = '#211e19';ctx.textAlign = 'center';ctx.textBaseline = 'middle';
+      ctx.font = `bold ${13 * P}px "DFKai-SB", "KaiTi", "BiauKai", serif`;
+      ctx.fillText('禁', 0, .5 * P, 11 * P);
+      // Bounded glints: no particle allocation or effects left after pickup.
       ctx.fillStyle = '#fff3b0';
-      for (let i = 0; i < 3; i++) {
-        const phase = t * 1.6 + i * 2.1 + p.x * .03;
-        const sx = Math.round(p.x + Math.sin(phase) * w * .6);
-        const sy = Math.round(p.y - h * (.45 + i * .25) - pulse * 4);
-        ctx.globalAlpha = .5 + .5 * Math.sin(phase) ** 2;
+      for (let i = 0; i < (calm || G.Settings.fx === 0 ? 2 : 4); i++) {
+        const glint = phase + i * 1.57;
+        const sx = Math.round(Math.sin(glint) * w * .65);
+        const sy = Math.round(Math.cos(glint * .8) * h * .5);
+        ctx.globalAlpha = .3 + .6 * Math.sin(glint) ** 2;
         ctx.fillRect(sx - 3, sy, 8, 2);ctx.fillRect(sx, sy - 3, 2, 8);
       }
       ctx.restore();
+      return;
     }
     if (p.type !== 'grass') {
       ctx.fillStyle = 'rgba(0,0,0,.3)';

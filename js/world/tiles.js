@@ -540,26 +540,29 @@ G.Tiles = (() => {
       return P.canvas();
     },
 
-    /** Cofre grande con candado. */
+    /** Forbidden scroll: cream paper, dark green caps and an ink seal label. */
     bigchest() {
-      const P = Pix(24, 20);
-      const wood = pack('#a75324'), woodL = pack('#dc8b3b'), woodD = pack('#633015');
-      const iron = pack('#fff0a6'), ironD = pack('#dcae39'), gold = pack('#fff49c'), goldD = pack('#edbd3b');
-      for (let y = 2; y < 19; y++) for (let x = 1; x < 23; x++) {
-        let c = y < 8 ? woodL : wood;
-        if (y === 8 || y === 9) c = ironD;
-        if (x === 1 || x === 22 || y === 18) c = woodD;
-        if (x === 5 || x === 6 || x === 17 || x === 18) c = (x === 5 || x === 17) ? iron : ironD;
-        if (y === 2 && x > 1 && x < 22) c = iron;
+      const P = Pix(24, 36);
+      const paper = ['#a99c78', '#d1c399', '#e8d9b2', '#f4e8c8'].map(h => pack(h));
+      const green = ['#28382f', '#435346', '#61715a'].map(h => pack(h));
+      const ink = pack('#38342a'), label = pack('#e5dac5');
+      for (let y = 2; y < 34; y++) for (let x = 4; x < 20; x++) {
+        let c = paper[x < 7 ? 0 : x < 11 ? 1 : x < 17 ? 2 : 1];
+        if (x === 15 && y > 6 && y < 29) c = paper[3];
+        if (y < 5 || y >= 31) c = green[x < 9 ? 0 : x < 17 ? 1 : 2];
+        if (y === 7 || y === 28) c = ink;
         P.set(x, y, c);
       }
-      // Candado.
-      for (let x = 10; x <= 13; x++) { P.set(x, 5, iron); }
-      P.set(9, 6, iron); P.set(14, 6, iron); P.set(9, 7, iron); P.set(14, 7, iron);
-      for (let y = 8; y <= 13; y++) for (let x = 8; x <= 15; x++) P.set(x, y, (x + y) % 4 ? gold : goldD);
-      P.set(11, 10, woodD); P.set(12, 10, woodD); P.set(11, 11, woodD); P.set(11, 12, woodD);
-      outline(P, pack('#1e0f06'));
-      return P.canvas();
+      for (let y = 10; y <= 26; y++) for (let x = 6; x <= 17; x++) {
+        P.set(x, y, x === 6 || x === 17 || y === 10 || y === 26 ? ink : label);
+      }
+      outline(P, pack('#20271f'));
+      const cv = P.canvas(), ctx = cv.getContext('2d');
+      ctx.fillStyle = '#211e19';
+      ctx.font = 'bold 13px "DFKai-SB", "KaiTi", "BiauKai", serif';
+      ctx.textAlign = 'center';ctx.textBaseline = 'middle';
+      ctx.fillText('禁', 12, 18.5, 11);
+      return cv;
     },
 
     /** Trampa de Mundo Misterioso. variante: 0 veneno · 1 pegajosa · 2 explosiva. */
@@ -607,21 +610,7 @@ G.Tiles = (() => {
     },
 
     chest() {
-      const P = Pix(16, 14);
-      const gold = pack('#fff1a0'), goldD = pack('#e9b936'), wood = pack('#bc6c2c'), woodD = pack('#713b19');
-      const lid = pack('#eea34a');
-      for (let y = 2; y < 13; y++) for (let x = 1; x < 15; x++) {
-        let c = y < 6 ? lid : wood;
-        if (y === 6) c = goldD;
-        if (x === 1 || x === 14) c = woodD;
-        if ((x === 4 || x === 11) && y > 1) c = y < 6 ? gold : goldD;
-        if (y === 12) c = woodD;
-        if (y === 2 || y === 11) c = gold;
-        P.set(x, y, c);
-      }
-      for (let x = 6; x < 10; x++) for (let y = 5; y < 9; y++) P.set(x, y, (x + y) % 3 ? gold : goldD);
-      outline(P, pack('#2a160a'));
-      return P.canvas();
+      return PAINT.bigchest();
     }
   };
 

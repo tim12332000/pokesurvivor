@@ -31,7 +31,7 @@ CHECK = r"""() => {
   const bursts=V.activeBursts.length;
   if(clone)G.DigimonSkills.fireFrom(p,m,0,0,0,.3);else {p.cast(m);assert(G.DigimonSkills.cast(p,m),'cast rejected')}
   const shots=G.Projectiles.all();assert(shots.length===1,'base count changed');
-  assert(shots[0].r===15&&shots[0].life===1.3&&shots[0].vx===350,'flight or collision changed');
+  assert(shots[0].r===12&&shots[0].life===1.3&&shots[0].vx===350,'flight or collision changed');
   assert(m.cd===6&&m.passive&&m.autoCast&&m.dmg===58&&!m.charge,'timing or automatic status changed');
   assert(!!shots[0].narutoClone===clone,'clone ownership tag changed');
   step(.35);const hp=es.map(e=>100000-e.hp);

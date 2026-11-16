@@ -204,7 +204,7 @@ def main():
                     page.wait_for_timeout(60)
                     page.screenshot(path=str(OUT / f'{width}-{direction}-live-rasengan-{name}-gameplay.png'))
                 report['liveRasengan'][direction] = phases
-            report['expiry'] = view.evaluate("""()=>{G.NarutoSupport.update(20);const A=DirectionCheck;
+            report['expiry'] = view.evaluate("""()=>{G.NarutoSupport.update(G.Moves.instance('naruto-nine-tails-cloak',1).fieldDuration+1);const A=DirectionCheck;
               A.assert(!G.KyuubiForm.poseFor(A.p.anim)&&!G.KyuubiForm.poseFor(A.clone.anim),'form survived expiry');return true;}""")
             assert not errors, errors
             report['errors'] = errors
