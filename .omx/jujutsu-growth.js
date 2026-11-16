@@ -135,7 +135,7 @@
       const id=card.key.slice(3),m=p.moves.find(m=>m.id===id);
       if(m?.digiMode?.startsWith('shikamaru-')&&G.NarutoShikamaru){
         const next=G.Moves.instance(id,m.lvl+1),metrics=(owner,move)=>{
-          if(move.digiMode==='shikamaru-mass'&&G.NarutoShikamaruMass){const profile=G.NarutoShikamaruMass.profile(owner,move);return {爆破傷害:profile.damage,圓區半徑:profile.radius,拘束秒數:profile.bindDuration};}
+          if(move.digiMode==='shikamaru-mass'&&G.NarutoShikamaruMass){const profile=G.NarutoShikamaruMass.profile(owner,move);return {每輪電擊:profile.damage*profile.shockScale,電擊輪次:profile.shockPulses,爆破傷害:profile.damage*profile.bombScale,圓區半徑:profile.radius,拘束秒數:profile.bindDuration};}
           if(move.digiMode==='shikamaru-tactics'){
             const probe=Object.create(owner);probe.moves=owner.moves.map(x=>x.id===move.id?move:x);
             const shadow=probe.moves.find(x=>x.digiMode==='shikamaru-shadow')||G.Moves.instance('naruto-shikamaru');
