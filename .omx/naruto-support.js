@@ -11,7 +11,7 @@
     byakugan: { fieldDuration: 5, radius: 280, damageMul: 1.2 },
     'sand-shield': { fieldDuration: 8, shieldAmount: 45, cd: 12 },
     'earth-wall': { fieldDuration: 3, width: 100, range: 72 },
-    'nine-tails-cloak': { fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75, radius:76, pulseDamage:12, pulseInterval:.65, knock:18 }
+    'nine-tails-cloak': { fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75, radius:96, pulseDamage:18, pulseInterval:.65, knock:18 }
   };
   const valid = f => controlled(f.owner) && f.world === G.World && !f.owner.dead && f.owner.hp > 0;
   const active = (owner, mode) => effects.find(f => f.owner === owner && f.mode === mode && valid(f));

@@ -261,15 +261,15 @@
       source_url:'https://naruto-official.com/en/news/01_1287'
     }],
     ['naruto-nine-tails-cloak', [30001], {
-      icon:'nineTailsCloak', name:'九尾查克拉外衣', mode:'nine-tails-cloak', type:'fighting', cd:18, dmg:0, learnLevel:9,
+      icon:'nineTailsCloak', name:'九尾查克拉外衣', mode:'nine-tails-cloak', type:'fighting', cd:14, dmg:0, learnLevel:9,
       fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75,
-      radius:76, pulseDamage:12, pulseInterval:.65, knock:18,
+      radius:96, pulseDamage:18, pulseInterval:.65, knock:18,
       vis:{pal:'naruto-red'},
-      desc:'需選中才會施放。一尾外衣持續 8 秒：攻擊 +50%、移速 +25%、一般傷害 -25%，每 0.65 秒反擊近身敵人。切招仍有效，不能疊加。',
-      ups:[{t:'外衣持續時間 → 9 秒',m:{fieldDuration:9}},
-        {t:'外衣攻擊加成 → +65%',m:{atkMul:1.65}},
-        {t:'外衣移速加成 → +35%',m:{speedMul:1.35}},
-        {t:'冷卻 -15%、持續時間 → 10 秒',m:{cd:.85,fieldDuration:10}}],
+      desc:'需選中才會施放，基礎冷卻 14 秒。查克拉漸顯後進入一尾低姿態，持續 8 秒：攻擊 +50%、移速 +25%、一般傷害 -25%，每 0.65 秒以基傷 18 震擊半徑 96 的敵人。既有與新生影分身同步變身，攻擊承接本體加成，不另複製震擊；到期一起還原。升階擴大震擊並提高傷害與頻率。切招仍有效，不能疊加。',
+      ups:[{t:'外衣持續 9 秒、震擊基傷 22',m:{fieldDuration:9,pulseDamage:22}},
+        {t:'攻擊加成 +65%、震擊半徑 108',m:{atkMul:1.65,radius:108}},
+        {t:'移速加成 +35%、震擊基傷 26',m:{speedMul:1.35,pulseDamage:26}},
+        {t:'冷卻 -15%、持續 10 秒、震擊基傷 32／半徑 120／間隔 0.55 秒',m:{cd:.85,fieldDuration:10,pulseDamage:32,radius:120,pulseInterval:.55}}],
       source_url:'https://naruto-official.com/en/news/01_1296'
     }],
     ['naruto-fireball', [30002, 30008], {

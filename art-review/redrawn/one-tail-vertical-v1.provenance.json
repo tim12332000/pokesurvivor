@@ -1,0 +1,20 @@
+{
+  "tool": "built-in image_gen",
+  "kind": "newly drawn bitmap",
+  "prompt": "Create a new supplementary pixel-art game sprite atlas, matching reference image 1 (current Naruto red one-tail cloak sprite sheet) very closely in line thickness, pixel density, colors, costume, head size and chibi anatomy. Reference image 2 is ordinary Naruto for front/back orientation ONLY.\nOutput transparent background, no lettering, no grid lines, no shadows outside sprites. A precise uniform 4-column by 8-row sprite sheet (32 full isolated characters), portrait canvas 1:2 ratio, each cell square, generous 15% transparent padding. Each character centered horizontally with grounded feet/hands near 85% cell height. All bodies same physical scale. No side view anywhere in this sheet.\nCharacter: young Naruto, spiky yellow hair, blue leaf forehead protector, orange and dark blue tracksuit with white collar, blue sandals, red orange translucent one-tail chakra cloak with TWO small chakra ears, EXACTLY ONE long thick curved tapering red tail rising behind the lower back. Low feral crouch, hands touching or close to ground. Preserve clothing and face clearly beneath chakra, black navy crisp pixel outlines, red eyes. Match existing side sheet art, not a new artistic style. Body crouches below normal standing height.\nROWS strictly:\n1: four FRONT-facing (toward viewer/down screen) crouching idle breathing frames, tiny tail sway.\n2: four BACK-facing (away viewer/up screen) crouching idle frames. Show back of yellow hair, blue tied headband, back orange jacket spiral. NO visible face or eyes. Tail behind back rises toward upper side without covering head.\n3: four FRONT-facing low quadrupedal forward run frames; alternate left and right arm and opposite leg reach, do not turn sideways.\n4: four BACK-facing low quadrupedal run frames moving away; alternate limbs; NO face.\n5: four FRONT-facing claw attack phases: prepare, reach right claw forward toward viewer, both chakra claws contact, recoil.\n6: four BACK-facing claw attack phases: prepare, reach claw away from viewer, chakra claw contact beyond body up screen, recoil; NO face.\n7: four FRONT-facing Rasengan/casting phases: gathering red-white small energy orb between hands low at torso, charged orb, thrust orb toward viewer, recover low crouch.\n8: four BACK-facing Rasengan/casting phases: gather orb in front of torso mostly occluded, charged side-visible orb, thrust away up screen beyond shoulder, recover low crouch. NO face.\nEnsure exactly four columns and eight rows, no extra isolated tail fragments, no cropped feet, no giant glowing circles or atmosphere. This is an in-game sprite atlas, consistent animation cels rather than character concept art.",
+  "references": [
+    "art-review/redrawn/one-tail-v2.png",
+    "art-review/redrawn/naruto-common-v1.png"
+  ],
+  "original": "C:/Users/Tim/.codex/generated_images/01a1e476-e8b7-79c0-952d-38cd00eb5aff/exec-1e192554-77b0-424a-b5ef-4a417a9e3dc0.png",
+  "output": "art-review/redrawn/one-tail-vertical-v1.png",
+  "transparent_background": true,
+  "sha256": "b4ff9cf65b4e0ac40a5752e86c3cb8a1917a4486369cf7592d603066623f87b9",
+  "raw_output_sha256": "b4ff9cf65b4e0ac40a5752e86c3cb8a1917a4486369cf7592d603066623f87b9",
+  "reference_sha256": {
+    "art-review/redrawn/one-tail-v2.png": "d775a6300516d5a6cfb9e3036fb032bb0a5117542d696e8c1559e230073cc9d9",
+    "art-review/redrawn/naruto-common-v1.png": "1c562132eb25249f859ec3e071ac90ad8e0e24cdcc08abc89a873e0ff662c391"
+  },
+  "bodyHeight": 159.78,
+  "scaleRule": "Median front/back hair width matched to existing side idle hair width; one shared scale across all poses."
+}

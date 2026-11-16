@@ -10,11 +10,21 @@ OUT = ROOT / '.omx/state/kyuubi-form'
 
 FORM_HARNESS = r"""() => {
   const A=Acceptance;
+  const selectedCast=A.cast;
+  A.cast=(id,...args)=>{
+    const p=A.p(),m=p.moves.find(m=>m.id===id);
+    for(const move of p.moves)move.t=999;
+    if(!m?.autoCast)return selectedCast(id,...args);
+    m.t=0;p.target=A.enemy(0,65);p.aim=0;
+    A.resume();try{G.Combat.tick(.01,p,0)}finally{A.pause()}
+    A.assert(m.t>0,'learned automatic cast did not start '+id);
+    return {id,entry:'learned automatic Combat.tick',cooldown:m.t};
+  };
   A.formRender=()=>{
     const canvas=document.createElement('canvas');canvas.width=640;canvas.height=480;
     const ctx=canvas.getContext('2d',{willReadFrequently:true}),calls=[];
     const draw=ctx.drawImage.bind(ctx);
-    ctx.drawImage=(img,...args)=>{calls.push({src:img.src||img.dataset?.source||'',formSource:img===G.KyuubiForm.image,args});return draw(img,...args)};
+    ctx.drawImage=(img,...args)=>{calls.push({src:img.src||img.dataset?.source||'',formSource:img===G.KyuubiForm.image||img===G.KyuubiForm.directionalImage,args});return draw(img,...args)};
     const pose=G.KyuubiForm.poseFor(A.p().anim);
     A.p().anim.draw(ctx,320,390,{});
     const data=ctx.getImageData(0,0,640,480).data;
@@ -112,7 +122,9 @@ def main():
           const f=G.NarutoSupport.effects.find(f=>f.owner===A.p()&&f.mode==='nine-tails-cloak');
           A.assert(f,'cloak effect missing');let calls=0;
           for(const name of ['fill','stroke','drawImage','fillRect']){const original=ctx[name].bind(ctx);ctx[name]=(...args)=>{calls++;return original(...args)}}
-          G.NarutoCloakVFX.draw(ctx,f,100);A.assert(calls===0,'extra procedural cloak drawn over baked sprite');return true}''')
+          const flash=f.pulseFlash;f.pulseFlash=0;
+          try{G.NarutoCloakVFX.draw(ctx,f,true)}finally{f.pulseFlash=flash}
+          A.assert(calls===0,'extra procedural cloak drawn over baked sprite between pulses');return true}''')
         page.screenshot(path=str(OUT / 'actual-gameplay.png'))
         page.locator('#candidate').uncheck()
         report['disabled'] = frame.evaluate('''() => {Acceptance.assert(!G.KyuubiForm.poseFor(Acceptance.p().anim),
@@ -151,7 +163,7 @@ def main():
         mobile_report['viewportBounds'] = bounds
         mobile_report['idle'] = save('mobile-idle', frame.evaluate('Acceptance.formRender()'))
         initial = frame.evaluate('({x:Acceptance.p().x,y:Acceptance.p().y})')
-        frame.evaluate('Acceptance.p().invuln=99999;Acceptance.resume()')
+        frame.evaluate('Acceptance.p().invuln=99999;for(const m of Acceptance.p().moves)m.t=999;Acceptance.resume()')
         cdp = mobile.new_cdp_session(phone)
         x, y = bounds['x'] + 85, bounds['y'] + bounds['height'] * .6
         cdp.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': [{'x': x, 'y': y}]})
@@ -161,7 +173,9 @@ def main():
           return {x:p.x,y:p.y,walking:p.walking,pose:G.KyuubiForm.poseFor(p.anim)}}''')
         cdp.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
         assert moved['walking'] and moved['x'] > initial['x'], (initial, moved)
-        assert moved['pose']['animation'] == 'run', moved
+        assert moved['pose']['animation'] in ('run', 'attack'), moved
+        # Movement remains valid during a counter pulse; sample its subsequent run pose.
+        frame.evaluate('Acceptance.step(.2)')
         mobile_report['touch'] = {'before': initial, 'after': moved}
         mobile_report['run'] = save('mobile-run', frame.evaluate('Acceptance.formRender()'))
         phone.screenshot(path=str(OUT / 'mobile-one-tail.png'))

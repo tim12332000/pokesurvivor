@@ -28,7 +28,9 @@ review_runtime = ['art-review/' + name for name in [
     'kyuubi-form.js', 'animation-assets.json', 'kyuubi-frames.json']]
 metadata = json.loads((ROOT / 'art-review/animation-assets.json').read_text('utf-8'))
 sources = {item['source'] for item in metadata.values()}
-sources.add(json.loads((ROOT / 'art-review/kyuubi-frames.json').read_text('utf-8'))['source'])
+cloak = json.loads((ROOT / 'art-review/kyuubi-frames.json').read_text('utf-8'))
+sources.add(cloak['source'])
+sources.add(cloak['directional']['source'])
 for source in sorted(sources):
     path = Path('art-review') / source
     assert source.startswith('redrawn/') and path.suffix == '.png'
@@ -68,7 +70,7 @@ assert sources == {
     'redrawn/naruto-common-v1.png', 'redrawn/naruto-skills-v2.png',
     'redrawn/sasuke-common-v1.png', 'redrawn/sasuke-skills-v2.png',
     'redrawn/sasuke-chidori-charge-v3.png', 'redrawn/sasuke-chidori-walk-v1.png',
-    'redrawn/one-tail-v2.png',
+    'redrawn/one-tail-v2.png', 'redrawn/one-tail-vertical-v1.png',
     'redrawn/lee-common-v1.png', 'redrawn/lee-skills-v1.png',
     'redrawn/lee-gates-common-v1.png', 'redrawn/lee-gates-skills-v1.png',
     'redrawn/lee-death-common-v3.png', 'redrawn/lee-death-skills-v3.png',

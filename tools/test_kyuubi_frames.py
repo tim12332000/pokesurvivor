@@ -60,5 +60,47 @@ class KyuubiFrameTests(unittest.TestCase):
             self.assertEqual(animation['loop'], name in ('idle','walk','run','rasenganDash'), name)
         self.assertEqual(self.data['animations']['walk']['frames'], self.data['animations']['run']['frames'])
 
+    def test_vertical_directions_cover_the_complete_action_family(self):
+        vertical = self.data['directional']
+        image = Image.open(ROOT / 'art-review' / vertical['source'])
+        self.assertEqual(image.mode, 'RGBA')
+        self.assertEqual(image.getchannel('A').getextrema(), (0, 255))
+        self.assertEqual(set(vertical['animations']), {'up', 'down'})
+        self.assertNotEqual(vertical['source'], self.data['source'])
+        provenance = json.loads((ROOT / 'art-review/redrawn/one-tail-vertical-v1.provenance.json').read_text())
+        self.assertEqual(hashlib.sha256((ROOT/'art-review'/vertical['source']).read_bytes()).hexdigest(), provenance['sha256'])
+        for direction, animations in vertical['animations'].items():
+            self.assertEqual(set(animations), set(self.data['animations']))
+            for name, animation in animations.items():
+                for frame in animation['frames']:
+                    x, y, w, h = frame['rect']
+                    self.assertTrue(0 <= x < x+w <= image.width, (direction, name))
+                    self.assertTrue(0 <= y < y+h <= image.height, (direction, name))
+                    self.assertTrue(image.crop((x,y,x+w,y+h)).getchannel('A').getbbox())
+                    self.assertEqual(frame['bodyHeight'], vertical['bodyHeight'])
+                    self.assertTrue(0 <= frame['anchor'][0] <= w)
+                    self.assertTrue(0 <= frame['anchor'][1] <= h)
+                    self.assertEqual(frame['atlasIndex']//4%2, 0 if direction=='down' else 1)
+                    if frame.get('orb'):
+                        ox, oy, radius = frame['orb']
+                        self.assertTrue(0 <= ox <= w and 0 <= oy <= h)
+                        self.assertGreater(radius, 0)
+
+    def test_directional_registration_is_reproducible_and_head_scaled(self):
+        from copy import deepcopy
+        from statistics import median
+        from register_kyuubi_directions import register
+        from build_redrawn_atlases import hair_width
+        self.assertEqual(register(deepcopy(self.data))['directional'], self.data['directional'])
+        side = self.data
+        vertical = side['directional']
+        image = Image.open(ROOT / 'art-review' / vertical['source'])
+        head = median(hair_width(self.image, frame)*55/side['bodyHeight']
+                      for frame in side['animations']['idle']['frames'])
+        for direction in ('up', 'down'):
+            other = median(hair_width(image, frame)*55/vertical['bodyHeight']
+                           for frame in vertical['animations'][direction]['idle']['frames'])
+            self.assertLess(abs(head-other), 1)
+
 if __name__ == '__main__':
     unittest.main()

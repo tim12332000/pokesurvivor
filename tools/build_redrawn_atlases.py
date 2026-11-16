@@ -344,6 +344,8 @@ def main():
         animations[kind] = {'frames': sequence(form, indices)['frames'], 'fps': fps, 'loop': loop}
     form_json = {'source': form['source'], 'bodyHeight': form['bodyHeight'],
                  'facing': 'right', 'animations': animations}
+    from register_kyuubi_directions import register as register_kyuubi_directions
+    register_kyuubi_directions(form_json)
     (ART / 'kyuubi-frames.json').write_text(json.dumps(form_json, indent=2) + '\n', encoding='utf-8')
     write_registered_entries(ART / 'redrawn/atlas-map.json', sources)
     # Review every physical frame at the exact same world scale as the game.

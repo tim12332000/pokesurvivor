@@ -32,6 +32,12 @@
   }
   function point(anim,pose,x,y){
     if(pose?.key!=='naruto-rasengan'||!orbPoints[pose.frame])return null;
+    const form=G.KyuubiForm?.poseFor(anim);
+    if(form&&['up','down'].includes(form.direction)){
+      if(!form.orb)return null;
+      const [ox,oy,r]=form.orb,k=55/form.bodyHeight*(anim.scale||1);
+      return {x:x+(ox-form.anchor[0])*k,y:y+(oy-form.anchor[1])*k,r:r*k,scale:anim.scale||1};
+    }
     const asset=window.AnimationAssets?.get(pose.key),frame=asset?.frames[pose.frame];
     if(!frame)return null;
     const [ox,oy,r]=orbPoints[pose.frame],scale=64/asset.bodyHeight*(anim.scale||1);
