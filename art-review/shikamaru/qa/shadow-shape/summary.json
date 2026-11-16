@@ -1,0 +1,364 @@
+{
+  "status": "Focused tapered-shadow QA complete; independent art/anime review delegated to their lanes.",
+  "sourceManifest": {
+    ".omx/naruto-shikamaru.js": "bd7c6b3fd6f6ffd14bbea531b906ce644152756704e6e69f699f3d32f5def3e9",
+    "art-review/shikamaru-art.js": "23299e78451e7954145772e359037e270ad92a09ab1f2d00ec9a90c95771d1bc",
+    "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+    ".omx/digimon.html": "a9ff4af88b1a667b27e6c34678c2f8e2ac52f598cbb0542a77de48f3ddbc675a"
+  },
+  "sourceStable": {
+    "controlled": true,
+    "native": true
+  },
+  "nativeHurtAndMask": [
+    {
+      "name": "root-inner",
+      "x": 5,
+      "y": -18,
+      "expected": true,
+      "hits": [
+        {
+          "raw": 33.263999999999996,
+          "loss": 33,
+          "owner": true,
+          "id": "naruto-shikamaru"
+        }
+      ],
+      "pixelAlpha": 169,
+      "actual": true
+    },
+    {
+      "name": "root-outer",
+      "x": 5,
+      "y": -25,
+      "expected": false,
+      "hits": [],
+      "pixelAlpha": 0,
+      "actual": false
+    },
+    {
+      "name": "middle-inner",
+      "x": 165,
+      "y": -8,
+      "expected": true,
+      "hits": [
+        {
+          "raw": 33.263999999999996,
+          "loss": 33,
+          "owner": true,
+          "id": "naruto-shikamaru"
+        }
+      ],
+      "pixelAlpha": 107,
+      "actual": true
+    },
+    {
+      "name": "middle-outer",
+      "x": 165,
+      "y": -14,
+      "expected": false,
+      "hits": [],
+      "pixelAlpha": 0,
+      "actual": false
+    },
+    {
+      "name": "tip-inner",
+      "x": 325,
+      "y": -0.1,
+      "expected": true,
+      "hits": [
+        {
+          "raw": 33.263999999999996,
+          "loss": 33,
+          "owner": true,
+          "id": "naruto-shikamaru"
+        }
+      ],
+      "pixelAlpha": 149,
+      "actual": true
+    },
+    {
+      "name": "tip-outer",
+      "x": 325,
+      "y": -5,
+      "expected": false,
+      "hits": [],
+      "pixelAlpha": 0,
+      "actual": false
+    },
+    {
+      "name": "behind-root",
+      "x": -20,
+      "y": 0,
+      "expected": false,
+      "hits": [],
+      "pixelAlpha": 0,
+      "actual": false
+    },
+    {
+      "name": "beyond-tip",
+      "x": 332,
+      "y": 0,
+      "expected": false,
+      "hits": [],
+      "pixelAlpha": 0,
+      "actual": false
+    }
+  ],
+  "wall": {
+    "tips": [
+      {
+        "x": 96,
+        "y": 0
+      },
+      {
+        "x": 97.58974493306056,
+        "y": 21.822962308086932
+      },
+      {
+        "x": 97.71317962775606,
+        "y": 46.00146222712797
+      },
+      {
+        "x": 97.95903670567327,
+        "y": 76.02648964470579
+      }
+    ],
+    "nearHits": [
+      {
+        "raw": 33.263999999999996,
+        "loss": 33,
+        "owner": true,
+        "id": "naruto-shikamaru"
+      }
+    ],
+    "farHits": []
+  },
+  "triangleBoundaries": [
+    {
+      "name": "root-axis",
+      "x": 0,
+      "y": 0,
+      "r": 0,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "root-side",
+      "x": 0,
+      "y": 21,
+      "r": 0,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "root-outer",
+      "x": 0,
+      "y": 23,
+      "r": 0,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "root-behind",
+      "x": -1,
+      "y": 0,
+      "r": 0,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "circle-touches-root",
+      "x": -1,
+      "y": 0,
+      "r": 2,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "circle-misses-root",
+      "x": -3,
+      "y": 0,
+      "r": 2,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "mid-in",
+      "x": 100,
+      "y": 10,
+      "r": 0,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "mid-out",
+      "x": 100,
+      "y": 12,
+      "r": 0,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "tip-in",
+      "x": 199,
+      "y": 0.05,
+      "r": 0,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "tip-out",
+      "x": 199,
+      "y": 1,
+      "r": 0,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "beyond-tip",
+      "x": 201,
+      "y": 0,
+      "r": 0,
+      "expected": false,
+      "actual": false
+    },
+    {
+      "name": "circle-touches-tip",
+      "x": 201,
+      "y": 0,
+      "r": 2,
+      "expected": true,
+      "actual": true
+    },
+    {
+      "name": "circle-misses-tip",
+      "x": 203,
+      "y": 0,
+      "r": 2,
+      "expected": false,
+      "actual": false
+    }
+  ],
+  "pool": {
+    "initial": {
+      "x": 0,
+      "y": 0,
+      "poolRadius": 34,
+      "spent": 0,
+      "extensionTotal": 0,
+      "branches": 0
+    },
+    "extended": {
+      "x": 0,
+      "y": 0,
+      "poolRadius": 15.137532457071359,
+      "spent": 0.9111111111111111,
+      "extensionTotal": 1312,
+      "branches": 4
+    },
+    "held": {
+      "x": 0,
+      "y": 0,
+      "poolRadius": 30.725667879912173,
+      "spent": 0.20833333333333334,
+      "extensionTotal": 300,
+      "branches": 1
+    },
+    "heldNow": true,
+    "rays": 0,
+    "recovered": {
+      "x": 0,
+      "y": 0,
+      "poolRadius": 34,
+      "spent": 0,
+      "extensionTotal": 0,
+      "branches": 0
+    },
+    "before": {
+      "clock": 0.7500000000000004,
+      "castAges": [
+        0.7500000000000004
+      ],
+      "leases": 1
+    },
+    "after": {
+      "clock": 0.7500000000000004,
+      "castAges": [
+        0.7500000000000004
+      ],
+      "leases": 1
+    }
+  },
+  "firstCaptureTargetsQ0Q1Q3": [
+    4,
+    6,
+    10
+  ],
+  "nativePhases": [
+    {
+      "image": "native/initial.png",
+      "phase": "initial",
+      "time": 0.14706666666666673,
+      "poolRadius": 34,
+      "extensionTotal": 0,
+      "liveRays": 0,
+      "held": 0
+    },
+    {
+      "image": "native/extended.png",
+      "phase": "extended",
+      "time": 1.281466666666667,
+      "poolRadius": 17.557524502806956,
+      "extensionTotal": 1200,
+      "liveRays": 1,
+      "held": 1
+    },
+    {
+      "image": "native/held-after-rays.png",
+      "phase": "held-after-rays",
+      "time": 1.7774666666666674,
+      "poolRadius": 30.725667879912173,
+      "extensionTotal": 300,
+      "liveRays": 0,
+      "held": 1
+    },
+    {
+      "image": "native/recovered.png",
+      "phase": "recovered",
+      "time": 4.48966666666667,
+      "poolRadius": 34,
+      "extensionTotal": 0,
+      "liveRays": 0,
+      "held": 0
+    }
+  ],
+  "errors": {
+    "controlled": [],
+    "native": []
+  },
+  "sourceDifference": "Earlier complete natural/core evidence used the previous uniform-width shadow. This patch changes shadow/sewing true geometry to the drawn taper, plus read-only source-pool visualization. Core phase/CD/damage/card rules were not changed; new shape is verified here rather than claiming old natural video contains it.",
+  "fixedCounterexample": "Before the fix: enemy (-20,0),r1 lost33HP at native ground-mask alpha0 while poolRadius15.1375. Minimal true-triangle/circle-edge fix now gives zero hurt at the same unseen point. Original failure report retained.",
+  "rawEvidence": {
+    "report.json": {
+      "path": "art-review/shikamaru/qa/shadow-shape/report.json",
+      "sha256": "b83723928e6c3c6eb1e9d9877d316b7b943fdc48db31df0e1017902226f30f45"
+    },
+    "root-behind-counterexample.json": {
+      "path": "art-review/shikamaru/qa/shadow-shape/root-behind-counterexample.json",
+      "sha256": "f4b227b887cd6ab2df704af7bfce705366bafa8d394ab34a740c8d3706e2fe29"
+    },
+    "native-ground-mask.png": {
+      "path": "art-review/shikamaru/qa/shadow-shape/native-ground-mask.png",
+      "sha256": "f94ec716c40f1a720b859a72b2391394873b91bbc29ab7150a4a444e443b70d6"
+    },
+    "native/report.json": {
+      "path": "art-review/shikamaru/qa/shadow-shape/native/report.json",
+      "sha256": "73dd36a741c5569a145530732826b227989f7eea118abcccdc7bcf728dc79eb6"
+    },
+    "native/pool-tapered-native.webm": {
+      "path": "art-review/shikamaru/qa/shadow-shape/native/pool-tapered-native.webm",
+      "sha256": "8b29cfc54c3041a149dbd620594596aec4d683272589bfc7d2b3a04509e33cd1"
+    }
+  }
+}

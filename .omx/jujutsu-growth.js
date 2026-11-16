@@ -17,7 +17,7 @@
     if(mode.startsWith('shikamaru-')&&G.NarutoShikamaru){
       if(mode==='shikamaru-tactics')return null;
       const pfile=G.NarutoShikamaru.profile(p,m);
-      return mode==='shikamaru-trap'?{起爆札:pfile.traps,爆破半徑:pfile.radius,佈陣射程:pfile.range}:{影分枝:pfile.branches,接觸波次:pfile.pulses,影術射程:pfile.range};
+      return mode==='shikamaru-trap'?{札位容量:pfile.traps,每札爆破輪次:pfile.blastRounds,爆破半徑:pfile.radius}:{影分枝:pfile.branches,接觸波次:pfile.pulses,影術射程:pfile.range};
     }
     if(customConsumers.has(mode))return customConsumers.get(mode)(p,m);
     if(mode==='jjk-ryu-spread')return {追蹤砲彈:count(p,G.Jujutsu.power.ryu.scatterBases[i],G.Jujutsu.power.ryu.scatterCap)};

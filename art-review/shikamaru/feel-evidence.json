@@ -1,0 +1,102 @@
+{
+  "purpose": "Separate verified behavior from human fun approval; older natural run predates tapered collision.",
+  "rawEvidence": {
+    "controlled": {
+      "path": "art-review/shikamaru/qa/feel/report.json",
+      "sha256": "abb2bc88019b020e747ff10bd63d8eebf899af076a3d727e006ed4c0fd8081d9",
+      "sourceStable": true,
+      "sources": {
+        ".omx/naruto-shikamaru.js": "6588f09747eda40aabd04d03b33495b300ef0e46b3f88565410f761618d7c6b4",
+        ".omx/naruto-skills.js": "59708ecd0e8f49621bb42519a957044f061fba534b4eefe55fa8d09abc561c02",
+        ".omx/naruto-training.js": "173bb83fc28c2c91cc5a7626cd01554ebcf389aae2bfd2aafb935daf0ed71ff8",
+        ".omx/jujutsu-growth.js": "6c5d339ec47ae11d22becf8ca545298f02152c71e51d64a0f25d89c1190da14c",
+        "js/entities/enemy.js": "d35930081aba4652aa37c35cad1ca96b9e1a23f1534f1dd054bad284e591791f",
+        "js/systems/combat.js": "5f8315d3987d169d99d7ebe17d809f94aa7068825ee4e377a6fd285a41561748",
+        "js/systems/self-clone.js": "f4a05ea297bae3fa0e318fc9699117a949ccb66e816e723c81a58ba2fcf4f62e",
+        "art-review/shikamaru-art.js": "23299e78451e7954145772e359037e270ad92a09ab1f2d00ec9a90c95771d1bc",
+        "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+        ".omx/digimon.html": "7c9ed53edc93b2bede4ca015d525b99aeb94db1e4a7f3248e6478655f1371a1f"
+      }
+    },
+    "natural": {
+      "path": "art-review/shikamaru/qa/feel/natural/report.json",
+      "sha256": "f264633f9d4a11c0ae9997ecd74aee2080d6e0de384643f5e719b59f1d4157ce",
+      "sourceStable": true,
+      "sources": {
+        ".omx/naruto-shikamaru.js": "6588f09747eda40aabd04d03b33495b300ef0e46b3f88565410f761618d7c6b4",
+        ".omx/naruto-skills.js": "59708ecd0e8f49621bb42519a957044f061fba534b4eefe55fa8d09abc561c02",
+        ".omx/naruto-training.js": "173bb83fc28c2c91cc5a7626cd01554ebcf389aae2bfd2aafb935daf0ed71ff8",
+        ".omx/jujutsu-growth.js": "6c5d339ec47ae11d22becf8ca545298f02152c71e51d64a0f25d89c1190da14c",
+        "js/entities/enemy.js": "d35930081aba4652aa37c35cad1ca96b9e1a23f1534f1dd054bad284e591791f",
+        "js/systems/combat.js": "5f8315d3987d169d99d7ebe17d809f94aa7068825ee4e377a6fd285a41561748",
+        "js/systems/self-clone.js": "f4a05ea297bae3fa0e318fc9699117a949ccb66e816e723c81a58ba2fcf4f62e",
+        "art-review/shikamaru-art.js": "23299e78451e7954145772e359037e270ad92a09ab1f2d00ec9a90c95771d1bc",
+        "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+        ".omx/digimon.html": "7c9ed53edc93b2bede4ca015d525b99aeb94db1e4a7f3248e6478655f1371a1f"
+      }
+    },
+    "shape": {
+      "path": "art-review/shikamaru/qa/shadow-shape/report.json",
+      "sha256": "b83723928e6c3c6eb1e9d9877d316b7b943fdc48db31df0e1017902226f30f45",
+      "sourceStable": true,
+      "sources": {
+        ".omx/naruto-shikamaru.js": "bd7c6b3fd6f6ffd14bbea531b906ce644152756704e6e69f699f3d32f5def3e9",
+        "art-review/shikamaru-art.js": "23299e78451e7954145772e359037e270ad92a09ab1f2d00ec9a90c95771d1bc",
+        "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+        ".omx/digimon.html": "a9ff4af88b1a667b27e6c34678c2f8e2ac52f598cbb0542a77de48f3ddbc675a"
+      }
+    }
+  },
+  "controlled": {
+    "ok": true,
+    "checks": [
+      "profiles",
+      "coverage",
+      "movement",
+      "board",
+      "strategies",
+      "cancellation",
+      "lv1",
+      "empty",
+      "blastRounds",
+      "clones"
+    ]
+  },
+  "natural": {
+    "coreComplete": true,
+    "time": 82.1996666666678,
+    "level": 7,
+    "hp": 235,
+    "dead": false,
+    "appliedCards": 5,
+    "finalState": "levelup",
+    "errors": [],
+    "stopCycles": [
+      7,
+      9,
+      15,
+      17,
+      19
+    ],
+    "timeoutCycles": [
+      4,
+      6,
+      8,
+      10,
+      12,
+      14,
+      16,
+      18
+    ]
+  },
+  "shape": {
+    "ok": true,
+    "checks": [
+      "geometry",
+      "pool",
+      "boundaries",
+      "wall",
+      "quantityCapture"
+    ]
+  }
+}
