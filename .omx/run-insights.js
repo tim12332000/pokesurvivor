@@ -65,6 +65,7 @@
   const over=G.RunUI.showOver;
   G.RunUI.showOver=function(...args){const result=over.apply(this,args);document.getElementById('over-stats')?.insertAdjacentHTML('beforeend',summary());return result;};
   function skillState(player,move){
+    if(player?.dex===30017&&G.NarutoShikamaru?.supports(move))return G.NarutoShikamaru.statusFor?.(player,move)||{label:'戰術連動',fraction:0};
     if(!move?.id?.startsWith('jjk-'))return null;
     const api=player.dex===30013?G.JujutsuYuta:player.dex===30014?G.JjkRyu:G.JjkUro;
     if(player.dex===30013){
