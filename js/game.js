@@ -195,30 +195,7 @@ G.Game = (() => {
   function drawChest() {
     if (!chestOpening) return;
     const age = chestOpening.age, opening = Math.min(1, age / CHEST_OPEN_TIME);
-    const calm = G.Settings.get('calm');
-    const img = G.Tiles.propSprite(biome, 'bigchest', 0), scale = G.Sprites.PX * 1.25;
-    const prop = chestOpening.prop;
-    ctx.save();
-    ctx.fillStyle = 'rgba(0,0,0,.3)';
-    ctx.beginPath();ctx.ellipse(prop.x, prop.y, prop.r * 1.1, prop.r * .38, 0, 0, Math.PI * 2);ctx.fill();
-    ctx.translate(prop.x, prop.y - (img.height - 8) * scale);
-    ctx.fillStyle = '#f6cc62';ctx.globalAlpha = .15 * opening;
-    ctx.beginPath();ctx.ellipse(0, 0, img.width * scale, img.height * scale, 0, 0, Math.PI * 2);ctx.fill();
-    ctx.globalAlpha = 1;
-    ctx.save();ctx.scale(scale, scale);
-    ctx.drawImage(img, 0, 8, img.width, img.height - 8, -img.width / 2, 0, img.width, img.height - 8);
-    ctx.save();ctx.translate(-img.width / 2, 0);ctx.rotate(-opening * .9);
-    ctx.drawImage(img, 0, 0, img.width, 8, 0, -8, img.width, 8);ctx.restore();
-    ctx.restore();
-    if (chestOpening.opened) {
-      ctx.fillStyle = '#fff2ab';
-      for (let i = 0; i < 8; i++) {
-        const a = i * Math.PI / 4 + (calm ? 0 : age * .3), radius = img.width * scale * .75;
-        const x = Math.cos(a) * radius, y = Math.sin(a) * radius;
-        ctx.fillRect(Math.round(x)-4, Math.round(y)-1, 9, 3);ctx.fillRect(Math.round(x)-1, Math.round(y)-4, 3, 9);
-      }
-    }
-    ctx.restore();
+    G.World.drawProp(ctx, chestOpening.prop, performance.now() / 1000, opening);
   }
 
   // Destello de pantalla completa (viaje a la grieta).
