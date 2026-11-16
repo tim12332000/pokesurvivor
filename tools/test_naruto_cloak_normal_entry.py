@@ -77,7 +77,7 @@ def main():
                 const u=G.Moves.instance(id,rank),index=rank-1;
                 const expected={radius:[96,96,108,108,120][index],pulseDamage:[18,22,22,26,32][index],
                   atkMul:[1.5,1.5,1.65,1.65,1.65][index],speedMul:[1.25,1.25,1.25,1.35,1.35][index],
-                  fieldDuration:[8,9,9,9,10][index],cd:[14,14,14,14,11.9][index]};
+                  fieldDuration:[24,27,27,27,30][index],cd:[42,42,42,42,35.7][index]};
                 for(const [key,value] of Object.entries(expected))assert(Math.abs(u[key]-value)<1e-6,'tier '+rank+' '+key+' mismatch: '+u[key]);
                 tiers.push({rank,...expected});
               }
@@ -106,10 +106,10 @@ def main():
               window.cloakStep=dt=>{G.Game.togglePause();
                 try{G.Combat.updateFields(dt);p.anim.update(dt)}finally{G.Game.togglePause()}
               };
-              return {expectedPulse:expected,actualPulse,clones:8,tiers,upgrade:{damage:upgrade.pulseDamage,radius:upgrade.radius,interval:upgrade.pulseInterval},checks:['normal entry','single inherited attack bonus','one pulse despite eight clones','outside range','wall blocking','real basic punch pose','dead clone','dead owner','independent card-clone ownership','exact tier stats']};
+              return {expectedPulse:expected,actualPulse,clones:8,tiers,duration:m.fieldDuration,upgrade:{damage:upgrade.pulseDamage,radius:upgrade.radius,interval:upgrade.pulseInterval},checks:['normal entry','single inherited attack bonus','one pulse despite eight clones','outside range','wall blocking','real basic punch pose','dead clone','dead owner','independent card-clone ownership','exact tier stats']};
             }""")
             previous = 0
-            for age in (0, .15, .35, .7, 7.8, 8.05):
+            for age in (0, .15, .35, .7, report['duration']-.2, report['duration']+.05):
                 view.evaluate('(dt)=>cloakStep(dt)', age - previous)
                 previous = age
                 page.wait_for_timeout(90)
@@ -121,6 +121,7 @@ def main():
             # Advance the native game loop through a complete live window, rather than
             # treating the manually sampled phase captures as a natural-time recording.
             view.evaluate("""()=>{const p=G.Game.player;
+              p.xpNext=Infinity; // Keep this controlled long-window check out of the level-up screen.
               for(let i=0;i<12;i++){const a=i*Math.PI/6;
                 G.EnemyMgr.add(new G.Enemy({dex:19,hp:2000,spd:40,dmg:0,xp:0,behavior:'chase'},
                   p.x+Math.cos(a)*180,p.y+Math.sin(a)*180,{hp:1,spd:1,dmg:1}));}
@@ -129,7 +130,7 @@ def main():
               if(!G.NarutoSupport.cast(p,m))throw Error('native window failed to start');
               G.Game.togglePause();
             }""")
-            page.wait_for_timeout(8800)
+            page.wait_for_timeout(report['duration']*1000+800)
             report['nativeWindow'] = view.evaluate("""()=>{
               const p=G.Game.player;
               if(G.Game.state!=='playing')throw Error('native loop stopped during cloak window');

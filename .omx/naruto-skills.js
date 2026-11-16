@@ -244,9 +244,14 @@
     }],
     ['naruto-rasenshuriken', [30001], {
       icon:'rasenshuriken', name: '風遁・螺旋手裏劍', mode: 'shot', passive:true, autoCast:true, learnLevel:6, type: 'flying', cd: 6, dmg: 58,
-      speed: 350, life: 1.3, size: 15, range: 455, blastRadius: 110, knock: 65,
+      speed: 350, life: 1.3, size: 12, range: 455, blastRadius: 100, knock: 65,
+      spreadRadiusMul:1.25, spreadDamageRatio:.15,
       vis: { proj: 'naruto-wind-shuriken', trail: 'wind', pal: 'naruto-blue' },
-      desc:'學會後常駐自動施放，不需選招、不占主動槽，基礎冷卻 6 秒。投擲旋轉手裏劍，命中後爆發風刃，傷害周圍敵人。影分身各自按冷卻模仿施放；冷卻縮減有效。',
+      ups:[{t:'手裏劍尺寸 15、爆風半徑 110、傷害 +20%',m:{size:15/12,blastRadius:110,dmg:1.2}},
+        {t:'手裏劍尺寸 18、爆風半徑 120、冷卻 -10%',m:{size:18/15,blastRadius:120,cd:.9}},
+        {t:'手裏劍尺寸 21、爆風半徑 130、射程與持續時間 +12%',m:{size:21/18,blastRadius:130,range:509.6,life:1.12}},
+        {t:'手裏劍尺寸 24、爆風半徑 140、傷害 +25%',m:{size:24/21,blastRadius:140,dmg:1.25}}],
+      desc:'學會後常駐自動施放，不需選招、不占主動槽，基礎冷卻 6 秒。五階手裏劍尺寸依序 12／15／18／21／24，每階都變大；核心爆風半徑 100／110／120／130／140，造成基傷 80%，外側再擴散至 1.25 倍半徑並造成少量基傷 15%，同一目標只受一種爆風傷害，牆會擋住爆風。九尾化期間發射的手裏劍、尾流與爆風為橘色。影分身各自按冷卻模仿施放；冷卻縮減有效。',
       source_url: 'https://naruto-official.com/en/news/01_1423'
     }],
     ['naruto-toad-summon', [30001], {
@@ -261,15 +266,15 @@
       source_url:'https://naruto-official.com/en/news/01_1287'
     }],
     ['naruto-nine-tails-cloak', [30001], {
-      icon:'nineTailsCloak', name:'九尾查克拉外衣', mode:'nine-tails-cloak', type:'fighting', cd:14, dmg:0, learnLevel:9,
-      fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75,
+      icon:'nineTailsCloak', name:'九尾查克拉外衣', mode:'nine-tails-cloak', type:'fighting', cd:42, dmg:0, learnLevel:9,
+      fieldDuration:24, atkMul:1.5, speedMul:1.25, damageTakenMul:.75,
       radius:96, pulseDamage:18, pulseInterval:.65, knock:18,
       vis:{pal:'naruto-red'},
-      desc:'需選中才會施放，基礎冷卻 14 秒。查克拉漸顯後進入一尾低姿態，持續 8 秒：攻擊 +50%、移速 +25%、一般傷害 -25%，每 0.65 秒以基傷 18 震擊半徑 96 的敵人。既有與新生影分身同步變身，攻擊承接本體加成，不另複製震擊；到期一起還原。升階擴大震擊並提高傷害與頻率。切招仍有效，不能疊加。',
-      ups:[{t:'外衣持續 9 秒、震擊基傷 22',m:{fieldDuration:9,pulseDamage:22}},
+      desc:'需選中才會施放，基礎冷卻 42 秒。查克拉漸顯後進入一尾低姿態，持續 24 秒：攻擊 +50%、移速 +25%、一般傷害 -25%，每 0.65 秒以基傷 18 震擊半徑 96 的敵人。既有與新生影分身同步變身，攻擊承接本體加成，不另複製震擊；到期一起還原。升階擴大震擊並提高傷害與頻率。切招仍有效，不能疊加。',
+      ups:[{t:'外衣持續 27 秒、震擊基傷 22',m:{fieldDuration:27,pulseDamage:22}},
         {t:'攻擊加成 +65%、震擊半徑 108',m:{atkMul:1.65,radius:1.125}},
         {t:'移速加成 +35%、震擊基傷 26',m:{speedMul:1.35,pulseDamage:26}},
-        {t:'冷卻 -15%、持續 10 秒、震擊基傷 32／半徑 120／間隔 0.55 秒',m:{cd:.85,fieldDuration:10,pulseDamage:32,radius:10/9,pulseInterval:.55}}],
+        {t:'冷卻 -15%、持續 30 秒、震擊基傷 32／半徑 120／間隔 0.55 秒',m:{cd:.85,fieldDuration:30,pulseDamage:32,radius:10/9,pulseInterval:.55}}],
       source_url:'https://naruto-official.com/en/news/01_1296'
     }],
     ['naruto-fireball', [30002, 30008], {

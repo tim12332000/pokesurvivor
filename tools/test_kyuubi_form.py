@@ -131,7 +131,7 @@ def main():
           'disabled experiment retained transformed rendering');return true}''')
         page.locator('#candidate').check()
         assert frame.evaluate('!!G.KyuubiForm.poseFor(Acceptance.p().anim)'), 're-enabled experiment lost live buff'
-        report['expiry'] = frame.evaluate('''() => {const A=Acceptance;A.activate();A.step(13);
+        report['expiry'] = frame.evaluate('''() => {const A=Acceptance;A.activate();A.step(G.Moves.instance('naruto-nine-tails-cloak',1).fieldDuration+1);
           A.assert(!G.KyuubiForm.active(A.p()),'form survived expiry');A.assert(!G.KyuubiForm.poseFor(A.p().anim),'form pose survived expiry');
           return {active:false,regular:A.render().state}}''')
         report['cancel'] = frame.evaluate('''() => {const A=Acceptance;A.activate();G.Combat.clearFields();
@@ -179,7 +179,7 @@ def main():
         mobile_report['touch'] = {'before': initial, 'after': moved}
         mobile_report['run'] = save('mobile-run', frame.evaluate('Acceptance.formRender()'))
         phone.screenshot(path=str(OUT / 'mobile-one-tail.png'))
-        mobile_report['expiry'] = frame.evaluate('''() => {const A=Acceptance;A.step(13);
+        mobile_report['expiry'] = frame.evaluate('''() => {const A=Acceptance;A.step(G.Moves.instance('naruto-nine-tails-cloak',1).fieldDuration+1);
           A.assert(!G.KyuubiForm.active(A.p()),'mobile form survived expiry');
           A.assert(!G.KyuubiForm.poseFor(A.p().anim),'mobile form pose survived expiry');return true}''')
         (OUT / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
