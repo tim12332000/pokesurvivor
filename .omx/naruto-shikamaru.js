@@ -263,17 +263,6 @@
     if(!Number.isFinite(d)||d>Math.max(80,dt*900))return;
     if(d){
       s.travelled+=d;
-      for(const [e,l]of ownedCaptures(s)){
-        if(strong(e))continue;
-        const steps=Math.max(1,Math.ceil(d/4));
-        for(let i=0;i<steps;i++){
-          const x=e.x+dx/steps,y=e.y+dy/steps;
-          if(!G.World.isFree?.(x,y,e.r||10,true)||!clearPath(e.x,e.y,x,y))break;
-          e.x=x;e.y=y;s.dragged+=d/steps;
-        }
-        e.anim?.loop?.('Walk');
-      }
-      G.EnemyMgr.rebuildGrid?.();
       const m=moveFor(a,'trap');if(m){
         const p=profile(a,m),total=s.walkDistance+d,count=Math.min(p.traps,Math.floor(total/p.deployDistance));
         for(let i=0;i<count;i++){const distance=p.deployDistance-s.walkDistance+i*p.deployDistance,u=Math.min(1,distance/d);deploy(s,oldX+dx*u,oldY+dy*u);}
@@ -519,7 +508,7 @@
     if(G.Game.state==='playing'&&held(this)){
       // The native stopped gate handles ordinary AI after status clocks run.
       // Strong enemies retain attacks; only their position is restrained.
-      if(!strong(this)){const r=oldEnemy.call(this,dt,...args);if(held(this)&&leases.get(this)?.cast.state.moving)this.anim?.loop?.('Walk');return r;}
+      if(!strong(this))return oldEnemy.call(this,dt,...args);
       const x=this.x,y=this.y,result=oldEnemy.call(this,dt,...args);if(held(this)&&alive(this)){this.x=x;this.y=y;}return result;
     }
     return oldEnemy.call(this,dt,...args);
