@@ -72,6 +72,15 @@ def main():
               assert(outside.hp===1e7&&blocked.hp===1e7,'pulse hit outside range or through wall');
               const upgrade=G.Moves.instance(id,5);
               assert(upgrade.pulseDamage>m.pulseDamage&&upgrade.radius>m.radius&&upgrade.pulseInterval<m.pulseInterval,'upgrades do not improve pulse');
+              const tiers=[];
+              for(let rank=1;rank<=5;rank++){
+                const u=G.Moves.instance(id,rank),index=rank-1;
+                const expected={radius:[96,96,108,108,120][index],pulseDamage:[18,22,22,26,32][index],
+                  atkMul:[1.5,1.5,1.65,1.65,1.65][index],speedMul:[1.25,1.25,1.25,1.35,1.35][index],
+                  fieldDuration:[8,9,9,9,10][index],cd:[14,14,14,14,11.9][index]};
+                for(const [key,value] of Object.entries(expected))assert(Math.abs(u[key]-value)<1e-6,'tier '+rank+' '+key+' mismatch: '+u[key]);
+                tiers.push({rank,...expected});
+              }
               const sample=G.NarutoClones.actors[0];
               sample.x=near.x-20;sample.y=near.y;sample.cd=0;
               G.NarutoClones.update(.01);
@@ -97,7 +106,7 @@ def main():
               window.cloakStep=dt=>{G.Game.togglePause();
                 try{G.Combat.updateFields(dt);p.anim.update(dt)}finally{G.Game.togglePause()}
               };
-              return {expectedPulse:expected,actualPulse,clones:8,upgrade:{damage:upgrade.pulseDamage,radius:upgrade.radius,interval:upgrade.pulseInterval},checks:['normal entry','single inherited attack bonus','one pulse despite eight clones','outside range','wall blocking','real basic punch pose','dead clone','dead owner','independent card-clone ownership','tier growth']};
+              return {expectedPulse:expected,actualPulse,clones:8,tiers,upgrade:{damage:upgrade.pulseDamage,radius:upgrade.radius,interval:upgrade.pulseInterval},checks:['normal entry','single inherited attack bonus','one pulse despite eight clones','outside range','wall blocking','real basic punch pose','dead clone','dead owner','independent card-clone ownership','exact tier stats']};
             }""")
             previous = 0
             for age in (0, .15, .35, .7, 7.8, 8.05):
