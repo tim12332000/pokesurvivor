@@ -54,7 +54,9 @@ def main():
     env = dict(os.environ, GIT_INDEX_FILE=str(index),
                GIT_DIR=str(ROOT / '.git'), GIT_WORK_TREE=str(artifact))
     git('read-tree', '--empty', env=env)
-    git('add', '-f', '--all', '--', '.', env=env, cwd=artifact)
+    # Store the verified artifact bytes verbatim, including generated HTML on
+    # Windows; source-checkout newline policy must not alter the public package.
+    git('-c', 'core.autocrlf=false', 'add', '-f', '--all', '--', '.', env=env, cwd=artifact)
     tree = git('write-tree', env=env)
     message = ('Make classic Freeze playable from the existing public entry\n\n'
                'Publish the verified static package from source ' + source + '.\n\n'
