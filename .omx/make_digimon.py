@@ -69,7 +69,7 @@ html = html.replace('<script defer src=".omx/unlimited.js"></script>', '<script 
 html = html.replace(main, '<script defer src=".omx/naruto-skills-en.js"></script>\n' + main, 1)
 # Shikamaru uses an on-demand authored atlas and a separate combat runtime.
 html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src="art-review/shikamaru-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
-html = html.replace(main, '<script defer src=".omx/naruto-shikamaru.js"></script>\n' + main, 1)
+html = html.replace(main, '<script defer src="art-review/shikamaru/reference-shadow-geometry.js"></script>\n<script defer src=".omx/naruto-shikamaru.js"></script>\n' + main, 1)
 # Local previews need the same cache separation as deployed builds. A version
 # on the page URL alone does not invalidate its independently cached scripts.
 def version_asset(match):

@@ -11,6 +11,7 @@ import test_shikamaru_chain as chain
 OUT = base.ROOT / 'art-review/shikamaru/qa/stationary-bind'
 CHECK = r"""() => {
  const A=Acceptance,p=A.p(),S=G.NarutoShikamaru,out=[];
+ A.waitForStationaryBind=e=>{for(let i=0;i<200&&!S.held(e);i++)A.step(.01);A.assert(S.held(e),'controlled tip did not capture within 2s')};
  for(const clone of [false,true])for(const boss of [false,true]){
    A.chainBuild(2,0);
    const actor=clone?G.SelfClones.summon(p):p;
@@ -18,7 +19,9 @@ CHECK = r"""() => {
    const es=[A.spawn(100,0,boss),A.spawn(180,70,boss)];
    actor.target=es[0];
    A.resume();try{A.assert(S.cast(actor,actor.moves.find(m=>m.id==='naruto-shikamaru')),'cast rejected')}finally{A.pause()}
-   A.finish(.7);A.assert(es.every(e=>S.held(e)),'fixture did not complete A-B capture');
+   // Actual tip travel may ease into contact; gate on capture, not old speed.
+   for(let i=0;i<200&&!es.every(e=>S.held(e));i++)A.step(.01);
+   A.assert(es.every(e=>S.held(e)),'fixture did not complete A-B capture within 2s');
    const before=es.map(e=>({x:e.x,y:e.y})),poolBefore=S.shadowVisualFor(actor),clock=S.stateFor(actor).clock;
    for(let i=0;i<20;i++){
      actor.x+=3;actor.y+=1;
@@ -65,7 +68,15 @@ def main():
             report['stationary']=page.evaluate(CHECK)
             report['chainGrowth']=page.evaluate(chain.GROWTH)
             report['chainStopping']=page.evaluate(chain.STOPPING)
-            report['control']=page.evaluate(base.CONTROL)
+            # Retain the contact/DOT/in-flight assertions; old .4s travel is not
+            # a binding rule now that the physical tip accelerates into contact.
+            control=base.CONTROL.replace('A.cast(m);A.finish(.4);A.assert(S.held(e)',
+                'A.cast(m);A.waitForStationaryBind(e);A.assert(S.held(e)')
+            control=control.replace('A.cast(m);A.finish(.4);A.assert(S.held(enemy)',
+                'A.cast(m);A.waitForStationaryBind(enemy);A.assert(S.held(enemy)')
+            assert control.count('A.waitForStationaryBind(')==2
+            report['controlTiming']='Bounded real-contact gate replaces two old fixed .4s waits; all original control assertions retained.'
+            report['control']=page.evaluate(control)
             page.screenshot(path=str(OUT/'entry.png'));browser.close()
         assert not report['errors'],report['errors']
         report['ok']=True

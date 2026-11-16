@@ -21,11 +21,15 @@ vm.runInNewContext(fs.readFileSync('art-review/shikamaru-art.js','utf8'),context
  assert.equal(art.sample('cast',50,'down',pose('release',{kind:'trap',phaseAge:.02,phaseDuration:.22})).key,'frontThrowRelease');
  assert.equal(art.sample('cast',50,'down',pose('release',{kind:'trap',phaseAge:.2,phaseDuration:.22})).key,'frontThrowRecover');
  assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',phaseAge:.05})).key,'frontPrepare');
- assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',phaseAge:.4})).key,'frontCrouch');
+ assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',phaseAge:.4})).key,'frontSeal');
  assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',phaseAge:.8})).key,'frontSeal');
  assert.equal(art.sample('cast',50,'up',pose('finish',{kind:'strangle',phaseAge:.2})).key,'backCrouch');
  assert.equal(art.sample('cast',50,'up',pose('finish',{kind:'strangle',phaseAge:.5})).key,'backSeal');
  assert.equal(art.sample('cast',50,'up',pose('finish',{kind:'shadow',phaseAge:.2})).key,'backIdle');
+ assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',stage:'ground',phaseAge:.05})).key,'frontPrepare');
+ assert.equal(art.sample('cast',50,'down',pose('sewing',{kind:'sewing',stage:'rise',phaseAge:.2})).key,'frontSeal');
+ assert.equal(art.sample('cast',50,'up',pose('sewing',{kind:'sewing',stage:'descent',phaseAge:.5})).key,'backSeal');
+ assert.equal(art.sample('cast',50,'up',pose('sewing',{kind:'sewing',stage:'recover',phaseAge:.2})).key,'backIdle');
  assert.equal(art.sample('hurt',50,'right',pose('net')).key,'hurt');
  const ctx={save(){},restore(){},translate(){},scale(){},drawImage(...args){drawCalls.push(args)}};
  art.draw(ctx,{}, {state:'cast',time:.1,dir:4,pose:pose('drag',{moving:true,aim:0})});

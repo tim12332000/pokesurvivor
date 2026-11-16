@@ -31,7 +31,14 @@
       else if(pose.kind==='trap'&&['prepare','release','recover'].includes(phase))key=named(phase==='prepare'?'throwPrepare':phase==='release'?(phaseProgress<.7?'throwRelease':'throwRecover'):'throwRecover');
       else if(phase==='drag'||phase==='blast'||phase==='recover')key=idle;
       else if(phase==='net')key=named(phaseProgress<.12?'prepare':'seal');
-      else if(phase==='sewing')key=named(phaseProgress<.18?'prepare':phaseProgress<.72?'crouch':phaseProgress<.92?'seal':'idle');
+      else if(phase==='sewing'){
+        // The reference-driven arc leaves from a standing rat seal; its
+        // independent travel must not replay the retired ground-stab crouch.
+        const stage=pose.stage;
+        const recovering=stage==='recover'||stage==='return'||phaseProgress>=.92;
+        const preparing=stage==='ground'?localAge<.1:!stage&&phaseProgress<.18;
+        key=recovering?idle:named(preparing?'prepare':'seal');
+      }
       else if(phase==='finish')key=pose.kind==='strangle'?named(phaseProgress<.35?'crouch':phaseProgress<.86?'seal':'idle'):idle;
       else key=named(phase==='prepare'?'prepare':'seal');
     }
