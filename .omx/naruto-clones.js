@@ -98,9 +98,10 @@
     if (enemy.dead || !valid(a)) return;
     const typeK = G.Types.mult(type, enemy.types), crit = a.owner.critChance > 0 && Math.random() < a.owner.critChance;
     const dmg = base * typeK * G.Weather.mult(type) * (crit ? 1.5 : 1);
-    enemy.hurt(dmg, '#a9dcff', enemy.x - a.x, enemy.y - a.y, knock, crit ? 'crit' : G.Types.label(typeK), a.owner, moveId);
+    const color=G.KyuubiForm?.active(a)?'#ff8155':'#a9dcff';
+    enemy.hurt(dmg, color, enemy.x - a.x, enemy.y - a.y, knock, crit ? 'crit' : G.Types.label(typeK), a.owner, moveId);
     a.owner.onDealt(dmg); a.owner.dmgDealt += dmg;
-    G.DamageSplash?.hit(a.owner, enemy, dmg, '#a9dcff', moveId);
+    G.DamageSplash?.hit(a.owner, enemy, dmg, color, moveId);
   }
   function moveToward(a, x, y, speed, dt) {
     const d = Math.hypot(x - a.x, y - a.y);
@@ -177,7 +178,7 @@
             } else if (!technique && a.cd <= 0 && clearPath(a.x, a.y, e.x, e.y)) {
               a.cd = a.punchCd * (G.Giant?.interval(a.owner) || 1); a.anim.play('Attack', { speed: 1.3 });
               hit(a, e, a.dmg * a.owner.atk, 'fighting');
-              G.FX.spark(e.x, e.y - (e.bodyH || 30) * .5, '#a9dcff', e.x - a.x, e.y - a.y, 3);
+              G.FX.spark(e.x, e.y - (e.bodyH || 30) * .5, G.KyuubiForm?.active(a)?'#ff8155':'#a9dcff', e.x - a.x, e.y - a.y, 3);
             }
           }
         } else {
@@ -203,13 +204,9 @@
   function combo() { return 0; }
   function draw(ctx) {
     const owner=G.Game.player;
-    if(owner&&living(owner).length){
-      ctx.save();ctx.fillStyle='#ffd23f';const y=Math.round(owner.y-owner.bodyH-8),x=Math.round(owner.x);
-      ctx.beginPath();ctx.moveTo(x-5,y-4);ctx.lineTo(x+5,y-4);ctx.lineTo(x,y+2);ctx.closePath();ctx.fill();ctx.restore();
-    }
     for (const a of [...actors].sort((a, b) => a.y - b.y)) {
       if (!valid(a)) continue;
-      const alpha = Math.min(.82, Math.max(0, a.ttl - a.age) * 2);
+      const alpha = Math.min(G.KyuubiForm?.active(a) ? .7 : .82, Math.max(0, a.ttl - a.age) * 2);
       a.anim.draw(ctx, a.x, a.y, { alpha });
       if (a.comboT > 0 && !G.AnimationLab?.enabled) {
         const aim = a.comboAim || 0, x = a.x + Math.cos(aim) * 18, y = a.y - G.LIFT + Math.sin(aim) * 12;
@@ -219,6 +216,11 @@
         ctx.beginPath(); ctx.ellipse(0, 0, 10, 4, 0, 0, TAU); ctx.ellipse(0, 0, 4, 10, 0, 0, TAU); ctx.stroke(); ctx.restore();
       }
     }
+    // Keep the owner's marker above overlapping transformed bodies and tails.
+    if(owner&&living(owner).length){
+      ctx.save();ctx.fillStyle='#ffd23f';const y=Math.round(owner.y-owner.bodyH-8),x=Math.round(owner.x);
+      ctx.beginPath();ctx.moveTo(x-5,y-4);ctx.lineTo(x+5,y-4);ctx.lineTo(x,y+2);ctx.closePath();ctx.fill();ctx.restore();
+    }
     ctx.save(); ctx.fillStyle = '#dfedff';
     for (const p of smoke) { ctx.globalAlpha = .65 * (1 - p.t / p.life); const size = 5 + Math.floor(p.t * 12); ctx.fillRect(Math.round(p.x), Math.round(p.y), size, size); }
     ctx.restore();
@@ -227,7 +229,7 @@
     ctx.save();
     for (const a of actors) if (valid(a)) {
       ctx.globalAlpha = .22; ctx.fillStyle = '#081b3a'; ctx.beginPath(); ctx.ellipse(a.x, a.y, 13, 5, 0, 0, TAU); ctx.fill();
-      ctx.globalAlpha = .25; ctx.strokeStyle = '#83caff'; ctx.strokeRect(Math.round(a.x - 12), Math.round(a.y - 3), 24, 4);
+      ctx.globalAlpha = .25; ctx.strokeStyle = G.KyuubiForm?.active(a)?'#ff8155':'#83caff'; ctx.strokeRect(Math.round(a.x - 12), Math.round(a.y - 3), 24, 4);
     }
     ctx.restore();
   }
