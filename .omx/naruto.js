@@ -1,7 +1,7 @@
 // Naruto crossover registration. Original sheet provenance lives in naruto/sources.json.
 (() => {
   // Public beta roster. Keep all definitions so hidden characters can return later.
-  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011,30012,30013,30014,30015,30016,30017]);
+  const availableDexes=Object.freeze([30001,30002,30006,30007,30009,30010,30011,30012,30013,30014,30015,30016,30017,30018]);
   const available=G.Catalog.isPlayable;
   const t=text=>G.I18n.t(text);
   const version=t('火影 beta 0.01');
@@ -22,22 +22,23 @@
     ['jjk-ryu','Ryu Ishigori','石流龍','咒術迴戰・咒力砲擊',['psychic'],5,165,108],
     ['jjk-uro','Takako Uro','烏鷺亨子','咒術迴戰・天空操術',['psychic','flying'],5,125,132],
     ['madara','Madara Uchiha','宇智波斑','穢土轉生・須佐軍團',['fire','psychic'],5,180,118],
-    ['shikamaru','Shikamaru Nara','奈良鹿丸','疾風傳・影子戰術',['psychic'],4,155,124]
+    ['shikamaru','Shikamaru Nara','奈良鹿丸','疾風傳・影子戰術',['psychic'],4,155,124],
+    ['freeze','Freeze','Freeze','經典 LF2 2.0a・冰之鬥士',['ice'],4,160,122]
   ];
   const records = new Map(), dictionary = {};
   for (const [index,[slug,name,chinese,team,types,rarity,hp,spd]] of roster.entries()) {
-    const dex = 30001 + index, start = slug==='naruto'?'naruto-shadow-clones':slug.startsWith('jjk-')?slug:'naruto-' + slug;
+    const dex = 30001 + index, start = slug==='freeze'?'lf2-iceball':slug==='naruto'?'naruto-shadow-clones':slug.startsWith('jjk-')?slug:'naruto-' + slug;
     const mon = {dex,name,types,hp,spd,atk:1.32,rarity,bst:400+rarity*38,starter:true,gen:11,naruto:true,start};
     G.DEX.push(mon);G.DEX_BY[dex]=mon;
     const starter={dex,start,traits:['valiente','leal']};
     G.STARTERS.push(starter);G.STARTER_BY[dex]=starter;
     // Temari has her own on-demand atlas; no legacy pixel sheet is required.
-    const basePixel=(slug.startsWith('jjk-')||['temari','kimimaro','madara','shikamaru'].includes(slug))?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug];
+    const basePixel=(slug.startsWith('jjk-')||['temari','kimimaro','madara','shikamaru','freeze'].includes(slug))?{frames:{down:[[0,0,32,36]]},animations:{},mirror:[]}:window.PS_NARUTO_SPRITES[slug==='lee'?'rock-lee':slug];
     const pixel=(slug.startsWith('jjk-')||['pain','temari','kimimaro'].includes(slug))?{...basePixel,preview:{source:'.omx/naruto/portraits/'+slug+'.png'+(slug==='kimimaro'?'?v=full-body-1':''),w:96,h:112,ax:48,ay:110}}:basePixel,image=new Image();
     const geometry={w:32,h:36,ax:16,ay:36,n:1,r:1,d:[24]};
     G.SPRITE_META[dex]={s:1,sh:false,a:Object.fromEntries(G.Sprites.ANIMS.map(anim=>{
       const action=pixel.animations?.[anim];
-      const authored=slug.startsWith('jjk-')||['temari','kimimaro','madara','shikamaru'].includes(slug);
+      const authored=slug.startsWith('jjk-')||['temari','kimimaro','madara','shikamaru','freeze'].includes(slug);
       const count=slug==='kimimaro'?({Idle:2,Walk:3,Hurt:2,Faint:2}[anim]||4):authored?4:anim==='Walk'?4:action?Math.max(...Object.values(action.frames).map(frames=>frames.length)):1;
       const duration=slug==='kimimaro'?({Idle:12,Walk:7,Hurt:6,Faint:9}[anim]||6):authored?(anim==='Idle'?12:anim==='Faint'?9:6):anim==='Walk'?8:action?(action.duration||7):24;
       return [anim,{...geometry,n:count,d:action?.durations||Array(count).fill(duration)}];
@@ -46,6 +47,7 @@
     let loading;
     Object.defineProperty(record,'loaded',{get(){
       if(record.ready)return Promise.resolve(true);
+      if(slug==='freeze')return G.LF2Art.load().then(()=>{record.ready=true;return true;});
       if(slug==='shikamaru')return G.ShikamaruArt.load().then(()=>{record.ready=true;return true;});
       if(slug==='madara')return G.MadaraArt.ready.then(()=>{record.ready=true;return true;});
       if(slug.startsWith('jjk-'))return G.JujutsuArt.load(dex).then(()=>{record.ready=true;return true;});
@@ -112,6 +114,13 @@
       if(!record)return super.draw(ctx,x,y,opts);
       const pixel=record.pixel;
       const ui=previews.has(ctx.canvas);
+      if(this.dex===30018){
+        if(!record.ready){void record.loaded;return;}
+        const actor=G.Game.player?.anim===this?G.Game.player:[...(G.SelfClones?.actors?.()||[]),...(G.Coop?.puppets?.()||[])].find(a=>a.anim===this);
+        const pose=actor?G.LF2Freeze?.pose(actor):null;
+        const state=actor?.dead||this.cur==='Faint'?'faint':actor?.flash>0||this.cur==='Hurt'?'hurt':pose?'cast':this.cur==='Walk'?'walk':'idle';
+        G.LF2Art.draw(ctx,actor||{},{x,y,height:ui?Math.min(ctx.canvas.height*.78,ctx.canvas.width*.75):64*this.scale,state,time:pose?.age??(this.frame*6+this.t)/60,dir:this.dir,pose,flash:opts.flash,alpha:opts.alpha??1});return;
+      }
       if(this.dex===30017){
         if(!record.ready){void record.loaded;return;}
         const actor=G.Game.player?.anim===this?G.Game.player:[...(G.SelfClones?.actors?.()||[]),...(G.Coop?.puppets?.()||[])].find(a=>a.anim===this);
@@ -235,7 +244,7 @@
   picker.innerHTML=`<div class="box"><div class="naruto-heading"><div><h2>跨界角色</h2><p class="naruto-version">${version}</p><p class="sub">選擇角色，展開生存挑戰。</p></div><button id="naruto-close" class="btn small ghost">返回</button></div>
     <div class="naruto-actions"><button id="naruto-to-digimon" class="btn small">數碼寶貝</button></div>
     <div class="naruto-grid"></div><p class="note">${availableDexes.length} 位忍者・招式為生存玩法改編・存檔保存在此瀏覽器</p>
-    <p class="note">角色動畫使用本專案重繪素材；動作研究參考 <a href="https://spritedatabase.net/game/55" target="_blank" rel="noopener noreferrer">Ninja Council 3</a>。角色權利屬原權利人。</p></div>`;
+    <p class="note">火影／咒術角色使用本專案重繪素材；LF2 Freeze 使用經典 2.0a 像素素材。動作研究參考 <a href="https://spritedatabase.net/game/55" target="_blank" rel="noopener noreferrer">Ninja Council 3</a>／<a href="https://lf2.net/" target="_blank" rel="noopener noreferrer">Little Fighter 2</a>。角色權利屬原權利人。</p></div>`;
   document.body.append(picker);
   const grid=picker.querySelector('.naruto-grid');
   const hideOverlays=()=>['scr-naruto','scr-naruto-skills','scr-digimon','scr-digimon-skills'].forEach(id=>document.getElementById(id)?.classList.add('hidden'));
@@ -295,12 +304,13 @@
     30013:['雙人連打・里香共鳴','里香常駐追擊，顯現巨大化接雙人連打；十二級可學協戰共鳴終擊。'],
     30014:['升空索敵・蓄能爆發','普通砲命中蓄能，接續全力砲；散射砲升空迴旋後遠距追敵，圓環砲繞身迎擊，固定爆破對付敵群。'],
     30017:['多重捕捉・苦無連投','固定光向的腳底投影，多條影子同時鎖住敵群，再朝各目標連投真實飛行的苦無；影縫由已捕地影高拱回落穿身。'],
+    30018:['經典 LF2・冰之鬥士','冰波凍住前方敵人，召出冰劍近戰；三連冰柱沿路升起，再以冰旋風捲走敵潮。採用舊版 LF2 2.0a 的像素動作，招式自動施放。'],
     30016:['穢土斑・須佐軍團','開局兩名常駐木分身，升階擴軍、全軍披上須佐；本體蓄勢展開完全體，雙隕石壓境。'],
     30015:['巨幅裂面・反擊連鎖','連續碎面與巨型裂區壓制敵潮，真反射接獨立反擊；十二級可學裂面殘響。']
   };
   const learning=document.createElement('div');learning.className='launch-kit';learning.hidden=true;
   learning.setAttribute('aria-label','特色技能學習進程');detail.querySelector('.launch-description').after(learning);
-  const kitLabels={30016:['體術','火幕','須佐','隕石','木分身'],30013:['刀斬','里香','咒言','純愛砲','顯現','共鳴'],30014:['額砲','散射','圓環','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落','殘響']};
+  const kitLabels={30018:['冰波','冰劍','冰柱','冰旋風'],30016:['體術','火幕','須佐','隕石','木分身'],30013:['刀斬','里香','咒言','純愛砲','顯現','共鳴'],30014:['額砲','散射','圓環','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落','殘響']};
   let learningDex;
   let previewDex;
   const syncQuickPick=()=>{
@@ -318,7 +328,7 @@
     detail.querySelector('.launch-name').textContent=isNaruto?record.chinese:'';
     detail.querySelector('.launch-role').textContent=isNaruto?roles[selected]?.[0]||record.team:'';
     detail.querySelector('.launch-description').textContent=isNaruto?roles[selected]?.[1]||'選好角色，準備出發。':'';
-    const kit=+selected===30017?[30017,['naruto-shikamaru',...(G.NarutoSkillCatalog?.extraPools.get(30017)||[])].map(id=>{const d=G.Moves.BY_ID[id];return [id,d?.digiMode,d?.name,d?.type,d?.learnLevel||1];})]:+selected===30016?G.NarutoMadara?.kit:G.Jujutsu?.kits.find(([dex])=>dex===+selected);
+    const kit=+selected===30018?G.LF2?.kit:+selected===30017?[30017,['naruto-shikamaru',...(G.NarutoSkillCatalog?.extraPools.get(30017)||[])].map(id=>{const d=G.Moves.BY_ID[id];return [id,d?.digiMode,d?.name,d?.type,d?.learnLevel||1];})]:+selected===30016?G.NarutoMadara?.kit:G.Jujutsu?.kits.find(([dex])=>dex===+selected);
     learning.hidden=!kit;
     if(kit&&learningDex!==selected){
       learning.dataset.skillCount=String(kit[1].length);learning.style.setProperty('--kit-columns',String(kit[1].length));
@@ -344,7 +354,7 @@
   document.getElementById('btn-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').onclick=G.Digimon.openPicker;
   document.getElementById('naruto-to-digimon').hidden=!G.Digimon.enabled;
-  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位角色：鳴人、佐助、小李、我愛羅、天天、沛恩六道、手鞠、君麻呂、乙骨憂太、石流龍、烏鷺亨子、宇智波斑、奈良鹿丸。`;
+  picker.querySelector('.naruto-grid + .note').textContent=`${availableDexes.length} 位角色：鳴人、佐助、小李、我愛羅、天天、沛恩六道、手鞠、君麻呂、乙骨憂太、石流龍、烏鷺亨子、宇智波斑、奈良鹿丸、Freeze 冰人。`;
   document.getElementById('naruto-close').onclick=()=>{hideOverlays();G.Flow.goMenu();};
   const nav=document.createElement('button');nav.id='btn-naruto';nav.className='btn small gold';nav.textContent='跨界角色';nav.translate=true;nav.onclick=openPicker;
   document.getElementById('btn-settings').before(nav);

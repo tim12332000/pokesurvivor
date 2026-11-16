@@ -545,6 +545,26 @@ G.Audio = (() => {
     try { fn(opts); } catch (e) { /* un efecto nunca debe romper el juego */ }
   }
 
+  // Recorded effects use the same SFX bus, mute controls and recording stream.
+  const sampleBuffers = new Map();
+  async function sample(url, { gain = 1, guard = () => true } = {}) {
+    if (!ctx || settings.muted || settings.sfx <= 0 || ctx.state !== 'running' || !guard()) return null;
+    const context = ctx;
+    try {
+      if (!sampleBuffers.has(url)) sampleBuffers.set(url, fetch(url).then(response => {
+        if (!response.ok) throw new Error('Audio sample ' + response.status);
+        return response.arrayBuffer();
+      }).then(bytes => context.decodeAudioData(bytes)));
+      const buffer = await sampleBuffers.get(url);
+      if (ctx !== context || settings.muted || settings.sfx <= 0 || ctx.state !== 'running' || !guard()) return null;
+      const source = context.createBufferSource(), level = context.createGain();
+      source.buffer = buffer; level.gain.value = Math.max(0, Math.min(1, gain));
+      source.connect(level).connect(sfxBus);
+      source.onended = () => { source.disconnect(); level.disconnect(); };
+      source.start(); return source;
+    } catch { sampleBuffers.delete(url); return null; }
+  }
+
   /** Para pruebas: mide pico y RMS de la salida durante `ms` milisegundos. */
   function debugMeter(ms = 2000) {
     if (!ctx) return Promise.resolve(null);
@@ -580,7 +600,7 @@ G.Audio = (() => {
   }
 
   return {
-    music, sfx, setVolume, toggleMute, unlock, debugMeter, debugStream,
+    music, sfx, sample, setVolume, toggleMute, unlock, debugMeter, debugStream,
     /** ¿Ya puede sonar? (el navegador sólo deja tras tocar algo, salvo excepciones) */
     canPlay() { return !!ctx && ctx.state === 'running'; },
     get settings() { return settings; },
