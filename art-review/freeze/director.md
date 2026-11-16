@@ -31,3 +31,7 @@ Scope follows the user's original-feeling first version: classic LF2 2.0a Freeze
 No physical-phone endurance, multiplayer network run, subjective sound assessment or human-player fun approval claimed. Natural runs establish the first original-special loop, not a full30-minute endurance session. LF2 asset provenance/rights are separate from project/community engine code licenses.
 
 Stop adding mechanics or broadening QA unless a new concrete defect appears. Proceed with authorized publication and close its public-verification gate using observed evidence.
+
+## 公開閘門完成
+
+主代理已完成34個公開檔byte核對，以及公開桌機／390手機視窗全新Lv1開局，無錯誤或缺失資源。見 publishing.md。產品與發布均完成；實體手機、多人与真人聲音聽評仍屬明示未驗項目。
