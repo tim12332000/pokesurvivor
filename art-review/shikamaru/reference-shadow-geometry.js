@@ -36,7 +36,7 @@
     if(dex===30017){
       const art=G.ShikamaruArt;if(!art?.loaded)return null;
       const pose=G.NarutoShikamaru?.activeFor(actor),state=actor.dead||anim.cur==='Faint'?'faint':actor.flash>0||anim.cur==='Hurt'?'hurt':pose?'cast':anim.cur==='Walk'?'walk':'idle';
-      const time=pose?.age??(anim.frame*6+anim.t)/60,dir=pose&&!(pose.moving&&['drag','net','blast','finish','recover','sewing'].includes(pose.phase))&&Number.isFinite(pose.aim)?G.Sprites.dirFromAngle(pose.aim):anim.dir;
+      const time=pose?.age??(anim.frame*6+anim.t)/60,dir=pose&&!(pose.moving&&(pose.kind==='mass'||['drag','net','blast','finish','recover','sewing'].includes(pose.phase)))&&Number.isFinite(pose.aim)?G.Sprites.dirFromAngle(pose.aim):anim.dir;
       const frame=art.sample(state,time,dir,pose);if(!frame)return null;
       image=art.images.body;rect=frame.rect;anchor=frame.anchor;k=64*(anim.scale||1)/frame.bodyHeight;mirror=frame.direction==='left';key='shika:'+frame.key+':'+frame.direction+':'+k;url=frame.source;
     }else{

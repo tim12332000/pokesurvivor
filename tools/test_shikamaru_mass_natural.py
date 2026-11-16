@@ -11,7 +11,7 @@ import time
 from playwright.sync_api import sync_playwright
 import test_shikamaru as base
 
-OUT = base.ROOT / 'art-review/shikamaru/qa/mass/self-natural'
+OUT = base.ROOT / 'art-review/shikamaru/qa/mass/conduction/natural'
 SOURCE = '.omx/naruto-shikamaru-mass.js'
 
 OBSERVE = r'''() => {
@@ -21,12 +21,12 @@ OBSERVE = r'''() => {
  const show=G.RunUI.showLevelUp;
  G.RunUI.showLevelUp=function(level,list,cb,...args){const offer={serial:Q.offers.length+1,time:G.Game.st.time,level,options:list.map(c=>({key:c.key,type:c.type,title:c.title,desc:c.desc}))};Q.offers.push(offer);Q.offer=offer;return show.call(this,level,list,c=>{const before=Q.snapshot();cb(c);Q.ledger.push({time:G.Game.st.time,level,key:c.key,before,after:Q.snapshot()});Q.offer=null},...args)};
  const hurt=G.Enemy.prototype.hurt;
- G.Enemy.prototype.hurt=function(...args){const hp=this.hp,p=G.Game.player,b=M.stateFor(p)?.cast,result=hurt.apply(this,args);if(args[6]===p&&args[7]==='naruto-shikamaru-mass'&&this.hp<hp)Q.mainHits.push({time:G.Game.st.time,targetId:this.id,hpBefore:hp,hpAfter:this.hp,loss:hp-this.hp,raw:args[0],cast:M.stateFor(p)?.casts,castAge:b?.age,blastAt:b?.blastAt,center:b?{...b.center}:null});return result};
+ G.Enemy.prototype.hurt=function(...args){const hp=this.hp,p=G.Game.player,b=M.stateFor(p)?.cast,result=hurt.apply(this,args);if(args[6]===p&&args[7]==='naruto-shikamaru-mass'&&this.hp<hp)Q.mainHits.push({stage:b?.exploded?'bomb':'shock',time:G.Game.st.time,targetId:this.id,hpBefore:hp,hpAfter:this.hp,loss:hp-this.hp,raw:args[0],cast:M.stateFor(p)?.casts,castAge:b?.age,blastAt:b?.blastAt,center:b?{...b.center}:null});return result};
  const draw=G.Combat.drawAirFields;
  G.Combat.drawAirFields=function(ctx){const result=draw.call(this,ctx),p=G.Game.player,s=p&&M.stateFor(p),b=s?.cast;if(!b)return result;
   if(!Q.casts.some(c=>c.serial===s.casts))Q.casts.push({serial:s.casts,time:G.Game.st.time,level:p.level,center:{...b.center},origin:{...b.origin},profile:{...b.spec},releaseAt:b.releaseAt,duration:b.duration,blastAt:b.blastAt});
-  if(b){const active=M.casts.includes(b),keys=[];if(b.age>=b.spec.prepare&&b.age<b.full)keys.push('straight-stabs');if(b.age>=b.full&&b.age<b.throwAt)keys.push('all-bound');if(b.age>=b.throwAt+.15&&b.age<b.landAt)keys.push('bomb-flight');if(b.age>=b.blastAt+.1&&b.age<b.blastAt+.4)keys.push('blast');if(!active&&b.age>=b.duration&&Q.mainHits.some(h=>h.cast===s.casts)){keys.push('full-release');Q.completed=true;Q.completeCast={serial:s.casts,age:b.age,duration:b.duration,releaseAt:b.releaseAt,remainingBound:b.bound.size,active};}
-   for(const key of keys)if(!seen.has(s.casts+'-'+key)){seen.add(s.casts+'-'+key);const state={key,serial:s.casts,snapshot:Q.snapshot(),castAge:b.age,center:{...b.center},radius:b.radius,rays:[...b.rays.values()].map(r=>({targetId:r.target.id,source:{...r.source},tip:{...r.current},hit:r.hit,contact:r.contact,boundAt:r.boundAt})),bound:b.bound.size,bomb:b.bomb?{source:{...b.bomb.source},aim:b.bomb.aim}:null,exploded:b.exploded};queueMicrotask(()=>Q.frames.push({...state,png:ctx.canvas.toDataURL()}))}
+  if(b){const active=M.casts.includes(b),keys=[];if(b.age>=b.spec.prepare&&b.age<b.full)keys.push('straight-stabs');if(b.age>=b.full&&b.conductAt!==null&&b.age<b.conductAt)keys.push('all-bound');if([...b.rays.values()].some(r=>r.shocks.some(p=>!p.done&&p.progress>0)))keys.push('current-travel');if([...b.rays.values()].some(r=>r.shockEvents.length))keys.push('current-hit');if(b.age>=b.throwAt+.15&&b.age<b.landAt)keys.push('bomb-flight');if(b.age>=b.blastAt+.1&&b.age<b.blastAt+.4)keys.push('blast');if(!active&&b.age>=b.duration&&Q.mainHits.some(h=>h.cast===s.casts)){keys.push('full-release');Q.completed=true;Q.completeCast={serial:s.casts,age:b.age,duration:b.duration,releaseAt:b.releaseAt,remainingBound:b.bound.size,active};}
+   for(const key of keys)if(!seen.has(s.casts+'-'+key)){seen.add(s.casts+'-'+key);const state={key,serial:s.casts,snapshot:Q.snapshot(),castAge:b.age,center:{...b.center},radius:b.radius,rays:[...b.rays.values()].map(r=>({targetId:r.target.id,source:{...r.source},tip:{...r.current},hit:r.hit,contact:r.contact,boundAt:r.boundAt,shocks:r.shocks.map(p=>({...p})),shockEvents:r.shockEvents.map(e=>({...e,point:{...e.point}}))})),bound:b.bound.size,bomb:b.bomb?{source:{...b.bomb.source},aim:b.bomb.aim}:null,exploded:b.exploded};queueMicrotask(()=>Q.frames.push({...state,png:ctx.canvas.toDataURL()}))}
   }
   return result;
  };
@@ -102,7 +102,7 @@ def main():
             video = page.video;context.close();video.save_as(str(OUT/'native-growth.webm'));video.delete();browser.close()
         report['ok'] = (report['initial']['level'] == 1 and
                         any(c['key']=='new:naruto-shikamaru-mass' and c['level']>=6 for c in report['ledger']) and
-                        len(report['mainHits'])>0 and report['completed'] and
+                        any(h['stage']=='shock' for h in report['mainHits']) and report['completed'] and
                         report['completeCast']['remainingBound']==0 and not report['errors'])
         assert report['ok'], {'final':report['final'],'ledger':report['ledger'],'mainHits':len(report['mainHits']),'complete':report['completed']}
         print('Fresh Lv1 mass learn, main-player blast and full native release PASS',flush=True)

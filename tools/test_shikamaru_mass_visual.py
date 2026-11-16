@@ -6,17 +6,17 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 import test_shikamaru as base
 
-OUT=base.ROOT/'art-review/shikamaru/qa/mass/self-native'
+OUT=base.ROOT/'art-review/shikamaru/qa/mass/conduction/native'
 SETUP=r'''() => {
  const A=Acceptance,p=A.p(),M=G.NarutoShikamaruMass;
  A.massScene=()=>{A.reset();p.statsTaken={};p.level=6;p.moves=[G.Moves.instance('naruto-shikamaru')];const card=G.LevelUp.offer(p,1000).find(c=>c.key==='new:naruto-shikamaru-mass');A.assert(card&&card.apply(p)!==false,'Lv6 actual mass card unavailable');
  const es=Array.from({length:18},(_,i)=>A.spawn(Math.cos(i*2.4)*(55+i*7),Math.sin(i*2.4)*(55+i*7),i===0));p.target=es[0];return es};
  window.MassFrames=[];window.MassSeen=new Set();window.MassTimeline=[];let last=-1;
  const draw=G.Combat.drawAirFields;G.Combat.drawAirFields=function(ctx){const result=draw.call(this,ctx),b=M.stateFor(p)?.cast;if(!b)return result;
- const key=b.age<b.spec.prepare?'seal':b.age<b.full?'stabbing':b.age<b.throwAt?'bind':b.age<b.landAt?'bomb-flight':b.age<b.blastAt?'fuse':b.age<b.blastAt+.12?'blast':b.age<b.blastAt+.4?'blast-middle':b.age<b.releaseAt?'hold-after-blast':'release';
- const sample=()=>({key,age:b.age,radius:b.radius,rays:[...b.rays.values()].map(r=>({targetId:r.target.id,source:{...r.source},tip:{...r.current},hit:r.hit,contact:r.contact,boundAt:r.boundAt})),bound:b.bound.size,center:{...b.center},origin:{...b.origin},bomb:b.bomb?JSON.parse(JSON.stringify(b.bomb)):null,exploded:b.exploded,contacts:M.stateFor(p).contacts.slice(),pose:G.NarutoShikamaru.activeFor(p)});
+ const electricHits=[...b.rays.values()].reduce((n,r)=>n+r.shockEvents.length,0);const key=b.age<b.spec.prepare?'seal':b.age<b.full?'stabbing':b.age<b.throwAt?(b.conductAt!==null&&b.age>=b.conductAt?(!electricHits?'electric-travel':electricHits<b.initialTargets.size*2?'electric-hit':'electric-late'):'bind'):b.age<b.landAt?'bomb-flight':b.age<b.blastAt?'fuse':b.age<b.blastAt+.12?'blast':b.age<b.blastAt+.4?'blast-middle':b.age<b.releaseAt?'hold-after-blast':'release';
+ const sample=()=>{const pose=G.NarutoShikamaru.activeFor(p);return {key,age:b.age,radius:b.radius,rays:[...b.rays.values()].map(r=>({targetId:r.target.id,source:{...r.source},tip:{...r.current},hit:r.hit,contact:r.contact,boundAt:r.boundAt,visual:M.rayVisualFor(b,r),shocks:r.shocks.map(p=>({...p})),shockEvents:r.shockEvents.map(e=>({...e,point:{...e.point}}))})),bound:b.bound.size,center:{...b.center},origin:{...b.origin},bomb:b.bomb?JSON.parse(JSON.stringify(b.bomb)):null,exploded:b.exploded,contacts:M.stateFor(p).contacts.slice(),pose:pose?{kind:pose.kind,phase:pose.phase,age:pose.age,phaseAge:pose.phaseAge,phaseDuration:pose.phaseDuration,aim:pose.aim,moving:pose.moving}:null};};
  if(b.age-last>.08){MassTimeline.push(sample());last=b.age;}
- const delayed=(key==='stabbing'&&b.age<b.spec.prepare+.1)||(key==='bomb-flight'&&b.age<b.throwAt+.2)||(key==='release'&&b.age<b.releaseAt+.15);
+ const delayed=(key==='stabbing'&&b.age<b.spec.prepare+.1)||(key==='electric-travel'&&b.age<b.conductAt+.1)||(key==='bomb-flight'&&b.age<b.throwAt+.2)||(key==='release'&&b.age<b.releaseAt+.15);
  if(!delayed&&!MassSeen.has(key)){MassSeen.add(key);const state=sample();queueMicrotask(()=>MassFrames.push({...state,png:ctx.canvas.toDataURL()}))}return result;};
 }'''
 
@@ -33,9 +33,11 @@ def main():
             if width<600:base.URL=saved.replace('&layout=wide','')
             try:base.boot(page)
             finally:base.URL=saved
+            page.evaluate('window.MassVisualWarm=Acceptance.spawn(1000,1000)')
+            page.wait_for_function('!!G.ShikamaruReferenceGeometry.bodyFor(MassVisualWarm)')
             page.evaluate(SETUP);page.evaluate('Acceptance.massScene();Acceptance.resume()')
             page.wait_for_function('MassSeen.has("release")',timeout=20000)
-            page.evaluate('Acceptance.pause()');data=page.evaluate('({frames:MassFrames,timeline:MassTimeline,stats:{casts:G.NarutoShikamaruMass.stateFor(Acceptance.p()).casts,hits:G.NarutoShikamaruMass.stateFor(Acceptance.p()).hits}})')
+            page.evaluate('Acceptance.pause()');data=page.evaluate('({frames:MassFrames,timeline:MassTimeline,stats:{casts:G.NarutoShikamaruMass.stateFor(Acceptance.p()).casts,hits:G.NarutoShikamaruMass.stateFor(Acceptance.p()).hits,shockHits:G.NarutoShikamaruMass.stateFor(Acceptance.p()).shockHits,bombHits:G.NarutoShikamaruMass.stateFor(Acceptance.p()).bombHits}})')
             for frame in data['frames']:
                 png=frame.pop('png');name=frame['key']+'.png';(folder/name).write_bytes(base64.b64decode(png.split(',',1)[1]));frame['image']=name
             report['viewports'][label]=data
