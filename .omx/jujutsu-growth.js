@@ -14,11 +14,13 @@
   }
   function vector(p,m){
     const mode=m.digiMode||'',i=rank(m)-1;
+    if(mode==='shikamaru-mass'&&G.NarutoShikamaruMass){const profile=G.NarutoShikamaruMass.profile(p,m);return {圓區半徑:profile.radius,拘束秒數:profile.bindDuration};}
     if(mode.startsWith('shikamaru-')&&G.NarutoShikamaru){
       if(mode==='shikamaru-tactics')return null;
       const pfile=G.NarutoShikamaru.profile(p,m);
       if(mode==='shikamaru-trap')return {札位容量:pfile.traps,每札爆破輪次:pfile.blastRounds,爆破半徑:pfile.radius};
       if(mode==='shikamaru-sewing')return {高拱穿刺輪次:pfile.pulses};
+      if(mode==='shikamaru-checkmate')return {詰將連刺輪次:pfile.pulses,終局爆破半徑:pfile.blastRadius,終局爆破倍率:pfile.blastScale};
       if(mode==='shikamaru-strangle')return {收緊目標:pfile.chainTargets,收緊波次:pfile.pulses};
       return {同時捕捉:pfile.branches,每目標苦無:pfile.kunaiRounds,捕捉射程:pfile.range};
     }
@@ -133,6 +135,7 @@
       const id=card.key.slice(3),m=p.moves.find(m=>m.id===id);
       if(m?.digiMode?.startsWith('shikamaru-')&&G.NarutoShikamaru){
         const next=G.Moves.instance(id,m.lvl+1),metrics=(owner,move)=>{
+          if(move.digiMode==='shikamaru-mass'&&G.NarutoShikamaruMass){const profile=G.NarutoShikamaruMass.profile(owner,move);return {爆破傷害:profile.damage,圓區半徑:profile.radius,拘束秒數:profile.bindDuration};}
           if(move.digiMode==='shikamaru-tactics'){
             const probe=Object.create(owner);probe.moves=owner.moves.map(x=>x.id===move.id?move:x);
             const shadow=probe.moves.find(x=>x.digiMode==='shikamaru-shadow')||G.Moves.instance('naruto-shikamaru');

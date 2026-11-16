@@ -27,7 +27,7 @@
     else if(state==='faint'||state==='death')key=age<.22?'exhausted':'faint';
     else if(phase){
       const moving=!!pose.moving;
-      if(moving&&['drag','net','blast','finish','recover','sewing'].includes(phase))key=prefix?prefix+'Run'+(1+Math.floor(age*10)%2):'run'+(1+Math.floor(age*10)%2);
+      if(moving&&['drag','net','blast','finish','recover','sewing','checkmate'].includes(phase))key=prefix?prefix+'Run'+(1+Math.floor(age*10)%2):'run'+(1+Math.floor(age*10)%2);
       else if(pose.kind==='trap'&&['prepare','release','recover'].includes(phase))key=named(phase==='prepare'?'throwPrepare':phase==='release'?(phaseProgress<.7?'throwRelease':'throwRecover'):'throwRecover');
       else if(phase==='drag'||phase==='blast'||phase==='recover')key=idle;
       else if(phase==='net')key=named(phaseProgress<.12?'prepare':'seal');
@@ -39,6 +39,7 @@
         const preparing=stage==='ground'?localAge<.1:!stage&&phaseProgress<.18;
         key=recovering?idle:named(preparing?'prepare':'seal');
       }
+      else if(phase==='checkmate')key=named(phaseProgress<.15?'prepare':phaseProgress<.8?'seal':'throwRelease');
       else if(phase==='finish')key=pose.kind==='strangle'?named(phaseProgress<.35?'crouch':phaseProgress<.86?'seal':'idle'):idle;
       else key=named(phase==='prepare'?'prepare':'seal');
     }
@@ -63,7 +64,7 @@
     if(!options){options=actor;actor={};}
     if(!api.loaded){void load().catch(()=>{});return false;}
     const pose=options.pose??G.NarutoShikamaru?.activeFor?.(actor),state=options.state||'idle';
-    const frame=sample(state,options.time??pose?.age??0,pose&&!(pose.moving&&['drag','net','blast','finish','recover','sewing'].includes(pose.phase))&&Number.isFinite(pose.aim)?G.Sprites.dirFromAngle(pose.aim):(options.dir??actor.anim?.dir??0),pose);
+    const frame=sample(state,options.time??pose?.age??0,pose&&!(pose.moving&&['drag','net','blast','finish','recover','sewing','checkmate'].includes(pose.phase))&&Number.isFinite(pose.aim)?G.Sprites.dirFromAngle(pose.aim):(options.dir??actor.anim?.dir??0),pose);
     return !!frame&&paint(ctx,frame,options);
   }
   const api={loaded:false,load,sample,draw,get ready(){return load();},get metadata(){return metadata;},get images(){return images;}};

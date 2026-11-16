@@ -325,7 +325,7 @@
       learning.replaceChildren(...kit[1].map(([id,,,,level],index)=>{
         const cell=document.createElement('span'),label=document.createElement('b'),stage=document.createElement('small');
         cell.title=`Lv.${level} ${G.Moves.BY_ID[id].name}`;cell.innerHTML=G.Icons.html('move:'+id,22);
-        label.textContent=+selected===30017?({'naruto-shikamaru':'影模仿','naruto-shikamaru-sewing':'影縫','naruto-shikamaru-trap':'起爆札','naruto-shikamaru-tactics':'影術精修','naruto-shikamaru-strangle':'影首縛'}[id]||G.Moves.BY_ID[id].name):kitLabels[selected][index];stage.textContent=`Lv.${level}`;cell.append(label,stage);return cell;
+        label.textContent=+selected===30017?({'naruto-shikamaru':'影模仿','naruto-shikamaru-sewing':'影縫','naruto-shikamaru-trap':'起爆札','naruto-shikamaru-tactics':'影術精修','naruto-shikamaru-strangle':'影首縛','naruto-shikamaru-checkmate':'詰將','naruto-shikamaru-mass':'大捕縛'}[id]||G.Moves.BY_ID[id].name):kitLabels[selected][index];stage.textContent=`Lv.${level}`;cell.append(label,stage);return cell;
       }));
       learningDex=selected;
     }
