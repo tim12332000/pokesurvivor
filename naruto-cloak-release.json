@@ -1,0 +1,21 @@
+{
+  "sourceCommit": "e26551ecdb3cd77a69819195c65bd38b22764276",
+  "feature": "rasenshuriken-growth-orange-and-tripled-cloak",
+  "sha256": {
+    ".omx/digimon.html": "40e6d06d73e1afbf71315acd320c6ec4fec1675ec5d1e3ef33c433fcd9bd9201",
+    ".omx/portrait.html": "2ee4716215f28acd8bf4999670a24e9cb6e1d1b266eb0b27a237b573a1395b34",
+    "art-review/kyuubi-form.js": "57296707f33d90f2077b4686dcdb3f29f41e616432b9d6d4de099cfa6788064a",
+    "art-review/kyuubi-frames.json": "72dab6274d8b9f84ebac175345bd6cd650ad25388fc9a7c4df6da639649a2b13",
+    "art-review/redrawn/one-tail-v2.png": "d775a6300516d5a6cfb9e3036fb032bb0a5117542d696e8c1559e230073cc9d9",
+    "art-review/redrawn/one-tail-vertical-v1.png": "b4ff9cf65b4e0ac40a5752e86c3cb8a1917a4486369cf7592d603066623f87b9",
+    ".omx/naruto-clones.js": "670cf3b76ec16349742ffaa155933c873a9ec2ae8d449ed7dcce34c123d80977",
+    ".omx/naruto-support.js": "cf3754461200d5540097c65aa0a920dd229e4335bf42aca9fa3a4bd47bb94ed9",
+    ".omx/naruto-skills.js": "8b62003f6254a0e2538327195d569a0a58717828e497ce592a63be15ca1e07b2",
+    ".omx/naruto-skills-en.js": "e4c1049581fab9a2582fa96d7a9bba87e7f3e7a81a02bf8b720829502aa1a950",
+    ".omx/naruto-rasengan-vfx.js": "f3ed159cf903bc1e821b2011addde7f1f88dcfd6f166bdde50b138975bb41575",
+    ".omx/naruto-shikamaru.js": "a7f9f11afdc15507d2ea4582c73b3de9066d8f3289ea6f38ae8edc93fa775340",
+    ".omx/redrawn-init.js": "953c1a456a59d52ee1d2357e85026ed9c7a93356dc98696d358947d6f6af6b50",
+    ".omx/digimon-skill-combat.js": "9c7ecae1e497cd5e0afe95658a3521fde6184040bede3c2eb308672af5d79438",
+    ".omx/naruto-rasenshuriken-vfx.js": "41eca06da1a69261cb648e43778c20352e3b5796a6c4ce9de66cede83221bf98"
+  }
+}

@@ -11,7 +11,7 @@
     byakugan: { fieldDuration: 5, radius: 280, damageMul: 1.2 },
     'sand-shield': { fieldDuration: 8, shieldAmount: 45, cd: 12 },
     'earth-wall': { fieldDuration: 3, width: 100, range: 72 },
-    'nine-tails-cloak': { fieldDuration:8, atkMul:1.5, speedMul:1.25, damageTakenMul:.75, radius:96, pulseDamage:18, pulseInterval:.65, knock:18 }
+    'nine-tails-cloak': { fieldDuration:24, atkMul:1.5, speedMul:1.25, damageTakenMul:.75, radius:96, pulseDamage:18, pulseInterval:.65, knock:18 }
   };
   const valid = f => controlled(f.owner) && f.world === G.World && !f.owner.dead && f.owner.hp > 0;
   const active = (owner, mode) => effects.find(f => f.owner === owner && f.mode === mode && valid(f));
@@ -52,7 +52,7 @@
     for (const list of [effects, locks]) for (let i = list.length - 1; i >= 0; i--) if (!valid(list[i])) list.splice(i, 1);
     if (effects.length >= 16) return false;
     const mode = move.digiMode, m = { ...defaults[mode], ...move };
-    const f = { owner, world: G.World, mode, m, age: 0, ttl: Math.max(.1, Math.min(12, finite(m.fieldDuration, 3))), tick: 0 };
+    const f = { owner, world: G.World, mode, m, age: 0, ttl: Math.max(.1, Math.min(mode==='nine-tails-cloak'?60:12, finite(m.fieldDuration, 3))), tick: 0 };
     if (mode === 'medical-heal') owner.heal(owner.maxHp * Math.min(.35, Math.max(0, finite(m.healFraction, .22))));
     if (mode === 'sharingan') { f.dodges = 1; f.attackReady = true; }
     if (mode === 'sand-shield') f.shield = f.capacity = Math.max(1, finite(m.shieldAmount, 45));

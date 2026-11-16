@@ -45,12 +45,17 @@
         origin={x,y};
       }
     }
-    const v = vis(m), p = G.Projectiles.spawn({ x: origin.x + Math.cos(a) * 3, y: origin.y + Math.sin(a) * 3,
+    const narutoCloak=m.id==='naruto-rasenshuriken'&&!!G.NarutoSupport?.effects.some(f=>f.owner===pl&&f.world===G.World&&f.mode==='nine-tails-cloak'&&f.age<f.ttl);
+    const v = vis(m);
+    if(narutoCloak)v.pal='naruto-cloak-orange';
+    const bombMove=narutoCloak?{...m,digiVis:{...m.digiVis,pal:v.pal}}:m;
+    const p = G.Projectiles.spawn({ x: origin.x + Math.cos(a) * 3, y: origin.y + Math.sin(a) * 3,
       vx: Math.cos(a) * m.speed, vy: Math.sin(a) * m.speed, dmg: m.dmg * pl.atk * ratio * (explosive ? .2 : 1),
-      r: m.size, life: m.life, pierce: m.pierce | 0, color: color(m), homing: m.homing || 0,
+      r: m.size, life: m.life, pierce: m.pierce | 0, color: narutoCloak?'#ff8a2a':color(m), homing: m.homing || 0,
       hits: new Set(), vis: v, owner: pl, mid: m.id, mtype: m.type, burn: m.burn || 0, poison: m.poison || 0,
       slow: m.slow || 0, knock: m.knock || 0, damageSplash: !explosive && !m.fireballAOE && !m.blastRadius,
-      digiBomb: explosive ? { m, owner: pl, r: m.blastRadius || m.radius } : null });
+      narutoCloak,
+      digiBomb: explosive ? { m:bombMove, owner: pl, world:G.World, r: m.blastRadius || m.radius } : null });
     if(m.fumaReturn) {
       Object.assign(p,{fumaReturn:true,boom:m.boom,bsp:m.speed*1.1,fumaPierce:p.pierce,fumaLearned:pl.hasMove(m.id)});
       const target=pl.target,locked=target&&!target.dead&&G.EnemyMgr.all().includes(target)&&G.U.dist(pl.x,pl.y,target.x,target.y)<=m.range;
@@ -433,7 +438,49 @@
     }
   };
   C.clearFields = clear;
-  C.resolve = function(dt, pl, now) { vanilla.resolve(dt, pl, now); const live=new Set(G.Projectiles.all()); for (const p of [...bombs]) { const b = p.digiBomb, alive = live.has(p); if (!b) { bombs.delete(p); continue; } if (!b.owner || !controlled(b.owner) || b.owner.dead || b.owner.hp <= 0) { p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); continue; } if ((p.hits && p.hits.size) || !alive) { const m = b.m; if(m.id==='naruto-fireball')G.FX.sp('naruto-great-fireball-burst','naruto-fireball',p.x,p.y-G.LIFT,{life:.24,scale:b.r/51,frameRate:12}); if(m.id==='naruto-rasenshuriken'&&G.NarutoRasenshurikenVFX)G.NarutoRasenshurikenVFX.impact(b.owner,p.x,p.y,b.r);else G.FX.ring(p.x, p.y, 4, b.r, color(m), .25, 3); for (const e of targets(p.x, p.y, b.r)) hit(b.owner, m, e, m.dmg * b.owner.atk * .8, e.x - p.x, e.y - p.y); propHits(b.owner, m, p.x, p.y, b.r, m.dmg * b.owner.atk * .8); p.digiBomb = null; G.Projectiles.remove(p); bombs.delete(p); } } };
+  function rasenshurikenBlast(p,b){
+    const m=b.m,outer=b.r*Math.max(1,m.spreadRadiusMul||1);
+    const current=()=>p.digiBomb===b&&bombs.has(p)&&valid(b);
+    if(!current())return;
+    if(G.NarutoRasenshurikenVFX)G.NarutoRasenshurikenVFX.impact(b.owner,p.x,p.y,outer,{cloak:p.narutoCloak});
+    else G.FX.ring(p.x,p.y,4,outer,color(m),.25,3);
+    for(const e of targets(p.x,p.y,outer)){
+      // A damage callback may clear this cast, kill its owner, or replace the world.
+      if(!current())break;
+      const distance=Math.hypot(e.x-p.x,e.y-p.y),reach=e.r||0;
+      if(distance>outer+reach||!whirlwindPath(p.x,p.y,e.x,e.y))continue;
+      const ratio=distance<=b.r+reach ? .8 : (m.spreadDamageRatio||0);
+      if(ratio>0)hit(b.owner,m,e,m.dmg*b.owner.atk*ratio,e.x-p.x,e.y-p.y);
+    }
+    if(current()){
+      propHits(b.owner,m,p.x,p.y,b.r,m.dmg*b.owner.atk*.8,
+        prop=>current()&&G.World.projectilePathClear(p.x,p.y,prop.x,prop.y,prop,{radius:1,spacing:4,includeStart:false}));
+      propHits(b.owner,m,p.x,p.y,outer,m.dmg*b.owner.atk*(m.spreadDamageRatio||0),
+        prop=>current()&&Math.hypot(prop.x-p.x,prop.y-p.y)>b.r+(prop.r||0)&&G.World.projectilePathClear(p.x,p.y,prop.x,prop.y,prop,{radius:1,spacing:4,includeStart:false}));
+    }
+  }
+  C.resolve = function(dt, pl, now) {
+    vanilla.resolve(dt,pl,now);
+    const live=new Set(G.Projectiles.all());
+    for(const p of [...bombs]){
+      const b=p.digiBomb,alive=live.has(p);
+      if(!b){bombs.delete(p);continue;}
+      if(!b.owner||!controlled(b.owner)||b.owner.dead||b.owner.hp<=0){
+        p.digiBomb=null;G.Projectiles.remove(p);bombs.delete(p);continue;
+      }
+      if((p.hits&&p.hits.size)||!alive){
+        const m=b.m;
+        if(m.id==='naruto-rasenshuriken')rasenshurikenBlast(p,b);
+        else{
+          if(m.id==='naruto-fireball')G.FX.sp('naruto-great-fireball-burst','naruto-fireball',p.x,p.y-G.LIFT,{life:.24,scale:b.r/51,frameRate:12});
+          G.FX.ring(p.x,p.y,4,b.r,color(m),.25,3);
+          for(const e of targets(p.x,p.y,b.r))hit(b.owner,m,e,m.dmg*b.owner.atk*.8,e.x-p.x,e.y-p.y);
+          propHits(b.owner,m,p.x,p.y,b.r,m.dmg*b.owner.atk*.8);
+        }
+        p.digiBomb=null;G.Projectiles.remove(p);bombs.delete(p);
+      }
+    }
+  };
   // Native pixel additions; VFX's public tables are the same used by the cache.
   G.VFX.PAL.holy = ['#786022','#b38a32','#e2c56b','#fff0b0','#fffdf0'];
   G.VFX.PAL.blueflame = ['#133e70','#267ed1','#58c5ff','#b3f1ff','#fff'];
