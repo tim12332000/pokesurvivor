@@ -11,7 +11,7 @@ import time
 from playwright.sync_api import sync_playwright
 import test_shikamaru as base
 
-OUT = base.ROOT / 'art-review/shikamaru/qa/mass/natural'
+OUT = base.ROOT / 'art-review/shikamaru/qa/mass/self-natural'
 SOURCE = '.omx/naruto-shikamaru-mass.js'
 
 OBSERVE = r'''() => {
@@ -25,8 +25,8 @@ OBSERVE = r'''() => {
  const draw=G.Combat.drawAirFields;
  G.Combat.drawAirFields=function(ctx){const result=draw.call(this,ctx),p=G.Game.player,s=p&&M.stateFor(p),b=s?.cast;if(!b)return result;
   if(!Q.casts.some(c=>c.serial===s.casts))Q.casts.push({serial:s.casts,time:G.Game.st.time,level:p.level,center:{...b.center},origin:{...b.origin},profile:{...b.spec},releaseAt:b.releaseAt,duration:b.duration,blastAt:b.blastAt});
-  if(b){const active=M.casts.includes(b),keys=[];if(b.age<b.arrive)keys.push('shadow-flight');if(b.age>=b.full&&b.age<b.throwAt)keys.push('full-circle');if(b.age>=b.throwAt+.15&&b.age<b.landAt)keys.push('bomb-flight');if(b.age>=b.blastAt+.1&&b.age<b.blastAt+.4)keys.push('blast');if(!active&&b.age>=b.duration&&Q.mainHits.some(h=>h.cast===s.casts)){keys.push('full-release');Q.completed=true;Q.completeCast={serial:s.casts,age:b.age,duration:b.duration,releaseAt:b.releaseAt,remainingBound:b.bound.size,active};}
-   for(const key of keys)if(!seen.has(s.casts+'-'+key)){seen.add(s.casts+'-'+key);const state={key,serial:s.casts,snapshot:Q.snapshot(),castAge:b.age,center:{...b.center},radius:b.radius,bound:b.bound.size,bomb:b.bomb?{source:{...b.bomb.source},aim:b.bomb.aim}:null,exploded:b.exploded};queueMicrotask(()=>Q.frames.push({...state,png:ctx.canvas.toDataURL()}))}
+  if(b){const active=M.casts.includes(b),keys=[];if(b.age>=b.spec.prepare&&b.age<b.full)keys.push('straight-stabs');if(b.age>=b.full&&b.age<b.throwAt)keys.push('all-bound');if(b.age>=b.throwAt+.15&&b.age<b.landAt)keys.push('bomb-flight');if(b.age>=b.blastAt+.1&&b.age<b.blastAt+.4)keys.push('blast');if(!active&&b.age>=b.duration&&Q.mainHits.some(h=>h.cast===s.casts)){keys.push('full-release');Q.completed=true;Q.completeCast={serial:s.casts,age:b.age,duration:b.duration,releaseAt:b.releaseAt,remainingBound:b.bound.size,active};}
+   for(const key of keys)if(!seen.has(s.casts+'-'+key)){seen.add(s.casts+'-'+key);const state={key,serial:s.casts,snapshot:Q.snapshot(),castAge:b.age,center:{...b.center},radius:b.radius,rays:[...b.rays.values()].map(r=>({targetId:r.target.id,source:{...r.source},tip:{...r.current},hit:r.hit,contact:r.contact,boundAt:r.boundAt})),bound:b.bound.size,bomb:b.bomb?{source:{...b.bomb.source},aim:b.bomb.aim}:null,exploded:b.exploded};queueMicrotask(()=>Q.frames.push({...state,png:ctx.canvas.toDataURL()}))}
   }
   return result;
  };

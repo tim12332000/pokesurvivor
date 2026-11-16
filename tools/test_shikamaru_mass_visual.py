@@ -6,17 +6,17 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 import test_shikamaru as base
 
-OUT=base.ROOT/'art-review/shikamaru/qa/mass/native'
+OUT=base.ROOT/'art-review/shikamaru/qa/mass/self-native'
 SETUP=r'''() => {
  const A=Acceptance,p=A.p(),M=G.NarutoShikamaruMass;
  A.massScene=()=>{A.reset();p.statsTaken={};p.level=6;p.moves=[G.Moves.instance('naruto-shikamaru')];const card=G.LevelUp.offer(p,1000).find(c=>c.key==='new:naruto-shikamaru-mass');A.assert(card&&card.apply(p)!==false,'Lv6 actual mass card unavailable');
- const es=Array.from({length:18},(_,i)=>A.spawn(245+Math.cos(i*2.4)*(55+i*7),Math.sin(i*2.4)*(55+i*7),i===0));p.target=es[0];return es};
+ const es=Array.from({length:18},(_,i)=>A.spawn(Math.cos(i*2.4)*(55+i*7),Math.sin(i*2.4)*(55+i*7),i===0));p.target=es[0];return es};
  window.MassFrames=[];window.MassSeen=new Set();window.MassTimeline=[];let last=-1;
  const draw=G.Combat.drawAirFields;G.Combat.drawAirFields=function(ctx){const result=draw.call(this,ctx),b=M.stateFor(p)?.cast;if(!b)return result;
- const key=b.age<b.spec.prepare?'seal':b.age<b.arrive?'travel':b.age<b.full?'spread':b.age<b.throwAt?'bind':b.age<b.landAt?'bomb-flight':b.age<b.blastAt?'fuse':b.age<b.blastAt+.12?'blast':b.age<b.blastAt+.4?'blast-middle':b.age<b.releaseAt?'hold-after-blast':'release';
- const sample=()=>({key,age:b.age,radius:b.radius,bound:b.bound.size,center:{...b.center},origin:{...b.origin},bomb:b.bomb?JSON.parse(JSON.stringify(b.bomb)):null,exploded:b.exploded,contacts:M.stateFor(p).contacts.slice(),pose:G.NarutoShikamaru.activeFor(p)});
+ const key=b.age<b.spec.prepare?'seal':b.age<b.full?'stabbing':b.age<b.throwAt?'bind':b.age<b.landAt?'bomb-flight':b.age<b.blastAt?'fuse':b.age<b.blastAt+.12?'blast':b.age<b.blastAt+.4?'blast-middle':b.age<b.releaseAt?'hold-after-blast':'release';
+ const sample=()=>({key,age:b.age,radius:b.radius,rays:[...b.rays.values()].map(r=>({targetId:r.target.id,source:{...r.source},tip:{...r.current},hit:r.hit,contact:r.contact,boundAt:r.boundAt})),bound:b.bound.size,center:{...b.center},origin:{...b.origin},bomb:b.bomb?JSON.parse(JSON.stringify(b.bomb)):null,exploded:b.exploded,contacts:M.stateFor(p).contacts.slice(),pose:G.NarutoShikamaru.activeFor(p)});
  if(b.age-last>.08){MassTimeline.push(sample());last=b.age;}
- const delayed=(key==='spread'&&b.radius<b.spec.radius*.5)||(key==='bomb-flight'&&b.age<b.throwAt+.2)||(key==='release'&&b.age<b.releaseAt+.15);
+ const delayed=(key==='stabbing'&&b.age<b.spec.prepare+.1)||(key==='bomb-flight'&&b.age<b.throwAt+.2)||(key==='release'&&b.age<b.releaseAt+.15);
  if(!delayed&&!MassSeen.has(key)){MassSeen.add(key);const state=sample();queueMicrotask(()=>MassFrames.push({...state,png:ctx.canvas.toDataURL()}))}return result;};
 }'''
 
