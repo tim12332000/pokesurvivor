@@ -2,6 +2,8 @@
 (() => {
   if(G.NarutoShikamaru)return;
   const C=G.Combat,DEX=30017,EPS=1e-8,states=new Map(),casts=[],leases=new Map(),effects=[];
+  const Ref=G.ShikamaruReferenceGeometry;
+  if(!Ref)throw Error('Shikamaru reference geometry must load before combat');
   const modes=new Set(['shikamaru-shadow','shikamaru-sewing','shikamaru-trap','shikamaru-strangle','shikamaru-tactics']);
   let serial=0;
   const alive=a=>!!a&&!a.dead&&a.hp>0;
@@ -16,11 +18,11 @@
     const tactics=a.moves?.find(x=>x.digiMode==='shikamaru-tactics'),T=tactics?rank(tactics):0;
     const kind=(m?.digiMode||'shikamaru-shadow').replace('shikamaru-','');
     return {kind,L,Q,T,range:(m?.range||300)+24*(L-1)+12*Q,
-      branches:Math.min(16,L+Q+Math.floor(T/2)),chainTargets:Math.min(16,L+Q+Math.floor(T/2)),chainHops:Math.min(16,L+Q+Math.floor(T/2))-1,simultaneousRoots:1,chainRange:Math.min(240,((m?.range||300)+24*(L-1)+12*Q)*.75),pulses:kind==='sewing'?3+L+Math.min(4,Q):kind==='strangle'?2+L:1,
+      branches:Math.min(16,L+Q+Math.floor(T/2)),chainTargets:Math.min(16,L+Q+Math.floor(T/2)),chainHops:Math.min(16,L+Q+Math.floor(T/2))-1,simultaneousRoots:1,chainRange:Math.min(240,((m?.range||300)+24*(L-1)+12*Q)*.75),pulses:kind==='sewing'?2+Math.floor((L-1)/2)+Math.min(2,Q):kind==='strangle'?2+L:1,
       traps:Math.min(24,3+2*Q+Math.floor((L-1)/2)),radius:(kind==='trap'?108:kind==='strangle'?70:22)+7*(L-1)+(kind==='trap'?8*Q:0),
       damage:(m?.dmg??(kind==='shadow'?12:kind==='sewing'?17:kind==='trap'?65:35))*(a.atk??1),
       bindDuration:1.25+.23*L+.12*T,cd:Math.max(.2,(m?.cd??(kind==='shadow'?1.5:kind==='sewing'?4:kind==='trap'?5.5:7))*(a.cdMul??1)),
-      speed:620+35*L,release:kind==='trap'?.25:.18,interval:kind==='strangle'?.23:.16,
+      speed:620+35*L,release:kind==='trap'?.25:.18,interval:kind==='sewing'?.7:kind==='strangle'?.23:.16,archFlight:.5,archPrepare:.12,needleWidth:5*(a.anim?.scale||1),
       trapLifetime:10,deployDistance:54,trapArm:.55,blastRounds:1+Math.min(3,Q)+Math.floor((L-1)/2),blastInterval:.16,chainInterval:.12,captureWindow:.55,dragTimeout:a.moves?.some(x=>x.digiMode==='shikamaru-trap')?2.4:.9,stopWindow:.25,netPrepare:.28,recoverTime:.35};
   }
   function clearPath(ax,ay,bx,by,r=1,target=null){
@@ -33,16 +35,29 @@
     if(list.length||p.kind!=='shadow')return list;
     return (G.World.propsInCircle?.(a.x,a.y,p.range)||[]).filter(e=>e.destructible&&e.hp>0&&clearPath(a.x,a.y,e.x,e.y,1,e));
   }
+  function projectionFor(actor){
+    const body=Ref.bodyFor(actor);if(!body)return null;
+    const owner=valid(actor),height=body.bodyHeight;
+    let dx=-.45,dy=.9,length=height*.92,across=.85;
+    if(owner){dx=Math.cos(actor.aim||0);dy=Math.sin(actor.aim||0);const chain=states.get(actor)?.lastChain,front=chain?.chain?.segments[0];length=height*(.72+.45*Math.min(1,(front?.travelled||0)/Math.max(1,height)));across=.6;}
+    else{
+      const lease=leases.get(actor),s=lease?.cast.state;
+      if(s){const near=ownedCaptures(s).map(([e])=>e).filter(e=>Math.hypot(e.x-actor.x,e.y-actor.y)<Math.max(110,height*2.5));
+        if(near.length>1){const cx=near.reduce((sum,e)=>sum+e.x,0)/near.length,cy=Math.max(...near.map(e=>e.y))+height*.75;dx=cx-actor.x;dy=cy-actor.y;length=Math.hypot(dx,dy);across=1.1;}
+      }
+    }
+    return Ref.project(actor,dx,dy,length,across,clearPath);
+  }
   function legal(b){return !b.cancelled&&valid(b.owner)&&b.world===G.World&&states.get(b.owner)===b.state&&learned(b.owner,b.m.id);}
   function chainConnected(b,e){const chain=b.followChain||b;if(!chain.chain)return clearPath(b.owner.x,b.owner.y,e.x,e.y);if(!legal(chain))return false;const index=chain.chain.segments.findIndex(s=>s.target===e&&s.contact);return index>=0&&chain.chain.segments.slice(0,index+1).every(s=>s.linked!==false);}
   function held(e){const l=leases.get(e);return !!l&&legal(l.cast)&&alive(e)&&l.until>l.cast.state.clock&&chainConnected(l.cast,e);}
   const stopped=e=>held(e)&&!strong(e);
-  function canCast(a,m){if(!valid(a)||a.frozen||!supports(m)||m.digiMode==='shikamaru-tactics')return false;const s=state(a),p=profile(a,m);if((s.cooldowns[m.id]||0)>EPS)return false;if(p.kind==='shadow'&&(casts.some(b=>b.owner===a&&b.kind==='shadow'&&legal(b)&&!b.chain?.ended)||ownedCaptures(s).length))return false;if(p.kind==='sewing')return !!s.lastChain&&legal(s.lastChain)&&s.lastChain.chain.segments.some(x=>x.contact);const t=targets(a,p);return p.kind==='strangle'?t.some(e=>held(e)&&leases.get(e)?.cast.owner===a):t.length>0;}
+  function canCast(a,m){if(!valid(a)||a.frozen||!supports(m)||m.digiMode==='shikamaru-tactics'||m.digiMode==='shikamaru-strangle')return false;const s=state(a),p=profile(a,m);if((s.cooldowns[m.id]||0)>EPS)return false;if(p.kind==='shadow'&&(casts.some(b=>b.owner===a&&b.kind==='shadow'&&legal(b)&&!b.chain?.ended)||ownedCaptures(s).length))return false;if(p.kind==='sewing')return !!s.lastChain&&legal(s.lastChain)&&s.lastChain.chain.segments.some(x=>x.contact&&alive(x.target));const t=targets(a,p);return t.length>0;}
   function cast(a,m){
     if(!canCast(a,m))return false;
     const s=state(a),p=profile(a,m),t=targets(a,p).filter(e=>p.kind!=='strangle'||held(e)&&leases.get(e)?.cast.owner===a);
     if(p.kind==='sewing'){
-      const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:p.kind,age:0,duration:p.release+p.pulses*p.interval+.4,aim:a.aim||0,rays:[],traps:[],emitted:0,cancelled:false,hits:0,followChain:s.lastChain};
+      const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:p.kind,age:0,duration:p.release+p.pulses*p.interval+p.archFlight+.4,aim:a.aim||0,rays:[],traps:[],arcs:[],emitted:0,cancelled:false,hits:0,followChain:s.lastChain};
       s.cooldowns[m.id]=p.cd;m.t=p.cd;s.casts[p.kind]=(s.casts[p.kind]||0)+1;s.sewingPose={kind:'sewing',phase:'sewing',started:s.clock,duration:.55,aim:b.aim};casts.push(b);return true;
     }
     const count=p.kind==='trap'?p.traps:p.kind==='shadow'?1:p.branches;
@@ -71,8 +86,7 @@
   function hit(b,e,scale=1){
     if(!legal(b)||!alive(e))return false;
     const mult=G.Types?.mult?.(b.m.type||'dark',e.types)??1,crit=Math.random()<(b.owner.critChance||0);
-    const preparation=b.shared&&!b.finisher&&b.kind==='sewing'?.3:1;
-    const damage=b.spec.damage*scale*preparation*mult*(G.Weather?.mult?.(b.m.type||'dark')??1)*(crit?1.5:1);
+    const damage=b.spec.damage*scale*mult*(G.Weather?.mult?.(b.m.type||'dark')??1)*(crit?1.5:1);
     e.hurt(damage,b.kind==='trap'?'#ffc27b':'#bca6db',0,0,0,crit?'crit':G.Types?.label?.(mult),b.owner,b.m.id);
     if(!legal(b))return false;
     b.owner.onDealt?.(damage);if(!legal(b))return false;
@@ -102,7 +116,8 @@
     return Math.min(segmentDistance(x,y,lx,ly,g.bx,g.by),segmentDistance(x,y,g.bx,g.by,rx,ry),segmentDistance(x,y,rx,ry,lx,ly))<=Math.max(0,targetRadius);
   }
   function makeSegment(b,target,origin,sourceActor){
-    const seed=b.serial*1.713+(b.chain?.segments.length||0)*2.391,dx=target.x-origin.x,dy=target.y-origin.y,d=Math.hypot(dx,dy),nx=d?-dy/d:0,ny=d?dx/d:1;
+    const shadow=projectionFor(target),destination=shadow?.points.reduce((best,p)=>!best||Math.hypot(p.x-origin.x,p.y-origin.y)<Math.hypot(best.x-origin.x,best.y-origin.y)?p:best,null)||target;
+    const seed=b.serial*1.713+(b.chain?.segments.length||0)*2.391,dx=destination.x-origin.x,dy=destination.y-origin.y,d=Math.hypot(dx,dy),nx=d?-dy/d:0,ny=d?dx/d:1;
     const points=[{...origin}],steps=Math.max(3,Math.ceil(d/5));let blocked=false;
     for(let i=1;i<=steps;i++){
       const u=i/steps,envelope=Math.sin(Math.PI*u),bend=envelope*(Math.sin(seed+u*4.7)*Math.min(35,d*.16)+Math.sin(seed*1.9+u*11.3)*Math.min(10,d*.045));
@@ -112,7 +127,7 @@
       points.push(point);
     }
     let totalLength=0;for(let i=1;i<points.length;i++)totalLength+=Math.hypot(points[i].x-points[i-1].x,points[i].y-points[i-1].y);
-    return {index:b.chain?.segments.length||0,seed,origin:{...origin},sourceActor,target,path:points,totalLength,travelled:0,grownPoints:[{...origin}],polygon:[],contact:false,contactPoint:null,blocked};
+    return {index:b.chain?.segments.length||0,seed,origin:{...origin},sourceOffset:sourceActor?{x:origin.x-sourceActor.x,y:origin.y-sourceActor.y}:null,sourceActor,target,path:points,totalLength,travelled:0,grownPoints:[{...origin}],polygon:[],contact:false,contactPoint:null,blocked};
   }
   function chainMesh(segment,radius){
     const points=segment.grownPoints,left=[],right=[];let total=0,passed=0;
@@ -120,7 +135,7 @@
     for(let i=0;i<points.length;i++){
       if(i)passed+=Math.hypot(points[i].x-points[i-1].x,points[i].y-points[i-1].y);
       const prev=points[Math.max(0,i-1)],next=points[Math.min(points.length-1,i+1)],dx=next.x-prev.x,dy=next.y-prev.y,d=Math.hypot(dx,dy)||1,u=total?passed/total:0;
-      const taper=Math.min(1,Math.max(0,(total-passed)/18)),width=radius*.38*(.88+.12*Math.sin(segment.seed+u*8.1)+.07*Math.sin(segment.seed*.63+u*19.7))*taper;
+      const taper=Math.min(1,Math.max(0,(total-passed)/10)),width=Math.min(2.5,radius*.095)*taper;
       const edge=sign=>{const ox=-dy/d*width*sign,oy=dx/d*width*sign;let fraction=1;if(!clearPath(points[i].x,points[i].y,points[i].x+ox,points[i].y+oy)){let low=0,high=1;for(let step=0;step<5;step++){const t=(low+high)/2;if(clearPath(points[i].x,points[i].y,points[i].x+ox*t,points[i].y+oy*t))low=t;else high=t;}fraction=low;}return {x:points[i].x+ox*fraction,y:points[i].y+oy*fraction};};
       left.push(edge(1));right.push(edge(-1));
     }
@@ -130,7 +145,7 @@
     if(poly.length<3)return false;let inside=false;
     for(let i=0,j=poly.length-1;i<poly.length;j=i++){
       const a=poly[i],b=poly[j];
-      if(segmentDistance(x,y,a.x,a.y,b.x,b.y)<=radius)return true;
+      if(segmentDistance(x,y,a.x,a.y,b.x,b.y)<=radius+1e-6)return true;
       if((a.y>y)!==(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)inside=!inside;
     }return inside;
   }
@@ -142,10 +157,25 @@
       if(remaining>=d){grown.push({...z});remaining-=d;}else{if(remaining>0)grown.push({x:a.x+(z.x-a.x)*remaining/d,y:a.y+(z.y-a.y)*remaining/d});break;}
     }
     const source=segment.index===0?b.owner:alive(segment.sourceActor)?segment.sourceActor:segment.origin;
-    grown[0]={x:source.x,y:source.y};
-    if(segment.contact&&alive(segment.target)&&grown.length>1)grown[grown.length-1]={x:segment.target.x,y:segment.target.y};
+    grown[0]={x:source.x+(alive(segment.sourceActor)?segment.sourceOffset?.x||0:0),y:source.y+(alive(segment.sourceActor)?segment.sourceOffset?.y||0:0)};
+    if(segment.contact&&alive(segment.target)&&grown.length>1)grown[grown.length-1]={x:segment.target.x+(segment.contactOffset?.x||0),y:segment.target.y+(segment.contactOffset?.y||0)};
     segment.grownPoints=grown;segment.polygon=chainMesh(segment,b.spec.radius);
     segment.linked=!grown.some((p,i,list)=>i&&!clearPath(list[i-1].x,list[i-1].y,p.x,p.y));
+  }
+  function reanchorContacts(s){
+    const b=s.lastChain;if(!b||!legal(b))return;
+    for(const segment of b.chain.segments){
+      if(!segment.contact||!alive(segment.target))continue;
+      const e=segment.target,projection=projectionFor(e),old={x:e.x+(segment.contactOffset?.x||0),y:e.y+(segment.contactOffset?.y||0)};
+      if(projection&&!Ref.contains(projection,old.x,old.y)){
+        const previous=segment.grownPoints.at(-2)||segment.origin;
+        const point=projection.points.reduce((best,p)=>clearPath(previous.x,previous.y,p.x,p.y)&&(!best||Math.hypot(p.x-old.x,p.y-old.y)<Math.hypot(best.x-old.x,best.y-old.y))?p:best,null);
+        if(!point){segment.linked=false;leases.delete(e);continue;}
+        segment.contactOffset={x:point.x-e.x,y:point.y-e.y};segment.liveContactPoint={...point};
+        for(const next of b.chain.segments)if(next.sourceActor===e)next.sourceOffset={...segment.contactOffset};
+      }
+      refreshSegment(b,segment);
+    }
   }
   function advanceChain(b,dt){
     if(b.age<b.spec.release||!legal(b)||b.chain.ended)return;
@@ -153,12 +183,13 @@
     if(!alive(segment.target)){chain.ended=true;return;}
     segment.travelled=Math.min(segment.totalLength,segment.travelled+Math.min(dt,Math.max(0,b.age-b.spec.release))*b.spec.speed);refreshSegment(b,segment);
     if(segment.grownPoints.some((p,i,list)=>i&&!clearPath(list[i-1].x,list[i-1].y,p.x,p.y))){chain.ended=true;return;}
-    const e=segment.target;
-    if(polygonContains(segment.polygon,e.x,e.y,e.r||0)&&clearPath(segment.grownPoints[0].x,segment.grownPoints[0].y,e.x,e.y)){
-      const point={x:e.x,y:e.y};b.emitted=chain.current+1;
+    const e=segment.target,projection=projectionFor(e),contact=e.destructible?(polygonContains(segment.polygon,e.x,e.y,e.r||0)?{x:e.x,y:e.y}:null):Ref.groundContact(projection,segment.polygon,polygonContains);
+    if(contact&&clearPath(segment.grownPoints[0].x,segment.grownPoints[0].y,contact.x,contact.y)){
+      const point={...contact};b.emitted=chain.current+1;
       if(e.destructible){G.World.damageProp?.(e,b.spec.damage,'#302936');chain.ended=true;return;}
       if(!hit(b,e))return;
-      segment.contact=true;segment.contactPoint=point;chain.visited.add(e);chain.lastContact=point;
+      if(b.state.contacts.length)b.state.contacts[b.state.contacts.length-1].geometry={kind:'ground-alpha',point:{...point},sourceURL:projection?.sourceURL,bodyKey:projection?.body.key};
+      segment.contact=true;segment.contactPoint=point;segment.contactOffset={x:point.x-e.x,y:point.y-e.y};segment.targetProjection=projection;chain.visited.add(e);chain.lastContact=point;
       // Keep the confirmed contact path; a killing hit still owns a real graft point.
       segment.path=segment.grownPoints.map(p=>({...p}));segment.path.push(point);segment.travelled=segment.totalLength=segment.path.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-segment.path[i].x,p.y-segment.path[i].y),0);refreshSegment(b,segment);
       bind(b,e);contactVisual(b,e,'shadow',chain.current+1,.25);
@@ -171,14 +202,33 @@
   }
   function advanceSewing(b){
     if(!legal(b.followChain)){b.cancelled=true;return;}
+    if(!b.followChain.chain.segments.some(segment=>segment.contact&&alive(segment.target)&&chainConnected(b.followChain,segment.target)))b.emitted=b.spec.pulses;
     while(legal(b)&&b.emitted<b.spec.pulses&&b.age>=b.spec.release+b.emitted*b.spec.interval){
-      b.emitted++;
+      const born=b.spec.release+b.emitted*b.spec.interval;b.emitted++;
       for(const segment of b.followChain.chain.segments){
         if(!legal(b))return;const e=segment.target;
         if(!segment.contact||segment.linked===false||!alive(e)||!chainConnected(b.followChain,e))continue;
-        if(!hit(b,e))return;bind(b,e);contactVisual(b,e,'sewing',b.emitted,Math.max(.13,b.duration-b.age+.13));
+        const arc=Ref.makeArch(b.owner,e,{x:b.owner.x,y:b.owner.y},b.arcs.length,b.spec.needleWidth);arc.born=born;arc.pulseIndex=b.emitted;arc.hitSet=new Set();arc.bodySource=Ref.bodyFor(e);b.arcs.push(arc);
       }
     }
+    for(const arc of b.arcs){
+      if(!legal(b))return;if(arc.blocked||arc.progress>=1)continue;
+      const age=b.age-arc.born;if(age<0)continue;
+      const progress=Math.max(0,Math.min(1,(age-b.spec.archPrepare)/b.spec.archFlight)),old={...arc.current},body=Ref.bodyFor(arc.target);arc.framePrevious=old;
+      while(arc.progress<progress-EPS){
+        const next=Math.min(progress,arc.progress+.025);Ref.advanceArch(arc,next,clearPath);if(arc.blocked)break;
+        if(!arc.hit&&alive(arc.target)){
+          const contact=Ref.sweptBody(arc,arc.previous,arc.current,body,clearPath);
+          if(contact){
+            arc.hit=true;arc.hitSet.add(arc.target);arc.contact={point:{...contact},previous:{...arc.previous},current:{...arc.current},progress:arc.progress,phase:arc.phase,targetId:arc.target.id,bodyKey:body?.key};
+            const emitted=b.emitted;b.emitted=arc.pulseIndex;if(!hit(b,arc.target)){b.emitted=emitted;return;}b.emitted=emitted;
+            if(b.state.contacts.length)b.state.contacts[b.state.contacts.length-1].geometry={kind:'xyz-tip-sweep',...arc.contact};
+          }
+        }
+      }
+      arc.previous=old;
+    }
+    if(b.emitted>=b.spec.pulses&&!b.arcs.some(arc=>!arc.blocked&&arc.progress<1&&alive(arc.target)))b.duration=Math.min(b.duration,b.age+.16);
   }
   function shadowVisualFor(a){
     const s=states.get(a),m=moveFor(a,'shadow'),p=m?profile(a,m):null,b=s?.lastChain;let extensionTotal=0,branches=0;
@@ -243,6 +293,7 @@
   }
   const moveFor=(a,kind)=>a.moves?.find(m=>m.digiMode==='shikamaru-'+kind);
   const activeFront=s=>!!s.lastChain&&legal(s.lastChain)&&casts.includes(s.lastChain)&&!s.lastChain.chain.ended;
+  function activeSewing(s){return casts.some(b=>b.owner===s.owner&&b.kind==='sewing'&&legal(b)&&((b.arcs||[]).some(arc=>!arc.blocked&&arc.progress<1&&alive(arc.target))||b.emitted<b.spec.pulses&&b.followChain.chain.segments.some(segment=>segment.contact&&alive(segment.target)&&chainConnected(b.followChain,segment.target))));}
   function relay(s,kind,finisher=false){
     const m=moveFor(s.owner,kind);if(!m)return null;
     s.cooldowns[m.id]=0;
@@ -314,7 +365,11 @@
     }else if(p.phase==='net'&&age>=spec.netPrepare){
       // A Lv1 net is already a real second attack, even before any tool is learned.
       const net={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec,kind:'shadow',age:0,shared:true,finisher:true,cancelled:false,hits:0,emitted:1};
-      for(const [e]of heldList){if(!legal(net)||!hit(net,e,2))break;const visual=contactVisual(net,e,'net',net.emitted,.4);visual.radius=(e.r||12)+12;}
+      for(const [e]of moveFor(a,'sewing')?[]:heldList){
+        if(!legal(net))break;const segment=s.lastChain?.chain.segments.find(segment=>segment.target===e&&segment.contact),projection=projectionFor(e);
+        const contact=segment&&Ref.groundContact(projection,segment.polygon,polygonContains);if(!contact)continue;
+        if(!hit(net,e,2))break;if(s.contacts.length)s.contacts[s.contacts.length-1].geometry={kind:'ground-alpha-net',point:contact,bodyKey:projection?.body.key};
+      }
       if(states.get(a)!==s)return;
       relay(s,'sewing',true);
       let scheduled=0,last=s.clock;
@@ -322,7 +377,7 @@
         t.blastAt=s.clock+scheduled*t.cast.spec.chainInterval;last=t.blastAt+(t.cast.spec.blastRounds-1)*t.cast.spec.blastInterval;scheduled++;
       }
       p.phase='blast';p.at=s.clock;p.end=Math.max(s.clock+.4,last+.2);p.nodes=scheduled;
-    }else if(p.phase==='blast'&&s.clock>=p.end&&!activeFront(s)){const finish=relay(s,'strangle',true);p.phase='finish';p.at=s.clock;p.finishDuration=finish?finish.spec.release+(finish.spec.pulses-1)*finish.spec.interval+.25:.45;for(const [,l]of ownedCaptures(s))l.until=Math.max(l.until,s.clock+p.finishDuration+.1);}
+    }else if(p.phase==='blast'&&s.clock>=p.end&&!activeFront(s)&&!activeSewing(s)){const finish=relay(s,'strangle',true);p.phase='finish';p.at=s.clock;p.finishDuration=finish?finish.spec.release+(finish.spec.pulses-1)*finish.spec.interval+.25:.45;for(const [,l]of ownedCaptures(s))l.until=Math.max(l.until,s.clock+p.finishDuration+.1);}
     else if(p.phase==='finish'&&age>=p.finishDuration){p.phase='recover';p.at=s.clock;for(const [e]of ownedCaptures(s))leases.delete(e);}
     else if(p.phase==='recover'&&s.clock-p.at>=(p.empty?.18:spec.recoverTime)){s.plan=null;s.sewingQueued=false;}
     if(states.get(a)!==s)return;
@@ -341,6 +396,7 @@
   }
   function update(dt){
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
+    Ref.beginFrame?.();
     for(const [a,s]of states){if(!valid(a)||s.world!==G.World||(s.plan&&!moveFor(a,'shadow'))){clear(a);continue;}s.clock+=dt;if(s.pose&&s.pose.age>=.65)s.pose=null;
       const chain=s.lastChain;if(chain&&legal(chain))for(const segment of chain.chain.segments)if(segment.contact){refreshSegment(chain,segment);if(!segment.linked){leases.delete(segment.target);chain.chain.ended=true;}}
     }
@@ -360,6 +416,12 @@
       s.cue.actionLabel=s.cue.action==='strangle'?'影首縛 · 收緊':s.cue.action==='sewing'?'影縫 · 穿刺':'';
       if(s.cue.phase==='finish'&&s.cue.action!=='strangle')s.cue.label='影術收勢';
     }
+    for(const s of states.values()){
+      reanchorContacts(s);
+      s.projection=projectionFor(s.owner);const targets=new Set(ownedCaptures(s).map(([e])=>e));
+      for(const segment of s.lastChain?.chain.segments||[])if(alive(segment.target)&&!segment.target.destructible)targets.add(segment.target);
+      s.projections=new Map([...targets].map(e=>[e,projectionFor(e)]));
+    }
   }
   function tick(dt,a,now){
     if((a?.mon?.dex??a?.dex)!==DEX)return oldTick.call(this,dt,a,now);
@@ -375,6 +437,23 @@
     ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle='#191522';ctx.strokeStyle='#6b5878';ctx.lineWidth=1;
     ctx.beginPath();ctx.moveTo(left.x,left.y);ctx.lineTo(g.bx,g.by);ctx.lineTo(right.x,right.y);ctx.closePath();ctx.fill();ctx.stroke();
     ctx.globalAlpha=.55;ctx.strokeStyle='#211a2a';ctx.lineWidth=1;ctx.lineCap='butt';ctx.beginPath();ctx.moveTo(g.ax,g.ay);ctx.lineTo(g.bx,g.by);ctx.stroke();ctx.restore();
+  }
+  function referenceGround(ctx){
+    for(const s of states.values()){
+      if(!valid(s.owner)||s.world!==G.World)continue;Ref.drawProjection(ctx,s.projection);
+      for(const projection of s.projections?.values()||[])Ref.drawProjection(ctx,projection);
+      const b=s.lastChain;if(b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length)){
+        ctx.save();ctx.fillStyle='#030304';for(const segment of b.chain.segments){if(segment.linked===false)break;if(segment.polygon.length<3)continue;ctx.beginPath();segment.polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();}ctx.restore();
+      }
+      for(const node of s.board){if(!legal(node.cast)||s.clock-node.born<node.cast.spec.trapArm)continue;ctx.save();ctx.translate(node.x,node.y);ctx.fillStyle='#ead7a3';ctx.fillRect(-5,-9,10,18);ctx.fillStyle='#713d33';ctx.fillRect(-1,-6,2,11);ctx.restore();}
+      for(const b of casts)if(b.owner===s.owner&&b.kind==='sewing'&&legal(b))for(const arc of b.arcs||[]){
+        const age=b.age-arc.born;if(age>=0&&age<b.spec.archPrepare){const progress=age/b.spec.archPrepare;Ref.drawProjection(ctx,s.projection,1);ctx.save();ctx.fillStyle='#030304';ctx.beginPath();ctx.moveTo(arc.source.x-4,arc.source.y);ctx.quadraticCurveTo(arc.source.x,arc.source.y-8*progress,arc.source.x+8,arc.source.y);ctx.fill();ctx.restore();}
+      }
+    }
+  }
+  function referenceAir(ctx){
+    for(const b of casts)if(b.kind==='sewing'&&legal(b))for(const arc of b.arcs||[]){const age=b.age-arc.born;if(age<0||age>b.spec.archPrepare+b.spec.archFlight+.16)continue;Ref.drawArch(ctx,arc,Math.min(1,Math.max(0,(b.spec.archPrepare+b.spec.archFlight+.16-age)/.16)));}
+    for(const e of effects)if(e.kind==='explosion'){const u=e.age/e.life;ctx.save();ctx.globalAlpha=1-u;ctx.fillStyle='#ed9b43';for(let i=0;i<7;i++){const a=i*Math.PI*2/7;ctx.beginPath();ctx.arc(e.x+Math.cos(a)*e.radius*u,e.y+Math.sin(a)*e.radius*u-8,8*(1-u)+2,0,Math.PI*2);ctx.fill();}ctx.restore();}
   }
   function drawGround(ctx){
     for(const a of [G.Game.player,...(G.SelfClones?.actors?.()||[])])if(valid(a)){
@@ -516,7 +595,13 @@
   const oldTick=C.tick,oldUpdate=C.updateFields,oldClear=C.clearFields,oldGround=C.drawGroundFields,oldAir=C.drawAirFields;
   C.tick=tick;C.updateFields=function(dt){const r=oldUpdate.call(this,dt);update(dt);return r;};
   C.clearFields=function(a){clear(a);return oldClear.call(this,a);};
-  C.drawGroundFields=function(ctx){oldGround.call(this,ctx);drawGround(ctx);};C.drawAirFields=function(ctx){oldAir.call(this,ctx);drawAir(ctx);};
+  C.drawGroundFields=function(ctx){oldGround.call(this,ctx);referenceGround(ctx);};C.drawAirFields=function(ctx){oldAir.call(this,ctx);referenceAir(ctx);};
+  const nativeShadow=G.Sprites.drawShadow;
+  G.Sprites.drawShadow=function(ctx,dex,x,y,scale){
+    if(dex===DEX)return;
+    for(const s of states.values())if(s.projections&&[...s.projections.keys()].some(e=>e.dex===dex&&e.x===x&&e.y===y))return;
+    return nativeShadow.call(this,ctx,dex,x,y,scale);
+  };
   function statusFor(a,m){
     const s=states.get(a);if(!s)return {label:'影網待命',fraction:0};
     if(m?.digiMode==='shikamaru-tactics')return {label:'戰術被動',fraction:0};
@@ -526,13 +611,13 @@
   }
   function skillAction(s,kind){
     for(const b of casts)if(b.owner===s.owner&&b.kind===kind&&legal(b)){
-      if(kind==='sewing'&&b.emitted<b.spec.pulses&&b.followChain.chain.segments.some(seg=>seg.contact&&alive(seg.target)&&chainConnected(b.followChain,seg.target)))return b;
+      if(kind==='sewing'&&((b.arcs||[]).some(arc=>!arc.blocked&&arc.progress<1&&alive(arc.target))||b.emitted<b.spec.pulses&&b.followChain.chain.segments.some(seg=>seg.contact&&alive(seg.target)&&chainConnected(b.followChain,seg.target))))return b;
       if(kind==='strangle'&&b.rays.some(ray=>alive(ray.target)&&held(ray.target)))return b;
     }
     const visual=effects.find(e=>e.owner===s.owner&&e.kind===kind&&e.castRef&&legal(e.castRef)&&(kind!=='sewing'||sewingVisualFor(e.castRef,e.target,e)?.height>0));return visual?.castRef||null;
   }
-  function sewingPoseFor(a,s,p){const pose=s?.sewingPose;if(!pose||!moveFor(a,'sewing')||['net','finish'].includes(p?.phase)||s.clock-pose.started>=pose.duration)return null;return {...pose,phaseAge:s.clock-pose.started,phaseDuration:pose.duration,age:s.clock-pose.started,moving:s.moving};}
-  G.NarutoShikamaru={version:5,dex:DEX,supports,profile,canCast,cast,update,clear,held,stopped,clearPath,segmentDistance,statusFor,shadowVisualFor,ribbonGeometry,ribbonContains,polygonContains,sewingVisualFor,effectVisualFor,
+  function sewingPoseFor(a,s,p){const pose=s?.sewingPose;if(!pose||!moveFor(a,'sewing')||['net','finish'].includes(p?.phase)||s.clock-pose.started>=pose.duration)return null;const cast=casts.findLast(b=>b.owner===a&&b.kind==='sewing'&&legal(b)),arc=cast?.arcs.find(arc=>arc.progress<1&&!arc.blocked);return {...pose,stage:arc?.phase||'ground',phaseAge:s.clock-pose.started,phaseDuration:pose.duration,age:s.clock-pose.started,moving:s.moving};}
+  G.NarutoShikamaru={version:6,dex:DEX,supports,profile,canCast,cast,update,clear,held,stopped,clearPath,segmentDistance,statusFor,shadowVisualFor,ribbonGeometry,ribbonContains,polygonContains,sewingVisualFor,effectVisualFor,projectionFor,
     activeFor:a=>{const s=states.get(a),p=s?.plan,throwing=s?.throwPose,sewing=sewingPoseFor(a,s,p);if(sewing)return sewing;if(throwing&&s.clock-throwing.started<throwing.duration&&!s.moving)return {...throwing,phaseAge:s.clock-throwing.started,phaseDuration:throwing.duration,age:s.clock-throwing.started,moving:false};if(p){const m=moveFor(a,'shadow'),spec=profile(a,m),duration={prepare:spec.release,release:spec.captureWindow-spec.release,drag:spec.dragTimeout,net:spec.netPrepare,blast:Math.max(.4,(p.end||s.clock)-p.at),finish:p.finishDuration||.65,recover:spec.recoverTime}[p.phase];return {kind:p.phase==='finish'&&skillAction(s,'strangle')?'strangle':'shadow',phase:p.phase,phaseAge:s.clock-p.at,phaseDuration:duration,age:s.clock-p.at,duration,moving:s.moving,aim:a.aim||0};}const b=s?.pose;return b&&legal(b)&&b.age<.65?{...b,kind:b.kind,age:b.age,duration:.65}:null;},
     stateFor:(a=G.Game.player)=>states.get(a)||null,stats:(a=G.Game.player)=>{const s=states.get(a);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,bound:s.bound,detonations:s.detonations,contacts:s.contacts.slice(),phase:s.plan?.phase||'ready',cycles:s.cycles,travelled:s.travelled,dragged:s.dragged,board:s.board.length}:null;},
     get casts(){return casts;},get leases(){return leases;},get effects(){return effects;}};

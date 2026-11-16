@@ -294,13 +294,13 @@
     30010:['六道協同','天道引斥控場，五道分工護衛，以通靈、飛彈與地爆天星壓制敵群。'],
     30013:['雙人連打・里香共鳴','里香常駐追擊，顯現巨大化接雙人連打；十二級可學協戰共鳴終擊。'],
     30014:['升空索敵・蓄能爆發','普通砲命中蓄能，接續全力砲；散射砲升空迴旋後遠距追敵，圓環砲繞身迎擊，固定爆破對付敵群。'],
-    30017:['影縛連鎖・起爆棋局','單根黑影打中A才接向B，升階與數量逐步增加順序連擊；抓住的敵人留在原地，收網連爆後接影首縛終結。'],
+    30017:['人物投影・影縫收束','人物投影拉長接上敵影，逐步接力融合成掌片，敵人原地受束；同一片影鼓起高拱，尖端回落穿身。'],
     30016:['穢土斑・須佐軍團','開局兩名常駐木分身，升階擴軍、全軍披上須佐；本體蓄勢展開完全體，雙隕石壓境。'],
     30015:['巨幅裂面・反擊連鎖','連續碎面與巨型裂區壓制敵潮，真反射接獨立反擊；十二級可學裂面殘響。']
   };
   const learning=document.createElement('div');learning.className='launch-kit';learning.hidden=true;
   learning.setAttribute('aria-label','特色技能學習進程');detail.querySelector('.launch-description').after(learning);
-  const kitLabels={30017:['影模仿','影縫','起爆札','戰術','影首縛'],30016:['體術','火幕','須佐','隕石','木分身'],30013:['刀斬','里香','咒言','純愛砲','顯現','共鳴'],30014:['額砲','散射','圓環','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落','殘響']};
+  const kitLabels={30016:['體術','火幕','須佐','隕石','木分身'],30013:['刀斬','里香','咒言','純愛砲','顯現','共鳴'],30014:['額砲','散射','圓環','爆破','全力砲'],30015:['抓空面','宇守羅彈','天空幕','震落','殘響']};
   let learningDex;
   let previewDex;
   const syncQuickPick=()=>{
@@ -318,14 +318,14 @@
     detail.querySelector('.launch-name').textContent=isNaruto?record.chinese:'';
     detail.querySelector('.launch-role').textContent=isNaruto?roles[selected]?.[0]||record.team:'';
     detail.querySelector('.launch-description').textContent=isNaruto?roles[selected]?.[1]||'選好角色，準備出發。':'';
-    const kit=+selected===30017?[30017,['naruto-shikamaru','naruto-shikamaru-sewing','naruto-shikamaru-trap','naruto-shikamaru-tactics','naruto-shikamaru-strangle'].map(id=>{const d=G.Moves.BY_ID[id];return [id,d?.digiMode,d?.name,d?.type,d?.learnLevel||1];})]:+selected===30016?G.NarutoMadara?.kit:G.Jujutsu?.kits.find(([dex])=>dex===+selected);
+    const kit=+selected===30017?[30017,['naruto-shikamaru',...(G.NarutoSkillCatalog?.extraPools.get(30017)||[])].map(id=>{const d=G.Moves.BY_ID[id];return [id,d?.digiMode,d?.name,d?.type,d?.learnLevel||1];})]:+selected===30016?G.NarutoMadara?.kit:G.Jujutsu?.kits.find(([dex])=>dex===+selected);
     learning.hidden=!kit;
     if(kit&&learningDex!==selected){
       learning.dataset.skillCount=String(kit[1].length);learning.style.setProperty('--kit-columns',String(kit[1].length));
       learning.replaceChildren(...kit[1].map(([id,,,,level],index)=>{
         const cell=document.createElement('span'),label=document.createElement('b'),stage=document.createElement('small');
         cell.title=`Lv.${level} ${G.Moves.BY_ID[id].name}`;cell.innerHTML=G.Icons.html('move:'+id,22);
-        label.textContent=kitLabels[selected][index];stage.textContent=`Lv.${level}`;cell.append(label,stage);return cell;
+        label.textContent=+selected===30017?({'naruto-shikamaru':'影模仿','naruto-shikamaru-sewing':'影縫','naruto-shikamaru-trap':'起爆札','naruto-shikamaru-tactics':'影術精修','naruto-shikamaru-strangle':'影首縛'}[id]||G.Moves.BY_ID[id].name):kitLabels[selected][index];stage.textContent=`Lv.${level}`;cell.append(label,stage);return cell;
       }));
       learningDex=selected;
     }

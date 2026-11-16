@@ -18,7 +18,7 @@
       if(mode==='shikamaru-tactics')return null;
       const pfile=G.NarutoShikamaru.profile(p,m);
       if(mode==='shikamaru-trap')return {札位容量:pfile.traps,每札爆破輪次:pfile.blastRounds,爆破半徑:pfile.radius};
-      if(mode==='shikamaru-sewing')return {穿刺波次:pfile.pulses};
+      if(mode==='shikamaru-sewing')return {高拱穿刺輪次:pfile.pulses};
       if(mode==='shikamaru-strangle')return {收緊目標:pfile.chainTargets,收緊波次:pfile.pulses};
       return {接力目標:pfile.chainTargets,後續接點:pfile.chainHops,接力距離:pfile.chainRange,首段射程:pfile.range};
     }
@@ -139,7 +139,7 @@
             const profile=G.NarutoShikamaru.profile(probe,shadow);return {接力目標:profile.chainTargets,束縛秒數:profile.bindDuration};
           }
           const profile=G.NarutoShikamaru.profile(owner,move);
-          return {傷害:profile.damage,...vector(owner,move),...(profile.kind==='shadow'?{影身半寬:profile.radius}:{}),...(profile.kind==='strangle'?{收緊射程:profile.range}:{}),...(profile.kind==='shadow'||profile.kind==='sewing'?{束縛秒數:profile.bindDuration}:{})};
+          return {傷害:profile.damage,...vector(owner,move),...(profile.kind==='shadow'?{影身半寬:profile.radius}:{}),...(profile.kind==='strangle'?{收緊射程:profile.range}:{}),...(profile.kind==='shadow'?{束縛秒數:profile.bindDuration}:{})};
         };
         const before=metrics(p,m),after=metrics(p,next),parts=[];
         for(const key of Object.keys(before))if(before[key]!==after[key])parts.push(`${key} ${fmt(before[key])}→${fmt(after[key])}`);
