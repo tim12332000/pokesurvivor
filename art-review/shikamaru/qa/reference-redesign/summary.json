@@ -1,0 +1,471 @@
+{
+  "status": "Reference-driven true runtime QA complete; final art/anime/director acceptance and live publication remain leader responsibilities.",
+  "isolatedWorkspace": "C:\\Git\\pokesurvivor\\.omx\\worktrees\\shikamaru-reference-redesign",
+  "commit": "86e86b9d0e2e452bdd3ba463a8ca3813c0f2ee5e",
+  "publishedNarutoAncestorPreserved": true,
+  "sourceManifest": {
+    ".omx/naruto-shikamaru.js": "3617f40d7036e25d363788855f2268f1540a3c8e0343e9f8e24076753b371ec3",
+    ".omx/naruto-skills.js": "adb718cb94da9c4f002ee32df167a71cd5fc2a530659a87a3488184a7f255427",
+    ".omx/jujutsu-growth.js": "d0bebf58ea73cd7be9a5fda9f8fd08087b70f317391fcaaacb1fc91648d300b0",
+    "art-review/shikamaru-art.js": "a628d34bf34b196245e9e9c99f9a4b0d4e9a53a01221694087ca5c7e8b8a12aa",
+    "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+    "art-review/shikamaru/reference-shadow-geometry.js": "c456a3d702cc3627e34aa11a350ecce40976f8f3abb468dd0232ceccc2920560",
+    ".omx/digimon.html": "d2c6ea92cda0a839725ed491009dde9fd6b7006e8b0559e1803639ddd14f9915"
+  },
+  "sourceStable": {
+    "core": true,
+    "natural": true,
+    "native": true
+  },
+  "geometrySlice": {
+    "alphaNativeFrameMismatches": 0,
+    "monsterOwnSource": "http://127.0.0.1:8351/assets/pokemon/19/Idle.png",
+    "cache": {
+      "openPixels": 1546,
+      "wallX": 205,
+      "blockedPixels": 740,
+      "leakedPixels": 0,
+      "changedWorldPixels": 0
+    },
+    "archBodyHeight": 37,
+    "archMaximumZ": 92.1618238052322,
+    "firstDescendingContact": {
+      "u": 0.94,
+      "phase": "descent",
+      "point": {
+        "x": 150.39999999999998,
+        "y": 0,
+        "z": 32.087125373532324
+      }
+    },
+    "movingTargetEvaded": true,
+    "wallBlocked": true,
+    "rendererReadOnly": true,
+    "helperHashMatchesCurrent": true
+  },
+  "sixCoreChecks": [
+    "groundAlpha",
+    "fusion",
+    "archHurt",
+    "safety",
+    "stationary",
+    "readOnly"
+  ],
+  "groundAlphaGrowth": [
+    {
+      "rank": 1,
+      "quantity": 0,
+      "actualCards": [],
+      "nativeHurtCount": 1,
+      "distinctTargets": 1,
+      "contactsAllActualAlpha": true
+    },
+    {
+      "rank": 2,
+      "quantity": 0,
+      "actualCards": [
+        "up:naruto-shikamaru"
+      ],
+      "nativeHurtCount": 2,
+      "distinctTargets": 2,
+      "contactsAllActualAlpha": true
+    },
+    {
+      "rank": 1,
+      "quantity": 1,
+      "actualCards": [
+        "stat:quantity"
+      ],
+      "nativeHurtCount": 2,
+      "distinctTargets": 2,
+      "contactsAllActualAlpha": true
+    },
+    {
+      "rank": 1,
+      "quantity": 2,
+      "actualCards": [
+        "stat:quantity",
+        "stat:quantity"
+      ],
+      "nativeHurtCount": 3,
+      "distinctTargets": 3,
+      "contactsAllActualAlpha": true
+    }
+  ],
+  "fusionLinks": [
+    {
+      "targetId": 14,
+      "held": true,
+      "endpoint": {
+        "x": 66.5,
+        "y": 11.5
+      },
+      "insideCurrentAlpha": true,
+      "bodyKey": "19:Hurt:0:0:2:false"
+    },
+    {
+      "targetId": 15,
+      "held": true,
+      "endpoint": {
+        "x": 105.5,
+        "y": 27.5
+      },
+      "insideCurrentAlpha": true,
+      "bodyKey": "19:Hurt:0:0:2:false"
+    }
+  ],
+  "trueArchHurt": {
+    "nativeHurtCount": 6,
+    "contactCount": 6,
+    "allGeometry": "xyz-tip-sweep",
+    "allDescentOrContact": true
+  },
+  "safety": [
+    {
+      "reason": "pause",
+      "hits": 0
+    },
+    {
+      "reason": "clear",
+      "hits": 0
+    },
+    {
+      "reason": "death",
+      "hits": 0
+    },
+    {
+      "reason": "world",
+      "hits": 0
+    },
+    {
+      "reason": "unlearn",
+      "hits": 0
+    },
+    {
+      "callback": "hurt",
+      "hits": [
+        {
+          "time": 1.340000000000001,
+          "id": "naruto-shikamaru-sewing",
+          "targetId": 29,
+          "x": 100,
+          "y": 0,
+          "loss": 63,
+          "owner": true,
+          "bodyKey": "19:Hurt:0:0:2:false",
+          "bodyHeight": 55
+        }
+      ]
+    },
+    {
+      "callback": "onDealt",
+      "hits": [
+        {
+          "time": 1.340000000000001,
+          "id": "naruto-shikamaru-sewing",
+          "targetId": 32,
+          "x": 100,
+          "y": 0,
+          "loss": 63,
+          "owner": true,
+          "bodyKey": "19:Hurt:0:0:2:false",
+          "bodyHeight": 55
+        }
+      ]
+    }
+  ],
+  "stationaryFourCases": [
+    {
+      "clone": false,
+      "boss": false,
+      "before": [
+        {
+          "x": 100,
+          "y": 0
+        },
+        {
+          "x": 180,
+          "y": 70
+        }
+      ],
+      "after": [
+        {
+          "x": 100,
+          "y": 0
+        },
+        {
+          "x": 180,
+          "y": 70
+        }
+      ],
+      "dragged": 0
+    },
+    {
+      "clone": false,
+      "boss": true,
+      "before": [
+        {
+          "x": 100,
+          "y": 0
+        },
+        {
+          "x": 180,
+          "y": 70
+        }
+      ],
+      "after": [
+        {
+          "x": 100,
+          "y": 0
+        },
+        {
+          "x": 180,
+          "y": 70
+        }
+      ],
+      "dragged": 0
+    },
+    {
+      "clone": true,
+      "boss": false,
+      "before": [
+        {
+          "x": 100,
+          "y": 0
+        },
+        {
+          "x": 180,
+          "y": 70
+        }
+      ],
+      "after": [
+        {
+          "x": 100,
+          "y": 0
+        },
+        {
+          "x": 180,
+          "y": 70
+        }
+      ],
+      "dragged": 0
+    },
+    {
+      "clone": true,
+      "boss": true,
+      "before": [
+        {
+          "x": 100,
+          "y": 0
+        },
+        {
+          "x": 180,
+          "y": 70
+        }
+      ],
+      "after": [
+        {
+          "x": 100,
+          "y": 0
+        },
+        {
+          "x": 180,
+          "y": 70
+        }
+      ],
+      "dragged": 0
+    }
+  ],
+  "readOnly": {
+    "readOnly": true,
+    "iterations": 50
+  },
+  "natural": {
+    "newCoreComplete": true,
+    "time": 75.44206666666778,
+    "level": 7,
+    "actualAppliedCardCost": 6,
+    "cards": [
+      "new:naruto-shikamaru-sewing",
+      "new:naruto-shikamaru-trap",
+      "new:naruto-shikamaru-tactics",
+      "up:naruto-shikamaru-tactics",
+      "stat:quantity",
+      "up:naruto-shikamaru-sewing"
+    ],
+    "hp": 205.61352918400408,
+    "maxHp": 235,
+    "alive": true,
+    "groupEver": true,
+    "firstTrueArchBodyHurt": {
+      "time": 27.669466666666377,
+      "wall": 14.999799999952316,
+      "id": "naruto-shikamaru-sewing",
+      "targetId": 7,
+      "hpBefore": 1,
+      "hpAfter": -93,
+      "maxHp": 51,
+      "loss": 94,
+      "x": 95.59503335487258,
+      "y": 112.92547662996841,
+      "geometry": {
+        "kind": "xyz-tip-sweep",
+        "castId": 31,
+        "pulse": 1,
+        "point": {
+          "x": 97.31301630017876,
+          "y": 113.19863974654169,
+          "z": 35.177436210295056
+        },
+        "previous": {
+          "x": 97.66356438252367,
+          "y": 113.25464983890295,
+          "z": 38.00610864405652
+        },
+        "current": {
+          "x": 96.96246821783386,
+          "y": 113.14262965418042,
+          "z": 32.34876377653359
+        },
+        "progress": 0.9532000000000054,
+        "phase": "descent",
+        "targetId": 7,
+        "bodyKey": "104:Idle:1:3:2:false"
+      }
+    },
+    "finalPhase": "recover",
+    "finalFlyingArcCount": 0,
+    "finalState": "playing",
+    "permanent": {},
+    "policy": "Native D/S/A/W square,1.5 native seconds per side. Actual UI cards: learn new arch/sewing, quantity, shadow upgrade, other valid new/upgrade. No HP/XP/invulnerability/AI/clock mutation.",
+    "video": "art-review/shikamaru/qa/reference-redesign/natural/reference-new-core-native.webm",
+    "phaseImages": [
+      "Lv1-alpha-source.png",
+      "real-ground-contact.png",
+      "first-true-card.png",
+      "arch-rising.png",
+      "arch-overhead.png",
+      "actual-descent-hurt.png",
+      "arch-full-recover.png",
+      "fused-native-projections.png"
+    ],
+    "errors": []
+  },
+  "controlledNative": {
+    "configuration": "Three actual cards: basic rank3 plus learn sewing rank1; Q0. Native million-HP static fixture, open collision arena, four directions. Real Combat/RAF/hurt, not prototype or natural growth.",
+    "viewports": {
+      "desktop": {
+        "phaseImageCount": 32,
+        "video": "art-review/shikamaru/qa/reference-redesign/native/desktop/reference-four-direction-native.webm",
+        "directions": [
+          {
+            "direction": "right",
+            "fullRecover": true,
+            "trueXyzBodyHurtCount": 9
+          },
+          {
+            "direction": "left",
+            "fullRecover": true,
+            "trueXyzBodyHurtCount": 5
+          },
+          {
+            "direction": "up",
+            "fullRecover": true,
+            "trueXyzBodyHurtCount": 12
+          },
+          {
+            "direction": "down",
+            "fullRecover": true,
+            "trueXyzBodyHurtCount": 11
+          }
+        ]
+      },
+      "mobile390": {
+        "phaseImageCount": 32,
+        "video": "art-review/shikamaru/qa/reference-redesign/native/mobile390/reference-four-direction-native.webm",
+        "directions": [
+          {
+            "direction": "right",
+            "fullRecover": true,
+            "trueXyzBodyHurtCount": 9
+          },
+          {
+            "direction": "left",
+            "fullRecover": true,
+            "trueXyzBodyHurtCount": 6
+          },
+          {
+            "direction": "up",
+            "fullRecover": true,
+            "trueXyzBodyHurtCount": 12
+          },
+          {
+            "direction": "down",
+            "fullRecover": true,
+            "trueXyzBodyHurtCount": 11
+          }
+        ]
+      }
+    },
+    "errors": []
+  },
+  "prototypeBoundary": "Earlier four-space prototype showed direction only and had no damage, collision or growth. It is not used as this product completion evidence. This report instead pairs actual native sprite alpha, real ground/xyz contacts, true hurt, current-frame source, same-wave cancellation, stationary binding and a new genuine-card natural run.",
+  "fixedCounterexamples": [
+    "Old projection cache reused an open mask after world/clip-policy changed. World revision, native blocker identity and explicit pathClear policy are now separated; same-position next-sim/wall/world cases pass.",
+    "An actual tip at81.49999999999999/8.500000000000005 missed opaque pixel center81.5/8.5 due a zero-radius polygon edge strict comparison, causing0 real hits. Minimal1e-6 numerical edge tolerance fixed the real-alpha contact; no circle/bbox substituted.",
+    "Captured near targets changed projection toward group center while their old link endpoint could lie in a new transparent area. Only actual alpha endpoints are reanchored; held endpoints now remain within the current mask."
+  ],
+  "limitations": [
+    "Automated/visual checks do not certify subjective enjoyment or user acceptance.",
+    "390px viewport emulation is not a physical-phone long run.",
+    "No audio listening review.",
+    "Controlled directional clips use explicit million-HP static fixtures; they are separate from the new natural real-monster-HP run."
+  ],
+  "rawEvidence": {
+    "geometry-report.json": {
+      "path": "art-review/shikamaru/qa/reference-redesign/geometry-report.json",
+      "sha256": "eb19597837e6556c1186f36116612f39d2671653e302bf79c3e7e29fcc8a1cc5",
+      "bytes": 38783
+    },
+    "core-report.json": {
+      "path": "art-review/shikamaru/qa/reference-redesign/core-report.json",
+      "sha256": "b544f6629a3c5debcd6e5d40a7eba07ec6a1402dadae0cb3672b6110062ebaef",
+      "bytes": 441145
+    },
+    "cache-counterexample.json": {
+      "path": "art-review/shikamaru/qa/reference-redesign/cache-counterexample.json",
+      "sha256": "ac6785d4621eecef50653e4210cf65a08291ed46f2caf2791387102dba589fc0",
+      "bytes": 3631
+    },
+    "ground-miss-counterexample.json": {
+      "path": "art-review/shikamaru/qa/reference-redesign/ground-miss-counterexample.json",
+      "sha256": "fd6fb90afc5c6003bc27665fda4901307d99792da4f61193bd084d56d4a76d90",
+      "bytes": 6699
+    },
+    "natural/report.json": {
+      "path": "art-review/shikamaru/qa/reference-redesign/natural/report.json",
+      "sha256": "fac6a7c293fab4a2e0a92c5424bf1a7561bc5c06a53ebb60a10a2d1f1f7f7e98",
+      "bytes": 587323
+    },
+    "natural/reference-new-core-native.webm": {
+      "path": "art-review/shikamaru/qa/reference-redesign/natural/reference-new-core-native.webm",
+      "sha256": "dde1ce18f31b978d3ad8f0662390d0b345fb5359b5fcf5b414adcd3c68a62d1d",
+      "bytes": 7209742
+    },
+    "native/report.json": {
+      "path": "art-review/shikamaru/qa/reference-redesign/native/report.json",
+      "sha256": "bad80788063709f4834ec04384b7e6d2b3dfa57f31348277dadb2c3823249a11",
+      "bytes": 466914
+    },
+    "native/desktop/reference-four-direction-native.webm": {
+      "path": "art-review/shikamaru/qa/reference-redesign/native/desktop/reference-four-direction-native.webm",
+      "sha256": "8c51915ada80ead4e7493b01e86d650465b13409a5916756bbb2a0e5776b9340",
+      "bytes": 1297998
+    },
+    "native/mobile390/reference-four-direction-native.webm": {
+      "path": "art-review/shikamaru/qa/reference-redesign/native/mobile390/reference-four-direction-native.webm",
+      "sha256": "2ebb3ae97eced3d989f1f6647d260f5cb4050fa64c20e478817d19ad6bbe8099",
+      "bytes": 994768
+    }
+  }
+}

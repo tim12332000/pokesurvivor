@@ -1,0 +1,146 @@
+{
+  "desktop": {
+    "duration": 10.56,
+    "sha256": "8c51915ada80ead4e7493b01e86d650465b13409a5916756bbb2a0e5776b9340",
+    "samples": [
+      {
+        "time": 0.6683,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 1.5917,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 2.5986,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 3.5881,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 4.5842,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 5.5917,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 6.5924,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 7.5888,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 8.5893,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 9.6312,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 10.56,
+        "ended": true,
+        "paused": true,
+        "ready": 4
+      }
+    ]
+  },
+  "mobile390": {
+    "duration": 9.52,
+    "sha256": "2ebb3ae97eced3d989f1f6647d260f5cb4050fa64c20e478817d19ad6bbe8099",
+    "samples": [
+      {
+        "time": 0.8407,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 1.8507,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 2.8499,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 3.8396,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 4.8431,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 5.8487,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 6.8449,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 7.8478,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 8.8698,
+        "ended": false,
+        "paused": false,
+        "ready": 4
+      },
+      {
+        "time": 9.52,
+        "ended": true,
+        "paused": true,
+        "ready": 4
+      },
+      {
+        "time": 9.52,
+        "ended": true,
+        "paused": true,
+        "ready": 4
+      }
+    ]
+  }
+}
