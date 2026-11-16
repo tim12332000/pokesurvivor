@@ -674,14 +674,14 @@
   const shikamaruSource='https://naruto-official.com/en/news/01_1910';
   const shikamaruUps=Array.from({length:4},(_,i)=>({t:'影術傷害與實際覆蓋成長',m:{dmg:[1.2,1.4/1.2,1.7/1.4,2/1.7][i]}}));
   const shikamaruDesigns=[
-    ['naruto-shikamaru','影真似之術','shadow',1,1.2,18,'雙足下的人物投影拉長成一根追影，前沿沿地彎進，真接到A的地影後才拘束、傷害，再依投資預算從接點續向B。初始只接一個目標，每次升階或數量增加一個順序目標，至16個；戰術二、四階各加一個。多名已捕者的投影與已建立通道融合成不規則掌片，不憑空填滿敵群空地。普通敵原地束縛並停止新攻擊，玩家移動不拖怪；強敵保留攻擊，在途敵彈仍有威脅。'],
+    ['naruto-shikamaru','影真似之術','shadow',1,1.2,18,'腳底投影保持固定光向，多條地影一次捕捉不同目標，不再從A接力到B。初始捕捉一個目標，每次升階或數量卡增加一個，最多16個；精修二、四階各加一個。鎖定後朝各目標連投3枚苦無，影術三、五階各追加一枚；苦無實際飛行碰到目標才逐枚造成傷害，牆可阻擋、移動可閃避。普通敵原地束縛並停止新攻擊；強敵保留攻擊，在途敵彈仍有威脅。多重捕捉與苦無連投為本作改編。'],
     ['naruto-shikamaru-sewing','影縫之術','sewing',2,4.2,34,'從已接合的同一片地影前部鼓起，逐輪長出高拱黑影，尖端越過弧頂再回落穿身。只沿真正捕捉的接點施術；尖端真的掃過敵人身體才造成傷害，提前離開或牆阻可使穿刺落空。數量與升階增加真正高拱穿刺輪次，不在敵腳瞬刷刺群，也不從本體同時發射扇形影線。'],
     ['naruto-shikamaru-trap','起爆札・誘敵陷阱','trap',3,6,62,'沿真正走過的路徑預佈固定起爆札，落地後不跟敵人滑動；用影模仿將走入札區的追兵原地留下。成熟札與捕捉目標成立時可停步提前收網，繼續移動也會到時逐札連爆。數量增加真札位及預置多張起爆符的爆輪，收益顯示於成長預覽；自動佈陣及多符連爆為本作改編。'],
-    ['naruto-shikamaru-tactics','奈良流・影術精修','tactics',4,0,0,'常駐精修，延長已接影目標的拘束窗口；二、四階各增加一個順序接力目標，使多個已捕者的投影逐步連成掌片。只強化已學影術，不另外射出影線；各階真收益顯示於成長預覽。本作改編。'],
+    ['naruto-shikamaru-tactics','奈良流・影術精修','tactics',4,0,0,'常駐精修，延長已接影目標的拘束窗口；二、四階各增加一個同時捕捉目標，使多條地影同時鎖住不同敵人。只強化已學影術，不另外射出影線；各階真收益顯示於成長預覽。本作改編。'],
     ['naruto-shikamaru-strangle','影首縛之術','strangle',5,7,54,'舊招式ID保留相容；本次新招式池暫不提供。貼體影首縛需另完成當格身體遮影攀升與接觸驗收。']
   ];
   for(const [id,name,key,learnLevel,cd,dmg,desc]of shikamaruDesigns){
-    const design={name,mode:'shikamaru-'+key,icon:id,type:key==='trap'?'fire':'psychic',learnLevel,cd,dmg,range:360,radius:100,passive:true,autoCast:key!=='tactics',ups:shikamaruUps.map(u=>({...u,t:key==='tactics'?'拘束時間 +0.12 秒；二、四階增加接力目標':key==='sewing'?'高拱穿刺傷害增加；三、五階追加真穿刺輪次':key==='trap'?'傷害與爆破半徑增加；三、五階增加札位及每札爆輪':key==='strangle'?'傷害、收緊射程及目標數增加；收緊波次 +1':'傷害與首段射程增加；順序接力目標 +1',m:key==='tactics'?{}:{...u.m}})),source_url:shikamaruSource,desc:desc+' 學會即生效，不占主動槽。'};
+    const design={name,mode:'shikamaru-'+key,icon:id,type:key==='trap'?'fire':'psychic',learnLevel,cd,dmg,range:360,radius:100,passive:true,autoCast:key!=='tactics',ups:shikamaruUps.map(u=>({...u,t:key==='tactics'?'拘束時間 +0.12 秒；二、四階增加捕捉目標':key==='sewing'?'高拱穿刺傷害增加；三、五階追加真穿刺輪次':key==='trap'?'傷害與爆破半徑增加；三、五階增加札位及每札爆輪':key==='strangle'?'傷害、收緊射程及目標數增加；收緊波次 +1':'苦無傷害與捕捉射程增加；同時捕捉目標 +1；三、五階苦無 +1',m:key==='tactics'?{}:{...u.m}})),source_url:shikamaruSource,desc:desc+' 學會即生效，不占主動槽。'};
     kinds[design.mode]=key==='tactics'?'buff':'melee';
     if(key==='shadow')profiles.push([30017,'shikamaru',name,'Shikamaru Nara','01_1910',design]);else extra.push([id,key==='strangle'?[]:[30017],design]);
     const iconRows={
@@ -832,7 +832,7 @@
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = dex===30017?`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · ${move.digiMode==='shikamaru-tactics'?'強化共用影網':'捕群／收網接力'} · 可升至 Lv.${move.maxLvl||5}`:`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.${move.maxLvl||5}`;
+      extraStats.textContent = dex===30017?`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · ${move.digiMode==='shikamaru-tactics'?'強化共用影網':'捕群／苦無連投'} · 可升至 Lv.${move.maxLvl||5}`:`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.${move.maxLvl||5}`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';

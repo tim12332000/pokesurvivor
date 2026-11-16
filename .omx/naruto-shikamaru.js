@@ -18,11 +18,11 @@
     const tactics=a.moves?.find(x=>x.digiMode==='shikamaru-tactics'),T=tactics?rank(tactics):0;
     const kind=(m?.digiMode||'shikamaru-shadow').replace('shikamaru-','');
     return {kind,L,Q,T,range:(m?.range||300)+24*(L-1)+12*Q,
-      branches:Math.min(16,L+Q+Math.floor(T/2)),chainTargets:Math.min(16,L+Q+Math.floor(T/2)),chainHops:Math.min(16,L+Q+Math.floor(T/2))-1,simultaneousRoots:1,chainRange:Math.min(240,((m?.range||300)+24*(L-1)+12*Q)*.75),pulses:kind==='sewing'?2+Math.floor((L-1)/2)+Math.min(2,Q):kind==='strangle'?2+L:1,
+      branches:Math.min(16,L+Q+Math.floor(T/2)),chainTargets:Math.min(16,L+Q+Math.floor(T/2)),chainHops:0,simultaneousRoots:Math.min(16,L+Q+Math.floor(T/2)),chainRange:Math.min(240,((m?.range||300)+24*(L-1)+12*Q)*.75),pulses:kind==='sewing'?2+Math.floor((L-1)/2)+Math.min(2,Q):kind==='strangle'?2+L:1,
       traps:Math.min(24,3+2*Q+Math.floor((L-1)/2)),radius:(kind==='trap'?108:kind==='strangle'?70:22)+7*(L-1)+(kind==='trap'?8*Q:0),
       damage:(m?.dmg??(kind==='shadow'?12:kind==='sewing'?17:kind==='trap'?65:35))*(a.atk??1),
       bindDuration:1.25+.23*L+.12*T,cd:Math.max(.2,(m?.cd??(kind==='shadow'?1.5:kind==='sewing'?4:kind==='trap'?5.5:7))*(a.cdMul??1)),
-      speed:620+35*L,release:kind==='trap'?.25:.18,interval:kind==='sewing'?.7:kind==='strangle'?.23:.16,archFlight:.5,archPrepare:.12,needleWidth:5*(a.anim?.scale||1),
+      kunaiRounds:3+Math.floor((L-1)/2),kunaiInterval:.13,kunaiSpeed:740,speed:620+35*L,release:kind==='trap'?.25:.18,interval:kind==='sewing'?.7:kind==='strangle'?.23:.16,archFlight:.5,archPrepare:.12,needleWidth:5*(a.anim?.scale||1),
       trapLifetime:10,deployDistance:54,trapArm:.55,blastRounds:1+Math.min(3,Q)+Math.floor((L-1)/2),blastInterval:.16,chainInterval:.12,captureWindow:.55,dragTimeout:a.moves?.some(x=>x.digiMode==='shikamaru-trap')?2.4:.9,stopWindow:.25,netPrepare:.28,recoverTime:.35};
   }
   function clearPath(ax,ay,bx,by,r=1,target=null){
@@ -30,6 +30,7 @@
     const n=Math.max(1,Math.ceil(Math.hypot(bx-ax,by-ay)/5));
     for(let i=1;i<=n;i++){const x=ax+(bx-ax)*i/n,y=ay+(by-ay)*i/n,b=G.World.projectileBlock?.(x,y,r);if(b&&b!==target)return false;if(!G.World.projectileBlock&&G.World.isWall?.(x,y))return false;}return true;
   }
+  Ref.registerNativePolicy(clearPath);
   function targets(a,p){
     const list=[...new Set(G.EnemyMgr.queryCircle(a.x,a.y,p.range))].filter(e=>alive(e)&&!e.friendly&&Math.hypot(e.x-a.x,e.y-a.y)<=p.range+(e.r||0)&&(held(e)&&leases.get(e)?.cast.owner===a||clearPath(a.x,a.y,e.x,e.y))).sort((u,v)=>Number(held(u))-Number(held(v))||Math.hypot(u.x-a.x,u.y-a.y)-Math.hypot(v.x-a.x,v.y-a.y));
     if(list.length||p.kind!=='shadow')return list;
@@ -37,19 +38,12 @@
   }
   function projectionFor(actor){
     const body=Ref.bodyFor(actor);if(!body)return null;
-    const owner=valid(actor),height=body.bodyHeight;
-    let dx=-.45,dy=.9,length=height*.92,across=.85;
-    if(owner){dx=Math.cos(actor.aim||0);dy=Math.sin(actor.aim||0);const chain=states.get(actor)?.lastChain,front=chain?.chain?.segments[0];length=height*(.72+.45*Math.min(1,(front?.travelled||0)/Math.max(1,height)));across=.6;}
-    else{
-      const lease=leases.get(actor),s=lease?.cast.state;
-      if(s){const near=ownedCaptures(s).map(([e])=>e).filter(e=>Math.hypot(e.x-actor.x,e.y-actor.y)<Math.max(110,height*2.5));
-        if(near.length>1){const cx=near.reduce((sum,e)=>sum+e.x,0)/near.length,cy=Math.max(...near.map(e=>e.y))+height*.75;dx=cx-actor.x;dy=cy-actor.y;length=Math.hypot(dx,dy);across=1.1;}
-      }
-    }
+    const height=body.bodyHeight;
+    const dx=-.45,dy=.9,length=height*.92,across=valid(actor)?.6:.85;
     return Ref.project(actor,dx,dy,length,across,clearPath);
   }
   function legal(b){return !b.cancelled&&valid(b.owner)&&b.world===G.World&&states.get(b.owner)===b.state&&learned(b.owner,b.m.id);}
-  function chainConnected(b,e){const chain=b.followChain||b;if(!chain.chain)return clearPath(b.owner.x,b.owner.y,e.x,e.y);if(!legal(chain))return false;const index=chain.chain.segments.findIndex(s=>s.target===e&&s.contact);return index>=0&&chain.chain.segments.slice(0,index+1).every(s=>s.linked!==false);}
+  function chainConnected(b,e){const chain=b.followChain||b;if(!chain.chain)return clearPath(b.owner.x,b.owner.y,e.x,e.y);if(!legal(chain))return false;const index=chain.chain.segments.findIndex(s=>s.target===e&&s.contact);return index>=0&&chain.chain.segments[index].linked!==false;}
   function held(e){const l=leases.get(e);return !!l&&legal(l.cast)&&alive(e)&&l.until>l.cast.state.clock&&chainConnected(l.cast,e);}
   const stopped=e=>held(e)&&!strong(e);
   function canCast(a,m){if(!valid(a)||a.frozen||!supports(m)||m.digiMode==='shikamaru-tactics'||m.digiMode==='shikamaru-strangle')return false;const s=state(a),p=profile(a,m);if((s.cooldowns[m.id]||0)>EPS)return false;if(p.kind==='shadow'&&(casts.some(b=>b.owner===a&&b.kind==='shadow'&&legal(b)&&!b.chain?.ended)||ownedCaptures(s).length))return false;if(p.kind==='sewing')return !!s.lastChain&&legal(s.lastChain)&&s.lastChain.chain.segments.some(x=>x.contact&&alive(x.target));const t=targets(a,p);return t.length>0;}
@@ -60,7 +54,7 @@
       const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:p.kind,age:0,duration:p.release+p.pulses*p.interval+p.archFlight+.4,aim:a.aim||0,rays:[],traps:[],arcs:[],emitted:0,cancelled:false,hits:0,followChain:s.lastChain};
       s.cooldowns[m.id]=p.cd;m.t=p.cd;s.casts[p.kind]=(s.casts[p.kind]||0)+1;s.sewingPose={kind:'sewing',phase:'sewing',started:s.clock,duration:.55,aim:b.aim};casts.push(b);return true;
     }
-    const count=p.kind==='trap'?p.traps:p.kind==='shadow'?1:p.branches;
+    const count=p.kind==='trap'?p.traps:p.kind==='shadow'?Math.min(p.branches,t.length):p.branches;
     const b={serial:++serial,owner:a,state:s,world:G.World,m:{...m},spec:p,kind:p.kind,age:0,duration:p.kind==='trap'?1.3:p.release+(p.pulses-1)*p.interval+p.range/p.speed+.4,
       aim:Math.atan2(t[0].y-a.y,t[0].x-a.x),origin:{x:a.x,y:a.y},rays:[],traps:[],emitted:0,cancelled:false,hits:0};
     for(let i=0;i<count;i++){
@@ -76,8 +70,9 @@
     s.cooldowns[m.id]=p.cd;m.t=p.cd;s.casts[p.kind]=(s.casts[p.kind]||0)+1;s.pose=b;casts.push(b);a.aim=b.aim;
     if(p.kind==='shadow'){
       b.chain={segments:[],visited:new Set(),current:0,ended:false,lastContact:null};
-      b.duration=p.release+p.chainTargets*(p.range/p.speed+.35)+.5;
-      b.chain.segments.push(makeSegment(b,t[0],{x:a.x,y:a.y},null));s.lastChain=b;
+      b.duration=p.release+p.range/p.speed+p.bindDuration+1;
+      b.kunai=[];
+      for(const target of t.slice(0,p.branches))b.chain.segments.push(makeSegment(b,target,{x:a.x,y:a.y},null));s.lastChain=b;
     }
     return true;
   }
@@ -156,7 +151,7 @@
       const a=segment.path[i-1],z=segment.path[i],d=Math.hypot(z.x-a.x,z.y-a.y);
       if(remaining>=d){grown.push({...z});remaining-=d;}else{if(remaining>0)grown.push({x:a.x+(z.x-a.x)*remaining/d,y:a.y+(z.y-a.y)*remaining/d});break;}
     }
-    const source=segment.index===0?b.owner:alive(segment.sourceActor)?segment.sourceActor:segment.origin;
+    const source=segment.sourceActor?(alive(segment.sourceActor)?segment.sourceActor:segment.origin):b.owner;
     grown[0]={x:source.x+(alive(segment.sourceActor)?segment.sourceOffset?.x||0:0),y:source.y+(alive(segment.sourceActor)?segment.sourceOffset?.y||0:0)};
     if(segment.contact&&alive(segment.target)&&grown.length>1)grown[grown.length-1]={x:segment.target.x+(segment.contactOffset?.x||0),y:segment.target.y+(segment.contactOffset?.y||0)};
     segment.grownPoints=grown;segment.polygon=chainMesh(segment,b.spec.radius);
@@ -178,27 +173,50 @@
     }
   }
   function advanceChain(b,dt){
-    if(b.age<b.spec.release||!legal(b)||b.chain.ended)return;
-    const chain=b.chain,segment=chain.segments[chain.current];
-    if(!alive(segment.target)){chain.ended=true;return;}
-    segment.travelled=Math.min(segment.totalLength,segment.travelled+Math.min(dt,Math.max(0,b.age-b.spec.release))*b.spec.speed);refreshSegment(b,segment);
-    if(segment.grownPoints.some((p,i,list)=>i&&!clearPath(list[i-1].x,list[i-1].y,p.x,p.y))){chain.ended=true;return;}
-    const e=segment.target,projection=projectionFor(e),contact=e.destructible?(polygonContains(segment.polygon,e.x,e.y,e.r||0)?{x:e.x,y:e.y}:null):Ref.groundContact(projection,segment.polygon,polygonContains);
-    if(contact&&clearPath(segment.grownPoints[0].x,segment.grownPoints[0].y,contact.x,contact.y)){
-      const point={...contact};b.emitted=chain.current+1;
-      if(e.destructible){G.World.damageProp?.(e,b.spec.damage,'#302936');chain.ended=true;return;}
-      if(!hit(b,e))return;
-      if(b.state.contacts.length)b.state.contacts[b.state.contacts.length-1].geometry={kind:'ground-alpha',point:{...point},sourceURL:projection?.sourceURL,bodyKey:projection?.body.key};
-      segment.contact=true;segment.contactPoint=point;segment.contactOffset={x:point.x-e.x,y:point.y-e.y};segment.targetProjection=projection;chain.visited.add(e);chain.lastContact=point;
-      // Keep the confirmed contact path; a killing hit still owns a real graft point.
-      segment.path=segment.grownPoints.map(p=>({...p}));segment.path.push(point);segment.travelled=segment.totalLength=segment.path.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-segment.path[i].x,p.y-segment.path[i].y),0);refreshSegment(b,segment);
-      bind(b,e);contactVisual(b,e,'shadow',chain.current+1,.25);
+    if(b.age<b.spec.release||!legal(b))return;
+    const chain=b.chain;
+    for(const segment of chain.segments){
       if(!legal(b))return;
-      if(chain.segments.length>=b.spec.chainTargets){chain.ended=true;return;}
-      const next=[...new Set(G.EnemyMgr.queryCircle(point.x,point.y,b.spec.chainRange))].filter(t=>alive(t)&&!t.friendly&&!chain.visited.has(t)&&Math.hypot(t.x-point.x,t.y-point.y)<=b.spec.chainRange+(t.r||0)&&clearPath(point.x,point.y,t.x,t.y)).sort((a,z)=>Number(held(a))-Number(held(z))||Math.hypot(a.x-point.x,a.y-point.y)-Math.hypot(z.x-point.x,z.y-point.y))[0];
-      if(!next){chain.ended=true;return;}
-      chain.current++;chain.segments.push(makeSegment(b,next,point,e));
-    }else if(segment.travelled>=segment.totalLength){chain.ended=true;}
+      if(segment.contact||segment.finished)continue;
+      const e=segment.target;
+      if(!alive(e)){segment.finished=true;continue;}
+      segment.travelled=Math.min(segment.totalLength,segment.travelled+Math.min(dt,Math.max(0,b.age-b.spec.release))*b.spec.speed);refreshSegment(b,segment);
+      if(!segment.linked){segment.finished=true;continue;}
+      const projection=projectionFor(e),contact=e.destructible?(polygonContains(segment.polygon,e.x,e.y,e.r||0)?{x:e.x,y:e.y}:null):Ref.groundContact(projection,segment.polygon,polygonContains);
+      if(contact&&clearPath(segment.grownPoints[0].x,segment.grownPoints[0].y,contact.x,contact.y)){
+        if(e.destructible){G.World.damageProp?.(e,b.spec.damage,'#302936');segment.finished=true;continue;}
+        const point={...contact};segment.contact=true;segment.contactPoint=point;segment.contactOffset={x:point.x-e.x,y:point.y-e.y};segment.targetProjection=projection;chain.visited.add(e);chain.lastContact=point;
+        segment.path=segment.grownPoints.map(p=>({...p}));segment.path.push(point);segment.travelled=segment.totalLength=segment.path.slice(1).reduce((sum,p,i)=>sum+Math.hypot(p.x-segment.path[i].x,p.y-segment.path[i].y),0);refreshSegment(b,segment);
+        segment.shots=0;segment.nextShot=b.age;bind(b,e);contactVisual(b,e,'shadow',segment.index+1,.25);
+      }else if(segment.travelled>=segment.totalLength)segment.finished=true;
+    }
+    chain.ended=chain.segments.every(s=>s.contact||s.finished);
+    advanceKunai(b,dt);
+  }
+  function advanceKunai(b,dt){
+    for(const segment of b.chain.segments){
+      if(!legal(b))return;
+      if(!segment.contact||segment.linked===false||!alive(segment.target)||!held(segment.target)||leases.get(segment.target)?.cast!==b)continue;
+      while(segment.shots<b.spec.kunaiRounds&&b.age+EPS>=segment.nextShot){
+        const target=segment.target,source={x:b.owner.x,y:b.owner.y},dx=target.x-source.x,dy=target.y-source.y,d=Math.hypot(dx,dy)||1;
+        b.kunai.push({x:source.x,y:source.y,vx:dx/d*b.spec.kunaiSpeed,vy:dy/d*b.spec.kunaiSpeed,target,round:++segment.shots,born:b.age,remaining:b.spec.range+40,done:false});
+        segment.nextShot+=b.spec.kunaiInterval;
+        b.state.throwPose={kind:'trap',phase:'release',started:b.state.clock,aim:Math.atan2(dy,dx),duration:.2};
+      }
+    }
+    for(const k of b.kunai){
+      if(!legal(b))return;if(k.done||!alive(k.target)){k.done=true;continue;}
+      const travel=Math.min(k.remaining,Math.max(0,Math.min(dt,b.age-k.born))*b.spec.kunaiSpeed),ax=k.x,ay=k.y,bx=ax+k.vx/b.spec.kunaiSpeed*travel,by=ay+k.vy/b.spec.kunaiSpeed*travel;
+      k.x=bx;k.y=by;k.remaining-=travel;
+      const e=k.target,dx=bx-ax,dy=by-ay,u=Math.max(0,Math.min(1,((e.x-ax)*dx+(e.y-ay)*dy)/(dx*dx+dy*dy||1))),cx=ax+dx*u,cy=ay+dy*u;
+      const contact=travel>0&&Math.hypot(e.x-cx,e.y-cy)<=(e.r||12)+3;
+      if(!clearPath(ax,ay,contact?cx:bx,contact?cy:by,2)){k.done=true;continue;}
+      if(contact){k.done=true;b.emitted=k.round;if(!hit(b,e))return;
+        if(b.state.contacts.length)b.state.contacts.at(-1).geometry={kind:'kunai-sweep',previous:{x:ax,y:ay},current:{x:bx,y:by},point:{x:cx,y:cy},round:k.round};
+        contactVisual(b,e,'kunai',k.round,.16);
+      }else if(k.remaining<=EPS)k.done=true;
+    }
+    b.kunai=b.kunai.filter(k=>!k.done);
   }
   function advanceSewing(b){
     if(!legal(b.followChain)){b.cancelled=true;return;}
@@ -233,7 +251,7 @@
   function shadowVisualFor(a){
     const s=states.get(a),m=moveFor(a,'shadow'),p=m?profile(a,m):null,b=s?.lastChain;let extensionTotal=0,branches=0;
     if(b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length))for(const segment of b.chain.segments){
-      if(segment.linked===false)break;
+      if(segment.linked===false)continue;
       const points=segment.grownPoints;for(let i=1;i<points.length;i++)extensionTotal+=Math.hypot(points[i].x-points[i-1].x,points[i].y-points[i-1].y);if(points.length>1)branches++;
     }
     const spent=Math.min(1,extensionTotal/Math.max(1,(p?.range||360)));
@@ -384,7 +402,7 @@
     const phase=s.plan?.phase||'ready',remaining=phase==='drag'?Math.max(0,spec.dragTimeout-(s.clock-p.started)):phase==='net'?Math.max(0,spec.netPrepare-(s.clock-p.at)):phase==='blast'?Math.max(0,p.end-s.clock):0;
     const captured=ownedCaptures(s).length,board=s.board.length,hasTrap=!!moveFor(a,'trap');
     const canStop=captured>=2&&(!hasTrap||s.board.some(t=>s.clock-t.born>=t.cast.spec.trapArm))&&s.clock-(p.captureAt??s.clock)>=.7;
-    s.cue={phase,remaining,captured,board,label:phase==='drag'?`${hasTrap?'佈局｜札'+board+' ':''}捕捉${captured}${canStop?' · 停步收網':''}`:phase==='net'?'結印 · 影網收束':phase==='blast'?(activeFront(s)?'影脈 · 連續接力':p.nodes?'起爆札接力':'影網絞擊'):phase==='finish'?(moveFor(a,'strangle')?'影首縛 · 終結':'影術收勢'):phase==='recover'?(p.empty?'重新結影':'整備'):'影模仿 · 捕捉'};
+    s.cue={phase,remaining,captured,board,label:phase==='drag'?`${hasTrap?'佈局｜札'+board+' ':''}捕捉${captured}${canStop?' · 停步收網':''}`:phase==='net'?'結印 · 影網收束':phase==='blast'?(activeFront(s)?'影模仿 · 多重捕捉':p.nodes?'起爆札接力':'影網絞擊'):phase==='finish'?(moveFor(a,'strangle')?'影首縛 · 終結':'影術收勢'):phase==='recover'?(p.empty?'重新結影':'整備'):'影模仿 · 捕捉'};
   }
   function clear(owner){
     for(const [a,s]of states)if(!owner||a===owner)for(const t of s.board)t.cast.cancelled=true;
@@ -398,7 +416,7 @@
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
     Ref.beginFrame?.();
     for(const [a,s]of states){if(!valid(a)||s.world!==G.World||(s.plan&&!moveFor(a,'shadow'))){clear(a);continue;}s.clock+=dt;if(s.pose&&s.pose.age>=.65)s.pose=null;
-      const chain=s.lastChain;if(chain&&legal(chain))for(const segment of chain.chain.segments)if(segment.contact){refreshSegment(chain,segment);if(!segment.linked){leases.delete(segment.target);chain.chain.ended=true;}}
+      const chain=s.lastChain;if(chain&&legal(chain))for(const segment of chain.chain.segments)if(segment.contact){refreshSegment(chain,segment);if(!segment.linked){leases.delete(segment.target);segment.finished=true;}}
     }
     for(const [e,l]of leases)if(!held(e))leases.delete(e);
     for(const b of casts.slice()){
@@ -408,7 +426,7 @@
       else if(b.kind==='sewing')advanceSewing(b);
       else if(b.kind==='trap')for(const t of b.traps){t.age=b.age;if(b.age>=.9)detonate(b,t);}
       else{b.hitSets??=[];for(let i=0;i<b.spec.pulses;i++){const start=b.spec.release+i*b.spec.interval;if(b.age<start)break;pulse(b,i,Math.max(0,b.age-start));}}
-      if(b.age>=b.duration||(b.kind==='shadow'&&b.chain.ended&&b.age>=b.spec.release+.4)){const i=casts.indexOf(b);if(i>=0)casts.splice(i,1);}
+      if(b.age>=b.duration||(b.kind==='shadow'&&b.chain.ended&&!b.kunai.length&&b.chain.segments.every(s=>!s.contact||!alive(s.target)||!held(s.target)||s.linked===false||s.shots>=b.spec.kunaiRounds)&&b.age>=b.spec.release+.4)){const i=casts.indexOf(b);if(i>=0)casts.splice(i,1);}
     }
     for(let i=effects.length-1;i>=0;i--){const e=effects[i];e.age=e.castRef&&casts.includes(e.castRef)?Math.max(0,e.castRef.age-e.lastPulseAt):e.age+dt;if(e.age>=e.life||e.world!==G.World||!valid(e.owner)||e.castRef&&!legal(e.castRef))effects.splice(i,1);}
     for(const s of states.values())if(s.cue){
@@ -443,7 +461,7 @@
       if(!valid(s.owner)||s.world!==G.World)continue;Ref.drawProjection(ctx,s.projection);
       for(const projection of s.projections?.values()||[])Ref.drawProjection(ctx,projection);
       const b=s.lastChain;if(b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length)){
-        ctx.save();ctx.fillStyle='#030304';for(const segment of b.chain.segments){if(segment.linked===false)break;if(segment.polygon.length<3)continue;ctx.beginPath();segment.polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();}ctx.restore();
+        ctx.save();ctx.fillStyle='#030304';for(const segment of b.chain.segments){if(segment.linked===false)continue;if(segment.polygon.length<3)continue;ctx.beginPath();segment.polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();}ctx.restore();
       }
       for(const node of s.board){if(!legal(node.cast)||s.clock-node.born<node.cast.spec.trapArm)continue;ctx.save();ctx.translate(node.x,node.y);ctx.fillStyle='#ead7a3';ctx.fillRect(-5,-9,10,18);ctx.fillStyle='#713d33';ctx.fillRect(-1,-6,2,11);ctx.restore();}
       for(const b of casts)if(b.owner===s.owner&&b.kind==='sewing'&&legal(b))for(const arc of b.arcs||[]){
@@ -452,6 +470,10 @@
     }
   }
   function referenceAir(ctx){
+    for(const b of casts)if(b.kind==='shadow'&&legal(b))for(const k of b.kunai||[]){
+      ctx.save();ctx.translate(k.x,k.y-18);ctx.rotate(Math.atan2(k.vy,k.vx));ctx.fillStyle='#d9dee5';ctx.strokeStyle='#343840';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(11,0);ctx.lineTo(-3,-4);ctx.lineTo(-6,0);ctx.lineTo(-3,4);ctx.closePath();ctx.fill();ctx.stroke();ctx.beginPath();ctx.moveTo(-6,0);ctx.lineTo(-12,0);ctx.stroke();ctx.restore();
+    }
     for(const b of casts)if(b.kind==='sewing'&&legal(b))for(const arc of b.arcs||[]){const age=b.age-arc.born;if(age<0||age>b.spec.archPrepare+b.spec.archFlight+.16)continue;Ref.drawArch(ctx,arc,Math.min(1,Math.max(0,(b.spec.archPrepare+b.spec.archFlight+.16-age)/.16)));}
     for(const e of effects)if(e.kind==='explosion'){const u=e.age/e.life;ctx.save();ctx.globalAlpha=1-u;ctx.fillStyle='#ed9b43';for(let i=0;i<7;i++){const a=i*Math.PI*2/7;ctx.beginPath();ctx.arc(e.x+Math.cos(a)*e.radius*u,e.y+Math.sin(a)*e.radius*u-8,8*(1-u)+2,0,Math.PI*2);ctx.fill();}ctx.restore();}
   }
@@ -463,7 +485,7 @@
       const b=s.lastChain;if(!b||!legal(b)||!casts.includes(b)&&!ownedCaptures(s).length)continue;
       ctx.save();ctx.fillStyle='#242126';ctx.globalAlpha=.84;
       for(const segment of b.chain.segments){
-        if(segment.linked===false)break;if(segment.polygon.length<3)continue;
+        if(segment.linked===false)continue;if(segment.polygon.length<3)continue;
         ctx.beginPath();segment.polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();
       }ctx.restore();
     }
