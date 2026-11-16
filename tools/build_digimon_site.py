@@ -103,6 +103,19 @@ for sheet in kimimaro['sheets'].values():
     assert path.is_file(), f'Missing Kimimaro runtime atlas: {source}'
     review_runtime.append('art-review/' + source)
 review_runtime.extend(['.omx/jujutsu.js', '.omx/jujutsu-art.js', '.omx/jjk-yuta.js', '.omx/jjk-ryu.js', '.omx/jjk-uro.js', 'art-review/jjk-skills-v2.json'])
+review_runtime.extend(['.omx/lf2.js', '.omx/lf2-art.js', '.omx/lf2-audio.js', '.omx/lf2-freeze-combat.js'])
+freeze_root = ROOT / 'assets/lf2/freeze'
+freeze = json.loads((freeze_root / 'manifest.json').read_text('utf-8'))
+for item in freeze['source']['files']:
+    if 'runtime' not in item:
+        continue
+    source = (ROOT / item['runtime']).resolve()
+    assert source.is_relative_to(freeze_root.resolve()) and source.is_file()
+    assert hashlib.sha256(source.read_bytes()).hexdigest() == item['runtime_sha256'], 'Classic LF2 source pixels changed'
+for obj in freeze['objects'].values():
+    for sheet in obj['sheets']:
+        source = (freeze_root / sheet['image']).resolve()
+        assert source.is_relative_to(freeze_root.resolve()) and source.is_file(), 'Missing classic LF2 atlas'
 review_runtime.extend('.omx/'+name+'.js' for name in ['combat-pulse','jujutsu-growth','jujutsu-vfx','trial-build','run-insights'])
 review_runtime.extend('.omx/naruto/portraits/jjk-'+hero+'.png' for hero in ('yuta','ryu','uro'))
 jujutsu = json.loads((ROOT / 'art-review/jjk-skills-v2.json').read_text('utf-8'))
@@ -143,6 +156,8 @@ def version_asset(match):
     query = '?v=' + digest
     if source == 'art-review/madara/runtime.js':
         query += '&amp;data=' + hashlib.sha256((OUT / 'art-review/madara/frames.json').read_bytes()).hexdigest()[:12]
+    if source == '.omx/lf2-art.js':
+        query += '&amp;data=' + hashlib.sha256((OUT / 'assets/lf2/freeze/manifest.json').read_bytes()).hexdigest()[:12]
     return match[1] + source + query + match[3]
 
 html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',

@@ -1,5 +1,15 @@
 # Créditos
 
+## Little Fighter 2 (classic 2.0a)
+
+Freeze, the original pixel artwork, ice effects, weapon sprites and original
+sound effects are by Marti Wong and Starsky Wong: [Little Fighter 2](https://lf2.net/).
+This unofficial crossover uses the classic version, not LF2 Remastered.
+Original assets remain the property of their creators; the project's code
+license does not license these assets. Automatic casting, progression and
+survival combat are adaptations for this fan project. Source hashes and frame
+provenance are recorded in `assets/lf2/freeze/manifest.json`.
+
 ## Sprites
 
 Los sprites estilo *Pokémon Mundo Misterioso* vienen de

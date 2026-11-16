@@ -1,0 +1,700 @@
+{
+  "game": "Little Fighter 2 v2.0a (classic original)",
+  "installer_sha256": "540c485547e234b0d09595f54d067aafd7176092c308aca61868f3cbc03030e1",
+  "source_url": "https://archive.org/download/little-fighter-2_202404/Little%20Fighter%202.rar/Little%20Fighter%202%2FLF2Setup.exe",
+  "attribution": "Little Fighter 2 artwork and data by Marti Wong and Starsky Wong. Not covered by this project code license.",
+  "conversion": "Original in-cell pixel values retained; RGB (0,0,0) and ignored 1px atlas divider rows/columns become transparent.",
+  "files": [
+    {
+      "path": "data/001.wav",
+      "sha256": "28f50924fc845a963d398fda600b9df740149f1c696843aa7cbd56f8552d785a",
+      "bytes": 23694
+    },
+    {
+      "path": "data/002.wav",
+      "sha256": "f2783a52e1fc333a46a094b61332bb883380586119c77b1b0f86031dfa3f15f0",
+      "bytes": 23704
+    },
+    {
+      "path": "data/003.wav",
+      "sha256": "74885981a2003f1bc1c7f2cd22493c47c4b8059088aeffaed652eeef996f9c7a",
+      "bytes": 9870
+    },
+    {
+      "path": "data/004.wav",
+      "sha256": "4b501f67bec53f364530e041012faa40334e7f4f0f82088b6b7caa472c2207ac",
+      "bytes": 11228
+    },
+    {
+      "path": "data/005.wav",
+      "sha256": "dbeb2a3156662b1b6895b4ad5fb7aa319044968277eb482c5e4b7fa5a57e56c5",
+      "bytes": 43294,
+      "runtime": "assets/lf2/freeze/005.wav",
+      "runtime_sha256": "dbeb2a3156662b1b6895b4ad5fb7aa319044968277eb482c5e4b7fa5a57e56c5"
+    },
+    {
+      "path": "data/006.wav",
+      "sha256": "3ade81bab01f8eb99f9ed4c68d4c63245a6413757b801edfe04e59f7be3e80ea",
+      "bytes": 15654
+    },
+    {
+      "path": "data/007.wav",
+      "sha256": "d8e7bbee32a2a582a07d53f43db50c0c6c6e579ed322aa2369be8859b6385002",
+      "bytes": 4324,
+      "runtime": "assets/lf2/freeze/007.wav",
+      "runtime_sha256": "d8e7bbee32a2a582a07d53f43db50c0c6c6e579ed322aa2369be8859b6385002"
+    },
+    {
+      "path": "data/008.wav",
+      "sha256": "1e766a858e5177db7078674db7749e37aca8bd6b5ab93093385328d04c36837b",
+      "bytes": 6414,
+      "runtime": "assets/lf2/freeze/008.wav",
+      "runtime_sha256": "1e766a858e5177db7078674db7749e37aca8bd6b5ab93093385328d04c36837b"
+    },
+    {
+      "path": "data/009.wav",
+      "sha256": "9b02288a8412d68ef9264d7b3db2cd3767be0631c33b95844bc9405c6fe9acde",
+      "bytes": 15038
+    },
+    {
+      "path": "data/010.wav",
+      "sha256": "e5e31a220b7b607e189093cf01e1fefa4fb00ec00e8b55cb6ec9715c0fa199d6",
+      "bytes": 11576
+    },
+    {
+      "path": "data/011.wav",
+      "sha256": "788bf352868b82eeead8da8b95d289bcc8a9dcdf1f8c2b368579cf61b1ce7f9a",
+      "bytes": 3884
+    },
+    {
+      "path": "data/012.wav",
+      "sha256": "04e2b02ab4415827045d25cb9c7dadda70da23fc8637beac13123a34dce7f95c",
+      "bytes": 4326,
+      "runtime": "assets/lf2/freeze/012.wav",
+      "runtime_sha256": "04e2b02ab4415827045d25cb9c7dadda70da23fc8637beac13123a34dce7f95c"
+    },
+    {
+      "path": "data/013.wav",
+      "sha256": "6607d18ef69ab9fd43d58405a40cb1e091285fb68f7570baa0f1e4676fc203e6",
+      "bytes": 10894
+    },
+    {
+      "path": "data/014.wav",
+      "sha256": "670a61c14ba16c51f057a909ab1393f8917e38e80b7af5a0beadb9c7299d8e96",
+      "bytes": 48662
+    },
+    {
+      "path": "data/015.wav",
+      "sha256": "1badf632365f0b711c669f94cd9228af0f2b73f987d399df1322a1f958a6af60",
+      "bytes": 14432,
+      "runtime": "assets/lf2/freeze/015.wav",
+      "runtime_sha256": "1badf632365f0b711c669f94cd9228af0f2b73f987d399df1322a1f958a6af60"
+    },
+    {
+      "path": "data/016.wav",
+      "sha256": "40f7b9ac8483ba57dfed5c1e0322653fc387918d429b7711e3dd4b11178a9810",
+      "bytes": 8284
+    },
+    {
+      "path": "data/017.wav",
+      "sha256": "43030d58b00f98999af6635c9966294fb9b5b6889d03fd1dca8f46bfedf3b5a6",
+      "bytes": 15232
+    },
+    {
+      "path": "data/018.wav",
+      "sha256": "3e25a131f83f2187cac148fd0bc6e57650f49512a7a3ec2411c52953eb46961a",
+      "bytes": 23996
+    },
+    {
+      "path": "data/019.wav",
+      "sha256": "e405ec5be5c63109246eced4b4c9cabcfd5067a9acca0a6b19878f4aa8f8d70c",
+      "bytes": 31426,
+      "runtime": "assets/lf2/freeze/019.wav",
+      "runtime_sha256": "e405ec5be5c63109246eced4b4c9cabcfd5067a9acca0a6b19878f4aa8f8d70c"
+    },
+    {
+      "path": "data/020.wav",
+      "sha256": "7fff68e80d827a2237a05b0483b914c757c742e73a1a5c8a012a3b3f58b8db70",
+      "bytes": 33678,
+      "runtime": "assets/lf2/freeze/020.wav",
+      "runtime_sha256": "7fff68e80d827a2237a05b0483b914c757c742e73a1a5c8a012a3b3f58b8db70"
+    },
+    {
+      "path": "data/021.wav",
+      "sha256": "c5de442a4d4a3d48340529cd1a91b051dac7eccc83c88ab5ae67a8426a63f0a5",
+      "bytes": 34436
+    },
+    {
+      "path": "data/022.wav",
+      "sha256": "4881eb2a97fa289f0984dd7bc951e63c949a98456aa84097e162d4795bfa6f99",
+      "bytes": 14540
+    },
+    {
+      "path": "data/023.wav",
+      "sha256": "bc357eed06c8e42d40b40fe9a79ec2da7a7ba192c145d803801651b3c4614e7d",
+      "bytes": 14644
+    },
+    {
+      "path": "data/024.wav",
+      "sha256": "6d3fe5cc41df30fa6d29df92fe83e05448bbd062bf5bf1e003c75a26edefc7cd",
+      "bytes": 11984
+    },
+    {
+      "path": "data/025.wav",
+      "sha256": "8668a7e6a2912e5f5c093c9814ee06343aff88333f39d894dc954c8ddcfbc1d1",
+      "bytes": 8606
+    },
+    {
+      "path": "data/026.wav",
+      "sha256": "0d501b4578a9f1173058e0bf8979606336287c8b39bf52c1709d38eabd6858fa",
+      "bytes": 23850
+    },
+    {
+      "path": "data/027.wav",
+      "sha256": "aebc30342a9c08fbba3cc77e941e44d568c392641afa55c08594e09dca780b44",
+      "bytes": 16052
+    },
+    {
+      "path": "data/028.wav",
+      "sha256": "718a04d73637a1d8f94dc00c93594d7c819a5726fcedb64bdd839db0172d35bf",
+      "bytes": 32402
+    },
+    {
+      "path": "data/029.wav",
+      "sha256": "c07f7fde5d4627dff8466c82feade0ff1e1c4141e36f6c0c7610847c79c90edb",
+      "bytes": 9716
+    },
+    {
+      "path": "data/030.wav",
+      "sha256": "c96b86f70187d2f8e718f97f74b0e2732034d131ed88ed2ea0f1a302db1e754b",
+      "bytes": 22278
+    },
+    {
+      "path": "data/031.wav",
+      "sha256": "8d31579f2663f8c1366012c19856ba3bbe24e64cd89c025b325975083831ed24",
+      "bytes": 49652
+    },
+    {
+      "path": "data/032.wav",
+      "sha256": "90bb8290a65a8aa38e2effc077939431df0ece4e1c304eb6905ad47002def286",
+      "bytes": 12148
+    },
+    {
+      "path": "data/033.wav",
+      "sha256": "4cbab9e851b6601cbf20cbbc349305436261e902862c12818e1458179f59d3bc",
+      "bytes": 21834
+    },
+    {
+      "path": "data/034.wav",
+      "sha256": "da6f6b317eb78232991ac028d737a9496ba2db6fe3fa785c437062e7c11dc791",
+      "bytes": 18882
+    },
+    {
+      "path": "data/035.wav",
+      "sha256": "39e8417d42b6bb12e28adc2e2ac712c5038b09d8696a8378c73d2aab23e2f7b5",
+      "bytes": 33890
+    },
+    {
+      "path": "data/036.wav",
+      "sha256": "8ffdece175073b2ddfc1d0f51b79c8f7ed90cb9d9cafb9fda24b1c31c27f1d4d",
+      "bytes": 41886
+    },
+    {
+      "path": "data/037.wav",
+      "sha256": "b890fe30f664cc218793a868ee028e16a8b1a34a0451ddb46c14eede6914cd7e",
+      "bytes": 29018
+    },
+    {
+      "path": "data/038.wav",
+      "sha256": "a833ead59d74ff6910dd9ab30a59424398281826c2504ee180fba0860fd119a9",
+      "bytes": 924
+    },
+    {
+      "path": "data/039.wav",
+      "sha256": "8b3c2c8356655ad3708e578a9033a8f9db25243fb97c91a97ee2f0dbf350b889",
+      "bytes": 2774
+    },
+    {
+      "path": "data/040.wav",
+      "sha256": "31fc1ce02c95ad05a34e9658196b8b1fe4612b5398a2c387298293e9ea19cecf",
+      "bytes": 49584
+    },
+    {
+      "path": "data/041.wav",
+      "sha256": "228871564ff4ae726d264897097e53162d95e4fe6810cd9092950349d583fbef",
+      "bytes": 16392
+    },
+    {
+      "path": "data/042.wav",
+      "sha256": "a7d6654cb95f4fdd0c0f0e80d9cf0cac3f204f22bc0a87a7c22e2763b4e62bed",
+      "bytes": 11066
+    },
+    {
+      "path": "data/043.wav",
+      "sha256": "f9c1b777d1a3cc1a92273eb49418bb6c2d7b2e64923a835e1eee90462f983427",
+      "bytes": 27408
+    },
+    {
+      "path": "data/044.wav",
+      "sha256": "7c679cf31db9f4e6264827f257c968277aa4a703152d9f5129ef2540a6aec28f",
+      "bytes": 23092
+    },
+    {
+      "path": "data/045.wav",
+      "sha256": "e357bda2ca5de205aa7f7c76c16fd54b71e59bcfdaaf5e8ab0e8162a76ccffa0",
+      "bytes": 38228
+    },
+    {
+      "path": "data/046.wav",
+      "sha256": "5a4d1de3afc288c22bcdae47a91e0cf42fa81461c7d6ac455fe624dd5910fea3",
+      "bytes": 26674
+    },
+    {
+      "path": "data/047.wav",
+      "sha256": "f3b347b1ae8bb77ac0662cac51c4361548a0199b313acc4e4eea0e4dee960b3c",
+      "bytes": 27608
+    },
+    {
+      "path": "data/048.wav",
+      "sha256": "3b586c4ba39fccca9926aa8a493f700c3b5d22675e94003d9eb52579bb34cd04",
+      "bytes": 25230
+    },
+    {
+      "path": "data/049.wav",
+      "sha256": "53b1aeae5c622bec6fcab1a4536a80eb126726d92c81754cd2a762f68e0ed100",
+      "bytes": 65942
+    },
+    {
+      "path": "data/050.wav",
+      "sha256": "87d73cc00972d15b3bfc4ced0a997c1cda8b7c0ebc7f263f8e295486edaf46c4",
+      "bytes": 56970
+    },
+    {
+      "path": "data/051.wav",
+      "sha256": "263b704b1e59c2832bc7d68983438a275317225cf9ddd9681be595a1fd92f5cf",
+      "bytes": 6066
+    },
+    {
+      "path": "data/052.wav",
+      "sha256": "0e4c3158ac18f99b66a34c1f33dd20c1510370766f49e72a2b492889978676b8",
+      "bytes": 9786
+    },
+    {
+      "path": "data/053.wav",
+      "sha256": "850ec0de7efb86118ac40c933df01ba98556f15065120843f7701bd1f7187735",
+      "bytes": 5872
+    },
+    {
+      "path": "data/054.wav",
+      "sha256": "657333a0c49b13d2d2cbb975813417bcdea5db9009e1ea29c657ca4a895cada3",
+      "bytes": 45478
+    },
+    {
+      "path": "data/055.wav",
+      "sha256": "70cb41635863e0e4da772dfa474bc5fd5aa2b3f9bce3014ff24e6257592f34d6",
+      "bytes": 42830
+    },
+    {
+      "path": "data/056.wav",
+      "sha256": "3143dcc7de891ec740c294aaf95296e3dc87139bebe1ee5f710174b9bf31d26b",
+      "bytes": 13514
+    },
+    {
+      "path": "data/057.wav",
+      "sha256": "d106d542447d3a3b353acd3fe9dc63fde890532b077365ffda4ddafa68569aa8",
+      "bytes": 13398
+    },
+    {
+      "path": "data/058.wav",
+      "sha256": "4b9047cda21292135119168d61b5d75a15cd5607b6aea329e6416c46c55a6135",
+      "bytes": 31226
+    },
+    {
+      "path": "data/059.wav",
+      "sha256": "5028058364ec91f05630fa6116bbf586c6ede39d9fae5defcfb8ba52011bc8ca",
+      "bytes": 47898
+    },
+    {
+      "path": "data/060.wav",
+      "sha256": "fcd5d8c13951d38864ba0b8037be38dd6fec7ee5f56ec3b884c19fa3b4acb83f",
+      "bytes": 18600
+    },
+    {
+      "path": "data/061.wav",
+      "sha256": "635177bafc1935fa76df526883e1d5e03d21e48cd28af95474fe79cd9154e7df",
+      "bytes": 6588
+    },
+    {
+      "path": "data/062.wav",
+      "sha256": "c42eee65431fbe99698fc772b192f2f1a23c05a8d8437404f304ce040f4b0fd2",
+      "bytes": 78262
+    },
+    {
+      "path": "data/063.wav",
+      "sha256": "c41c710b72eba635e2d40490daefa05b1a2531b701bdcc170e30437c834ae086",
+      "bytes": 25722
+    },
+    {
+      "path": "data/064.wav",
+      "sha256": "ccf3e495d8adec853fd64b8bd78109f80f3697acc26745796c3043ab61325d74",
+      "bytes": 61164,
+      "runtime": "assets/lf2/freeze/064.wav",
+      "runtime_sha256": "ccf3e495d8adec853fd64b8bd78109f80f3697acc26745796c3043ab61325d74"
+    },
+    {
+      "path": "data/065.wav",
+      "sha256": "12475f3b79a518cfdf3b0f54bf606f9ace7d177ad5cac834b56e2c7a11ce466e",
+      "bytes": 48452
+    },
+    {
+      "path": "data/066.wav",
+      "sha256": "ff7b203d9cfdd2657ad04d8f7023555a43d6b7e90e29fcb0cc7aa40775f0c9f0",
+      "bytes": 60542
+    },
+    {
+      "path": "data/067.wav",
+      "sha256": "4148d5ce864e1f78cd2f87c85b30f5eb5319a363ea2aad0d361bf2c5f50eb8cd",
+      "bytes": 62466
+    },
+    {
+      "path": "data/068.wav",
+      "sha256": "b1cffa6ba75ed2ca808cab85358da5c4bf627ff80559ca943d716a9461632018",
+      "bytes": 53588
+    },
+    {
+      "path": "data/069.wav",
+      "sha256": "2e85babfc231942d118cf0bafcd3f57feeacefa72741c454703274f5fca5d20f",
+      "bytes": 5258
+    },
+    {
+      "path": "data/070.wav",
+      "sha256": "2d104a58a1b24622fb61e2f1533f44a5203b6c7b6dca902ef43bb35d50ad6f1f",
+      "bytes": 72132
+    },
+    {
+      "path": "data/071.wav",
+      "sha256": "694dd49a27794a69891cfef376d0a29f23060cdc3a250e44f26230d234758dc0",
+      "bytes": 81134
+    },
+    {
+      "path": "data/072.wav",
+      "sha256": "00a536ce2830a9dd852476579cc6e47f49bdd6f1d9ebea0c3b9d7546892a5c9d",
+      "bytes": 32814,
+      "runtime": "assets/lf2/freeze/072.wav",
+      "runtime_sha256": "00a536ce2830a9dd852476579cc6e47f49bdd6f1d9ebea0c3b9d7546892a5c9d"
+    },
+    {
+      "path": "data/073.wav",
+      "sha256": "959b21a52334f6333e695ca9f44a59372624407b81f153a03eb660fee5230884",
+      "bytes": 112622,
+      "runtime": "assets/lf2/freeze/073.wav",
+      "runtime_sha256": "959b21a52334f6333e695ca9f44a59372624407b81f153a03eb660fee5230884"
+    },
+    {
+      "path": "data/074.wav",
+      "sha256": "11f2c5d7d3983dd614f0af3b87f51bb8e6804a402344df4978f33f4484d16ee6",
+      "bytes": 16470,
+      "runtime": "assets/lf2/freeze/074.wav",
+      "runtime_sha256": "11f2c5d7d3983dd614f0af3b87f51bb8e6804a402344df4978f33f4484d16ee6"
+    },
+    {
+      "path": "data/075.wav",
+      "sha256": "70320b85f3cbad144f73e5a89d905b7917ae3a94d941f78051c98484b1afa009",
+      "bytes": 23360
+    },
+    {
+      "path": "data/076.wav",
+      "sha256": "9873a008426197b75887bafafa936b4f8ee730cd9d111f830786a5884ddba3b7",
+      "bytes": 21602
+    },
+    {
+      "path": "data/077.wav",
+      "sha256": "6488be62145a44f71af7188e5d90bdb0e6892aa8016767271100b7aaa4039c5b",
+      "bytes": 43126
+    },
+    {
+      "path": "data/078.wav",
+      "sha256": "662555d6674ae210d23d620d07734373cefec0912b99b557b5aa3bfe27969ba0",
+      "bytes": 108334
+    },
+    {
+      "path": "data/079.wav",
+      "sha256": "5b12df13f6e1ea8b5d8e4c95f23d6d88f227831bd8aea094d9af79c1f253ae70",
+      "bytes": 20960
+    },
+    {
+      "path": "data/080.wav",
+      "sha256": "0505cc64298ea0fe22fb45f28994da6ba6e342bdce81f4b40f8f7bb8280ff26e",
+      "bytes": 29670
+    },
+    {
+      "path": "data/081.wav",
+      "sha256": "8a8b5a464be85f2b4c80a0bb7d3b3690631ac75c5fb14c53cf57de965f33fa1b",
+      "bytes": 5890
+    },
+    {
+      "path": "data/082.wav",
+      "sha256": "6043d6a3e9ef18e0cfff336aded71f65247f0a648ec2b26e8776fa58b06fcded",
+      "bytes": 5402
+    },
+    {
+      "path": "data/083.wav",
+      "sha256": "e3fba0741c5b3c9d369c8e804fc9516bb21c25fff65eca72d39278d1e67f2cdc",
+      "bytes": 17890
+    },
+    {
+      "path": "data/084.wav",
+      "sha256": "873f7d5d1b0783f414f4333f90ac60b54090bfb275e53a2deb0f7293386bd315",
+      "bytes": 23120
+    },
+    {
+      "path": "data/085.wav",
+      "sha256": "c41cbd34aa58de89c8fbc1a67bbcbb91bff674f45b065d8dd02326d2e307b0bb",
+      "bytes": 23186
+    },
+    {
+      "path": "data/086.wav",
+      "sha256": "f142cc8085bdfa6c5ec3c0fdbd0b11cb6f54f44cb4aa48338b10e863ec66208a",
+      "bytes": 87304
+    },
+    {
+      "path": "data/087.wav",
+      "sha256": "9413706313934de7c5492c3cfbec0e323e6d170ca2d77ca004315d9f9f623b2a",
+      "bytes": 72546
+    },
+    {
+      "path": "data/088.wav",
+      "sha256": "d8d9155dedcafbee2ceaf98ebba69af6b0d70442e9faa38f5110139a13ae38e6",
+      "bytes": 22378
+    },
+    {
+      "path": "data/089.wav",
+      "sha256": "0ac777d030726089c19c4957cc8a4c229ba264ac564c938f9f431e479c4bf579",
+      "bytes": 24176
+    },
+    {
+      "path": "data/090.wav",
+      "sha256": "fb598bcb49066db724309ca10566a0ad05dd9f30bff24e46035897089358b4e7",
+      "bytes": 121540
+    },
+    {
+      "path": "data/091.wav",
+      "sha256": "8f9009a8c80f3309faac1838a490bf242e2d22388d0e75737c3fb93db9e32bc6",
+      "bytes": 33606
+    },
+    {
+      "path": "data/092.wav",
+      "sha256": "862374ed4358e56755e8a643c6ea269eccf6246574a3fbf9562e0c907eebecaf",
+      "bytes": 39438
+    },
+    {
+      "path": "data/093.wav",
+      "sha256": "7b371ca961b96d89fa8e5cd5f155b23f79c3c2fa6888d22c8041b767c7bf0746",
+      "bytes": 69678
+    },
+    {
+      "path": "data/094.wav",
+      "sha256": "42f29888bba67f8f19775185374a83a227e73801b7fe258ecb4ef060a17042db",
+      "bytes": 10338
+    },
+    {
+      "path": "data/095.wav",
+      "sha256": "f294c18c1b92a2ef1df85f23d4e34420835cc52a646bc88dac8bacb644ab1655",
+      "bytes": 32130
+    },
+    {
+      "path": "data/096.wav",
+      "sha256": "77289be0ddcc827dc93c1892f547420c19daa20d723427c6d98a9b9494cf5362",
+      "bytes": 13958
+    },
+    {
+      "path": "data/097.wav",
+      "sha256": "966735807666202e4e70da1f3e84f0f5104b7071dcfcd57f1f4b7c99b6bbdd67",
+      "bytes": 36748
+    },
+    {
+      "path": "data/098.wav",
+      "sha256": "d109a7ece2e1e5851d81c0b63e219081fd80650bce3c396b178a82354febad36",
+      "bytes": 14700
+    },
+    {
+      "path": "data/099.wav",
+      "sha256": "2ad9eb83cf696e9a4d710ef8e5bc0606374e81cb11b4be75b2783f3608bd7eb4",
+      "bytes": 21898
+    },
+    {
+      "path": "data/100.wav",
+      "sha256": "d8fbe890993acb1c845efdf1e3de28c27a87d2453c72e06322d53b6c4586d338",
+      "bytes": 35632
+    },
+    {
+      "path": "data/101.wav",
+      "sha256": "632a7ad94f5225f82f190f1119724440afa3a9f3c8e35b668d7958b6b0880d2f",
+      "bytes": 14246
+    },
+    {
+      "path": "data/102.wav",
+      "sha256": "779645e6daefb350106b87edce10d6daca7976f8beeeae9070b79941a22d4c74",
+      "bytes": 71680
+    },
+    {
+      "path": "data/freeze.dat",
+      "sha256": "0c0dd4fc8f8db767c5a95315807866663f1ea9a9e6c9b3bab07d529efa5f6f73",
+      "bytes": 69099
+    },
+    {
+      "path": "data/freeze_ball.dat",
+      "sha256": "7dc156b181da7052721c3f7b0caefa46e4f65d887363cf2b9f65ac302685ceea",
+      "bytes": 5039
+    },
+    {
+      "path": "data/freeze_column.dat",
+      "sha256": "df9e362fe3bee1d9a596e54a09c34f991e9af1d1b2bd03f518bb05ea2452c708",
+      "bytes": 13717
+    },
+    {
+      "path": "data/weapon7.dat",
+      "sha256": "5c757983a9c01156cdd60f2fa498bbd9d6897b9c2895797afd451689e122880f",
+      "bytes": 18936
+    },
+    {
+      "path": "sprite/sys/freeze_0.bmp",
+      "sha256": "5bdd1412642bceff01f84da65ad0f57007e26391efe276ea5f47218dbcbbea78",
+      "bytes": 166376,
+      "runtime": "assets/lf2/freeze/freeze_0.png",
+      "runtime_sha256": "8bfe6cb0669656b4d62e02e478bf903b9e386c0a5d1d274ce8b9db01f5bc5f38",
+      "size": [
+        800,
+        560
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_0_mirror.bmp",
+      "sha256": "082328a22759e9af2bd3d0289e3e67b9e9562adbc44087977bc91f425b39d330",
+      "bytes": 166360
+    },
+    {
+      "path": "sprite/sys/freeze_1.bmp",
+      "sha256": "c9e145688661bdfe0ef2d7b34dfa332a3765e144f429e01a65a5f37cad8bf7cc",
+      "bytes": 166560,
+      "runtime": "assets/lf2/freeze/freeze_1.png",
+      "runtime_sha256": "c72289656d95a47b96b6912274da6248d37d699eca32d9642229b9d36fc47a88",
+      "size": [
+        800,
+        560
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_1_mirror.bmp",
+      "sha256": "1d58bca738c85e16f5f925712c38440f0fd70dd26c5f87c1ec9bac3fa687c857",
+      "bytes": 166760
+    },
+    {
+      "path": "sprite/sys/freeze_2.bmp",
+      "sha256": "0cc84e6ee197c859adc0346ec63e078f832ec4320a14fd6410a79f5d0ef25177",
+      "bytes": 61664,
+      "runtime": "assets/lf2/freeze/freeze_2.png",
+      "runtime_sha256": "95040ec0b451c90fcafbf7613cd554c5f5d99ef6bc44f2355cad49015cfa5b0b",
+      "size": [
+        800,
+        270
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_2_mirror.bmp",
+      "sha256": "a80f03efb2fdba3f3967f3079e58c9332dbb8e8166ff6b5a7ae994f37f036438",
+      "bytes": 62368
+    },
+    {
+      "path": "sprite/sys/freeze_ball.bmp",
+      "sha256": "d9300969b0258cd2d48e690cc7ca4e276692cea88cc57cf378e4b360cbb05466",
+      "bytes": 18448,
+      "runtime": "assets/lf2/freeze/freeze_ball.png",
+      "runtime_sha256": "d6a43c12058afd2eff5aaa41c36324059c2f215ad4e02dca8b3c1762327fe562",
+      "size": [
+        328,
+        249
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_ball_mirror.bmp",
+      "sha256": "f7f7b60a7b9bb7331b44274e351e41cd79f6c5de3c706dcee939a5ce52a37112",
+      "bytes": 17532
+    },
+    {
+      "path": "sprite/sys/freeze_col.bmp",
+      "sha256": "dd1c871fd1ec0587791282c50a31a8943c40b9dc9f724225cdca97fe0f3ca137",
+      "bytes": 84988,
+      "runtime": "assets/lf2/freeze/freeze_col.png",
+      "runtime_sha256": "5e6942758fcd60cf2e25d20877c8e0cc9bb6be9b497e8a3d8efc53bbafb8695c",
+      "size": [
+        770,
+        440
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_col_mirror.bmp",
+      "sha256": "181da56dda6da42f1d6305e97d4a7e961b6c87fadebd88561c6a9d446f4ed0ba",
+      "bytes": 83248
+    },
+    {
+      "path": "sprite/sys/freeze_f.bmp",
+      "sha256": "8ba7099cd21a86a6ca7d5ab15e36602f4785bc85088c321731ea30e662bd5aea",
+      "bytes": 14064,
+      "runtime": "assets/lf2/freeze/freeze_f.png",
+      "runtime_sha256": "85218d3a6bbbec5843de304c184b4e6f6501e6ebd0270825d7d82a21ed24ad53",
+      "size": [
+        120,
+        120
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_s.bmp",
+      "sha256": "4ca931cb87d30734c18ffef60a263734b52c19a90fd2a6f45b981c384ff1f91e",
+      "bytes": 2588,
+      "runtime": "assets/lf2/freeze/freeze_s.png",
+      "runtime_sha256": "839c6a7f943d845f02b98d94cc4339bd0c98159264818d5a4fbb2a1d2bef1f6c",
+      "size": [
+        40,
+        45
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_ww.bmp",
+      "sha256": "9ebd621af8b6ca4ddf6fbe7ae21b721b591306457cdd36cc3e845cf6451ce4d9",
+      "bytes": 40020,
+      "runtime": "assets/lf2/freeze/freeze_ww.png",
+      "runtime_sha256": "7a1a4526a8d3f7ffb1b9de4ff1a830fc1b4c77b2d13a205032199bf5d478a4e2",
+      "size": [
+        800,
+        320
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_ww_mirror.bmp",
+      "sha256": "092786a1e1fa5f1a1084e6da92db26f8ebf215261b842abf2fa649f138de090b",
+      "bytes": 38652
+    },
+    {
+      "path": "sprite/sys/weapon7.bmp",
+      "sha256": "c21b5a1c4cfd813b3e9090cf69f2825b3bc8ee2af5169dc49f929c7e33676672",
+      "bytes": 35344,
+      "runtime": "assets/lf2/freeze/weapon7.png",
+      "runtime_sha256": "86e246120fb57f1eb5f773dc0e8eca147f804b520d5c3fae138ac771f447c3c2",
+      "size": [
+        700,
+        280
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_0.bmp#pic8-9-cyan-overlay",
+      "runtime": "assets/lf2/freeze/freeze_ice.png",
+      "runtime_sha256": "08acbe00b6de48a8a00ffaee404972c0414134e7493443ec2a698a8da342d2bc",
+      "size": [
+        160,
+        80
+      ],
+      "conversion": "Crop original pic8/9 and retain original cyan pixels only: b>r*1.25,g>r*1.1,g>90; no redrawing."
+    }
+  ]
+}

@@ -1,0 +1,1931 @@
+{
+  "controlled": {
+    "ok": true,
+    "errors": [],
+    "sourceStable": true,
+    "checks": {
+      "progression": {
+        "offers": [
+          {
+            "level": 1,
+            "pool": [
+              "lf2-iceball"
+            ],
+            "cards": [
+              "stat:cd",
+              "stat:xp",
+              "stat:quantity",
+              "stat:selfClone",
+              "up:lf2-iceball",
+              "stat:lifesteal",
+              "stat:mag",
+              "stat:giant",
+              "stat:atk",
+              "stat:damageSplash",
+              "stat:def",
+              "stat:spd",
+              "stat:percentHealthDamage",
+              "stat:maxHealthPercent"
+            ]
+          },
+          {
+            "level": 2,
+            "pool": [
+              "lf2-iceball"
+            ],
+            "cards": [
+              "up:lf2-iceball",
+              "stat:maxHealthPercent",
+              "stat:selfClone",
+              "stat:quantity",
+              "stat:def",
+              "stat:xp",
+              "stat:cd",
+              "stat:atk",
+              "stat:lifesteal",
+              "stat:mag",
+              "stat:percentHealthDamage",
+              "stat:spd",
+              "stat:giant",
+              "stat:damageSplash"
+            ]
+          },
+          {
+            "level": 3,
+            "pool": [
+              "lf2-iceball",
+              "lf2-sword"
+            ],
+            "cards": [
+              "new:lf2-sword",
+              "stat:quantity",
+              "stat:mag",
+              "stat:cd",
+              "stat:xp",
+              "stat:maxHealthPercent",
+              "stat:atk",
+              "stat:spd",
+              "stat:percentHealthDamage",
+              "stat:giant",
+              "stat:lifesteal",
+              "up:lf2-iceball",
+              "stat:damageSplash",
+              "stat:selfClone",
+              "stat:def"
+            ]
+          },
+          {
+            "level": 4,
+            "pool": [
+              "lf2-iceball",
+              "lf2-sword"
+            ],
+            "cards": [
+              "new:lf2-sword",
+              "up:lf2-iceball",
+              "stat:lifesteal",
+              "stat:atk",
+              "stat:selfClone",
+              "stat:mag",
+              "stat:percentHealthDamage",
+              "stat:giant",
+              "stat:maxHealthPercent",
+              "stat:def",
+              "stat:spd",
+              "stat:quantity",
+              "stat:damageSplash",
+              "stat:cd",
+              "stat:xp"
+            ]
+          },
+          {
+            "level": 5,
+            "pool": [
+              "lf2-iceball",
+              "lf2-sword",
+              "lf2-column"
+            ],
+            "cards": [
+              "new:lf2-sword",
+              "new:lf2-column",
+              "stat:quantity",
+              "stat:spd",
+              "stat:selfClone",
+              "stat:def",
+              "stat:percentHealthDamage",
+              "up:lf2-iceball",
+              "stat:giant",
+              "stat:cd",
+              "stat:damageSplash",
+              "stat:atk",
+              "stat:xp",
+              "stat:mag",
+              "stat:lifesteal",
+              "stat:maxHealthPercent"
+            ]
+          },
+          {
+            "level": 7,
+            "pool": [
+              "lf2-iceball",
+              "lf2-sword",
+              "lf2-column"
+            ],
+            "cards": [
+              "new:lf2-column",
+              "new:lf2-sword",
+              "stat:atk",
+              "stat:maxHealthPercent",
+              "stat:quantity",
+              "stat:cd",
+              "stat:percentHealthDamage",
+              "up:lf2-iceball",
+              "stat:lifesteal",
+              "stat:xp",
+              "stat:spd",
+              "stat:selfClone",
+              "stat:mag",
+              "stat:def",
+              "stat:damageSplash",
+              "stat:giant"
+            ]
+          },
+          {
+            "level": 8,
+            "pool": [
+              "lf2-iceball",
+              "lf2-sword",
+              "lf2-column",
+              "lf2-whirlwind"
+            ],
+            "cards": [
+              "new:lf2-sword",
+              "new:lf2-column",
+              "new:lf2-whirlwind",
+              "stat:xp",
+              "stat:atk",
+              "stat:def",
+              "stat:giant",
+              "stat:quantity",
+              "stat:percentHealthDamage",
+              "stat:selfClone",
+              "stat:cd",
+              "stat:lifesteal",
+              "stat:damageSplash",
+              "up:lf2-iceball",
+              "stat:maxHealthPercent",
+              "stat:spd",
+              "stat:mag"
+            ]
+          }
+        ],
+        "growth": [
+          {
+            "id": "lf2-iceball",
+            "before": {
+              "mode": "lf2-iceball",
+              "charge": 0.2,
+              "cd": 1.25,
+              "damage": 48,
+              "range": 500,
+              "radius": 16,
+              "count": 1,
+              "speed": 420,
+              "freeze": 1.2,
+              "life": 0,
+              "tick": 0,
+              "arc": 1.9,
+              "duration": 0.4666666666666667
+            },
+            "after": {
+              "mode": "lf2-iceball",
+              "charge": 0.2,
+              "cd": 1.25,
+              "damage": 48,
+              "range": 500,
+              "radius": 16,
+              "count": 1,
+              "speed": 420,
+              "freeze": 1.2,
+              "life": 0,
+              "tick": 0,
+              "arc": 1.9,
+              "duration": 0.4666666666666667
+            }
+          },
+          {
+            "id": "lf2-sword",
+            "before": {
+              "mode": "lf2-sword",
+              "charge": 0,
+              "cd": 1.05,
+              "damage": 62,
+              "range": 88,
+              "radius": 88,
+              "count": 1,
+              "speed": 0,
+              "freeze": 1.2,
+              "life": 0,
+              "tick": 0,
+              "arc": 1.9,
+              "duration": 0.26666666666666666
+            },
+            "after": {
+              "mode": "lf2-sword",
+              "charge": 0,
+              "cd": 1.05,
+              "damage": 62,
+              "range": 88,
+              "radius": 88,
+              "count": 1,
+              "speed": 0,
+              "freeze": 1.2,
+              "life": 0,
+              "tick": 0,
+              "arc": 1.9,
+              "duration": 0.26666666666666666
+            }
+          },
+          {
+            "id": "lf2-column",
+            "before": {
+              "mode": "lf2-column",
+              "charge": 0.3333333333333333,
+              "cd": 5.6,
+              "damage": 90,
+              "range": 260,
+              "radius": 38,
+              "count": 3,
+              "speed": 0,
+              "freeze": 1.2,
+              "life": 0,
+              "tick": 0,
+              "arc": 1.9,
+              "duration": 0.8
+            },
+            "after": {
+              "mode": "lf2-column",
+              "charge": 0.3333333333333333,
+              "cd": 5.6,
+              "damage": 90,
+              "range": 260,
+              "radius": 38,
+              "count": 5,
+              "speed": 0,
+              "freeze": 1.2,
+              "life": 0,
+              "tick": 0,
+              "arc": 1.9,
+              "duration": 0.8
+            }
+          },
+          {
+            "id": "lf2-whirlwind",
+            "before": {
+              "mode": "lf2-whirlwind",
+              "charge": 0.36666666666666664,
+              "cd": 8.5,
+              "damage": 30,
+              "range": 480,
+              "radius": 62,
+              "count": 1,
+              "speed": 138.14814814814815,
+              "freeze": 0,
+              "life": 2.7,
+              "tick": 0.22,
+              "arc": 1.9,
+              "duration": 0.8333333333333334
+            },
+            "after": {
+              "mode": "lf2-whirlwind",
+              "charge": 0.36666666666666664,
+              "cd": 8.5,
+              "damage": 30,
+              "range": 480,
+              "radius": 62,
+              "count": 1,
+              "speed": 138.14814814814815,
+              "freeze": 0,
+              "life": 2.7,
+              "tick": 0.22,
+              "arc": 1.9,
+              "duration": 0.8333333333333334
+            }
+          }
+        ]
+      },
+      "mechanics": {
+        "flight": [
+          {
+            "raw": 88.704,
+            "loss": 89,
+            "owner": true,
+            "id": "lf2-iceball"
+          }
+        ],
+        "wall": true,
+        "lf2-sword": {
+          "hits": [
+            [
+              {
+                "raw": 114.576,
+                "loss": 115,
+                "owner": true,
+                "id": "lf2-sword"
+              }
+            ],
+            [
+              {
+                "raw": 114.576,
+                "loss": 115,
+                "owner": true,
+                "id": "lf2-sword"
+              }
+            ],
+            [
+              {
+                "raw": 114.576,
+                "loss": 115,
+                "owner": true,
+                "id": "lf2-sword"
+              }
+            ]
+          ],
+          "outside": []
+        },
+        "lf2-column": {
+          "hits": [
+            [
+              {
+                "raw": 166.32,
+                "loss": 166,
+                "owner": true,
+                "id": "lf2-column"
+              }
+            ],
+            [
+              {
+                "raw": 166.32,
+                "loss": 166,
+                "owner": true,
+                "id": "lf2-column"
+              }
+            ],
+            [
+              {
+                "raw": 166.32,
+                "loss": 166,
+                "owner": true,
+                "id": "lf2-column"
+              }
+            ]
+          ],
+          "outside": []
+        },
+        "lf2-whirlwind": {
+          "hits": [
+            [
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              }
+            ],
+            [
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              }
+            ],
+            [
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              },
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              }
+            ]
+          ],
+          "outside": []
+        },
+        "advertisedReach": [
+          {
+            "id": "lf2-column",
+            "range": 260,
+            "hits": [
+              {
+                "raw": 166.32,
+                "loss": 166,
+                "owner": true,
+                "id": "lf2-column"
+              }
+            ]
+          },
+          {
+            "id": "lf2-whirlwind",
+            "range": 480,
+            "hits": [
+              {
+                "raw": 55.44,
+                "loss": 55,
+                "owner": true,
+                "id": "lf2-whirlwind"
+              }
+            ]
+          }
+        ],
+        "freeze": {
+          "status": {
+            "remaining": 1.01,
+            "duration": 1.2
+          },
+          "x": 100,
+          "y": 0,
+          "contactDamage": 0
+        },
+        "props": [
+          {
+            "id": "lf2-iceball",
+            "calls": [
+              88.704
+            ],
+            "hp": 9911.296
+          },
+          {
+            "id": "lf2-sword",
+            "calls": [
+              114.576
+            ],
+            "hp": 9885.424
+          },
+          {
+            "id": "lf2-column",
+            "calls": [
+              166.32,
+              166.32
+            ],
+            "hp": 9667.36
+          },
+          {
+            "id": "lf2-whirlwind",
+            "calls": [
+              36.036,
+              55.44
+            ],
+            "hp": 9908.524
+          }
+        ]
+      },
+      "identity": {
+        "punch": [
+          {
+            "raw": 48.7872,
+            "loss": 49,
+            "owner": true,
+            "id": "lf2-iceball"
+          }
+        ],
+        "sword": {
+          "hits": [
+            {
+              "raw": 114.576,
+              "loss": 115,
+              "owner": true,
+              "id": "lf2-sword"
+            }
+          ],
+          "removed": true
+        }
+      },
+      "growth": {
+        "baseline": {
+          "mode": "lf2-sword",
+          "charge": 0,
+          "cd": 1.05,
+          "damage": 62,
+          "range": 88,
+          "radius": 88,
+          "count": 1,
+          "speed": 0,
+          "freeze": 1.2,
+          "life": 0,
+          "tick": 0,
+          "arc": 1.9,
+          "duration": 0.26666666666666666
+        },
+        "grown": {
+          "mode": "lf2-sword",
+          "charge": 0,
+          "cd": 1.05,
+          "damage": 62,
+          "range": 110,
+          "radius": 110,
+          "count": 1,
+          "speed": 0,
+          "freeze": 1.2,
+          "life": 0,
+          "tick": 0,
+          "arc": 1.9,
+          "duration": 0.26666666666666666
+        },
+        "hits": [
+          {
+            "raw": 114.576,
+            "loss": 115,
+            "owner": true,
+            "id": "lf2-sword"
+          }
+        ]
+      },
+      "lifecycle": [
+        {
+          "reason": "pause",
+          "hits": []
+        },
+        {
+          "reason": "clear",
+          "hits": []
+        },
+        {
+          "reason": "death",
+          "hits": []
+        },
+        {
+          "reason": "unlearn",
+          "hits": []
+        },
+        {
+          "reason": "world",
+          "hits": []
+        },
+        {
+          "reason": "epoch",
+          "hits": []
+        },
+        {
+          "reason": "same-wave-clear",
+          "first": [
+            {
+              "raw": 166.32,
+              "loss": 166,
+              "owner": true,
+              "id": "lf2-column"
+            }
+          ],
+          "second": []
+        },
+        {
+          "reason": "same-wave-unlearn",
+          "first": [
+            {
+              "raw": 166.32,
+              "loss": 166,
+              "owner": true,
+              "id": "lf2-column"
+            }
+          ],
+          "second": []
+        },
+        {
+          "reason": "same-wave-world",
+          "first": [
+            {
+              "raw": 166.32,
+              "loss": 166,
+              "owner": true,
+              "id": "lf2-column"
+            }
+          ],
+          "second": []
+        },
+        {
+          "cloneIsolation": true,
+          "events": [
+            {
+              "ownerMain": false,
+              "ownerClone": true,
+              "id": "lf2-column"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "natural": {
+    "desktop": {
+      "initial": {
+        "time": 0.33933333333333343,
+        "level": 1,
+        "hp": 240,
+        "maxHp": 240,
+        "dead": false,
+        "x": 0,
+        "y": 0,
+        "moves": [
+          {
+            "id": "lf2-iceball",
+            "rank": 1
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-iceball": 1
+          },
+          "hits": 0,
+          "damage": 0,
+          "effects": 1
+        }
+      },
+      "permanent": {},
+      "ledger": [
+        {
+          "time": 23.901599999999757,
+          "level": 2,
+          "key": "stat:cd",
+          "before": {
+            "time": 23.901599999999757,
+            "level": 2,
+            "hp": 236.35383722667098,
+            "maxHp": 240,
+            "dead": false,
+            "x": 170.67409599999982,
+            "y": 25.707514666666544,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 25
+              },
+              "hits": 6,
+              "damage": 505.6128,
+              "effects": 1
+            }
+          },
+          "after": {
+            "time": 23.901599999999757,
+            "level": 2,
+            "hp": 236.35383722667098,
+            "maxHp": 240,
+            "dead": false,
+            "x": 170.67409599999982,
+            "y": 25.707514666666544,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 25
+              },
+              "hits": 6,
+              "damage": 505.6128,
+              "effects": 1
+            }
+          }
+        },
+        {
+          "time": 33.219999999999814,
+          "level": 3,
+          "key": "new:lf2-sword",
+          "before": {
+            "time": 33.219999999999814,
+            "level": 3,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -44.08299199999986,
+            "y": 69.76025066666614,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 36
+              },
+              "hits": 14,
+              "damage": 1321.6895999999997,
+              "effects": 1
+            }
+          },
+          "after": {
+            "time": 33.219999999999814,
+            "level": 3,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -44.08299199999986,
+            "y": 69.76025066666614,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 1
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 36
+              },
+              "hits": 14,
+              "damage": 1321.6895999999997,
+              "effects": 1
+            }
+          }
+        },
+        {
+          "time": 40.57233333333409,
+          "level": 4,
+          "key": "up:lf2-iceball",
+          "before": {
+            "time": 40.57233333333409,
+            "level": 4,
+            "hp": 223.66193888000035,
+            "maxHp": 240,
+            "dead": false,
+            "x": 110.07132800000126,
+            "y": 21.159029333333073,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 1
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 44,
+                "lf2-sword": 4
+              },
+              "hits": 21,
+              "damage": 2205.4032,
+              "effects": 0
+            }
+          },
+          "after": {
+            "time": 40.57233333333409,
+            "level": 4,
+            "hp": 223.66193888000035,
+            "maxHp": 240,
+            "dead": false,
+            "x": 110.07132800000126,
+            "y": 21.159029333333073,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 44,
+                "lf2-sword": 4
+              },
+              "hits": 21,
+              "damage": 2205.4032,
+              "effects": 0
+            }
+          }
+        },
+        {
+          "time": 42.732133333334374,
+          "level": 5,
+          "key": "new:lf2-column",
+          "before": {
+            "time": 42.732133333334374,
+            "level": 5,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 9.107056000001036,
+            "y": 215.7353653333325,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 46,
+                "lf2-sword": 6
+              },
+              "hits": 27,
+              "damage": 2787.4492800000003,
+              "effects": 1
+            }
+          },
+          "after": {
+            "time": 42.732133333334374,
+            "level": 5,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 9.107056000001036,
+            "y": 215.7353653333325,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 46,
+                "lf2-sword": 6
+              },
+              "hits": 27,
+              "damage": 2787.4492800000003,
+              "effects": 1
+            }
+          }
+        },
+        {
+          "time": 60.51933333333671,
+          "level": 6,
+          "key": "up:lf2-iceball",
+          "before": {
+            "time": 60.51933333333671,
+            "level": 6,
+            "hp": 234.6764499200042,
+            "maxHp": 240,
+            "dead": false,
+            "x": -80.8137759999959,
+            "y": 195.5243573333339,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 64,
+                "lf2-sword": 7,
+                "lf2-column": 5
+              },
+              "hits": 42,
+              "damage": 4530.03936,
+              "effects": 2
+            }
+          },
+          "after": {
+            "time": 60.51933333333671,
+            "level": 6,
+            "hp": 234.6764499200042,
+            "maxHp": 240,
+            "dead": false,
+            "x": -80.8137759999959,
+            "y": 195.5243573333339,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 3
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 64,
+                "lf2-sword": 7,
+                "lf2-column": 5
+              },
+              "hits": 42,
+              "damage": 4530.03936,
+              "effects": 2
+            }
+          }
+        },
+        {
+          "time": 77.5057333333351,
+          "level": 7,
+          "key": "stat:quantity",
+          "before": {
+            "time": 77.5057333333351,
+            "level": 7,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -128.5274879999929,
+            "y": 228.53365333333346,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 3
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 81,
+                "lf2-sword": 9,
+                "lf2-column": 9
+              },
+              "hits": 63,
+              "damage": 7442.738687999997,
+              "effects": 1
+            }
+          },
+          "after": {
+            "time": 77.5057333333351,
+            "level": 7,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -128.5274879999929,
+            "y": 228.53365333333346,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 3
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 81,
+                "lf2-sword": 9,
+                "lf2-column": 9
+              },
+              "hits": 63,
+              "damage": 7442.738687999997,
+              "effects": 1
+            }
+          }
+        },
+        {
+          "time": 83.91193333333409,
+          "level": 8,
+          "key": "new:lf2-whirlwind",
+          "before": {
+            "time": 83.91193333333409,
+            "level": 8,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -97.30329599999372,
+            "y": 142.30405333333368,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 3
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 87,
+                "lf2-sword": 10,
+                "lf2-column": 11
+              },
+              "hits": 73,
+              "damage": 8541.115967999995,
+              "effects": 0
+            }
+          },
+          "after": {
+            "time": 83.91193333333409,
+            "level": 8,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -97.30329599999372,
+            "y": 142.30405333333368,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 3
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              },
+              {
+                "id": "lf2-whirlwind",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 87,
+                "lf2-sword": 10,
+                "lf2-column": 11
+              },
+              "hits": 73,
+              "damage": 8541.115967999995,
+              "effects": 0
+            }
+          }
+        },
+        {
+          "time": 88.36473333333342,
+          "level": 9,
+          "key": "up:lf2-iceball",
+          "before": {
+            "time": 88.36473333333342,
+            "level": 9,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -95.45767999999195,
+            "y": 355.2457813333342,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 3
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              },
+              {
+                "id": "lf2-whirlwind",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 91,
+                "lf2-sword": 12,
+                "lf2-column": 12,
+                "lf2-whirlwind": 1
+              },
+              "hits": 83,
+              "damage": 9904.939967999993,
+              "effects": 0
+            }
+          },
+          "after": {
+            "time": 88.36473333333342,
+            "level": 9,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -95.45767999999195,
+            "y": 355.2457813333342,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 4
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              },
+              {
+                "id": "lf2-whirlwind",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 91,
+                "lf2-sword": 12,
+                "lf2-column": 12,
+                "lf2-whirlwind": 1
+              },
+              "hits": 83,
+              "damage": 9904.939967999993,
+              "effects": 0
+            }
+          }
+        }
+      ],
+      "allSpecialsHit": true,
+      "fullWhirlwindClosed": true,
+      "final": {
+        "time": 93.20573333333269,
+        "level": 9,
+        "hp": 232.14183526400046,
+        "maxHp": 240,
+        "dead": false,
+        "x": 27.502704000008485,
+        "y": 390.16120533333236,
+        "moves": [
+          {
+            "id": "lf2-iceball",
+            "rank": 4
+          },
+          {
+            "id": "lf2-sword",
+            "rank": 1
+          },
+          {
+            "id": "lf2-column",
+            "rank": 1
+          },
+          {
+            "id": "lf2-whirlwind",
+            "rank": 1
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-iceball": 95,
+            "lf2-sword": 13,
+            "lf2-column": 13,
+            "lf2-whirlwind": 2
+          },
+          "hits": 95,
+          "damage": 11878.160447999991,
+          "effects": 0
+        }
+      },
+      "state": "playing",
+      "sourceDrift": [
+        ".omx/lf2-art.js"
+      ],
+      "videoSha256": "430043bfe7f2c9b766a8ab33ced0d8db749ea4938c29794ff57dd171fc0f405f"
+    },
+    "mobile390": {
+      "initial": {
+        "time": 0.29113333333333447,
+        "level": 1,
+        "hp": 240,
+        "maxHp": 240,
+        "dead": false,
+        "x": 0,
+        "y": 0,
+        "moves": [
+          {
+            "id": "lf2-iceball",
+            "rank": 1
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-iceball": 1
+          },
+          "hits": 0,
+          "damage": 0,
+          "effects": 1
+        }
+      },
+      "permanent": {},
+      "ledger": [
+        {
+          "time": 28.342733333333022,
+          "level": 2,
+          "key": "up:lf2-iceball",
+          "before": {
+            "time": 28.342733333333022,
+            "level": 2,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -7.442976000001717,
+            "y": 0.030256000000024486,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 30
+              },
+              "hits": 10,
+              "damage": 1002.3551999999997,
+              "effects": 1
+            }
+          },
+          "after": {
+            "time": 28.342733333333022,
+            "level": 2,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -7.442976000001717,
+            "y": 0.030256000000024486,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 30
+              },
+              "hits": 10,
+              "damage": 1002.3551999999997,
+              "effects": 1
+            }
+          }
+        },
+        {
+          "time": 37.91553333333375,
+          "level": 3,
+          "key": "new:lf2-sword",
+          "before": {
+            "time": 37.91553333333375,
+            "level": 3,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -60.663280000001045,
+            "y": 207.43513599999764,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 40
+              },
+              "hits": 17,
+              "damage": 1953.2620799999997,
+              "effects": 3
+            }
+          },
+          "after": {
+            "time": 37.91553333333375,
+            "level": 3,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": -60.663280000001045,
+            "y": 207.43513599999764,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 40
+              },
+              "hits": 17,
+              "damage": 1953.2620799999997,
+              "effects": 3
+            }
+          }
+        },
+        {
+          "time": 40.77893333333412,
+          "level": 4,
+          "key": "stat:cd",
+          "before": {
+            "time": 40.77893333333412,
+            "level": 4,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 137.57403199999803,
+            "y": 34.85491199999619,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 43,
+                "lf2-sword": 1
+              },
+              "hits": 22,
+              "damage": 2762.2425599999992,
+              "effects": 1
+            }
+          },
+          "after": {
+            "time": 40.77893333333412,
+            "level": 4,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 137.57403199999803,
+            "y": 34.85491199999619,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 43,
+                "lf2-sword": 1
+              },
+              "hits": 22,
+              "damage": 2762.2425599999992,
+              "effects": 1
+            }
+          }
+        },
+        {
+          "time": 47.28233333333504,
+          "level": 5,
+          "key": "new:lf2-column",
+          "before": {
+            "time": 47.28233333333504,
+            "level": 5,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 133.9130559999974,
+            "y": 161.5367839999953,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 50,
+                "lf2-sword": 3
+              },
+              "hits": 30,
+              "damage": 3899.4278399999985,
+              "effects": 2
+            }
+          },
+          "after": {
+            "time": 47.28233333333504,
+            "level": 5,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 133.9130559999974,
+            "y": 161.5367839999953,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 50,
+                "lf2-sword": 3
+              },
+              "hits": 30,
+              "damage": 3899.4278399999985,
+              "effects": 2
+            }
+          }
+        },
+        {
+          "time": 48.180133333335164,
+          "level": 6,
+          "key": "stat:quantity",
+          "before": {
+            "time": 48.180133333335164,
+            "level": 6,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 73.34054399999715,
+            "y": 194.5460799999959,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 51,
+                "lf2-sword": 3,
+                "lf2-column": 1
+              },
+              "hits": 32,
+              "damage": 4063.0867199999984,
+              "effects": 3
+            }
+          },
+          "after": {
+            "time": 48.180133333335164,
+            "level": 6,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 73.34054399999715,
+            "y": 194.5460799999959,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 51,
+                "lf2-sword": 3,
+                "lf2-column": 1
+              },
+              "hits": 32,
+              "damage": 4063.0867199999984,
+              "effects": 3
+            }
+          }
+        },
+        {
+          "time": 74.30273333333565,
+          "level": 7,
+          "key": "stat:quantity",
+          "before": {
+            "time": 74.30273333333565,
+            "level": 7,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 159.69116799999867,
+            "y": 36.73078399999633,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 77,
+                "lf2-sword": 3,
+                "lf2-column": 7
+              },
+              "hits": 59,
+              "damage": 7507.9065599999985,
+              "effects": 1
+            }
+          },
+          "after": {
+            "time": 74.30273333333565,
+            "level": 7,
+            "hp": 240,
+            "maxHp": 240,
+            "dead": false,
+            "x": 159.69116799999867,
+            "y": 36.73078399999633,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 77,
+                "lf2-sword": 3,
+                "lf2-column": 7
+              },
+              "hits": 59,
+              "damage": 7507.9065599999985,
+              "effects": 1
+            }
+          }
+        },
+        {
+          "time": 89.35993333333327,
+          "level": 8,
+          "key": "new:lf2-whirlwind",
+          "before": {
+            "time": 89.35993333333327,
+            "level": 8,
+            "hp": 210.9290312960013,
+            "maxHp": 240,
+            "dead": false,
+            "x": -49.710607999998686,
+            "y": 34.94567999999804,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 92,
+                "lf2-sword": 6,
+                "lf2-column": 11
+              },
+              "hits": 94,
+              "damage": 11668.375487999994,
+              "effects": 1
+            }
+          },
+          "after": {
+            "time": 89.35993333333327,
+            "level": 8,
+            "hp": 210.9290312960013,
+            "maxHp": 240,
+            "dead": false,
+            "x": -49.710607999998686,
+            "y": 34.94567999999804,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              },
+              {
+                "id": "lf2-whirlwind",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 92,
+                "lf2-sword": 6,
+                "lf2-column": 11
+              },
+              "hits": 94,
+              "damage": 11668.375487999994,
+              "effects": 1
+            }
+          }
+        },
+        {
+          "time": 90.16053333333315,
+          "level": 9,
+          "key": "up:lf2-sword",
+          "before": {
+            "time": 90.16053333333315,
+            "level": 9,
+            "hp": 211.72963129600151,
+            "maxHp": 240,
+            "dead": false,
+            "x": -3.842511999999142,
+            "y": 5.597359999998045,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 1
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              },
+              {
+                "id": "lf2-whirlwind",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 92,
+                "lf2-sword": 6,
+                "lf2-column": 11,
+                "lf2-whirlwind": 1
+              },
+              "hits": 94,
+              "damage": 11668.375487999994,
+              "effects": 2
+            }
+          },
+          "after": {
+            "time": 90.16053333333315,
+            "level": 9,
+            "hp": 211.72963129600151,
+            "maxHp": 240,
+            "dead": false,
+            "x": -3.842511999999142,
+            "y": 5.597359999998045,
+            "moves": [
+              {
+                "id": "lf2-iceball",
+                "rank": 2
+              },
+              {
+                "id": "lf2-sword",
+                "rank": 2
+              },
+              {
+                "id": "lf2-column",
+                "rank": 1
+              },
+              {
+                "id": "lf2-whirlwind",
+                "rank": 1
+              }
+            ],
+            "stats": {
+              "casts": {
+                "lf2-iceball": 92,
+                "lf2-sword": 6,
+                "lf2-column": 11,
+                "lf2-whirlwind": 1
+              },
+              "hits": 94,
+              "damage": 11668.375487999994,
+              "effects": 2
+            }
+          }
+        }
+      ],
+      "allSpecialsHit": true,
+      "fullWhirlwindClosed": true,
+      "final": {
+        "time": 95.7415333333324,
+        "level": 9,
+        "hp": 217.31063129600307,
+        "maxHp": 240,
+        "dead": false,
+        "x": -71.76723199999914,
+        "y": 1.9666399999980173,
+        "moves": [
+          {
+            "id": "lf2-iceball",
+            "rank": 2
+          },
+          {
+            "id": "lf2-sword",
+            "rank": 2
+          },
+          {
+            "id": "lf2-column",
+            "rank": 1
+          },
+          {
+            "id": "lf2-whirlwind",
+            "rank": 1
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-iceball": 98,
+            "lf2-sword": 8,
+            "lf2-column": 13,
+            "lf2-whirlwind": 1
+          },
+          "hits": 105,
+          "damage": 13280.88115199999,
+          "effects": 4
+        }
+      },
+      "state": "playing",
+      "sourceDrift": [],
+      "videoSha256": "f27315ee48ac7636615bb2c48481384cf5872f206ef25ca208065bef86677831"
+    }
+  },
+  "limits": [
+    "Physical mobile hardware, long-session performance and multiplayer not verified",
+    "Original WAV provenance and routing verified; no human listening review"
+  ],
+  "provenance": "Natural ledgers and videos retain their recorded source hashes. Final sword motion and transparent atlas gutters were separately rechecked in current-source clips; no natural-run cheats were used.",
+  "finalNativeCycles": {
+    "ok": true,
+    "errors": [],
+    "sourceStable": true,
+    "videoSha256": "757ae83896bb548a02bd38a9d753a0f995ff9ae4c4477cd0ea8e05705f85b067",
+    "scope": "Controlled level30/rank1 native animation cycles; separate from natural growth",
+    "sourceHashes": {
+      ".omx/lf2.js": "202c42597b9e7908d211d1657b686f8c37eceb197de6566ce8fba225705d29fe",
+      ".omx/lf2-freeze-combat.js": "18bcfcc59722fda02b44972cee4b01199e3eac6e39edce418297844d2c0b87c1",
+      ".omx/lf2-art.js": "2871eb8c831f04b75e66aaf068c1bdee0bfd38fe70cc5a0478b363f97115a993",
+      ".omx/naruto.js": "e2b4751292ee6d1ecae6f6d9f6e8f4b8408a15292d81b4deb775898ca603e8e3",
+      ".omx/digimon.html": "f7e4da344975927d4dec1944a602f83facdeb71fc48f22270c8851a27a65e36f",
+      "js/entities/enemy.js": "8c90da582a332b003f940d909bcc55364f39ce182b1d4fc30c3a18709c831a5e",
+      "assets/lf2/freeze/005.wav": "dbeb2a3156662b1b6895b4ad5fb7aa319044968277eb482c5e4b7fa5a57e56c5",
+      "assets/lf2/freeze/007.wav": "d8e7bbee32a2a582a07d53f43db50c0c6c6e579ed322aa2369be8859b6385002",
+      "assets/lf2/freeze/008.wav": "1e766a858e5177db7078674db7749e37aca8bd6b5ab93093385328d04c36837b",
+      "assets/lf2/freeze/012.wav": "04e2b02ab4415827045d25cb9c7dadda70da23fc8637beac13123a34dce7f95c",
+      "assets/lf2/freeze/015.wav": "1badf632365f0b711c669f94cd9228af0f2b73f987d399df1322a1f958a6af60",
+      "assets/lf2/freeze/019.wav": "e405ec5be5c63109246eced4b4c9cabcfd5067a9acca0a6b19878f4aa8f8d70c",
+      "assets/lf2/freeze/020.wav": "7fff68e80d827a2237a05b0483b914c757c742e73a1a5c8a012a3b3f58b8db70",
+      "assets/lf2/freeze/064.wav": "ccf3e495d8adec853fd64b8bd78109f80f3697acc26745796c3043ab61325d74",
+      "assets/lf2/freeze/072.wav": "00a536ce2830a9dd852476579cc6e47f49bdd6f1d9ebea0c3b9d7546892a5c9d",
+      "assets/lf2/freeze/073.wav": "959b21a52334f6333e695ca9f44a59372624407b81f153a03eb660fee5230884",
+      "assets/lf2/freeze/074.wav": "11f2c5d7d3983dd614f0af3b87f51bb8e6804a402344df4978f33f4484d16ee6",
+      "assets/lf2/freeze/freeze_0.png": "8bfe6cb0669656b4d62e02e478bf903b9e386c0a5d1d274ce8b9db01f5bc5f38",
+      "assets/lf2/freeze/freeze_1.png": "c72289656d95a47b96b6912274da6248d37d699eca32d9642229b9d36fc47a88",
+      "assets/lf2/freeze/freeze_2.png": "95040ec0b451c90fcafbf7613cd554c5f5d99ef6bc44f2355cad49015cfa5b0b",
+      "assets/lf2/freeze/freeze_ball.png": "d6a43c12058afd2eff5aaa41c36324059c2f215ad4e02dca8b3c1762327fe562",
+      "assets/lf2/freeze/freeze_col.png": "5e6942758fcd60cf2e25d20877c8e0cc9bb6be9b497e8a3d8efc53bbafb8695c",
+      "assets/lf2/freeze/freeze_f.png": "85218d3a6bbbec5843de304c184b4e6f6501e6ebd0270825d7d82a21ed24ad53",
+      "assets/lf2/freeze/freeze_ice.png": "08acbe00b6de48a8a00ffaee404972c0414134e7493443ec2a698a8da342d2bc",
+      "assets/lf2/freeze/freeze_s.png": "839c6a7f943d845f02b98d94cc4339bd0c98159264818d5a4fbb2a1d2bef1f6c",
+      "assets/lf2/freeze/freeze_ww.png": "7a1a4526a8d3f7ffb1b9de4ff1a830fc1b4c77b2d13a205032199bf5d478a4e2",
+      "assets/lf2/freeze/manifest.json": "97072ad2ce8d83c2437f3de403cdcb0c498af46292b93e06e32814f3c4a20d82",
+      "assets/lf2/freeze/weapon7.png": "86e246120fb57f1eb5f773dc0e8eca147f804b520d5c3fae138ac771f447c3c2"
+    }
+  }
+}

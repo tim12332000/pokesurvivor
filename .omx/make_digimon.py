@@ -70,6 +70,9 @@ html = html.replace(main, '<script defer src=".omx/naruto-skills-en.js"></script
 # Shikamaru uses an on-demand authored atlas and a separate combat runtime.
 html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src="art-review/shikamaru-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
 html = html.replace(main, '<script defer src="art-review/shikamaru/reference-shadow-geometry.js"></script>\n<script defer src=".omx/naruto-shikamaru.js"></script>\n' + main, 1)
+# Classic LF2 keeps its original sprite/data vocabulary in a dedicated runtime.
+html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src=".omx/lf2-audio.js"></script>\n<script defer src=".omx/lf2-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
+html = html.replace(main, '<script defer src=".omx/lf2.js"></script>\n<script defer src=".omx/lf2-freeze-combat.js"></script>\n' + main, 1)
 # Local previews need the same cache separation as deployed builds. A version
 # on the page URL alone does not invalidate its independently cached scripts.
 def version_asset(match):
@@ -78,6 +81,8 @@ def version_asset(match):
     query = '?v=' + digest
     if source == 'art-review/madara/runtime.js':
         query += '&amp;data=' + hashlib.sha256((root / 'art-review/madara/frames.json').read_bytes()).hexdigest()[:12]
+    if source == '.omx/lf2-art.js':
+        query += '&amp;data=' + hashlib.sha256((root / 'assets/lf2/freeze/manifest.json').read_bytes()).hexdigest()[:12]
     return match[1] + source + query + match[3]
 
 html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(")', version_asset, html)

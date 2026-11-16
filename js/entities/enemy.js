@@ -285,7 +285,7 @@
         } else if (le.slow) terrainMul = le.slow < 0.5 ? 0.45 : 0.55;
       }
 
-      if (G.JujutsuYuta?.stopped?.(this) || G.NarutoShikamaru?.stopped?.(this)) {
+      if (G.JujutsuYuta?.stopped?.(this) || G.LF2Freeze?.stopped?.(this) || G.NarutoShikamaru?.stopped?.(this)) {
         this._yutaSpeechStopped = true;
         this.kx *= Math.pow(0.0015, dt); this.ky *= Math.pow(0.0015, dt);
         if (this.shieldT > 0 && (this.shieldT -= dt) <= 0) this.shield = 0;
@@ -884,7 +884,7 @@
 
     function separate(dt) {
       for (const e of list) {
-        if (e.dead || G.NarutoLee?.bound?.(e) || G.NarutoKimimaro?.held?.(e) || G.NarutoTemari?.held?.(e) || G.NarutoTemari?.pushed?.(e) || G.JujutsuYuta?.stopped?.(e) || G.NarutoShikamaru?.held?.(e)) continue;
+        if (e.dead || G.NarutoLee?.bound?.(e) || G.NarutoKimimaro?.held?.(e) || G.NarutoTemari?.held?.(e) || G.NarutoTemari?.pushed?.(e) || G.JujutsuYuta?.stopped?.(e) || G.LF2Freeze?.stopped?.(e) || G.NarutoShikamaru?.held?.(e)) continue;
         const cx = Math.floor(e.x / CELL), cy = Math.floor(e.y / CELL);
         let px = 0, py = 0, n = 0;
         for (let j = -1; j <= 1; j++) {
@@ -970,7 +970,7 @@
           if (G.Coop.isHost) G.Coop.enemyGone(e, false);
           continue;
         }
-        if (e.boss || e.shiny || G.Rift.inArena || G.NarutoTemari?.held?.(e) || G.NarutoTemari?.pushed?.(e) || G.JujutsuYuta?.stopped?.(e) || G.NarutoShikamaru?.held?.(e)) continue;
+        if (e.boss || e.shiny || G.Rift.inArena || G.NarutoTemari?.held?.(e) || G.NarutoTemari?.pushed?.(e) || G.JujutsuYuta?.stopped?.(e) || G.LF2Freeze?.stopped?.(e) || G.NarutoShikamaru?.held?.(e)) continue;
         // Rezagados: los que se quedan atrás mientras corres y llevan un rato
         // FUERA DE LA VISTA (de todos) vuelven a salir por delante de ti. Así
         // no se puede huir sin más, y nunca desaparece uno que estés viendo.
