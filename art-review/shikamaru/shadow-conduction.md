@@ -27,3 +27,13 @@
 - 現行九個標準Node檢查、姿勢／投影效能、修改JS語法與 `git diff --check` 通過。後續發布從乾淨來源建置，沿用當前Pages設定，並核對公開檔案與桌機／手機真入口。
 
 仍有限制：多目標電流在近源端短暫交疊；已看畫面中鹿丸頭部、敵方血條與HUD可辨。未驗手機實機長局、音效聽評及合作guest同步；視覺放行不代替使用者對帥氣與樂趣的判斷。
+
+## 發布完成
+
+[正式遊玩導電版鹿丸](https://tim12332000.github.io/pokesurvivor/?lang=zh-TW&hero=shikamaru&release=1a94af11)
+
+遊戲來源 `1a94af1119e46fbf40ceb7cf73d7b73abddb13f1`，靜態提交 `66ab28b54bbbd97c5e797b0a9b8028852de341d9`，Pages來源 `codex/shikamaru-conduction-pages-1a94af11:/`。沿當時真實線上靜態 `ddae37a34a8781885e451aac8ff08aae74ba6dec` 更新，保留13,855個既有公開檔案；僅六個runtime／入口及新manifest改變。網址、HTTPS、CNAME、default main與保護維持原設定。
+
+公開 [manifest](https://tim12332000.github.io/pokesurvivor/shikamaru-conduction-release.json) 與20個核對檔案符合canonical artifact及靜態Git blob。正式根入口的桌機及390手機、冷／暖快取，皆真正從Lv1開局、自然命中及真按鍵移動；公開程式另通過影線移動、300敵、三個真電流抵達後傷害／完電才丟彈、所有清理與回呼取消測試，零pageerror／缺失請求。沒有攔截或替換公開程式，不把push或queued當發布完成。
+
+發布證據位於 `.omx/state/shikamaru-conduction-release/` 的 `release.json`、`static-artifact.json`、`public-assets.json`、`public-browser.json`、`remote-after.json`。無關三份原有QA髒檔保留，未提交或打包。
