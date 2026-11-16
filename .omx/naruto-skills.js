@@ -669,18 +669,18 @@
   const shikamaruSource='https://naruto-official.com/en/news/01_1910';
   const shikamaruUps=Array.from({length:4},(_,i)=>({t:'影術傷害與實際覆蓋成長',m:{dmg:[1.2,1.4/1.2,1.7/1.4,2/1.7][i]}}));
   const shikamaruDesigns=[
-    ['naruto-shikamaru','影真似之術','shadow',1,1.2,18,'足底影網沿地面掃過整群，真接觸才捕捉。普通敵暫停新攻擊並模仿玩家實際位移，同向走入預佈札路，遇牆停下；強敵只限位移、仍可攻擊。在途敵彈仍有威脅。捕群後進入收網節奏，有效拘束至少0.7秒後，停步0.25秒可提前結印，持續移動2.4秒也會自動收網；已啟動連爆不因移動中止。起始四條真分枝，數量第一張增加兩條、最多32條。'],
-    ['naruto-shikamaru-sewing','影縫之術','sewing',2,4.2,34,'捕捉成功後，黑影接力抬起尖端，多輪穿刺影網裡的敵群。與收網共用戰術節奏；數量與升階增加真正影線、穿刺輪次及覆蓋，不再各招各自空轉。'],
+    ['naruto-shikamaru','影真似之術','shadow',1,1.2,18,'足底只伸出一根不規則黑影，真打中A後才從A的命中位置接向B，再依序接C；未打中不會預先分叉。普通敵暫停新攻擊並模仿玩家實際位移，同向走入預佈札路，遇牆停下；強敵只限位移、仍可攻擊。在途敵彈仍有威脅。首觸造成完整傷害；未學札時0.9秒內接續收網，打倒目標就快速重捕。學札後才保留2.4秒佈局窗；已有成熟札與捕捉目標時，停步0.25秒可提前結印，持續移動也會自動收網。已啟動連爆不因移動中止。初始只接一個目標，每次升階或每張數量增加一個順序接力目標；戰術二、四階各加一個，上限16目標。'],
+    ['naruto-shikamaru-sewing','影縫之術','sewing',2,4.2,34,'捕捉成功後，黑影接力抬起尖端，多輪穿刺影網裡的敵群。與收網共用戰術節奏；只沿這輪已真命中的影子接點抬刺；數量與升階增加真正穿刺輪次，不另從本體發射一排影線。'],
     ['naruto-shikamaru-trap','起爆札・誘敵陷阱','trap',3,6,62,'沿玩家真正走過的路徑預佈固定世界起爆札，落地後不跟敵人滑動。影模仿同向帶入追兵，成熟札與捕群成立時可停步提前收網，繼續移動也會到時自動逐札連爆。移動不取消已點燃的爆破，起始三個札位；數量第一張就增加兩個真札位及每札一輪真爆破。走過54像素補一個札，固定保留10秒、落地0.55秒後成熟，札位最多24個。每札多輪代表預置多張起爆符；自動佈陣與多符連爆是本作改編。'],
-    ['naruto-shikamaru-tactics','奈良流・戰術佈局','tactics',4,0,0,'常駐被動，擴充影網與拘束窗口，讓走位帶群、固定札與收網形成接力。各階真實收益依共同能力資料顯示於成長預覽。本作改編。'],
+    ['naruto-shikamaru-tactics','奈良流・戰術佈局','tactics',4,0,0,'常駐被動，延長拘束窗口；二、四階各增加一個順序接力目標，讓走位帶群、固定札與收網形成接力。各階真實收益依共同能力資料顯示於成長預覽。本作改編。'],
     ['naruto-shikamaru-strangle','影首縛之術','strangle',5,7,54,'收網接續影首縛，黑影沿已捕捉的敵人身體抬升，分段收緊形成群體終結。由同一輪戰術觸發，數量與升階擴大實際收束規模，不另等一組無關冷卻。群體自動收束為本作改編。']
   ];
   for(const [id,name,key,learnLevel,cd,dmg,desc]of shikamaruDesigns){
-    const design={name,mode:'shikamaru-'+key,icon:id,type:key==='trap'?'fire':'psychic',learnLevel,cd,dmg,range:360,radius:100,passive:true,autoCast:key!=='tactics',ups:shikamaruUps.map(u=>({...u,t:key==='tactics'?'影分枝 +1；拘束時間 +0.12 秒':key==='sewing'?'傷害、射程、接觸半徑增加；穿刺波次 +1':key==='trap'?'傷害與爆破半徑增加；三、五階增加札位及每札爆輪':key==='strangle'?'傷害、射程、束縛範圍增加；收緊波次 +1':'傷害、影術射程及接觸寬度增加',m:key==='tactics'?{}:{...u.m}})),source_url:shikamaruSource,desc:desc+' 學會即生效，不占主動槽。'};
+    const design={name,mode:'shikamaru-'+key,icon:id,type:key==='trap'?'fire':'psychic',learnLevel,cd,dmg,range:360,radius:100,passive:true,autoCast:key!=='tactics',ups:shikamaruUps.map(u=>({...u,t:key==='tactics'?'拘束時間 +0.12 秒；二、四階增加接力目標':key==='sewing'?'沿已命中接點的穿刺傷害與波次增加':key==='trap'?'傷害與爆破半徑增加；三、五階增加札位及每札爆輪':key==='strangle'?'傷害、收緊射程及目標數增加；收緊波次 +1':'傷害與首段射程增加；順序接力目標 +1',m:key==='tactics'?{}:{...u.m}})),source_url:shikamaruSource,desc:desc+' 學會即生效，不占主動槽。'};
     kinds[design.mode]=key==='tactics'?'buff':'melee';
     if(key==='shadow')profiles.push([30017,'shikamaru',name,'Shikamaru Nara','01_1910',design]);else extra.push([id,[30017],design]);
     const iconRows={
-      shadow:['.....ww.....','....wwww....','.....kk.....','.....kk.....','..s..kk..s..','..ss.kk.ss..','...sskkss...','....skks....','.....kk.....','...sskkss...','..ss.kk.ss..','.ss..kk..ss.'],
+      shadow:['.ww.........','wwww........','.wws........','...ss.......','....ss......','.....sss....','.......ss...','........ss..','.........ss.','.........ww.','........wwww','.........ww.'],
       sewing:['..s..ss..s..','..k..kk..k..','..k..kk..k..','.sk.skk.ks..','.kk.skk.kk..','.kk.skk.kk..','..k..kk..k..','..ssskkss...','....skks....','.....kk.....','....kkkk....','...kkkkkk...'],
       trap:['....rrrr....','...rwwwwr...','...rwkkwr...','...rwkkwr...','...rwwwwr...','...rwkkwr...','...rwwwwr...','....rrrr....','.....rr.....','....r..r....','...r....r...','............'],
       tactics:['ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss','ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss','ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss'],

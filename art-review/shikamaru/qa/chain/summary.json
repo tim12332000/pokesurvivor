@@ -1,0 +1,296 @@
+{
+  "status": "Focused one-root chain QA complete; independent art/anime/director review and publishing remain leader responsibilities.",
+  "sourceManifest": {
+    ".omx/naruto-shikamaru.js": "db28bad0db8ee81cadf73cde395cc027e79c3dee5a538ba14b8f1c3bb99c4fd1",
+    ".omx/naruto-skills.js": "a1ee401fb010b110d368bc56692bd118df948040637e7245385fb10dba29f5f3",
+    ".omx/jujutsu-growth.js": "4870a01487eb456fe97c3586b848934fcae8a3556df329bd1d9fca36afa56ae2",
+    "art-review/shikamaru-art.js": "23299e78451e7954145772e359037e270ad92a09ab1f2d00ec9a90c95771d1bc",
+    "art-review/shikamaru-frames.json": "1c17f719a40606e254ca1f67dff4a302f05d72fc155f8c5e475490b01deb5c26",
+    ".omx/digimon.html": "bdb5b090f7d7dedf9772d92850f9f6eaec2d4781e39b30a2a235c83adccbfa0f"
+  },
+  "controlled": {
+    "sourceStable": true,
+    "checks": [
+      "growth",
+      "stopping",
+      "lethal",
+      "pathAndPool",
+      "props",
+      "highBudget"
+    ],
+    "checkCount": 6,
+    "validLegacyControl": true,
+    "growth": [
+      {
+        "rank": 1,
+        "quantity": 0,
+        "appliedCards": [],
+        "cost": 0,
+        "distinctHurtTargets": 1,
+        "timeOrder": [
+          0.3100000000000001
+        ]
+      },
+      {
+        "rank": 2,
+        "quantity": 0,
+        "appliedCards": [
+          "up:naruto-shikamaru"
+        ],
+        "cost": 1,
+        "distinctHurtTargets": 2,
+        "timeOrder": [
+          0.2900000000000001,
+          0.4200000000000002
+        ]
+      },
+      {
+        "rank": 3,
+        "quantity": 0,
+        "appliedCards": [
+          "up:naruto-shikamaru",
+          "up:naruto-shikamaru"
+        ],
+        "cost": 2,
+        "distinctHurtTargets": 3,
+        "timeOrder": [
+          0.2900000000000001,
+          0.4200000000000002,
+          0.5700000000000003
+        ]
+      },
+      {
+        "rank": 1,
+        "quantity": 1,
+        "appliedCards": [
+          "stat:quantity"
+        ],
+        "cost": 1,
+        "distinctHurtTargets": 2,
+        "timeOrder": [
+          0.3000000000000001,
+          0.45000000000000023
+        ]
+      },
+      {
+        "rank": 1,
+        "quantity": 3,
+        "appliedCards": [
+          "stat:quantity",
+          "stat:quantity",
+          "stat:quantity"
+        ],
+        "cost": 3,
+        "distinctHurtTargets": 4,
+        "timeOrder": [
+          0.3100000000000001,
+          0.45000000000000023,
+          0.6100000000000003,
+          0.7800000000000005
+        ]
+      }
+    ],
+    "stoppingReasons": [
+      "miss",
+      "target-dead-before-contact",
+      "wall",
+      "callback-clear",
+      "owner-death",
+      "world"
+    ],
+    "lethalContactRelay": true,
+    "organicPolygonNativeMaskInsideOutside": {
+      "insideAlpha": 214,
+      "insideHurt": 1,
+      "outsideAlpha": 0,
+      "outsideHurt": 0
+    },
+    "highBudget": {
+      "budget": 16,
+      "age": 5.199999999999934,
+      "realDistinctHurtTargets": 16
+    }
+  },
+  "natural": {
+    "completedSameCast": 234,
+    "time": 109.2426666666725,
+    "level": 10,
+    "hp": 137.9906536319833,
+    "alive": true,
+    "actualAppliedCardCost": 9,
+    "cards": [
+      "new:naruto-shikamaru-sewing",
+      "new:naruto-shikamaru-trap",
+      "new:naruto-shikamaru-tactics",
+      "new:naruto-shikamaru-strangle",
+      "up:naruto-shikamaru-trap",
+      "up:naruto-shikamaru-trap",
+      "stat:quantity",
+      "up:naruto-shikamaru-tactics",
+      "up:naruto-shikamaru-trap"
+    ],
+    "firstUpgrade": {
+      "time": 19.01626666666646,
+      "key": "new:naruto-shikamaru-sewing",
+      "hp": 212.01219327999954,
+      "nearestEnemy": 137.02373955263397
+    },
+    "firstRealChainHit": {
+      "time": 10.760466666666673,
+      "serial": 12,
+      "index": 0,
+      "target": 1,
+      "x": 408.5910349053526,
+      "y": 268.82993893906155,
+      "loss": 33
+    },
+    "ABCTrueHurtEvents": [
+      {
+        "time": 109.01866666667247,
+        "serial": 234,
+        "index": 0,
+        "target": 117,
+        "x": 63.43842413601224,
+        "y": 247.8312026163928,
+        "loss": 50
+      },
+      {
+        "time": 109.03446666667246,
+        "serial": 234,
+        "index": 1,
+        "target": 118,
+        "x": 40.92082597322769,
+        "y": 249.4220657637349,
+        "loss": 50
+      },
+      {
+        "time": 109.13066666667248,
+        "serial": 234,
+        "index": 2,
+        "target": 110,
+        "x": 98.35960838409132,
+        "y": 281.1394073731201,
+        "loss": 50
+      }
+    ],
+    "sourceStable": false,
+    "changedSources": [
+      ".omx/digimon.html"
+    ],
+    "criticalSourcesStable": true,
+    "sourceDifference": "Only generated digimon.html changed during recording when leader refreshed query hashes; runtime/skills/growth/art/metadata bytes remained unchanged. No claim that raw entry HTML was stable.",
+    "phaseImageWarning": "natural/chain-0, chain-1, chain-2 are an earlier cast, while chain-3 is successful cast234. They are not a same-cast montage. Natural true same-cast ABC is established by hurt ledger and original native video.",
+    "errors": []
+  },
+  "readableNativeScene": {
+    "sourceStable": true,
+    "fixture": "Normal entry/native RAF; rank3 Q0 via two true basic upgrade cards, three static million-HP native enemies; no manual sim, clock or player HP changes.",
+    "sameCast": 2,
+    "frames": [
+      {
+        "image": "native-spaced/single-root.png",
+        "time": 0.16266666666666668,
+        "serial": 2,
+        "contacts": 0
+      },
+      {
+        "image": "native-spaced/first-A.png",
+        "time": 0.5946666666666668,
+        "serial": 2,
+        "contacts": 1
+      },
+      {
+        "image": "native-spaced/A-B.png",
+        "time": 0.8506666666666669,
+        "serial": 2,
+        "contacts": 2
+      },
+      {
+        "image": "native-spaced/A-B-C.png",
+        "time": 1.122666666666667,
+        "serial": 2,
+        "contacts": 3
+      }
+    ],
+    "hits": [
+      {
+        "index": 0,
+        "time": 0.5946666666666668,
+        "wall": 1.1851000001430512,
+        "loss": 47
+      },
+      {
+        "index": 1,
+        "time": 0.8506666666666669,
+        "wall": 1.3124000000953675,
+        "loss": 47
+      },
+      {
+        "index": 2,
+        "time": 1.122666666666667,
+        "wall": 1.4485,
+        "loss": 47
+      },
+      {
+        "index": 0,
+        "time": 1.3468666666666669,
+        "wall": 1.5605,
+        "loss": 93
+      },
+      {
+        "index": 1,
+        "time": 1.3468666666666669,
+        "wall": 1.5606000001430511,
+        "loss": 93
+      },
+      {
+        "index": 2,
+        "time": 1.3468666666666669,
+        "wall": 1.5606000001430511,
+        "loss": 93
+      }
+    ],
+    "errors": []
+  },
+  "clarifiedEndpointContract": {
+    "rejectedExpectation": "Freeze every grownPoints coordinate after A contact. Initial QA asserted this and failed when the living endpoint moved.",
+    "acceptedByLeader": "Living A updates both adjacent segment endpoints; internal seeded path/shape and contactPoint stay fixed. Dead A freezes both adjacent endpoints at its confirmed contactPoint, never moved corpse coordinates.",
+    "verification": "Actual living A moved15px: B source and A terminal endpoint followed; internal points and contactPoint remained fixed. After A died and corpse moved to x1000, B source remained at the confirmed contactPoint. 100 draw/query calls left path and sim clock unchanged."
+  },
+  "supersededLegacyContracts": [
+    "Radial Q0/Q1/Q3 four/six/ten simultaneous captures are intentionally superseded by single-root sequential target budget L+Q+floor(T/2).",
+    "Earlier uniform/tapered radial screenshots and complete natural core do not establish this new chain appearance or growth. Existing unaffected contact/DOT safety is separately retained."
+  ],
+  "limitations": [
+    "No claim of subjective enjoyment from tests or visual review.",
+    "Natural successful A and B contacts were16ms apart because targets were close; readable visual order is independently shown in the explicitly controlled spaced-target scene.",
+    "No physical-mobile long run or audio listening review."
+  ],
+  "rawEvidence": {
+    "report.json": {
+      "path": "art-review/shikamaru/qa/chain/report.json",
+      "sha256": "896e30d66db2e1c49374415f6d3ec6cd76cc815f5c8fba745a0cb8251a591d7a",
+      "bytes": 9513465
+    },
+    "natural/report.json": {
+      "path": "art-review/shikamaru/qa/chain/natural/report.json",
+      "sha256": "6dae0e9026f39c07d11e59fd0f46a9eac2af9dc2b9218efdaa95a6ab63949681",
+      "bytes": 16319015
+    },
+    "natural/single-root-chain-native.webm": {
+      "path": "art-review/shikamaru/qa/chain/natural/single-root-chain-native.webm",
+      "sha256": "2f8443221602d467310ecedeb85ccff4b4a3518fa067c2bdc4cf8740d8db88a4",
+      "bytes": 9551586
+    },
+    "native-spaced/report.json": {
+      "path": "art-review/shikamaru/qa/chain/native-spaced/report.json",
+      "sha256": "ec6e7e125840de3c066656b740e1d04d593c18fcd13dff0cd660a7b220dc2b3a",
+      "bytes": 113654
+    },
+    "native-spaced/same-cast-ABC-native.webm": {
+      "path": "art-review/shikamaru/qa/chain/native-spaced/same-cast-ABC-native.webm",
+      "sha256": "1d99ba04269d405ff61e2d15c8c5229a634f59a836f225311b59bf9d537cce69",
+      "bytes": 340446
+    }
+  }
+}
