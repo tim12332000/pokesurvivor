@@ -20,7 +20,7 @@
       if(mode==='shikamaru-trap')return {札位容量:pfile.traps,每札爆破輪次:pfile.blastRounds,爆破半徑:pfile.radius};
       if(mode==='shikamaru-sewing')return {高拱穿刺輪次:pfile.pulses};
       if(mode==='shikamaru-strangle')return {收緊目標:pfile.chainTargets,收緊波次:pfile.pulses};
-      return {接力目標:pfile.chainTargets,後續接點:pfile.chainHops,接力距離:pfile.chainRange,首段射程:pfile.range};
+      return {同時捕捉:pfile.branches,每目標苦無:pfile.kunaiRounds,捕捉射程:pfile.range};
     }
     if(customConsumers.has(mode))return customConsumers.get(mode)(p,m);
     if(mode==='jjk-ryu-spread')return {追蹤砲彈:count(p,G.Jujutsu.power.ryu.scatterBases[i],G.Jujutsu.power.ryu.scatterCap)};
@@ -136,7 +136,7 @@
           if(move.digiMode==='shikamaru-tactics'){
             const probe=Object.create(owner);probe.moves=owner.moves.map(x=>x.id===move.id?move:x);
             const shadow=probe.moves.find(x=>x.digiMode==='shikamaru-shadow')||G.Moves.instance('naruto-shikamaru');
-            const profile=G.NarutoShikamaru.profile(probe,shadow);return {接力目標:profile.chainTargets,束縛秒數:profile.bindDuration};
+            const profile=G.NarutoShikamaru.profile(probe,shadow);return {同時捕捉:profile.branches,束縛秒數:profile.bindDuration};
           }
           const profile=G.NarutoShikamaru.profile(owner,move);
           return {傷害:profile.damage,...vector(owner,move),...(profile.kind==='shadow'?{影身半寬:profile.radius}:{}),...(profile.kind==='strangle'?{收緊射程:profile.range}:{}),...(profile.kind==='shadow'?{束縛秒數:profile.bindDuration}:{})};

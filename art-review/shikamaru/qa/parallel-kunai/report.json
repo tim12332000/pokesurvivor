@@ -1,0 +1,68 @@
+{
+  "controlled": true,
+  "checks": {
+    "parallel": {
+      "targets": 3,
+      "rounds": 4,
+      "hits": [
+        4,
+        4,
+        4
+      ]
+    },
+    "fixedDirection": true,
+    "independent": true,
+    "evaded": true,
+    "wall": true,
+    "lifecycle": true,
+    "callback": true,
+    "maximum": {
+      "targets": 16,
+      "hits": 80
+    },
+    "growth": [
+      {
+        "rank": 1,
+        "q": 0,
+        "targets": 1,
+        "rounds": 3
+      },
+      {
+        "rank": 1,
+        "q": 1,
+        "targets": 2,
+        "rounds": 3
+      },
+      {
+        "rank": 3,
+        "q": 0,
+        "targets": 3,
+        "rounds": 4
+      },
+      {
+        "rank": 5,
+        "q": 0,
+        "targets": 5,
+        "rounds": 5
+      },
+      {
+        "rank": 5,
+        "q": 16,
+        "targets": 16,
+        "rounds": 5
+      }
+    ]
+  },
+  "errors": [],
+  "native": {
+    "hits": [
+      4,
+      4,
+      4
+    ],
+    "cycles": 1,
+    "clock": 1.0069999999999995,
+    "moved": true
+  },
+  "ok": true
+}
