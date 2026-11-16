@@ -1,8 +1,8 @@
 {
-  "sourceCommit": "3290233e414879b395a6545b88ceb0ed3fbb8746",
+  "sourceCommit": "51805cee99285099d4d502f3531fc75b419438f5",
   "feature": "naruto-cloak-directions-and-shadow-sync",
   "sha256": {
-    ".omx/digimon.html": "51ab2c148ea92d9550c8e1383ef4bc092a3ef936965172b14d95e1f3b132dc50",
+    ".omx/digimon.html": "569b10ad41a4c71f7c990d8af65fe6a333bf1c044ceb90b6a04582c743f257a7",
     ".omx/portrait.html": "2ee4716215f28acd8bf4999670a24e9cb6e1d1b266eb0b27a237b573a1395b34",
     "art-review/kyuubi-form.js": "57296707f33d90f2077b4686dcdb3f29f41e616432b9d6d4de099cfa6788064a",
     "art-review/kyuubi-frames.json": "72dab6274d8b9f84ebac175345bd6cd650ad25388fc9a7c4df6da639649a2b13",
@@ -10,7 +10,7 @@
     "art-review/redrawn/one-tail-vertical-v1.png": "b4ff9cf65b4e0ac40a5752e86c3cb8a1917a4486369cf7592d603066623f87b9",
     ".omx/naruto-clones.js": "670cf3b76ec16349742ffaa155933c873a9ec2ae8d449ed7dcce34c123d80977",
     ".omx/naruto-support.js": "d1b80a87096ec815999364384a834a854efa74ee1d3f5a5f825009a4815f4ca0",
-    ".omx/naruto-skills.js": "3b1a5784cd9a3c106c0177863b407a73b9ee699bc46ef844fded78919b5ba217",
+    ".omx/naruto-skills.js": "29483c55750b143994667d59c3175ea8d72166c8bff1ebdf60f6ef92fe8cc641",
     ".omx/naruto-skills-en.js": "adf43751d91cad998081cdd532e0fa96ad368e3a63b4d749bdc9e70ff5b85e13",
     ".omx/naruto-rasengan-vfx.js": "f3ed159cf903bc1e821b2011addde7f1f88dcfd6f166bdde50b138975bb41575",
     ".omx/naruto-shikamaru.js": "a7f9f11afdc15507d2ea4582c73b3de9066d8f3289ea6f38ae8edc93fa775340",
