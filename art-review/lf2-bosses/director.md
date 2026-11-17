@@ -57,3 +57,7 @@ Separate art review renewed PASS94 for the **complete six-skill** candidate (`vi
 Root may now commit/build/publish this corrected complete candidate under the existing authorization. It must still verify the actual live files, all six registered definitions and normal public desktop/mobile starts against the canonical artifact before claiming publication complete. Push/queued is not proof. Stop adding mechanics or broadening QA absent a new concrete defect.
 
 Physical-phone endurance, multiplayer,30-minute performance and human fun/audio listening remain explicitly unverified; none was used to excuse an omitted named ability.
+
+## 完整六招公開閘門完成
+
+主代理已核對110個公開檔bytes一致，Freeze／Firzen／Julian各桌機與390手機共六個新Lv1入口零錯誤，公開實際能力與圖示分別4／3／6。Julian六招含正式Soul Punch與Mirror Image；本次完整範圍與公開發布均完成，見 publishing-v2.md。舊四招結論仍僅保留作已撤回歷史。
