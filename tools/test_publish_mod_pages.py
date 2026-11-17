@@ -126,6 +126,20 @@ class PublishTests(unittest.TestCase):
         self.assertTrue(json.loads(result.stdout)['dryRun'])
         self.assertEqual(before, self.snapshot())
 
+    def test_clean_crlf_checkout_uses_repository_normalization(self):
+        self.run_git('config', 'core.autocrlf', 'true')
+        for name in self.files: (self.repo/name).unlink()
+        subprocess.run(['git', 'checkout', '--force', 'HEAD', '--', '.'], cwd=self.repo,
+                       capture_output=True, check=True)
+        self.assertIn(b'\r\n', (self.repo/'js/main.js').read_bytes())
+        clean = subprocess.run(['git', 'status', '--porcelain', '--untracked-files=no'],
+                               cwd=self.repo, capture_output=True, check=True).stdout
+        self.assertEqual(clean, b'')
+        self.assertTrue(self.prepare(dry_run=True)['dryRun'])
+        self.write(self.repo/'README.md', b'committed source \r\n')
+        with self.assertRaisesRegex(RuntimeError, 'tracked modifications'):
+            self.prepare(dry_run=True)
+
     def test_local_independent_release_is_not_overwritten(self):
         tree = self.run_git('rev-parse', self.parent+'^{tree}').strip().decode()
         other = self.run_git('commit-tree', tree, '-p', self.parent, '-m', 'other local release').strip().decode()

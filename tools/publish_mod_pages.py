@@ -117,8 +117,10 @@ def prepare(repo, artifact, expected_source, expected_pages, remote='origin', dr
     source = text(repo, 'rev-parse', 'HEAD')
     if source != expected_source or text(repo, 'rev-parse', SOURCE_BRANCH) != source:
         raise RuntimeError('Use the expected mod-main source checkout')
-    git(repo, 'diff', '--quiet', 'HEAD')
-    git(repo, 'diff', '--cached', '--quiet')
+    # Cleanliness follows the checkout's own EOL rules; byte-exact staging below does not.
+    for args in [('diff', '--quiet', 'HEAD'), ('diff', '--cached', '--quiet')]:
+        if subprocess.run(['git', *args], cwd=repo, capture_output=True).returncode:
+            raise RuntimeError('Source checkout has tracked modifications')
     if 'branch refs/heads/' + PAGES_BRANCH in text(repo, 'worktree', 'list', '--porcelain').splitlines():
         raise RuntimeError('Detach the gh-pages worktree before publishing')
     git(repo, 'cat-file', '-e', expected_pages + '^{commit}')
