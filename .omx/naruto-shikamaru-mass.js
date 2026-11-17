@@ -12,7 +12,8 @@
     return {kind:'mass',L,Q,radius:260+20*(L-1)+5*Math.min(12,Q),range:m?.range??440,
       bindDuration:3.2+.2*(L-1),cd:(m?.cd??32)*(a.cdMul??1),damage:(m?.dmg??45)*(a.atk??1),
       prepare:.32,speed:900,spread:.45,throwDelay:.55,bombFlight:.7,fuse:.32,aftermath:.7,
-      shockPulses:3,shockGap:.18,shockSpeed:620,shockScale:.15,bombScale:.55};
+      // Double both the launch span (.36 -> .72) and travel time; keep the 45% electric budget.
+      shockPulses:6,shockGap:.144,shockSpeed:310,shockMinDuration:.48,shockScale:.075,bombScale:.55};
   }
   function legal(b){return !b.cancelled&&valid(b.owner)&&b.world===G.World&&states.get(b.owner)===b.state&&!!learned(b.owner);}
   function state(a){
@@ -40,7 +41,10 @@
   function deal(b,e,scale,type,stage,pulse=0){
     if(!legal(b)||!alive(e))return false;
     const mult=G.Types?.mult?.(type,e.types)??1,damage=b.spec.damage*scale*mult*(G.Weather?.mult?.(type)??1);
-    e.hurt(damage,stage==='shock'?'#bbecff':'#ffb461',0,0,0,G.Types?.label?.(mult),b.owner,ID);if(!legal(b))return false;
+    // Split each previous rounded shock across two arrivals so six hits preserve actual HP loss.
+    const paired=stage==='shock'&&b.spec.shockPulses===6,pairDamage=Math.max(1,Math.round(damage*2));
+    const amount=paired?(pulse%2?Math.floor(pairDamage/2):Math.ceil(pairDamage/2)):damage;
+    if(!paired||amount>0)e.hurt(amount,stage==='shock'?'#bbecff':'#ffb461',0,0,0,G.Types?.label?.(mult),b.owner,ID);if(!legal(b))return false;
     b.owner.onDealt?.(damage);if(!legal(b))return false;
     b.owner.dmgDealt=(b.owner.dmgDealt||0)+damage;b.state.hits++;b.state[stage==='shock'?'shockHits':'bombHits']++;b.state.damage+=damage;
     if(b.state.contacts.length<256)b.state.contacts.push({stage,pulse,targetId:e.id,x:e.x,y:e.y,damage,origin:{...b.center},radius:b.spec.radius});
@@ -88,7 +92,7 @@
         const first=Math.max(b.conductAt,ray.boundAt+.1);
         while(ray.shocks.length<b.spec.shockPulses&&b.age>=first+ray.shocks.length*b.spec.shockGap){
           const born=first+ray.shocks.length*b.spec.shockGap,length=Math.hypot(ray.bodyPoint.x-ray.source.x,ray.bodyPoint.y-ray.source.y,ray.bodyPoint.z);
-          ray.shocks.push({pulse:ray.shocks.length+1,born,duration:Math.max(.24,length/b.spec.shockSpeed),progress:0,done:false});
+          ray.shocks.push({pulse:ray.shocks.length+1,born,duration:Math.max(b.spec.shockMinDuration,length/b.spec.shockSpeed),progress:0,done:false});
         }
         for(const packet of ray.shocks){
           if(!legal(b))break;if(packet.done)continue;packet.progress=Math.min(1,Math.max(0,(b.age-packet.born)/packet.duration));
@@ -114,7 +118,7 @@
     const pose=(phase,started,duration)=>({kind:'mass',phase,age:b.age,phaseAge:b.age-started,phaseDuration:duration,aim:b.bomb?.aim??aim,moving});
     if(b.age<b.spec.prepare)return pose('mass-charge',0,b.spec.prepare);
     if(b.age<b.full+.08)return pose('mass-seal',b.spec.prepare,b.full+.08-b.spec.prepare);
-    const sendDuration=b.spec.shockGap*(b.spec.shockPulses-1)+.08;
+    const sendDuration=b.spec.shockGap*(b.spec.shockPulses-1)+.16;
     if(b.conductAt!==null&&b.age>=b.conductAt-.1&&b.age<b.conductAt+sendDuration)return pose('mass-conduct',b.conductAt-.1,sendDuration+.1);
     if(b.age>=b.throwAt-.18&&b.age<b.throwAt)return pose('mass-throw-prepare',b.throwAt-.18,.18);
     if(b.age>=b.throwAt&&b.age<b.throwAt+.1)return pose('mass-throw-release',b.throwAt,.1);
