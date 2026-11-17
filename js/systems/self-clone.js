@@ -326,11 +326,11 @@
   G.Combat.resolve = function(dt, owner, now) {
     if (G.Game.state === 'playing') {
       G.NarutoSandGuard?.updateClones(dt, owner);
-      const shots = G.Projectiles.all(), live = actors().filter(a => a.sourceOwner === owner && !a.frozen);
+      const shots = G.Projectiles.all(), live = actors().filter(a => a.sourceOwner === owner && !a.frozen && !G.LF2Julian?.collisionExempt?.(a));
       for (let i = shots.length - 1; i >= 0; i--) {
         const shot = shots[i];
         if (shot.friendly !== false || G.World.projectileBlock(shot.x, shot.y, shot.r)) continue;
-        let first = null, time = owner ? contactTime(shot, owner) : Infinity;
+        let first = null, time = owner && !G.LF2Julian?.collisionExempt?.(owner) ? contactTime(shot, owner) : Infinity;
         for (const actor of live) {
           if (!isActor(actor)) continue;
           const t = contactTime(shot, actor);
