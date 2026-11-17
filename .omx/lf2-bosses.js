@@ -1,4 +1,4 @@
-/* Classic LF2 hidden fighters: original identities with native survivor growth. */
+/* Classic LF2 fighters: original identities with native survivor growth. */
 (() => {
   'use strict';
   if (G.LF2Bosses) return;
@@ -8,6 +8,12 @@
       ['lf2-firzen-cannon','冰火砲 · Firzen Cannon','ice',1,'從手前持續射出冰火砲彈，首發重擊接續連射；砲彈真正飛行，牆與障礙會阻擋。'],
       ['lf2-firzen-disaster','冰火追擊 · Overwhelming Disaster','fire',3,'向上釋出冰火追擊彈，升空後各自追向敵人；火彈與冰彈分別命中，冰彈可凍結普通敵人，強敵時間較短。'],
       ['lf2-firzen-volcano','冰火大爆發 · Arctic Volcano','fire',6,'在周圍釋放原版冰火爆發，覆蓋包圍自己的敵群；每道爆發各有真實命中，離開本體後仍依原動畫收束。']
+    ]},
+    {dex:30021,name:'Firen 火人',api:G.LF2Firen,moves:[
+      ['lf2-firen-ball','火球 · Fire Ball','fire',1,'以原版姿勢連續推出真正飛行的火球，接觸敵人燃燒；牆和障礙會阻擋。'],
+      ['lf2-firen-blaze','烈焰衝刺 · Blaze','fire',3,'化為烈焰，依移動方向真正衝刺並沿腳下留下地火；接觸與火跡各自命中，牆與障礙限制前進。'],
+      ['lf2-firen-inferno','噴火 · Inferno','fire',5,'從嘴前連續吐出原版火焰，逐段穿過面前敵群，已釋放火焰持續前進直到消散。'],
+      ['lf2-firen-explosion','爆炸 · Explosion','fire',8,'蓄力後在本體周圍釋放原版大爆炸；每次施放消耗最大生命8%，生命不足時不自動施放。']
     ]},
     {dex:30020,name:'Julian 邪鬼',api:G.LF2Julian,moves:[
       ['lf2-julian-skull','骷髏彈 · Skull Blast','psychic',1,'連續射出原版骷髏彈追擊敵人，逐發飛行與命中；近身空檔以普通拳擊迎擊。'],
@@ -25,10 +31,14 @@
     skull:['...bbbbbb...','..bwwwwwwb..','.bwwwwwwwwb.','.bwwwwwwwwb.','.bwbwwbwwb..','.bwbwwbwwb..','..bwwwwwwb..','...bwwwwb...','...bwbwb....','...bbbbb....','............','............'],
     fist:['............','....bbbb....','...bwwwwb...','...bwwwwb...','...bwwwwb...','....bwwb....','....bwwb....','....bwwb....','...bwwwwb...','...bwwwwb...','....bbbb....','............'],
     rush:['............','.......bbbb.','......bwwwwb','..bb..bwwwwb','bbwwbbbwwwwb','..bbwwwwwwwb','bbwwbbbwwwwb','..bb..bwwwwb','......bwwwwb','.......bbbb.','............','............'],
+    fire:['.....b......','....bwb.....','....bwwb....','...bwwwb....','..bwwwwb....','.bwwwwwwb...','bwwwwwwwwb..','bwwwbbwwwb..','.bwwbbwwb...','..bwwwwb....','...bbbb.....','............'],
+    breath:['............','.........bb.','......bbwwb.','...bbwwwwwb.','.bwwwwwwwwb.','bwwwwwwwwwb.','bwwwwwwwwwb.','.bwwwwwwwwb.','...bbwwwwwb.','......bbwwb.','.........bb.','............'],
+    blaze:['........bb..','.......bwwb.','..b.....bb..','.bwb..bbbb..','bwwb.bwwwwb.','.bwwbbwwwwb.','..bwwbbbwb..','.bwwb..bb...','..bb..b..b..','.....b....b.','............','............'],
     mirror:['..bb....bb..','.bwwb..bwwb.','..bb....bb..','..bb....bb..','.bwwb..bwwb.','bwwwwbbwwwwb','..bb....bb..','..bb....bb..','.b..b..b..b.','.b..b..b..b.','............','............']
   };
   const catalog=G.NarutoSkillCatalog,kits=[],owners=new Map(),power={};
   const countLabels={'lf2-firzen-cannon':'連射發數','lf2-firzen-disaster':'追擊彈數','lf2-firzen-volcano':'爆發組數',
+    'lf2-firen-ball':'火球輪次','lf2-firen-blaze':'衝刺輪次','lf2-firen-inferno':'噴火段數','lf2-firen-explosion':'爆炸輪次',
     'lf2-julian-skull':'骷髏彈數','lf2-julian-punch':'衝拳次數','lf2-julian-uppercut':'上勾拳次數','lf2-julian-mirror':'幻影數','lf2-julian-ball':'能量球數','lf2-julian-blast':'大爆發輪次'};
   for (const hero of heroes) {
     if (!hero.api?.specs) throw Error('Classic LF2 combat definitions missing: '+hero.dex);
@@ -40,11 +50,19 @@
       power[id]=p;
       const ranges=p.ranges,radii=p.radii,counts=p.counts;
       const utility=id==='lf2-julian-mirror';
-      const icon=/mirror/.test(id)?'mirror':/skull/.test(id)?'skull':/punch/.test(id)?'rush':/uppercut/.test(id)?'fist':/disaster/.test(id)?'orbs':/volcano|blast/.test(id)?'blast':'cannon';
-      G.Icons.UI[id]={pal:{w:hero.dex===30019?'#fff0c1':'#ddd7ff',b:hero.dex===30019?'#58cbe9':'#8463d5'},rows:marks[icon],outline:true};
+      const icon=/blaze/.test(id)?'blaze':/inferno/.test(id)?'breath':/firen-ball/.test(id)?'fire':/mirror/.test(id)?'mirror':/skull/.test(id)?'skull':/punch/.test(id)?'rush':/uppercut/.test(id)?'fist':/disaster/.test(id)?'orbs':/volcano|blast|explosion/.test(id)?'blast':'cannon';
+      G.Icons.UI[id]={pal:{w:hero.dex===30021?'#fff1a3':hero.dex===30019?'#fff0c1':'#ddd7ff',b:hero.dex===30021?'#f16b32':hero.dex===30019?'#58cbe9':'#8463d5'},rows:marks[icon],outline:true};
+      const rangeLabel=id==='lf2-firen-blaze'?'每輪衝刺尺度':id.endsWith('explosion')?'爆炸範圍':'射程';
+      const radiusLabel=id==='lf2-firen-blaze'?'地火半寬':id==='lf2-firen-inferno'?'最大火舌半寬':'命中半徑';
+      const radiusMetric=radii.map((radius,i)=>{
+        if(id!=='lf2-firen-blaze'&&id!=='lf2-firen-inferno')return radius;
+        const actual=hero.api.profile({quantityPicks:0,giantPicks:0},{id,digiMode:id,lvl:i+1,range:ranges[i],radius});
+        const width=id==='lf2-firen-blaze'?actual.groundHalfWidth:actual.maxHalfWidth;
+        return Math.round(width*100)/100;
+      });
       const ups=scales.slice(1).map((scale,i)=>({
         t:utility?`${countLabels[id]}基數 ${counts[i]}→${counts[i+1]}，誘敵範圍 ${ranges[i]}→${ranges[i+1]}，閃身距離 ${p.distances[i]}→${p.distances[i+1]}；幻影維持 ${(p.lifetimes[i+1]).toFixed(2)} 秒`:
-          `傷害提高；${countLabels[id]}基數 ${counts[i]}→${counts[i+1]}，射程 ${ranges[i]}→${ranges[i+1]}，命中半徑 ${radii[i]}→${radii[i+1]}`,
+          `傷害提高；${countLabels[id]}基數 ${counts[i]}→${counts[i+1]}，${rangeLabel} ${ranges[i]}→${ranges[i+1]}，${radiusLabel} ${radiusMetric[i]}→${radiusMetric[i+1]}`,
         m:{...(utility?{}:{dmg:scale/scales[i]}),range:ranges[i+1],radius:radii[i]>0?radii[i+1]/radii[i]:1,width:radii[i]>0?radii[i+1]/radii[i]:1}
       }));
       const def={id,name,icon:id,type,kind:utility?'buff':'melee',digiMode:id,digimonSkill:true,narutoSkill:true,lf2Skill:true,
@@ -91,7 +109,9 @@
     }
     const active=state?.effects?.filter(e=>!e.dead&&e.action?.m.id===move.id);
     if(active?.length)return {label:'作用中 '+active.length,fraction:Math.max(0,Math.min(1,Math.max(...active.map(e=>(e.life-e.age)/Math.max(.01,e.life)))))};
-    const t=Math.max(0,move.t||0);return {label:t>0?t.toFixed(1)+'s':pose?'待出手':'就緒',fraction:Math.min(1,t/Math.max(.05,move.cd*(player.cdMul??1)))};
+    const t=Math.max(0,move.t||0),waiting=hero.api.statusFor?.(player,move);
+    if(t<=0&&waiting?.reason)return {label:waiting.label,fraction:0};
+    return {label:t>0?t.toFixed(1)+'s':pose?'待出手':'就緒',fraction:Math.min(1,t/Math.max(.05,move.cd*(player.cdMul??1)))};
   };
   for(const hero of heroes){
     const article=document.createElement('article');article.className='naruto-skill-entry';
