@@ -682,7 +682,7 @@ G.Combat = (() => {
     if (pl.dead) return;
     for (const e of G.EnemyMgr.queryCircle(pl.x, pl.y, pl.r + 40)) {
       if (G.U.dist2(e.x, e.y, pl.x, pl.y) > (e.r + pl.r) * (e.r + pl.r)) continue;
-      if (e.touchCd > 0 || e.behavior === 'thief' || G.NarutoLee?.bound?.(e) || G.NarutoKimimaro?.held?.(e) || G.JujutsuYuta?.stopped?.(e) || G.LF2Freeze?.stopped?.(e) || G.NarutoShikamaru?.stopped?.(e)) continue;
+      if (e.touchCd > 0 || e.behavior === 'thief' || G.NarutoLee?.bound?.(e) || G.NarutoKimimaro?.held?.(e) || G.JujutsuYuta?.stopped?.(e) || G.LF2Freeze?.stopped?.(e) || G.LF2Firzen?.stopped?.(e) || G.NarutoShikamaru?.stopped?.(e)) continue;
       e.touchCd = 0.55;
       e.strike(pl);
       pl.hurt(e.dmg, e.atkType, false, { cause: 'contact', sourceEnemy: e, fromX: e.x, fromY: e.y });

@@ -340,7 +340,7 @@
       }
       for (const actor of live) for (const enemy of G.EnemyMgr.queryCircle(actor.x, actor.y, actor.r + 40)) {
         if (!isActor(actor)) break;
-        if (enemy.dead || enemy.touchCd > 0 || enemy.behavior === 'thief' || G.NarutoLee?.bound?.(enemy) || G.NarutoKimimaro?.held?.(enemy) || G.JujutsuYuta?.stopped?.(enemy) || G.LF2Freeze?.stopped?.(enemy) || G.NarutoShikamaru?.stopped?.(enemy) || Math.hypot(enemy.x - actor.x, enemy.y - actor.y) > actor.r + enemy.r) continue;
+        if (enemy.dead || enemy.touchCd > 0 || enemy.behavior === 'thief' || G.NarutoLee?.bound?.(enemy) || G.NarutoKimimaro?.held?.(enemy) || G.JujutsuYuta?.stopped?.(enemy) || G.LF2Freeze?.stopped?.(enemy) || G.LF2Firzen?.stopped?.(enemy) || G.NarutoShikamaru?.stopped?.(enemy) || Math.hypot(enemy.x - actor.x, enemy.y - actor.y) > actor.r + enemy.r) continue;
         enemy.touchCd = .55; enemy.strike(actor); actor.hurt(enemy.dmg, enemy.atkType, false, { cause: 'contact', sourceEnemy: enemy, fromX: enemy.x, fromY: enemy.y });
       }
     }

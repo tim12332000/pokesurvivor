@@ -9,9 +9,9 @@
       if (voice.source) { try { voice.source.stop(); } catch {} }
     }
   }
-  async function play(id, owner = G.Game.player) {
+  async function play(id, owner = G.Game.player, metadata = G.LF2Art?.metadata) {
     if (!G.Audio?.sample || G.Game.state !== 'playing' || !owner || owner.dead || owner.hp <= 0 || voices.size >= 8) return false;
-    const entry = G.LF2Art?.metadata?.source.files.find(file => file.runtime?.endsWith('/' + id + '.wav'));
+    const entry = metadata?.source.files.find(file => file.runtime?.endsWith('/' + id + '.wav'));
     if (!entry) return false;
     const voice = {owner, world:G.World, epoch:G.CombatPulse?.epoch, source:null};
     voices.add(voice);

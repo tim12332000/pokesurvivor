@@ -1,4 +1,4 @@
-"""Compare the live Freeze package to its canonical artifact, then open it normally."""
+"""Compare a live classic LF2 package to its artifact and open each selected hero."""
 import argparse
 import hashlib
 import json
@@ -17,16 +17,23 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('artifact', type=Path)
     parser.add_argument('source')
+    parser.add_argument('--heroes', nargs='+', choices=['freeze','firzen','julian'], default=['freeze'])
     args = parser.parse_args()
     artifact = args.artifact.resolve()
     assert artifact.is_relative_to(ROOT)
+    scope='lf2-bosses' if any(hero!='freeze' for hero in args.heroes) else 'freeze'
+    OUT=ROOT/'.omx/state'/scope/'public'
     OUT.mkdir(parents=True, exist_ok=True)
     paths = ['index.html', '.omx/digimon.html', '.omx/naruto.js', '.omx/redrawn-init.js',
              '.omx/lf2.js', '.omx/lf2-art.js', '.omx/lf2-audio.js', '.omx/lf2-freeze-combat.js',
              'js/core/audio.js', 'js/entities/enemy.js', 'js/systems/combat.js', 'js/systems/self-clone.js',
              'assets/lf2/freeze/manifest.json']
-    paths += [p.relative_to(artifact).as_posix() for p in (artifact/'assets/lf2/freeze').iterdir()
-              if p.is_file() and p.suffix in {'.png', '.wav'}]
+    if scope=='lf2-bosses':
+        paths += ['.omx/lf2-bosses.js','.omx/lf2-boss-art.js','.omx/lf2-firzen-combat.js','.omx/lf2-julian-combat.js']
+    for hero in dict.fromkeys(['freeze',*args.heroes]):
+        paths += [p.relative_to(artifact).as_posix() for p in (artifact/'assets/lf2'/hero).iterdir()
+                  if p.is_file() and p.suffix in {'.png','.wav','.json'}]
+    paths=list(dict.fromkeys(paths))
     checked = {}
     for name in paths:
         expected = hashlib.sha256((artifact/name).read_bytes()).hexdigest()
@@ -38,32 +45,35 @@ def main():
     browser_report = {}
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=r'C:\Program Files\Google\Chrome\Application\chrome.exe', headless=True)
-        for name, viewport, mobile in [('desktop', {'width':1100,'height':850}, False),
-                                       ('mobile390', {'width':390,'height':844}, True)]:
-            context = browser.new_context(viewport=viewport, is_mobile=mobile, has_touch=mobile)
-            page = context.new_page()
-            errors, failed = [], []
-            page.on('pageerror', lambda e: errors.append(str(e)))
-            page.on('response', lambda r: failed.append({'status':r.status,'url':r.url}) if r.status >= 400 and 'github.io/pokesurvivor/' in r.url else None)
-            url = BASE + '?lang=zh-TW&hero=freeze&release=' + args.source[:8]
-            if not mobile: url += '&layout=wide'
-            page.goto(url)
-            page.wait_for_function("window.G?.LF2Freeze&&document.getElementById('boot').classList.contains('hidden')", timeout=60000)
-            if page.locator('#tap-start').is_visible(): page.locator('#tap-start').click()
-            page.locator('[data-quick-naruto="30018"]').click()
-            page.wait_for_function('G.NarutoAssets.ready(30018)', timeout=30000)
-            page.screenshot(path=str(OUT/(name+'-selection.png')))
-            page.locator('#scr-menu [data-go="play"]').click()
-            page.wait_for_function('G.Game.player?.dex===30018&&G.Game.state==="playing"')
-            page.keyboard.down('KeyD')
-            page.wait_for_timeout(1500)
-            page.keyboard.up('KeyD')
-            page.screenshot(path=str(OUT/(name+'-play.png')))
-            state = page.evaluate('({dex:G.Game.player.dex,level:G.Game.player.level,ready:G.LF2Art.loaded,moves:G.Game.player.moves.map(m=>m.id),label:document.querySelector(".launch-name")?.textContent||null})')
-            assert state['dex'] == 30018 and state['ready'] and state['moves'][0] == 'lf2-iceball'
-            assert not errors and not failed, {'errors':errors,'failed':failed}
-            browser_report[name] = {**state, 'errors':errors, 'failed':failed, 'url':page.url}
-            context.close()
+        for hero in args.heroes:
+            dex,starter={'freeze':(30018,'lf2-iceball'),'firzen':(30019,'lf2-firzen-cannon'),'julian':(30020,'lf2-julian-skull')}[hero]
+            for name, viewport, mobile in [('desktop', {'width':1100,'height':850}, False),
+                                           ('mobile390', {'width':390,'height':844}, True)]:
+                context = browser.new_context(viewport=viewport, is_mobile=mobile, has_touch=mobile)
+                page = context.new_page()
+                errors, failed = [], []
+                page.on('pageerror', lambda e: errors.append(str(e)))
+                page.on('response', lambda r: failed.append({'status':r.status,'url':r.url}) if r.status >= 400 and 'github.io/pokesurvivor/' in r.url else None)
+                url = BASE + '?lang=zh-TW&hero='+hero+'&release=' + args.source[:8]
+                if not mobile: url += '&layout=wide'
+                page.goto(url)
+                page.wait_for_function("window.G?.LF2Freeze&&document.getElementById('boot').classList.contains('hidden')", timeout=60000)
+                if page.locator('#tap-start').is_visible(): page.locator('#tap-start').click()
+                page.locator(f'[data-quick-naruto="{dex}"]').click()
+                page.wait_for_function('(dex)=>G.NarutoAssets.ready(dex)', arg=dex, timeout=30000)
+                page.screenshot(path=str(OUT/(hero+'-'+name+'-selection.png')))
+                page.locator('#scr-menu [data-go="play"]').click()
+                page.wait_for_function('(dex)=>G.Game.player?.dex===dex&&G.Game.state==="playing"',arg=dex)
+                initial=page.evaluate('G.Game.player.level');assert initial==1
+                page.keyboard.down('KeyD')
+                page.wait_for_timeout(1500)
+                page.keyboard.up('KeyD')
+                page.screenshot(path=str(OUT/(hero+'-'+name+'-play.png')))
+                state = page.evaluate('({dex:G.Game.player.dex,level:G.Game.player.level,ready:G.NarutoAssets.ready(G.Game.player.dex),moves:G.Game.player.moves.map(m=>m.id),label:document.querySelector(".launch-name")?.textContent||null})')
+                assert state['dex'] == dex and state['ready'] and state['moves'][0] == starter
+                assert not errors and not failed, {'errors':errors,'failed':failed}
+                browser_report[hero+'-'+name] = {'initialLevel':initial,**state, 'errors':errors, 'failed':failed, 'url':page.url}
+                context.close()
         browser.close()
     (OUT/'browser.json').write_text(json.dumps(browser_report, indent=2), 'utf-8')
     print(json.dumps({'ok':True,'files':len(checked),'browsers':list(browser_report)}))

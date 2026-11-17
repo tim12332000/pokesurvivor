@@ -1,0 +1,262 @@
+{
+  "game": "Little Fighter 2 v2.0a (classic original)",
+  "installer_sha256": "540c485547e234b0d09595f54d067aafd7176092c308aca61868f3cbc03030e1",
+  "source_url": "https://archive.org/download/little-fighter-2_202404/Little%20Fighter%202.rar/Little%20Fighter%202%2FLF2Setup.exe",
+  "attribution": "Original LF2 artwork/data/audio by Marti Wong and Starsky Wong; not covered by project code license.",
+  "conversion": "Original in-cell pixel values retained; RGB (0,0,0) and ignored 1px atlas divider rows/columns become transparent.",
+  "files": [
+    {
+      "path": "data/001.wav",
+      "sha256": "28f50924fc845a963d398fda600b9df740149f1c696843aa7cbd56f8552d785a",
+      "bytes": 23694,
+      "runtime": "assets/lf2/julian/001.wav",
+      "runtime_sha256": "28f50924fc845a963d398fda600b9df740149f1c696843aa7cbd56f8552d785a"
+    },
+    {
+      "path": "data/003.wav",
+      "sha256": "74885981a2003f1bc1c7f2cd22493c47c4b8059088aeffaed652eeef996f9c7a",
+      "bytes": 9870,
+      "runtime": "assets/lf2/julian/003.wav",
+      "runtime_sha256": "74885981a2003f1bc1c7f2cd22493c47c4b8059088aeffaed652eeef996f9c7a"
+    },
+    {
+      "path": "data/004.wav",
+      "sha256": "4b501f67bec53f364530e041012faa40334e7f4f0f82088b6b7caa472c2207ac",
+      "bytes": 11228,
+      "runtime": "assets/lf2/julian/004.wav",
+      "runtime_sha256": "4b501f67bec53f364530e041012faa40334e7f4f0f82088b6b7caa472c2207ac"
+    },
+    {
+      "path": "data/007.wav",
+      "sha256": "d8e7bbee32a2a582a07d53f43db50c0c6c6e579ed322aa2369be8859b6385002",
+      "bytes": 4324,
+      "runtime": "assets/lf2/julian/007.wav",
+      "runtime_sha256": "d8e7bbee32a2a582a07d53f43db50c0c6c6e579ed322aa2369be8859b6385002"
+    },
+    {
+      "path": "data/008.wav",
+      "sha256": "1e766a858e5177db7078674db7749e37aca8bd6b5ab93093385328d04c36837b",
+      "bytes": 6414,
+      "runtime": "assets/lf2/julian/008.wav",
+      "runtime_sha256": "1e766a858e5177db7078674db7749e37aca8bd6b5ab93093385328d04c36837b"
+    },
+    {
+      "path": "data/009.wav",
+      "sha256": "9b02288a8412d68ef9264d7b3db2cd3767be0631c33b95844bc9405c6fe9acde",
+      "bytes": 15038,
+      "runtime": "assets/lf2/julian/009.wav",
+      "runtime_sha256": "9b02288a8412d68ef9264d7b3db2cd3767be0631c33b95844bc9405c6fe9acde"
+    },
+    {
+      "path": "data/012.wav",
+      "sha256": "04e2b02ab4415827045d25cb9c7dadda70da23fc8637beac13123a34dce7f95c",
+      "bytes": 4326,
+      "runtime": "assets/lf2/julian/012.wav",
+      "runtime_sha256": "04e2b02ab4415827045d25cb9c7dadda70da23fc8637beac13123a34dce7f95c"
+    },
+    {
+      "path": "data/014.wav",
+      "sha256": "670a61c14ba16c51f057a909ab1393f8917e38e80b7af5a0beadb9c7299d8e96",
+      "bytes": 48662,
+      "runtime": "assets/lf2/julian/014.wav",
+      "runtime_sha256": "670a61c14ba16c51f057a909ab1393f8917e38e80b7af5a0beadb9c7299d8e96"
+    },
+    {
+      "path": "data/015.wav",
+      "sha256": "1badf632365f0b711c669f94cd9228af0f2b73f987d399df1322a1f958a6af60",
+      "bytes": 14432,
+      "runtime": "assets/lf2/julian/015.wav",
+      "runtime_sha256": "1badf632365f0b711c669f94cd9228af0f2b73f987d399df1322a1f958a6af60"
+    },
+    {
+      "path": "data/017.wav",
+      "sha256": "43030d58b00f98999af6635c9966294fb9b5b6889d03fd1dca8f46bfedf3b5a6",
+      "bytes": 15232,
+      "runtime": "assets/lf2/julian/017.wav",
+      "runtime_sha256": "43030d58b00f98999af6635c9966294fb9b5b6889d03fd1dca8f46bfedf3b5a6"
+    },
+    {
+      "path": "data/018.wav",
+      "sha256": "3e25a131f83f2187cac148fd0bc6e57650f49512a7a3ec2411c52953eb46961a",
+      "bytes": 23996,
+      "runtime": "assets/lf2/julian/018.wav",
+      "runtime_sha256": "3e25a131f83f2187cac148fd0bc6e57650f49512a7a3ec2411c52953eb46961a"
+    },
+    {
+      "path": "data/019.wav",
+      "sha256": "e405ec5be5c63109246eced4b4c9cabcfd5067a9acca0a6b19878f4aa8f8d70c",
+      "bytes": 31426,
+      "runtime": "assets/lf2/julian/019.wav",
+      "runtime_sha256": "e405ec5be5c63109246eced4b4c9cabcfd5067a9acca0a6b19878f4aa8f8d70c"
+    },
+    {
+      "path": "data/020.wav",
+      "sha256": "7fff68e80d827a2237a05b0483b914c757c742e73a1a5c8a012a3b3f58b8db70",
+      "bytes": 33678,
+      "runtime": "assets/lf2/julian/020.wav",
+      "runtime_sha256": "7fff68e80d827a2237a05b0483b914c757c742e73a1a5c8a012a3b3f58b8db70"
+    },
+    {
+      "path": "data/030.wav",
+      "sha256": "c96b86f70187d2f8e718f97f74b0e2732034d131ed88ed2ea0f1a302db1e754b",
+      "bytes": 22278,
+      "runtime": "assets/lf2/julian/030.wav",
+      "runtime_sha256": "c96b86f70187d2f8e718f97f74b0e2732034d131ed88ed2ea0f1a302db1e754b"
+    },
+    {
+      "path": "data/031.wav",
+      "sha256": "8d31579f2663f8c1366012c19856ba3bbe24e64cd89c025b325975083831ed24",
+      "bytes": 49652,
+      "runtime": "assets/lf2/julian/031.wav",
+      "runtime_sha256": "8d31579f2663f8c1366012c19856ba3bbe24e64cd89c025b325975083831ed24"
+    },
+    {
+      "path": "data/042.wav",
+      "sha256": "a7d6654cb95f4fdd0c0f0e80d9cf0cac3f204f22bc0a87a7c22e2763b4e62bed",
+      "bytes": 11066,
+      "runtime": "assets/lf2/julian/042.wav",
+      "runtime_sha256": "a7d6654cb95f4fdd0c0f0e80d9cf0cac3f204f22bc0a87a7c22e2763b4e62bed"
+    },
+    {
+      "path": "data/071.wav",
+      "sha256": "694dd49a27794a69891cfef376d0a29f23060cdc3a250e44f26230d234758dc0",
+      "bytes": 81134,
+      "runtime": "assets/lf2/julian/071.wav",
+      "runtime_sha256": "694dd49a27794a69891cfef376d0a29f23060cdc3a250e44f26230d234758dc0"
+    },
+    {
+      "path": "data/089.wav",
+      "sha256": "0ac777d030726089c19c4957cc8a4c229ba264ac564c938f9f431e479c4bf579",
+      "bytes": 24176,
+      "runtime": "assets/lf2/julian/089.wav",
+      "runtime_sha256": "0ac777d030726089c19c4957cc8a4c229ba264ac564c938f9f431e479c4bf579"
+    },
+    {
+      "path": "data/090.wav",
+      "sha256": "fb598bcb49066db724309ca10566a0ad05dd9f30bff24e46035897089358b4e7",
+      "bytes": 121540,
+      "runtime": "assets/lf2/julian/090.wav",
+      "runtime_sha256": "fb598bcb49066db724309ca10566a0ad05dd9f30bff24e46035897089358b4e7"
+    },
+    {
+      "path": "data/091.wav",
+      "sha256": "8f9009a8c80f3309faac1838a490bf242e2d22388d0e75737c3fb93db9e32bc6",
+      "bytes": 33606,
+      "runtime": "assets/lf2/julian/091.wav",
+      "runtime_sha256": "8f9009a8c80f3309faac1838a490bf242e2d22388d0e75737c3fb93db9e32bc6"
+    },
+    {
+      "path": "data/data.txt",
+      "sha256": "39bca5a474ceff5dd1b8c7f5d4562548b64dc6b67b76b77199b6c9e5ae88f5f2",
+      "bytes": 3478
+    },
+    {
+      "path": "data/julian.dat",
+      "sha256": "a226be9e4803c263bfdfc151c57ed7978af44d46acc8710c5c758471e58a4851",
+      "bytes": 76114
+    },
+    {
+      "path": "data/julian_ball.dat",
+      "sha256": "bc9731c0f256d01d99b6ecae68c2f3c0924ad9ae637f949efc9e9f6f28003297",
+      "bytes": 7770
+    },
+    {
+      "path": "data/julian_ball2.dat",
+      "sha256": "155b0f347cbf0c5f6b5554c956568e5d646cc93a1c667aef9aad926c880fe4b3",
+      "bytes": 10560
+    },
+    {
+      "path": "readme.txt",
+      "sha256": "1afdf46df9198614da0b6a511564906691ec51bc22c37895630b7c638c113bb5",
+      "bytes": 9850
+    },
+    {
+      "path": "sprite/sys/julian_0.bmp",
+      "sha256": "f460be73aaf74467663bf692a2759e91b9227b8733bbf298264e0b172aa02992",
+      "bytes": 186976,
+      "runtime": "assets/lf2/julian/julian_0.png",
+      "runtime_sha256": "7c0e9d0d87a778f7d55fe71c198a53bfec58e6c3d0b67d78511ae8a61353db89",
+      "size": [
+        800,
+        560
+      ]
+    },
+    {
+      "path": "sprite/sys/julian_1.bmp",
+      "sha256": "51877517a5e4a07e3ff3f622ef51b802e8e3cee363d33bd05222838610ed06d5",
+      "bytes": 52588,
+      "runtime": "assets/lf2/julian/julian_1.png",
+      "runtime_sha256": "84ea4ef76538354ddbc0cdfb83acd5fc2b87ad4adab952191e44279251d981f0",
+      "size": [
+        800,
+        240
+      ]
+    },
+    {
+      "path": "sprite/sys/julian_2.bmp",
+      "sha256": "d4310b625a16d3213568acecce84afa3c3afb5674d97a0d17afc963b497eec9d",
+      "bytes": 169056,
+      "runtime": "assets/lf2/julian/julian_2.png",
+      "runtime_sha256": "d8e379f316e4d7838d1e224a003a51057105eafffd77b16de3d13654fb491f99",
+      "size": [
+        800,
+        560
+      ]
+    },
+    {
+      "path": "sprite/sys/julian_ball.bmp",
+      "sha256": "942c86bc0b39b9ddc65de59d3b5a6deb62f8a419a01b49c3dec284c2a75658dd",
+      "bytes": 18252,
+      "runtime": "assets/lf2/julian/julian_ball.png",
+      "runtime_sha256": "12761076165396ccd5170b96e76ce7b85022281dd0a9396ef4485205d2a50d35",
+      "size": [
+        328,
+        249
+      ]
+    },
+    {
+      "path": "sprite/sys/julian_ball2.bmp",
+      "sha256": "86c3f99596560f55b47001ff0cc8c6b6483569fafd2ed2b46b2639ad9466451b",
+      "bytes": 21112,
+      "runtime": "assets/lf2/julian/julian_ball2.png",
+      "runtime_sha256": "29e93d045fe21dbd3df1aa9986c1427fda71c6d0aca00769ec6298ae85793642",
+      "size": [
+        440,
+        200
+      ]
+    },
+    {
+      "path": "sprite/sys/julian_col.bmp",
+      "sha256": "93455fc9a3c3841dcf71289c0e23761f53e8b405dc5cbd3b42b01fe194d5d7e6",
+      "bytes": 66852,
+      "runtime": "assets/lf2/julian/julian_col.png",
+      "runtime_sha256": "1caddd9b31978a7ae3fbb4a175b5b5b6fb5e0b20d196e216a10fe0ec8fe51942",
+      "size": [
+        800,
+        405
+      ]
+    },
+    {
+      "path": "sprite/sys/julian_col2.bmp",
+      "sha256": "1b8b7eb95d36489180ab6fcce70d5da7509108b422507d2ca0e918caa1cc90bf",
+      "bytes": 62588,
+      "runtime": "assets/lf2/julian/julian_col2.png",
+      "runtime_sha256": "d57291a207f7f73fc90ac08bf36e3bffe8bdc4cb3df7206cca3c56dec0267058",
+      "size": [
+        640,
+        405
+      ]
+    },
+    {
+      "path": "sprite/sys/julian_exp.bmp",
+      "sha256": "29c80ff3b0aaf982497494bacd07bab06f2feb0356e51ac983153daa1250e228",
+      "bytes": 91328,
+      "runtime": "assets/lf2/julian/julian_exp.png",
+      "runtime_sha256": "cead7fed6d29a9fe0c62b183c30c617ed57901d49c789a41ced7846f8015aa54",
+      "size": [
+        800,
+        480
+      ]
+    }
+  ]
+}

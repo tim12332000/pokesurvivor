@@ -73,6 +73,8 @@ html = html.replace(main, '<script defer src="art-review/shikamaru/reference-sha
 # Classic LF2 keeps its original sprite/data vocabulary in a dedicated runtime.
 html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src=".omx/lf2-audio.js"></script>\n<script defer src=".omx/lf2-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
 html = html.replace(main, '<script defer src=".omx/lf2.js"></script>\n<script defer src=".omx/lf2-freeze-combat.js"></script>\n' + main, 1)
+html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src=".omx/lf2-boss-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
+html = html.replace(main, '<script defer src=".omx/lf2-firzen-combat.js"></script>\n<script defer src=".omx/lf2-julian-combat.js"></script>\n<script defer src=".omx/lf2-bosses.js"></script>\n' + main, 1)
 # Local previews need the same cache separation as deployed builds. A version
 # on the page URL alone does not invalidate its independently cached scripts.
 def version_asset(match):
@@ -83,6 +85,8 @@ def version_asset(match):
         query += '&amp;data=' + hashlib.sha256((root / 'art-review/madara/frames.json').read_bytes()).hexdigest()[:12]
     if source == '.omx/lf2-art.js':
         query += '&amp;data=' + hashlib.sha256((root / 'assets/lf2/freeze/manifest.json').read_bytes()).hexdigest()[:12]
+    if source == '.omx/lf2-boss-art.js':
+        query += '&amp;data=' + hashlib.sha256(b''.join((root / 'assets/lf2' / hero / 'manifest.json').read_bytes() for hero in ['firzen', 'julian'])).hexdigest()[:12]
     return match[1] + source + query + match[3]
 
 html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(")', version_asset, html)

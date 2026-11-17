@@ -1,0 +1,406 @@
+{
+  "game": "Little Fighter 2 v2.0a (classic original)",
+  "installer_sha256": "540c485547e234b0d09595f54d067aafd7176092c308aca61868f3cbc03030e1",
+  "source_url": "https://archive.org/download/little-fighter-2_202404/Little%20Fighter%202.rar/Little%20Fighter%202%2FLF2Setup.exe",
+  "attribution": "Original LF2 artwork/data/audio by Marti Wong and Starsky Wong; not covered by project code license.",
+  "conversion": "Original in-cell pixel values retained; RGB (0,0,0) and ignored 1px atlas divider rows/columns become transparent.",
+  "files": [
+    {
+      "path": "data/001.wav",
+      "sha256": "28f50924fc845a963d398fda600b9df740149f1c696843aa7cbd56f8552d785a",
+      "bytes": 23694,
+      "runtime": "assets/lf2/firzen/001.wav",
+      "runtime_sha256": "28f50924fc845a963d398fda600b9df740149f1c696843aa7cbd56f8552d785a"
+    },
+    {
+      "path": "data/003.wav",
+      "sha256": "74885981a2003f1bc1c7f2cd22493c47c4b8059088aeffaed652eeef996f9c7a",
+      "bytes": 9870,
+      "runtime": "assets/lf2/firzen/003.wav",
+      "runtime_sha256": "74885981a2003f1bc1c7f2cd22493c47c4b8059088aeffaed652eeef996f9c7a"
+    },
+    {
+      "path": "data/004.wav",
+      "sha256": "4b501f67bec53f364530e041012faa40334e7f4f0f82088b6b7caa472c2207ac",
+      "bytes": 11228,
+      "runtime": "assets/lf2/firzen/004.wav",
+      "runtime_sha256": "4b501f67bec53f364530e041012faa40334e7f4f0f82088b6b7caa472c2207ac"
+    },
+    {
+      "path": "data/007.wav",
+      "sha256": "d8e7bbee32a2a582a07d53f43db50c0c6c6e579ed322aa2369be8859b6385002",
+      "bytes": 4324,
+      "runtime": "assets/lf2/firzen/007.wav",
+      "runtime_sha256": "d8e7bbee32a2a582a07d53f43db50c0c6c6e579ed322aa2369be8859b6385002"
+    },
+    {
+      "path": "data/008.wav",
+      "sha256": "1e766a858e5177db7078674db7749e37aca8bd6b5ab93093385328d04c36837b",
+      "bytes": 6414,
+      "runtime": "assets/lf2/firzen/008.wav",
+      "runtime_sha256": "1e766a858e5177db7078674db7749e37aca8bd6b5ab93093385328d04c36837b"
+    },
+    {
+      "path": "data/009.wav",
+      "sha256": "9b02288a8412d68ef9264d7b3db2cd3767be0631c33b95844bc9405c6fe9acde",
+      "bytes": 15038,
+      "runtime": "assets/lf2/firzen/009.wav",
+      "runtime_sha256": "9b02288a8412d68ef9264d7b3db2cd3767be0631c33b95844bc9405c6fe9acde"
+    },
+    {
+      "path": "data/012.wav",
+      "sha256": "04e2b02ab4415827045d25cb9c7dadda70da23fc8637beac13123a34dce7f95c",
+      "bytes": 4326,
+      "runtime": "assets/lf2/firzen/012.wav",
+      "runtime_sha256": "04e2b02ab4415827045d25cb9c7dadda70da23fc8637beac13123a34dce7f95c"
+    },
+    {
+      "path": "data/014.wav",
+      "sha256": "670a61c14ba16c51f057a909ab1393f8917e38e80b7af5a0beadb9c7299d8e96",
+      "bytes": 48662,
+      "runtime": "assets/lf2/firzen/014.wav",
+      "runtime_sha256": "670a61c14ba16c51f057a909ab1393f8917e38e80b7af5a0beadb9c7299d8e96"
+    },
+    {
+      "path": "data/015.wav",
+      "sha256": "1badf632365f0b711c669f94cd9228af0f2b73f987d399df1322a1f958a6af60",
+      "bytes": 14432,
+      "runtime": "assets/lf2/firzen/015.wav",
+      "runtime_sha256": "1badf632365f0b711c669f94cd9228af0f2b73f987d399df1322a1f958a6af60"
+    },
+    {
+      "path": "data/017.wav",
+      "sha256": "43030d58b00f98999af6635c9966294fb9b5b6889d03fd1dca8f46bfedf3b5a6",
+      "bytes": 15232,
+      "runtime": "assets/lf2/firzen/017.wav",
+      "runtime_sha256": "43030d58b00f98999af6635c9966294fb9b5b6889d03fd1dca8f46bfedf3b5a6"
+    },
+    {
+      "path": "data/018.wav",
+      "sha256": "3e25a131f83f2187cac148fd0bc6e57650f49512a7a3ec2411c52953eb46961a",
+      "bytes": 23996,
+      "runtime": "assets/lf2/firzen/018.wav",
+      "runtime_sha256": "3e25a131f83f2187cac148fd0bc6e57650f49512a7a3ec2411c52953eb46961a"
+    },
+    {
+      "path": "data/019.wav",
+      "sha256": "e405ec5be5c63109246eced4b4c9cabcfd5067a9acca0a6b19878f4aa8f8d70c",
+      "bytes": 31426,
+      "runtime": "assets/lf2/firzen/019.wav",
+      "runtime_sha256": "e405ec5be5c63109246eced4b4c9cabcfd5067a9acca0a6b19878f4aa8f8d70c"
+    },
+    {
+      "path": "data/020.wav",
+      "sha256": "7fff68e80d827a2237a05b0483b914c757c742e73a1a5c8a012a3b3f58b8db70",
+      "bytes": 33678,
+      "runtime": "assets/lf2/firzen/020.wav",
+      "runtime_sha256": "7fff68e80d827a2237a05b0483b914c757c742e73a1a5c8a012a3b3f58b8db70"
+    },
+    {
+      "path": "data/042.wav",
+      "sha256": "a7d6654cb95f4fdd0c0f0e80d9cf0cac3f204f22bc0a87a7c22e2763b4e62bed",
+      "bytes": 11066,
+      "runtime": "assets/lf2/firzen/042.wav",
+      "runtime_sha256": "a7d6654cb95f4fdd0c0f0e80d9cf0cac3f204f22bc0a87a7c22e2763b4e62bed"
+    },
+    {
+      "path": "data/049.wav",
+      "sha256": "53b1aeae5c622bec6fcab1a4536a80eb126726d92c81754cd2a762f68e0ed100",
+      "bytes": 65942,
+      "runtime": "assets/lf2/firzen/049.wav",
+      "runtime_sha256": "53b1aeae5c622bec6fcab1a4536a80eb126726d92c81754cd2a762f68e0ed100"
+    },
+    {
+      "path": "data/052.wav",
+      "sha256": "0e4c3158ac18f99b66a34c1f33dd20c1510370766f49e72a2b492889978676b8",
+      "bytes": 9786,
+      "runtime": "assets/lf2/firzen/052.wav",
+      "runtime_sha256": "0e4c3158ac18f99b66a34c1f33dd20c1510370766f49e72a2b492889978676b8"
+    },
+    {
+      "path": "data/064.wav",
+      "sha256": "ccf3e495d8adec853fd64b8bd78109f80f3697acc26745796c3043ab61325d74",
+      "bytes": 61164,
+      "runtime": "assets/lf2/firzen/064.wav",
+      "runtime_sha256": "ccf3e495d8adec853fd64b8bd78109f80f3697acc26745796c3043ab61325d74"
+    },
+    {
+      "path": "data/067.wav",
+      "sha256": "4148d5ce864e1f78cd2f87c85b30f5eb5319a363ea2aad0d361bf2c5f50eb8cd",
+      "bytes": 62466,
+      "runtime": "assets/lf2/firzen/067.wav",
+      "runtime_sha256": "4148d5ce864e1f78cd2f87c85b30f5eb5319a363ea2aad0d361bf2c5f50eb8cd"
+    },
+    {
+      "path": "data/068.wav",
+      "sha256": "b1cffa6ba75ed2ca808cab85358da5c4bf627ff80559ca943d716a9461632018",
+      "bytes": 53588,
+      "runtime": "assets/lf2/firzen/068.wav",
+      "runtime_sha256": "b1cffa6ba75ed2ca808cab85358da5c4bf627ff80559ca943d716a9461632018"
+    },
+    {
+      "path": "data/070.wav",
+      "sha256": "2d104a58a1b24622fb61e2f1533f44a5203b6c7b6dca902ef43bb35d50ad6f1f",
+      "bytes": 72132,
+      "runtime": "assets/lf2/firzen/070.wav",
+      "runtime_sha256": "2d104a58a1b24622fb61e2f1533f44a5203b6c7b6dca902ef43bb35d50ad6f1f"
+    },
+    {
+      "path": "data/071.wav",
+      "sha256": "694dd49a27794a69891cfef376d0a29f23060cdc3a250e44f26230d234758dc0",
+      "bytes": 81134,
+      "runtime": "assets/lf2/firzen/071.wav",
+      "runtime_sha256": "694dd49a27794a69891cfef376d0a29f23060cdc3a250e44f26230d234758dc0"
+    },
+    {
+      "path": "data/072.wav",
+      "sha256": "00a536ce2830a9dd852476579cc6e47f49bdd6f1d9ebea0c3b9d7546892a5c9d",
+      "bytes": 32814,
+      "runtime": "assets/lf2/firzen/072.wav",
+      "runtime_sha256": "00a536ce2830a9dd852476579cc6e47f49bdd6f1d9ebea0c3b9d7546892a5c9d"
+    },
+    {
+      "path": "data/073.wav",
+      "sha256": "959b21a52334f6333e695ca9f44a59372624407b81f153a03eb660fee5230884",
+      "bytes": 112622,
+      "runtime": "assets/lf2/firzen/073.wav",
+      "runtime_sha256": "959b21a52334f6333e695ca9f44a59372624407b81f153a03eb660fee5230884"
+    },
+    {
+      "path": "data/092.wav",
+      "sha256": "862374ed4358e56755e8a643c6ea269eccf6246574a3fbf9562e0c907eebecaf",
+      "bytes": 39438,
+      "runtime": "assets/lf2/firzen/092.wav",
+      "runtime_sha256": "862374ed4358e56755e8a643c6ea269eccf6246574a3fbf9562e0c907eebecaf"
+    },
+    {
+      "path": "data/100.wav",
+      "sha256": "d8fbe890993acb1c845efdf1e3de28c27a87d2453c72e06322d53b6c4586d338",
+      "bytes": 35632,
+      "runtime": "assets/lf2/firzen/100.wav",
+      "runtime_sha256": "d8fbe890993acb1c845efdf1e3de28c27a87d2453c72e06322d53b6c4586d338"
+    },
+    {
+      "path": "data/data.txt",
+      "sha256": "39bca5a474ceff5dd1b8c7f5d4562548b64dc6b67b76b77199b6c9e5ae88f5f2",
+      "bytes": 3478
+    },
+    {
+      "path": "data/firen_flame.dat",
+      "sha256": "59d1acdf27d475f33e175157834401a2342217811d2450cad7d2a67f9ba673bc",
+      "bytes": 11466
+    },
+    {
+      "path": "data/firzen.dat",
+      "sha256": "850b5868b62cf01df21672154803dc100a8295a3237426aa7c1ebe7dda6eb199",
+      "bytes": 68138
+    },
+    {
+      "path": "data/firzen_ball.dat",
+      "sha256": "9f624fa5f76071593f6ceaf349d1cfe339acb46d963baeb6d3ab0b23875daf43",
+      "bytes": 3402
+    },
+    {
+      "path": "data/firzen_chasef.dat",
+      "sha256": "ce3b680afc26fd8f19d56103174254fa6cea9e5b2cf56b139f6f494d2626d7e5",
+      "bytes": 7868
+    },
+    {
+      "path": "data/firzen_chasei.dat",
+      "sha256": "07b9caae27dfc78d27d5266685c713cc22d7b23d64d7176f73ca7c963faa80af",
+      "bytes": 5097
+    },
+    {
+      "path": "data/freeze_column.dat",
+      "sha256": "df9e362fe3bee1d9a596e54a09c34f991e9af1d1b2bd03f518bb05ea2452c708",
+      "bytes": 13717
+    },
+    {
+      "path": "data/jan_chaseh.dat",
+      "sha256": "40b43b8f313c582e9535275a95328a86f3ce5854c28f5ce5b514f966e0bc117f",
+      "bytes": 5024
+    },
+    {
+      "path": "readme.txt",
+      "sha256": "1afdf46df9198614da0b6a511564906691ec51bc22c37895630b7c638c113bb5",
+      "bytes": 9850
+    },
+    {
+      "path": "sprite/sys/firen_exp.bmp",
+      "sha256": "32a0848e60ab7f1f4b4363090007a644b8bd5f43d3ddf59cab8f2b34e6a3251e",
+      "bytes": 141544,
+      "runtime": "assets/lf2/firzen/firen_exp.png",
+      "runtime_sha256": "79f13b79caa18baa69037ed061498e2a7ec54b386f42bcecfecf901a0f5a577e",
+      "size": [
+        800,
+        480
+      ]
+    },
+    {
+      "path": "sprite/sys/firen_flame.bmp",
+      "sha256": "1065b8edfdc28dd28fa3842c2031d1a689fef26fc135ba633dd1325395e2e8ea",
+      "bytes": 19584,
+      "runtime": "assets/lf2/firzen/firen_flame.png",
+      "runtime_sha256": "adf0d4ae9f19f2feb9e49d73de0922fb6b4ca6aeef6d9c16dd63c72b0a8fe78f",
+      "size": [
+        360,
+        192
+      ]
+    },
+    {
+      "path": "sprite/sys/firen_grd.bmp",
+      "sha256": "35c4425b06fbc53c09910cf35d03d27f78282893c49cf8f7341450c3f8298aba",
+      "bytes": 13856,
+      "runtime": "assets/lf2/firzen/firen_grd.png",
+      "runtime_sha256": "8ff43b4c021d2ed35a0063033cf47f67edc174873d4da0f3727118bca58d0953",
+      "size": [
+        144,
+        200
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_0.bmp",
+      "sha256": "e10519ff8fec9f4c5824a1d38446bb653d24cfd4dffe62bc2068a359c4f7ccf9",
+      "bytes": 178448,
+      "runtime": "assets/lf2/firzen/firzen_0.png",
+      "runtime_sha256": "7be0bb4ca38e64eb81925f322aadbde5e33d3851406baf15cb38c00d885ebd71",
+      "size": [
+        800,
+        560
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_1.bmp",
+      "sha256": "cd4189865ef7a88280149c3321af299966bbb998699a9ccdf5d51a8e8af4995a",
+      "bytes": 134868,
+      "runtime": "assets/lf2/firzen/firzen_1.png",
+      "runtime_sha256": "41ef04b090fd02e4782748fe642d27e878b9c157a82b01079707c2c3b20f1b27",
+      "size": [
+        800,
+        560
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_2.bmp",
+      "sha256": "0ae1f019e79cfb1fafa354c634b0e32124bfead7b132b966be48ace0f680066b",
+      "bytes": 16676,
+      "runtime": "assets/lf2/firzen/firzen_2.png",
+      "runtime_sha256": "d0b0eb3f3853ba8a02d813e0c428b35502d15ba170eb062f187482a8fe1dcb3e",
+      "size": [
+        480,
+        80
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_ball.bmp",
+      "sha256": "f0d04728db9405624a322fff03c9973506758afe9d1a3262fafb03c6eb061223",
+      "bytes": 27804,
+      "runtime": "assets/lf2/firzen/firzen_ball.png",
+      "runtime_sha256": "abe13816ebee57f9141ac9ed23eff87657384055d05317f551eb86dc556bb40f",
+      "size": [
+        520,
+        249
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_chasef.bmp",
+      "sha256": "0652415bb46613d6c1edce378002a959c8cd43d7cb5ce220cc4e2985719f1f54",
+      "bytes": 15260,
+      "runtime": "assets/lf2/firzen/firzen_chasef.png",
+      "runtime_sha256": "0ae0ff64ffa817cc885b3611a80ea936988e18e8a5db4e2c00ec5590a372b5da",
+      "size": [
+        328,
+        249
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_chasei.bmp",
+      "sha256": "bd2f00aea2f7106bc062a8736e17e9b1224225c620cd0fbd21ef075d551b37c1",
+      "bytes": 13696,
+      "runtime": "assets/lf2/firzen/firzen_chasei.png",
+      "runtime_sha256": "bdc5d18ddd3b0b18c5be37defac8f0e62868fedbc3c7eeae8735b046da9508f1",
+      "size": [
+        328,
+        249
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_up.bmp",
+      "sha256": "82c0e06c70c65de1e1e05a8b6e6a3443ee3fc26f3d802b7ba26c31073f9a52c8",
+      "bytes": 8472,
+      "runtime": "assets/lf2/firzen/firzen_up.png",
+      "runtime_sha256": "03f115ad31eb614dd2141c8aabfa5a320b13951a2097d13ae1e308b3fd7fb0a0",
+      "size": [
+        144,
+        150
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_up2.bmp",
+      "sha256": "df5da25e419489ff4a10111343d93c30feeed710031564b2f1845f3b0c23e553",
+      "bytes": 3932,
+      "runtime": "assets/lf2/firzen/firzen_up2.png",
+      "runtime_sha256": "416f6f647f6dd53ac740af4ebd07fce667cc7c3befb9d5a172d3f67071369ccb",
+      "size": [
+        144,
+        100
+      ]
+    },
+    {
+      "path": "sprite/sys/firzen_up3.bmp",
+      "sha256": "2b4d8c5d3e5d670106adfe1e7886fb57e760bb2517615a426877ca6088f6578d",
+      "bytes": 6116,
+      "runtime": "assets/lf2/firzen/firzen_up3.png",
+      "runtime_sha256": "fd7ba63a61fceed6f18198961833e36c16480160f16095bccf49437837698b42",
+      "size": [
+        328,
+        83
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_0.bmp",
+      "sha256": "5bdd1412642bceff01f84da65ad0f57007e26391efe276ea5f47218dbcbbea78",
+      "bytes": 166376,
+      "runtime": "assets/lf2/firzen/freeze_ice.png",
+      "runtime_sha256": "08acbe00b6de48a8a00ffaee404972c0414134e7493443ec2a698a8da342d2bc",
+      "size": [
+        160,
+        80
+      ],
+      "conversion": "Original pic8/9 cyan-only ice casing; no redrawing."
+    },
+    {
+      "path": "sprite/sys/freeze_col.bmp",
+      "sha256": "dd1c871fd1ec0587791282c50a31a8943c40b9dc9f724225cdca97fe0f3ca137",
+      "bytes": 84988,
+      "runtime": "assets/lf2/firzen/freeze_col.png",
+      "runtime_sha256": "5e6942758fcd60cf2e25d20877c8e0cc9bb6be9b497e8a3d8efc53bbafb8695c",
+      "size": [
+        770,
+        440
+      ]
+    },
+    {
+      "path": "sprite/sys/freeze_ww.bmp",
+      "sha256": "9ebd621af8b6ca4ddf6fbe7ae21b721b591306457cdd36cc3e845cf6451ce4d9",
+      "bytes": 40020,
+      "runtime": "assets/lf2/firzen/freeze_ww.png",
+      "runtime_sha256": "7a1a4526a8d3f7ffb1b9de4ff1a830fc1b4c77b2d13a205032199bf5d478a4e2",
+      "size": [
+        800,
+        320
+      ]
+    },
+    {
+      "path": "sprite/sys/jan_chaseh.bmp",
+      "sha256": "395a6370366a6f149c1a2398c7ccd72f61835be649d06460105b0fba888ec8c1",
+      "bytes": 10184,
+      "runtime": "assets/lf2/firzen/jan_chaseh.png",
+      "runtime_sha256": "70c6299dfbcb32d7b972757b8eee875f8a797224ed1945071072b910567ad688",
+      "size": [
+        328,
+        249
+      ]
+    }
+  ]
+}

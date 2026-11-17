@@ -1,0 +1,33 @@
+{
+  "result": "pass",
+  "date": "2026-11-17",
+  "classicVersion": "LF2 2.0a",
+  "originalCellPixelsVerified": 4586787,
+  "sourceIdentity": "Original pinned installer readme/dat/images/audio; no Remaster or generated replacements",
+  "currentFinalSourceHashMatch": {
+    "firzen": {
+      "sourceStable": true,
+      "mismatches": []
+    },
+    "julian": {
+      "sourceStable": true,
+      "mismatches": []
+    }
+  },
+  "viewedEvidence": [
+    "Firzen/Julian desktop normal entry and selection",
+    "Firzen desktop natural full phase screenshots",
+    "Firzen current mobile mother-before-split and chase screenshots",
+    "Julian desktop skull/uppercut/sphere/BigBang/SoulPunch screenshots",
+    "Actual ffmpeg seek samples from both natural videos and both final native cycle videos"
+  ],
+  "omissions": [
+    "Julian Mirror Image intentionally omitted; no attacking clone substitute",
+    "Original manual inputs, full Z-axis and native armor not claimed"
+  ],
+  "notVerified": [
+    "Physical mobile endurance",
+    "Human sound listening",
+    "Every frame of every video"
+  ]
+}
