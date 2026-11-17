@@ -1,28 +1,30 @@
-name: Publish personal Digimon sandbox
+name: Publish modification to gh-pages
 
 on:
   push:
-    branches: [feat/digimon-sandbox]
+    branches: [mod-main]
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
-  id-token: write
 
 concurrency:
-  group: personal-digimon-pages
+  group: mod-main-gh-pages
   cancel-in-progress: false
 
 jobs:
   deploy:
-    if: github.repository == 'tim12332000/pokesurvivor'
+    if: github.repository == 'tim12332000/pokesurvivor' && github.ref == 'refs/heads/mod-main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: https://tim12332000.github.io/pokesurvivor/
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: mod-main
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
@@ -37,11 +39,24 @@ jobs:
           node tools/test_combat_pulse.cjs
           node tools/test_trial_build_scope.cjs
           node tools/test_madara_framing.cjs
+          python tools/test_publish_mod_pages.py
+      - name: Refresh publication leases
+        run: git fetch --no-tags origin +refs/heads/mod-main:refs/remotes/origin/mod-main +refs/heads/gh-pages:refs/remotes/origin/gh-pages
+      - name: Set release identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - run: python tools/build_digimon_site.py
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist-digimon
-      - name: Deploy
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Publish fixed branch and release tag
+        run: python tools/publish_mod_pages.py --push
+      # GITHUB_TOKEN pushes do not trigger a legacy Pages build automatically:
+      # https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site
+      - name: Request the existing legacy Pages build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git fetch --no-tags origin +refs/heads/mod-main:refs/remotes/origin/mod-main +refs/heads/gh-pages:refs/remotes/origin/gh-pages
+          published_source=$(git show refs/remotes/origin/gh-pages:release.json | python -c "import json,sys; print(json.load(sys.stdin)['sourceCommit'])")
+          test "$published_source" = "$(git rev-parse refs/remotes/origin/mod-main)"
+          gh api repos/${{ github.repository }}/pages --jq '.build_type == "legacy" and .source.branch == "gh-pages" and .source.path == "/"' | grep -qx true
+          gh api --method POST repos/${{ github.repository }}/pages/builds
