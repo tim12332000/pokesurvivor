@@ -118,3 +118,7 @@ The first Julian natural attempts failed during page boot before gameplay; QA pr
 Read stable `firzen-natural-mobile-report.json`: ok=true/sourceStable=true/errors[], fresh Lv1/no permanent upgrades, actual touch input ledger (`input:"touch"`), final99.86 game seconds/Lv6 and260/260HP. All three taught moves caused real main-player damage and the Volcano signature fully closed after the required post-hit interval. Other ongoing cannon/disaster effects do not invalidate that separate signature-closure assertion.
 
 Independently viewed mobile Volcano original pillar/ground-fire/central burst and emitter aftermath stills, plus an actual decoded52s frame from the57.16s touch movie. Controls, caster and routes remain readable outside the brief compound burst; independent fired effects and original gold cannon are visible. No new visual blocker found. Final isolated current-source native cycles and the separate authenticity/art signoffs are still required for the combined candidate gate.
+
+## 公開閘門已完成
+
+主代理實際核對109個公開檔與正式包bytes一致，Freeze／Firzen／Julian各桌機及390手機視窗共六個全新Lv1開局通過，無頁面錯誤／缺失請求。來源與正式提交見 publishing.md。產品、包及公開驗證均完成，保留已聲明的原作取捨與未驗條件。
