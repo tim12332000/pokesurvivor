@@ -1,0 +1,1563 @@
+{
+  "version": 1,
+  "status": "Complete four-named-skill Firen candidate verified; public verification belongs to root",
+  "formalIds": [
+    "lf2-firen-ball",
+    "lf2-firen-blaze",
+    "lf2-firen-inferno",
+    "lf2-firen-explosion"
+  ],
+  "controlled": {
+    "ok": true,
+    "errors": [],
+    "sourceStable": true,
+    "groups": [
+      "progression",
+      "mechanics",
+      "sourceIdentity",
+      "growth",
+      "quantityContacts",
+      "giantBody",
+      "lifecycle",
+      "contactBoundary"
+    ],
+    "count": 8,
+    "lifecycleCases": 24,
+    "callbackCases": 3,
+    "noEnemyPropCases": 4,
+    "sourceIdentity": {
+      "ballFlight": [
+        {
+          "raw": 88.704,
+          "loss": 89,
+          "owner": true,
+          "id": "lf2-firen-ball"
+        }
+      ],
+      "ballWall": true,
+      "blazeForward": {
+        "x": 44.99999999999999,
+        "hits": [
+          {
+            "raw": 83.16,
+            "loss": 83,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          }
+        ]
+      },
+      "blazeRetreat": {
+        "before": 44.99999999999999,
+        "after": -30.00000000000003
+      },
+      "blazeWall": {
+        "x": 19.5,
+        "hits": []
+      },
+      "blazeTrail": {
+        "old": [
+          [
+            16.215384615384615,
+            1.9692307692307693
+          ],
+          [
+            41.29230769230769,
+            1.9692307692307693
+          ],
+          [
+            76.21538461538461,
+            1.9692307692307693
+          ],
+          [
+            101.29230769230759,
+            1.9692307692307693
+          ]
+        ],
+        "lateHits": [
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          }
+        ]
+      },
+      "blazeRecovery": true,
+      "inferno": {
+        "hits": [
+          [
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            }
+          ],
+          [
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            }
+          ],
+          [
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            },
+            {
+              "raw": 157.07999999999998,
+              "loss": 157,
+              "owner": true,
+              "id": "lf2-firen-inferno"
+            }
+          ]
+        ],
+        "behind": [],
+        "side": []
+      },
+      "infernoWall": true,
+      "explosion": {
+        "cost": 19.2,
+        "hits": [
+          [
+            {
+              "raw": 277.2,
+              "loss": 277,
+              "owner": true,
+              "id": "lf2-firen-explosion"
+            }
+          ],
+          [
+            {
+              "raw": 277.2,
+              "loss": 277,
+              "owner": true,
+              "id": "lf2-firen-explosion"
+            }
+          ],
+          [
+            {
+              "raw": 277.2,
+              "loss": 277,
+              "owner": true,
+              "id": "lf2-firen-explosion"
+            }
+          ]
+        ],
+        "outside": []
+      },
+      "exactExplosionClock": true,
+      "explosionWall": true,
+      "insufficientHealth": true,
+      "midWindupCancel": true,
+      "multipleCostOnce": {
+        "count": 6,
+        "cost": 19.2,
+        "loss": 19.19999999999999,
+        "hits": [
+          {
+            "raw": 277.2,
+            "loss": 277,
+            "owner": true,
+            "id": "lf2-firen-explosion"
+          },
+          {
+            "raw": 277.2,
+            "loss": 277,
+            "owner": true,
+            "id": "lf2-firen-explosion"
+          },
+          {
+            "raw": 277.2,
+            "loss": 277,
+            "owner": true,
+            "id": "lf2-firen-explosion"
+          },
+          {
+            "raw": 277.2,
+            "loss": 277,
+            "owner": true,
+            "id": "lf2-firen-explosion"
+          },
+          {
+            "raw": 277.2,
+            "loss": 277,
+            "owner": true,
+            "id": "lf2-firen-explosion"
+          },
+          {
+            "raw": 277.2,
+            "loss": 277,
+            "owner": true,
+            "id": "lf2-firen-explosion"
+          }
+        ]
+      },
+      "costSnapshot": {
+        "cost": 19.2,
+        "loss": 19.19999999999999
+      },
+      "ordinaryPunch": [
+        {
+          "raw": 70.9632,
+          "loss": 71,
+          "owner": true,
+          "id": "lf2-firen-ball"
+        }
+      ]
+    },
+    "giantBody": {
+      "before": {
+        "name": "烈焰衝刺 · Blaze",
+        "type": "fire",
+        "learnLevel": 3,
+        "cd": 5.5,
+        "damage": 45,
+        "ranges": [
+          120,
+          132,
+          144,
+          156,
+          168
+        ],
+        "radii": [
+          18,
+          20,
+          22,
+          24,
+          26
+        ],
+        "counts": [
+          1,
+          1,
+          2,
+          2,
+          3
+        ],
+        "cap": 6,
+        "sourceStart": 255,
+        "charge": 0.2,
+        "moveStart": 0.1,
+        "cycle": 0.4,
+        "recovery": 0.2,
+        "groundLife": 2.8,
+        "desc": "移動時本體燃燒衝刺並留下真正地火，依照玩家方向前進；放開方向會熄火收勢，撤退不會被拉回敵人，牆與物件阻止穿越。每輪原12/30秒衝刺留下四處火焰，數量增加完整輪次；距離為每輪衝刺尺度、半徑為地火範圍。",
+        "mode": "lf2-firen-blaze",
+        "count": 1,
+        "range": 120,
+        "radius": 18,
+        "duration": 0.8,
+        "bodyScale": 1,
+        "bodyRadius": 24,
+        "dashSpeed": 300,
+        "maxHalfWidth": 18,
+        "groundHalfWidth": 16,
+        "healthCost": 0
+      },
+      "after": {
+        "name": "烈焰衝刺 · Blaze",
+        "type": "fire",
+        "learnLevel": 3,
+        "cd": 5.5,
+        "damage": 45,
+        "ranges": [
+          120,
+          132,
+          144,
+          156,
+          168
+        ],
+        "radii": [
+          18,
+          20,
+          22,
+          24,
+          26
+        ],
+        "counts": [
+          1,
+          1,
+          2,
+          2,
+          3
+        ],
+        "cap": 6,
+        "sourceStart": 255,
+        "charge": 0.2,
+        "moveStart": 0.1,
+        "cycle": 0.4,
+        "recovery": 0.2,
+        "groundLife": 2.8,
+        "desc": "移動時本體燃燒衝刺並留下真正地火，依照玩家方向前進；放開方向會熄火收勢，撤退不會被拉回敵人，牆與物件阻止穿越。每輪原12/30秒衝刺留下四處火焰，數量增加完整輪次；距離為每輪衝刺尺度、半徑為地火範圍。",
+        "mode": "lf2-firen-blaze",
+        "count": 1,
+        "range": 120,
+        "radius": 18,
+        "duration": 0.8,
+        "bodyScale": 1.25,
+        "bodyRadius": 30,
+        "dashSpeed": 300,
+        "maxHalfWidth": 18,
+        "groundHalfWidth": 16,
+        "healthCost": 0
+      },
+      "extendedY": 41.08,
+      "baselineHits": [],
+      "hits": [
+        {
+          "raw": 83.16,
+          "loss": 83,
+          "owner": true,
+          "id": "lf2-firen-blaze"
+        }
+      ]
+    },
+    "quantityContacts": [
+      {
+        "id": "lf2-firen-ball",
+        "baseline": {
+          "name": "火球 · Fire Ball",
+          "type": "fire",
+          "learnLevel": 1,
+          "cd": 1.35,
+          "damage": 48,
+          "ranges": [
+            520,
+            580,
+            640,
+            700,
+            780
+          ],
+          "radii": [
+            14,
+            16,
+            18,
+            20,
+            22
+          ],
+          "counts": [
+            1,
+            2,
+            2,
+            3,
+            4
+          ],
+          "cap": 8,
+          "speed": 690,
+          "sourceStart": 235,
+          "charge": 0.2,
+          "cycle": 0.43333333333333335,
+          "desc": "從手前射出真正飛行的火球，命中灼燒後爆散；追加火球依次播放原235／241／247出手，不會同時隔空命中。牆與障礙擋住火球，數量卡增加完整發射輪次。",
+          "mode": "lf2-firen-ball",
+          "count": 1,
+          "range": 520,
+          "radius": 14,
+          "duration": 0.43333333333333335,
+          "bodyScale": 1,
+          "bodyRadius": 24,
+          "dashSpeed": 0,
+          "maxHalfWidth": 14,
+          "groundHalfWidth": 0,
+          "healthCost": 0
+        },
+        "profile": {
+          "name": "火球 · Fire Ball",
+          "type": "fire",
+          "learnLevel": 1,
+          "cd": 1.35,
+          "damage": 48,
+          "ranges": [
+            520,
+            580,
+            640,
+            700,
+            780
+          ],
+          "radii": [
+            14,
+            16,
+            18,
+            20,
+            22
+          ],
+          "counts": [
+            1,
+            2,
+            2,
+            3,
+            4
+          ],
+          "cap": 8,
+          "speed": 690,
+          "sourceStart": 235,
+          "charge": 0.2,
+          "cycle": 0.43333333333333335,
+          "desc": "從手前射出真正飛行的火球，命中灼燒後爆散；追加火球依次播放原235／241／247出手，不會同時隔空命中。牆與障礙擋住火球，數量卡增加完整發射輪次。",
+          "mode": "lf2-firen-ball",
+          "count": 2,
+          "range": 520,
+          "radius": 14,
+          "duration": 0.8666666666666667,
+          "bodyScale": 1,
+          "bodyRadius": 24,
+          "dashSpeed": 0,
+          "maxHalfWidth": 14,
+          "groundHalfWidth": 0,
+          "healthCost": 0
+        },
+        "hits": [
+          {
+            "raw": 88.704,
+            "loss": 89,
+            "owner": true,
+            "id": "lf2-firen-ball"
+          },
+          {
+            "raw": 88.704,
+            "loss": 89,
+            "owner": true,
+            "id": "lf2-firen-ball"
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-firen-ball": 1
+          },
+          "hits": 2,
+          "damage": 177.408,
+          "effects": 0,
+          "healthSpent": 0,
+          "blazeDistance": 0,
+          "groundFires": 0
+        }
+      },
+      {
+        "id": "lf2-firen-blaze",
+        "baseline": {
+          "name": "烈焰衝刺 · Blaze",
+          "type": "fire",
+          "learnLevel": 3,
+          "cd": 5.5,
+          "damage": 45,
+          "ranges": [
+            120,
+            132,
+            144,
+            156,
+            168
+          ],
+          "radii": [
+            18,
+            20,
+            22,
+            24,
+            26
+          ],
+          "counts": [
+            1,
+            1,
+            2,
+            2,
+            3
+          ],
+          "cap": 6,
+          "sourceStart": 255,
+          "charge": 0.2,
+          "moveStart": 0.1,
+          "cycle": 0.4,
+          "recovery": 0.2,
+          "groundLife": 2.8,
+          "desc": "移動時本體燃燒衝刺並留下真正地火，依照玩家方向前進；放開方向會熄火收勢，撤退不會被拉回敵人，牆與物件阻止穿越。每輪原12/30秒衝刺留下四處火焰，數量增加完整輪次；距離為每輪衝刺尺度、半徑為地火範圍。",
+          "mode": "lf2-firen-blaze",
+          "count": 1,
+          "range": 120,
+          "radius": 18,
+          "duration": 0.8,
+          "bodyScale": 1,
+          "bodyRadius": 24,
+          "dashSpeed": 300,
+          "maxHalfWidth": 18,
+          "groundHalfWidth": 16,
+          "healthCost": 0
+        },
+        "profile": {
+          "name": "烈焰衝刺 · Blaze",
+          "type": "fire",
+          "learnLevel": 3,
+          "cd": 5.5,
+          "damage": 45,
+          "ranges": [
+            120,
+            132,
+            144,
+            156,
+            168
+          ],
+          "radii": [
+            18,
+            20,
+            22,
+            24,
+            26
+          ],
+          "counts": [
+            1,
+            1,
+            2,
+            2,
+            3
+          ],
+          "cap": 6,
+          "sourceStart": 255,
+          "charge": 0.2,
+          "moveStart": 0.1,
+          "cycle": 0.4,
+          "recovery": 0.2,
+          "groundLife": 2.8,
+          "desc": "移動時本體燃燒衝刺並留下真正地火，依照玩家方向前進；放開方向會熄火收勢，撤退不會被拉回敵人，牆與物件阻止穿越。每輪原12/30秒衝刺留下四處火焰，數量增加完整輪次；距離為每輪衝刺尺度、半徑為地火範圍。",
+          "mode": "lf2-firen-blaze",
+          "count": 2,
+          "range": 120,
+          "radius": 18,
+          "duration": 1.2,
+          "bodyScale": 1,
+          "bodyRadius": 24,
+          "dashSpeed": 300,
+          "maxHalfWidth": 18,
+          "groundHalfWidth": 16,
+          "healthCost": 0
+        },
+        "hits": [
+          {
+            "raw": 83.16,
+            "loss": 83,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          },
+          {
+            "raw": 37.422,
+            "loss": 37,
+            "owner": true,
+            "id": "lf2-firen-blaze"
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-firen-blaze": 1
+          },
+          "hits": 13,
+          "damage": 532.2240000000002,
+          "effects": 15,
+          "healthSpent": 0,
+          "blazeDistance": 269.99999999999983,
+          "groundFires": 8
+        }
+      },
+      {
+        "id": "lf2-firen-inferno",
+        "baseline": {
+          "name": "噴火 · Inferno",
+          "type": "fire",
+          "learnLevel": 5,
+          "cd": 6,
+          "damage": 85,
+          "ranges": [
+            180,
+            210,
+            240,
+            270,
+            300
+          ],
+          "radii": [
+            14,
+            16,
+            18,
+            20,
+            22
+          ],
+          "counts": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "cap": 16,
+          "sourceStart": 267,
+          "charge": 0.3,
+          "interval": 0.2,
+          "recovery": 0.13333333333333333,
+          "life": 1,
+          "desc": "由嘴部連續吐出原版火舌，火焰前進、成長並逐一燒過敵群；每股火焰先顯形2/30秒再開始接觸。火舌與本體各有時計，數量增加真正吐火段數；航程放大屬本作成長，不另虛構落地火。",
+          "mode": "lf2-firen-inferno",
+          "count": 4,
+          "range": 180,
+          "radius": 14,
+          "duration": 1.1,
+          "bodyScale": 1,
+          "bodyRadius": 24,
+          "dashSpeed": 0,
+          "maxHalfWidth": 27.44,
+          "groundHalfWidth": 0,
+          "healthCost": 0
+        },
+        "profile": {
+          "name": "噴火 · Inferno",
+          "type": "fire",
+          "learnLevel": 5,
+          "cd": 6,
+          "damage": 85,
+          "ranges": [
+            180,
+            210,
+            240,
+            270,
+            300
+          ],
+          "radii": [
+            14,
+            16,
+            18,
+            20,
+            22
+          ],
+          "counts": [
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "cap": 16,
+          "sourceStart": 267,
+          "charge": 0.3,
+          "interval": 0.2,
+          "recovery": 0.13333333333333333,
+          "life": 1,
+          "desc": "由嘴部連續吐出原版火舌，火焰前進、成長並逐一燒過敵群；每股火焰先顯形2/30秒再開始接觸。火舌與本體各有時計，數量增加真正吐火段數；航程放大屬本作成長，不另虛構落地火。",
+          "mode": "lf2-firen-inferno",
+          "count": 9,
+          "range": 180,
+          "radius": 14,
+          "duration": 2.1,
+          "bodyScale": 1,
+          "bodyRadius": 24,
+          "dashSpeed": 0,
+          "maxHalfWidth": 27.44,
+          "groundHalfWidth": 0,
+          "healthCost": 0
+        },
+        "hits": [
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          },
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          },
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          },
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          },
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          },
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          },
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          },
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          },
+          {
+            "raw": 157.07999999999998,
+            "loss": 157,
+            "owner": true,
+            "id": "lf2-firen-inferno"
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-firen-inferno": 1
+          },
+          "hits": 9,
+          "damage": 1413.7199999999996,
+          "effects": 0,
+          "healthSpent": 0,
+          "blazeDistance": 0,
+          "groundFires": 0
+        }
+      }
+    ]
+  },
+  "natural": {
+    "desktop": {
+      "ok": true,
+      "errors": [],
+      "policy": "Fresh save; native Lv1/HP/XP/AI/time; visible cards/items and native keyboard only.",
+      "permanent": {},
+      "initial": {
+        "time": 0.3413333333333333,
+        "level": 1,
+        "hp": 240,
+        "maxHp": 240,
+        "dead": false,
+        "x": 0,
+        "y": 0,
+        "moves": [
+          {
+            "id": "lf2-firen-ball",
+            "rank": 1
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-firen-ball": 1
+          },
+          "hits": 0,
+          "damage": 0,
+          "effects": 1,
+          "healthSpent": 0,
+          "blazeDistance": 0,
+          "groundFires": 0
+        },
+        "completedWindows": {}
+      },
+      "assessment": {
+        "time": 85.9336666666684,
+        "level": 9,
+        "hp": 69.923042559992,
+        "maxHp": 240,
+        "dead": false,
+        "x": 47.939564619935105,
+        "y": 147.98527380499186,
+        "moves": [
+          {
+            "id": "lf2-firen-ball",
+            "rank": 1
+          },
+          {
+            "id": "lf2-firen-blaze",
+            "rank": 2
+          },
+          {
+            "id": "lf2-firen-inferno",
+            "rank": 1
+          },
+          {
+            "id": "lf2-firen-explosion",
+            "rank": 2
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-firen-ball": 70,
+            "lf2-firen-basic-punch": 10,
+            "lf2-firen-blaze": 13,
+            "lf2-firen-inferno": 10,
+            "lf2-firen-explosion": 2
+          },
+          "hits": 81,
+          "damage": 10394.464079999992,
+          "effects": 2,
+          "healthSpent": 38.4,
+          "blazeDistance": 931.0369279999987,
+          "groundFires": 46
+        },
+        "completedWindows": {
+          "lf2-firen-ball": 80,
+          "lf2-firen-blaze": 12,
+          "lf2-firen-inferno": 10,
+          "lf2-firen-explosion": 2
+        }
+      },
+      "allSpecialsHit": true,
+      "allSkillsLearned": true,
+      "fullSignatureClosed": true,
+      "allFourNativeWindowsClosed": true,
+      "paidCards": 8,
+      "ledger": [
+        {
+          "time": 24.799266666666057,
+          "level": 2,
+          "key": "stat:xp",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            }
+          ],
+          "afterHp": 232.70855897599827,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 29.360266666665723,
+          "level": 3,
+          "key": "new:lf2-firen-blaze",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 1
+            }
+          ],
+          "afterHp": 237.26955897599657,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 36.03286666666539,
+          "level": 4,
+          "key": "stat:percentHealthDamage",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 1
+            }
+          ],
+          "afterHp": 240,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 39.631866666665275,
+          "level": 5,
+          "key": "new:lf2-firen-inferno",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            }
+          ],
+          "afterHp": 234.54739903999965,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 51.20606666666484,
+          "level": 6,
+          "key": "up:lf2-firen-blaze",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            }
+          ],
+          "afterHp": 226.81211840000003,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 61.71186666666448,
+          "level": 7,
+          "key": "stat:quantity",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            }
+          ],
+          "afterHp": 221.19858950399674,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 74.37806666666637,
+          "level": 8,
+          "key": "new:lf2-firen-explosion",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-explosion",
+              "rank": 1
+            }
+          ],
+          "afterHp": 211.67604876799243,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 81.00346666666756,
+          "level": 9,
+          "key": "up:lf2-firen-explosion",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-explosion",
+              "rank": 2
+            }
+          ],
+          "afterHp": 118.25916447999113,
+          "afterMaxHp": 240
+        }
+      ],
+      "hitCounts": {
+        "lf2-firen-ball": 47,
+        "lf2-firen-blaze": 16,
+        "lf2-firen-inferno": 9,
+        "lf2-firen-explosion": 9
+      },
+      "coreBallProof": {
+        "firstHit": {
+          "time": 6.845400000000003,
+          "id": "lf2-firen-ball",
+          "loss": 133,
+          "target": 2
+        },
+        "firstSampleAfter": 7.404066666666667,
+        "fallbackPunchesBeforeFirstCoreHit": 0,
+        "reason": "Cast counters are monotonic in this fresh run; first ball-tagged damage precedes any fallback punch."
+      },
+      "sourceStableDuringRun": true,
+      "currentSourceDifferences": [
+        ".omx/lf2-firen-combat.js",
+        ".omx/lf2-boss-art.js"
+      ],
+      "videoSha256": "40794faaddbc004759340addfb1d85a23183fa341cb912a1bbfb22274f4ac6a3"
+    },
+    "mobile390": {
+      "ok": true,
+      "errors": [],
+      "policy": "Fresh save; native Lv1/HP/XP/AI/time; visible cards/items and native touch joystick only.",
+      "permanent": {},
+      "initial": {
+        "time": 0.2771333333333336,
+        "level": 1,
+        "hp": 240,
+        "maxHp": 240,
+        "dead": false,
+        "x": 0,
+        "y": 0,
+        "moves": [
+          {
+            "id": "lf2-firen-ball",
+            "rank": 1
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-firen-ball": 1
+          },
+          "hits": 0,
+          "damage": 0,
+          "effects": 1,
+          "healthSpent": 0,
+          "blazeDistance": 0,
+          "groundFires": 0
+        },
+        "completedWindows": {}
+      },
+      "assessment": {
+        "time": 102.46233333333792,
+        "level": 8,
+        "hp": 10.802373542396538,
+        "maxHp": 240,
+        "dead": false,
+        "x": 56.96203299282562,
+        "y": 193.2061583544358,
+        "moves": [
+          {
+            "id": "lf2-firen-ball",
+            "rank": 2
+          },
+          {
+            "id": "lf2-firen-blaze",
+            "rank": 2
+          },
+          {
+            "id": "lf2-firen-inferno",
+            "rank": 1
+          },
+          {
+            "id": "lf2-firen-explosion",
+            "rank": 1
+          }
+        ],
+        "stats": {
+          "casts": {
+            "lf2-firen-ball": 84,
+            "lf2-firen-blaze": 13,
+            "lf2-firen-basic-punch": 8,
+            "lf2-firen-inferno": 9,
+            "lf2-firen-explosion": 2
+          },
+          "hits": 102,
+          "damage": 11902.236191999995,
+          "effects": 3,
+          "healthSpent": 19.2,
+          "blazeDistance": 767.4155519999973,
+          "groundFires": 41
+        },
+        "completedWindows": {
+          "lf2-firen-ball": 91,
+          "lf2-firen-blaze": 13,
+          "lf2-firen-inferno": 8,
+          "lf2-firen-explosion": 2
+        }
+      },
+      "allSpecialsHit": true,
+      "allSkillsLearned": true,
+      "fullSignatureClosed": true,
+      "allFourNativeWindowsClosed": true,
+      "paidCards": 7,
+      "ledger": [
+        {
+          "time": 28.80393333333249,
+          "level": 2,
+          "key": "stat:quantity",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            }
+          ],
+          "afterHp": 240,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 42.668733333331986,
+          "level": 3,
+          "key": "new:lf2-firen-blaze",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 1
+            }
+          ],
+          "afterHp": 240,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 55.30833333333165,
+          "level": 4,
+          "key": "stat:cd",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 1
+            }
+          ],
+          "afterHp": 215.96048831999644,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 61.46453333333145,
+          "level": 5,
+          "key": "new:lf2-firen-inferno",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            }
+          ],
+          "afterHp": 222.11668831999432,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 70.05413333333249,
+          "level": 6,
+          "key": "up:lf2-firen-ball",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            }
+          ],
+          "afterHp": 230.7062883199916,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 83.46013333333474,
+          "level": 7,
+          "key": "up:lf2-firen-blaze",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            }
+          ],
+          "afterHp": 230.4565148799989,
+          "afterMaxHp": 240
+        },
+        {
+          "time": 92.99833333333626,
+          "level": 8,
+          "key": "new:lf2-firen-explosion",
+          "afterMoves": [
+            {
+              "id": "lf2-firen-ball",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-blaze",
+              "rank": 2
+            },
+            {
+              "id": "lf2-firen-inferno",
+              "rank": 1
+            },
+            {
+              "id": "lf2-firen-explosion",
+              "rank": 1
+            }
+          ],
+          "afterHp": 86.3274952959969,
+          "afterMaxHp": 240
+        }
+      ],
+      "hitCounts": {
+        "lf2-firen-ball": 68,
+        "lf2-firen-blaze": 12,
+        "lf2-firen-inferno": 14,
+        "lf2-firen-explosion": 7
+      },
+      "coreBallProof": {
+        "firstHit": {
+          "time": 6.978333333333339,
+          "id": "lf2-firen-ball",
+          "loss": 89,
+          "target": 1
+        },
+        "firstSampleAfter": 7.327933333333339,
+        "fallbackPunchesBeforeFirstCoreHit": 0,
+        "reason": "Cast counters are monotonic in this fresh run; first ball-tagged damage precedes any fallback punch."
+      },
+      "sourceStableDuringRun": true,
+      "currentSourceDifferences": [
+        ".omx/lf2-boss-art.js"
+      ],
+      "videoSha256": "128b6b5e8146f79ab897e4ebec8b6ab2b31307f8199fcb69b37e62285ca02f07",
+      "videoTail": {
+        "deathObserved": true,
+        "frame": "art-review/firen/qa/director/mobile-natural-seek-2.png",
+        "approxVideoSeconds": 58.4,
+        "note": "Criteria assessment at102.462game seconds is alive10.802/240; native RAF continues during screenshot/PNG saving before context close, and the actual movie tail shows0/240/fallen body. This is retained, not rerun or described as an alive movie ending."
+      }
+    }
+  },
+  "native": {
+    "ok": true,
+    "sourceStable": true,
+    "errors": [],
+    "scope": "Controlled Lv30/rank1, high-HP zero-damage targets; real keyboard/native RAF, no manual combat stepping. Separate from natural growth.",
+    "time": 9.670000000000009,
+    "missingHits": [],
+    "closedWindows": {
+      "lf2-firen-ball": 9,
+      "lf2-firen-inferno": 1,
+      "lf2-firen-explosion": 1,
+      "lf2-firen-blaze": 1
+    },
+    "stats": {
+      "casts": {
+        "lf2-firen-ball": 5,
+        "lf2-firen-blaze": 2,
+        "lf2-firen-inferno": 2,
+        "lf2-firen-explosion": 1,
+        "lf2-firen-basic-punch": 4
+      },
+      "hits": 59,
+      "damage": 4846.1028,
+      "effects": 12,
+      "healthSpent": 19.2,
+      "blazeDistance": 146.24000000000024,
+      "groundFires": 8
+    },
+    "videoSha256": "b0824269b8defe4f264ef91f6b5f0ca6d46e3c4745cfeb0de045253ba18d1204"
+  },
+  "currentControlledSource": {
+    ".omx/lf2-firen.js": "421a4e9dd7b6628acba7c7b021387ce32ed34041039be482ebe61c06ac0931b9",
+    ".omx/lf2-firen-combat.js": "089826a1772c8aecdfaccebd941c3f827f40fc5bbbc8ab69550437a7f843bbcf",
+    ".omx/lf2-firen-art.js": "b0705d22a107ba00a7b07b181beb742d37c3d82c6bea63444b9d9dc793d1ca30",
+    ".omx/lf2-bosses.js": "b09f41fe87eea69786f8ebe41c04f27ff16898b709e11d28aa2d738395d9862c",
+    ".omx/lf2-boss-art.js": "e54d5a9c2ff56ab5d38a069749ad96314982f12a9b5e87c3646c125562cfd317",
+    ".omx/lf2-audio.js": "d8ba77e4176d21d235e5672f17530cdef30e2628cfe57d108dedec9ade13dc05",
+    ".omx/naruto.js": "f1e48c575efe9e858e0a88a7db415ea9a4f8fb8e5d4203bf366248cecf22c2ac",
+    ".omx/digimon.html": "8064b22da74c2ce4867f2a134112d602dbeba18aaab079c4d0b26fb8bc82d33c",
+    "js/entities/enemy.js": "477bedc6f8f4d447b0072d4abd2e89ee5e623c9d727c02e80220f8223de22075",
+    "js/systems/combat.js": "0686bdffea7577052f7c583a0f82b414cab5f312a5ac44f8d4afb81e4e01b405",
+    "js/systems/self-clone.js": "aa9840f49481b4d84de3a8255cc880ea91bf78fbb500ce71996aad8fedee6e1b",
+    "js/systems/hazards.js": "8fcec2921243de0880a1af92724acbf6e0ba11e2a753b184616eeea8efc7b606",
+    "assets/lf2/firen/001.wav": "28f50924fc845a963d398fda600b9df740149f1c696843aa7cbd56f8552d785a",
+    "assets/lf2/firen/003.wav": "74885981a2003f1bc1c7f2cd22493c47c4b8059088aeffaed652eeef996f9c7a",
+    "assets/lf2/firen/004.wav": "4b501f67bec53f364530e041012faa40334e7f4f0f82088b6b7caa472c2207ac",
+    "assets/lf2/firen/007.wav": "d8e7bbee32a2a582a07d53f43db50c0c6c6e579ed322aa2369be8859b6385002",
+    "assets/lf2/firen/008.wav": "1e766a858e5177db7078674db7749e37aca8bd6b5ab93093385328d04c36837b",
+    "assets/lf2/firen/009.wav": "9b02288a8412d68ef9264d7b3db2cd3767be0631c33b95844bc9405c6fe9acde",
+    "assets/lf2/firen/012.wav": "04e2b02ab4415827045d25cb9c7dadda70da23fc8637beac13123a34dce7f95c",
+    "assets/lf2/firen/014.wav": "670a61c14ba16c51f057a909ab1393f8917e38e80b7af5a0beadb9c7299d8e96",
+    "assets/lf2/firen/015.wav": "1badf632365f0b711c669f94cd9228af0f2b73f987d399df1322a1f958a6af60",
+    "assets/lf2/firen/017.wav": "43030d58b00f98999af6635c9966294fb9b5b6889d03fd1dca8f46bfedf3b5a6",
+    "assets/lf2/firen/020.wav": "7fff68e80d827a2237a05b0483b914c757c742e73a1a5c8a012a3b3f58b8db70",
+    "assets/lf2/firen/042.wav": "a7d6654cb95f4fdd0c0f0e80d9cf0cac3f204f22bc0a87a7c22e2763b4e62bed",
+    "assets/lf2/firen/067.wav": "4148d5ce864e1f78cd2f87c85b30f5eb5319a363ea2aad0d361bf2c5f50eb8cd",
+    "assets/lf2/firen/068.wav": "b1cffa6ba75ed2ca808cab85358da5c4bf627ff80559ca943d716a9461632018",
+    "assets/lf2/firen/070.wav": "2d104a58a1b24622fb61e2f1533f44a5203b6c7b6dca902ef43bb35d50ad6f1f",
+    "assets/lf2/firen/071.wav": "694dd49a27794a69891cfef376d0a29f23060cdc3a250e44f26230d234758dc0",
+    "assets/lf2/firen/firen_0.png": "9e099d51252c6239ea8eb73951bfc5d92caee444f2c867903e5587de75e4e5d3",
+    "assets/lf2/firen/firen_1.png": "a1ebc1470adb8353d942567d2c496a7469fc05cf1ae5f24b665dca6c7f0efb34",
+    "assets/lf2/firen/firen_2.png": "8ec9eca8526aa563fcb1a65c051959410b71d8f4fbec447fa5eb95fd2a89517d",
+    "assets/lf2/firen/firen_ball.png": "f5d07a45afd99df8cae82ca7687ef210119de777ecaf8626d724e17701058cce",
+    "assets/lf2/firen/firen_exp.png": "79f13b79caa18baa69037ed061498e2a7ec54b386f42bcecfecf901a0f5a577e",
+    "assets/lf2/firen/firen_flame.png": "adf0d4ae9f19f2feb9e49d73de0922fb6b4ca6aeef6d9c16dd63c72b0a8fe78f",
+    "assets/lf2/firen/firen_grd.png": "8ff43b4c021d2ed35a0063033cf47f67edc174873d4da0f3727118bca58d0953",
+    "assets/lf2/firen/manifest.json": "16bea6158d63c2792bf2138f5daa4cb371bb250b1b87949c9ec4684582e5a95e"
+  },
+  "limits": [
+    "Physical-phone endurance not verified",
+    "Multiplayer not verified",
+    "Original audio routing/provenance verified; no human sound listening assessment",
+    "Natural formation is not a full30-minute endurance win; mobile video tail contains a later death"
+  ],
+  "postNaturalBridges": {
+    "post-natural-audio-difference.json": {
+      "file": ".omx/lf2-firen-combat.js",
+      "recordedSha256": "75210d358c53128d461dd03ecba7123d1bcc93171578793c24f937b15d01f297",
+      "currentSha256": "089826a1772c8aecdfaccebd941c3f827f40fc5bbbc8ab69550437a7f843bbcf",
+      "onlyAudioDispatchChanged": true,
+      "comparison": "Remove sound-only bodySound definition/calls and playSound dispatch, normalize whitespace; remaining source exactly equal",
+      "diff": [
+        "--- recorded\n",
+        "+++ current\n",
+        "@@ -105,6 +105,13 @@\n",
+        "     }else f.phase=f.age<f.charge?'windup':f.age<27/30?'release':'recovery';",
+        "     f.phaseAge=Math.max(0,f.age-(f.phase==='windup'?0:f.charge));f.progress=clamp(f.age/Math.max(.01,f.duration));",
+        "   }",
+        "+  function bodySound(s,f){",
+        "+    if(f.kind==='punch'||!legal(s,f))return;",
+        "+    const frame=G.LF2FirenArt?.sequence?.('firen',f.sourceStart,f.sourceAge,false);if(!frame)return;",
+        "+    const key=f.sourceStart+':'+(frame.id??frame.pic)+':'+frame.name;",
+        "+    if(f.audioFrame===key)return;f.audioFrame=key;",
+        "+    const sound=frame.sound?.match(/(?:^|\\/)(\\d+)\\.wav$/)?.[1];if(sound)G.LF2FirenArt?.playSound?.(sound,s.owner);",
+        "+  }",
+        "   function cast(owner,m){",
+        "     if(!canCast(owner,m))return false;",
+        "     const s=state(owner),p=profile(owner,m),target=targetFor(owner,m),v=input(owner);",
+        "@@ -113,7 +120,7 @@\n",
+        "       emitted:0,nextTrail:p.charge,trailIndex:0,bodyHits:new Map(),healthPaid:false,",
+        "       damage:p.damage*(owner.atk??1)*(G.NarutoSupport?.takeAttackBonus(owner)||1)};",
+        "     f.cast=G.CombatPulse.create(owner,m.id,{channel:'body'});f.cast.targetIsLegal=()=>legal(s,f);",
+        "-    choreography(f);s.action=f;s.ready.delete(m.id);s.casts[m.id]=(s.casts[m.id]||0)+1;",
+        "+    choreography(f);s.action=f;s.ready.delete(m.id);s.casts[m.id]=(s.casts[m.id]||0)+1;bodySound(s,f);",
+        "     owner.aim=aim;owner.cast?.(m);m.t=Math.max(.05,p.cd*(owner.cdMul??1));m.castAt=performance.now();return true;",
+        "   }",
+        "   function contact(s,f,enemies,ratio=1,element='fire'){",
+        "@@ -135,20 +142,19 @@\n",
+        "     return {x:finite(socket?.x,s.owner.x),y:Number.isFinite(socket?.y)?socket.y+lift:s.owner.y,lift};",
+        "   }",
+        "   function impact(s,e){effect(s,e.action,{kind:'impact',x:e.x,y:e.y,lift:e.lift||0,aim:e.aim,life:8/30,",
+        "-    sourceObject:'firen_ball',sourceStart:10,sourceLoop:false,scale:e.scale,radius:e.radius,rotateToAim:true});}",
+        "+    sourceObject:'firen_ball',sourceStart:10,sourceLoop:false,scale:e.scale,radius:e.radius,rotateToAim:true});",
+        "+    if(legal(s,e.action))G.LF2FirenArt?.playSound?.('020',s.owner);}",
+        "   function ball(s,f,index){",
+        "     const o=origin(s,f,[238,244,250][index%3]),block=firstBlock(s.owner.x,s.owner.y,o.x,o.y);",
+        "     if(block){hurtProp(s,f,block.prop);return;}",
+        "     effect(s,f,{kind:'fireball',...o,aim:f.aim,speed:f.speed,range:f.range,traveled:0,life:f.range/f.speed,",
+        "       radius:f.radius,scale:f.radius/13.5,sourceObject:'firen_ball',sourceStart:0,sourceLoop:0,rotateToAim:true,hits:new Set()});",
+        "-    G.LF2FirenArt?.playSound?.('067',s.owner);",
+        "   }",
+        "   function flame(s,f,index){",
+        "     const o=origin(s,f,index%2?274:271),block=firstBlock(s.owner.x,s.owner.y,o.x,o.y);",
+        "     if(block){hurtProp(s,f,block.prop);return;}",
+        "     effect(s,f,{kind:'mouth-flame',...o,aim:f.aim,range:f.range,traveled:0,life:30/30,",
+        "       radius:f.radius,scale:f.radius/12.5,sourceObject:'firen_flame',sourceStart:0,sourceLoop:false,rotateToAim:true,hits:new Set()});",
+        "-    G.LF2FirenArt?.playSound?.('070',s.owner);",
+        "   }",
+        "   function ground(s,f,frame){",
+        "     const o=origin(s,f,frame,true),block=firstBlock(s.owner.x,s.owner.y,o.x,o.y);",
+        "@@ -164,7 +170,6 @@\n",
+        "     const o=origin(s,f,289,true);",
+        "     for(let i=0;i<f.count&&legal(s,f);i++)effect(s,f,{kind:'explosion',...o,aim:f.aim,age:-i*f.interval,",
+        "       life:24/30,radius:f.radius,scale:f.radius/73,sourceObject:'firen_flame',sourceStart:109,sourceLoop:false,hits:new Set()});",
+        "-    G.LF2FirenArt?.playSound?.('071',s.owner);",
+        "   }",
+        "   function moveBlaze(s,f,previous){",
+        "     const start=Math.max(previous,f.moveStart),end=Math.min(f.age,f.stopAt??f.charge+f.count*f.cycle);if(end<=start)return;",
+        "@@ -257,7 +262,7 @@\n",
+        "         }else if(f.mode==='lf2-firen-inferno'){",
+        "           while(f.emitted<f.count&&f.age+EPS>=f.charge+f.emitted*f.interval&&legal(s,f)){flame(s,f,f.emitted);f.emitted++;f.released=true;}",
+        "         }else if(f.mode==='lf2-firen-explosion'&&!f.released&&f.age+EPS>=f.charge){f.released=true;explosion(s,f);}",
+        "-        if(f.age+EPS>=f.duration&&s.action===f)s.action=null;",
+        "+        bodySound(s,f);if(f.age+EPS>=f.duration&&s.action===f)s.action=null;",
+        "       }",
+        "     }",
+        "     for(const e of s.effects.slice()){"
+      ]
+    },
+    "post-natural-visual-difference.json": {
+      "file": ".omx/lf2-boss-art.js",
+      "recordedSha256": "ac74a6fdf829a6110f14a7a978284c96c6c3b80aa76b24721f0544127106b1ae",
+      "currentSha256": "e54d5a9c2ff56ab5d38a069749ad96314982f12a9b5e87c3646c125562cfd317",
+      "onlyFirenHurtCastFrameSelectionChanged": true,
+      "reversePatchMatchesRecordedBytes": true,
+      "diff": [
+        "--- recorded\n",
+        "+++ current\n",
+        "@@ -73,7 +73,13 @@\n",
+        "       const mirror=sequence(dex,key,pose.sourceStart??106,pose.sourceAge??pose.age??time);",
+        "       if (mirror?.id===103) return mirror;",
+        "     }",
+        "-    if (state==='hurt') return sequence(dex,key,180,time);",
+        "+    if (state==='hurt') {",
+        "+      // Firen's sustained casts keep their simulation-owned hand/mouth source.",
+        "+      // Flash the matching cast frame rather than moving it to a hurt pose.",
+        "+      const start=pose?.sourceStart??pose?.startFrame;",
+        "+      if (+dex===30021 && Number.isFinite(start)) return sequence(dex,key,start,pose.sourceAge??pose.age??time);",
+        "+      return sequence(dex,key,180,time);",
+        "+    }",
+        "     if (pose) {",
+        "       const start = pose.sourceStart ?? pose.startFrame;",
+        "       if (Number.isFinite(start)) return sequence(dex,key,start,pose.sourceAge ?? pose.age ?? time);"
+      ]
+    },
+    "registration-scope-proof.json": {
+      "note": "Initial natural hash list omitted shared registration; recorded HTML cache digest matches current registry, final controlled verification additionally includes its full SHA. No old report keys rewritten.",
+      "file": ".omx/lf2-bosses.js",
+      "currentSha256": "b09f41fe87eea69786f8ebe41c04f27ff16898b709e11d28aa2d738395d9862c",
+      "recordedEntryVersion": "b09f41fe87ee",
+      "matches": true
+    }
+  }
+}

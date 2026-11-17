@@ -1,0 +1,26 @@
+{
+  "file": ".omx/lf2-boss-art.js",
+  "recordedSha256": "ac74a6fdf829a6110f14a7a978284c96c6c3b80aa76b24721f0544127106b1ae",
+  "currentSha256": "e54d5a9c2ff56ab5d38a069749ad96314982f12a9b5e87c3646c125562cfd317",
+  "onlyFirenHurtCastFrameSelectionChanged": true,
+  "reversePatchMatchesRecordedBytes": true,
+  "diff": [
+    "--- recorded\n",
+    "+++ current\n",
+    "@@ -73,7 +73,13 @@\n",
+    "       const mirror=sequence(dex,key,pose.sourceStart??106,pose.sourceAge??pose.age??time);",
+    "       if (mirror?.id===103) return mirror;",
+    "     }",
+    "-    if (state==='hurt') return sequence(dex,key,180,time);",
+    "+    if (state==='hurt') {",
+    "+      // Firen's sustained casts keep their simulation-owned hand/mouth source.",
+    "+      // Flash the matching cast frame rather than moving it to a hurt pose.",
+    "+      const start=pose?.sourceStart??pose?.startFrame;",
+    "+      if (+dex===30021 && Number.isFinite(start)) return sequence(dex,key,start,pose.sourceAge??pose.age??time);",
+    "+      return sequence(dex,key,180,time);",
+    "+    }",
+    "     if (pose) {",
+    "       const start = pose.sourceStart ?? pose.startFrame;",
+    "       if (Number.isFinite(start)) return sequence(dex,key,start,pose.sourceAge ?? pose.age ?? time);"
+  ]
+}

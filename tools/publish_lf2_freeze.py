@@ -35,24 +35,27 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('artifact', type=Path)
     parser.add_argument('source')
-    parser.add_argument('--scope', choices=['freeze', 'lf2-bosses'], default='freeze')
+    parser.add_argument('--scope', choices=['freeze', 'lf2-bosses', 'firen'], default='freeze')
     args = parser.parse_args()
     artifact = args.artifact.resolve()
     assert artifact.is_relative_to(ROOT), 'Artifact must stay in this repository'
     assert (artifact / '.nojekyll').is_file() and not (artifact / 'CNAME').exists()
     assert (artifact / '.omx/lf2-freeze-combat.js').is_file()
     assert (artifact / 'assets/lf2/freeze/manifest.json').is_file()
-    if args.scope == 'lf2-bosses':
+    if args.scope in ['lf2-bosses', 'firen']:
         for hero in ['firzen', 'julian']:
             assert (artifact / f'.omx/lf2-{hero}-combat.js').is_file()
             assert (artifact / f'assets/lf2/{hero}/manifest.json').is_file()
+    if args.scope == 'firen':
+        assert (artifact / '.omx/lf2-firen-combat.js').is_file()
+        assert (artifact / 'assets/lf2/firen/manifest.json').is_file()
     assert git('remote', 'get-url', 'origin') == 'https://github.com/' + REPO + '.git'
     source = git('rev-parse', args.source + '^{commit}')
     pages = api('GET', '/repos/' + REPO + '/pages')
     assert pages['build_type'] == 'legacy', 'Review changed deployment mechanism first'
     parent = git('ls-remote', 'origin', 'refs/heads/' + pages['source']['branch']).split()[0]
     git('fetch', 'origin', pages['source']['branch'])
-    branch = 'codex/' + ('freeze-classic' if args.scope == 'freeze' else 'lf2-bosses') + '-pages-' + source[:8]
+    branch = 'codex/' + ('freeze-classic' if args.scope == 'freeze' else args.scope) + '-pages-' + source[:8]
     state = ROOT / '.omx/state' / args.scope
     index = state / 'pages.index'
     index.parent.mkdir(parents=True, exist_ok=True)

@@ -6,7 +6,15 @@
   const heroes = {30019:{slug:'firzen',height:64},30020:{slug:'julian',height:84}};
   const sheets = new Map(), pending = new Map();
   const dexFor = actor => +(actor?.mon?.dex ?? actor?.dex);
-  const apiFor = dex => +dex === 30019 ? G.LF2Firzen : +dex === 30020 ? G.LF2Julian : null;
+  const apiFor = dex => heroes[+dex]?.api?.() ?? (+dex === 30019 ? G.LF2Firzen : +dex === 30020 ? G.LF2Julian : null);
+  function register(dex, config) {
+    dex=+dex;
+    if (!Number.isInteger(dex) || heroes[dex]) throw Error('Classic LF2 art registration already exists: '+dex);
+    if (!/^[a-z0-9-]+$/.test(config?.slug||'') || typeof config.api!=='function' || !(config.height>0))
+      throw Error('Invalid classic LF2 art registration');
+    heroes[dex]={slug:config.slug,height:config.height,api:config.api};
+    return true;
+  }
   const metadataFor = dex => sheets.get(+dex)?.metadata || null;
   const isReady = dex => !!sheets.get(+dex)?.loaded;
   function load(dex) {
@@ -65,7 +73,13 @@
       const mirror=sequence(dex,key,pose.sourceStart??106,pose.sourceAge??pose.age??time);
       if (mirror?.id===103) return mirror;
     }
-    if (state==='hurt') return sequence(dex,key,180,time);
+    if (state==='hurt') {
+      // Firen's sustained casts keep their simulation-owned hand/mouth source.
+      // Flash the matching cast frame rather than moving it to a hurt pose.
+      const start=pose?.sourceStart??pose?.startFrame;
+      if (+dex===30021 && Number.isFinite(start)) return sequence(dex,key,start,pose.sourceAge??pose.age??time);
+      return sequence(dex,key,180,time);
+    }
     if (pose) {
       const start = pose.sourceStart ?? pose.startFrame;
       if (Number.isFinite(start)) return sequence(dex,key,start,pose.sourceAge ?? pose.age ?? time);
@@ -130,7 +144,12 @@
       if (G.Camera?.sees && !G.Camera.sees(e.x,e.y,Math.max(250,(e.radius||0)*2))) continue;
       const f=effectFrame(dex,e); if (!f) continue;
       const scale=Number.isFinite(e.scale)?e.scale:e.visualBaseRadius?e.radius/e.visualBaseRadius:s.owner?.anim?.scale||1;
-      paint(ctx,dex,f,e.x,e.y-(e.lift||0),scale,Math.cos(e.aim||0)<0,e.alpha??1);
+      if (e.rotateToAim) {
+        // Directional travelling fire uses the same local frame axes as its
+        // swept contact geometry. Body poses and upright ground fire stay put.
+        ctx.save();ctx.translate(e.x,e.y-(e.lift||0));ctx.rotate(e.aim||0);
+        paint(ctx,dex,f,0,0,scale,false,e.alpha??1);ctx.restore();
+      } else paint(ctx,dex,f,e.x,e.y-(e.lift||0),scale,Math.cos(e.aim||0)<0,e.alpha??1);
     }
     const ice=sheets.get(dex)?.images['freeze_ice.png'];
     if (ice) for (const {enemy,remaining,duration} of runtime?.frozenTargets?.()||[]) {
@@ -142,7 +161,7 @@
   }
   const playSound=(id,owner)=>G.LF2Audio?.play(id,owner,metadataFor(dexFor(owner)));
   const stopSounds=owner=>G.LF2Audio?.stop(owner);
-  G.LF2BossArt={load,isReady,draw,pointFor,drawEffects,playSound,stopSounds,frame,sequence,sample,metadataFor,heightFor,
+  G.LF2BossArt={register,load,isReady,draw,pointFor,drawEffects,playSound,stopSounds,frame,sequence,sample,metadataFor,heightFor,
     get metadata(){return Object.fromEntries([...sheets].map(([dex,s])=>[dex,s.metadata]));},
     get images(){return Object.fromEntries([...sheets].map(([dex,s])=>[dex,s.images]));}};
 })();

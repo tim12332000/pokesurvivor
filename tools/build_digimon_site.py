@@ -104,8 +104,8 @@ for sheet in kimimaro['sheets'].values():
     review_runtime.append('art-review/' + source)
 review_runtime.extend(['.omx/jujutsu.js', '.omx/jujutsu-art.js', '.omx/jjk-yuta.js', '.omx/jjk-ryu.js', '.omx/jjk-uro.js', 'art-review/jjk-skills-v2.json'])
 review_runtime.extend(['.omx/lf2.js', '.omx/lf2-art.js', '.omx/lf2-audio.js', '.omx/lf2-freeze-combat.js'])
-review_runtime.extend(['.omx/lf2-bosses.js', '.omx/lf2-boss-art.js', '.omx/lf2-firzen-combat.js', '.omx/lf2-julian-combat.js'])
-for hero in ['firzen', 'julian']:
+review_runtime.extend(['.omx/lf2-firen.js', '.omx/lf2-firen-art.js', '.omx/lf2-firen-combat.js', '.omx/lf2-bosses.js', '.omx/lf2-boss-art.js', '.omx/lf2-firzen-combat.js', '.omx/lf2-julian-combat.js'])
+for hero in ['firzen', 'julian', 'firen']:
     boss_root = ROOT / 'assets/lf2' / hero
     boss = json.loads((boss_root / 'manifest.json').read_text('utf-8'))
     for item in boss['source']['files']:
@@ -173,7 +173,7 @@ def version_asset(match):
     if source == '.omx/lf2-art.js':
         query += '&amp;data=' + hashlib.sha256((OUT / 'assets/lf2/freeze/manifest.json').read_bytes()).hexdigest()[:12]
     if source == '.omx/lf2-boss-art.js':
-        query += '&amp;data=' + hashlib.sha256(b''.join((OUT / 'assets/lf2' / hero / 'manifest.json').read_bytes() for hero in ['firzen', 'julian'])).hexdigest()[:12]
+        query += '&amp;data=' + hashlib.sha256(b''.join((OUT / 'assets/lf2' / hero / 'manifest.json').read_bytes() for hero in ['firzen', 'julian', 'firen'])).hexdigest()[:12]
     return match[1] + source + query + match[3]
 
 html = re.sub(r'(<script\b[^>]*\bsrc=")(?!https?://)([^"?]+)(?:\?[^"\s]*)?(")',

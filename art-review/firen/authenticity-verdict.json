@@ -1,0 +1,36 @@
+{
+  "result": "pass",
+  "scope": "Classic LF2 2.0a Firen, all four original named skills",
+  "date": "2026-11-17",
+  "namedSkills": [
+    "Fire Ball",
+    "Blaze",
+    "Inferno",
+    "Explosion"
+  ],
+  "originalCellPixelsVerified": 1762755,
+  "sourceInventoryComplete": true,
+  "entryViewed": [
+    "firen-desktop-selection.png",
+    "firen-desktop-normal-entry.png"
+  ],
+  "naturalDesktopViewed": "All four first/release/recovery/independent/fade PNGs; actual native video seeks20,24,26,29,35,42,43,44,45,50 seconds",
+  "naturalMobileViewed": "Actual native video seeks20,40,50 seconds plus Explosion active/fade/final PNGs",
+  "currentNativeViewed": "11.04s current original RAF clip, actual seek5,5.7,6.1,6.3,6.8,7.1,8,10 seconds (2s is loading;12/15 beyond duration were NOT viewed as gameplay)",
+  "currentFinalCycleInternalStable": true,
+  "currentSourceHashMismatches": [],
+  "findings": [
+    "Original alternate fireball hand poses and traveling ball remain distinct from mouth flame.",
+    "Burning body advances with real input and original ground fires remain at the traveled path.",
+    "Inferno begins at original mouth point and has independently traveling growing flame; ground fire still belongs to Blaze.",
+    "Original large Explosion advances through transparent109, active110-117 and original fade; brief peak body occlusion clears and route remains visible.",
+    "All four original named skills appear in normal learning/HUD and natural cards."
+  ],
+  "scopeDecision": "Firen–Freeze fusion is a separately audited real-pair game-system rule, not a fifth readme skill; no fake solo fusion/helper claimed.",
+  "limits": [
+    "No physical-phone endurance proof",
+    "No multiplayer/network fusion proof",
+    "No human audio listening review",
+    "Automatic casting, growth, HP percentage cost timing and top-down geometry are explicit game adaptations"
+  ]
+}

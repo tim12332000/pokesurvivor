@@ -17,19 +17,21 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('artifact', type=Path)
     parser.add_argument('source')
-    parser.add_argument('--heroes', nargs='+', choices=['freeze','firzen','julian'], default=['freeze'])
+    parser.add_argument('--heroes', nargs='+', choices=['freeze','firzen','julian','firen'], default=['freeze'])
     args = parser.parse_args()
     artifact = args.artifact.resolve()
     assert artifact.is_relative_to(ROOT)
-    scope='lf2-bosses' if any(hero!='freeze' for hero in args.heroes) else 'freeze'
+    scope='firen' if 'firen' in args.heroes else 'lf2-bosses' if any(hero!='freeze' for hero in args.heroes) else 'freeze'
     OUT=ROOT/'.omx/state'/scope/'public'
     OUT.mkdir(parents=True, exist_ok=True)
     paths = ['index.html', '.omx/digimon.html', '.omx/naruto.js', '.omx/redrawn-init.js',
              '.omx/lf2.js', '.omx/lf2-art.js', '.omx/lf2-audio.js', '.omx/lf2-freeze-combat.js',
              'js/core/audio.js', 'js/entities/enemy.js', 'js/systems/combat.js', 'js/systems/self-clone.js', 'js/systems/hazards.js',
              'assets/lf2/freeze/manifest.json']
-    if scope=='lf2-bosses':
+    if scope!='freeze':
         paths += ['.omx/lf2-bosses.js','.omx/lf2-boss-art.js','.omx/lf2-firzen-combat.js','.omx/lf2-julian-combat.js']
+    if 'firen' in args.heroes:
+        paths += ['.omx/lf2-firen.js','.omx/lf2-firen-art.js','.omx/lf2-firen-combat.js']
     for hero in dict.fromkeys(['freeze',*args.heroes]):
         paths += [p.relative_to(artifact).as_posix() for p in (artifact/'assets/lf2'/hero).iterdir()
                   if p.is_file() and p.suffix in {'.png','.wav','.json'}]
@@ -46,7 +48,7 @@ def main():
     with sync_playwright() as pw:
         browser = pw.chromium.launch(executable_path=r'C:\Program Files\Google\Chrome\Application\chrome.exe', headless=True)
         for hero in args.heroes:
-            dex,starter={'freeze':(30018,'lf2-iceball'),'firzen':(30019,'lf2-firzen-cannon'),'julian':(30020,'lf2-julian-skull')}[hero]
+            dex,starter={'freeze':(30018,'lf2-iceball'),'firzen':(30019,'lf2-firzen-cannon'),'julian':(30020,'lf2-julian-skull'),'firen':(30021,'lf2-firen-ball')}[hero]
             for name, viewport, mobile in [('desktop', {'width':1100,'height':850}, False),
                                            ('mobile390', {'width':390,'height':844}, True)]:
                 context = browser.new_context(viewport=viewport, is_mobile=mobile, has_touch=mobile)
@@ -67,6 +69,7 @@ def main():
                 }''')
                 expected={'freeze':['lf2-iceball','lf2-sword','lf2-column','lf2-whirlwind'],
                           'firzen':['lf2-firzen-cannon','lf2-firzen-disaster','lf2-firzen-volcano'],
+                          'firen':['lf2-firen-ball','lf2-firen-blaze','lf2-firen-inferno','lf2-firen-explosion'],
                           'julian':['lf2-julian-skull','lf2-julian-punch','lf2-julian-uppercut','lf2-julian-mirror','lf2-julian-ball','lf2-julian-blast']}[hero]
                 assert kit['ids']==expected and len(kit['labels'])==len(expected),kit
                 page.screenshot(path=str(OUT/(hero+'-'+name+'-selection.png')))
