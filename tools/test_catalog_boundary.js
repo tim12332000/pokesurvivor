@@ -33,5 +33,10 @@ for (const file of ['dev.html', '.omx/digimon.html']) {
   assert.equal(sources.filter(source => source === 'js/core/catalog.js').length, 1, file);
   assert(sources.indexOf('js/data/pokedex.js') < sources.indexOf('js/core/catalog.js'), file);
   assert(sources.indexOf('js/core/catalog.js') < sources.indexOf('js/data/achievements.js'), file);
+  if (file === '.omx/digimon.html') {
+    const shadow = ['art-review/shikamaru/reference-shadow-geometry.js', '.omx/naruto-shikamaru.js', '.omx/naruto-shikamaru-mass.js', 'js/main.js'];
+    for (const source of shadow) assert.equal(sources.filter(value => value === source).length, 1, `${file}: missing or duplicate ${source}`);
+    assert.deepEqual(shadow.map(source => sources.indexOf(source)), shadow.map(source => sources.indexOf(source)).sort((a, b) => a - b), `${file}: shadow module load order`);
+  }
 }
 console.log('Runtime consumers use explicit catalog scopes; destructive filtering fixture is rejected.');

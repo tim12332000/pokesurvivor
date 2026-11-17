@@ -163,6 +163,10 @@ for name in filter(None, tracked + public_new + ['.omx/naruto-en.js', '.omx/naru
 
 html_path = OUT / '.omx/digimon.html'
 html = html_path.read_text(encoding='utf-8')
+scripts = [source.split('?', 1)[0] for source in re.findall(r'<script\b[^>]*\bsrc="([^"]+)"', html)]
+shadow_runtime = ['art-review/shikamaru/reference-shadow-geometry.js', '.omx/naruto-shikamaru.js', '.omx/naruto-shikamaru-mass.js', 'js/main.js']
+assert all(scripts.count(source) == 1 for source in shadow_runtime), 'Missing or duplicate Shikamaru runtime script'
+assert [scripts.index(source) for source in shadow_runtime] == sorted(scripts.index(source) for source in shadow_runtime), 'Incorrect Shikamaru runtime load order'
 # Version the actual bytes, including local changes built before a commit.
 def version_asset(match):
     source = match[2]

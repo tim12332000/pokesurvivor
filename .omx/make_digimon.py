@@ -69,7 +69,7 @@ html = html.replace('<script defer src=".omx/unlimited.js"></script>', '<script 
 html = html.replace(main, '<script defer src=".omx/naruto-skills-en.js"></script>\n' + main, 1)
 # Shikamaru uses an on-demand authored atlas and a separate combat runtime.
 html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src="art-review/shikamaru-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
-html = html.replace(main, '<script defer src="art-review/shikamaru/reference-shadow-geometry.js"></script>\n<script defer src=".omx/naruto-shikamaru.js"></script>\n' + main, 1)
+html = html.replace(main, '<script defer src="art-review/shikamaru/reference-shadow-geometry.js"></script>\n<script defer src=".omx/naruto-shikamaru.js"></script>\n<script defer src=".omx/naruto-shikamaru-mass.js"></script>\n' + main, 1)
 # Classic LF2 keeps its original sprite/data vocabulary in a dedicated runtime.
 html = html.replace('<script defer src=".omx/naruto.js"></script>', '<script defer src=".omx/lf2-audio.js"></script>\n<script defer src=".omx/lf2-art.js"></script>\n<script defer src=".omx/naruto.js"></script>', 1)
 html = html.replace(main, '<script defer src=".omx/lf2.js"></script>\n<script defer src=".omx/lf2-freeze-combat.js"></script>\n' + main, 1)
