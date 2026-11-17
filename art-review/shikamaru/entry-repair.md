@@ -14,3 +14,13 @@
 沒有修改招式數值、導電／炸彈演出或其他角色。本機正常入口的原生自動施放在桌機、360、390手機視窗均完成穿刺、導電、投彈、爆破與解除；不是只直接呼叫cast。九個標準Node檢查、Python編譯與diff檢查通過。
 
 發布必須以當時真實線上火人靜態head為parent，只更新入口及本輪manifest，保留其他角色資產和LF2的metadata快取參數。正式結果在完成公開bytes及瀏覽器施放核對後補記。
+
+## 正式站已修復
+
+[正式版鹿丸](https://tim12332000.github.io/pokesurvivor/?lang=zh-TW&hero=shikamaru&release=f6d40787)
+
+來源 `f6d407877c977f59e5c7d37c1579c6b9b40725b3`，靜態提交 `6df23b58042a914cd4363b216aba87f38dcc3dc5`，Pages來源 `codex/shikamaru-entry-pages-f6d40787:/`。公開差異僅HTML入口及本輪manifest；其餘13,981個既有公開檔案、LF2腳本及metadata快取參數維持原樣。網址、HTTPS、CNAME與服務保護未改。
+
+公開28個檔案與canonical／Git blob一致。桌機及390手機的冷／暖快取正常Lv1入口、真按鍵移動通過；另在各自的正式頁面真正自動施放一整發18靶技能，各得到18根影線、54次電擊與18次炸彈命中，完整跑到解除。沒有攔截或替換公開程式，也不只靠直接呼叫cast宣稱能出招。
+
+首輪施放驗證均通過，但一張未改動的寶可夢倒地PNG短暫回503；重新抓取為200且bytes符合canonical，完整乾淨重測無pageerror或失敗請求。證據為 `.omx/state/shikamaru-entry-repair/{release,public-assets,public-browser,verification}.json`，首輪失敗紀錄另保存。手機實機長局仍未驗。
