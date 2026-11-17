@@ -10,8 +10,10 @@
       ['lf2-firzen-volcano','冰火大爆發 · Arctic Volcano','fire',6,'在周圍釋放原版冰火爆發，覆蓋包圍自己的敵群；每道爆發各有真實命中，離開本體後仍依原動畫收束。']
     ]},
     {dex:30020,name:'Julian 邪鬼',api:G.LF2Julian,moves:[
-      ['lf2-julian-skull','骷髏彈 · Skull Blast','psychic',1,'連續射出原版骷髏彈追擊敵人，逐發飛行與命中；近身空檔以拳擊迎擊，朝敵人移動時可接原版衝拳。'],
+      ['lf2-julian-skull','骷髏彈 · Skull Blast','psychic',1,'連續射出原版骷髏彈追擊敵人，逐發飛行與命中；近身空檔以普通拳擊迎擊。'],
+      ['lf2-julian-punch','衝拳 · Soul Punch','fighting',2,'朝近敵移動時使出原版衝拳，以本體真正前進和接觸攻擊；撤退不自動追敵，牆與障礙限制前進。'],
       ['lf2-julian-uppercut','邪鬼上勾拳 · Uppercut','fighting',3,'以原版抬臂、上勾拳和收勢迎擊近身敵群，只有手臂真正掃過的接觸窗造成傷害。'],
+      ['lf2-julian-mirror','幻影移形 · Mirror Image','psychic',4,'留下原版無傷害幻影並迴避移動，誘導敵人追擊與瞄準留影；消失的原版時段可迴避碰撞攻擊，幻影本身不會擋住敵彈。'],
       ['lf2-julian-ball','巨大能量球 · Soul Bomb','psychic',5,'蓄力後射出大型能量球，沿路壓制多名敵人；飛行、命中與消散各自保留原版圖格。'],
       ['lf2-julian-blast','邪鬼大爆炸 · Big Bang','psychic',8,'以原版蓄力和巨大爆發迎擊包圍，爆發真正覆蓋周圍敵人，完整播放釋放到消散。']
     ]}
@@ -21,11 +23,13 @@
     orbs:['.....bb.....','....bwwb....','.....bb.....','............','.bb......bb.','bwwb....bwwb','.bb......bb.','............','.....bb.....','....bwwb....','.....bb.....','............'],
     blast:['.....b......','..b..w..b...','...b.w.b....','..bbwwwbb...','.bwwwwwwwb..','bwwwbbwwwb..','.bwwwwwwwb..','..bbwwwbb...','...b.w.b....','..b..w..b...','.....b......','............'],
     skull:['...bbbbbb...','..bwwwwwwb..','.bwwwwwwwwb.','.bwwwwwwwwb.','.bwbwwbwwb..','.bwbwwbwwb..','..bwwwwwwb..','...bwwwwb...','...bwbwb....','...bbbbb....','............','............'],
-    fist:['............','....bbbb....','...bwwwwb...','...bwwwwb...','...bwwwwb...','....bwwb....','....bwwb....','....bwwb....','...bwwwwb...','...bwwwwb...','....bbbb....','............']
+    fist:['............','....bbbb....','...bwwwwb...','...bwwwwb...','...bwwwwb...','....bwwb....','....bwwb....','....bwwb....','...bwwwwb...','...bwwwwb...','....bbbb....','............'],
+    rush:['............','.......bbbb.','......bwwwwb','..bb..bwwwwb','bbwwbbbwwwwb','..bbwwwwwwwb','bbwwbbbwwwwb','..bb..bwwwwb','......bwwwwb','.......bbbb.','............','............'],
+    mirror:['..bb....bb..','.bwwb..bwwb.','..bb....bb..','..bb....bb..','.bwwb..bwwb.','bwwwwbbwwwwb','..bb....bb..','..bb....bb..','.b..b..b..b.','.b..b..b..b.','............','............']
   };
   const catalog=G.NarutoSkillCatalog,kits=[],owners=new Map(),power={};
   const countLabels={'lf2-firzen-cannon':'連射發數','lf2-firzen-disaster':'追擊彈數','lf2-firzen-volcano':'爆發組數',
-    'lf2-julian-skull':'骷髏彈數','lf2-julian-uppercut':'上勾拳次數','lf2-julian-ball':'能量球數','lf2-julian-blast':'大爆發輪次'};
+    'lf2-julian-skull':'骷髏彈數','lf2-julian-punch':'衝拳次數','lf2-julian-uppercut':'上勾拳次數','lf2-julian-mirror':'幻影數','lf2-julian-ball':'能量球數','lf2-julian-blast':'大爆發輪次'};
   for (const hero of heroes) {
     if (!hero.api?.specs) throw Error('Classic LF2 combat definitions missing: '+hero.dex);
     const rows=[];
@@ -35,15 +39,17 @@
       const name=p.name||fallbackName,type=p.type||fallbackType,learnLevel=p.learnLevel??fallbackLevel;
       power[id]=p;
       const ranges=p.ranges,radii=p.radii,counts=p.counts;
-      const icon=/skull/.test(id)?'skull':/uppercut/.test(id)?'fist':/disaster/.test(id)?'orbs':/volcano|blast/.test(id)?'blast':'cannon';
+      const utility=id==='lf2-julian-mirror';
+      const icon=/mirror/.test(id)?'mirror':/skull/.test(id)?'skull':/punch/.test(id)?'rush':/uppercut/.test(id)?'fist':/disaster/.test(id)?'orbs':/volcano|blast/.test(id)?'blast':'cannon';
       G.Icons.UI[id]={pal:{w:hero.dex===30019?'#fff0c1':'#ddd7ff',b:hero.dex===30019?'#58cbe9':'#8463d5'},rows:marks[icon],outline:true};
       const ups=scales.slice(1).map((scale,i)=>({
-        t:`傷害提高；${countLabels[id]}基數 ${counts[i]}→${counts[i+1]}，射程 ${ranges[i]}→${ranges[i+1]}，命中半徑 ${radii[i]}→${radii[i+1]}`,
-        m:{dmg:scale/scales[i],range:ranges[i+1],radius:radii[i+1]/radii[i],width:radii[i+1]/radii[i]}
+        t:utility?`${countLabels[id]}基數 ${counts[i]}→${counts[i+1]}，誘敵範圍 ${ranges[i]}→${ranges[i+1]}，閃身距離 ${p.distances[i]}→${p.distances[i+1]}；幻影維持 ${(p.lifetimes[i+1]).toFixed(2)} 秒`:
+          `傷害提高；${countLabels[id]}基數 ${counts[i]}→${counts[i+1]}，射程 ${ranges[i]}→${ranges[i+1]}，命中半徑 ${radii[i]}→${radii[i+1]}`,
+        m:{...(utility?{}:{dmg:scale/scales[i]}),range:ranges[i+1],radius:radii[i]>0?radii[i+1]/radii[i]:1,width:radii[i]>0?radii[i+1]/radii[i]:1}
       }));
-      const def={id,name,icon:id,type,kind:'melee',digiMode:id,digimonSkill:true,narutoSkill:true,lf2Skill:true,
+      const def={id,name,icon:id,type,kind:utility?'buff':'melee',digiMode:id,digimonSkill:true,narutoSkill:true,lf2Skill:true,
         passive:true,autoCast:true,learnLevel,cd:p.cd,dmg:p.damage,range:ranges[0],radius:radii[0],width:radii[0]*2,
-        count:counts[0],speed:p.speed||420,life:p.life||1,duration:p.life||0,arc:1.9,pierce:0,maxLvl:5,ups,
+        count:counts[0],speed:p.speed||420,life:utility?p.lifetimes[0]:p.life||1,duration:utility?p.lifetimes[0]:p.life||0,arc:1.9,pierce:0,maxLvl:5,ups,
         desc:(p.desc||description)+' 自動施放、學習等級、數量與數值成長為本作改編；不占主動槽。',source_url:source};
       G.Moves.BY_ID[id]=def;G.Moves.ALL.push(def);catalog.definitions.set(id,def);owners.set(id,hero.dex);
       rows.push([id,id,name,type,learnLevel,p.cd,p.damage,ranges[0],radii[0],def.desc]);
@@ -78,7 +84,11 @@
   if(skillState)G.RunInsights.skillState=(player,move)=>{
     const hero=heroes.find(h=>h.dex===player?.dex);if(!hero||!owners.has(move?.id))return skillState(player,move);
     const pose=hero.api.pose(player),state=hero.api.stateFor(player);
-    if(pose?.m?.id===move.id)return {label:pose.kind==='punch'?'近身拳擊':pose.kind==='soul-punch'?'衝拳':'出招中',fraction:0};
+    if(pose?.m?.id===move.id)return {label:move.id==='lf2-julian-mirror'?'幻影移形':pose.kind==='punch'?'近身拳擊':pose.kind==='soul-punch'?'衝拳':'出招中',fraction:0};
+    if(move.id==='lf2-julian-mirror'){
+      const decoys=hero.api.decoys?.().filter(d=>d.owner===player)||[];
+      if(decoys.length)return {label:'誘敵幻影 '+decoys.length,fraction:Math.min(1,Math.max(...decoys.map(d=>Math.max(0,d.life-d.age)/Math.max(.01,d.life))))};
+    }
     const active=state?.effects?.filter(e=>!e.dead&&e.action?.m.id===move.id);
     if(active?.length)return {label:'作用中 '+active.length,fraction:Math.max(0,Math.min(1,Math.max(...active.map(e=>(e.life-e.age)/Math.max(.01,e.life)))))};
     const t=Math.max(0,move.t||0);return {label:t>0?t.toFixed(1)+'s':pose?'待出手':'就緒',fraction:Math.min(1,t/Math.max(.05,move.cd*(player.cdMul??1)))};

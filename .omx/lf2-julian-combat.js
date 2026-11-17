@@ -3,14 +3,22 @@
   'use strict';
   if (G.LF2Julian) return;
   const DEX=30020, C=G.Combat, EPS=1e-8, states=new Map();
+  let nextDecoy=0;
   const specs={
     'lf2-julian-skull':{name:'追魂骷髏 · Skull Blast',learnLevel:1,cd:2.4,damage:40,
       ranges:[560,620,680,740,820],radii:[28,30,32,34,38],counts:[5,6,7,8,10],cap:20,
       speed:450,turn:1.8,sourceStart:260,charge:4/30,fullDuration:33/30,
       releaseTimes:[4/30,9/30,16/30,21/30,26/30]},
+    'lf2-julian-punch':{name:'邪鬼衝拳 · Soul Punch',learnLevel:2,cd:3.8,damage:90,
+      ranges:[78,78,78,78,78],radii:[22,22,22,22,22],counts:[1,1,2,2,3],cap:6,
+      sourceStart:300,charge:0,fullDuration:14/30,runDistance:30,runDuration:2/30},
     'lf2-julian-uppercut':{name:'邪昇拳 · Uppercut',learnLevel:3,cd:2.6,damage:80,
       ranges:[55,55,55,55,55],radii:[55,55,55,55,55],counts:[1,1,2,2,3],cap:6,
       sourceStart:235,charge:2/30,fullDuration:22/30},
+    'lf2-julian-mirror':{name:'幻影閃身 · Mirror Image',learnLevel:4,cd:6.8,damage:0,
+      ranges:[280,310,340,370,400],radii:[0,0,0,0,0],counts:[1,1,2,2,3],cap:6,
+      distances:[88,94,100,106,112],lifetimes:[59/30,59/30,59/30,59/30,59/30],
+      sourceStart:106,charge:2/30,fullDuration:22/30},
     'lf2-julian-ball':{name:'毀滅巨彈 · Soul Bomb',learnLevel:5,cd:5.5,damage:110,
       ranges:[700,760,820,900,1000],radii:[61,66,71,76,84],counts:[1,1,2,2,3],cap:8,
       speed:540,sourceStart:280,charge:12/30,fullDuration:20/30},
@@ -31,22 +39,24 @@
     const mode=m?.digiMode||m?.id,base=specs[mode];if(!base)return null;
     const p={...base,...(G.LF2Bosses?.power?.[mode]||{})},L=Math.max(0,Math.min(4,(m?.lvl||1)-1));
     const count=Math.min(p.cap,Math.max(1,G.Quantity?.count(owner,p.counts[L])??p.counts[L]));
-    const bodyScale=mode==='lf2-julian-uppercut'?giant(owner):1;
+    const bodyScale=['lf2-julian-uppercut','lf2-julian-punch'].includes(mode)?giant(owner):1;
     return {...p,mode,count,range:finite(m?.range,p.ranges[L])*bodyScale,
       radius:finite(m?.radius,p.radii[L])*bodyScale,damage:finite(m?.dmg,p.damage),cd:finite(m?.cd,p.cd),
-      duration:mode==='lf2-julian-uppercut'?p.fullDuration*count:p.fullDuration};
+      distance:p.distances?.[L]||0,decoyLife:p.lifetimes?.[L]||0,
+      duration:['lf2-julian-uppercut','lf2-julian-punch'].includes(mode)?p.fullDuration*count:p.fullDuration};
   }
   function state(owner){
     let s=states.get(owner);
     if(s&&(s.world!==G.World||s.epoch!==G.CombatPulse.epoch)){clear(owner);s=null;}
-    if(!s){s={owner,world:G.World,epoch:G.CombatPulse.epoch,clock:0,action:null,effects:[],ready:new Map(),
-      punchReady:0,punchIndex:0,casts:{},hits:0,damage:0};states.set(owner,s);}
+    if(!s){s={owner,world:G.World,epoch:G.CombatPulse.epoch,clock:0,action:null,effects:[],decoys:[],ready:new Map(),
+      punchReady:0,punchIndex:0,casts:{},hits:0,damage:0,mirrorSpawned:0,mirrorRedirects:0,mirrorWhiffs:0,mirrorDistance:0};states.set(owner,s);}
     return s;
   }
   const stateLegal=s=>states.get(s.owner)===s&&valid(s.owner)&&s.world===G.World&&s.epoch===G.CombatPulse.epoch;
   const legal=(s,f)=>stateLegal(s)&&learned(s.owner,f.m.id)&&G.CombatPulse.legal(f.cast);
   function clear(owner){
     G.LF2BossArt?.stopSounds?.(owner);
+    for(const s of states.values())if(!owner||s.owner===owner)for(const d of s.decoys)d.dead=true;
     if(owner)states.delete(owner);else states.clear();
   }
   function firstBlock(ax,ay,bx,by,radius=1,target=null){
@@ -62,13 +72,114 @@
   function nearby(x,y,r){
     return [...new Set(G.EnemyMgr.queryCircle(x,y,r))].filter(e=>alive(e)&&!e.friendly&&Math.hypot(e.x-x,e.y-y)<=r+(e.r||0));
   }
+  function inputVector(owner){
+    if(owner===G.Game.player&&G.Input?.axis){
+      const [x,y]=G.Input.axis(),n=Math.hypot(x,y);return n>0?{x:x/n,y:y/n}:null;
+    }
+    const x=owner.svx??owner._vx??0,y=owner.svy??owner._vy??0,n=Math.hypot(x,y);
+    return n>1?{x:x/n,y:y/n}:null;
+  }
+  function toward(owner,target){
+    const v=inputVector(owner);if(!v||!target)return false;
+    const dx=target.x-owner.x,dy=target.y-owner.y;return v.x*dx+v.y*dy>Math.hypot(dx,dy)*.4;
+  }
+  function evadeDirection(owner,threat){
+    const dx=threat.x-owner.x,dy=threat.y-owner.y,v=inputVector(owner);
+    if(v)return Math.atan2(v.y,v.x);
+    const away=Math.atan2(-dy,-dx),candidates=[away,away+Math.PI/2,away-Math.PI/2];
+    return candidates.find(a=>G.World.isFree?.(owner.x+Math.cos(a)*20,owner.y+Math.sin(a)*20,owner.r||12)??
+      path(owner.x,owner.y,owner.x+Math.cos(a)*20,owner.y+Math.sin(a)*20))??away;
+  }
+  function moveSafely(owner,aim,distance){
+    if(!(distance>0))return 0;
+    const count=Math.max(1,Math.ceil(distance/3)),dx=Math.cos(aim)*distance/count,dy=Math.sin(aim)*distance/count;
+    let moved=0;
+    for(let i=0;i<count;i++){
+      const x=owner.x+dx,y=owner.y+dy;
+      if(G.World.isFree?!G.World.isFree(x,y,owner.r||12):!path(owner.x,owner.y,x,y))break;
+      owner.x=x;owner.y=y;moved+=Math.hypot(dx,dy);
+    }
+    return moved;
+  }
+  const decoyLegal=(s,d)=>stateLegal(s)&&learned(s.owner,'lf2-julian-mirror')&&s.decoys.includes(d)&&
+    d.world===G.World&&d.epoch===G.CombatPulse.epoch&&!d.dead&&d.hp>0&&d.age<d.life&&!terminal();
+  function decoys(){
+    const result=[];for(const s of states.values())for(const d of s.decoys)if(decoyLegal(s,d))result.push(d);return result;
+  }
+  function isDecoy(d){const s=states.get(d?.owner);return !!s&&decoyLegal(s,d);}
+  function hurtDecoy(d,amount,meta){
+    // Original phantom has no bdy: physical shots and contact do not get consumed.
+    const s=states.get(d?.owner);if(!s||!decoyLegal(s,d)||G.Game.state!=='playing')return false;
+    d.whiffs++;s.mirrorWhiffs++;return false;
+  }
+  function targetForEnemies(enemy,fallback){
+    if(!alive(enemy)||enemy.remote||enemy.behavior==='thief')return fallback;
+    const base=fallback?Math.hypot(fallback.x-enemy.x,fallback.y-enemy.y):Infinity;
+    const candidates=decoys().filter(d=>Math.hypot(d.x-enemy.x,d.y-enemy.y)<=d.lureRange&&
+      Math.hypot(d.x-enemy.x,d.y-enemy.y)<=base*1.5&&path(enemy.x,enemy.y,d.x,d.y))
+      .sort((a,b)=>Math.hypot(a.x-enemy.x,a.y-enemy.y)-Math.hypot(b.x-enemy.x,b.y-enemy.y));
+    const d=candidates[0];if(!d)return fallback;
+    if(!d.enemies.has(enemy)){d.enemies.add(enemy);const s=states.get(d.owner);if(s)s.mirrorRedirects++;}
+    return d;
+  }
+  function collisionExempt(owner){
+    const s=states.get(owner),f=s?.action;
+    return !!f&&f.mode==='lf2-julian-mirror'&&legal(s,f)&&f.sourceAge+EPS>=2/30&&f.sourceAge<13/30-EPS;
+  }
+  function spawnDecoys(s,f){
+    const owner=s.owner,scale=84/86*giant(owner),sign=Math.cos(f.aim)<0?-1:1;
+    const ox=owner.x+5*scale*sign,oy=owner.y,perp=f.evadeAim+Math.PI/2;
+    for(let i=0;i<f.count&&legal(s,f);i++){
+      const offset=i===0?0:Math.ceil(i/2)*(i%2?1:-1)*((owner.r||16)*2+8);
+      const x=ox+Math.cos(perp)*offset,y=oy+Math.sin(perp)*offset;
+      if(i>0&&G.World.isFree&&!G.World.isFree(x,y,owner.r||12))continue;
+      const d=Object.create(owner);
+      Object.assign(d,{id:'lf2-mirror-'+(++nextDecoy),owner,lf2Decoy:true,isDecoy:true,intangible:true,
+        x,y,r:owner.r||16,bodyH:owner.bodyH||84,hp:10,maxHp:10,dead:false,frozen:false,invuln:0,
+        _vx:0,_vy:0,svx:0,svy:0,level:owner.level,mon:owner.mon,world:G.World,epoch:G.CombatPulse.epoch,
+        kind:'mirror-decoy',action:f,age:0,sourceAge:0,life:f.decoyLife,lureRange:f.range,whiffs:0,enemies:new Set(),
+        sourceObject:'julian',sourceStart:240,sourceLoop:false,scale,lift:0,aim:f.aim});
+      Object.defineProperty(d,'atk',{value:0});Object.defineProperty(d,'spd',{value:0});
+      d.hurt=(amount,type,pure,meta)=>hurtDecoy(d,amount,meta||{type,pure});d.onDealt=()=>{};d.heal=()=>{};
+      s.decoys.push(d);s.effects.push(d);s.mirrorSpawned++;
+    }
+  }
+  function moveAction(s,f,previous){
+    if(f.mode==='lf2-julian-mirror'){
+      const lo=Math.max(2/30,previous),hi=Math.min(13/30,f.age);
+      if(hi<=lo)return;
+      const direction=evadeDirection(s.owner,f.target),amount=Math.min(f.distance-f.mirrorMoved,f.distance*(hi-lo)/(11/30));
+      f.evadeAim=direction;const moved=moveSafely(s.owner,direction,amount);f.mirrorMoved+=moved;s.mirrorDistance+=moved;
+      return;
+    }
+    if(f.mode!=='lf2-julian-punch')return;
+    for(let i=0;i<f.count&&legal(s,f);i++){
+      const start=i*f.fullDuration,end=start+f.runDuration;
+      if(f.age<=start||previous>=end)continue;
+      if(i>0&&previous<=start+EPS){
+        const current=s.owner.moves?.find(m=>m.id===f.m.id),next=current&&targetFor(s.owner,current);
+        if(next){f.target=next;f.aim=Math.atan2(next.y-s.owner.y,next.x-s.owner.x);}
+      }
+      if(!toward(s.owner,f.target)){
+        f.retreatCancelled=true;f.count=Math.min(f.count,i+1);f.duration=Math.min(f.duration,(i+1)*f.fullDuration);continue;
+      }
+      const lo=Math.max(start,previous),hi=Math.min(end,f.age),spent=f.runSpent.get(i)||0;
+      const budget=f.runDistance*giant(s.owner),amount=Math.min(budget-spent,budget*(hi-lo)/f.runDuration);
+      const v=inputVector(s.owner),aim=v?Math.atan2(v.y,v.x):f.aim;
+      f.runSpent.set(i,spent+moveSafely(s.owner,aim,amount));
+    }
+  }
   function targetFor(owner,m){
     const p=profile(owner,m);if(!p)return null;
-    const enemies=nearby(owner.x,owner.y,p.range).filter(e=>path(owner.x,owner.y,e.x,e.y));
+    const reach=p.range+(p.mode==='lf2-julian-punch'?p.runDistance*giant(owner):0);
+    const enemies=nearby(owner.x,owner.y,reach).filter(e=>path(owner.x,owner.y,e.x,e.y)&&
+      (p.mode!=='lf2-julian-punch'||toward(owner,e)));
     enemies.sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y));
     if(enemies.length)return enemies[0];
-    return (G.World.propsInCircle?.(owner.x,owner.y,p.range)||[]).filter(p=>p.hp>0&&p.destructible!==false&&
-      Math.hypot(p.x-owner.x,p.y-owner.y)<=profile(owner,m).range+(p.r||0)&&path(owner.x,owner.y,p.x,p.y,p))
+    if(p.mode==='lf2-julian-mirror')return null;
+    return (G.World.propsInCircle?.(owner.x,owner.y,reach)||[]).filter(p=>p.hp>0&&p.destructible!==false&&
+      Math.hypot(p.x-owner.x,p.y-owner.y)<=reach+(p.r||0)&&path(owner.x,owner.y,p.x,p.y,p)&&
+      (m.digiMode!=='lf2-julian-punch'||toward(owner,p)))
       .sort((a,b)=>Math.hypot(a.x-owner.x,a.y-owner.y)-Math.hypot(b.x-owner.x,b.y-owner.y))[0]||null;
   }
   function canCast(owner,m){
@@ -76,10 +187,12 @@
       !state(owner).action&&(m.t||0)<=EPS&&!!targetFor(owner,m);
   }
   function choreography(f){
-    const local=f.mode==='lf2-julian-uppercut'?f.age%f.fullDuration:f.age;
+    const local=['lf2-julian-uppercut','lf2-julian-punch'].includes(f.mode)?f.age%f.fullDuration:f.age;
     f.sourceAge=local;f.sourceStart=f.kind==='punch'?f.punchIndex%2?65:60:f.kind==='soul-punch'?300:f.sourceStart;
     f.phase=local+EPS<f.charge?'windup':local<f.duration-.08?'release':'recovery';
     if(f.mode==='lf2-julian-uppercut')f.phase=local<2/30?'windup':local<9/30?'release':'recovery';
+    if(f.mode==='lf2-julian-punch')f.phase=local<6/30?'release':'recovery';
+    if(f.mode==='lf2-julian-mirror')f.phase=local<2/30?'windup':local<13/30?'evade':'recovery';
     f.phaseAge=f.phase==='windup'?local:f.phase==='release'?Math.max(0,local-f.charge):Math.max(0,local-f.fullDuration+.08);
     f.progress=Math.max(0,Math.min(1,local/Math.max(.01,f.fullDuration||f.duration)));
   }
@@ -92,8 +205,13 @@
   function cast(owner,m){
     if(!canCast(owner,m))return false;
     const s=state(owner),p=profile(owner,m),target=targetFor(owner,m),aim=Math.atan2(target.y-owner.y,target.x-owner.x);
-    const f=makeCast(s,m,p,aim);s.action=f;s.ready.delete(m.id);s.casts[m.id]=(s.casts[m.id]||0)+1;
-    owner.aim=aim;owner.cast?.(m);m.t=Math.max(.05,p.cd*(owner.cdMul??1));m.castAt=performance.now();return true;
+    const f=makeCast(s,m,p,aim,p.mode==='lf2-julian-punch'?'soul-punch':p.mode==='lf2-julian-mirror'?'mirror':p.mode);
+    f.target=target;f.runSpent=new Map();f.mirrorMoved=0;
+    if(p.mode==='lf2-julian-mirror')f.evadeAim=evadeDirection(s.owner,target);
+    s.action=f;s.ready.delete(m.id);s.casts[m.id]=(s.casts[m.id]||0)+1;
+    owner.aim=aim;owner.cast?.(m);m.t=Math.max(.05,p.cd*(owner.cdMul??1));m.castAt=performance.now();
+    if(p.mode==='lf2-julian-mirror')sound('030',owner);
+    return true;
   }
   function contact(s,f,enemies,ratio=1){
     if(!legal(s,f))return false;
@@ -159,19 +277,28 @@
       f.released=true;
       if(f.mode==='lf2-julian-ball'){for(let i=0;i<f.count&&legal(s,f);i++)spawnShot(s,f,i,f.count,f.charge,'soul-ball');sound('019',s.owner);}
       if(f.mode==='lf2-julian-blast'){for(let i=0;i<f.count&&legal(s,f);i++)spawnBang(s,f,i);sound('089',s.owner);}
+      if(f.mode==='lf2-julian-mirror')spawnDecoys(s,f);
     }
   }
   function meleeStep(s,f,previous){
-    const upper=f.mode==='lf2-julian-uppercut',period=upper?f.fullDuration:f.duration;
-    for(let i=0;i<(upper?f.count:1)&&legal(s,f);i++){
+    const upper=f.mode==='lf2-julian-uppercut',soul=f.mode==='lf2-julian-punch',period=upper||soul?f.fullDuration:f.duration;
+    for(let i=0;i<(upper||soul?f.count:1)&&legal(s,f);i++){
+      if(soul&&i>0&&f.retreatCancelled)continue;
       const windows=upper?[[2/30,4/30,1],[6/30,9/30,.75]]:f.kind==='soul-punch'?[[0,6/30,1]]:[[3/30,5/30,1]];
       let ledger=f.meleeHits.get(i);if(!ledger)f.meleeHits.set(i,ledger=new Set());
       for(const [a,b,ratio]of windows){
         const start=i*period+a,end=i*period+b;if(f.age+EPS<start||previous>=end-EPS)continue;
         if(!f.hitSounds)f.hitSounds=new Set();
         if(!f.hitSounds.has(i)){sound(f.kind==='soul-punch'?'031':'007',s.owner);f.hitSounds.add(i);}
-        const inside=e=>Math.hypot(e.x-s.owner.x,e.y-s.owner.y)<=f.range+(e.r||0)&&
-          Math.abs(angle(Math.atan2(e.y-s.owner.y,e.x-s.owner.x)-f.aim))<=.9+Math.asin(Math.min(1,(e.r||0)/Math.max(1,Math.hypot(e.x-s.owner.x,e.y-s.owner.y))));
+        const inside=e=>{
+          const dx=e.x-s.owner.x,dy=e.y-s.owner.y;
+          if(soul){
+            const forward=dx*Math.cos(f.aim)+dy*Math.sin(f.aim),side=-dx*Math.sin(f.aim)+dy*Math.cos(f.aim);
+            return forward>=-28*giant(s.owner)-(e.r||0)&&forward<=f.range+(e.r||0)&&Math.abs(side)<=f.radius+(e.r||0);
+          }
+          return Math.hypot(dx,dy)<=f.range+(e.r||0)&&Math.abs(angle(Math.atan2(dy,dx)-f.aim))<=
+            .9+Math.asin(Math.min(1,(e.r||0)/Math.max(1,Math.hypot(dx,dy))));
+        };
         const victims=nearby(s.owner.x,s.owner.y,f.range).filter(e=>!ledger.has(e)&&inside(e)&&path(s.owner.x,s.owner.y,e.x,e.y));
         if(victims.length){contact(s,f,victims,ratio);for(const e of victims)ledger.add(e);}
         props(s,f,s.owner.x,s.owner.y,f.range,p=>!ledger.has(p)&&inside(p),ratio);
@@ -208,7 +335,8 @@
     if(f){
       if(!legal(s,f))s.action=null;
       else{
-        const previous=f.age;f.age+=dt;f.x=s.owner.x;f.y=s.owner.y;choreography(f);release(s,f);
+        const previous=f.age;f.age+=dt;f.x=s.owner.x;f.y=s.owner.y;choreography(f);release(s,f);moveAction(s,f,previous);
+        f.x=s.owner.x;f.y=s.owner.y;
         if(f.mode==='lf2-julian-uppercut'||f.kind==='punch'||f.kind==='soul-punch')meleeStep(s,f,previous);
         if(f.age+EPS>=f.duration&&s.action===f)s.action=null;
       }
@@ -227,6 +355,7 @@
       if(e.age+EPS>=e.life)e.dead=true;
     }
     s.effects=s.effects.filter(e=>!e.dead);
+    s.decoys=s.decoys.filter(d=>decoyLegal(s,d));
   }
   function update(dt){
     if(terminal()){clear();return;}
@@ -240,13 +369,12 @@
   function fallback(s,m){
     const reach=55*giant(s.owner),target=nearby(s.owner.x,s.owner.y,reach).filter(e=>path(s.owner.x,s.owner.y,e.x,e.y))[0];
     if(!target)return false;
-    const owner=s.owner,dx=target.x-owner.x,dy=target.y-owner.y,aim=Math.atan2(dy,dx),speed=Math.hypot(owner._vx||0,owner._vy||0);
-    const soul=speed>20&&((owner._vx||0)*dx+(owner._vy||0)*dy)>speed*Math.hypot(dx,dy)*.45;
-    const p={mode:soul?'lf2-julian-soul-punch':'lf2-julian-punch',sourceStart:soul?300:s.punchIndex%2?65:60,
-      damage:soul?Math.max(48,(m.dmg||40)*1.4):Math.max(26,(m.dmg||40)*.7),range:reach,radius:reach,count:1,
-      charge:soul?0:3/30,fullDuration:soul?14/30:5/30,duration:soul?14/30:5/30};
-    const f=makeCast(s,m,p,aim,soul?'soul-punch':'punch');f.punchIndex=s.punchIndex++;choreography(f);
-    s.action=f;s.punchReady=s.clock+(soul?.7:.42)*(owner.cdMul??1);owner.aim=aim;owner.cast?.(m);
+    const owner=s.owner,dx=target.x-owner.x,dy=target.y-owner.y,aim=Math.atan2(dy,dx);
+    const p={mode:'lf2-julian-basic-punch',sourceStart:s.punchIndex%2?65:60,
+      damage:Math.max(26,(m.dmg||40)*.7),range:reach,radius:reach,count:1,
+      charge:3/30,fullDuration:5/30,duration:5/30};
+    const f=makeCast(s,m,p,aim,'punch');f.punchIndex=s.punchIndex++;choreography(f);
+    s.action=f;s.punchReady=s.clock+.42*(owner.cdMul??1);owner.aim=aim;owner.cast?.(m);
     s.casts[p.mode]=(s.casts[p.mode]||0)+1;return true;
   }
   function pose(owner=G.Game.player){const s=states.get(owner);return s&&stateLegal(s)?s.action:null;}
@@ -265,6 +393,8 @@
   C.clearFields=function(owner){const result=oldClear.call(this,owner);clear(owner);return result;};
   C.drawAirFields=function(ctx){oldAir.call(this,ctx);G.LF2BossArt?.drawEffects?.(ctx,DEX);};
   G.LF2Julian={dex:DEX,specs,supports,handles:supports,profile,canCast,cast,update,clear,pose,activeFor:pose,targetFor,renderStates,
+    decoys,isDecoy,hurtDecoy,targetForEnemies,collisionExempt,
     stateFor:(owner=G.Game.player)=>{const s=states.get(owner);return s&&stateLegal(s)?s:null;},
-    stats:(owner=G.Game.player)=>{const s=states.get(owner);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,effects:s.effects.length}:null;}};
+    stats:(owner=G.Game.player)=>{const s=states.get(owner);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,effects:s.effects.length,
+      mirrorSpawned:s.mirrorSpawned,mirrorRedirects:s.mirrorRedirects,mirrorWhiffs:s.mirrorWhiffs,mirrorDistance:s.mirrorDistance}:null;}};
 })();

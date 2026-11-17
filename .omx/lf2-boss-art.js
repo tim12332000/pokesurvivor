@@ -59,6 +59,12 @@
     const hero = heroes[+dex]; if (!hero || !isReady(dex)) return null;
     const key = hero.slug;
     if (state==='death' || state==='faint') return sequence(dex,key,230,time);
+    // Mirror's original empty frame is the actual evasion window. A flash
+    // left over from the preceding hit must not replace it with a hurt body.
+    if (+dex===30020 && pose?.mode==='lf2-julian-mirror') {
+      const mirror=sequence(dex,key,pose.sourceStart??106,pose.sourceAge??pose.age??time);
+      if (mirror?.id===103) return mirror;
+    }
     if (state==='hurt') return sequence(dex,key,180,time);
     if (pose) {
       const start = pose.sourceStart ?? pose.startFrame;

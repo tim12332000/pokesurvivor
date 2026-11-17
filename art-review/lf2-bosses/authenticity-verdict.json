@@ -1,33 +1,50 @@
 {
   "result": "pass",
+  "scope": "Full original named kit: Firzen3 and Julian6; prior four-skill-only acceptance remains withdrawn",
   "date": "2026-11-17",
   "classicVersion": "LF2 2.0a",
   "originalCellPixelsVerified": 4586787,
-  "sourceIdentity": "Original pinned installer readme/dat/images/audio; no Remaster or generated replacements",
+  "originalReadmeInventory": {
+    "firzen": [
+      "Firzen Cannon",
+      "Overwhelming Disaster",
+      "Arctic Volcano"
+    ],
+    "julian": [
+      "Soul Punch",
+      "Uppercut",
+      "Skull Blast",
+      "Mirror Image",
+      "Big Bang",
+      "Soul Bomb"
+    ]
+  },
   "currentFinalSourceHashMatch": {
-    "firzen": {
-      "sourceStable": true,
-      "mismatches": []
-    },
-    "julian": {
+    "julianAllSix": {
+      "ok": true,
       "sourceStable": true,
       "mismatches": []
     }
   },
   "viewedEvidence": [
-    "Firzen/Julian desktop normal entry and selection",
-    "Firzen desktop natural full phase screenshots",
-    "Firzen current mobile mother-before-split and chase screenshots",
-    "Julian desktop skull/uppercut/sphere/BigBang/SoulPunch screenshots",
-    "Actual ffmpeg seek samples from both natural videos and both final native cycle videos"
+    "Original readme/dat/pixel cells and primary engine-rule cross-reference",
+    "Firzen desktop+mobile natural full phases and current mother-before-split native clips",
+    "NEW Julian all-six desktop and390 mobile natural phases, formalSoulPunch and genuine stationaryMirror afterimage",
+    "Actual ffmpeg seeks from NEW Julian six-skill desktop30/40/50 andmobile47.5/50 seconds",
+    "Actual ffmpeg seeks from NEW Julian full-six final native5/5.8/6.1/6.9/9/12/15 seconds plus full-phase PNGs"
   ],
-  "omissions": [
-    "Julian Mirror Image intentionally omitted; no attacking clone substitute",
-    "Original manual inputs, full Z-axis and native armor not claimed"
+  "genuineMirrorEvidence": [
+    "103 original transparent sprite and empty bdy only2/30..13/30",
+    "Body moves away while original source240 phantom stays; harmless/non-solid59/30 base life",
+    "Native enemy chase/attack aim redirected; matched encounter loss0 withMirror vs21 without",
+    "Projectile passes through phantom, no invented shield; expiration retargets realactor"
   ],
-  "notVerified": [
-    "Physical mobile endurance",
-    "Human sound listening",
-    "Every frame of every video"
+  "pending": [],
+  "omittedNamedSkills": [],
+  "limitations": [
+    "Original manual command inputs and complete Z-axis physics are adapted",
+    "Bounded source300 dash and retreat-respecting evade do not claim exact native momentum distances",
+    "Physical-phone endurance and multiplayer not verified",
+    "No human sound listening or every-frame review claimed"
   ]
 }

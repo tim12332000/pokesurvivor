@@ -565,7 +565,7 @@ G.Combat = (() => {
           projectiles.splice(i, 1);
           continue;
         }
-        if (G.U.dist2(p.x, p.y, pl.x, pl.y) < (p.r + pl.r) * (p.r + pl.r)) {
+        if (!G.LF2Julian?.collisionExempt?.(pl) && G.U.dist2(p.x, p.y, pl.x, pl.y) < (p.r + pl.r) * (p.r + pl.r)) {
           pl.hurt(p.dmg, p.mtype, false, { cause: 'projectile', fromX: p.x, fromY: p.y, vx: p.vx, vy: p.vy });
           G.FX.burst(p.x, p.y - G.LIFT, p.color, 7, 110);
           projectiles.splice(i, 1);
@@ -679,7 +679,7 @@ G.Combat = (() => {
     }
 
     // --- contacto enemigo <-> jugador ---
-    if (pl.dead) return;
+    if (pl.dead || G.LF2Julian?.collisionExempt?.(pl)) return;
     for (const e of G.EnemyMgr.queryCircle(pl.x, pl.y, pl.r + 40)) {
       if (G.U.dist2(e.x, e.y, pl.x, pl.y) > (e.r + pl.r) * (e.r + pl.r)) continue;
       if (e.touchCd > 0 || e.behavior === 'thief' || G.NarutoLee?.bound?.(e) || G.NarutoKimimaro?.held?.(e) || G.JujutsuYuta?.stopped?.(e) || G.LF2Freeze?.stopped?.(e) || G.LF2Firzen?.stopped?.(e) || G.NarutoShikamaru?.stopped?.(e)) continue;

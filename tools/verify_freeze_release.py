@@ -26,7 +26,7 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
     paths = ['index.html', '.omx/digimon.html', '.omx/naruto.js', '.omx/redrawn-init.js',
              '.omx/lf2.js', '.omx/lf2-art.js', '.omx/lf2-audio.js', '.omx/lf2-freeze-combat.js',
-             'js/core/audio.js', 'js/entities/enemy.js', 'js/systems/combat.js', 'js/systems/self-clone.js',
+             'js/core/audio.js', 'js/entities/enemy.js', 'js/systems/combat.js', 'js/systems/self-clone.js', 'js/systems/hazards.js',
              'assets/lf2/freeze/manifest.json']
     if scope=='lf2-bosses':
         paths += ['.omx/lf2-bosses.js','.omx/lf2-boss-art.js','.omx/lf2-firzen-combat.js','.omx/lf2-julian-combat.js']
@@ -61,6 +61,14 @@ def main():
                 if page.locator('#tap-start').is_visible(): page.locator('#tap-start').click()
                 page.locator(f'[data-quick-naruto="{dex}"]').click()
                 page.wait_for_function('(dex)=>G.NarutoAssets.ready(dex)', arg=dex, timeout=30000)
+                kit=page.evaluate('''() => {
+                  const dex=+G.DB.save.partner,rows=dex===30018?G.LF2.kit[1]:G.LF2Bosses.kits.find(row=>row[0]===dex)[1];
+                  return {ids:rows.map(row=>row[0]),labels:[...document.querySelectorAll('.launch-kit b')].map(el=>el.textContent)};
+                }''')
+                expected={'freeze':['lf2-iceball','lf2-sword','lf2-column','lf2-whirlwind'],
+                          'firzen':['lf2-firzen-cannon','lf2-firzen-disaster','lf2-firzen-volcano'],
+                          'julian':['lf2-julian-skull','lf2-julian-punch','lf2-julian-uppercut','lf2-julian-mirror','lf2-julian-ball','lf2-julian-blast']}[hero]
+                assert kit['ids']==expected and len(kit['labels'])==len(expected),kit
                 page.screenshot(path=str(OUT/(hero+'-'+name+'-selection.png')))
                 page.locator('#scr-menu [data-go="play"]').click()
                 page.wait_for_function('(dex)=>G.Game.player?.dex===dex&&G.Game.state==="playing"',arg=dex)
@@ -72,7 +80,7 @@ def main():
                 state = page.evaluate('({dex:G.Game.player.dex,level:G.Game.player.level,ready:G.NarutoAssets.ready(G.Game.player.dex),moves:G.Game.player.moves.map(m=>m.id),label:document.querySelector(".launch-name")?.textContent||null})')
                 assert state['dex'] == dex and state['ready'] and state['moves'][0] == starter
                 assert not errors and not failed, {'errors':errors,'failed':failed}
-                browser_report[hero+'-'+name] = {'initialLevel':initial,**state, 'errors':errors, 'failed':failed, 'url':page.url}
+                browser_report[hero+'-'+name] = {'initialLevel':initial,**state, 'kit':kit, 'errors':errors, 'failed':failed, 'url':page.url}
                 context.close()
         browser.close()
     (OUT/'browser.json').write_text(json.dumps(browser_report, indent=2), 'utf-8')

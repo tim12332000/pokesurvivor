@@ -2,6 +2,8 @@
 
 本輪使用經典 **Little Fighter 2 v2.0a**，不使用 Remastered、R-LF2 或 LF2.5 的改招素材。原圖、原音效與資料由 Marti Wong、Starsky Wong 製作；本專案程式授權不涵蓋原素材。人物直接加入選角與本作自動戰鬥，並非移植原版所有操作或引擎。
 
+**現行範圍是 Firzen 原三招、Julian 原六招全部接入。** 使用者已否定先前省略 Mirror Image 的取捨；舊四招候選的完成通過已撤回。下方保留的舊影片核對只作歷史，新全六招候選已按文末重新驗收通過；歷史四招結果仍不作這次完成依據。
+
 ## 已實際核對的來源
 
 - 原版安裝包沿用 Freeze 首發的 SHA 固定來源：`art-review/freeze/source/LF2Setup.exe`，29,586,263 bytes，SHA256 `540c485547e234b0d09595f54d067aafd7176092c308aca61868f3cbc03030e1`。從[保存的原包](https://archive.org/download/little-fighter-2_202404/Little%20Fighter%202.rar/Little%20Fighter%202%2FLF2Setup.exe)讀取；沒有執行安裝器。
@@ -45,13 +47,13 @@ Volcano 的引擎交叉佐證具體為：中心 `firen_flame` action109；六個
 
 Julian 原 `frame0` 的 `hit_Fa/hit_Ua/hit_Fj/hit_Uj/hit_ja` 分別對應260／235／280／310／106；Soul Punch 是跑攻，故不在這五個方向輸入欄位。原盔甲反應另由引擎計時控制，獨立重實作可佐證其存在；未驗就不宣稱無條件無敵、固定三次免傷或永久反射。原兩向身體、假影及原球／能量柱輪廓要保留，任意武器拾取、原D/J/A搓招與完整物理仍屬移植界線。
 
-本輪主代理已明確選擇 **四招正式學習＋一項近身基礎動作＋一項明示取捨**：Skull Blast、Uppercut、Soul Bomb、Big Bang 進技能池與四個圖示；Soul Punch 在玩家朝近敵移動、身體可出手時作真實接觸衝拳，不另占學招卡，空檔還有普通拳。Mirror Image 首發不接入，因本作尚未有手動迴避與真實誘餌瞄準分派；不以攻擊分身或裝飾殘影假稱完成此招。這是自動戰鬥首版的功能取捨，不宣稱原 Julian 只有四招。無條件盔甲免傷亦不附送。
+使用者已明確更正「全部技能」，先前將 Mirror Image 省略、Soul Punch 僅列為基礎動作的候選不再作完成依據。現行目標為 **原 readme 全六招皆正式進入學習與成長**：Skull Blast Lv1、Soul Punch Lv2、Uppercut Lv3、Mirror Image Lv4、Soul Bomb Lv5、Big Bang Lv8。Mirror 必須有原迴避移動、獨立非攻擊假影與真正影響敵人／追蹤彈的誘導，不能以攻擊分身或純裝飾殘影替代。完整候選重新驗收中；舊四招影片只保留為歷史證據。
 
 ## 目前證據界線
 
 已核對：原包 SHA、原 readme 六／三招清單、所有列出的原 dat鏈、依賴物件／實體圖格範圍、原始細胞像素與 runtime SHA，以及 OpenLF2 特殊分派交叉佐證。
 
-已獨立看過 `qa/firzen-desktop-normal-entry.png`、`qa/julian-desktop-normal-entry.png` 及 Julian 選角：Firzen 原綠髮、黃衣、披風與雙手冰火蓄能姿勢成立；Julian 原深色盔甲、面具紅眼、披風與掌中能量成立，身型比 Firzen 高大，腳底與地面陰影相接。四個 Julian 學習圖示符合上述取捨，不是把原六招盤點縮成四招的證據。
+已獨立看過 `qa/firzen-desktop-normal-entry.png`、`qa/julian-desktop-normal-entry.png` 及 Julian 選角：Firzen 原綠髮、黃衣、披風與雙手冰火蓄能姿勢成立；Julian 原深色盔甲、面具紅眼、披風與掌中能量成立，身型比 Firzen 高大，腳底與地面陰影相接。該舊圖僅有四個 Julian 學習圖示，不符合使用者其後要求的全六招，不作完整候選完成證據。
 
 仍待候選完整 phase：來源考據者須獨立看桌機／手機原生出招片段，涵蓋首段／後段／收勢及真正消散，再填本節。此時未把起始截圖稱為全部技能、玩法或完整畫面已完成，也未宣稱聽過全部原 WAV。
 
@@ -63,10 +65,48 @@ Julian 原 `frame0` 的 `hit_Fa/hit_Ua/hit_Fj/hit_Uj/hit_ja` 分別對應260／2
 此桌機自然片製作期間另修正母體 lift 的升空先後；該片證明自然選卡與各招整體身份，最終升空→分裂關係仍以後續來源穩定的手機／受控原生片定點補驗，不冒稱早期片與最終產品每個byte相同。Julian 各招與 Firzen 最終 lift 版本取樣仍待補齊。
 
 
-### 最終候選考據／動作複核：通過
+### 先前四招候選的歷史複核：通過已撤回
 
 已獨立實看 Julian 自然桌機的骷髏逐發、上勾拳接觸與收勢、實體能量球、源300 Soul Punch 衝拳姿勢，以及 Big Bang 的原巨柱與回到站姿；另實際從 `native-growth.webm` seek 20、35、48、51、51.4、52、54秒取格，見原骷髏與巨球飛行、Big Bang由準備→原柱亮起→柱消失且本體重新施放骷髏。只聲明這些真正取樣，不把未取到影格的57／60秒當已看。
 
 Firzen 最新手機自然局的母體取樣位於本體頭頂明顯較高位置，接續火／冰球才分裂並向敵群落下，符合原 opoint dvy−7 與20/30秒分裂順序；手機的炮／火山圖及影片20、40秒取格仍保有原像素輪廓、手部來源和可走路面。最終受控原生 `qa/{firzen,julian}/final-cycles/native-cycles.webm` 也各自真正seek 5、7、9秒並檢視；看見修正後母體上升、獨立火冰球與本體收勢，及 Julian 近身上勾拳和獨立巨球。再核對對應原生phase PNG含火山複合冰／火、球彈及柱的收束。這些Lv30受控片與Lv1自然成長分開標示。
 
-`qa/firzen-final-cycles-source.json`、`qa/julian-final-cycles-source.json` 均為ok、errors空、sourceStable=true；獨立重新計算其全部 `sourceAfter` 路徑hash，與當前工作樹無差異。身份與動作來源複核無剩餘阻擋。Julian六項原招盤點與首發四教學＋基礎跑拳＋未移植Mirror Image的界線仍有效；不宣稱實體手機長局、完整原遊戲物理或真人聲音聽評。
+`qa/firzen-final-cycles-source.json`、`qa/julian-final-cycles-source.json` 均為ok、errors空、sourceStable=true；獨立重新計算其全部 `sourceAfter` 路徑hash，與當前工作樹無差異。此僅證明舊四招候選的已看片段，不能證明全六招完成；使用者拒絕省略 Mirror Image 後，完整考據／動作驗收已重新開啟。未宣稱實體手機長局、完整原遊戲物理或真人聲音聽評。
+
+
+## 全六招修正後的當前狀態
+
+原三招 Firzen 的素材與像素證據保留；Julian 全六招候選須重新驗證原 Soul Punch 真前衝與 Mirror 的離身、假影、真敵方選目標／追蹤影響。先前final-cycles來源穩定只代表舊四招版本，不能覆蓋這次新行為。來源資料本身已包含全部106／103／104／105及240–251格，不需要補畫或借他人素材。
+
+
+### Mirror Image 原資料精查（全技能修正）
+
+| 原格 | 本體相對時間 | 原速度欄位 | 原圖與身體碰撞 |
+| --- | --- | --- | --- |
+|106|0–2/30秒|dvx0、dvy0、dvz3|pic78，存在bdy，原030聲音|
+|103|2/30–13/30秒|dvx10、dvy0、dvz3|**pic49原像素全透明**，無bdy、無itr；不是缺失載入。此時從opoint產生假影。|
+|104|13/30–17/30秒|dvx0、dvy0、dvz1|pic77重新出現，存在bdy，無itr|
+|105|17/30–22/30秒|dvx0、dvy0、dvz1|pic78收勢，存在bdy；原hit_j可再接106|
+
+103的opoint為oid52/action240、x39/y99，本體center34/99，因此原留影在釋出當格本體地面位置的面向前方5px，原Z另加1；不是追著本體跑的演員。假影240停26ticks，241–251共十一格各3ticks，總59/30秒；各格state15、dvx/dvy/dvz皆0，所有bdy與itr皆空。原pic78就是正常顏色的不透明Julian，後續來源格有自己的姿態變化；沒有資料指示改成攻擊分身、固定藍色幽靈或傷害球。
+
+另實讀OpenLF2 `objects.lua` 的原opoint角色分派：新Julian假影hp/max_hp/dark_hp均10、mp5，繼承隊伍與owner/follow。`ai.prepare`把它列為活角色，選目標及追蹤球掃描依角色／隊伍／HP處理，不以bdy是否存在作瞄準資格。因此可吸引AI與追蹤彈，但**空bdy假影不是原版實體擋彈盾**：非追蹤彈照原航線飛行，追蹤彈可被誘向舊位置而失去真正本體。若本作另讓假影受擊消失或吸收彈體，必須標為改編，不能稱原始碰撞規則。
+
+本體103沒有bdy的11ticks是真正避開身體命中的原窗口，106／104／105仍有bdy，不能把全部22ticks或假影全壽命寫成無敵。原資料同時要求真實位移與離開留影位置，僅播放透明圖而留原地並不完整。
+
+OpenLF2 `control.lua` 的 `frame_velocity` 明確表明：dvx0不會清零現有vx，正數dvx只確保向面向方向的速度至少達指定值；`physics.lua`另逐tick扣1地面摩擦。故103的dvx10讓迴避主段持續前進，104／105的0讓慣性衰減；Soul Punch300／301的dvx15建立前衝，302以後0也不是立即停步。dvz3／1則依按住上／下與最近輸入設定。俯視本作可將此轉成依當下移動意圖的安全閃步／衝拳，保留撤退方向、牆碰撞與每步真實位置，不能以瞬移追敵取代，也不能把ITR的dvx25（受害者擊退）誤當本體速度。
+
+
+## 全六招候選重新驗收：通過
+
+本次重新核對的是 **Firzen原三招＋Julian原六招**。Julian當前正式學習項目完整含Skull Blast、Soul Punch、Uppercut、Mirror Image、Soul Bomb、Big Bang，並非舊四招加裝飾陰影。原普通拳仍是額外基礎動作，不代替正式Soul Punch。
+
+已獨立檢視全六招桌機自然局的正式衝拳命中、Mirror準備／103消失／舊地假影／本體離開後重新出現／假影消散，以及六個完整HUD項目；手機390自然局相同Mirror相位可見原假影留在舊處、本體往不同方向移出再現，畫面與觸控區仍可辨。另真正ffmpeg seek新六招桌機自然片30、40、50秒，以及手機自然片47.5、50秒並實看，所見原骷髏飛行、巨球爆裂與分離本體／假影均與原圖一致，沒有攻擊假影或額外換色角色。
+
+新 `qa/julian/final-cycles/native-cycles.webm` 以真鍵盤與原生RAF拍攝（受控Lv30／一階，各招及utility獨立展示），亦已真正seek5、5.8、6.1、6.9、9、12、15秒取格並逐一實看；重新看過其正式Soul Punch／Mirror103隱去、重現雙人、Big Bang完整光柱與回復原本姿勢等phase PNG。這些新的全六招證據與舊四招影片分開，不將未觀看部分稱作完整逐格或聲音聽評。
+
+另讀過當前受控報告的真實防禦反例：原103時窗contact／projectile不傷，本體前後相位恢復受傷；native Enemy.update真的追向原位置假影，敵彈實際瞄準假影；同遭遇有Mirror損失0、無Mirror損失21，彈體穿過無bdy假影而不被吸收，幻影結束後恢復真人目標，地形／狀態傷害仍繼續。這些是模擬證據，不把單純計數器或回傳代理物件當作遊戲效果。
+
+最終六招原生片來源 `julian-final-cycles-source.json` 為ok、errors空、sourceStable=true；獨立重算當前每個sourceAfter路徑，無產品內容差異。六招自然桌機／觸控片各自來源穩定，只有隨後註冊顯示檔的版本差異另保留，未冒稱與當前每個byte一致；最終原生片已對齊當前候選。Firzen的原三招與像素驗證結論保留，沒有因補Julian而刪減。
+
+**考據與動作身份無剩餘阻擋，允許主代理依授權繼續發布及公開核對。** 原手動D/J/A輸入、完整原Z軸物理、實體手機長局、多人與真人聲音聽評仍是明示未驗／改編界線，不是缺少六個原招的理由。Soul Punch的30px受控前衝與依輸入的閃步，屬保留真位移／接觸及撤退意圖的自動戰鬥改編，沒有聲稱完全重現原摩擦慣性距離。

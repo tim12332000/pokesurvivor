@@ -1,5 +1,7 @@
 # 冰火人與邪鬼：經典 LF2 首發紀錄
 
+**前版歷史紀錄：使用者已否定省略技能的範圍，以下四招教學版本不作完整六招的完成依據。完整技能補齊由重新開啟的總監、考據、美術及測試閘門另行驗收。**
+
 已公開：[Firzen 冰火人](https://tim12332000.github.io/pokesurvivor/?lang=zh-TW&hero=firzen&release=15e2fa80)／[Julian 邪鬼](https://tim12332000.github.io/pokesurvivor/?lang=zh-TW&hero=julian&release=15e2fa80)。
 
 - 來源提交：`15e2fa80dedad3aab7a1ed239c65dd276a59ef98`。
