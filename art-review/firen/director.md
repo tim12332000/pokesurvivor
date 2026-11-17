@@ -134,3 +134,7 @@ Stop adding mechanics or broadening QA without a new actual defect. Root may com
 ## Practical evidence limits
 
 Browser touch and native test films do not establish physical-phone endurance, network multiplayer or subjective player fun. Source WAV hashes and an audio track do not establish human listening review. Keep these limits separate from the concrete skill/function gates.
+
+## 公開閘門完成
+
+主代理完成137個公開檔byte核對，Firen正常桌機／390手機視窗Lv1開局、實際4能力／4學習圖示核對，零頁面錯誤與缺失請求。原全角色批次首Freeze等待逾時未列通過；Firen直接入口已另證。見 publishing.md。手機影片尾段死亡仍按原證據保留。
