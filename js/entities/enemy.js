@@ -307,10 +307,12 @@
       const effectiveSlow = Math.max(this.slow, G.NarutoGaara?.prisonSlow?.(this) || 0);
       const spd = sandRoot ? 0 : this.spd * (1 - effectiveSlow) * terrainMul * G.Weather.speedFor(this.types);
       if (sandRoot) this.kx = this.ky = 0;
-      // A Mirror Image is an AI aim point, never a party member or a solid body.
-      const mirrorTarget = !this.remote && this.behavior !== 'thief' ? G.LF2Julian?.targetForEnemies?.(this, pl) : null;
-      this._lf2MirrorTarget = G.LF2Julian?.isDecoy?.(mirrorTarget) ? mirrorTarget : null;
-      if (mirrorTarget) pl = mirrorTarget;
+      // Stationary phantoms change AI aim without joining the party or blocking shots.
+      let decoyTarget = G.LF2Julian?.targetForEnemies?.(this, pl) || pl;
+      decoyTarget = G.NarutoShikamaruDecoy?.targetForEnemies?.(this, decoyTarget) || decoyTarget;
+      this._lf2MirrorTarget = G.LF2Julian?.isDecoy?.(decoyTarget) ? decoyTarget : null;
+      this._shikamaruDecoyTarget = G.NarutoShikamaruDecoy?.isDecoy?.(decoyTarget) ? decoyTarget : null;
+      pl = decoyTarget;
       let [dx, dy] = G.U.norm(pl.x - this.x, pl.y - this.y);
       const dist = G.U.dist(this.x, this.y, pl.x, pl.y);
       // Duende del tesoro: huye de ti (en zigzag) en cuanto te acercas.
