@@ -3,6 +3,7 @@
   const catalog = G.NarutoSkillCatalog;
   if (!catalog) return;
   const entries = {
+    'naruto-shikamaru-decoy': ['Nara Style: Shadow Lure', 'Learn at Lv.2. Automatically leaves a stationary black silhouette when enemies approach while Shikamaru can move freely. Nearby enemies with a clear path chase and aim at the shadow. It cannot attack or block projectiles. Starts with one shadow lasting 3s, lure radius 280 and cooldown 8s. Each rank adds 0.35s and 20 radius; ranks 3 and 5 add one shadow. Each quantity card adds one shadow, up to six, and the first twelve cards add 12 lure radius each. Extra shadows require free ground. This lure is a game adaptation.'],
     'jjk-ryu-spread': ['Scatter Cursed-Energy Cannon', () => {
       const c=G.Jujutsu.power.ryu;
       return `At character Lv.3, learn an automatic volley of ${c.scatterBases[0]}–${c.scatterBases[4]} independent cursed-energy bolts. After a 0.35s charge they rise for 0.26s, orbit independently for 0.6–1.15s, then choose current living targets and dive into long-range homing pursuit. Acquisition range ${c.scatterRanges[0]}–${c.scatterRanges[4]}; finite travel budget ${c.scatterRanges[0]*1.6}–${c.scatterRanges[4]*1.6}. The first quantity pick raises 8 to 10; cap ${c.scatterCap}. Each bolt hits once and stops; several bolts can hit the same enemy. Walls interrupt pursuit. Each successful volley grants at most one Full-Power charge. The rising and orbiting choreography is a game adaptation.`;
@@ -164,6 +165,7 @@
   };
   const replacements = Object.entries(terms).sort(([a], [b]) => b.length - a.length);
   const translateUpgrade = text => {
+    if(text==='留影時間 +0.35 秒；誘敵半徑 +20；三、五階留影 +1')return 'Shadow duration +0.35s; lure radius +20; ranks 3 and 5 add one shadow';
     let translated = text;
     for (const [source, english] of replacements) translated = translated.split(source).join(english);
     return translated;

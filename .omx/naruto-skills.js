@@ -676,6 +676,7 @@
   const shikamaruDesigns=[
     ['naruto-shikamaru','影真似之術','shadow',1,1.2,18,'腳底投影保持固定光向，多條地影一次捕捉不同目標，不再從A接力到B。初始捕捉一個目標，每次升階或數量卡增加一個，最多16個；精修二、四階各加一個。鎖定後朝各目標連投3枚苦無，影術三、五階各追加一枚；苦無實際飛行碰到目標才逐枚造成傷害，牆可阻擋、移動可閃避。普通敵原地束縛並停止新攻擊；強敵保留攻擊，在途敵彈仍有威脅。多重捕捉與苦無連投為本作改編。'],
     ['naruto-shikamaru-sewing','影縫之術','sewing',2,4.2,34,'從已接合的同一片地影前部鼓起，逐輪長出高拱黑影，尖端越過弧頂再回落穿身。只沿真正捕捉的接點施術；尖端真的掃過敵人身體才造成傷害，提前離開或牆阻可使穿刺落空。數量與升階增加真正高拱穿刺輪次，不在敵腳瞬刷刺群，也不從本體同時發射扇形影線。'],
+    ['naruto-shikamaru-decoy','奈良流・留影誘敵','decoy',2,8,0,'有敵人接近時自動在原地留下黑色人形影替身，本體維持自由移動；範圍內且未被牆擋住的敵人會改追影子，遠程敵人也會朝影子瞄準，方便撤退或接續影真似與起爆札。影子固定不跟身、沒有攻擊，也不擋子彈；已發射的敵彈仍會傷到本體。初始一個影子，持續3秒、誘敵半徑280、冷卻8秒；每階持續時間增加0.35秒、半徑增加20，三、五階各多一個。每張數量卡多一個影子、最多6個，前12張各擴大半徑12；額外影子只放在可通行的位置。留影誘敵為本作改編。'],
     ['naruto-shikamaru-trap','起爆札・誘敵陷阱','trap',3,6,62,'沿真正走過的路徑預佈固定起爆札，落地後不跟敵人滑動；用影模仿將走入札區的追兵原地留下。成熟札與捕捉目標成立時可停步提前收網，繼續移動也會到時逐札連爆。數量增加真札位及預置多張起爆符的爆輪，收益顯示於成長預覽；自動佈陣及多符連爆為本作改編。'],
     ['naruto-shikamaru-tactics','奈良流・影術精修','tactics',4,0,0,'常駐精修，延長已接影目標的拘束窗口；二、四階各增加一個同時捕捉目標，使多條地影同時鎖住不同敵人。只強化已學影術，不另外射出影線；各階真收益顯示於成長預覽。本作改編。'],
     ['naruto-shikamaru-strangle','影首縛之術','strangle',5,7,54,'舊招式ID保留相容；本次新招式池暫不提供。貼體影首縛需另完成當格身體遮影攀升與接觸驗收。'],
@@ -684,13 +685,15 @@
   ];
   for(const [id,name,key,learnLevel,cd,dmg,desc]of shikamaruDesigns){
     const design={name,mode:'shikamaru-'+key,icon:id,type:key==='trap'||key==='mass'?'fire':'psychic',learnLevel,cd,dmg,range:key==='mass'?440:360,radius:key==='mass'?260:100,passive:true,autoCast:key!=='tactics',ups:shikamaruUps.map(u=>({...u,t:key==='mass'?'爆破傷害增加；圓區半徑 +20；拘束 +0.2 秒':key==='checkmate'?'詰將傷害與爆破半徑增加；三、五階追加連刺輪次':key==='tactics'?'拘束時間 +0.12 秒；二、四階增加捕捉目標':key==='sewing'?'高拱穿刺傷害增加；三、五階追加真穿刺輪次':key==='trap'?'傷害與爆破半徑增加；三、五階增加札位及每札爆輪':key==='strangle'?'傷害、收緊射程及目標數增加；收緊波次 +1':'苦無傷害與捕捉射程增加；同時捕捉目標 +1；三、五階苦無 +1',m:key==='tactics'?{}:{...u.m}})),source_url:shikamaruSource,desc:desc+' 學會即生效，不占主動槽。'};
-    kinds[design.mode]=key==='tactics'?'buff':'melee';
+    if(key==='decoy')Object.assign(design,{range:280,radius:0,ups:Array.from({length:4},()=>({t:'留影時間 +0.35 秒；誘敵半徑 +20；三、五階留影 +1',m:{}}))});
+    kinds[design.mode]=key==='tactics'||key==='decoy'?'buff':'melee';
     if(key==='shadow')profiles.push([30017,'shikamaru',name,'Shikamaru Nara','01_1910',design]);else extra.push([id,key==='strangle'?[]:[30017],design]);
     const iconRows={
       shadow:['.ww.........','wwww........','.wws........','...ss.......','....ss......','.....sss....','.......ss...','........ss..','.........ss.','.........ww.','........wwww','.........ww.'],
       sewing:['..s..ss..s..','..k..kk..k..','..k..kk..k..','.sk.skk.ks..','.kk.skk.kk..','.kk.skk.kk..','..k..kk..k..','..ssskkss...','....skks....','.....kk.....','....kkkk....','...kkkkkk...'],
       trap:['....rrrr....','...rwwwwr...','...rwkkwr...','...rwkkwr...','...rwwwwr...','...rwkkwr...','...rwwwwr...','....rrrr....','.....rr.....','....r..r....','...r....r...','............'],
       tactics:['ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss','ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss','ssssssssssss','skkkksskkkks','skkkksskkkks','ssssssssssss'],
+      decoy:['...ss.......','..skks......','...kk.......','..skks..ww..','.skkkks.ww..','..kkkk..ww..','..kkkk.wwww.','..k..k..ww..','.kk..kk.ww..','.kk..kk.w.w.','sskkkkssw.w.','.ssssss.....'],
       strangle:['....wwww....','...wwwwww...','...wkwwkw...','...wwwwww...','....wwww....','...ssssss...','..sskkkks...','..skkkkss...','...ssss.....','.....kk.....','....skks....','...sskkss...'],
       checkmate:['.....rr.....','..r..rr..r..','...r.ww.r...','....wwww....','...wwkkww...','...wwkkww...','....wwww....','....ssss....','..sss..sss..','.ss......ss.','ss........ss','............'],
       mass:['....ssss....','..ss....ss..','.s........s.','s....rr....s','s...rwwr...s','s...rwkr...s','s...rwwr...s','s....rr....s','.s...kk...s.','..ss.kk.ss..','....ssss....','.....kk.....']
@@ -836,12 +839,12 @@
       const detail = document.createElement('p');
       detail.textContent = move.desc;
       const extraStats = document.createElement('small');
-      extraStats.textContent = dex===30017?`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · ${move.digiMode==='shikamaru-mass'?'無上限拘束／沿線六段導電／單彈收尾 · 冷卻32秒':move.digiMode==='shikamaru-tactics'?'強化共用影網':move.digiMode==='shikamaru-checkmate'?'連刺埋札／終局爆破':'捕群／苦無連投'} · 可升至 Lv.${move.maxLvl||5}`:`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.${move.maxLvl||5}`;
+      extraStats.textContent = dex===30017?`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · ${move.digiMode==='shikamaru-decoy'?'固定留影／誘導追擊與瞄準 · 冷卻8秒':move.digiMode==='shikamaru-mass'?'無上限拘束／沿線六段導電／單彈收尾 · 冷卻32秒':move.digiMode==='shikamaru-tactics'?'強化共用影網':move.digiMode==='shikamaru-checkmate'?'連刺埋札／終局爆破':'捕群／苦無連投'} · 可升至 Lv.${move.maxLvl||5}`:`Lv.${move.learnLevel||1} 可學 · ${activationLabel(move)} · 冷卻 ${move.cd} 秒 · 可升至 Lv.${move.maxLvl||5}`;
       const link = document.createElement('a');
       link.href = move.owner_sources?.[dex] || move.source_url;
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
-      link.textContent = dex===30009 ? '官方動畫參考 · 招式與數值依本作改編' : move.id==='naruto-sand-shield' ? '官方砂術參考 · 護盾與護衛機制為本作改編' : `官方招式來源 · ${move.name}`;
+      link.textContent = move.digiMode==='shikamaru-decoy' ? '官方角色參考 · 留影誘敵為本作改編' : dex===30009 ? '官方動畫參考 · 招式與數值依本作改編' : move.id==='naruto-sand-shield' ? '官方砂術參考 · 護盾與護衛機制為本作改編' : `官方招式來源 · ${move.name}`;
       item.append(heading, detail, extraStats, link);
     }
     guide.querySelector('.naruto-skill-entries').append(item);

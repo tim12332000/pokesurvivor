@@ -43,7 +43,7 @@ for hero in ('naruto', 'sasuke', 'rock-lee', 'gaara', 'tenten'):
     assert (ROOT / source).resolve().is_relative_to((ROOT / '.omx/naruto/portraits').resolve())
     review_runtime.append(source)
 review_runtime.append('.omx/naruto-rasenshuriken-vfx.js')
-review_runtime.extend(['.omx/naruto-shikamaru.js', '.omx/naruto-shikamaru-mass.js', 'art-review/shikamaru-art.js',
+review_runtime.extend(['.omx/naruto-shikamaru.js', '.omx/naruto-shikamaru-mass.js', '.omx/naruto-shikamaru-decoy.js', 'art-review/shikamaru-art.js',
                        'art-review/shikamaru-frames.json', 'art-review/shikamaru/atlas-v1.png',
                        'art-review/shikamaru/reference-shadow-geometry.js'])
 review_runtime.extend(['.omx/naruto-summoning.js', 'art-review/redrawn/gamabunta-summon-v2.png', 'art-review/redrawn/gamabunta-water-v1.png'])
@@ -164,7 +164,7 @@ for name in filter(None, tracked + public_new + ['.omx/naruto-en.js', '.omx/naru
 html_path = OUT / '.omx/digimon.html'
 html = html_path.read_text(encoding='utf-8')
 scripts = [source.split('?', 1)[0] for source in re.findall(r'<script\b[^>]*\bsrc="([^"]+)"', html)]
-shadow_runtime = ['art-review/shikamaru/reference-shadow-geometry.js', '.omx/naruto-shikamaru.js', '.omx/naruto-shikamaru-mass.js', 'js/main.js']
+shadow_runtime = ['art-review/shikamaru/reference-shadow-geometry.js', '.omx/naruto-shikamaru.js', '.omx/naruto-shikamaru-mass.js', '.omx/naruto-shikamaru-decoy.js', 'js/main.js']
 assert all(scripts.count(source) == 1 for source in shadow_runtime), 'Missing or duplicate Shikamaru runtime script'
 assert [scripts.index(source) for source in shadow_runtime] == sorted(scripts.index(source) for source in shadow_runtime), 'Incorrect Shikamaru runtime load order'
 # Version the actual bytes, including local changes built before a commit.
