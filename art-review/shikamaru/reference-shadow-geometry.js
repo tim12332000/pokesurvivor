@@ -32,13 +32,14 @@
   const clamp=x=>Math.max(0,Math.min(1,x));
   function bodyFor(actor){
     const dex=actor.mon?.dex??actor.dex,anim=actor.anim;if(!anim)return null;
-    let image,rect,anchor,k,key,url,mirror=false;
+    let image,rect,anchor,k,key,url,mirror=false,compositeFrame=null,paintComposite=null;
     if(dex===30017){
       const art=G.ShikamaruArt;if(!art?.loaded)return null;
-      const pose=G.NarutoShikamaru?.activeFor(actor),state=actor.dead||anim.cur==='Faint'?'faint':actor.flash>0||anim.cur==='Hurt'?'hurt':pose?'cast':anim.cur==='Walk'?'walk':'idle';
-      const time=pose?.age??(anim.frame*6+anim.t)/60,dir=pose&&!(pose.moving&&(pose.kind==='mass'||['drag','net','blast','finish','recover','sewing'].includes(pose.phase)))&&Number.isFinite(pose.aim)?G.Sprites.dirFromAngle(pose.aim):anim.dir;
+      const active=G.NarutoShikamaru?.activeFor(actor),pose=active?{...active,walkTime:(anim.frame*6+anim.t)/60}:null,state=actor.dead||anim.cur==='Faint'?'faint':actor.flash>0||anim.cur==='Hurt'?'hurt':pose?'cast':anim.cur==='Walk'?'walk':'idle';
+      const time=pose?.age??(anim.frame*6+anim.t)/60,dir=pose&&!pose.moving&&Number.isFinite(pose.aim)?G.Sprites.dirFromAngle(pose.aim):anim.dir;
       const frame=art.sample(state,time,dir,pose);if(!frame)return null;
       image=art.images.body;rect=frame.rect;anchor=frame.anchor;k=64*(anim.scale||1)/frame.bodyHeight;mirror=frame.direction==='left';key='shika:'+frame.key+':'+frame.direction+':'+k;url=frame.source;
+      if(frame.lowerFrame&&art.paint){compositeFrame=frame;paintComposite=art.paint;key+=':'+frame.lowerFrame.key+':'+frame.lowerFrame.direction+':'+frame.splitHeight;}
     }else{
       let name=anim.cur,sheet=G.Sprites.sheet(dex,name,anim.shiny),meta=G.Sprites.animMeta(dex,name,anim.shiny),frame=anim.frame;
       if(!sheet?.ready){name='Idle';sheet=G.Sprites.sheet(dex,name,anim.shiny);meta=G.Sprites.animMeta(dex,name,anim.shiny);frame=0;}
@@ -47,8 +48,11 @@
     }
     if(masks.has(key))return masks.get(key);
     const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.ceil(rect[2]*k));canvas.height=Math.max(1,Math.ceil(rect[3]*k));const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.imageSmoothingEnabled=false;
-    if(mirror){ctx.translate(canvas.width,0);ctx.scale(-1,1);}ctx.drawImage(image,...rect,0,0,rect[2]*k,rect[3]*k);ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='source-in';ctx.fillStyle='#030304';ctx.fillRect(0,0,canvas.width,canvas.height);
-    const data=ctx.getImageData(0,0,canvas.width,canvas.height).data,foot={x:mirror?canvas.width-anchor[0]*k:anchor[0]*k,y:anchor[1]*k};
+    const foot={x:mirror?canvas.width-anchor[0]*k:anchor[0]*k,y:anchor[1]*k};
+    if(compositeFrame)paintComposite(ctx,compositeFrame,{x:foot.x,y:foot.y,height:64*(anim.scale||1)});
+    else{if(mirror){ctx.translate(canvas.width,0);ctx.scale(-1,1);}ctx.drawImage(image,...rect,0,0,rect[2]*k,rect[3]*k);}
+    ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation='source-in';ctx.fillStyle='#030304';ctx.fillRect(0,0,canvas.width,canvas.height);
+    const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
     let top=foot.y;const support=Array.from({length:32},(_,i)=>({dx:Math.cos(i*Math.PI/16),dy:Math.sin(i*Math.PI/16),dot:-Infinity,point:null}));
     // Scan a source frame once, never a transformed projection or a collision area.
     for(let y=0;y<canvas.height;y++){let left=canvas.width,right=-1;for(let x=0;x<canvas.width;x++)if(data[(y*canvas.width+x)*4+3]>24){left=Math.min(left,x);right=x;top=Math.min(top,y);}if(right<0)continue;for(const x of [left,right])for(const v of support){const dot=(x+.5)*v.dx+(y+.5)*v.dy;if(dot>v.dot){v.dot=dot;v.point={x:x+.5,y:y+.5};}}}
@@ -127,9 +131,12 @@
     const slope=(arc.destination.y-arc.source.y)-arc.destination.z+Math.PI*(arc.normal.y*arc.sideBow-arc.lift)*Math.cos(Math.PI*arc.progress);
     arc.phase=arc.progress>=1?'contact':Math.abs(slope)<8?'crest':slope>0?'descent':'rise';return arc.current;
   }
-  function drawArch(ctx,arc,alpha=1){
-    if(arc.points.length<2||arc.progress<=0||arc.blocked)return;const points=arc.points.map(p=>({x:p.x,y:p.y-p.z}));ctx.save();ctx.globalAlpha*=alpha;ctx.fillStyle='#030304';ctx.beginPath();
-    for(let side=0;side<2;side++)for(let j=0;j<points.length;j++){const i=side?points.length-1-j:j,p=points[i],a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,u=arc.progress*i/(points.length-1),w=arc.width*(.5+1.1*Math.sin(Math.PI*u)**.8)*Math.min(1,(arc.progress-u)/.18)*(side?-1:1);if(!side&&!j)ctx.moveTo(p.x-dy/d*w,p.y+dx/d*w);else ctx.lineTo(p.x-dy/d*w,p.y+dx/d*w);}ctx.closePath();ctx.fill();ctx.restore();
+  function drawArch(ctx,arc,alpha=1,remaining=1,from=0,to=1){
+    if(arc.points.length<2||arc.progress<=0||arc.blocked||remaining<=0)return;
+    const progress=arc.progress*clamp(remaining),start=Math.min(progress,clamp(from)),end=Math.min(progress,clamp(to));if(end<=start)return;
+    const steps=Math.max(2,Math.ceil(48*(end-start))),spine=start>0||end<arc.progress||remaining<1?Array.from({length:steps+1},(_,i)=>archPoint(arc,start+(end-start)*i/steps)):arc.points;
+    const points=spine.map(p=>({x:p.x,y:p.y-p.z}));ctx.save();ctx.globalAlpha*=alpha;ctx.fillStyle='#080a09';ctx.beginPath();
+    for(let side=0;side<2;side++)for(let j=0;j<points.length;j++){const i=side?points.length-1-j:j,p=points[i],a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,u=start+(end-start)*i/(points.length-1),w=arc.width*(.5+1.1*Math.sin(Math.PI*u)**.8)*Math.min(1,(progress-u)/.18)*(side?-1:1);if(!side&&!j)ctx.moveTo(p.x-dy/d*w,p.y+dx/d*w);else ctx.lineTo(p.x-dy/d*w,p.y+dx/d*w);}ctx.closePath();ctx.fill();ctx.restore();
   }
   G.ShikamaruReferenceGeometry={bodyFor,alphaAt,project,contains,groundContact,drawProjection,archPoint,makeArch,sweptBody,advanceArch,drawArch,registerNativePolicy(policy){nativePolicies.add(policy);},beginFrame(){revision++;scans.clear();},invalidateWorld(){revision++;forcedRevision++;scans.clear();}};
   // World is a stable singleton across runs; a reset can replace same-tile props.

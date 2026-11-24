@@ -12,7 +12,7 @@
   const learned=(a,id)=>a.moves?.some(m=>m.id===id);
   const supports=m=>modes.has(typeof m==='string'?m:m?.digiMode);
   const strong=e=>!!(e.boss||e.elite||e.legend||e.judge);
-  function state(a){let s=states.get(a);if(s&&s.world!==G.World){clear(a);s=null;}if(!s){s={owner:a,world:G.World,clock:0,cooldowns:{},pose:null,casts:{},hits:0,damage:0,bound:0,detonations:0,contacts:[],board:[],plan:null,walkDistance:0,prevX:a.x,prevY:a.y,moving:false,travelled:0,dragged:0,cycles:0,sewingQueued:false};states.set(a,s);}return s;}
+  function state(a){let s=states.get(a);if(s&&s.world!==G.World){clear(a);s=null;}if(!s){s={owner:a,world:G.World,clock:0,cooldowns:{},pose:null,casts:{},hits:0,damage:0,bound:0,detonations:0,contacts:[],board:[],plan:null,walkDistance:0,prevX:a.x,prevY:a.y,moving:false,travelled:0,dragged:0,cycles:0,sewingQueued:false,shadowReturns:[],visibleShadow:null};states.set(a,s);}return s;}
   function profile(a,m){
     const L=rank(m),Q=Math.max(0,Math.min(16,Math.floor(G.Quantity?.bonus(a)??a.quantityPicks??a.quantityBonus??0)));
     const tactics=a.moves?.find(x=>x.digiMode==='shikamaru-tactics'),T=tactics?rank(tactics):0;
@@ -444,6 +444,32 @@
     for(let i=effects.length-1;i>=0;i--)if(!owner||effects[i].owner===owner)effects.splice(i,1);
     if(owner)states.delete(owner);else states.clear();
   }
+  function prefixPoints(points,length){
+    if(!points.length||length<=0)return [];
+    const result=[{...points[0]}];let remaining=length;
+    for(let i=1;i<points.length;i++){
+      const a=points[i-1],b=points[i],d=Math.hypot(b.x-a.x,b.y-a.y);
+      if(d<=remaining){result.push({...b});remaining-=d;}
+      else{if(d>EPS)result.push({x:a.x+(b.x-a.x)*remaining/d,y:a.y+(b.y-a.y)*remaining/d});break;}
+    }return result;
+  }
+  function updateShadowReturns(s,dt){
+    if(!moveFor(s.owner,'shadow')){s.shadowReturns=[];s.visibleShadow=null;return;}
+    for(const trail of s.shadowReturns){
+      trail.age+=dt;trail.remainingLength=trail.length*Math.max(0,1-(trail.age/trail.life)**.8);
+      trail.remainingPoints=prefixPoints(trail.points,trail.remainingLength);
+    }
+    s.shadowReturns=s.shadowReturns.filter(trail=>trail.age<trail.life&&trail.remainingPoints.every((p,i,list)=>!i||clearPath(list[i-1].x,list[i-1].y,p.x,p.y)));
+    const b=s.lastChain,visible=b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length);
+    if(visible){s.visibleShadow=b;return;}
+    const previous=s.visibleShadow;s.visibleShadow=null;if(!previous||!legal(previous))return;
+    // This settled copy has no cast/target callbacks and cannot keep a lease alive.
+    for(const segment of previous.chain.segments){
+      if(segment.linked===false||segment.polygon.length<3||segment.grownPoints.length<2)continue;
+      const points=segment.grownPoints.map(p=>({...p})),length=points.reduce((n,p,i)=>n+(i?Math.hypot(p.x-points[i-1].x,p.y-points[i-1].y):0),0);
+      s.shadowReturns.push({points,polygon:segment.polygon.map(p=>({...p})),seed:segment.seed,age:0,life:.26,length,remainingLength:length,remainingPoints:points});
+    }
+  }
   function update(dt){
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
     Ref.beginFrame?.();
@@ -467,6 +493,7 @@
       if(s.cue.phase==='finish'&&s.cue.action!=='strangle')s.cue.label='影術收勢';
     }
     for(const s of states.values()){
+      updateShadowReturns(s,dt);
       reanchorContacts(s);
       s.projection=projectionFor(s.owner);const targets=new Set(ownedCaptures(s).map(([e])=>e));
       for(const segment of s.lastChain?.chain.segments||[])if(alive(segment.target)&&!segment.target.destructible)targets.add(segment.target);
@@ -524,6 +551,37 @@
     if(u<.24){const flash=1-u/.24;ctx.globalAlpha=flash*.85;ctx.fillStyle='#ffad43';ctx.beginPath();ctx.arc(e.x,e.y,Math.min(e.radius*.4,(ultimate?36:22)+r*.16),0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff2c7';ctx.beginPath();ctx.arc(e.x,e.y,Math.min(e.radius*.2,(ultimate?17:10)+r*.07),0,Math.PI*2);ctx.fill();}
     ctx.globalAlpha=fade*Math.min(1,u*6)*.35;ctx.fillStyle='#5b4b43';for(let i=0;i<(ultimate?7:4);i++){const a=i*2.4,d=r*(.3+.06*i),size=(ultimate?13:8)*(1+u);ctx.beginPath();ctx.ellipse(e.x+Math.cos(a)*d,e.y+Math.sin(a)*d-20*u,size,size*.65,a,0,Math.PI*2);ctx.fill();}ctx.restore();
   }
+  function drawGroundInk(ctx,polygon,points,seed,clock,fade=1,returning=false){
+    if(polygon.length<3||points.length<2||fade<=0)return;
+    ctx.save();ctx.beginPath();polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.clip();
+    ctx.fillStyle='#101210';ctx.strokeStyle='#101210';ctx.globalAlpha=.68*fade;
+    if(returning){ctx.lineWidth=6;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();}
+    else ctx.fill();
+    // Matte, uneven ink gathers inside the true footprint; it is not a bright
+    // centre stripe and never paints ahead of the simulated tip.
+    ctx.fillStyle='#050706';let patches=0;
+    for(let i=2;i<points.length&&patches<18;i+=3){
+      const noise=Math.sin(i*12.9898+seed*7.13)*43758.5453,n=noise-Math.floor(noise);if(n<.27)continue;
+      const a=points[i-1],p=points[i],dx=p.x-a.x,dy=p.y-a.y,d=Math.hypot(dx,dy)||1,offset=(n-.5)*2.2;
+      ctx.globalAlpha=fade*(.12+.15*n)*(.88+.12*Math.sin(clock*1.7+seed+i));
+      ctx.beginPath();ctx.ellipse(p.x-dy/d*offset,p.y+dx/d*offset,3+6*n,.8+.8*n,Math.atan2(dy,dx),0,Math.PI*2);ctx.fill();patches++;
+    }ctx.restore();
+  }
+  function drawCasterArch(ctx,b,arc,remaining,behind){
+    const body=Ref.bodyFor(b.owner);if(!body){if(!behind)Ref.drawArch(ctx,arc,.9,remaining);return;}
+    const left=b.owner.x-body.foot.x,top=b.owner.y-body.foot.y,right=left+body.width,bottom=top+body.height,rootEnd=Math.min(.65,Math.max(0,(arc.contact?.progress??1)-.04));
+    ctx.save();ctx.beginPath();
+    if(behind)ctx.rect(left,top,body.width,body.height);
+    else{
+      const margin=arc.width*3+2,minX=Math.min(left,...arc.points.map(p=>p.x))-margin,maxX=Math.max(right,...arc.points.map(p=>p.x))+margin,minY=Math.min(top,...arc.points.map(p=>p.y-p.z))-margin,maxY=Math.max(bottom,...arc.points.map(p=>p.y-p.z))+margin;
+      ctx.rect(minX,minY,maxX-minX,top-minY);ctx.rect(minX,bottom,maxX-minX,maxY-bottom);
+      ctx.rect(minX,top,left-minX,body.height);ctx.rect(right,top,maxX-right,body.height);
+    }
+    ctx.clip();Ref.drawArch(ctx,arc,.9,remaining,0,behind?rootEnd:1);ctx.restore();
+    // The contact end stays in front of victims, including a victim next to the
+    // caster. Only the source portion passes behind the living casting body.
+    if(!behind){ctx.save();ctx.beginPath();ctx.rect(left,top,body.width,body.height);ctx.clip();Ref.drawArch(ctx,arc,.9,remaining,rootEnd,1);ctx.restore();}
+  }
   function referenceGround(ctx){
     for(const s of states.values()){
       if(!valid(s.owner)||s.world!==G.World)continue;Ref.drawProjection(ctx,s.projection);
@@ -541,18 +599,18 @@
       const b=s.lastChain;if(b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length)){
         for(const segment of b.chain.segments){
           if(segment.linked===false||segment.polygon.length<3)continue;
-          ctx.save();ctx.fillStyle='#030304';ctx.beginPath();segment.polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();ctx.clip();
-          const points=segment.grownPoints;ctx.strokeStyle='#8b798b';ctx.lineWidth=1.3;ctx.globalAlpha=.28;ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();
-          const start=Math.floor((s.clock*16+segment.index*7)%Math.max(1,points.length)),end=Math.min(points.length,start+5);ctx.strokeStyle='#d6c4a5';ctx.lineWidth=2;ctx.globalAlpha=.48;ctx.beginPath();for(let i=start;i<end;i++){const p=points[i];i===start?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y);}ctx.stroke();ctx.restore();
+          drawGroundInk(ctx,segment.polygon,segment.grownPoints,segment.seed,s.clock);
         }
       }
+      for(const trail of s.shadowReturns)drawGroundInk(ctx,trail.polygon,trail.remainingPoints,trail.seed,s.clock,1-trail.age/trail.life,true);
       for(const node of s.board){
         if(!legal(node.cast)||s.clock-node.born<node.cast.spec.trapArm)continue;const heat=Number.isFinite(node.blastAt)?Math.max(0,Math.min(1,1-(node.blastAt-s.clock)/.5)):0;
         drawPaperPacket(ctx,node.x,node.y,1.15,.12,heat,Math.max(1,node.cast.spec.blastRounds-node.round));
       }
       for(const b of casts)if(b.owner===s.owner&&b.kind==='trap'&&legal(b)&&b.age>=.55)for(const t of b.traps)if(!t.detonated)drawPaperPacket(ctx,t.x,t.y,1.15,.12,Math.min(1,Math.max(0,(b.age-.55)/.5)));
       for(const b of casts)if(b.owner===s.owner&&b.kind==='sewing'&&legal(b))for(const arc of b.arcs||[]){
-        const age=b.age-arc.born;if(age>=0&&age<b.spec.archPrepare){const progress=age/b.spec.archPrepare;Ref.drawProjection(ctx,s.projection,1);ctx.save();ctx.fillStyle='#030304';ctx.beginPath();ctx.moveTo(arc.source.x-7,arc.source.y);ctx.quadraticCurveTo(arc.source.x,arc.source.y-16*progress,arc.source.x+11,arc.source.y);ctx.fill();ctx.strokeStyle='#9d8875';ctx.globalAlpha=progress*.6;ctx.lineWidth=1.5;ctx.beginPath();ctx.ellipse(arc.source.x,arc.source.y,8+9*progress,3+3*progress,0,Math.PI,Math.PI*2);ctx.stroke();ctx.restore();}
+        const age=b.age-arc.born;if(age>=0&&age<b.spec.archPrepare+b.spec.archFlight+.16){const progress=Math.min(1,age/b.spec.archPrepare),settle=Math.max(0,1-(age-b.spec.archPrepare-b.spec.archFlight)/.16);ctx.save();ctx.fillStyle='#0b0c0d';ctx.globalAlpha=.62*settle;ctx.beginPath();ctx.ellipse(arc.source.x,arc.source.y,7+4*progress,3+2*progress,-.12,0,Math.PI*2);ctx.fill();if(age<b.spec.archPrepare){ctx.beginPath();ctx.moveTo(arc.source.x-6,arc.source.y);ctx.quadraticCurveTo(arc.source.x,arc.source.y-14*progress,arc.source.x+8,arc.source.y);ctx.fill();}ctx.restore();}
+        if(age>=0&&age<b.spec.archPrepare+b.spec.archFlight+.16)drawCasterArch(ctx,b,arc,Math.max(0,1-Math.max(0,age-b.spec.archPrepare-b.spec.archFlight)/.16),true);
       }
     }
   }
@@ -569,8 +627,7 @@
       const u=Math.min(1,(b.age-b.spec.release)/(.55-b.spec.release));for(const t of b.traps)drawPaperPacket(ctx,b.origin.x+(t.x-b.origin.x)*u,b.origin.y+(t.y-b.origin.y)*u-Math.sin(u*Math.PI)*52-(1-u)*18,1.08,b.aim+u*5.5,0);
     }
     for(const b of casts)if(b.kind==='sewing'&&legal(b))for(const arc of b.arcs||[]){
-      const age=b.age-arc.born;if(age<0||age>b.spec.archPrepare+b.spec.archFlight+.16)continue;const alpha=Math.min(1,Math.max(0,(b.spec.archPrepare+b.spec.archFlight+.16-age)/.16));Ref.drawArch(ctx,arc,alpha);
-      if(!arc.blocked&&arc.points.length>2&&arc.progress>0){ctx.save();ctx.globalAlpha=alpha*(b.ultimate?.7:.5);ctx.strokeStyle=b.ultimate?'#c8aa80':'#8b7d8e';ctx.lineWidth=Math.min(2.4,arc.width*.35);ctx.beginPath();for(let i=0;i<arc.points.length-1;i++){const p=arc.points[i];i?ctx.lineTo(p.x,p.y-p.z):ctx.moveTo(p.x,p.y-p.z);}ctx.stroke();ctx.restore();}
+      const age=b.age-arc.born;if(age<0||age>b.spec.archPrepare+b.spec.archFlight+.16)continue;const remaining=Math.max(0,1-Math.max(0,age-b.spec.archPrepare-b.spec.archFlight)/.16);drawCasterArch(ctx,b,arc,remaining,false);
       if(arc.hit&&arc.contact){const contactAge=age-b.spec.archPrepare-b.spec.archFlight*arc.contact.progress,punch=Math.max(0,1-contactAge/.16),p=arc.contact.point;if(punch>0){ctx.save();ctx.translate(p.x,p.y-p.z);ctx.globalAlpha=punch;ctx.strokeStyle='#221a26';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-9-8*(1-punch),9);ctx.lineTo(9+8*(1-punch),-11);ctx.stroke();ctx.strokeStyle='#ffe0a0';ctx.lineWidth=1.5;ctx.stroke();ctx.restore();}}
     }
     for(const e of effects){
@@ -744,9 +801,16 @@
     }
     const visual=effects.find(e=>e.owner===s.owner&&e.kind===kind&&e.castRef&&legal(e.castRef)&&(kind!=='sewing'||sewingVisualFor(e.castRef,e.target,e)?.height>0));return visual?.castRef||null;
   }
-  function sewingPoseFor(a,s,p){const pose=s?.sewingPose;if(!pose||!moveFor(a,'sewing')||['net','finish'].includes(p?.phase)||s.clock-pose.started>=pose.duration)return null;const cast=casts.findLast(b=>b.owner===a&&b.kind==='sewing'&&legal(b)),arc=cast?.arcs.find(arc=>arc.progress<1&&!arc.blocked);return {...pose,stage:arc?.phase||'ground',phaseAge:s.clock-pose.started,phaseDuration:pose.duration,age:s.clock-pose.started,moving:s.moving};}
+  function sewingPoseFor(a,s,p){
+    const pose=s?.sewingPose;if(!pose||!moveFor(a,'sewing'))return null;
+    const cast=casts.findLast(b=>b.owner===a&&b.kind==='sewing'&&!b.ultimate&&legal(b));if(!cast)return null;
+    const duration=cast.spec.archPrepare+cast.spec.archFlight+.1,arc=cast.arcs.findLast(arc=>!arc.blocked&&cast.age-arc.born<duration),local=arc?Math.max(0,cast.age-arc.born):cast.age;
+    if(!arc&&cast.emitted>=cast.spec.pulses)return null;
+    const stage=!arc||local<cast.spec.archPrepare?'ground':local>=cast.spec.archPrepare+cast.spec.archFlight?'recover':arc.phase;
+    return {...pose,stage,phaseAge:local,phaseDuration:arc?duration:cast.spec.release+cast.spec.archPrepare,age:local,duration,moving:s.moving,aim:cast.aim};
+  }
   G.NarutoShikamaru={version:7,dex:DEX,supports,profile,canCast,cast,update,clear,held,stopped,clearPath,segmentDistance,statusFor,shadowVisualFor,ribbonGeometry,ribbonContains,polygonContains,sewingVisualFor,effectVisualFor,projectionFor,
-    activeFor:a=>{const s=states.get(a),p=s?.plan,throwing=s?.throwPose,sewing=sewingPoseFor(a,s,p);if(s?.ultimate&&legal(s.ultimate)&&s.ultimate.age<s.ultimate.duration)return {kind:'checkmate',phase:'checkmate',phaseAge:s.ultimate.age,phaseDuration:s.ultimate.duration,age:s.ultimate.age,duration:s.ultimate.duration,moving:s.moving,aim:a.aim||0};if(sewing)return sewing;if(throwing&&s.clock-throwing.started<throwing.duration&&!s.moving)return {...throwing,phaseAge:s.clock-throwing.started,phaseDuration:throwing.duration,age:s.clock-throwing.started,moving:false};if(p){const m=moveFor(a,'shadow'),spec=profile(a,m),duration={prepare:spec.release,release:spec.captureWindow-spec.release,drag:spec.dragTimeout,net:spec.netPrepare,blast:Math.max(.4,(p.end||s.clock)-p.at),finish:p.finishDuration||.65,recover:spec.recoverTime}[p.phase];return {kind:p.phase==='finish'&&skillAction(s,'strangle')?'strangle':'shadow',phase:p.phase,phaseAge:s.clock-p.at,phaseDuration:duration,age:s.clock-p.at,duration,moving:s.moving,aim:a.aim||0};}const b=s?.pose;return b&&legal(b)&&b.age<.65?{...b,kind:b.kind,age:b.age,duration:.65}:null;},
+    activeFor:a=>{const s=states.get(a),p=s?.plan,throwing=s?.throwPose,sewing=sewingPoseFor(a,s,p);if(s?.ultimate&&legal(s.ultimate)&&s.ultimate.age<s.ultimate.duration)return {kind:'checkmate',phase:'checkmate',phaseAge:s.ultimate.age,phaseDuration:s.ultimate.duration,age:s.ultimate.age,duration:s.ultimate.duration,moving:s.moving,aim:a.aim||0};if(sewing)return sewing;if(throwing&&s.clock-throwing.started<throwing.duration)return {...throwing,phaseAge:s.clock-throwing.started,phaseDuration:throwing.duration,age:s.clock-throwing.started,moving:s.moving};if(p){const m=moveFor(a,'shadow'),spec=profile(a,m),duration={prepare:spec.release,release:spec.captureWindow-spec.release,drag:spec.dragTimeout,net:spec.netPrepare,blast:Math.max(.4,(p.end||s.clock)-p.at),finish:p.finishDuration||.65,recover:spec.recoverTime}[p.phase];return {kind:p.phase==='finish'&&skillAction(s,'strangle')?'strangle':'shadow',phase:p.phase,phaseAge:s.clock-p.at,phaseDuration:duration,age:s.clock-p.at,duration,moving:s.moving,aim:a.aim||0};}const b=s?.pose;return b&&legal(b)&&b.age<.65?{...b,kind:b.kind,age:b.age,duration:.65}:null;},
     stateFor:(a=G.Game.player)=>states.get(a)||null,stats:(a=G.Game.player)=>{const s=states.get(a);return s?{casts:{...s.casts},hits:s.hits,damage:s.damage,bound:s.bound,detonations:s.detonations,contacts:s.contacts.slice(),phase:s.plan?.phase||'ready',cycles:s.cycles,travelled:s.travelled,dragged:s.dragged,board:s.board.length}:null;},
     get casts(){return casts;},get leases(){return leases;},get effects(){return effects;}};
 })();
