@@ -38,7 +38,7 @@
     const ctx=canvas.getContext('2d'),x=canvas.width/2,y=canvas.height-8;
     if(!G.ShikamaruArt?.draw(ctx,{}, {x,y,height,state:'idle',time:0,dir,pose:false}))return null;
     ctx.globalCompositeOperation='source-in';ctx.fillStyle='#08070b';ctx.fillRect(0,0,canvas.width,canvas.height);
-    return {canvas,x,y};
+    return {canvas,x,y,height};
   }
   function cast(a,m){
     if(!canCast(a,m))return false;
@@ -49,7 +49,7 @@
       const d={id:'shikamaru-decoy-'+(++serial),owner:a,isDecoy:true,shikamaruDecoy:true,intangible:true,
         dex:30017,mon:a.mon,level:a.level,r:a.r||12,bodyH:a.bodyH||64,x,y,hp:1,maxHp:1,dead:false,
         _vx:0,_vy:0,svx:0,svy:0,atk:0,spd:0,aim,dir,age:0,life:p.life,lureRange:p.range,image,
-        world:G.World,epoch:epoch(),enemies:new Set(),hurt:()=>false,onDealt:()=>{},heal:()=>{}};
+        world:G.World,epoch:epoch(),seed:serial,enemies:new Set(),hurt:()=>false,onDealt:()=>{},heal:()=>{}};
       s.decoys.push(d);s.spawned++;
     }
     s.cooldown=p.cd;m.t=p.cd;s.casts++;return true;
@@ -77,20 +77,47 @@
       s.decoys=s.decoys.filter(d=>!d.dead);
     }
   }
+  const clamp=v=>Math.max(0,Math.min(1,v));
+  const settle=v=>{const u=clamp(v);return u*u*(3-2*u);};
+  function visualFor(d){
+    if(!d)return null;
+    const formTime=Math.min(.34,d.life*.2),collapseTime=Math.min(.48,d.life*.25),remaining=d.life-d.age;
+    const phase=d.age<formTime?'form':remaining<collapseTime?'collapse':'hold';
+    const progress=clamp(phase==='form'?d.age/formTime:phase==='collapse'?1-remaining/collapseTime:1);
+    const height=phase==='form'?settle(progress):phase==='collapse'?1-settle(progress):1;
+    return {phase,progress,height,spread:1+.45*(1-height),opacity:clamp(d.age/.07)*clamp(remaining/.13)};
+  }
   function ground(ctx){
     for(const d of decoys()){
-      const fade=Math.min(1,d.age/.12,(d.life-d.age)/.4);
-      ctx.save();ctx.globalAlpha=.7*fade;ctx.fillStyle='#08070b';ctx.beginPath();ctx.ellipse(d.x,d.y+1,d.r+4,5,0,0,Math.PI*2);ctx.fill();ctx.restore();
+      const v=visualFor(d),r=(d.r+4)*v.spread,phase=d.age*2.2+d.seed;
+      ctx.save();ctx.globalAlpha=(.38+.16*v.height)*v.opacity;ctx.fillStyle='#08070b';ctx.beginPath();
+      for(let i=0;i<=12;i++){
+        const a=i*Math.PI/6,lobe=1+.08*Math.sin(i*2.1+d.seed)+.035*Math.sin(phase+i*1.7);
+        const x=d.x+Math.cos(a)*r*lobe,y=d.y+1+Math.sin(a)*5.5*lobe;
+        i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      }ctx.closePath();ctx.fill();ctx.restore();
     }
   }
   function silhouettes(ctx){
     for(const d of decoys()){
-      const fade=Math.min(1,d.age/.12,(d.life-d.age)/.4);
-      ctx.save();ctx.globalAlpha=.82*fade;
-      if(d.image)ctx.drawImage(d.image.canvas,d.x-d.image.x,d.y-d.image.y);
+      const v=visualFor(d);ctx.save();ctx.globalAlpha=.76*v.opacity;
+      if(d.image){
+        const image=d.image,step=Math.max(3,Math.ceil(image.height/((G.Settings?.fx??1)>0?22:12)));
+        ctx.imageSmoothingEnabled=false;
+        // Ink accumulates from the feet in separate bands. Collapse reverses
+        // that flow; it does not scale a rigid standing cutout as one object.
+        for(let sy=Math.max(0,Math.floor(image.y-image.height-3));sy<image.y;sy+=step){
+          const sh=Math.min(step,image.y-sy),distance=image.y-sy-sh,t=clamp(distance/image.height);
+          const growth=v.phase==='form'?settle((v.progress-t*.28)/.72):v.phase==='collapse'?1-settle(v.progress*(1+.25*t)):1;
+          if(growth<=0)continue;
+          const spread=1+(1-growth)*.45,w=image.canvas.width*spread;
+          const drift=Math.sin(d.age*2.2+d.seed+t*5)*Math.sin(t*Math.PI)*(.35+2*(1-growth));
+          ctx.drawImage(image.canvas,0,sy,image.canvas.width,sh,d.x-image.x*spread+drift,d.y-(distance+sh)*growth,w,Math.max(.2,sh*growth));
+        }
+      }
       else{
         // Keep the hair knot, folded arms and split legs readable while assets load.
-        const h=d.bodyH;ctx.translate(d.x,d.y);ctx.fillStyle='#08070b';ctx.beginPath();ctx.moveTo(-7,-h*.84);ctx.lineTo(-9,-h);ctx.lineTo(2,-h*.94);ctx.lineTo(8,-h*.81);ctx.lineTo(7,-h*.65);ctx.lineTo(14,-h*.5);ctx.lineTo(10,-h*.32);ctx.lineTo(7,-h*.3);ctx.lineTo(10,0);ctx.lineTo(2,0);ctx.lineTo(0,-h*.26);ctx.lineTo(-3,0);ctx.lineTo(-11,0);ctx.lineTo(-8,-h*.34);ctx.lineTo(-14,-h*.48);ctx.lineTo(-8,-h*.65);ctx.closePath();ctx.fill();
+        const h=d.bodyH*v.height;ctx.translate(d.x,d.y);ctx.scale(v.spread,1);ctx.fillStyle='#08070b';ctx.beginPath();ctx.moveTo(-7,-h*.84);ctx.lineTo(-9,-h);ctx.lineTo(2,-h*.94);ctx.lineTo(8,-h*.81);ctx.lineTo(7,-h*.65);ctx.lineTo(14,-h*.5);ctx.lineTo(10,-h*.32);ctx.lineTo(7,-h*.3);ctx.lineTo(10,0);ctx.lineTo(2,0);ctx.lineTo(0,-h*.26);ctx.lineTo(-3,0);ctx.lineTo(-11,0);ctx.lineTo(-8,-h*.34);ctx.lineTo(-14,-h*.48);ctx.lineTo(-8,-h*.65);ctx.closePath();ctx.fill();
       }
       ctx.restore();
     }
@@ -107,6 +134,6 @@
   S.supports=m=>supports(m)||oldSupports(m);S.canCast=(a,m)=>supports(m)?canCast(a,m):oldCanCast(a,m);
   S.cast=(a,m)=>supports(m)?cast(a,m):oldCast(a,m);S.profile=(a,m)=>supports(m)?profile(a,m):oldProfile(a,m);
   S.statusFor=(a,m)=>supports(m)?statusFor(a,m):oldStatus(a,m);
-  G.NarutoShikamaruDecoy={supports,profile,canCast,cast,update,clear,decoys,isDecoy,targetForEnemies,statusFor,
+  G.NarutoShikamaruDecoy={supports,profile,canCast,cast,update,clear,decoys,isDecoy,targetForEnemies,statusFor,visualFor,
     stateFor:(a=G.Game.player)=>states.get(a)||null,stats:(a=G.Game.player)=>{const s=states.get(a);return s?{casts:s.casts,spawned:s.spawned,redirects:s.redirects}:null;}};
 })();
