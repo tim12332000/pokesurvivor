@@ -72,12 +72,36 @@
       return {x:actor.x+dx*low,y:actor.y+dy*low};
     });
   }
-  function project(actor,dx,dy,length,across=.65,pathClear=null){
+  function flowRow(body,flow,y){
+    if(!flow)return {scale:1,offset:0};
+    const row=Math.floor(y/flow.band)*flow.band,sample=row+Math.min(flow.band,body.height-row)*.5;
+    const u=clamp((body.foot.y-sample)/body.bodyHeight),envelope=u*(.45+.55*Math.sin(Math.PI*u*.85));
+    const phase=flow.phase*2.4-u*4.6+flow.seed;
+    return {scale:1+envelope*(.18*Math.sin(phase)+.04*Math.sin(phase*1.7+.8)),offset:envelope*flow.strength*(5.8*Math.sin(phase)+1.8*Math.sin(flow.phase*1.3+u*6.2+flow.seed))};
+  }
+  function opaqueShadow(body){
+    if(body.shadowCanvas)return body.shadowCanvas;
+    const canvas=document.createElement('canvas');canvas.width=body.width;canvas.height=body.height;
+    const ctx=canvas.getContext('2d');ctx.fillStyle='#030304';
+    // Reuse the cached source alpha and the same contact threshold. This is
+    // built once per body frame, never read back from a moving projection.
+    for(let y=0;y<body.height;y++)for(let x=0;x<body.width;){
+      if(body.data[(y*body.width+x)*4+3]<24){x++;continue;}
+      const start=x++;while(x<body.width&&body.data[(y*body.width+x)*4+3]>=24)x++;
+      ctx.fillRect(start,y,x-start,1);
+    }
+    body.shadowCanvas=canvas;return canvas;
+  }
+  function project(actor,dx,dy,length,across=.65,pathClear=null,flow=null){
     const body=bodyFor(actor);if(!body)return null;const d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;length=Math.max(1,length);
-    const key=[body.key,dx,dy,length,across,actor.x,actor.y].join('|'),old=projectionCache.get(actor);
+    const material=flow?{phase:Number(flow.phase)||0,seed:Number(flow.seed)||0,band:Math.max(1,Math.floor(body.bodyHeight/32)),strength:Math.max(.6,Math.min(2,body.bodyHeight/64))*(Number(flow.strength)||1)}:null;
+    const key=[body.key,dx,dy,length,across,actor.x,actor.y,material?.phase??'',material?.seed??'',material?.strength??''].join('|'),old=projectionCache.get(actor);
     const matrix={a:-dy*across,b:dx*across,c:-dx*length/body.bodyHeight,d:-dy*length/body.bodyHeight,e:actor.x,f:actor.y};
-    const transform=p=>({x:matrix.a*(p.x-body.foot.x)+matrix.c*(p.y-body.foot.y)+actor.x,y:matrix.b*(p.x-body.foot.x)+matrix.d*(p.y-body.foot.y)+actor.y});
-    const hull=body.silhouette.map(transform),corners=[[0,0],[body.width,0],[body.width,body.height],[0,body.height]].map(([x,y])=>transform({x,y}));
+    const transform=(p,warp=flowRow(body,material,p.y))=>{const x=(p.x-body.foot.x)*warp.scale+warp.offset,y=p.y-body.foot.y;return {x:matrix.a*x+matrix.c*y+actor.x,y:matrix.b*x+matrix.d*y+actor.y};};
+    const hull=body.silhouette.map(p=>transform(p)),corners=[];
+    if(material){
+      for(let y=0;y<body.height;y+=material.band){const h=Math.min(material.band,body.height-y),warp=flowRow(body,material,y+.5);for(const x of [0,body.width]){corners.push(transform({x,y},warp),transform({x,y:y+h},warp));}}
+    }else for(const [x,y]of [[0,0],[body.width,0],[body.width,body.height],[0,body.height]])corners.push(transform({x,y}));
     const left=Math.floor(Math.min(...corners.map(p=>p.x)))-1,top=Math.floor(Math.min(...corners.map(p=>p.y)))-1,w=Math.ceil(Math.max(...corners.map(p=>p.x)))-left+2,h=Math.ceil(Math.max(...corners.map(p=>p.y)))-top+2;
     const obstacle=obstacleState(actor,left-actor.x,top-actor.y,w,h,pathClear);
     if(old?.key===key&&old.world===G.World&&old.obstacleKey===obstacle.key&&old.clip===pathClear&&old.path===G.World?.projectilePathClear&&old.block===G.World?.projectileBlock)return old.projection;
@@ -85,13 +109,24 @@
     const visible=p=>!obstacle.blocked||(obstacle.native?nativeVisible(actor.x,actor.y,p.x,p.y,obstacle):pathClear(actor.x,actor.y,p.x,p.y));
     const canvas=old?.projection.canvas||document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.save();
     if(clip){ctx.beginPath();clip.forEach((p,i)=>i?ctx.lineTo(p.x-left,p.y-top):ctx.moveTo(p.x-left,p.y-top));ctx.closePath();ctx.clip();}
-    ctx.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,actor.x-left,actor.y-top);ctx.drawImage(body.canvas,-body.foot.x,-body.foot.y);ctx.restore();
-    const projection={body,matrix,canvas,x:left,y:top,width:w,height:h,points:hull.filter(visible),hull,clip,visible,sourceURL:body.sourceURL,rect:body.rect,anchor:body.anchor,length,across,revision};
+    ctx.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,actor.x-left,actor.y-top);
+    if(material){
+      const source=opaqueShadow(body);
+      for(let row=0;row<body.height;row+=material.band){const sh=Math.min(material.band,body.height-row),warp=flowRow(body,material,row+.5);ctx.drawImage(source,0,row,body.width,sh,-body.foot.x*warp.scale+warp.offset,row-body.foot.y,body.width*warp.scale,sh);}
+    }else ctx.drawImage(body.canvas,-body.foot.x,-body.foot.y);
+    ctx.restore();
+    // Adjacent transformed pixel bands share antialiased edges. Seal those
+    // seams so a solid shadow cannot become translucent striped material.
+    if(material)for(let i=0;i<3;i++)ctx.drawImage(canvas,0,0);
+    const projection={body,matrix,flow:material,canvas,x:left,y:top,width:w,height:h,points:hull.filter(visible),hull,clip,visible,sourceURL:body.sourceURL,rect:body.rect,anchor:body.anchor,length,across,revision};
+    if(material)projection.points=projection.points.filter(p=>contains(projection,p.x,p.y));
     projectionCache.set(actor,{key,projection,world:G.World,obstacleKey:obstacle.key,clip:pathClear,path:G.World?.projectilePathClear,block:G.World?.projectileBlock});return projection;
   }
   function contains(projection,x,y){
     if(!projection||!projection.visible({x,y}))return false;const {matrix:m,body}=projection,det=m.a*m.d-m.b*m.c;if(!det)return false;
-    const px=x-m.e,py=y-m.f;return alphaAt(body,(m.d*px-m.c*py)/det+body.foot.x,(-m.b*px+m.a*py)/det+body.foot.y)>=24;
+    const px=x-m.e,py=y-m.f,sourceY=(-m.b*px+m.a*py)/det+body.foot.y,warp=flowRow(body,projection.flow,sourceY);
+    const sourceX=((m.d*px-m.c*py)/det-warp.offset)/warp.scale+body.foot.x;
+    return alphaAt(body,sourceX,sourceY)>=24;
   }
   function intersection(a,b,c,d){
     const dx=b.x-a.x,dy=b.y-a.y,ex=d.x-c.x,ey=d.y-c.y,det=dx*ey-dy*ex;if(Math.abs(det)<1e-9)return null;

@@ -26,10 +26,12 @@ CHECK=r'''() => {
   const world=G.World;if(reason==='clear')S.clear(p);if(reason==='death')p.dead=true;if(reason==='world')G.World={...world};if(reason==='unlearn')p.moves=[];
   try{if(reason==='pause')S.update(2);else A.finish(1)}finally{p.dead=false;G.World=world}A.assert(!hits.some(h=>h.length),'lifecycle leaked '+reason);
  }result.lifecycle=true;
- m=setup();es=[A.spawn(160,0),A.spawn(0,160)];hits=es.map(A.watch);const hurt=es[0].hurt;es[0].hurt=function(...args){const r=hurt.apply(this,args);S.clear(p);return r};A.cast(m);A.finish(1.8);A.assert(hits[0].length===1&&!hits[1].length,'hurt callback failed to cancel other target');result.callback=true;
+ // Flowing target silhouettes can contact in either order. Cancel the first
+ // actual callback, not an assumed enemy id, then reject every later hit.
+ m=setup();es=[A.spawn(160,0),A.spawn(0,160)];hits=es.map(A.watch);for(const e of es){const hurt=e.hurt;e.hurt=function(...args){const r=hurt.apply(this,args);S.clear(p);return r}}A.cast(m);A.finish(1.8);A.assert(hits.reduce((n,h)=>n+h.length,0)===1,'hurt callback failed to cancel other target');result.callback=true;
  for(const mode of ['hurt','onDealt']){
   m=setup();es=[A.spawn(160,0),A.spawn(0,160)];hits=es.map(A.watch);const dealt=p.onDealt;
-  if(mode==='onDealt')p.onDealt=()=>S.clear(p);else{const h=es[0].hurt;es[0].hurt=function(...args){const r=h.apply(this,args);S.clear(p);return r}}
+  if(mode==='onDealt')p.onDealt=()=>S.clear(p);else for(const e of es){const h=e.hurt;e.hurt=function(...args){const r=h.apply(this,args);S.clear(p);return r}}
   try{A.cast(m);A.finish(1.8);A.assert(hits.reduce((n,h)=>n+h.length,0)===1,'callback leaked '+mode)}finally{p.onDealt=dealt}
  }
  m=setup(5,16);es=Array.from({length:16},(_,i)=>A.spawn(Math.cos(i*Math.PI/8)*180,Math.sin(i*Math.PI/8)*180));hits=es.map(A.watch);A.cast(m);b=S.casts.at(-1);A.finish(1.7);A.assert(hits.every(h=>h.length===5),'maximum target budget dropped hits '+hits.map(h=>h.length));result.maximum={targets:16,hits:hits.reduce((n,h)=>n+h.length,0)};

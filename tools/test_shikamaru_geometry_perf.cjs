@@ -19,4 +19,18 @@ const body=R.bodyFor(actor),arc={target:actor,width:4};actor.x=100;
 assert(R.sweptBody(arc,{x:0,y:0,z:12},{x:120,y:0,z:12},body,()=>true),'fast sweep tunnelled through body');
 assert(!R.sweptBody(arc,{x:0,y:0,z:100},{x:120,y:0,z:100},body,()=>true),'overhead sweep falsely hit');
 assert(!R.sweptBody(arc,{x:0,y:0,z:12},{x:120,y:0,z:12},body,()=>false),'wall sweep falsely hit');
+actor.x=0;
+const sourceAlpha=Array.from(body.data),sourceCanvas=body.canvas;
+let materialMask;
+for(let i=0;i<120;i++){
+ const q=R.project(actor,1,0,100,.7,()=>true,{phase:i/30,seed:3});
+ assert(R.contains(q,50,0),'flow lost the occupied source alpha');
+ assert(!R.contains(q,50,20),'flow captured transparent space');
+ assert(q.points.length<=32&&q.points.every(p=>R.contains(q,p.x,p.y)),'flow contacts are unbounded or outside actual alpha');
+ materialMask??=body.shadowCanvas;
+ assert.equal(body.shadowCanvas,materialMask,'moving flow rebuilt its source mask');
+}
+assert.equal(reads,1,'flow must not read pixels per moving frame');
+assert.equal(body.canvas,sourceCanvas,'flow replaced the normal body source');
+assert.deepEqual(Array.from(body.data),sourceAlpha,'flow mutated source alpha for other projections');
 console.log(JSON.stringify({ok:true,sourcePixelReads:reads,movingProjections:100,maximumContactCandidates:32,pathQueries:paths}));
