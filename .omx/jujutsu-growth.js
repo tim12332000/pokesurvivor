@@ -144,7 +144,7 @@
             const profile=G.NarutoShikamaru.profile(probe,shadow);return {同時捕捉:profile.branches,束縛秒數:profile.bindDuration};
           }
           const profile=G.NarutoShikamaru.profile(owner,move);
-          return {傷害:profile.damage,...vector(owner,move),...(profile.kind==='shadow'?{影身半寬:profile.radius}:{}),...(profile.kind==='strangle'?{收緊射程:profile.range}:{}),...(profile.kind==='shadow'?{束縛秒數:profile.bindDuration}:{})};
+          return {傷害:profile.damage,...vector(owner,move),...(profile.kind==='shadow'?{影舌寬度上限:2*(profile.shadowWidthMax??profile.radius)}:{}),...(profile.kind==='strangle'?{收緊射程:profile.range}:{}),...(profile.kind==='shadow'?{束縛秒數:profile.bindDuration}:{})};
         };
         const before=metrics(p,m),after=metrics(p,next),parts=[];
         for(const key of Object.keys(before))if(before[key]!==after[key])parts.push(`${key} ${fmt(before[key])}→${fmt(after[key])}`);
