@@ -1,6 +1,6 @@
 /* Reference-driven shadows: actual body alpha, ground projection, and swept xyz tips. */
 (() => {
-  const masks=new Map(),projectionCache=new WeakMap(),nativePolicies=new WeakSet(),scans=new Map();let revision=0,forcedRevision=0;
+  const masks=new Map(),readyBases=new Map(),projectionCache=new WeakMap(),nativePolicies=new WeakSet(),scans=new Map();let revision=0,forcedRevision=0;
   const nativeWorld=G.World,nativeBlock=nativeWorld?.projectileBlock,nativePath=nativeWorld?.projectilePathClear,nativeWall=nativeWorld?.isWall,nativeWalkable=nativeWorld?.walkable;
   function obstacleState(actor,left,top,w,h,clip){
     const world=G.World;
@@ -62,6 +62,24 @@
   }
   function alphaAt(body,x,y){x=Math.floor(x);y=Math.floor(y);return x>=0&&y>=0&&x<body.width&&y<body.height?body.data[(y*body.width+x)*4+3]:0;}
   function insidePolygon(poly,x,y){let inside=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a.y>y)!==(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)inside=!inside;}return inside;}
+  function readyBaseFor(actor){
+    const scale=actor.anim?.scale||1,key='shika-ready-base:'+scale;if(readyBases.has(key))return readyBases.get(key);
+    const canvas=document.createElement('canvas');canvas.width=canvas.height=Math.max(1,Math.ceil(80*scale));
+    const foot={x:40*scale,y:40*scale},unit=scale/3;
+    // The user's ready silhouette: head, two broad arms and the lower body.
+    // It belongs to the ground, so walking/throwing poses never replace it.
+    const outline=[[120,50],[143,36],[174,30],[195,31],[198,42],[188,63],[178,83],[201,100],[222,120],[240,139],[242,151],[230,160],[212,157],[185,142],[160,129],[149,143],[138,160],[120,188],[103,208],[85,212],[66,210],[57,198],[61,188],[79,174],[96,157],[86,142],[68,133],[55,117],[50,105],[55,96],[67,91],[81,93],[98,102],[112,113],[130,99],[129,83],[124,67]];
+    const points=outline.map(([x,y])=>({x:foot.x+(x-140)*unit,y:foot.y+(y-130)*unit})),data=new Uint8ClampedArray(canvas.width*canvas.height*4),ctx=canvas.getContext('2d');
+    ctx.fillStyle='#030304';
+    for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;){
+      if(!insidePolygon(points,x+.5,y+.5)){x++;continue;}
+      const start=x++;while(x<canvas.width&&insidePolygon(points,x+.5,y+.5))x++;
+      ctx.fillRect(start,y,x-start,1);
+      for(let px=start;px<x;px++){const i=(y*canvas.width+px)*4;data[i]=3;data[i+1]=3;data[i+2]=4;data[i+3]=255;}
+    }
+    const body={kind:'ready-base',key,canvas,shadowCanvas:canvas,data,silhouette:points,width:canvas.width,height:canvas.height,foot,bodyHeight:64*scale,sourceURL:'procedural:nara-ready-base',rect:[0,0,canvas.width,canvas.height],anchor:[foot.x,foot.y],scale,mirror:false};
+    readyBases.set(key,body);if(readyBases.size>24)readyBases.delete(readyBases.keys().next().value);return body;
+  }
   function visibility(actor,radius,obstacle,pathClear){
     const angles=Array.from({length:48},(_,i)=>i*Math.PI/24);
     if(obstacle.native)for(const wall of obstacle.rectangles)for(const [x,y]of [[wall.left,wall.top],[wall.right,wall.top],[wall.right,wall.bottom],[wall.left,wall.bottom]]){const angle=Math.atan2(y-actor.y,x-actor.x);angles.push(angle-.00001,angle,angle+.00001);}
@@ -75,8 +93,9 @@
   function flowRow(body,flow,y){
     if(!flow)return {scale:1,offset:0};
     const row=Math.floor(y/flow.band)*flow.band,sample=row+Math.min(flow.band,body.height-row)*.5;
-    const u=clamp((body.foot.y-sample)/body.bodyHeight),envelope=u*(.45+.55*Math.sin(Math.PI*u*.85));
-    const phase=flow.phase*2.4-u*4.6+flow.seed;
+    const distance=body.kind==='ready-base'?Math.abs(body.foot.y-sample)/(body.bodyHeight*.65):(body.foot.y-sample)/body.bodyHeight;
+    const u=clamp(distance),envelope=u*(.45+.55*Math.sin(Math.PI*u*.85));
+    const phase=flow.phase*2.4-u*4.6+flow.seed+(body.kind==='ready-base'&&sample>body.foot.y?1.3:0);
     return {scale:1+envelope*(.18*Math.sin(phase)+.04*Math.sin(phase*1.7+.8)),offset:envelope*flow.strength*(5.8*Math.sin(phase)+1.8*Math.sin(flow.phase*1.3+u*6.2+flow.seed))};
   }
   function opaqueShadow(body){
@@ -93,10 +112,10 @@
     body.shadowCanvas=canvas;return canvas;
   }
   function project(actor,dx,dy,length,across=.65,pathClear=null,flow=null){
-    const body=bodyFor(actor);if(!body)return null;const d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;length=Math.max(1,length);
+    const body=flow?.readyBase?readyBaseFor(actor):bodyFor(actor);if(!body)return null;const d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;length=Math.max(1,length);
     const material=flow?{phase:Number(flow.phase)||0,seed:Number(flow.seed)||0,band:Math.max(1,Math.floor(body.bodyHeight/32)),strength:Math.max(.6,Math.min(2,body.bodyHeight/64))*(Number(flow.strength)||1)}:null;
     const key=[body.key,dx,dy,length,across,actor.x,actor.y,material?.phase??'',material?.seed??'',material?.strength??''].join('|'),old=projectionCache.get(actor);
-    const matrix={a:-dy*across,b:dx*across,c:-dx*length/body.bodyHeight,d:-dy*length/body.bodyHeight,e:actor.x,f:actor.y};
+    const matrix=body.kind==='ready-base'?{a:1,b:0,c:0,d:.65,e:actor.x,f:actor.y}:{a:-dy*across,b:dx*across,c:-dx*length/body.bodyHeight,d:-dy*length/body.bodyHeight,e:actor.x,f:actor.y};
     const transform=(p,warp=flowRow(body,material,p.y))=>{const x=(p.x-body.foot.x)*warp.scale+warp.offset,y=p.y-body.foot.y;return {x:matrix.a*x+matrix.c*y+actor.x,y:matrix.b*x+matrix.d*y+actor.y};};
     const hull=body.silhouette.map(p=>transform(p)),corners=[];
     if(material){

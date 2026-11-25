@@ -33,4 +33,17 @@ for(let i=0;i<120;i++){
 assert.equal(reads,1,'flow must not read pixels per moving frame');
 assert.equal(body.canvas,sourceCanvas,'flow replaced the normal body source');
 assert.deepEqual(Array.from(body.data),sourceAlpha,'flow mutated source alpha for other projections');
+let readyBody;
+for(let i=0;i<90;i++){
+ actor.anim.frame=i%2;actor.anim.dir=i%4;
+ const q=R.project(actor,0,1,64,1,()=>true,{phase:i/30,seed:3,readyBase:true});
+ assert.equal(q.body.kind,'ready-base');readyBody??=q.body;
+ assert.equal(q.body,readyBody,'body pose replaced the permanent ready base');
+ assert(R.contains(q,actor.x,actor.y),'ready base detached from the feet');
+ assert.equal(q.matrix.e,actor.x);assert.equal(q.matrix.f,actor.y);
+ assert.equal(q.matrix.b,0);assert.equal(q.matrix.c,0);assert.equal(q.matrix.d,.65);
+}
+actor.anim.frame=0;actor.anim.dir=0;
+assert.equal(R.bodyFor(actor),body,'ready base replaced the physical body mask');
+assert.equal(reads,1,'ready base scanned sprite pixels instead of using its cached outline');
 console.log(JSON.stringify({ok:true,sourcePixelReads:reads,movingProjections:100,maximumContactCandidates:32,pathQueries:paths}));
