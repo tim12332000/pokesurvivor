@@ -50,7 +50,9 @@
     const body=Ref.bodyFor(actor);if(!body)return null;
     const height=body.bodyHeight;
     const dx=-.45,dy=.9,length=height*.92,across=.85;
-    const flow=current&&learned(s.owner,'naruto-shikamaru')?{phase:s.material.phase,seed:(Number.isFinite(actor.id)?actor.id:actor.dex||DEX)*.713,strength:1}:null;
+    const sharedPhase=states.get(G.Game.player)?.material.phase??s?.material.phase??0;
+    const stagger=((Number.isFinite(actor.id)?actor.id:0)%6)/60;
+    const flow=current&&learned(s.owner,'naruto-shikamaru')?{phase:Math.floor((sharedPhase+stagger)*10)/10,seed:(Number.isFinite(actor.id)?actor.id:actor.dex||DEX)*.713,strength:1}:null;
     return Ref.project(actor,dx,dy,length,across,clearPath,flow);
   }
   function segmentDirection(owner,segment){
@@ -138,7 +140,16 @@
   function chainConnected(b,e){const chain=b.followChain||b;if(!chain.chain)return clearPath(b.owner.x,b.owner.y,e.x,e.y);if(!legal(chain))return false;const index=chain.chain.segments.findIndex(s=>s.target===e&&s.contact);return index>=0&&chain.chain.segments[index].linked!==false;}
   function held(e){const l=leases.get(e);return !!l&&legal(l.cast)&&alive(e)&&l.until>l.cast.state.clock&&chainConnected(l.cast,e);}
   const stopped=e=>held(e)&&!strong(e);
-  function canCast(a,m){if(!valid(a)||a.frozen||!supports(m)||m.digiMode==='shikamaru-tactics'||m.digiMode==='shikamaru-strangle')return false;const s=state(a),p=profile(a,m);if((s.cooldowns[m.id]||0)>EPS)return false;if(p.kind==='shadow'&&(casts.some(b=>b.owner===a&&b.kind==='shadow'&&legal(b)&&!b.chain?.ended)||ownedCaptures(s).length))return false;if(p.kind==='sewing'||p.kind==='checkmate')return !!s.lastChain&&legal(s.lastChain)&&s.lastChain.chain.segments.some(x=>x.contact&&alive(x.target)&&chainConnected(s.lastChain,x.target)&&(p.kind!=='checkmate'||held(x.target)&&leases.get(x.target)?.cast.owner===a));const t=targets(a,p);return t.length>0;}
+  function hasTarget(a,p){
+    for(const e of G.EnemyMgr.queryCircle(a.x,a.y,p.range)){
+      if(!alive(e)||e.friendly||Math.hypot(e.x-a.x,e.y-a.y)>p.range+(e.r||0))continue;
+      if((held(e)&&leases.get(e)?.cast.owner===a)||Ref.lineClear(a.x,a.y,e.x,e.y,clearPath))return true;
+    }
+    if(p.kind!=='shadow')return false;
+    for(const e of G.World.propsInCircle?.(a.x,a.y,p.range)||[])if(e.destructible&&e.hp>0&&clearPath(a.x,a.y,e.x,e.y,1,e))return true;
+    return false;
+  }
+  function canCast(a,m){if(!valid(a)||a.frozen||!supports(m)||m.digiMode==='shikamaru-tactics'||m.digiMode==='shikamaru-strangle')return false;const s=state(a),p=profile(a,m);if((s.cooldowns[m.id]||0)>EPS)return false;if(p.kind==='shadow'&&(casts.some(b=>b.owner===a&&b.kind==='shadow'&&legal(b)&&!b.chain?.ended)||ownedCaptures(s).length))return false;if(p.kind==='sewing'||p.kind==='checkmate')return !!s.lastChain&&legal(s.lastChain)&&s.lastChain.chain.segments.some(x=>x.contact&&alive(x.target)&&chainConnected(s.lastChain,x.target)&&(p.kind!=='checkmate'||held(x.target)&&leases.get(x.target)?.cast.owner===a));return hasTarget(a,p);}
   function cast(a,m){
     if(!canCast(a,m))return false;
     const s=state(a),p=profile(a,m),t=targets(a,p).filter(e=>p.kind!=='strangle'||held(e)&&leases.get(e)?.cast.owner===a);
@@ -221,18 +232,30 @@
     let totalLength=0;for(let i=1;i<points.length;i++)totalLength+=Math.hypot(points[i].x-points[i-1].x,points[i].y-points[i-1].y);
     return {index:b.chain?.segments.length||0,seed,origin:{...origin},sourceOffset:sourceActor?{x:origin.x-sourceActor.x,y:origin.y-sourceActor.y}:null,sourceActor,target,path:points,totalLength,travelled:0,grownPoints:[{...origin}],polygon:[],contact:false,contactPoint:null,blocked};
   }
-  function chainMesh(segment,spec,phase){
+  function curveRegionClear(points,pad,extra=null){
+    if(!Ref.isRegionClear||!points.length)return false;
+    let minX=extra?extra.x:points[0].x,maxX=minX,minY=extra?extra.y:points[0].y,maxY=minY;
+    for(const p of points){if(p.x<minX)minX=p.x;if(p.x>maxX)maxX=p.x;if(p.y<minY)minY=p.y;if(p.y>maxY)maxY=p.y;}
+    return Ref.isRegionClear(minX-pad,minY-pad,maxX+pad,maxY+pad,clearPath);
+  }
+  function segmentPathLinked(owner,grown,open=false){
+    if(!grown.length||open)return true;
+    return Ref.polylineClear?Ref.polylineClear(owner,grown,clearPath):(clearPath(owner.x,owner.y,grown[0].x,grown[0].y)&&!grown.some((p,i,list)=>i&&!clearPath(list[i-1].x,list[i-1].y,p.x,p.y)));
+  }
+  function chainMesh(segment,spec,phase,openRegion=false){
     const points=segment.grownPoints,left=[],right=[];let total=0,passed=0;
     for(let i=1;i<points.length;i++)total+=Math.hypot(points[i].x-points[i-1].x,points[i].y-points[i-1].y);
     const stations=[],min=spec.shadowWidthMin,max=spec.shadowWidthMax,span=max-min;
+    const open=openRegion||curveRegionClear(points,max+2);
     const lobe=(distance,offset)=>{const u=((distance-phase*55+segment.seed*17+offset)%108+108)%108-54;return Math.exp(-u*u/430);};
     for(let i=0;i<points.length;i++){
       if(i)passed+=Math.hypot(points[i].x-points[i-1].x,points[i].y-points[i-1].y);
-      const prev=points[Math.max(0,i-1)],next=points[Math.min(points.length-1,i+1)],dx=next.x-prev.x,dy=next.y-prev.y,d=Math.hypot(dx,dy)||1,u=total?passed/total:0;
+      const prev=points[Math.max(0,i-1)],next=points[Math.min(points.length-1,i+1)],dx=next.x-prev.x,dy=next.y-prev.y,d=Math.hypot(dx,dy)||1;
       const taper=Math.sin(Math.min(Math.PI/2,Math.max(0,total-passed)/12*Math.PI/2));
       const root=Math.exp(-passed/20),front=Math.exp(-((total-passed-14)**2)/450),wave=lobe(passed,0);
       const width=sign=>taper*(min+span*Math.min(1,.08+.32*root+.33*front+.9*wave+.12*lobe(passed,sign>0?-18:18)));
-      const edge=sign=>{const w=width(sign),ox=-dy/d*w*sign,oy=dx/d*w*sign;let fraction=1;if(!clearPath(points[i].x,points[i].y,points[i].x+ox,points[i].y+oy)){let low=0,high=1;for(let step=0;step<5;step++){const t=(low+high)/2;if(clearPath(points[i].x,points[i].y,points[i].x+ox*t,points[i].y+oy*t))low=t;else high=t;}fraction=low;}return {point:{x:points[i].x+ox*fraction,y:points[i].y+oy*fraction},width:w*fraction};};
+      const pointOpen=open||!!Ref.isPointOpen?.(points[i].x,points[i].y,max+1,clearPath);
+      const edge=sign=>{const w=width(sign),ox=-dy/d*w*sign,oy=dx/d*w*sign;let fraction=1;if(!pointOpen&&!clearPath(points[i].x,points[i].y,points[i].x+ox,points[i].y+oy)){let low=0,high=1;for(let step=0;step<5;step++){const t=(low+high)/2;if(clearPath(points[i].x,points[i].y,points[i].x+ox*t,points[i].y+oy*t))low=t;else high=t;}fraction=low;}return {point:{x:points[i].x+ox*fraction,y:points[i].y+oy*fraction},width:w*fraction};};
       const l=edge(1),r=edge(-1);left.push(l.point);right.push(r.point);stations.push({distance:passed,left:l.width,right:r.width});
     }
     segment.flow={phase,stations,rootWidth:stations[0]?stations[0].left+stations[0].right:0,maxWidth:stations.reduce((n,s)=>Math.max(n,s.left,s.right),0)};
@@ -278,14 +301,23 @@
       grown[grown.length-1]={...tip};
     }
     grown[0]=root;
-    segment.grownPoints=grown;segment.polygon=chainMesh(segment,b.spec,b.state.material.phase);
-    segment.linked=clearPath(b.owner.x,b.owner.y,root.x,root.y)&&!grown.some((p,i,list)=>i&&!clearPath(list[i-1].x,list[i-1].y,p.x,p.y));
+    const open=curveRegionClear(grown,b.spec.shadowWidthMax+2,b.owner);
+    const phase=b.state.material.phase,pathFn=G.World?.projectilePathClear;
+    const sameMesh=segment.polygon.length>=3&&segment._mPhase===phase&&segment._mWorld===G.World&&segment._mPath===pathFn&&segment._mLen===grown.length&&segment._mRx===root.x&&segment._mRy===root.y&&segment._mTx===tip.x&&segment._mTy===tip.y&&segment._mTr===segment.travelled;
+    segment.grownPoints=grown;
+    if(!sameMesh){
+      segment.polygon=chainMesh(segment,b.spec,phase,open);
+      segment._mPhase=phase;segment._mWorld=G.World;segment._mPath=pathFn;segment._mLen=grown.length;segment._mRx=root.x;segment._mRy=root.y;segment._mTx=tip.x;segment._mTy=tip.y;segment._mTr=segment.travelled;
+    }
+    segment.linked=segmentPathLinked(b.owner,grown,open);
   }
-  function reanchorContacts(s){
+  function reanchorContacts(s,projMap){
     const b=s.lastChain;if(!b||!legal(b))return;
     for(const segment of b.chain.segments){
       if(!segment.contact||!alive(segment.target))continue;
-      const e=segment.target,projection=projectionFor(e,s),old={x:e.x+(segment.contactOffset?.x||0),y:e.y+(segment.contactOffset?.y||0)};
+      const e=segment.target,projection=projMap?.get(e)||projectionFor(e,s);
+      if(projMap&&projection)projMap.set(e,projection);
+      const old={x:e.x+(segment.contactOffset?.x||0),y:e.y+(segment.contactOffset?.y||0)};
       if(projection&&!Ref.contains(projection,old.x,old.y)){
         const previous=segment.grownPoints.at(-2)||segment.origin;
         const point=projection.points.reduce((best,p)=>Ref.contains(projection,p.x,p.y)&&clearPath(previous.x,previous.y,p.x,p.y)&&(!best||Math.hypot(p.x-old.x,p.y-old.y)<Math.hypot(best.x-old.x,best.y-old.y))?p:best,null);
@@ -294,6 +326,7 @@
         for(const next of b.chain.segments)if(next.sourceActor===e)next.sourceOffset={...segment.contactOffset};
       }
       refreshSegment(b,segment);
+      if(!segment.linked){leases.delete(e);segment.finished=true;}
     }
   }
   function advanceChain(b,dt){
@@ -606,8 +639,14 @@
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
     Ref.beginFrame?.();
     for(const [a,s]of states){if(!valid(a)||s.world!==G.World||s.epoch!==G.CombatPulse?.epoch||((s.plan||s.lastChain)&&!moveFor(a,'shadow'))){clear(a);continue;}s.clock+=dt;s.material.clock=s.clock;s.material.phase=Math.floor(s.clock*30)/30;if(s.pose&&s.pose.age>=.65)s.pose=null;
-      updateReservoir(s);s.projection=projectionFor(s.owner,s);
-      const chain=s.lastChain;if(chain&&legal(chain))for(const segment of chain.chain.segments)if(segment.contact){refreshSegment(chain,segment);if(!segment.linked){leases.delete(segment.target);segment.finished=true;}}
+      const chain=s.lastChain;
+      if(chain&&legal(chain)){
+        if(casts.includes(chain)&&!chain.chain.ended){updateReservoir(s);s.projection=projectionFor(s.owner,s);}
+        for(const segment of chain.chain.segments)if(segment.contact){
+          const open=curveRegionClear(segment.grownPoints,2,s.owner);
+          if(!segmentPathLinked(s.owner,segment.grownPoints,open)){segment.linked=false;leases.delete(segment.target);segment.finished=true;}
+        }
+      }
     }
     for(const [e,l]of leases)if(!held(e))leases.delete(e);
     for(const b of casts.slice()){
@@ -629,15 +668,18 @@
       updateShadowReturns(s,dt);
       updateReservoir(s);
       s.projection=projectionFor(s.owner,s);
-      for(const trail of s.shadowReturns)refreshReturnTrail(s,trail);
-      s.shadowReturns=s.shadowReturns.filter(trail=>trail.remainingPoints.length>=2&&clearPath(s.owner.x,s.owner.y,trail.remainingPoints[0].x,trail.remainingPoints[0].y)&&trail.remainingPoints.every((p,i,list)=>!i||clearPath(list[i-1].x,list[i-1].y,p.x,p.y)));
-      updateReservoir(s);
-      s.projection=projectionFor(s.owner,s);
-      reanchorContacts(s);
+      if(s.shadowReturns.length){
+        for(const trail of s.shadowReturns)refreshReturnTrail(s,trail);
+        s.shadowReturns=s.shadowReturns.filter(trail=>trail.remainingPoints.length>=2&&segmentPathLinked(s.owner,trail.remainingPoints,curveRegionClear(trail.remainingPoints,2,s.owner)));
+        updateReservoir(s);
+        s.projection=projectionFor(s.owner,s);
+      }
+      const projMap=new Map();
+      reanchorContacts(s,projMap);
       const chain=s.lastChain;if(chain&&legal(chain)&&(casts.includes(chain)||ownedCaptures(s).length))for(const segment of chain.chain.segments)if(!segment.contact&&!segment.finished&&segment.travelled>0)refreshSegment(chain,segment);
-      const targets=new Set(ownedCaptures(s).map(([e])=>e));
-      for(const segment of s.lastChain?.chain.segments||[])if(alive(segment.target)&&!segment.target.destructible)targets.add(segment.target);
-      s.projections=new Map([...targets].map(e=>[e,projectionFor(e,s)]));
+      for(const [e]of ownedCaptures(s))if(!projMap.has(e))projMap.set(e,projectionFor(e,s));
+      for(const segment of s.lastChain?.chain.segments||[])if(alive(segment.target)&&!segment.target.destructible&&!projMap.has(segment.target))projMap.set(segment.target,projectionFor(segment.target,s));
+      s.projections=projMap;
     }
   }
   function tick(dt,a,now){
@@ -719,13 +761,25 @@
     // caster. Only the source portion passes behind the living casting body.
     if(!behind){ctx.save();ctx.beginPath();ctx.rect(left,top,body.width,body.height);ctx.clip();Ref.drawArch(ctx,arc,.9,remaining,rootEnd,1);ctx.restore();}
   }
+  function appendGroundInkPath(ctx,polygon,points,maxWidth=14,rootWidth=0){
+    if(polygon.length<3||points.length<2)return;
+    if(rootWidth>0){
+      const a=points[0],b=points[1],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
+      if(d>1e-4){
+        const r=Math.max(3,Math.min(maxWidth,rootWidth*.5)),cx=a.x-dx/d*Math.min(3.5,r*.45),cy=a.y-dy/d*Math.min(3.5,r*.45);
+        ctx.moveTo(cx+r,cy);ctx.arc(cx,cy,r,0,Math.PI*2);
+      }
+    }
+    polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();
+  }
   function referenceGround(ctx){
     // The reservoir is part of the living caster, not an active cast. It also
     // exists on the first frame and after clearFields, without mutating state.
     for(const actor of [G.Game.player,...(G.SelfClones?.actors?.()||[])])if(valid(actor))Ref.drawProjection(ctx,projectionFor(actor));
+    const drawnTargets=new Set();
     for(const s of states.values()){
       if(!valid(s.owner)||s.world!==G.World||s.epoch!==G.CombatPulse?.epoch)continue;
-      for(const projection of s.projections?.values()||[])Ref.drawProjection(ctx,projection);
+      if(s.projections?.size)for(const [e,projection]of s.projections){if(drawnTargets.has(e))continue;drawnTargets.add(e);Ref.drawProjection(ctx,projection);}
       const tactics=moveFor(s.owner,'tactics');
       if(tactics&&s.plan){
         const strength=rank(tactics),phase=s.clock*3;ctx.save();ctx.fillStyle='#0a080d';ctx.strokeStyle='#8c765f';ctx.lineWidth=1.2;
@@ -736,13 +790,16 @@
         ctx.save();ctx.strokeStyle='#e9ad5b';ctx.lineWidth=2+heat;ctx.globalAlpha=.16+.34*heat;for(let i=0;i<4;i++){const a=i*Math.PI/2+.15;ctx.beginPath();ctx.arc(site.x,site.y,b.spec.blastRadius,a,a+.85);ctx.stroke();}ctx.restore();
         for(let i=0;i<3;i++)drawPaperPacket(ctx,site.x,site.y-3,1.16,(i-1)*.55,heat);
       }
-      const b=s.lastChain;if(b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length)){
-        for(const segment of b.chain.segments){
+      const b=s.lastChain,hasChain=b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length);
+      if(hasChain||s.shadowReturns.length){
+        ctx.save();ctx.fillStyle='#030304';ctx.globalAlpha=1;ctx.beginPath();
+        if(hasChain)for(const segment of b.chain.segments){
           if(segment.linked===false||segment.polygon.length<3)continue;
-          drawGroundInk(ctx,segment.polygon,segment.grownPoints,segment.seed,s.clock,1,false,b.spec.shadowWidthMax,segment.flow?.rootWidth||b.spec.shadowWidthMin*2);
+          appendGroundInkPath(ctx,segment.polygon,segment.grownPoints,b.spec.shadowWidthMax,segment.flow?.rootWidth||b.spec.shadowWidthMin*2);
         }
+        for(const trail of s.shadowReturns)appendGroundInkPath(ctx,trail.polygon,trail.remainingPoints,trail.maxWidth,trail.rootWidth||0);
+        ctx.fill();ctx.restore();
       }
-      for(const trail of s.shadowReturns)drawGroundInk(ctx,trail.polygon,trail.remainingPoints,trail.seed,s.clock,1,true,trail.maxWidth,trail.rootWidth||0);
       for(const node of s.board){
         if(!legal(node.cast)||s.clock-node.born<node.cast.spec.trapArm)continue;const heat=Number.isFinite(node.blastAt)?Math.max(0,Math.min(1,1-(node.blastAt-s.clock)/.5)):0;
         drawPaperPacket(ctx,node.x,node.y,1.15,.12,heat,Math.max(1,node.cast.spec.blastRounds-node.round));
@@ -923,7 +980,7 @@
   const nativeShadow=G.Sprites.drawShadow;
   G.Sprites.drawShadow=function(ctx,dex,x,y,scale){
     if(dex===DEX)return;
-    for(const s of states.values())if(s.projections&&[...s.projections.keys()].some(e=>e.dex===dex&&e.x===x&&e.y===y))return;
+    for(const s of states.values())if(s.projections?.size)for(const e of s.projections.keys())if(e.dex===dex&&e.x===x&&e.y===y)return;
     return nativeShadow.call(this,ctx,dex,x,y,scale);
   };
   function statusFor(a,m){
