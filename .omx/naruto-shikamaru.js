@@ -39,11 +39,16 @@
     return (G.World.propsInCircle?.(a.x,a.y,p.range)||[]).filter(e=>e.destructible&&e.hp>0&&clearPath(a.x,a.y,e.x,e.y,1,e));
   }
   function projectionFor(actor,ownerState=null){
+    const caster=valid(actor),s=ownerState||states.get(actor)||leases.get(actor)?.cast.state;
+    const current=s&&s.world===G.World&&s.epoch===G.CombatPulse?.epoch;
+    if(caster){
+      const flow={phase:current?s.material.phase:0,seed:DEX*.713,strength:1.35,readyBase:true};
+      return Ref.project(actor,0,1,64*(actor.anim?.scale||1),1,clearPath,flow);
+    }
     const body=Ref.bodyFor(actor);if(!body)return null;
     const height=body.bodyHeight;
-    const dx=-.45,dy=.9,length=height*.92,across=valid(actor)?1.2:.85;
-    const s=ownerState||states.get(actor)||leases.get(actor)?.cast.state;
-    const flow=s&&s.world===G.World&&s.epoch===G.CombatPulse?.epoch&&learned(s.owner,'naruto-shikamaru')?{phase:s.material.phase,seed:(Number.isFinite(actor.id)?actor.id:actor.dex||DEX)*.713,strength:valid(actor)?1.35:1}:null;
+    const dx=-.45,dy=.9,length=height*.92,across=.85;
+    const flow=current&&learned(s.owner,'naruto-shikamaru')?{phase:s.material.phase,seed:(Number.isFinite(actor.id)?actor.id:actor.dex||DEX)*.713,strength:1}:null;
     return Ref.project(actor,dx,dy,length,across,clearPath,flow);
   }
   function legal(b){return !b.cancelled&&valid(b.owner)&&b.world===G.World&&b.state.epoch===G.CombatPulse?.epoch&&states.get(b.owner)===b.state&&learned(b.owner,b.m.id);}
@@ -585,8 +590,11 @@
     if(!behind){ctx.save();ctx.beginPath();ctx.rect(left,top,body.width,body.height);ctx.clip();Ref.drawArch(ctx,arc,.9,remaining,rootEnd,1);ctx.restore();}
   }
   function referenceGround(ctx){
+    // The reservoir is part of the living caster, not an active cast. It also
+    // exists on the first frame and after clearFields, without mutating state.
+    for(const actor of [G.Game.player,...(G.SelfClones?.actors?.()||[])])if(valid(actor))Ref.drawProjection(ctx,projectionFor(actor));
     for(const s of states.values()){
-      if(!valid(s.owner)||s.world!==G.World||s.epoch!==G.CombatPulse?.epoch)continue;Ref.drawProjection(ctx,s.projection);
+      if(!valid(s.owner)||s.world!==G.World||s.epoch!==G.CombatPulse?.epoch)continue;
       for(const projection of s.projections?.values()||[])Ref.drawProjection(ctx,projection);
       const tactics=moveFor(s.owner,'tactics');
       if(tactics&&s.plan){
