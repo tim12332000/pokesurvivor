@@ -38,13 +38,24 @@
     return G.Game.state==='playing'&&valid(a)&&!a.frozen&&supports(m)&&!!learned(a)&&state(a).cooldown<=EPS&&hasThreat(a,profile(a,m));
   }
   const silhouetteCache=new Map();
+  const dpx=v=>Math.round(v*.5)*2;
   function silhouette(owner,dir){
     const height=64*(owner.anim?.scale||1),key=height+':'+dir;
     if(silhouetteCache.has(key))return silhouetteCache.get(key);
-    const canvas=document.createElement('canvas');canvas.width=Math.ceil(height*2);canvas.height=Math.ceil(height*1.5);
-    const ctx=canvas.getContext('2d'),x=canvas.width/2,y=canvas.height-8;
-    if(!G.ShikamaruArt?.draw(ctx,{}, {x,y,height,state:'idle',time:0,dir,pose:false}))return null;
-    ctx.globalCompositeOperation='source-in';ctx.fillStyle='#08070b';ctx.fillRect(0,0,canvas.width,canvas.height);
+    const w=Math.ceil(height*2),h=Math.ceil(height*1.5);
+    const mask=document.createElement('canvas');mask.width=w;mask.height=h;
+    const mctx=mask.getContext('2d'),x=w/2,y=h-8;
+    if(!G.ShikamaruArt?.draw(mctx,{}, {x,y,height,state:'idle',time:0,dir,pose:false}))return null;
+    const rim=document.createElement('canvas');rim.width=w;rim.height=h;
+    const rctx=rim.getContext('2d');rctx.drawImage(mask,0,0);
+    rctx.globalCompositeOperation='source-in';rctx.fillStyle='#2a1f3d';rctx.fillRect(0,0,w,h);
+    mctx.globalCompositeOperation='source-in';mctx.fillStyle='#06050a';mctx.fillRect(0,0,w,h);
+    // Bake subtle 1px dark-violet chakra rim + deep ink core once per cached direction.
+    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+    const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;
+    ctx.globalAlpha=.72;
+    for(const [ox,oy]of [[-1,0],[1,0],[0,-1]])ctx.drawImage(rim,ox,oy);
+    ctx.globalAlpha=1;ctx.drawImage(mask,0,0);
     const entry={canvas,x,y,height};
     silhouetteCache.set(key,entry);if(silhouetteCache.size>24)silhouetteCache.delete(silhouetteCache.keys().next().value);
     return entry;
@@ -105,41 +116,67 @@
   }
   function ground(ctx){
     for(const d of decoys()){
-      const v=visualFor(d),r=(d.r+4)*v.spread,phase=d.age*2.2+d.seed;
-      ctx.save();ctx.globalAlpha=(.38+.16*v.height)*v.opacity;ctx.fillStyle='#08070b';ctx.beginPath();
-      for(let i=0;i<=12;i++){
-        const a=i*Math.PI/6,lobe=1+.08*Math.sin(i*2.1+d.seed)+.035*Math.sin(phase+i*1.7);
-        const x=d.x+Math.cos(a)*r*lobe,y=d.y+1+Math.sin(a)*5.5*lobe;
+      const v=visualFor(d),r=(d.r+6)*v.spread,phase=d.age*2.6+d.seed;
+      ctx.save();
+      // Outer dark-violet ink bleed + subtle lure pulse ring when enemies are redirected
+      ctx.globalAlpha=(.22+.1*v.height)*v.opacity;ctx.fillStyle='#191229';ctx.beginPath();
+      for(let i=0;i<=14;i++){
+        const a=i*Math.PI/7,lobe=1.16+.1*Math.sin(i*2.3+d.seed)+.05*Math.sin(phase+i*1.5);
+        const x=d.x+Math.cos(a)*r*lobe,y=d.y+1.5+Math.sin(a)*6.8*lobe;
         i?ctx.lineTo(x,y):ctx.moveTo(x,y);
-      }ctx.closePath();ctx.fill();ctx.restore();
+      }ctx.closePath();ctx.fill();
+      if(d.enemies.size){
+        const pulse=(d.age*1.4)%1;
+        ctx.globalAlpha=(1-pulse)*.28*v.opacity;ctx.strokeStyle='#4e3a6e';ctx.lineWidth=1.4;
+        ctx.beginPath();ctx.ellipse(d.x,d.y+1,r*(1+.55*pulse),6*(1+.45*pulse),0,0,Math.PI*2);ctx.stroke();
+      }
+      // Solid deep-black living shadow pool anchored under the bait's feet
+      ctx.globalAlpha=(.82+.12*v.height)*v.opacity;ctx.fillStyle='#050408';ctx.beginPath();
+      for(let i=0;i<=14;i++){
+        const a=i*Math.PI/7,lobe=1+.11*Math.sin(i*2.1+d.seed)+.05*Math.sin(phase+i*1.7);
+        const x=d.x+Math.cos(a)*r*lobe,y=d.y+1+Math.sin(a)*5.8*lobe;
+        i?ctx.lineTo(x,y):ctx.moveTo(x,y);
+      }ctx.closePath();ctx.fill();
+      ctx.restore();
     }
   }
   function silhouettes(ctx){
+    const detail=(G.Settings?.fx??1)>0;
     for(const d of decoys()){
-      const v=visualFor(d);ctx.save();ctx.globalAlpha=.76*v.opacity;
+      const v=visualFor(d);ctx.save();ctx.globalAlpha=.86*v.opacity;
       if(d.image){
         const image=d.image;
         ctx.imageSmoothingEnabled=false;
         if(v.phase==='hold'){
-          const drift=Math.sin(d.age*2.2+d.seed)*.5;
-          ctx.drawImage(image.canvas,d.x-image.x+drift,d.y-image.y);
+          const drift=Math.sin(d.age*2.4+d.seed)*.6;
+          ctx.drawImage(image.canvas,Math.round(d.x-image.x+drift),Math.round(d.y-image.y));
         }else{
-          const step=Math.max(3,Math.ceil(image.height/((G.Settings?.fx??1)>0?18:10)));
-          // Ink accumulates from the feet in separate bands. Collapse reverses
-          // that flow; it does not scale a rigid standing cutout as one object.
+          const step=Math.max(2,Math.ceil(image.height/(detail?24:12)));
+          // Ink accumulates from the feet in tight seamless bands; collapse melts back into the pool.
           for(let sy=Math.max(0,Math.floor(image.y-image.height-3));sy<image.y;sy+=step){
             const sh=Math.min(step,image.y-sy),distance=image.y-sy-sh,t=clamp(distance/image.height);
-            const growth=v.phase==='form'?settle((v.progress-t*.28)/.72):1-settle(v.progress*(1+.25*t));
+            const growth=v.phase==='form'?settle((v.progress-t*.26)/.74):1-settle(v.progress*(1+.24*t));
             if(growth<=0)continue;
-            const spread=1+(1-growth)*.45,w=image.canvas.width*spread;
-            const drift=Math.sin(d.age*2.2+d.seed+t*5)*Math.sin(t*Math.PI)*(.35+2*(1-growth));
-            ctx.drawImage(image.canvas,0,sy,image.canvas.width,sh,d.x-image.x*spread+drift,d.y-(distance+sh)*growth,w,Math.max(.2,sh*growth));
+            const spread=1+(1-growth)*.42,w=image.canvas.width*spread;
+            const drift=Math.sin(d.age*2.4+d.seed+t*5)*Math.sin(t*Math.PI)*(.4+2*(1-growth));
+            ctx.drawImage(image.canvas,0,sy,image.canvas.width,sh,d.x-image.x*spread+drift,d.y-(distance+sh)*growth-.4,w,Math.max(.6,sh*growth+.6));
           }
         }
       }
       else{
-        // Keep the hair knot, folded arms and split legs readable while assets load.
-        const h=d.bodyH*v.height;ctx.translate(d.x,d.y);ctx.scale(v.spread,1);ctx.fillStyle='#08070b';ctx.beginPath();ctx.moveTo(-7,-h*.84);ctx.lineTo(-9,-h);ctx.lineTo(2,-h*.94);ctx.lineTo(8,-h*.81);ctx.lineTo(7,-h*.65);ctx.lineTo(14,-h*.5);ctx.lineTo(10,-h*.32);ctx.lineTo(7,-h*.3);ctx.lineTo(10,0);ctx.lineTo(2,0);ctx.lineTo(0,-h*.26);ctx.lineTo(-3,0);ctx.lineTo(-11,0);ctx.lineTo(-8,-h*.34);ctx.lineTo(-14,-h*.48);ctx.lineTo(-8,-h*.65);ctx.closePath();ctx.fill();
+        const h=d.bodyH*v.height;ctx.translate(d.x,d.y);ctx.scale(v.spread,1);ctx.fillStyle='#06050a';ctx.beginPath();ctx.moveTo(-7,-h*.84);ctx.lineTo(-9,-h);ctx.lineTo(2,-h*.94);ctx.lineTo(8,-h*.81);ctx.lineTo(7,-h*.65);ctx.lineTo(14,-h*.5);ctx.lineTo(10,-h*.32);ctx.lineTo(7,-h*.3);ctx.lineTo(10,0);ctx.lineTo(2,0);ctx.lineTo(0,-h*.26);ctx.lineTo(-3,0);ctx.lineTo(-11,0);ctx.lineTo(-8,-h*.34);ctx.lineTo(-14,-h*.48);ctx.lineTo(-8,-h*.65);ctx.closePath();ctx.fill();
+      }
+      // Rising pixelated ink wisps around the standing shadow decoy
+      if(detail&&v.height>.25){
+        const h=d.bodyH*v.height;
+        for(let i=0;i<4;i++){
+          const cycle=(d.age*.9+i*.25+d.seed*.17)%1;
+          const side=Math.sin(i*2.3+d.seed+cycle*3)*(10+4*(i%2));
+          const wx=dpx(d.x+side),wy=dpx(d.y-4-cycle*h*.82);
+          ctx.globalAlpha=(1-cycle)*.58*v.opacity;
+          ctx.fillStyle=i%2?'#241a38':'#07050c';
+          ctx.fillRect(wx,wy,2,cycle<.5?4:2);
+        }
       }
       ctx.restore();
     }
