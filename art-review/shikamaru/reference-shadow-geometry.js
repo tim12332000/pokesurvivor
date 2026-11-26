@@ -112,19 +112,23 @@
   function readyBaseFor(actor){
     const scale=actor.anim?.scale||1,key='shika-ready-base:'+scale;if(readyBases.has(key))return readyBases.get(key);
     const canvas=document.createElement('canvas');canvas.width=canvas.height=Math.max(1,Math.ceil(80*scale));
-    const foot={x:40*scale,y:40*scale},unit=scale/3;
-    // The user's ready silhouette: head, two broad arms and the lower body.
-    // It belongs to the ground, so walking/throwing poses never replace it.
-    const outline=[[120,50],[143,36],[174,30],[195,31],[198,42],[188,63],[178,83],[201,100],[222,120],[240,139],[242,151],[230,160],[212,157],[185,142],[160,129],[149,143],[138,160],[120,188],[103,208],[85,212],[66,210],[57,198],[61,188],[79,174],[96,157],[86,142],[68,133],[55,117],[50,105],[55,96],[67,91],[81,93],[98,102],[112,113],[130,99],[129,83],[124,67]];
-    const points=outline.map(([x,y])=>({x:foot.x+(x-140)*unit,y:foot.y+(y-130)*unit})),data=new Uint8ClampedArray(canvas.width*canvas.height*4),ctx=canvas.getContext('2d');
-    ctx.fillStyle='#030304';
+    const foot={x:40*scale,y:40*scale};
+    // Clean, grounded oval shadow pool centered under Shikamaru's feet (replaces
+    // the awkward 4-pronged star/amoeba cutout while keeping ground perspective).
+    const rx=21.5*scale,ry=18.8*scale,count=48;
+    const points=Array.from({length:count},(_,i)=>{
+      const a=i*Math.PI*2/count;
+      return {x:foot.x+Math.cos(a)*rx,y:foot.y+Math.sin(a)*ry};
+    });
+    const data=new Uint8ClampedArray(canvas.width*canvas.height*4),ctx=canvas.getContext('2d');
+    ctx.fillStyle='#040307';
     for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;){
       if(!insidePolygon(points,x+.5,y+.5)){x++;continue;}
       const start=x++;while(x<canvas.width&&insidePolygon(points,x+.5,y+.5))x++;
       ctx.fillRect(start,y,x-start,1);
-      for(let px=start;px<x;px++){const i=(y*canvas.width+px)*4;data[i]=3;data[i+1]=3;data[i+2]=4;data[i+3]=255;}
+      for(let px=start;px<x;px++){const i=(y*canvas.width+px)*4;data[i]=4;data[i+1]=3;data[i+2]=7;data[i+3]=255;}
     }
-    const body={kind:'ready-base',key,canvas,shadowCanvas:canvas,data,silhouette:points,width:canvas.width,height:canvas.height,foot,bodyHeight:64*scale,sourceURL:'procedural:nara-ready-base',rect:[0,0,canvas.width,canvas.height],anchor:[foot.x,foot.y],scale,mirror:false};
+    const body={kind:'ready-base',key,canvas,shadowCanvas:canvas,data,silhouette:points,width:canvas.width,height:canvas.height,foot,bodyHeight:64*scale,sourceURL:'procedural:nara-ready-pool',rect:[0,0,canvas.width,canvas.height],anchor:[foot.x,foot.y],scale,mirror:false};
     readyBases.set(key,body);if(readyBases.size>24)readyBases.delete(readyBases.keys().next().value);return body;
   }
   function visibility(actor,radius,obstacle,pathClear){
@@ -159,20 +163,35 @@
     body.shadowCanvas=canvas;return canvas;
   }
   function readyOutline(body,matrix,material){
-    const core=6*body.scale,shoulder=17*body.scale,pullCore=1.5*body.scale,pullSpan=13*body.scale;
-    return body.silhouette.map(p=>{
-      const warp=flowRow(body,material,p.y),x=(p.x-body.foot.x)*warp.scale+warp.offset,y=(p.y-body.foot.y)*matrix.d,r=Math.hypot(x,y);
-      // A feed pulls its facing lobe, while the footward core stays planted.
-      // Pick the strongest local feed so sixteen targets cannot inflate it.
+    const scale=body.scale,phase=material?.phase||0,seed=material?.seed||0,feeds=material?.feeds||[];
+    // Subtle volume conservation: when shadow mass flows outward into active tongues,
+    // the non-feeding side of the foot pool tightens slightly while keeping feet planted.
+    let activeLoad=0;
+    for(const f of feeds)activeLoad=Math.max(activeLoad,clamp(f.pull/(22*scale)));
+    const conserve=1-.13*activeLoad;
+    return body.silhouette.map((p,idx)=>{
+      const bx=(p.x-body.foot.x),by=(p.y-body.foot.y)*matrix.d;
+      const ang=Math.atan2(by,bx);
+      // Calm, organic liquid rim breathing (no erratic sideways sloshing).
+      const ripple=1+.055*Math.sin(ang*3-phase*3.2+seed)+.035*Math.cos(ang*2+phase*2.3+seed*.7);
+      const driftX=1.15*scale*Math.sin(phase*2.6+ang*2+seed);
+      const driftY=.7*scale*Math.cos(phase*2.2-ang*3+seed);
+      let x=bx*ripple*conserve+driftX,y=by*ripple*conserve+driftY;
+      const r=Math.hypot(x,y)||1,ux=x/r,uy=y/r;
+      // Smooth liquid meniscus funnel pulled toward the active shadow cast direction.
       let strongest=0,moveX=0,moveY=0;
-      for(const feed of material?.feeds||[]){
-        const facing=Math.max(0,(x*feed.dx+y*feed.dy)/(r||1)),facing2=facing*facing;
-        const pullWeight=Math.max(clamp((r-pullCore)/pullSpan),.32*facing2)*facing2;
-        const pinchWeight=clamp((r-core)/shoulder)*facing2;
-        const influence=pullWeight*feed.pull+pinchWeight*feed.pinch*shoulder;
-        if(influence<=strongest)continue;strongest=influence;
-        const side=-x*feed.dy+y*feed.dx,pinch=side*feed.pinch*pinchWeight;
-        moveX=feed.dx*feed.pull*pullWeight+feed.dy*pinch;moveY=feed.dy*feed.pull*pullWeight-feed.dx*pinch;
+      for(const feed of feeds){
+        const cosA=ux*feed.dx+uy*feed.dy;
+        if(cosA<=0)continue;
+        const focus=Math.pow(cosA,2.6);
+        const pullAmt=feed.pull*.68*focus;
+        const sideProj=-x*feed.dy+y*feed.dx;
+        const waist=Math.pow(cosA,1.4)*(1-focus*.45)*feed.pinch*.55;
+        const influence=pullAmt+Math.abs(sideProj)*waist;
+        if(influence<=strongest)continue;
+        strongest=influence;
+        moveX=feed.dx*pullAmt+feed.dy*(sideProj*waist);
+        moveY=feed.dy*pullAmt-feed.dx*(sideProj*waist);
       }
       return {x:matrix.e+x+moveX,y:matrix.f+y+moveY};
     });
@@ -209,7 +228,7 @@
     ctx.imageSmoothingEnabled=false;ctx.save();
     if(clip){ctx.beginPath();clip.forEach((p,i)=>i?ctx.lineTo(p.x-left,p.y-top):ctx.moveTo(p.x-left,p.y-top));ctx.closePath();ctx.clip();}
     if(outline){
-      ctx.fillStyle='#030304';ctx.beginPath();outline.forEach((p,i)=>i?ctx.lineTo(p.x-left,p.y-top):ctx.moveTo(p.x-left,p.y-top));ctx.closePath();ctx.fill();
+      ctx.fillStyle='#040307';ctx.beginPath();outline.forEach((p,i)=>i?ctx.lineTo(p.x-left,p.y-top):ctx.moveTo(p.x-left,p.y-top));ctx.closePath();ctx.fill();
     }else if(material){
       ctx.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,actor.x-left,actor.y-top);
       const source=opaqueShadow(body);
@@ -271,12 +290,62 @@
     const slope=(arc.destination.y-arc.source.y)-arc.destination.z+Math.PI*(arc.normal.y*arc.sideBow-arc.lift)*Math.cos(Math.PI*arc.progress);
     arc.phase=arc.progress>=1?'contact':Math.abs(slope)<8?'crest':slope>0?'descent':'rise';return arc.current;
   }
-  function drawArch(ctx,arc,alpha=1,remaining=1,from=0,to=1){
+  const archGrain=new Float32Array(512);
+  for(let i=0;i<archGrain.length;i++){const v=Math.sin(i*127.1+311.7)*43758.5453;archGrain[i]=v-Math.floor(v);}
+  const px2=v=>Math.round(v*.5)*2;
+  function drawArch(ctx,arc,alpha=1,remaining=1,from=0,to=1,ultimate=false){
     if(arc.points.length<2||arc.progress<=0||arc.blocked||remaining<=0)return;
     const progress=arc.progress*clamp(remaining),start=Math.min(progress,clamp(from)),end=Math.min(progress,clamp(to));if(end<=start)return;
-    const steps=Math.max(2,Math.ceil(48*(end-start))),spine=start>0||end<arc.progress||remaining<1?Array.from({length:steps+1},(_,i)=>archPoint(arc,start+(end-start)*i/steps)):arc.points;
-    const points=spine.map(p=>({x:p.x,y:p.y-p.z}));ctx.save();ctx.globalAlpha*=alpha;ctx.fillStyle='#080a09';ctx.beginPath();
-    for(let side=0;side<2;side++)for(let j=0;j<points.length;j++){const i=side?points.length-1-j:j,p=points[i],a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,u=start+(end-start)*i/(points.length-1),w=arc.width*(.5+1.1*Math.sin(Math.PI*u)**.8)*Math.min(1,(progress-u)/.18)*(side?-1:1);if(!side&&!j)ctx.moveTo(p.x-dy/d*w,p.y+dx/d*w);else ctx.lineTo(p.x-dy/d*w,p.y+dx/d*w);}ctx.closePath();ctx.fill();ctx.restore();
+    const steps=Math.max(4,Math.ceil(48*(end-start))),spine=start>0||end<arc.progress||remaining<1?Array.from({length:steps+1},(_,i)=>archPoint(arc,start+(end-start)*i/steps)):arc.points;
+    const points=spine.map(p=>({x:p.x,y:p.y-p.z}));
+    const widthAt=u=>{
+      const tipTaper=Math.pow(clamp((progress-u)/Math.max(.14,progress*.42)),.72);
+      const bodyProfile=1.22-.52*Math.pow(u,.58)+.22*Math.sin(Math.PI*Math.min(1,u*1.15));
+      return arc.width*bodyProfile*tipTaper;
+    };
+    ctx.save();
+    // Soft dark-ink fringe blends the needle silhouette into the pixel ground/air.
+    ctx.globalAlpha=alpha*.34;ctx.fillStyle=ultimate?'#1f1024':'#151022';ctx.beginPath();
+    for(let side=0;side<2;side++)for(let j=0;j<points.length;j++){
+      const i=side?points.length-1-j:j,p=points[i],a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1;
+      const u=start+(end-start)*i/(points.length-1),w=(widthAt(u)+(u<progress-.03?1.4:0))*(side?-1:1);
+      if(!side&&!j)ctx.moveTo(p.x-dy/d*w,p.y+dx/d*w);else ctx.lineTo(p.x-dy/d*w,p.y+dx/d*w);
+    }
+    ctx.closePath();ctx.fill();
+    // Core razor shadow body.
+    ctx.globalAlpha=alpha;ctx.fillStyle='#050408';ctx.beginPath();
+    for(let side=0;side<2;side++)for(let j=0;j<points.length;j++){
+      const i=side?points.length-1-j:j,p=points[i],a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1;
+      const u=start+(end-start)*i/(points.length-1),w=widthAt(u)*(side?-1:1);
+      if(!side&&!j)ctx.moveTo(p.x-dy/d*w,p.y+dx/d*w);else ctx.lineTo(p.x-dy/d*w,p.y+dx/d*w);
+    }
+    ctx.closePath();ctx.fill();
+    // Faceted blade ridge along the upper edge gives crisp 3D needle sharpness.
+    if(points.length>=3){
+      ctx.globalAlpha=alpha*(ultimate?.78:.62);ctx.strokeStyle=ultimate?'#5c283c':'#312645';ctx.lineWidth=ultimate?1.8:1.3;ctx.lineCap='butt';ctx.beginPath();
+      let started=false;
+      for(let i=1;i<points.length-1;i++){
+        const u=start+(end-start)*i/(points.length-1);if(u>progress-.04)break;
+        const p=points[i],a=points[i-1],b=points[i+1],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,off=widthAt(u)*.36;
+        const rx=p.x-dy/d*off,ry=p.y+dx/d*off;
+        if(!started){ctx.moveTo(rx,ry);started=true;}else ctx.lineTo(rx,ry);
+      }
+      if(started)ctx.stroke();
+    }
+    // Pixelated ink motes trailing off the rising shadow needle.
+    if((G.Settings?.fx??1)>0&&end-start>.18){
+      const seedBase=((Math.abs(Math.round(arc.source.x*7+arc.source.y*13+(arc.pulseIndex||1)*31)))&255);
+      ctx.fillStyle=ultimate?'#2a1326':'#14101e';ctx.globalAlpha=alpha*.68*clamp(remaining);
+      for(let m=0;m<(ultimate?6:4);m++){
+        const g1=archGrain[(seedBase+m*19)&511],g2=archGrain[(seedBase+m*37+11)&511];
+        const u=start+(end-start)*(.12+.72*g1);if(u>=progress-.05)continue;
+        const idx=Math.min(points.length-1,Math.max(0,Math.round((u-start)/Math.max(1e-4,end-start)*(points.length-1))));
+        const p=points[idx],a=points[Math.max(0,idx-1)],b=points[Math.min(points.length-1,idx+1)],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1;
+        const spread=(widthAt(u)+2+3*g2)*(m%2?1:-1);
+        ctx.fillRect(px2(p.x-dy/d*spread),px2(p.y+dx/d*spread),2,2);
+      }
+    }
+    ctx.restore();
   }
   G.ShikamaruReferenceGeometry={bodyFor,alphaAt,project,contains,groundContact,drawProjection,archPoint,makeArch,sweptBody,advanceArch,drawArch,isRegionClear,isPointOpen,lineClear,polylineClear,registerNativePolicy(policy){nativePolicies.add(policy);},beginFrame(){revision++;scans.clear();clearScans.clear();},invalidateWorld(){revision++;forcedRevision++;scans.clear();clearScans.clear();}};
   // World is a stable singleton across runs; a reset can replace same-tile props.
