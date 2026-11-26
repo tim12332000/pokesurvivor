@@ -111,14 +111,35 @@
     }
     body.shadowCanvas=canvas;return canvas;
   }
+  function readyOutline(body,matrix,material){
+    const core=6*body.scale,shoulder=17*body.scale,pullCore=1.5*body.scale,pullSpan=13*body.scale;
+    return body.silhouette.map(p=>{
+      const warp=flowRow(body,material,p.y),x=(p.x-body.foot.x)*warp.scale+warp.offset,y=(p.y-body.foot.y)*matrix.d,r=Math.hypot(x,y);
+      // A feed pulls its facing lobe, while the footward core stays planted.
+      // Pick the strongest local feed so sixteen targets cannot inflate it.
+      let strongest=0,moveX=0,moveY=0;
+      for(const feed of material?.feeds||[]){
+        const facing=Math.max(0,(x*feed.dx+y*feed.dy)/(r||1)),facing2=facing*facing;
+        const pullWeight=Math.max(clamp((r-pullCore)/pullSpan),.32*facing2)*facing2;
+        const pinchWeight=clamp((r-core)/shoulder)*facing2;
+        const influence=pullWeight*feed.pull+pinchWeight*feed.pinch*shoulder;
+        if(influence<=strongest)continue;strongest=influence;
+        const side=-x*feed.dy+y*feed.dx,pinch=side*feed.pinch*pinchWeight;
+        moveX=feed.dx*feed.pull*pullWeight+feed.dy*pinch;moveY=feed.dy*feed.pull*pullWeight-feed.dx*pinch;
+      }
+      return {x:matrix.e+x+moveX,y:matrix.f+y+moveY};
+    });
+  }
   function project(actor,dx,dy,length,across=.65,pathClear=null,flow=null){
     const body=flow?.readyBase?readyBaseFor(actor):bodyFor(actor);if(!body)return null;const d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;length=Math.max(1,length);
     const material=flow?{phase:Number(flow.phase)||0,seed:Number(flow.seed)||0,band:Math.max(1,Math.floor(body.bodyHeight/32)),strength:Math.max(.6,Math.min(2,body.bodyHeight/64))*(Number(flow.strength)||1)}:null;
-    const key=[body.key,dx,dy,length,across,actor.x,actor.y,material?.phase??'',material?.seed??'',material?.strength??''].join('|'),old=projectionCache.get(actor);
+    if(material&&body.kind==='ready-base'){material.feeds=(flow.feeds||[]).map(feed=>({...feed}));material.revision=Number(flow.revision)||0;}
+    const key=[body.key,dx,dy,length,across,actor.x,actor.y,material?.phase??'',material?.seed??'',material?.strength??'',material?.revision??'',...(material?.feeds||[]).map(feed=>[feed.sourceCast,feed.segment,feed.stage,feed.dx,feed.dy,feed.pull,feed.pinch,feed.reach,feed.neckWidth].join(':'))].join('|'),old=projectionCache.get(actor);
     const matrix=body.kind==='ready-base'?{a:1,b:0,c:0,d:.65,e:actor.x,f:actor.y}:{a:-dy*across,b:dx*across,c:-dx*length/body.bodyHeight,d:-dy*length/body.bodyHeight,e:actor.x,f:actor.y};
     const transform=(p,warp=flowRow(body,material,p.y))=>{const x=(p.x-body.foot.x)*warp.scale+warp.offset,y=p.y-body.foot.y;return {x:matrix.a*x+matrix.c*y+actor.x,y:matrix.b*x+matrix.d*y+actor.y};};
-    const hull=body.silhouette.map(p=>transform(p)),corners=[];
-    if(material){
+    const outline=body.kind==='ready-base'?readyOutline(body,matrix,material):null,hull=outline||body.silhouette.map(p=>transform(p)),corners=[];
+    if(outline)corners.push(...outline);
+    else if(material){
       for(let y=0;y<body.height;y+=material.band){const h=Math.min(material.band,body.height-y),warp=flowRow(body,material,y+.5);for(const x of [0,body.width]){corners.push(transform({x,y},warp),transform({x,y:y+h},warp));}}
     }else for(const [x,y]of [[0,0],[body.width,0],[body.width,body.height],[0,body.height]])corners.push(transform({x,y}));
     const left=Math.floor(Math.min(...corners.map(p=>p.x)))-1,top=Math.floor(Math.min(...corners.map(p=>p.y)))-1,w=Math.ceil(Math.max(...corners.map(p=>p.x)))-left+2,h=Math.ceil(Math.max(...corners.map(p=>p.y)))-top+2;
@@ -128,21 +149,29 @@
     const visible=p=>!obstacle.blocked||(obstacle.native?nativeVisible(actor.x,actor.y,p.x,p.y,obstacle):pathClear(actor.x,actor.y,p.x,p.y));
     const canvas=old?.projection.canvas||document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.save();
     if(clip){ctx.beginPath();clip.forEach((p,i)=>i?ctx.lineTo(p.x-left,p.y-top):ctx.moveTo(p.x-left,p.y-top));ctx.closePath();ctx.clip();}
-    ctx.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,actor.x-left,actor.y-top);
-    if(material){
+    if(outline){
+      ctx.fillStyle='#030304';ctx.beginPath();outline.forEach((p,i)=>i?ctx.lineTo(p.x-left,p.y-top):ctx.moveTo(p.x-left,p.y-top));ctx.closePath();ctx.fill();
+    }else if(material){
+      ctx.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,actor.x-left,actor.y-top);
       const source=opaqueShadow(body);
       for(let row=0;row<body.height;row+=material.band){const sh=Math.min(material.band,body.height-row),warp=flowRow(body,material,row+.5);ctx.drawImage(source,0,row,body.width,sh,-body.foot.x*warp.scale+warp.offset,row-body.foot.y,body.width*warp.scale,sh);}
-    }else ctx.drawImage(body.canvas,-body.foot.x,-body.foot.y);
+    }else{ctx.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,actor.x-left,actor.y-top);ctx.drawImage(body.canvas,-body.foot.x,-body.foot.y);}
     ctx.restore();
     // Adjacent transformed pixel bands share antialiased edges. Seal those
     // seams so a solid shadow cannot become translucent striped material.
-    if(material)for(let i=0;i<3;i++)ctx.drawImage(canvas,0,0);
+    if(material&&!outline)for(let i=0;i<3;i++)ctx.drawImage(canvas,0,0);
     const projection={body,matrix,flow:material,canvas,x:left,y:top,width:w,height:h,points:hull.filter(visible),hull,clip,visible,sourceURL:body.sourceURL,rect:body.rect,anchor:body.anchor,length,across,revision};
+    if(outline){projection.readyOutline=outline;projection.feeds=material?.feeds||[];}
     if(material)projection.points=projection.points.filter(p=>contains(projection,p.x,p.y));
     projectionCache.set(actor,{key,projection,world:G.World,obstacleKey:obstacle.key,clip:pathClear,path:G.World?.projectilePathClear,block:G.World?.projectileBlock});return projection;
   }
   function contains(projection,x,y){
-    if(!projection||!projection.visible({x,y}))return false;const {matrix:m,body}=projection,det=m.a*m.d-m.b*m.c;if(!det)return false;
+    if(!projection||!projection.visible({x,y}))return false;
+    if(projection.readyOutline){
+      const outline=projection.readyOutline;if(insidePolygon(outline,x,y))return true;
+      return outline.some((a,i)=>{const b=outline[(i+1)%outline.length],dx=b.x-a.x,dy=b.y-a.y,t=clamp(((x-a.x)*dx+(y-a.y)*dy)/(dx*dx+dy*dy||1));return Math.hypot(x-a.x-dx*t,y-a.y-dy*t)<1e-6;});
+    }
+    const {matrix:m,body}=projection,det=m.a*m.d-m.b*m.c;if(!det)return false;
     const px=x-m.e,py=y-m.f,sourceY=(-m.b*px+m.a*py)/det+body.foot.y,warp=flowRow(body,projection.flow,sourceY);
     const sourceX=((m.d*px-m.c*py)/det-warp.offset)/warp.scale+body.foot.x;
     return alphaAt(body,sourceX,sourceY)>=24;

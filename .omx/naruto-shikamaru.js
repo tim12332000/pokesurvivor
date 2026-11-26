@@ -12,7 +12,7 @@
   const learned=(a,id)=>a.moves?.some(m=>m.id===id);
   const supports=m=>modes.has(typeof m==='string'?m:m?.digiMode);
   const strong=e=>!!(e.boss||e.elite||e.legend||e.judge);
-  function state(a){let s=states.get(a);if(s&&(s.world!==G.World||s.epoch!==G.CombatPulse?.epoch)){clear(a);s=null;}if(!s){s={owner:a,world:G.World,epoch:G.CombatPulse?.epoch,clock:0,material:{clock:0,phase:0},cooldowns:{},pose:null,casts:{},hits:0,damage:0,bound:0,detonations:0,contacts:[],board:[],plan:null,walkDistance:0,prevX:a.x,prevY:a.y,moving:false,travelled:0,dragged:0,cycles:0,sewingQueued:false,shadowReturns:[],visibleShadow:null};states.set(a,s);}return s;}
+  function state(a){let s=states.get(a);if(s&&(s.world!==G.World||s.epoch!==G.CombatPulse?.epoch)){clear(a);s=null;}if(!s){s={owner:a,world:G.World,epoch:G.CombatPulse?.epoch,clock:0,material:{clock:0,phase:0},reservoir:{feeds:[],revision:0},cooldowns:{},pose:null,casts:{},hits:0,damage:0,bound:0,detonations:0,contacts:[],board:[],plan:null,walkDistance:0,prevX:a.x,prevY:a.y,moving:false,travelled:0,dragged:0,cycles:0,sewingQueued:false,shadowReturns:[],visibleShadow:null};states.set(a,s);}return s;}
   function profile(a,m){
     const L=rank(m),Q=Math.max(0,Math.min(16,Math.floor(G.Quantity?.bonus(a)??a.quantityPicks??a.quantityBonus??0)));
     const tactics=a.moves?.find(x=>x.digiMode==='shikamaru-tactics'),T=tactics?rank(tactics):0;
@@ -38,11 +38,13 @@
     if(list.length||p.kind!=='shadow')return list;
     return (G.World.propsInCircle?.(a.x,a.y,p.range)||[]).filter(e=>e.destructible&&e.hp>0&&clearPath(a.x,a.y,e.x,e.y,1,e));
   }
+  const clamp01=x=>Math.max(0,Math.min(1,x));
   function projectionFor(actor,ownerState=null){
     const caster=valid(actor),s=ownerState||states.get(actor)||leases.get(actor)?.cast.state;
     const current=s&&s.world===G.World&&s.epoch===G.CombatPulse?.epoch;
     if(caster){
-      const flow={phase:current?s.material.phase:0,seed:DEX*.713,strength:1.35,readyBase:true};
+      const feeds=current&&s.reservoir?.feeds?.length?s.reservoir.feeds:[];
+      const flow={phase:current?s.material.phase:0,seed:DEX*.713,strength:1.35,readyBase:true,feeds,revision:current?s.reservoir?.revision||0:0};
       return Ref.project(actor,0,1,64*(actor.anim?.scale||1),1,clearPath,flow);
     }
     const body=Ref.bodyFor(actor);if(!body)return null;
@@ -50,6 +52,87 @@
     const dx=-.45,dy=.9,length=height*.92,across=.85;
     const flow=current&&learned(s.owner,'naruto-shikamaru')?{phase:s.material.phase,seed:(Number.isFinite(actor.id)?actor.id:actor.dex||DEX)*.713,strength:1}:null;
     return Ref.project(actor,dx,dy,length,across,clearPath,flow);
+  }
+  function segmentDirection(owner,segment){
+    let tx=0,ty=0;
+    if(segment.grownPoints?.length>1){
+      const sample=segment.grownPoints.find(p=>Math.hypot(p.x-owner.x,p.y-owner.y)>16)||segment.grownPoints.at(-1);
+      tx=sample.x-owner.x;ty=sample.y-owner.y;
+    }
+    if(Math.hypot(tx,ty)<=4&&segment.path?.length>1){
+      const start=segment.path[0],sample=segment.path.find(p=>Math.hypot(p.x-start.x,p.y-start.y)>24)||segment.path.at(-1);
+      tx=sample.x-start.x;ty=sample.y-start.y;
+    }
+    if(Math.hypot(tx,ty)<=4&&segment.target){tx=segment.target.x-owner.x;ty=segment.target.y-owner.y;}
+    const d=Math.hypot(tx,ty)||1;return {dx:tx/d,dy:ty/d};
+  }
+  function boundaryJoin(projection,owner,dx,dy){
+    const outline=projection?.readyOutline;
+    if(!outline||outline.length<3)return {x:owner.x,y:owner.y};
+    const hits=[];
+    for(let i=0;i<outline.length;i++){
+      const a=outline[i],b=outline[(i+1)%outline.length],ex=b.x-a.x,ey=b.y-a.y,det=dy*ex-dx*ey;
+      if(Math.abs(det)<1e-9)continue;
+      const wx=a.x-owner.x,wy=a.y-owner.y,t=(wy*ex-wx*ey)/det,u=(dx*wy-dy*wx)/det;
+      if(t>1e-4&&u>=-1e-5&&u<=1+1e-5)hits.push({t,x:owner.x+dx*t,y:owner.y+dy*t});
+    }
+    hits.sort((u,v)=>v.t-u.t);
+    for(const hit of hits)if(clearPath(owner.x,owner.y,hit.x,hit.y)&&Ref.contains(projection,hit.x,hit.y))return {x:hit.x,y:hit.y};
+    if(hits.length){
+      let low=0,high=hits[0].t;
+      for(let i=0;i<8;i++){const mid=(low+high)/2,px=owner.x+dx*mid,py=owner.y+dy*mid;if(clearPath(owner.x,owner.y,px,py)&&Ref.contains(projection,px,py))low=mid;else high=mid;}
+      return {x:owner.x+dx*low,y:owner.y+dy*low};
+    }
+    return {x:owner.x,y:owner.y};
+  }
+  function updateReservoir(s){
+    const a=s.owner,scale=a.anim?.scale||1,feeds=[];
+    if(valid(a)&&moveFor(a,'shadow')){
+      const b=s.lastChain;
+      if(b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length)){
+        for(const segment of b.chain.segments){
+          if(segment.sourceActor||segment.linked===false)continue;
+          const activeHold=segment.contact&&alive(segment.target)&&held(segment.target);
+          const gathering=b.age<b.spec.release&&casts.includes(b);
+          const extending=b.age>=b.spec.release&&!segment.contact&&!segment.finished&&casts.includes(b);
+          if(!gathering&&!extending&&!activeHold)continue;
+          const {dx,dy}=segmentDirection(a,segment);
+          const minW=b.spec.shadowWidthMin*2,maxW=b.spec.shadowWidthMax*2;
+          const rootWidth=segment.flow?.rootWidth||minW;
+          const pulse=clamp01((rootWidth-minW)/Math.max(1,maxW-minW));
+          let stage='hold',pull=0,pinch=0,reach=segment.travelled,neckWidth=rootWidth;
+          if(gathering){
+            stage='gather';
+            const u=clamp01(b.age/Math.max(EPS,b.spec.release));
+            pinch=.2+.38*Math.pow(u,.8);
+            pull=(4+18*Math.pow(u,1.15))*scale;
+            reach=0;
+            neckWidth=b.spec.shadowWidthMin*(1.5-.35*u);
+          }else if(extending){
+            stage='extend';
+            const grow=clamp01(segment.travelled/Math.max(1,segment.totalLength));
+            pull=(22+5*Math.sin(Math.PI*Math.min(1,grow*1.35))+3.5*pulse)*scale;
+            pinch=.58+.06*Math.sin(Math.PI*grow)-.06*pulse;
+          }else{
+            stage='hold';
+            pull=(19+5.5*pulse)*scale;
+            pinch=.52-.08*pulse;
+          }
+          feeds.push({sourceCast:b.serial,segment:segment.index,stage,dx,dy,pull,pinch,reach,neckWidth});
+        }
+      }
+      for(const trail of s.shadowReturns){
+        const frac=clamp01(trail.remainingLength/Math.max(1,trail.length));
+        if(frac<=1e-4)continue;
+        feeds.push({sourceCast:trail.sourceCast,segment:trail.segmentIndex,stage:'return',dx:trail.dir.dx,dy:trail.dir.dy,
+          pull:19*Math.pow(frac,.75)*scale,pinch:.48*Math.pow(frac,1.15),reach:trail.remainingLength,neckWidth:(trail.rootWidth||trail.maxWidth||10)*(.5+.5*frac)});
+      }
+    }
+    const prev=s.reservoir?.feeds||[];
+    const changed=prev.length!==feeds.length||feeds.some((f,i)=>{const o=prev[i];return !o||o.sourceCast!==f.sourceCast||o.segment!==f.segment||o.stage!==f.stage||Math.abs(o.dx-f.dx)>1e-5||Math.abs(o.dy-f.dy)>1e-5||Math.abs(o.pull-f.pull)>1e-4||Math.abs(o.pinch-f.pinch)>1e-4||Math.abs(o.reach-f.reach)>1e-3||Math.abs(o.neckWidth-f.neckWidth)>1e-4;});
+    if(!s.reservoir)s.reservoir={feeds:[],revision:0};
+    s.reservoir.feeds=feeds;
+    if(changed)s.reservoir.revision=(s.reservoir.revision||0)+1;
   }
   function legal(b){return !b.cancelled&&valid(b.owner)&&b.world===G.World&&b.state.epoch===G.CombatPulse?.epoch&&states.get(b.owner)===b.state&&learned(b.owner,b.m.id);}
   function chainConnected(b,e){const chain=b.followChain||b;if(!chain.chain)return clearPath(b.owner.x,b.owner.y,e.x,e.y);if(!legal(chain))return false;const index=chain.chain.segments.findIndex(s=>s.target===e&&s.contact);return index>=0&&chain.chain.segments[index].linked!==false;}
@@ -84,6 +167,7 @@
       b.duration=p.release+p.range/p.speed+p.bindDuration+1;
       b.kunai=[];
       for(const target of t.slice(0,p.branches))b.chain.segments.push(makeSegment(b,target,{x:a.x,y:a.y},null));s.lastChain=b;
+      updateReservoir(s);s.projection=projectionFor(a,s);
     }
     return true;
   }
@@ -147,7 +231,7 @@
       const prev=points[Math.max(0,i-1)],next=points[Math.min(points.length-1,i+1)],dx=next.x-prev.x,dy=next.y-prev.y,d=Math.hypot(dx,dy)||1,u=total?passed/total:0;
       const taper=Math.sin(Math.min(Math.PI/2,Math.max(0,total-passed)/12*Math.PI/2));
       const root=Math.exp(-passed/20),front=Math.exp(-((total-passed-14)**2)/450),wave=lobe(passed,0);
-      const width=sign=>taper*(min+span*Math.min(1,.08+.5*root+.33*front+.9*wave+.12*lobe(passed,sign>0?-18:18)));
+      const width=sign=>taper*(min+span*Math.min(1,.08+.32*root+.33*front+.9*wave+.12*lobe(passed,sign>0?-18:18)));
       const edge=sign=>{const w=width(sign),ox=-dy/d*w*sign,oy=dx/d*w*sign;let fraction=1;if(!clearPath(points[i].x,points[i].y,points[i].x+ox,points[i].y+oy)){let low=0,high=1;for(let step=0;step<5;step++){const t=(low+high)/2;if(clearPath(points[i].x,points[i].y,points[i].x+ox*t,points[i].y+oy*t))low=t;else high=t;}fraction=low;}return {point:{x:points[i].x+ox*fraction,y:points[i].y+oy*fraction},width:w*fraction};};
       const l=edge(1),r=edge(-1);left.push(l.point);right.push(r.point);stations.push({distance:passed,left:l.width,right:r.width});
     }
@@ -170,8 +254,17 @@
       if(remaining>=d){grown.push({...z});remaining-=d;}else{if(remaining>0)grown.push({x:a.x+(z.x-a.x)*remaining/d,y:a.y+(z.y-a.y)*remaining/d});break;}
     }
     const source=segment.sourceActor?(alive(segment.sourceActor)?segment.sourceActor:segment.origin):b.owner;
-    const root={x:source.x+(alive(segment.sourceActor)?segment.sourceOffset?.x||0:0),y:source.y+(alive(segment.sourceActor)?segment.sourceOffset?.y||0:0)},start=grown[0],end=grown.at(-1);
+    let root={x:source.x+(alive(segment.sourceActor)?segment.sourceOffset?.x||0:0),y:source.y+(alive(segment.sourceActor)?segment.sourceOffset?.y||0:0)};
+    const start=grown[0],end=grown.at(-1);
     const tip=segment.contact&&alive(segment.target)&&grown.length>1?{x:segment.target.x+(segment.contactOffset?.x||0),y:segment.target.y+(segment.contactOffset?.y||0)}:end;
+    if(!segment.sourceActor){
+      const projection=b.state.projection||projectionFor(b.owner,b.state);
+      const {dx,dy}=segmentDirection(b.owner,segment);
+      const join=boundaryJoin(projection,b.owner,dx,dy);
+      segment.sourceJoin=join;segment.rootExit=join;
+      const joinDist=Math.hypot(join.x-b.owner.x,join.y-b.owner.y),tipDist=Math.hypot(tip.x-b.owner.x,tip.y-b.owner.y);
+      if(segment.contact||tipDist>joinDist+2)root={...join};
+    }
     const ox=end.x-start.x,oy=end.y-start.y,oldLength=Math.hypot(ox,oy),dx=tip.x-root.x,dy=tip.y-root.y,length=Math.hypot(dx,dy);
     // Transport the entire grown curve in its chord's frame. Moving only the
     // first/last vertex leaves one long edge and a right-angle elbow behind.
@@ -186,7 +279,7 @@
     }
     grown[0]=root;
     segment.grownPoints=grown;segment.polygon=chainMesh(segment,b.spec,b.state.material.phase);
-    segment.linked=!grown.some((p,i,list)=>i&&!clearPath(list[i-1].x,list[i-1].y,p.x,p.y));
+    segment.linked=clearPath(b.owner.x,b.owner.y,root.x,root.y)&&!grown.some((p,i,list)=>i&&!clearPath(list[i-1].x,list[i-1].y,p.x,p.y));
   }
   function reanchorContacts(s){
     const b=s.lastChain;if(!b||!legal(b))return;
@@ -468,13 +561,35 @@
       else{if(d>EPS)result.push({x:a.x+(b.x-a.x)*remaining/d,y:a.y+(b.y-a.y)*remaining/d});break;}
     }return result;
   }
+  function transportCurve(points,root,tip){
+    if(points.length<2)return points.map(p=>({...p}));
+    const start=points[0],end=points.at(-1),ox=end.x-start.x,oy=end.y-start.y,oldLength=Math.hypot(ox,oy);
+    const dx=tip.x-root.x,dy=tip.y-root.y,length=Math.hypot(dx,dy);
+    if(oldLength<=EPS)return [{...root},{...tip}];
+    const bendScale=Math.min(1,length/oldLength),nx=length?-dy/length:0,ny=length?dx/length:0;
+    const result=points.map(p=>{const px=p.x-start.x,py=p.y-start.y,u=clamp01((px*ox+py*oy)/(oldLength*oldLength)),bend=(-oy*px+ox*py)/oldLength*bendScale;return {x:root.x+dx*u+nx*bend,y:root.y+dy*u+ny*bend};});
+    result[0]={...root};result[result.length-1]={...tip};return result;
+  }
+  function refreshReturnTrail(s,trail){
+    const end=trail.points.at(-1);if(!end)return;
+    const vx=end.x-s.owner.x,vy=end.y-s.owner.y,vd=Math.hypot(vx,vy);
+    if(vd>2)trail.dir={dx:vx/vd,dy:vy/vd};
+    const join=boundaryJoin(s.projection,s.owner,trail.dir.dx,trail.dir.dy);
+    trail.sourceJoin=join;
+    const transported=transportCurve(trail.points,join,end);
+    trail.remainingPoints=prefixPoints(transported,trail.remainingLength);
+    if(trail.remainingPoints.length>=2){
+      const meshSeg={grownPoints:trail.remainingPoints,seed:trail.seed};
+      trail.polygon=chainMesh(meshSeg,trail.spec,s.material.phase);
+      trail.rootWidth=meshSeg.flow?.rootWidth||trail.rootWidth;
+    }else trail.polygon=[];
+  }
   function updateShadowReturns(s,dt){
     if(!moveFor(s.owner,'shadow')){s.shadowReturns=[];s.visibleShadow=null;return;}
     for(const trail of s.shadowReturns){
-      trail.age+=dt;trail.remainingLength=trail.length*Math.max(0,1-(trail.age/trail.life)**.8);
-      trail.remainingPoints=prefixPoints(trail.points,trail.remainingLength);
+      trail.age+=dt;trail.remainingLength=trail.length*Math.max(0,1-(trail.age/trail.life)**.85);
     }
-    s.shadowReturns=s.shadowReturns.filter(trail=>trail.age<trail.life&&trail.remainingPoints.every((p,i,list)=>!i||clearPath(list[i-1].x,list[i-1].y,p.x,p.y)));
+    s.shadowReturns=s.shadowReturns.filter(trail=>trail.age<trail.life&&trail.remainingLength>2);
     const b=s.lastChain,visible=b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length);
     if(visible){s.visibleShadow=b;return;}
     const previous=s.visibleShadow;s.visibleShadow=null;if(!previous||!legal(previous))return;
@@ -482,13 +597,16 @@
     for(const segment of previous.chain.segments){
       if(segment.linked===false||segment.polygon.length<3||segment.grownPoints.length<2)continue;
       const points=segment.grownPoints.map(p=>({...p})),length=points.reduce((n,p,i)=>n+(i?Math.hypot(p.x-points[i-1].x,p.y-points[i-1].y):0),0);
-      s.shadowReturns.push({points,polygon:segment.polygon.map(p=>({...p})),seed:segment.seed,maxWidth:segment.flow?.maxWidth||previous.spec.shadowWidthMax,age:0,life:.26,length,remainingLength:length,remainingPoints:points});
+      if(length<=2)continue;
+      const dir=segmentDirection(s.owner,segment);
+      s.shadowReturns.push({sourceCast:previous.serial,segmentIndex:segment.index,points,polygon:segment.polygon.map(p=>({...p})),seed:segment.seed,spec:previous.spec,dir,sourceJoin:segment.sourceJoin||points[0],rootWidth:segment.flow?.rootWidth||previous.spec.shadowWidthMin*2,maxWidth:segment.flow?.maxWidth||previous.spec.shadowWidthMax,age:0,life:.34,length,remainingLength:length,remainingPoints:points});
     }
   }
   function update(dt){
     if(G.Game.state!=='playing'||!Number.isFinite(dt)||dt<=0)return;
     Ref.beginFrame?.();
     for(const [a,s]of states){if(!valid(a)||s.world!==G.World||s.epoch!==G.CombatPulse?.epoch||((s.plan||s.lastChain)&&!moveFor(a,'shadow'))){clear(a);continue;}s.clock+=dt;s.material.clock=s.clock;s.material.phase=Math.floor(s.clock*30)/30;if(s.pose&&s.pose.age>=.65)s.pose=null;
+      updateReservoir(s);s.projection=projectionFor(s.owner,s);
       const chain=s.lastChain;if(chain&&legal(chain))for(const segment of chain.chain.segments)if(segment.contact){refreshSegment(chain,segment);if(!segment.linked){leases.delete(segment.target);segment.finished=true;}}
     }
     for(const [e,l]of leases)if(!held(e))leases.delete(e);
@@ -509,8 +627,15 @@
     }
     for(const s of states.values()){
       updateShadowReturns(s,dt);
+      updateReservoir(s);
+      s.projection=projectionFor(s.owner,s);
+      for(const trail of s.shadowReturns)refreshReturnTrail(s,trail);
+      s.shadowReturns=s.shadowReturns.filter(trail=>trail.remainingPoints.length>=2&&clearPath(s.owner.x,s.owner.y,trail.remainingPoints[0].x,trail.remainingPoints[0].y)&&trail.remainingPoints.every((p,i,list)=>!i||clearPath(list[i-1].x,list[i-1].y,p.x,p.y)));
+      updateReservoir(s);
+      s.projection=projectionFor(s.owner,s);
       reanchorContacts(s);
-      s.projection=projectionFor(s.owner,s);const targets=new Set(ownedCaptures(s).map(([e])=>e));
+      const chain=s.lastChain;if(chain&&legal(chain)&&(casts.includes(chain)||ownedCaptures(s).length))for(const segment of chain.chain.segments)if(!segment.contact&&!segment.finished&&segment.travelled>0)refreshSegment(chain,segment);
+      const targets=new Set(ownedCaptures(s).map(([e])=>e));
       for(const segment of s.lastChain?.chain.segments||[])if(alive(segment.target)&&!segment.target.destructible)targets.add(segment.target);
       s.projections=new Map([...targets].map(e=>[e,projectionFor(e,s)]));
     }
@@ -566,12 +691,17 @@
     if(u<.24){const flash=1-u/.24;ctx.globalAlpha=flash*.85;ctx.fillStyle='#ffad43';ctx.beginPath();ctx.arc(e.x,e.y,Math.min(e.radius*.4,(ultimate?36:22)+r*.16),0,Math.PI*2);ctx.fill();ctx.fillStyle='#fff2c7';ctx.beginPath();ctx.arc(e.x,e.y,Math.min(e.radius*.2,(ultimate?17:10)+r*.07),0,Math.PI*2);ctx.fill();}
     ctx.globalAlpha=fade*Math.min(1,u*6)*.35;ctx.fillStyle='#5b4b43';for(let i=0;i<(ultimate?7:4);i++){const a=i*2.4,d=r*(.3+.06*i),size=(ultimate?13:8)*(1+u);ctx.beginPath();ctx.ellipse(e.x+Math.cos(a)*d,e.y+Math.sin(a)*d-20*u,size,size*.65,a,0,Math.PI*2);ctx.fill();}ctx.restore();
   }
-  function drawGroundInk(ctx,polygon,points,seed,clock,fade=1,returning=false,maxWidth=14){
+  function drawGroundInk(ctx,polygon,points,seed,clock,fade=1,returning=false,maxWidth=14,rootWidth=0){
     if(polygon.length<3||points.length<2||fade<=0)return;
-    ctx.save();ctx.beginPath();polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.clip();
-    ctx.fillStyle='#030304';ctx.strokeStyle='#030304';ctx.globalAlpha=fade;
-    if(returning){ctx.lineWidth=maxWidth*2+2;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.stroke();}
-    else ctx.fill();
+    ctx.save();ctx.fillStyle='#030304';ctx.globalAlpha=fade;
+    if(rootWidth>0){
+      const a=points[0],b=points[1],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
+      if(d>1e-4){
+        const r=Math.max(3,Math.min(maxWidth,rootWidth*.5));
+        ctx.beginPath();ctx.arc(a.x-dx/d*Math.min(3.5,r*.45),a.y-dy/d*Math.min(3.5,r*.45),r,0,Math.PI*2);ctx.fill();
+      }
+    }
+    ctx.beginPath();polygon.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fill();
     ctx.restore();
   }
   function drawCasterArch(ctx,b,arc,remaining,behind){
@@ -609,10 +739,10 @@
       const b=s.lastChain;if(b&&legal(b)&&(casts.includes(b)||ownedCaptures(s).length)){
         for(const segment of b.chain.segments){
           if(segment.linked===false||segment.polygon.length<3)continue;
-          drawGroundInk(ctx,segment.polygon,segment.grownPoints,segment.seed,s.clock);
+          drawGroundInk(ctx,segment.polygon,segment.grownPoints,segment.seed,s.clock,1,false,b.spec.shadowWidthMax,segment.flow?.rootWidth||b.spec.shadowWidthMin*2);
         }
       }
-      for(const trail of s.shadowReturns)drawGroundInk(ctx,trail.polygon,trail.remainingPoints,trail.seed,s.clock,1-trail.age/trail.life,true,trail.maxWidth);
+      for(const trail of s.shadowReturns)drawGroundInk(ctx,trail.polygon,trail.remainingPoints,trail.seed,s.clock,1,true,trail.maxWidth,trail.rootWidth||0);
       for(const node of s.board){
         if(!legal(node.cast)||s.clock-node.born<node.cast.spec.trapArm)continue;const heat=Number.isFinite(node.blastAt)?Math.max(0,Math.min(1,1-(node.blastAt-s.clock)/.5)):0;
         drawPaperPacket(ctx,node.x,node.y,1.15,.12,heat,Math.max(1,node.cast.spec.blastRounds-node.round));

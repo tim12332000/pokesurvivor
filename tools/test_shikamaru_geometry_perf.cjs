@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 let reads=0,paths=0;
-const context={imageSmoothingEnabled:false,save(){},restore(){},translate(){},scale(){},drawImage(){},setTransform(){},fillRect(){},beginPath(){},lineTo(){},moveTo(){},closePath(){},clip(){},getImageData(x,y,w,h){reads++;const data=new Uint8ClampedArray(w*h*4);for(let y=4;y<28;y++)for(let x=8;x<24;x++)data[(y*w+x)*4+3]=255;return {data};}};
+const context={imageSmoothingEnabled:false,save(){},restore(){},translate(){},scale(){},drawImage(){},setTransform(){},fillRect(){},fill(){},beginPath(){},lineTo(){},moveTo(){},closePath(){},clip(){},getImageData(x,y,w,h){reads++;const data=new Uint8ClampedArray(w*h*4);for(let y=4;y<28;y++)for(let x=8;x<24;x++)data[(y*w+x)*4+3]=255;return {data};}};
 const G={World:{},Sprites:{PX:1,sheet(){return {ready:true,img:{src:'fixture.png'}}},animMeta(){return {n:1,r:1,w:32,h:32,ax:16,ay:28}}}};
 vm.runInNewContext(fs.readFileSync('art-review/shikamaru/reference-shadow-geometry.js','utf8'),{G,document:{createElement(){return {width:0,height:0,getContext(){return context}}}},Math,Map,WeakMap,WeakSet});
 const R=G.ShikamaruReferenceGeometry,actor={dex:19,x:0,y:0,r:10,anim:{cur:'Idle',frame:0,dir:0,scale:1}},clear=(ax,ay,bx)=>{paths++;return bx<30};
@@ -44,6 +44,12 @@ for(let i=0;i<90;i++){
  assert.equal(q.matrix.b,0);assert.equal(q.matrix.c,0);assert.equal(q.matrix.d,.65);
 }
 actor.anim.frame=0;actor.anim.dir=0;
+const feeds16=Array.from({length:16},(_,i)=>({sourceCast:1,segment:i,stage:'extend',dx:Math.cos(i*Math.PI/8),dy:Math.sin(i*Math.PI/8),pull:24,pinch:.5,reach:120,neckWidth:12}));
+const fed=R.project(actor,0,1,64,1,()=>true,{phase:.5,seed:3,readyBase:true,feeds:feeds16,revision:1});
+const single=R.project(actor,0,1,64,1,()=>true,{phase:.5,seed:3,readyBase:true,feeds:[feeds16[0]],revision:2});
+assert(R.contains(fed,actor.x,actor.y),'multi-feed deformation detached foot core');
+const maxRadius=p=>Math.max(...p.readyOutline.map(v=>Math.hypot(v.x-actor.x,v.y-actor.y)));
+assert(maxRadius(fed)<=maxRadius(single)+15,'sixteen feeds inflated the ready base unboundedly');
 assert.equal(R.bodyFor(actor),body,'ready base replaced the physical body mask');
 assert.equal(reads,1,'ready base scanned sprite pixels instead of using its cached outline');
 console.log(JSON.stringify({ok:true,sourcePixelReads:reads,movingProjections:100,maximumContactCandidates:32,pathQueries:paths}));
