@@ -1,11 +1,58 @@
 /* Reference-driven shadows: actual body alpha, ground projection, and swept xyz tips. */
 (() => {
-  const masks=new Map(),readyBases=new Map(),projectionCache=new WeakMap(),nativePolicies=new WeakSet(),scans=new Map();let revision=0,forcedRevision=0;
+  const masks=new Map(),readyBases=new Map(),projectionCache=new WeakMap(),nativePolicies=new WeakSet(),scans=new Map(),clearScans=new Map();let revision=0,forcedRevision=0;
   const nativeWorld=G.World,nativeBlock=nativeWorld?.projectileBlock,nativePath=nativeWorld?.projectilePathClear,nativeWall=nativeWorld?.isWall,nativeWalkable=nativeWorld?.walkable;
+  function isNativePolicy(clip){
+    const world=G.World;
+    return !!clip&&nativePolicies.has(clip)&&world?.projectileBlock===nativeBlock&&world?.projectilePathClear===nativePath&&world?.isWall===nativeWall&&world?.walkable===nativeWalkable;
+  }
+  function isRegionClear(minX,minY,maxX,maxY,clip){
+    const world=G.World;
+    if(!clip)return true;
+    if(!isNativePolicy(clip)||!world?.isWall||!world?.walkable)return false;
+    const tile=world.TS||32,x0=Math.floor(minX/tile)-1,y0=Math.floor(minY/tile)-1,x1=Math.floor(maxX/tile)+1,y1=Math.floor(maxY/tile)+1;
+    const region=x0+':'+y0+':'+x1+':'+y1+':'+forcedRevision;
+    const cached=clearScans.get(region);
+    if(cached?.world===world)return cached.clear;
+    let clear=true;
+    outer:for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){
+      if(world.isWall((x+.5)*tile,(y+.5)*tile)||!world.walkable(x,y)){clear=false;break outer;}
+    }
+    if(clearScans.size>512)clearScans.clear();
+    clearScans.set(region,{world,clear});
+    return clear;
+  }
+  function lineClear(ax,ay,bx,by,clip){
+    if(!clip)return true;
+    if(!isNativePolicy(clip))return clip(ax,ay,bx,by);
+    const minX=Math.min(ax,bx),minY=Math.min(ay,by),w=Math.abs(bx-ax)+2,h=Math.abs(by-ay)+2;
+    const obs=obstacleState({x:ax,y:ay},minX-ax-1,minY-ay-1,w+2,h+2,clip);
+    return !obs.blocked||nativeVisible(ax,ay,bx,by,obs);
+  }
+  function polylineClear(owner,points,clip){
+    if(!points.length)return true;
+    if(!clip)return true;
+    if(!isNativePolicy(clip))return clip(owner.x,owner.y,points[0].x,points[0].y)&&!points.some((p,i,list)=>i&&!clip(list[i-1].x,list[i-1].y,p.x,p.y));
+    let minX=owner.x,maxX=owner.x,minY=owner.y,maxY=owner.y;
+    for(const p of points){if(p.x<minX)minX=p.x;if(p.x>maxX)maxX=p.x;if(p.y<minY)minY=p.y;if(p.y>maxY)maxY=p.y;}
+    const obs=obstacleState(owner,minX-owner.x-1,minY-owner.y-1,maxX-minX+2,maxY-minY+2,clip);
+    if(!obs.blocked)return true;
+    if(!nativeVisible(owner.x,owner.y,points[0].x,points[0].y,obs))return false;
+    for(let i=1;i<points.length;i++)if(!nativeVisible(points[i-1].x,points[i-1].y,points[i].x,points[i].y,obs))return false;
+    return true;
+  }
+  function isPointOpen(x,y,pad,clip){
+    const world=G.World;
+    if(!clip)return true;
+    if(!isNativePolicy(clip)||!world?.isWall||!world?.walkable)return false;
+    const tile=world.TS||32,x0=Math.floor((x-pad)/tile)-1,y0=Math.floor((y-pad)/tile)-1,x1=Math.floor((x+pad)/tile)+1,y1=Math.floor((y+pad)/tile)+1;
+    for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++)if(world.isWall((tx+.5)*tile,(ty+.5)*tile)||!world.walkable(tx,ty))return false;
+    return true;
+  }
   function obstacleState(actor,left,top,w,h,clip){
     const world=G.World;
-    if(!clip)return {key:'open:'+forcedRevision,blocked:false};
-    if(!nativePolicies.has(clip)||world?.projectileBlock!==nativeBlock||world?.projectilePathClear!==nativePath||world?.isWall!==nativeWall||world?.walkable!==nativeWalkable)return {key:'custom:'+revision+':'+forcedRevision,blocked:true};
+    if(!clip)return {key:'open:'+forcedRevision,blocked:false,native:true};
+    if(!isNativePolicy(clip))return {key:'custom:'+revision+':'+forcedRevision,blocked:true,native:false};
     const tile=world.TS||32,x0=Math.floor((Math.min(actor.x,actor.x+left)-1)/tile)-1,y0=Math.floor((Math.min(actor.y,actor.y+top)-1)/tile)-1,x1=Math.floor((Math.max(actor.x,actor.x+left+w)+1)/tile)+1,y1=Math.floor((Math.max(actor.y,actor.y+top+h)+1)/tile)+1;
     const region=[x0,y0,x1,y1,forcedRevision].join(':');let state=scans.get(region);if(state?.world===world)return state;
     let bits='';const rectangles=[],circles=[];
@@ -58,7 +105,7 @@
     for(let y=0;y<canvas.height;y++){let left=canvas.width,right=-1;for(let x=0;x<canvas.width;x++)if(data[(y*canvas.width+x)*4+3]>24){left=Math.min(left,x);right=x;top=Math.min(top,y);}if(right<0)continue;for(const x of [left,right])for(const v of support){const dot=(x+.5)*v.dx+(y+.5)*v.dy;if(dot>v.dot){v.dot=dot;v.point={x:x+.5,y:y+.5};}}}
     const silhouette=support.map(v=>v.point).filter((v,i,list)=>v&&(!i||v.x!==list[i-1]?.x||v.y!==list[i-1]?.y));
     const body={key,canvas,data,silhouette,width:canvas.width,height:canvas.height,foot,bodyHeight:Math.max(1,foot.y-top),sourceURL:url,rect:rect.slice(),anchor:anchor.slice(),scale:k,mirror};
-    masks.set(key,body);if(masks.size>160)masks.delete(masks.keys().next().value);return body;
+    masks.set(key,body);if(masks.size>512)masks.delete(masks.keys().next().value);return body;
   }
   function alphaAt(body,x,y){x=Math.floor(x);y=Math.floor(y);return x>=0&&y>=0&&x<body.width&&y<body.height?body.data[(y*body.width+x)*4+3]:0;}
   function insidePolygon(poly,x,y){let inside=false;for(let i=0,j=poly.length-1;i<poly.length;j=i++){const a=poly[i],b=poly[j];if((a.y>y)!==(b.y>y)&&x<(b.x-a.x)*(y-a.y)/(b.y-a.y)+a.x)inside=!inside;}return inside;}
@@ -132,38 +179,48 @@
   }
   function project(actor,dx,dy,length,across=.65,pathClear=null,flow=null){
     const body=flow?.readyBase?readyBaseFor(actor):bodyFor(actor);if(!body)return null;const d=Math.hypot(dx,dy)||1;dx/=d;dy/=d;length=Math.max(1,length);
-    const material=flow?{phase:Number(flow.phase)||0,seed:Number(flow.seed)||0,band:Math.max(1,Math.floor(body.bodyHeight/32)),strength:Math.max(.6,Math.min(2,body.bodyHeight/64))*(Number(flow.strength)||1)}:null;
+    const bandDiv=body.kind==='ready-base'?32:6;
+    const material=flow?{phase:Number(flow.phase)||0,seed:Number(flow.seed)||0,band:Math.max(body.kind==='ready-base'?1:4,Math.floor(body.bodyHeight/bandDiv)),strength:Math.max(.6,Math.min(2,body.bodyHeight/64))*(Number(flow.strength)||1)}:null;
     if(material&&body.kind==='ready-base'){material.feeds=(flow.feeds||[]).map(feed=>({...feed}));material.revision=Number(flow.revision)||0;}
     const key=[body.key,dx,dy,length,across,actor.x,actor.y,material?.phase??'',material?.seed??'',material?.strength??'',material?.revision??'',...(material?.feeds||[]).map(feed=>[feed.sourceCast,feed.segment,feed.stage,feed.dx,feed.dy,feed.pull,feed.pinch,feed.reach,feed.neckWidth].join(':'))].join('|'),old=projectionCache.get(actor);
+    const nativeFast=!pathClear||isNativePolicy(pathClear);
+    if(old?.key===key&&old.world===G.World&&old.clip===pathClear&&old.path===G.World?.projectilePathClear&&old.block===G.World?.projectileBlock&&old.forcedRevision===forcedRevision&&nativeFast&&old.obstacleNative)return old.projection;
     const matrix=body.kind==='ready-base'?{a:1,b:0,c:0,d:.65,e:actor.x,f:actor.y}:{a:-dy*across,b:dx*across,c:-dx*length/body.bodyHeight,d:-dy*length/body.bodyHeight,e:actor.x,f:actor.y};
     const transform=(p,warp=flowRow(body,material,p.y))=>{const x=(p.x-body.foot.x)*warp.scale+warp.offset,y=p.y-body.foot.y;return {x:matrix.a*x+matrix.c*y+actor.x,y:matrix.b*x+matrix.d*y+actor.y};};
-    const outline=body.kind==='ready-base'?readyOutline(body,matrix,material):null,hull=outline||body.silhouette.map(p=>transform(p)),corners=[];
-    if(outline)corners.push(...outline);
+    const outline=body.kind==='ready-base'?readyOutline(body,matrix,material):null,hull=outline||body.silhouette.map(p=>transform(p));
+    let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+    const include=p=>{if(p.x<minX)minX=p.x;if(p.x>maxX)maxX=p.x;if(p.y<minY)minY=p.y;if(p.y>maxY)maxY=p.y;};
+    if(outline)for(const p of outline)include(p);
     else if(material){
-      for(let y=0;y<body.height;y+=material.band){const h=Math.min(material.band,body.height-y),warp=flowRow(body,material,y+.5);for(const x of [0,body.width]){corners.push(transform({x,y},warp),transform({x,y:y+h},warp));}}
-    }else for(const [x,y]of [[0,0],[body.width,0],[body.width,body.height],[0,body.height]])corners.push(transform({x,y}));
-    const left=Math.floor(Math.min(...corners.map(p=>p.x)))-1,top=Math.floor(Math.min(...corners.map(p=>p.y)))-1,w=Math.ceil(Math.max(...corners.map(p=>p.x)))-left+2,h=Math.ceil(Math.max(...corners.map(p=>p.y)))-top+2;
+      for(let y=0;y<body.height;y+=material.band){const h=Math.min(material.band,body.height-y),warp=flowRow(body,material,y+.5);for(const x of [0,body.width]){include(transform({x,y},warp));include(transform({x,y:y+h},warp));}}
+    }else for(const [x,y]of [[0,0],[body.width,0],[body.width,body.height],[0,body.height]])include(transform({x,y}));
+    const left=Math.floor(minX)-1,top=Math.floor(minY)-1,w=Math.ceil(maxX)-left+2,h=Math.ceil(maxY)-top+2;
     const obstacle=obstacleState(actor,left-actor.x,top-actor.y,w,h,pathClear);
     if(old?.key===key&&old.world===G.World&&old.obstacleKey===obstacle.key&&old.clip===pathClear&&old.path===G.World?.projectilePathClear&&old.block===G.World?.projectileBlock)return old.projection;
-    const clip=obstacle.blocked?visibility(actor,Math.hypot(w,h)+Math.hypot(left-actor.x,top-actor.y)+2,obstacle,pathClear):null;
+    const clipRadius=Math.hypot(w,h)+Math.hypot(left-actor.x,top-actor.y)+2;
+    const reuseClip=obstacle.blocked&&obstacle.native&&old?.clipPoly&&old.obstacleKey===obstacle.key&&old.actorX===actor.x&&old.actorY===actor.y&&old.clipRadius>=clipRadius;
+    const clip=obstacle.blocked?(reuseClip?old.clipPoly:visibility(actor,clipRadius+8,obstacle,pathClear)):null;
     const visible=p=>!obstacle.blocked||(obstacle.native?nativeVisible(actor.x,actor.y,p.x,p.y,obstacle):pathClear(actor.x,actor.y,p.x,p.y));
-    const canvas=old?.projection.canvas||document.createElement('canvas');canvas.width=w;canvas.height=h;const ctx=canvas.getContext('2d');ctx.imageSmoothingEnabled=false;ctx.save();
+    const canvas=old?.projection.canvas||document.createElement('canvas');
+    const needResize=canvas.width<w||canvas.height<h||canvas.width>w+64||canvas.height>h+64;
+    if(needResize){canvas.width=w;canvas.height=h;}
+    const ctx=canvas.getContext('2d');
+    if(!needResize)ctx.clearRect?.(0,0,w,h);
+    ctx.imageSmoothingEnabled=false;ctx.save();
     if(clip){ctx.beginPath();clip.forEach((p,i)=>i?ctx.lineTo(p.x-left,p.y-top):ctx.moveTo(p.x-left,p.y-top));ctx.closePath();ctx.clip();}
     if(outline){
       ctx.fillStyle='#030304';ctx.beginPath();outline.forEach((p,i)=>i?ctx.lineTo(p.x-left,p.y-top):ctx.moveTo(p.x-left,p.y-top));ctx.closePath();ctx.fill();
     }else if(material){
       ctx.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,actor.x-left,actor.y-top);
       const source=opaqueShadow(body);
-      for(let row=0;row<body.height;row+=material.band){const sh=Math.min(material.band,body.height-row),warp=flowRow(body,material,row+.5);ctx.drawImage(source,0,row,body.width,sh,-body.foot.x*warp.scale+warp.offset,row-body.foot.y,body.width*warp.scale,sh);}
+      // Slight band overlap seals sub-pixel seams without expensive self-blits.
+      for(let row=0;row<body.height;row+=material.band){const sh=Math.min(material.band,body.height-row),warp=flowRow(body,material,row+.5);ctx.drawImage(source,0,row,body.width,sh,-body.foot.x*warp.scale+warp.offset,row-body.foot.y,body.width*warp.scale,sh+.6);}
     }else{ctx.setTransform(matrix.a,matrix.b,matrix.c,matrix.d,actor.x-left,actor.y-top);ctx.drawImage(body.canvas,-body.foot.x,-body.foot.y);}
     ctx.restore();
-    // Adjacent transformed pixel bands share antialiased edges. Seal those
-    // seams so a solid shadow cannot become translucent striped material.
-    if(material&&!outline)for(let i=0;i<3;i++)ctx.drawImage(canvas,0,0);
     const projection={body,matrix,flow:material,canvas,x:left,y:top,width:w,height:h,points:hull.filter(visible),hull,clip,visible,sourceURL:body.sourceURL,rect:body.rect,anchor:body.anchor,length,across,revision};
     if(outline){projection.readyOutline=outline;projection.feeds=material?.feeds||[];}
-    if(material)projection.points=projection.points.filter(p=>contains(projection,p.x,p.y));
-    projectionCache.set(actor,{key,projection,world:G.World,obstacleKey:obstacle.key,clip:pathClear,path:G.World?.projectilePathClear,block:G.World?.projectileBlock});return projection;
+    else if(material)projection.points=projection.points.filter(p=>contains(projection,p.x,p.y));
+    projectionCache.set(actor,{key,projection,world:G.World,obstacleKey:obstacle.key,obstacleNative:!!obstacle.native,forcedRevision,clip:pathClear,clipPoly:clip,clipRadius:reuseClip?old.clipRadius:clipRadius+8,actorX:actor.x,actorY:actor.y,path:G.World?.projectilePathClear,block:G.World?.projectileBlock});return projection;
   }
   function contains(projection,x,y){
     if(!projection||!projection.visible({x,y}))return false;
@@ -191,7 +248,7 @@
       if(p&&contains(projection,p.x,p.y))return p;
     }return null;
   }
-  function drawProjection(ctx,projection,alpha=1){if(!projection)return;ctx.save();ctx.globalAlpha*=alpha;ctx.imageSmoothingEnabled=false;ctx.drawImage(projection.canvas,projection.x,projection.y);ctx.restore();}
+  function drawProjection(ctx,projection,alpha=1){if(!projection)return;ctx.save();ctx.globalAlpha*=alpha;ctx.imageSmoothingEnabled=false;ctx.drawImage(projection.canvas,0,0,projection.width,projection.height,projection.x,projection.y,projection.width,projection.height);ctx.restore();}
   function archPoint(arc,u){
     u=clamp(u);const s=Math.sin(Math.PI*u);return {x:arc.source.x+(arc.destination.x-arc.source.x)*u+arc.normal.x*arc.sideBow*s,y:arc.source.y+(arc.destination.y-arc.source.y)*u+arc.normal.y*arc.sideBow*s,z:arc.destination.z*u+arc.lift*s};
   }
@@ -221,7 +278,7 @@
     const points=spine.map(p=>({x:p.x,y:p.y-p.z}));ctx.save();ctx.globalAlpha*=alpha;ctx.fillStyle='#080a09';ctx.beginPath();
     for(let side=0;side<2;side++)for(let j=0;j<points.length;j++){const i=side?points.length-1-j:j,p=points[i],a=points[Math.max(0,i-1)],b=points[Math.min(points.length-1,i+1)],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy)||1,u=start+(end-start)*i/(points.length-1),w=arc.width*(.5+1.1*Math.sin(Math.PI*u)**.8)*Math.min(1,(progress-u)/.18)*(side?-1:1);if(!side&&!j)ctx.moveTo(p.x-dy/d*w,p.y+dx/d*w);else ctx.lineTo(p.x-dy/d*w,p.y+dx/d*w);}ctx.closePath();ctx.fill();ctx.restore();
   }
-  G.ShikamaruReferenceGeometry={bodyFor,alphaAt,project,contains,groundContact,drawProjection,archPoint,makeArch,sweptBody,advanceArch,drawArch,registerNativePolicy(policy){nativePolicies.add(policy);},beginFrame(){revision++;scans.clear();},invalidateWorld(){revision++;forcedRevision++;scans.clear();}};
+  G.ShikamaruReferenceGeometry={bodyFor,alphaAt,project,contains,groundContact,drawProjection,archPoint,makeArch,sweptBody,advanceArch,drawArch,isRegionClear,isPointOpen,lineClear,polylineClear,registerNativePolicy(policy){nativePolicies.add(policy);},beginFrame(){revision++;scans.clear();clearScans.clear();},invalidateWorld(){revision++;forcedRevision++;scans.clear();clearScans.clear();}};
   // World is a stable singleton across runs; a reset can replace same-tile props.
   for(const name of ['reset','setBiome','setArena']){
     const previous=G.World?.[name];if(!previous)continue;

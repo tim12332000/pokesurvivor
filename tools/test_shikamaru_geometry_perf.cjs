@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 let reads=0,paths=0;
-const context={imageSmoothingEnabled:false,save(){},restore(){},translate(){},scale(){},drawImage(){},setTransform(){},fillRect(){},fill(){},beginPath(){},lineTo(){},moveTo(){},closePath(){},clip(){},getImageData(x,y,w,h){reads++;const data=new Uint8ClampedArray(w*h*4);for(let y=4;y<28;y++)for(let x=8;x<24;x++)data[(y*w+x)*4+3]=255;return {data};}};
+const context={imageSmoothingEnabled:false,save(){},restore(){},translate(){},scale(){},drawImage(){},setTransform(){},fillRect(){},clearRect(){},fill(){},beginPath(){},lineTo(){},moveTo(){},closePath(){},clip(){},getImageData(x,y,w,h){reads++;const data=new Uint8ClampedArray(w*h*4);for(let y=4;y<28;y++)for(let x=8;x<24;x++)data[(y*w+x)*4+3]=255;return {data};}};
 const G={World:{},Sprites:{PX:1,sheet(){return {ready:true,img:{src:'fixture.png'}}},animMeta(){return {n:1,r:1,w:32,h:32,ax:16,ay:28}}}};
 vm.runInNewContext(fs.readFileSync('art-review/shikamaru/reference-shadow-geometry.js','utf8'),{G,document:{createElement(){return {width:0,height:0,getContext(){return context}}}},Math,Map,WeakMap,WeakSet});
 const R=G.ShikamaruReferenceGeometry,actor={dex:19,x:0,y:0,r:10,anim:{cur:'Idle',frame:0,dir:0,scale:1}},clear=(ax,ay,bx)=>{paths++;return bx<30};

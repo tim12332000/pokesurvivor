@@ -26,19 +26,28 @@
   const decoyLegal=(s,d)=>stateLegal(s)&&!d.dead&&d.hp>0&&d.age<d.life;
   function decoys(){const out=[];for(const s of states.values())for(const d of s.decoys)if(decoyLegal(s,d))out.push(d);return out;}
   function isDecoy(d){const s=states.get(d?.owner);return !!s&&s.decoys.includes(d)&&decoyLegal(s,d);}
-  const path=(ax,ay,bx,by)=>S.clearPath(ax,ay,bx,by);
+  const path=(ax,ay,bx,by)=>G.ShikamaruReferenceGeometry?.lineClear?G.ShikamaruReferenceGeometry.lineClear(ax,ay,bx,by,S.clearPath):S.clearPath(ax,ay,bx,by);
   function threats(a,p){
     return G.EnemyMgr.queryCircle(a.x,a.y,p.range).filter(e=>alive(e)&&!e.friendly&&!e.remote&&e.behavior!=='thief'&&Math.hypot(e.x-a.x,e.y-a.y)<=p.range&&path(a.x,a.y,e.x,e.y));
   }
-  function canCast(a,m){
-    return G.Game.state==='playing'&&valid(a)&&!a.frozen&&supports(m)&&!!learned(a)&&state(a).cooldown<=EPS&&threats(a,profile(a,m)).length>0;
+  function hasThreat(a,p){
+    for(const e of G.EnemyMgr.queryCircle(a.x,a.y,p.range))if(alive(e)&&!e.friendly&&!e.remote&&e.behavior!=='thief'&&Math.hypot(e.x-a.x,e.y-a.y)<=p.range&&path(a.x,a.y,e.x,e.y))return true;
+    return false;
   }
+  function canCast(a,m){
+    return G.Game.state==='playing'&&valid(a)&&!a.frozen&&supports(m)&&!!learned(a)&&state(a).cooldown<=EPS&&hasThreat(a,profile(a,m));
+  }
+  const silhouetteCache=new Map();
   function silhouette(owner,dir){
-    const height=64*(owner.anim?.scale||1),canvas=document.createElement('canvas');canvas.width=Math.ceil(height*2);canvas.height=Math.ceil(height*1.5);
+    const height=64*(owner.anim?.scale||1),key=height+':'+dir;
+    if(silhouetteCache.has(key))return silhouetteCache.get(key);
+    const canvas=document.createElement('canvas');canvas.width=Math.ceil(height*2);canvas.height=Math.ceil(height*1.5);
     const ctx=canvas.getContext('2d'),x=canvas.width/2,y=canvas.height-8;
     if(!G.ShikamaruArt?.draw(ctx,{}, {x,y,height,state:'idle',time:0,dir,pose:false}))return null;
     ctx.globalCompositeOperation='source-in';ctx.fillStyle='#08070b';ctx.fillRect(0,0,canvas.width,canvas.height);
-    return {canvas,x,y,height};
+    const entry={canvas,x,y,height};
+    silhouetteCache.set(key,entry);if(silhouetteCache.size>24)silhouetteCache.delete(silhouetteCache.keys().next().value);
+    return entry;
   }
   function cast(a,m){
     if(!canCast(a,m))return false;
@@ -55,14 +64,21 @@
     s.cooldown=p.cd;m.t=p.cd;s.casts++;return true;
   }
   function targetForEnemies(enemy,fallback){
-    if(!alive(enemy)||enemy.friendly||enemy.remote||enemy.behavior==='thief')return fallback;
+    if(!states.size||!alive(enemy)||enemy.friendly||enemy.remote||enemy.behavior==='thief')return fallback;
+    let hasAny=false;for(const s of states.values())if(s.decoys.length){hasAny=true;break;}
+    if(!hasAny)return fallback;
     const base=fallback?Math.hypot(fallback.x-enemy.x,fallback.y-enemy.y):Infinity;
     const otherDecoy=G.LF2Julian?.isDecoy?.(fallback)||isDecoy(fallback);
-    let best=null,distance=otherDecoy?base:base*1.5;
-    for(const d of decoys()){
-      const range=Math.hypot(d.x-enemy.x,d.y-enemy.y);
-      if(range>d.lureRange||range>distance||!path(enemy.x,enemy.y,d.x,d.y))continue;
-      best=d;distance=range;
+    let best=null,distance=otherDecoy?base:base*1.5,dist2=distance*distance;
+    for(const s of states.values()){
+      if(!stateLegal(s))continue;
+      for(const d of s.decoys){
+        if(d.dead||d.hp<=0||d.age>=d.life)continue;
+        const dx=d.x-enemy.x,dy=d.y-enemy.y,r2=dx*dx+dy*dy,lure2=d.lureRange*d.lureRange;
+        if(r2>lure2||r2>dist2)continue;
+        if(!path(enemy.x,enemy.y,d.x,d.y))continue;
+        best=d;dist2=r2;distance=Math.sqrt(r2);
+      }
     }
     if(!best)return fallback;
     if(!best.enemies.has(enemy)){best.enemies.add(enemy);const s=states.get(best.owner);if(s)s.redirects++;}
@@ -102,17 +118,23 @@
     for(const d of decoys()){
       const v=visualFor(d);ctx.save();ctx.globalAlpha=.76*v.opacity;
       if(d.image){
-        const image=d.image,step=Math.max(3,Math.ceil(image.height/((G.Settings?.fx??1)>0?22:12)));
+        const image=d.image;
         ctx.imageSmoothingEnabled=false;
-        // Ink accumulates from the feet in separate bands. Collapse reverses
-        // that flow; it does not scale a rigid standing cutout as one object.
-        for(let sy=Math.max(0,Math.floor(image.y-image.height-3));sy<image.y;sy+=step){
-          const sh=Math.min(step,image.y-sy),distance=image.y-sy-sh,t=clamp(distance/image.height);
-          const growth=v.phase==='form'?settle((v.progress-t*.28)/.72):v.phase==='collapse'?1-settle(v.progress*(1+.25*t)):1;
-          if(growth<=0)continue;
-          const spread=1+(1-growth)*.45,w=image.canvas.width*spread;
-          const drift=Math.sin(d.age*2.2+d.seed+t*5)*Math.sin(t*Math.PI)*(.35+2*(1-growth));
-          ctx.drawImage(image.canvas,0,sy,image.canvas.width,sh,d.x-image.x*spread+drift,d.y-(distance+sh)*growth,w,Math.max(.2,sh*growth));
+        if(v.phase==='hold'){
+          const drift=Math.sin(d.age*2.2+d.seed)*.5;
+          ctx.drawImage(image.canvas,d.x-image.x+drift,d.y-image.y);
+        }else{
+          const step=Math.max(3,Math.ceil(image.height/((G.Settings?.fx??1)>0?18:10)));
+          // Ink accumulates from the feet in separate bands. Collapse reverses
+          // that flow; it does not scale a rigid standing cutout as one object.
+          for(let sy=Math.max(0,Math.floor(image.y-image.height-3));sy<image.y;sy+=step){
+            const sh=Math.min(step,image.y-sy),distance=image.y-sy-sh,t=clamp(distance/image.height);
+            const growth=v.phase==='form'?settle((v.progress-t*.28)/.72):1-settle(v.progress*(1+.25*t));
+            if(growth<=0)continue;
+            const spread=1+(1-growth)*.45,w=image.canvas.width*spread;
+            const drift=Math.sin(d.age*2.2+d.seed+t*5)*Math.sin(t*Math.PI)*(.35+2*(1-growth));
+            ctx.drawImage(image.canvas,0,sy,image.canvas.width,sh,d.x-image.x*spread+drift,d.y-(distance+sh)*growth,w,Math.max(.2,sh*growth));
+          }
         }
       }
       else{

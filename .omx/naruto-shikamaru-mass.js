@@ -20,8 +20,10 @@
     let s=states.get(a);if(s&&s.world!==G.World){clear(a);s=null;}
     if(!s){s={owner:a,world:G.World,cooldown:0,cast:null,casts:0,captured:0,hits:0,shockHits:0,bombHits:0,damage:0,contacts:[]};states.set(a,s);}return s;
   }
-  function targets(center,radius){return G.EnemyMgr.queryCircle(center.x,center.y,radius+64).filter(e=>alive(e)&&!e.friendly&&Math.hypot(e.x-center.x,e.y-center.y)<=radius+(e.r||0)&&S.clearPath(center.x,center.y,e.x,e.y));}
-  function canCast(a,m){return valid(a)&&!a.frozen&&supports(m)&&!!learned(a)&&state(a).cooldown<=1e-8&&targets(a,profile(a,m).radius).length>0;}
+  const lineClear=(ax,ay,bx,by)=>G.ShikamaruReferenceGeometry?.lineClear?G.ShikamaruReferenceGeometry.lineClear(ax,ay,bx,by,S.clearPath):S.clearPath(ax,ay,bx,by);
+  function targets(center,radius){return G.EnemyMgr.queryCircle(center.x,center.y,radius+64).filter(e=>alive(e)&&!e.friendly&&Math.hypot(e.x-center.x,e.y-center.y)<=radius+(e.r||0)&&lineClear(center.x,center.y,e.x,e.y));}
+  function hasTarget(center,radius){for(const e of G.EnemyMgr.queryCircle(center.x,center.y,radius+64))if(alive(e)&&!e.friendly&&Math.hypot(e.x-center.x,e.y-center.y)<=radius+(e.r||0)&&lineClear(center.x,center.y,e.x,e.y))return true;return false;}
+  function canCast(a,m){return valid(a)&&!a.frozen&&supports(m)&&!!learned(a)&&state(a).cooldown<=1e-8&&hasTarget(a,profile(a,m).radius);}
   function cast(a,m){
     if(!valid(a)||a.frozen||!supports(m)||!learned(a))return false;
     const s=state(a),p=profile(a,m),center={x:a.x,y:a.y},initial=targets(center,p.radius);
@@ -64,19 +66,45 @@
     for(const [a,s]of states)if(!valid(a)||s.world!==G.World){clear(a);}
     for(const b of casts.slice()){
       if(!legal(b)){drop(b);continue;}b.age+=dt;
-      for(const e of [...b.bound])if(!alive(e)||b.age>=b.releaseAt||Math.hypot(e.x-b.center.x,e.y-b.center.y)>b.radius+(e.r||0)||!S.clearPath(b.owner.x,b.owner.y,e.x,e.y)||!S.clearPath(b.center.x,b.center.y,e.x,e.y))unbind(b,e);
+      const ox=b.owner.x,oy=b.owner.y,cx=b.center.x,cy=b.center.y,pathFn=G.World?.projectilePathClear;
+      const ownerClearCache=new Map(),centerClearCache=new Map();
+      const ownerClear=e=>{
+        let v=ownerClearCache.get(e);if(v!==undefined)return v;
+        const r=b.rays.get(e);
+        if(r&&r._ocWorld===G.World&&r._ocPath===pathFn&&r._ocOx===ox&&r._ocOy===oy&&r._ocEx===e.x&&r._ocEy===e.y){v=r._ocVal;}
+        else{v=lineClear(ox,oy,e.x,e.y);if(r){r._ocWorld=G.World;r._ocPath=pathFn;r._ocOx=ox;r._ocOy=oy;r._ocEx=e.x;r._ocEy=e.y;r._ocVal=v;}}
+        ownerClearCache.set(e,v);return v;
+      };
+      const centerClear=e=>{
+        let v=centerClearCache.get(e);if(v!==undefined)return v;
+        const r=b.rays.get(e);
+        if(r&&r._ccWorld===G.World&&r._ccPath===pathFn&&r._ccEx===e.x&&r._ccEy===e.y){v=r._ccVal;}
+        else{v=lineClear(cx,cy,e.x,e.y);if(r){r._ccWorld=G.World;r._ccPath=pathFn;r._ccEx=e.x;r._ccEy=e.y;r._ccVal=v;}}
+        centerClearCache.set(e,v);return v;
+      };
+      const inRadius=e=>{const dx=e.x-cx,dy=e.y-cy,lim=b.radius+(e.r||0);return dx*dx+dy*dy<=lim*lim;};
+      for(const e of [...b.bound])if(!alive(e)||b.age>=b.releaseAt||!inRadius(e)||!ownerClear(e)||!centerClear(e))unbind(b,e);
       if(b.age>=b.spec.prepare&&b.age<b.releaseAt){
-        for(const e of targets(b.center,b.radius))if(!b.rays.has(e))b.rays.set(e,{target:e,born:b.age-dt,travelled:0,source:{x:b.owner.x,y:b.owner.y,z:0},current:{x:b.owner.x,y:b.owner.y,z:0},previous:{x:b.owner.x,y:b.owner.y,z:0},hit:false,linked:true,shocks:[],shockEvents:[]});
+        for(const e of G.EnemyMgr.queryCircle(cx,cy,b.radius+64)){
+          if(b.rays.has(e)||!alive(e)||e.friendly||!inRadius(e)||!centerClear(e))continue;
+          b.rays.set(e,{target:e,born:b.age-dt,travelled:0,source:{x:ox,y:oy,z:0},current:{x:ox,y:oy,z:0},previous:{x:ox,y:oy,z:0},hit:false,linked:true,shocks:[],shockEvents:[]});
+        }
         for(const ray of b.rays.values()){
           const e=ray.target;if(!alive(e))continue;
-          ray.source={x:b.owner.x,y:b.owner.y,z:0};ray.linked=S.clearPath(ray.source.x,ray.source.y,e.x,e.y)&&Math.hypot(e.x-b.center.x,e.y-b.center.y)<=b.radius+(e.r||0);
+          ray.source={x:ox,y:oy,z:0};ray.linked=inRadius(e)&&ownerClear(e);
           if(!ray.linked)continue;
-          const dx=e.x-ray.source.x,dy=e.y-ray.source.y,d=Math.hypot(dx,dy)||1,body=G.ShikamaruReferenceGeometry.bodyFor(e)||{bodyHeight:e.bodyH||24},height=body.bodyHeight*.45;
+          const dx=e.x-ox,dy=e.y-oy,d=Math.hypot(dx,dy)||1;
+          let body=ray.bodyCache;
+          if(!body||ray.bodyFrame!==e.anim?.frame||ray.bodyCur!==e.anim?.cur||ray.bodyDir!==e.anim?.dir){
+            body=G.ShikamaruReferenceGeometry.bodyFor(e)||{bodyHeight:e.bodyH||24};
+            ray.bodyCache=body;ray.bodyFrame=e.anim?.frame;ray.bodyCur=e.anim?.cur;ray.bodyDir=e.anim?.dir;
+          }
+          const height=body.bodyHeight*.45;
           ray.bodyPoint={x:e.x,y:e.y,z:height};
           const overrun=Math.max(36,(e.r||12)+12);ray.previous={...ray.current};ray.travelled=Math.min(d+overrun,ray.travelled+Math.max(0,Math.min(dt,b.age-b.spec.prepare))*b.spec.speed);
           // One straight, tapered shaft per target; its tip really sweeps through
           // the body before possession. Keep the whole shaft straight while moving.
-          const reach=ray.hit?d+overrun:ray.travelled;ray.current={x:ray.source.x+dx/d*reach,y:ray.source.y+dy/d*reach,z:height*reach/Math.max(24,d)};
+          const reach=ray.hit?d+overrun:ray.travelled;ray.current={x:ox+dx/d*reach,y:oy+dy/d*reach,z:height*reach/Math.max(24,d)};
           if(!ray.hit){
             const probe={target:e,width:4},Ref=G.ShikamaruReferenceGeometry,contact=Ref.sweptBody(probe,ray.previous,ray.current,body,S.clearPath)||Ref.sweptBody(probe,ray.source,ray.current,body,S.clearPath);
             if(contact&&!ray.contact){ray.contact={...contact};ray.contactAge=b.age;}
@@ -84,7 +112,7 @@
           }
         }
       }
-      const ready=[...b.initialTargets].every(e=>!alive(e)||Math.hypot(e.x-b.center.x,e.y-b.center.y)>b.radius+(e.r||0)||!S.clearPath(b.owner.x,b.owner.y,e.x,e.y)||b.rays.get(e)?.hit);
+      const ready=[...b.initialTargets].every(e=>!alive(e)||!inRadius(e)||!ownerClear(e)||b.rays.get(e)?.hit);
       if(ready&&b.conductAt===null)b.conductAt=b.age+.12;
       if(b.conductAt!==null)for(const ray of b.rays.values()){
         if(!legal(b))break;
@@ -155,7 +183,11 @@
       g.addColorStop(0,'rgba(20,14,28,.025)');g.addColorStop(.8,'rgba(20,14,28,.045)');g.addColorStop(1,'rgba(20,14,28,0)');
       ctx.fillStyle=g;ctx.beginPath();ctx.arc(b.center.x,b.center.y,r,0,Math.PI*2);ctx.fill();
       ctx.globalAlpha=fade;ctx.strokeStyle='#030304';ctx.lineWidth=4;
-      for(const e of b.bound){ctx.beginPath();ctx.ellipse(e.x,e.y,(e.r||12)+4,5,0,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(e.x-(e.r||12),e.y);ctx.quadraticCurveTo(e.x,e.y-12,e.x+(e.r||12),e.y);ctx.stroke();}
+      if(b.bound.size){
+        ctx.beginPath();
+        for(const e of b.bound){const er=(e.r||12);ctx.moveTo(e.x+er+4,e.y);ctx.ellipse(e.x,e.y,er+4,5,0,0,Math.PI*2);ctx.moveTo(e.x-er,e.y);ctx.quadraticCurveTo(e.x,e.y-12,e.x+er,e.y);}
+        ctx.stroke();
+      }
       if(b.exploded&&b.age<b.blastAt+b.spec.aftermath){
         const v=blastVisual(b),r=b.radius*v.front;
         ctx.globalAlpha=(1-v.u)*.48;ctx.fillStyle='#2a1d19';ctx.beginPath();ctx.ellipse(b.center.x,b.center.y,r*.75,r*.44,0,0,Math.PI*2);ctx.fill();
@@ -176,19 +208,52 @@
   function bombPoint(b,u){const s=b.bomb.source,side=Math.cos(b.bomb.aim)<-.25?-1:1;return {x:s.x+(b.center.x-s.x)*u+Math.sin(Math.PI*u)*24*side,y:s.y+(b.center.y-s.y)*u-Math.sin(Math.PI*u)*84};}
   function air(ctx){
     for(const b of casts){if(!legal(b))continue;
-      if(b.age<b.releaseAt){ctx.save();ctx.fillStyle='#030304';for(const ray of b.rays.values()){
-        if(!alive(ray.target)||!ray.linked||ray.travelled<=0)continue;const s=ray.source,t={x:ray.current.x,y:ray.current.y-ray.current.z},dx=t.x-s.x,dy=t.y-s.y,d=Math.hypot(dx,dy)||1,nx=-dy/d,ny=dx/d,v=rayVisualFor(b,ray),neck=Math.max(0,d-v.head),tail=Math.min(1,v.width);
-        ctx.beginPath();ctx.moveTo(s.x+nx*tail,s.y+ny*tail);ctx.lineTo(s.x+dx/d*neck+nx*tail,s.y+dy/d*neck+ny*tail);ctx.lineTo(s.x+dx/d*neck+nx*v.width,s.y+dy/d*neck+ny*v.width);ctx.lineTo(t.x,t.y);ctx.lineTo(s.x+dx/d*neck-nx*v.width,s.y+dy/d*neck-ny*v.width);ctx.lineTo(s.x+dx/d*neck-nx*tail,s.y+dy/d*neck-ny*tail);ctx.lineTo(s.x-nx*tail,s.y-ny*tail);ctx.closePath();ctx.fill();
-        if(v.impact&&ray.contact){const x=ray.contact.x,y=ray.contact.y-ray.contact.z;ctx.save();ctx.globalAlpha=v.impact;ctx.strokeStyle='#d3c4a6';ctx.lineWidth=1;for(const sign of [-1,1]){ctx.beginPath();ctx.moveTo(x+nx*4*sign,y+ny*4*sign);ctx.lineTo(x+nx*(10+5*v.impact)*sign-dx/d*4,y+ny*(10+5*v.impact)*sign-dy/d*4);ctx.stroke();}ctx.restore();}
-        for(const packet of ray.shocks){
-          if(packet.done||packet.progress<=0||!b.bound.has(ray.target))continue;
-          const tip=shockPoint(ray,packet),end={x:tip.x,y:tip.y-tip.z},body=ray.bodyPoint,l=Math.hypot(body.x-s.x,body.y-body.z-s.y)||1,start=Math.max(0,packet.progress-Math.min(.25,34/l));
-          ctx.save();ctx.strokeStyle='#ffca28';ctx.lineWidth=4.5;ctx.lineJoin='miter';ctx.beginPath();
-          for(let j=0;j<=6;j++){const u=start+(packet.progress-start)*j/6,off=j&&j<6?(j%2?1:-1)*5:0,x=s.x+(body.x-s.x)*u+nx*off,y=s.y+(body.y-body.z-s.y)*u+ny*off;j?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();
-          ctx.strokeStyle='#fff6c8';ctx.lineWidth=1.8;ctx.stroke();ctx.beginPath();ctx.moveTo(end.x-dx/d*10,end.y-dy/d*10);ctx.lineTo(end.x,end.y);ctx.stroke();ctx.restore();
+      if(b.age<b.releaseAt){
+        ctx.save();ctx.fillStyle='#030304';ctx.beginPath();
+        const impacts=[],shocks=[],events=[];
+        for(const ray of b.rays.values()){
+          if(!alive(ray.target)||!ray.linked||ray.travelled<=0)continue;
+          const s=ray.source,tx=ray.current.x,ty=ray.current.y-ray.current.z,dx=tx-s.x,dy=ty-s.y,d=Math.hypot(dx,dy)||1,inv=1/d,ux=dx*inv,uy=dy*inv,nx=-uy,ny=ux,v=rayVisualFor(b,ray),neck=Math.max(0,d-v.head),tail=Math.min(1,v.width),nxT=nx*tail,nyT=ny*tail,nxW=nx*v.width,nyW=ny*v.width,px=s.x+ux*neck,py=s.y+uy*neck;
+          ctx.moveTo(s.x+nxT,s.y+nyT);ctx.lineTo(px+nxT,py+nyT);ctx.lineTo(px+nxW,py+nyW);ctx.lineTo(tx,ty);ctx.lineTo(px-nxW,py-nyW);ctx.lineTo(px-nxT,py-nyT);ctx.lineTo(s.x-nxT,s.y-nyT);ctx.closePath();
+          if(v.impact&&ray.contact)impacts.push({ray,ux,uy,nx,ny,impact:v.impact});
+          if(b.bound.has(ray.target)){
+            for(const packet of ray.shocks)if(!packet.done&&packet.progress>0)shocks.push({ray,packet,ux,uy,nx,ny});
+          }
+          const event=ray.shockEvents.at(-1);if(event&&b.age-event.at<.2)events.push({ray,event});
         }
-        const event=ray.shockEvents.at(-1);if(event&&b.age-event.at<.2){const u=(b.age-event.at)/.2,x=event.point.x,y=event.point.y-event.point.z,r=(ray.target.r||12)+7;ctx.save();ctx.globalAlpha=1-u;ctx.strokeStyle='#ffca28';ctx.lineWidth=3;ctx.beginPath();for(let j=0;j<9;j++){const a=j*Math.PI/4,d=r*(j%2?.6:1);const px=x+Math.cos(a)*d,py=y+Math.sin(a)*d*.7;j?ctx.lineTo(px,py):ctx.moveTo(px,py);}ctx.stroke();ctx.strokeStyle='#fff6c8';ctx.lineWidth=1;ctx.stroke();ctx.restore();}
-      }ctx.restore();}
+        ctx.fill();
+        if(impacts.length){
+          ctx.strokeStyle='#d3c4a6';ctx.lineWidth=1;
+          for(const it of impacts){const x=it.ray.contact.x,y=it.ray.contact.y-it.ray.contact.z,span=10+5*it.impact;ctx.globalAlpha=it.impact;ctx.beginPath();for(const sign of [-1,1]){ctx.moveTo(x+it.nx*4*sign,y+it.ny*4*sign);ctx.lineTo(x+it.nx*span*sign-it.ux*4,y+it.ny*span*sign-it.uy*4);}ctx.stroke();}
+          ctx.globalAlpha=1;
+        }
+        if(shocks.length){
+          ctx.lineJoin='miter';
+          const segs=[];
+          for(const item of shocks){
+            const s=item.ray.source,body=item.ray.bodyPoint,l=Math.hypot(body.x-s.x,body.y-body.z-s.y)||1,start=Math.max(0,item.packet.progress-Math.min(.25,34/l));
+            const tip=shockPoint(item.ray,item.packet);
+            segs.push({s,body,start,prog:item.packet.progress,endX:tip.x,endY:tip.y-tip.z,ux:item.ux,uy:item.uy,nx:item.nx,ny:item.ny});
+          }
+          ctx.beginPath();
+          for(const g of segs){const bx=g.body.x-g.s.x,by=g.body.y-g.body.z-g.s.y;for(let j=0;j<=6;j++){const u=g.start+(g.prog-g.start)*j/6,off=j&&j<6?(j%2?1:-1)*5:0,x=g.s.x+bx*u+g.nx*off,y=g.s.y+by*u+g.ny*off;j?ctx.lineTo(x,y):ctx.moveTo(x,y);}}
+          ctx.strokeStyle='#ffca28';ctx.lineWidth=4.5;ctx.stroke();
+          ctx.strokeStyle='#fff6c8';ctx.lineWidth=1.8;ctx.stroke();
+          ctx.beginPath();
+          for(const g of segs){ctx.moveTo(g.endX-g.ux*10,g.endY-g.uy*10);ctx.lineTo(g.endX,g.endY);}
+          ctx.stroke();
+        }
+        if(events.length){
+          for(const it of events){
+            const u=(b.age-it.event.at)/.2,x=it.event.point.x,y=it.event.point.y-it.event.point.z,r=(it.ray.target.r||12)+7;
+            ctx.globalAlpha=1-u;ctx.beginPath();
+            for(let j=0;j<9;j++){const a=j*Math.PI/4,d=r*(j%2?.6:1);const px=x+Math.cos(a)*d,py=y+Math.sin(a)*d*.7;j?ctx.lineTo(px,py):ctx.moveTo(px,py);}
+            ctx.strokeStyle='#ffca28';ctx.lineWidth=3;ctx.stroke();
+            ctx.strokeStyle='#fff6c8';ctx.lineWidth=1;ctx.stroke();
+          }
+        }
+        ctx.restore();
+      }
       if(b.bomb&&b.age<b.blastAt){const u=Math.max(0,Math.min(1,(b.age-b.throwAt)/b.spec.bombFlight)),point=bombPoint(b,u),burn=Math.max(0,(b.age-b.landAt)/b.spec.fuse);
         ctx.save();ctx.strokeStyle=burn>0?'#fff0aa':'#e8ad55';ctx.lineWidth=burn>0?4:2;ctx.globalAlpha=.7;ctx.beginPath();ctx.ellipse(b.center.x,b.center.y,26+6*burn,11+3*burn,0,0,Math.PI*2);ctx.stroke();
         if(u<1){ctx.globalAlpha=.85;ctx.strokeStyle='#ffb33e';ctx.lineWidth=5;ctx.beginPath();for(let i=0;i<=6;i++){const p=bombPoint(b,Math.max(0,u-.22+i*.22/6));i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y);}ctx.stroke();ctx.strokeStyle='#fff0b4';ctx.lineWidth=2;ctx.stroke();}ctx.restore();
